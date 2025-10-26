@@ -2,75 +2,20 @@ name: .NET Framework 4.5 CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
 
 jobs:
   build:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Show working directory
-      run: |
-        Write-Host "Current working directory:" -ForegroundColor Cyan
-        pwd
-        Write-Host "Repository contents:" -ForegroundColor Cyan
-        ls
-      shell: powershell
-
-    - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v2
-
-    - name: Setup NuGet
-      uses: NuGet/setup-nuget@v2
-
-    - name: Restore NuGet packages
-      run: |
-        Write-Host "Restoring NuGet packages..." -ForegroundColor Cyan
-        nuget restore './slnNeoSpin/slnNeoSpin.sln'
-      shell: powershell
-
-    - name: Copy custom DLLs (if exist)
-      run: |
-        if (Test-Path './slnNeoSpin/lib') {
-            Write-Host "Copying custom DLLs to output folder..." -ForegroundColor Cyan
-            Copy-Item -Path './slnNeoSpin/lib/*' -Destination './slnNeoSpin/bin/Release/' -Force
-        } else {
-            Write-Host "No custom DLLs folder found. Skipping copy." -ForegroundColor Green
-        }
-      shell: powershell
-
-    - name: Build Solution (Release)
-      run: |
-        Write-Host "Building solution..." -ForegroundColor Cyan
-        msbuild './slnNeoSpin/slnNeoSpin.sln' /p:Configuration=Release /p:OutDir='./slnNeoSpin/bin/Release/' /clp:"ErrorsOnly;Summary"
-      shell: powershell
-
-    - name: Scan for Warnings (Informational)
-      run: |
-        Write-Host "Scanning for warnings in build output..." -ForegroundColor Cyan
-        $logFiles = Get-ChildItem -Path './slnNeoSpin/bin/Release/' -Filter '*.log' -Recurse
-        if ($logFiles.Count -eq 0) {
-            Write-Host "No log files found. Skipping warning scan." -ForegroundColor Green
-        } else {
-            foreach ($log in $logFiles) {
-                $warnings = Select-String -Path $log.FullName -Pattern "warning"
-                if ($warnings) {
-                    Write-Host "Warnings found in $($log.FullName):" -ForegroundColor Yellow
-                    $warnings | ForEach-Object { Write-Host $_.Line -ForegroundColor Yellow }
-                } else {
-                    Write-Host "No warnings in $($log.FullName)" -ForegroundColor Green
-                }
-            }
-        }
-      shell: powershell
-
-    - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: NeoSpin_Build_Output
-        path: './slnNeoSpin/bin/Release/'
+      - name: Build solution
+        shell: pwsh
+        run: |
+          Write-Host "Building solution..." -ForegroundColor Cyan
+          msbuild ".\slnNeoSpin\slnNeoSpin.sln" /p:Configuration=Release /clp:ErrorsOnly
