@@ -5,21 +5,37 @@ on:
     branches:
       - main
   pull_request:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - name: Set up MSBuild path
-        run: |
-          echo "##vso[task.setvariable variable=MSBUILD_PATH]C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe"
-        shell: powershell
+      - name: Set MSBuild path
+        run: echo "##vso[task.setvariable variable=MSBUILD_PATH]C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe"
 
       - name: Build solution
+        shell: pwsh
         run: |
-          $msbuild = $env:MSBUILD_PATH
-          & $msbuild ".\slnNeoSpin\slnNeoSpin.sln" /p:Configuration=Release /clp:ErrorsOnly
-        shell: powershell
+          Write-Host "Building solution..." -ForegroundColor Cyan
+          $msbuild = "$env:MSBUILD_PATH"
+          # Ensure path is quoted to handle spaces
+          & "$msbuild" ".\slnNeoSpin\slnNeoSpin.sln" /p:Configuration=Release /clp:ErrorsOnly
+
+      - name: Copy required DLLs
+        shell: pwsh
+        run: |
+          Write-Host "Copying Sagitec DLLs..." -ForegroundColor Cyan
+          # Example: copy all DLLs from lib folder to output
+          Copy-Item ".\slnNeoSpin\lib\*" ".\slnNeoSpin\bin\Release\" -Recurse -Force
+
+      - name: Verify build output
+        shell: pwsh
+        run: |
+          Write-Host "Verifying output folder..." -ForegroundColor Cyan
+          Get-ChildItem ".\slnNeoSpin\bin\Release"
