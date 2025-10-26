@@ -14,14 +14,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Build solution
+      - name: Build NeoSpin Solution
         shell: pwsh
         run: |
           Write-Host "Building solution..." -ForegroundColor Cyan
 
+          # Path to MSBuild in VS 2022
           $msbuildPath = "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe"
+
           if (-Not (Test-Path $msbuildPath)) {
             throw "MSBuild not found at $msbuildPath"
           }
 
+          # Build the solution (will fail if Sagitec assemblies are missing)
           & $msbuildPath ".\slnNeoSpin\slnNeoSpin.sln" /p:Configuration=Release /clp:ErrorsOnly
