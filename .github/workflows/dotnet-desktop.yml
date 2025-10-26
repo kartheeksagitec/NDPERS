@@ -34,23 +34,34 @@ jobs:
         nuget restore './slnNeoSpin/slnNeoSpin.sln'
       shell: powershell
 
+    - name: Copy custom DLLs
+      if: ${{ exists('./slnNeoSpin/lib') }}
+      run: |
+        Write-Host "Copying custom DLLs to output folder..." -ForegroundColor Cyan
+        Copy-Item -Path './slnNeoSpin/lib/*' -Destination './slnNeoSpin/bin/Release/' -Force
+      shell: powershell
+
     - name: Build Solution (Release)
       run: |
         Write-Host "Building solution..." -ForegroundColor Cyan
-        msbuild './slnNeoSpin/slnNeoSpin.sln' /p:Configuration=Release /p:OutDir='./slnNeoSpin/bin/Release/' /clp:ErrorsOnly;Summary
+        msbuild './slnNeoSpin/slnNeoSpin.sln' /p:Configuration=Release /p:OutDir='./slnNeoSpin/bin/Release/' /clp:"ErrorsOnly;Summary"
       shell: powershell
 
-    - name: Scan for Warnings
+    - name: Scan for Warnings (Informational)
       run: |
-        Write-Host "Checking for warnings in build output..." -ForegroundColor Cyan
+        Write-Host "Scanning for warnings in build output..." -ForegroundColor Cyan
         $logFiles = Get-ChildItem -Path './slnNeoSpin/bin/Release/' -Filter '*.log' -Recurse
-        foreach ($log in $logFiles) {
-            $warnings = Select-String -Path $log.FullName -Pattern "warning"
-            if ($warnings) {
-                Write-Host "Warnings found in $($log.FullName):" -ForegroundColor Yellow
-                $warnings | ForEach-Object { Write-Host $_.Line -ForegroundColor Yellow }
-            } else {
-                Write-Host "No warnings in $($log.FullName)" -ForegroundColor Green
+        if ($logFiles.Count -eq 0) {
+            Write-Host "No log files found. Skipping warning scan." -ForegroundColor Green
+        } else {
+            foreach ($log in $logFiles) {
+                $warnings = Select-String -Path $log.FullName -Pattern "warning"
+                if ($warnings) {
+                    Write-Host "Warnings found in $($log.FullName):" -ForegroundColor Yellow
+                    $warnings | ForEach-Object { Write-Host $_.Line -ForegroundColor Yellow }
+                } else {
+                    Write-Host "No warnings in $($log.FullName)" -ForegroundColor Green
+                }
             }
         }
       shell: powershell
