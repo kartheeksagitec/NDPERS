@@ -14,6 +14,14 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Show working directory
+      run: |
+        Write-Host "Current working directory:" -ForegroundColor Cyan
+        pwd
+        Write-Host "Repository contents:" -ForegroundColor Cyan
+        ls
+      shell: powershell
+
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
@@ -23,19 +31,19 @@ jobs:
     - name: Restore NuGet packages
       run: |
         Write-Host "Restoring NuGet packages..." -ForegroundColor Cyan
-        nuget restore 'NDPERS/slnNeoSpin.sln'
+        nuget restore './NDPERS/slnNeoSpin.sln'
       shell: powershell
 
     - name: Build Solution (Release)
       run: |
         Write-Host "Building solution..." -ForegroundColor Cyan
-        msbuild 'NDPERS/slnNeoSpin.sln' /p:Configuration=Release /p:OutDir='NDPERS/bin/Release/' /clp:ErrorsOnly;Summary
+        msbuild './NDPERS/slnNeoSpin.sln' /p:Configuration=Release /p:OutDir='./NDPERS/bin/Release/' /clp:ErrorsOnly;Summary
       shell: powershell
 
     - name: Scan for Warnings
       run: |
         Write-Host "Checking for warnings in build output..." -ForegroundColor Cyan
-        $logFiles = Get-ChildItem -Path 'NDPERS/bin/Release/' -Filter '*.log' -Recurse
+        $logFiles = Get-ChildItem -Path './NDPERS/bin/Release/' -Filter '*.log' -Recurse
         foreach ($log in $logFiles) {
             $warnings = Select-String -Path $log.FullName -Pattern "warning"
             if ($warnings) {
@@ -51,4 +59,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: NeoSpin_Build_Output
-        path: NDPERS/bin/Release/
+        path: './NDPERS/bin/Release/'
