@@ -1,4 +1,4 @@
-name: .NET Framework 4.5 CI
+name: Build NeoSpin Solution
 
 on:
   push:
@@ -14,14 +14,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup MSBuild path
-        shell: pwsh
-        run: |
-          Write-Host "MSBuild is assumed to be on PATH on windows-latest runners."
-          msbuild /version
-
       - name: Build solution
         shell: pwsh
         run: |
           Write-Host "Building solution..." -ForegroundColor Cyan
-          msbuild ".\slnNeoSpin\slnNeoSpin.sln" /p:Configuration=Release /clp:ErrorsOnly
+
+          $msbuildPath = "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe"
+          if (-Not (Test-Path $msbuildPath)) {
+            throw "MSBuild not found at $msbuildPath"
+          }
+
+          & $msbuildPath ".\slnNeoSpin\slnNeoSpin.sln" /p:Configuration=Release /clp:ErrorsOnly
