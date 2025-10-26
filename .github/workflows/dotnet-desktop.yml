@@ -1,0 +1,51 @@
+name: .NET Framework 4.5 CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v2
+
+    - name: Restore NuGet packages
+      run: |
+        echo "🔹 Restoring NuGet packages..."
+        nuget restore "NDPERS/slnNeoSpin.sln"
+      shell: powershell
+
+    - name: Build Solution (Release)
+      run: |
+        echo "🔹 Building solution..."
+        msbuild "NDPERS/slnNeoSpin.sln" /p:Configuration=Release /p:OutDir=NDPERS/bin/Release/ /clp:ErrorsOnly;Summary
+      shell: powershell
+
+    - name: Check for warnings
+      run: |
+        Write-Host "🔹 Scanning build output for warnings..."
+        $warnings = Get-Content "NDPERS/bin/Release/msbuild.log" | Select-String "warning"
+        if ($warnings) {
+            Write-Host " Warnings found:"
+            $warnings
+        } else {
+            Write-Host " No warnings found."
+        }
+      shell: powershell
+
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: NeoSpin_Build_Output
+        path: NDPERS/bin/Release/
