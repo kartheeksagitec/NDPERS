@@ -5,25 +5,21 @@ on:
     branches:
       - main
   pull_request:
-    branches:
-      - main
 
 jobs:
   build:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Set up MSBuild path
-      run: |
-        echo "##vso[task.setvariable variable=MSBUILD_PATH]C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe"
+      - name: Set up MSBuild path
+        run: |
+          echo "##vso[task.setvariable variable=MSBUILD_PATH]C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe"
+        shell: powershell
 
-    - name: Build solution
-      shell: pwsh
-      run: |
-        Write-Host "Building solution..." -ForegroundColor Cyan
-
-        # Direct call to MSBuild using quotes to handle spaces
-        & "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe" ".\slnNeoSpin\slnNeoSpin.sln" /p:Configuration=Release /clp:ErrorsOnly
+      - name: Build solution
+        run: |
+          $msbuild = $env:MSBUILD_PATH
+          & $msbuild ".\slnNeoSpin\slnNeoSpin.sln" /p:Configuration=Release /clp:ErrorsOnly
+        shell: powershell
