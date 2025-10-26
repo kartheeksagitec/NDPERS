@@ -1,0 +1,155 @@
+﻿
+<div ng-controller="CenterLeftController" class="full-height">
+    <div class="portlet-body">
+        <div class="form-body full-height">
+            <div class="form-group full-height">
+                <div class="col-xs-5 full-height no-left-padding">
+                    <div class="panel panel-primary full-height">
+                        <div class="page-sidebar-content">
+
+                            <div class="constant-tree-view">
+                                <span context-menu="menuOptionsForCenterLeft" ng-if="CenterLeft.Elements.length === 0">Add Control</span>
+
+                                <ul class="full-height" style="list-style:none" ng-if="CenterLeft.Elements.length > 0">
+                                    <li context-menu="menuOptionsForCenterLeft">
+                                        <i ng-class="IsExpanded?'constants-tree-minus':'constants-tree-plus'" ng-click="toggleRootNode()" style="float:left;"></i>
+                                        <span class="constant-tree-label">All Controls</span>
+                                        <ul class="full-height padding-0 marg-left-20" style="list-style:none" ng-show="IsExpanded">
+                                            <li ng-repeat="itm in CenterLeft.Elements">
+                                                <div class="constant-tree-view-wrap" ng-class="SelectedNode == itm?'selected':''" context-menu="menuOptionsForCenterLeft">
+                                                    <i ng-class="itm.IsExpanded?'constants-tree-minus':'constants-tree-plus'" ng-click="togglebuttonForTreeView(itm)" ng-if="itm.dictAttributes.ID=='trvCenterLeft'"></i>
+                                                    <span ng-bind='itm.dictAttributes.ID' class="constant-tree-label" ng-mousedown="SelectNodeClick(itm,$event)" />
+                                                </div>
+                                                <ul class='marg-left-20' style="list-style:none" ng-show="itm.IsExpanded" ng-if="objTreeView.objNodes.Elements.length >0">
+                                                    <li ng-repeat="nodes in itm.Elements[0].Elements" context-menu="menuOptionsForCenterLeft">
+                                                        <span ng-class="SelectedNode == nodes?'selected':''" ng-bind='nodes.Name' class="constant-tree-label" ng-mousedown="SelectNodeClick(nodes,$event)" />
+
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-7 sessions-tab">
+                    <div class="form-group" ng-if="SelectedNode.Name=='sfwXMLPanel'">
+                        <label class="control-label col-xs-5">Active Form</label>
+
+                        <div class="col-xs-7">
+                           
+                                <activeformintellisensetemplate activeformname='SelectedNode.dictAttributes.sfwXmlDocument' model='SelectedNode' formmodel='formodel' propertyname='"sfwXmlDocument"' formtype="'Maintenance,Lookup,Wizard'" multiactiveformflag='false' isupdatefromexternalprop="true" canhidesearchactiveformwindow="true" />
+                           
+                        </div>
+                    </div>
+                    <div ng-if="SelectedNode.Name=='sfwTreeNode'">
+                        <div class="form-group">
+                            <label class="control-label col-xs-5">Active Form</label>
+                            <div class="col-xs-7">
+                             
+                                    <activeformintellisensetemplate activeformname='SelectedNode.dictAttributes.sfwActiveForm' model='SelectedNode' formmodel='formodel' propertyname='"sfwActiveForm"' formtype="'Maintenance,Lookup,Wizard'" multiactiveformflag='false' isupdatefromexternalprop="true" canhidesearchactiveformwindow="true" />
+                               
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-xs-5">Text</label>
+
+                            <div class="col-xs-7">
+                              
+                                    <input type="text" class="form-control input-sm" title="{{SelectedNode.dictAttributes.Text}}" ng-model='SelectedNode.dictAttributes.Text' />
+                               
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-xs-5">Value</label>
+
+                            <div class="col-xs-7">
+                                
+                                    <input type="text" class="form-control input-sm" title="{{SelectedNode.dictAttributes.Value}}" ng-model='SelectedNode.dictAttributes.Value' />
+                               
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-xs-5">Entity Field</label>
+
+                            <div class="col-xs-7">
+                                <div class="textbox-autocomplete-block">
+                                    <entityfieldelementintellisense modebinding="SelectedNode.dictAttributes.sfwEntityField" model="SelectedNode" entityid="formmodel.dictAttributes.sfwEntity" propertyname='"dictAttributes.sfwEntityField"'></entityfieldelementintellisense>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-xs-5">Select Action</label>
+
+                            <div class="col-xs-7">
+                               
+
+                                    <select ng-options="action for action in $root.lstActions" class="form-control input-sm marg-top-5" title="{{SelectedNode.dictAttributes.SelectAction}}" ng-model="SelectedNode.dictAttributes.SelectAction" />
+                                    <!--<input type="text" class="form-control input-sm" title="{{SelectedNode.dictAttributes.SelectAction}}" ng-model='SelectedNode.dictAttributes.SelectAction' />-->
+                                
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-5">Field Name</label>
+
+                            <div class="col-xs-7">
+                             
+                                    <entityfieldelementintellisense modebinding="SelectedNode.dictAttributes.sfwFieldName" model="SelectedNode" entityid="formmodel.dictAttributes.sfwEntity"></entityfieldelementintellisense>
+                                
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-xs-5">Method Name</label>
+
+                            <div class="col-xs-7 method-name-input">
+                               
+
+                                    <entitymethodsintellisense model="SelectedNode" showonlycollection="true" entityid="formmodel.dictAttributes.sfwEntity" modelvalue="SelectedNode.dictAttributes.sfwMethodName" propertyname="'dictAttributes.sfwMethodName'"></entitymethodsintellisense>
+
+                              
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-xs-5">Tooltip</label>
+
+                            <div class="col-xs-7">
+                               
+                                    <entityfieldelementintellisense modebinding="SelectedNode.dictAttributes.Tooltip" model="SelectedNode" entityid="formmodel.dictAttributes.sfwEntity"></entityfieldelementintellisense>
+                              
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group" ng-if="SelectedNode.Name=='sfwTreeNode' || SelectedNode.Name=='sfwXMLPanel'">
+                        <label class="control-label col-xs-5">Navigation Parameter</label>
+                        <div class="col-xs-7">
+                            <div class="input-group">
+                                <input type="text" class="form-control input-sm" name='NavigationParameter' title="{{SelectedNode.dictAttributes.sfwNavigationParameter}}" ng-model='SelectedNode.dictAttributes.sfwNavigationParameter'>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default btn-search-popup" type="button" ng-click='onNavigationParamsClick()'></button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <input type="button" class="btn dialog-btn-default" value="OK" ng-click="onOkClick()" />
+        <input type="button" class="btn dialog-btn" value="Cancel" ng-click="onCancelClick()" />
+    </div>
+</div>

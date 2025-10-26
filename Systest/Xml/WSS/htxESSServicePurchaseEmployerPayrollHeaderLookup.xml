@@ -1,0 +1,139 @@
+﻿<form ID="wfmESSServicePurchaseEmployerPayrollHeaderLookup" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2004" sfwType="FormLinkLookup" sfwTitle="Employer Payroll Header Lookup" version="3.5" sfwEntity="entEmployerPayrollHeader" sfwGridCollection="busEmployerPayrollHeaderLookup.icolEmployerPayrollHeader" sfwTemplate="ESSServicePurchaseEmployerPayrollHeaderLookup.html" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmESSServicePurchaseEmployerPayrollHeaderLookup" isBasedOnWfm="true" sfwDefaultButtonID="btnSearch" sfwMaxCount="5000">
+  <initialload>
+    <query ID="cdoEmployerPayrollHeader" sfwQueryRef="entEmployerPayrollHeader.ESSMainLookUp" sfwMethodName="LoadEmployerPayrollHeaders" />
+    <query ID="ESSLOOKUPSubqueryEMP" sfwQueryRef="entEmployerPayrollHeader.ESSLOOKUPSubqueryEMP" />
+  </initialload>
+  <items>
+    <sfwTable ID="Main" />
+    <sfwPanel ID="pnlHeader" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblN" />
+        <sfwLiteral ID="ltrlPayrollHeaderLookup" Text="Payroll Report Lookup" />
+        <sfwLabel Text="Note: Your record has been submitted for process. Please click refresh button to view the updated result" ID="lblUploadNote" Visible="False" sfwIsCaption="True" />
+        <sfwLiteral ID="ltrRepReqPayments" Text="&lt;b&gt;Payroll Reports requiring payment.  Click on the link for the report you want to pay.&lt;/b&gt;" Visible="False" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlHeaderTab" sfwCaption="Search Parameters">
+      <items>
+        <sfwTable ID="tblHeaderTab" />
+        <sfwTabContainer ID="tctHeader">
+          <Tabs>
+            <sfwTabSheet HeaderText="Criteria" ID="tshCriteria">
+              <items>
+                <sfwTable ID="tblCriteria" />
+                <sfwLabel ID="lblbenefit_type_value" Text="Benefit : " sfwIsCaption="True" />
+                <sfwDropDownList ID="ddl_benefit_type_value" sfwDataField="header_type_value" sfwQueryID="cdoEmployerPayrollHeader" sfwClientVisibility="controllist:ddl_status_value,ddl_status_value_insr#default:ddl_status_value;DEFF:ddl_status_value;INSR:ddl_status_value_insr;PRCH:ddl_status_value;RETR:ddl_status_value;" sfwLoadType="Query" sfwLoadSource="entEmployerPayrollHeader.LoadBenefitTypeSearchDetail" sfwFirstItemText="All" DataTextField="description" DataValueField="code_value" sfwDefaultType="TextValue" sfwDefaultValue="PRCH" />
+                <sfwLabel ID="capEmployerPayrollHeaderId" Text="Report ID :" sfwIsCaption="True" />
+                <sfwTextBox ID="txtEmployerPayrollHeaderId" sfwDataField="temp.employer_payroll_header_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="cdoEmployerPayrollHeader" />
+                <sfwLabel ID="lblreport_type_value" Text="Report Type : " sfwIsCaption="True" />
+                <sfwDropDownList ID="ddl_report_type_value" sfwDataField="report_type_value" sfwQueryID="cdoEmployerPayrollHeader" sfwLoadType="CodeGroup" sfwLoadSource="1206" />
+                <sfwLabel ID="lblstatus_value" Text="Status : " sfwIsCaption="True" />
+                <sfwDropDownList ID="ddl_status_value" sfwDataField="temp.status_value" sfwQueryID="cdoEmployerPayrollHeader">
+                  <ListItem />
+                  <ListItem Text="Ignored" Value="IGNR" />
+                  <ListItem Text="Posted" Value="PSTD" />
+                  <ListItem Text="Ready To Post" Value="RPST" />
+                  <ListItem Text="Review" Value="REVW" />
+                  <ListItem Text="Valid" Value="VALD" />
+                </sfwDropDownList>
+                <sfwDropDownList ID="ddl_status_value_insr" sfwDataField="temp.status_value" sfwQueryID="cdoEmployerPayrollHeader" sfwData1EqualTo="Y" sfwLoadType="CodeGroup" sfwLoadSource="1209" />
+                <sfwLabel ID="lblLabel4" Text="Balancing Status :" sfwIsCaption="True" />
+                <sfwDropDownList ID="ddlBalancingStatusValue" sfwDataField="balancing_status_value" sfwQueryID="cdoEmployerPayrollHeader" sfwOperator="in" sfwLoadType="CodeGroup" sfwLoadSource="1203" />
+                <sfwLabel ID="capReceivedDate" Text="Submitted Date From : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtReceivedDateFrom" sfwDataField="submitted_date" sfwDataFormat="{0:d}" sfwOperator="between" sfwQueryID="cdoEmployerPayrollHeader" sfwDataType="DateTime" sfwRelatedControl="txtReceivedDateTo" />
+                <sfwLabel ID="capSubmittedDateTo" Text="Submitted Date To : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtReceivedDateTo" sfwDataField="submitted_date" sfwDataFormat="{0:d}" sfwOperator="between" sfwQueryID="cdoEmployerPayrollHeader" sfwDataType="DateTime" sfwRelatedControl="txtReceivedDateFrom" />
+                <sfwTextBox ID="txbOrgId" sfwDataField="Temp.org_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="cdoEmployerPayrollHeader" />
+                <sfwTextBox ID="txbContactId" sfwDataField="contact_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="cdoEmployerPayrollHeader" />
+                <sfwTextBox ID="txtBalancingValue" sfwDataField="interest_waiver_flag" sfwQueryID="cdoEmployerPayrollHeader" />
+                <sfwLabel ID="lblLabel5" Text="To display ALL, click ‘Search’ without entering any criteria" sfwIsCaption="True" />
+                <sfwButton ID="btnSearch" sfwMethodName="btnSearch_Click" Text="Search" />
+                <sfwButton ID="btnReset" sfwMethodName="btnReset_Click" Text="Reset" />
+                <sfwButton ID="btnOpenLookup" sfwMethodName="btnOpen_Click" Text="Create new Payroll Report" sfwActiveForm="wfmCreatePayrollMaintenance" sfwResource="5000" />
+                <sfwButton ID="btnStoreSearch" sfwMethodName="btnStoreUserDefaults_Click" Text="StoreSearch" CssClass="hideControl" />
+              </items>
+            </sfwTabSheet>
+            <sfwTabSheet HeaderText="Query" ID="tshSql" Visible="False">
+              <items>
+                <sfwTable ID="tblSql" />
+                <sfwTextBox ID="txbSql" Rows="5" TextMode="MultiLine" Width="500px" Visible="False" />
+                <sfwButton ID="btnExecuteQuery" sfwMethodName="btnSearch_Click" sfwRelatedControl="dgrResult" Text="Execute Query" Visible="False" />
+              </items>
+            </sfwTabSheet>
+          </Tabs>
+        </sfwTabContainer>
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlResult" sfwCaption="Search Results">
+      <items>
+        <sfwTable ID="tblResult" />
+        <sfwButton ID="btnNew" sfwActiveForm="wfmESSEmployerPayrollHeaderMaintenance" sfwMethodName="btnNew_Click" sfwNavigationParameter="aintOrgID=txbOrgId;aintContactID=txbContactId;astrBenefitType=ddl_benefit_type_value" Text="New" Visible="False" />
+        <sfwButton ID="btnOpen" sfwActiveForm="wfmESSEmployerPayrollHeaderMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintemployerpayrollheaderid=EmployerPayrollHeaderId;aintIsReload=#1" sfwRelatedControl="dgrResult" Text="Open" />
+        <sfwButton ID="btnDelete" sfwMethodName="btnDelete_Click" sfwRelatedControl="dgrResult" Text="Delete" CssClass="hideControl" />
+        <sfwButton ID="btnExportExcel" sfwMethodName="btnColumnsToExport_Click" sfwRelatedControl="dgrResult" Text="Export To Excel" />
+        <sfwButton ID="btnSearchRefreshButton" sfwMethodName="btnSearchRefreshButton_Click" Text="Refresh" Visible="False" CssClass="hideControl" />
+        <sfwGridView AllowPaging="True" AllowSorting="True" ID="dgrResult" sfwSelection="Many" PageSize="500" CssClass="set-comment-box">
+          <Columns>
+            <TemplateField HeaderText="Report ID" ItemStyle.HorizontalAlign="Left">
+              <ItemTemplate>
+                <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpen" sfwEntityField="EmployerPayrollHeaderId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Benefit" ItemStyle.HorizontalAlign="Left">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="HeaderTypeDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Report Type" ItemStyle.HorizontalAlign="Left">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="ReportTypeDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Status" ItemStyle.HorizontalAlign="Left">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="StatusDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Balancing Status" ItemStyle.HorizontalAlign="Left">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="BalancingStatusDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Total Purchase Amount Reported" ItemStyle.HorizontalAlign="Right">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="TotalPurchaseAmountReported" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Total Purchase Amount Calculated" ItemStyle.HorizontalAlign="Right">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="TotalPurchaseAmount" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Submitted Date" ItemStyle.HorizontalAlign="Left">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="SubmittedDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Org Name" sfwShowInExportToExcel="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objOrganization.OrgName" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Org Code ID" ItemStyle.HorizontalAlign="Left" sfwShowInExportToExcel="False">
+              <ItemTemplate>
+                <sfwLabel sfwRelatedControl="btnOpen" sfwEntityField="objOrganization.OrgCode" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Comments">
+              <ItemTemplate>
+                <sfwLabel Width="250px" sfwEntityField="IstrlookupComment" />
+              </ItemTemplate>
+            </TemplateField>
+          </Columns>
+        </sfwGridView>
+      </items>
+    </sfwPanel>
+  </items>
+  <loaddetails />
+  <ExtraFields />
+</form>

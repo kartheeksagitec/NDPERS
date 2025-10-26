@@ -1,0 +1,192 @@
+﻿
+<div class="entity-dashboard-editable-content col-xs-12">
+
+    <div class="entity-page-container full-height entity-queries" id="entity-queries-section">
+
+        <div class="col-xs-3 entity-sidebar no-left-padding full-height">
+
+            <div class="page-sidebar-header">
+
+                <filter-list collection="objQueries.Elements" change-callback="selectQueryGroup(obj,null,'entity-queries-section',true)" propertyname="'dictAttributes.ID'" slide-left="true" css-class="col-xs-6"></filter-list>
+                <div class="col-xs-4">
+                    <select class="form-control" ng-model="selectedTypeID" ng-options="x for x in lstQueryGroups" ng-change="filterByGroupName(selectedTypeID)"></select>
+
+                </div>
+
+                <div class="panel-icons">
+                    <a title="Add New Query"><img src="images/Common/icon_add_dark.svg" ng-click="addNewQuery('entity-queries-section')"></a>
+                    <a title="Delete Query" ng-show="!selectedQuery.IsBaseAppModel && !selectedQuery.BaseAppModel" ng-disabled="disableQueryDelete()"><img src="images/Common/icon_delete_dark.svg" ng-click="removeSelectedQuery('SelectEntityQuery')"></a>
+                    <a title="Revert" ng-show="!selectedQuery.IsBaseAppModel && selectedQuery.BaseAppModel"><i class="fa fa-undo" style="color:#555;font-size:13px;" ng-click="reverQuery()" /></a>
+                </div>
+
+            </div>
+
+            <div class="page-sidebar-content list-items list-items-queries" context-menu="QueryPasteMenuOption">
+
+
+                <ul>
+                    <li ng-repeat="objQuery in objQueries.Elements |filter:{dictAttributes:{[filterproperty]:selectedTypeID}} track by $index" tabindex="{{$index}}" key-up-down-with-element callbackfn="selectQuery" objproperty="'objQuery'"
+                        ng-click="selectQuery(objQuery,'entity-queries-section')" id="{{objEntity.dictAttributes.ID}}_{{objQuery.dictAttributes.ID}}">
+                        <div entityquerytemplate></div>
+                    </li>
+                </ul>
+
+
+            </div>
+
+        </div>
+
+        <div class="col-xs-9 entity-content-wrapper full-height" ng-show="selectedQuery!=undefined&&selectedQuery.Name=='query'">
+
+            <div class="entity-inner-container full-height">
+                <div class="entity-tab-content calc-query-entity-height form-details-label">
+
+                    <div class="query-inner-tab">
+
+                        <div ng-class="isSet(1)?'tab-pane fade active in full-height':'tab-pane fade full-height'">
+
+                            <div class="form-body query-input-section">
+
+                                <div class="col-xs-3">
+                                    <div class="form-group">
+                                        <label class="control-label">Query Name</label>
+                                        <input type="text" disabled="disabled" class="form-control input-sm" ng-model="selectedQueryName" />
+                                    </div>
+
+                                </div>
+
+                                <div class="col-xs-3">
+                                    <div class="form-group">
+                                        <label class="control-label">Query Type</label>
+                                        <select ng-disabled="selectedQuery.IsBaseAppModel || selectedQuery.BaseAppModel" class="form-control input-sm" ng-options="x for x in queryTypes" title="{{selectedQuery.dictAttributes.sfwQueryType}}" ng-model="selectedQuery.dictAttributes.sfwQueryType" ng-change="onQueryTypeChange(selectedQuery.dictAttributes['sfwQueryType'])" undoredodirective model="selectedQuery" undorelatedfunction="'onQueryTypeChange'"></select>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-xs-3">
+                                    <div class="form-group">
+                                        <label class="control-label" ng-show="selectedQuery.dictAttributes['sfwQueryType']!='SubSelectQuery'">Data Type</label>
+                                        <select class="form-control input-sm" ng-options="x for x in queryDataTypes" title="{{selectedQuery.dictAttributes.sfwDataType}}" ng-model="selectedQuery.dictAttributes.sfwDataType" ng-show="selectedQuery.dictAttributes['sfwQueryType']!='SubSelectQuery'" ng-disabled="selectedQuery.IsBaseAppModel || selectedQuery.BaseAppModel" undoredodirective model="selectedQuery"></select>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-3">
+                                    <div class="form-group">
+                                        <label class="control-label">Group Name</label>
+                                        <div>
+                                            <common-intellisense model="selectedQuery.dictAttributes" propertyname="'dictAttributes.sfwGroupName'"
+                                                                 collection="lstQueryGroups" change-callback="updateModelForBaseAppModel()"
+                                                                 selected-item="selectedQuery.dictAttributes.sfwGroupName"
+                                                                 display-property-name="'sfwGroupName'" selected-property-name="'sfwGroupName'"
+                                                                 onblurcallback="UpdateGroupName(selectedQuery.dictAttributes.sfwGroupName)" is-reset="true"></common-intellisense>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-xs-12">
+                                    <label class="control-label col-xs-2 no-padding align-left">
+                                        Query
+                                    </label>
+                                    <div class="panel-icons query-icons">
+                                        <i title="Comments" ng-click="setComments()" class="fa fa-comments" style="cursor:pointer"></i>
+                                        <img src="images/Entity/add_no_lock.svg" title="Add No Lock" ng-click="AddNodeLockOperation()" ng-if="!$root.IsOracleDB">
+                                        <!--<i ng-if="!$root.IsOracleDB" title="Add No Lock" ng-click="formatQuery(true)" class="fa fa-unlock-alt" style="cursor:pointer"><sub><i class="fa fa-plus-square-o"></i></sub></i>-->
+                                        <i title="Format" ng-click="formatQuery()" class="fa fa-file-text-o" style="cursor:pointer"></i>
+                                        <i title="Execute Query" ng-click="executeQuery()" ng-show="selectedQuery.dictAttributes.sfwQueryType && selectedQuery.dictAttributes.sfwQueryType !== 'NonQuery' && IsExecuteQueryShow==true" class="fa fa-bolt" style="cursor:pointer"></i>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12">
+                                    <ul class="nav nav-tabs" attribute-tab-wrapper>
+                                        <li ng-class="(objDBType ==objselectedQueryTab)?'active':'' " ng-repeat="objDBType in lstDBQueryTypes" ng-click="selectDBTypeTab(objDBType)">
+                                            <a data-toggle="tab">{{objDBType.ID}}</a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="form-group query-expression-textarea-wrapper">
+                                    <div class="full-height">
+                                        <div id="Queryeditor_{{objEntity.dictAttributes.ID}}" class="ace-editor-query-div"></div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="form-body query-tables-section">
+                                <div ng-class="isCustomMappingTab?'col-xs-6 full-height':'col-xs-12 full-height'">
+                                    <div class="form-group margin-bottom-5 query-panel-head">
+                                        <label class="entity-table-head ">Parameters</label>
+                                        <div class="panel-icons">
+                                            <img src="images/Entity/get_parameter.svg" title="Get Parameter" ng-disabled="selectedQuery.IsBaseAppModel || selectedQuery.BaseAppModel"  ng-click="getQueryParameters()">
+                                        </div>
+                                    </div>
+                                    <div class="form-group overflowA query-object-tree-border ">
+                                        <table class="sws-table" role="grid">
+                                            <thead>
+                                                <tr>
+                                                    <th> Parameter </th>
+                                                    <th> Data Type </th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody ng-repeat="objParams in selectedQuery.Elements" ng-if="objParams.Name=='parameters'">
+                                                <tr ng-repeat="objParam in objParams.Elements" ng-class="{'bckgGrey' : objParam.isAdvanceSearched, 'bckgGreen': (selectedParam==objParam && objParam.isAdvanceSearched)}">
+                                                    <td><span ng-bind="objParam.dictAttributes.ID"></span></td>
+                                                    <td>
+                                                        <select ng-options="x for x in parameterTypes" title="{{objParam.dictAttributes.sfwDataType}}" ng-model="objParam.dictAttributes.sfwDataType" undoredodirective model="objParam" ng-change="updateModelForBaseAppModel()"
+                                                                class="form-control form-filter input-sm"></select>
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 validation-container  full-height" ng-show="isCustomMappingTab == true">
+                                    <div class="form-group margin-bottom-5 query-panel-head">
+                                        <label class="entity-table-head ">Custom Mapping</label>
+                                        <div class="panel-icons">
+                                            <i class="fa fa-refresh" ng-click="refreshUnmappedColumnNew();updateModelForBaseAppModel();" title="Refresh Unmapped Columns"></i>
+                                            <i class="fa fa-plus" ng-click="addMappedColumn()" title="Add Unmapped Column"></i>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="validation-container-table query-object-tree-border">
+                                        <table class="sws-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Unmapped Column</th>
+                                                    <th>Entity Field</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+
+                                            <tr ng-repeat="columnItem in selectedQuery.objMappedColumns.Elements" ng-click="onUnmappedColumnSelectionChange(columnItem)" ng-class="{'selected':selectedUnmappedColumn==columnItem, 'bckgGrey' : columnItem.isAdvanceSearched, 'bckgGreen': (selectedUnmappedColumn==columnItem && columnItem.isAdvanceSearched)}">
+                                                <td><span ng-bind="columnItem.dictAttributes.ID"></span></td>
+
+                                                <!-- ng-show="!(selectedQuery.IsBaseAppModel || selectedQuery.BaseAppModel)" -->
+                                                <td>
+                                                    <entityfieldelementintellisense modebinding="columnItem.dictAttributes.sfwEntityField" model="columnItem" entityid="objEntity.dictAttributes.ID"
+                                                                                    propertyname="'dictAttributes.sfwEntityField'" errorprop="columnItem.errors.sfwEntityField" validate="true" isshowonetomany="false"
+                                                                                    isshowcdocollection="false" onchangecallback="updateModelForBaseAppModel()"/>
+                                                </td>
+                                                <!--<td ng-show="selectedQuery.IsBaseAppModel || selectedQuery.BaseAppModel">
+                                                    <input type="text" class="form-control input-sm" ng-model="columnItem.dictAttributes.sfwEntityField" disabled />
+                                                </td>-->
+                                                <td><input type="button" ng-disabled="columnItem.IsBaseAppModel || columnItem.BaseAppModel" ng-click="OnRemoveMappedQueryClickNew(columnItem,$index)" ng-if="columnItem.IsDeleteColumn" value="Remove" /></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>

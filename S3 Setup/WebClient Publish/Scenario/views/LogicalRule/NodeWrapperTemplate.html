@@ -1,0 +1,33 @@
+﻿<!--<li ng-if="item.Name != 'variables'" logical-rule-drag-drop node-id="{{::item.dictAttributes.sfwNodeID}}" node-name="{{::item.Name}}" ng-repeat="item in collection">-->
+<div logical-rule-drag-drop node-id="{{::model.dictAttributes.sfwNodeID}}" node-name="{{::model.Name}}" ng-keydown="onkeydownevent($event,model,parentModel)">
+    <span ng-show="(model.Name === 'foreach' || model.Name === 'while' || model.Name === 'switch') || (model.Name !== 'case' && model.Name !== 'default' && model.Children.length > 0) || ((model.Name === 'case' || model.Name === 'default') && model.Elements.length > 0)" class="node-expander node-expanded" ng-click="toggleNodeChildren($event)"></span>
+    <div class="node-wrapper node-wrapper-after">
+        <actions-node ng-if="model.Name == 'actions'"></actions-node>
+        <break-continue-default-node ng-if="model.Name == 'break' || model.Name == 'continue' || model.Name == 'default'"></break-continue-default-node>
+        <notes-node ng-if="model.Name == 'notes'"></notes-node>
+        <return-switch-case-while-node ng-if="model.Name == 'return' || model.Name == 'switch' || model.Name == 'case'|| model.Name == 'while'"></return-switch-case-while-node>
+        <call-rule-node ng-if="model.Name == 'calllogicalrule' || model.Name == 'calldecisiontable' || model.Name == 'callexcelmatrix'"></call-rule-node>
+        <for-each-node ng-if="model.Name == 'foreach'"></for-each-node>
+        <query-node ng-if="model.Name == 'query'"></query-node>
+        <method-node ng-if="model.Name == 'method'"></method-node>
+        <!--<loop-switch-children  ng-if="childrenCollection && childrenCollection.length>0" model="model" is-siblings-list="false" view-mode="viewMode" is-expanded="isExpanded"></loop-switch-children>-->
+        <ul ng-if="model.Name == 'foreach' || model.Name == 'while' || model.Name == 'switch'" ng-class="model.Name == 'switch'? 'ul-switch':'ul-children'">
+            <li ng-repeat="item in model.Elements">
+                <logical-rule-node-wrapper model="item" parent-model="model" view-mode="viewMode"></logical-rule-node-wrapper>
+            </li>
+
+        </ul>
+    </div>
+    <!--<logical-rule-node-list ng-if="siblingsCollection && siblingsCollection.length>0" model="model" is-siblings-list="true" view-mode="viewMode" is-expanded="isExpanded"></logical-rule-node-list>-->
+    <ul ng-if="(model.Name == 'case' || model.Name == 'default') && model.Elements.length>0">
+        <li ng-repeat="item in model.Elements">
+            <logical-rule-node-wrapper model="item" parent-model="model" view-mode="viewMode"></logical-rule-node-wrapper>
+        </li>
+    </ul>
+    <ul ng-if="model.Name != 'case' && model.Name != 'default' && model.Children.length>0">
+        <li ng-repeat="item in model.Children">
+            <logical-rule-node-wrapper model="item" parent-model="model" view-mode="viewMode"></logical-rule-node-wrapper>
+        </li>
+    </ul>
+</div>
+<!--</li>-->

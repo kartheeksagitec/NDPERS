@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entPersonAccountRetirementAdjustmentContribution" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvPerson" sfwType="BusinessRule" sfwMainCDO="icdoRetirementAdjustmentContribution" sfwReadOnlyRule="StatusIsPosted" sfwObjectID="busPersonAccountRetirementAdjustmentContribution" sfwTableName="sgt_person_account_retirement_adjustment_contribution">
+  <rules>
+    <rule ID="EffectiveDateIsRequired" sfwMessageId="7067" sfwExpression="(this.icdoRetirementAdjustmentContribution.effective_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="PayPeriodIsRequiredForSalary" sfwMessageId="7069" sfwExpression="!(this.icdoRetirementAdjustmentContribution.salary_amount == 0) &amp;&amp; &#xA;((this.icdoRetirementAdjustmentContribution.pay_period_month == 0) &amp;&amp; &#xA;(this.icdoRetirementAdjustmentContribution.pay_period_year == 0))" sfwObjectBased="True" />
+    <rule ID="PayPeriodMonthIsNotValidForEffectiveDate" sfwMessageId="7068" sfwExpression="!(this.IsPayPeriodValidForEffectiveDate() == True)" sfwObjectBased="True" />
+    <rule ID="StatusIsNotPosted" sfwExpression="!(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonAccountAdjustment.icdoPersonAccountAdjustment.status_value&quot;) == &quot;POST&quot;)" sfwObjectBased="True" />
+    <rule ID="StatusIsPosted" sfwMessageId="6634" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonAccountAdjustment.icdoPersonAccountAdjustment.status_value&quot;) == &quot;POST&quot;)" sfwObjectBased="True" />
+    <rule ID="SubsystemIsRequired" sfwMessageId="7064" sfwExpression="(string.IsNullOrEmpty(this.icdoRetirementAdjustmentContribution.subsystem_value))" sfwObjectBased="True" />
+    <rule ID="TransactiondateIsRequired" sfwMessageId="7066" sfwExpression="(this.icdoRetirementAdjustmentContribution.transaction_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="TransactionTypeIsRequired" sfwMessageId="7065" sfwExpression="(string.IsNullOrEmpty(this.icdoRetirementAdjustmentContribution.transaction_type_value))" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="StatusIsPosted" sfwMode="All" sfwStatus="Active" />
+    <item ID="StatusIsNotPosted" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="TransactionTypeIsRequired" sfwMode="All" sfwStatus="Active" />
+    <item ID="TransactiondateIsRequired" sfwMode="All" sfwStatus="Active" />
+    <item ID="EffectiveDateIsRequired" sfwMode="All" sfwStatus="Active" />
+    <item ID="PayPeriodMonthIsNotValidForEffectiveDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="PayPeriodIsRequiredForSalary" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete>
+    <item ID="StatusIsPosted" sfwMode="All" sfwStatus="Active" />
+  </validatedelete>
+  <updateablecdo />
+  <queries />
+  <attributes>
+    <attribute ID="RetirementAdjustmentContributionId" sfwType="Column" sfwValue="retirement_adjustment_contribution_id" sfwIsNull="False" sfwKeyNo="1" sfwIsIdentity="True" sfwDataType="int" />
+    <attribute ID="PersonAccountAdjustmentId" sfwType="Column" sfwValue="person_account_adjustment_id" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="SubsystemDescription" sfwType="Description" sfwValue="subsystem_description" />
+    <attribute ID="SubsystemId" sfwType="Column" sfwValue="subsystem_id" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="349" />
+    <attribute ID="SubsystemValue" sfwType="Column" sfwValue="subsystem_value" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="SubsystemRefId" sfwType="Column" sfwValue="subsystem_ref_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="TransactionDate" sfwType="Column" sfwValue="transaction_date" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="EffectiveDate" sfwType="Column" sfwValue="effective_date" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="PayPeriodMonth" sfwType="Column" sfwValue="pay_period_month" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="PayPeriodYear" sfwType="Column" sfwValue="pay_period_year" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="PersonEmploymentDtlId" sfwType="Column" sfwValue="person_employment_dtl_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="TransactionTypeDescription" sfwType="Description" sfwValue="transaction_type_description" />
+    <attribute ID="TransactionTypeId" sfwType="Column" sfwValue="transaction_type_id" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="350" />
+    <attribute ID="TransactionTypeValue" sfwType="Column" sfwValue="transaction_type_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="SalaryAmount" sfwType="Column" sfwValue="salary_amount" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="PostTaxErAmount" sfwType="Column" sfwValue="post_tax_er_amount" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="PostTaxEeAmount" sfwType="Column" sfwValue="post_tax_ee_amount" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="PreTaxErAmount" sfwType="Column" sfwValue="pre_tax_er_amount" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="PreTaxEeAmount" sfwType="Column" sfwValue="pre_tax_ee_amount" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="EeRhicAmount" sfwType="Column" sfwValue="ee_rhic_amount" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="ErRhicAmount" sfwType="Column" sfwValue="er_rhic_amount" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="EeErPickupAmount" sfwType="Column" sfwValue="ee_er_pickup_amount" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="ErVestedAmount" sfwType="Column" sfwValue="er_vested_amount" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="InterestAmount" sfwType="Column" sfwValue="interest_amount" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="VestedServiceCredit" sfwType="Column" sfwValue="vested_service_credit" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,6" />
+    <attribute ID="PensionServiceCredit" sfwType="Column" sfwValue="pension_service_credit" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,6" />
+    <attribute ID="RetirementContributionId" sfwType="Column" sfwValue="retirement_contribution_id" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="objPersonAccountAdjustment" sfwType="Object" sfwEntity="entPersonAccountAdjustment" sfwValue="ibusPersonAccountAdjustment" />
+  </attributes>
+  <objectmethods>
+    <method ID="GetOrganizationForPersonAccount" sfwReturnType="Collection" sfwEntity="entPersonAccountEmploymentDetail" />
+  </objectmethods>
+</entity>

@@ -1,0 +1,37 @@
+﻿<form class="full-width fleft marg-top-8">
+    <fieldset ng-disabled="$ctrl.isDisabledforVersioning">
+        <div class="form-group">
+            <label class="control-label marg-bottom-5">Event Type</label>
+            <select class="form-control input-sm" title="{{$ctrl.selected.eventType}}" ng-model="$ctrl.selected.eventType" ng-change="$ctrl.onEventTypeChanged()"
+                    undoredodirective model="$ctrl" propertyname="'selected.eventType'">
+                <option></option>
+                <option>Message</option>
+                <option>Timer</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <fieldset ng-show="$ctrl.selected.eventType == 'Timer'" class="marg-top-8" ng-disabled="$ctrl.isDisabledforVersioning">
+                <legend class="marg-bottom-8">Time Duration</legend>
+                <div class="form-group">
+                    <label class="control-label marg-bottom-5">Value Source</label>
+                    <select class="form-control input-sm" title="{{$ctrl.selected.valueSource}}" ng-model="$ctrl.selected.valueSource" ng-change="$ctrl.onValueSourceChanged()"
+                            undoredodirective model="$ctrl" propertyname="'selected.valueSource'">
+                        <option>Constant</option>
+                        <option>Parameter</option>
+                    </select>
+                </div>
+                <div class="form-group" ng-show="$ctrl.selected.valueSource">
+                    <label class="control-label marg-bottom-5">Value </label>
+                    <input class="form-control input-sm" type="text" title="{{$ctrl.durationModel.dictAttributes.sfwParameterValue}}" ng-model="$ctrl.durationModel.dictAttributes.sfwParameterValue" 
+                           disabled ng-show="$ctrl.selected.valueSource == 'Constant'" undoredodirective model="$ctrl.durationModel" propertyname="'dictAttributes.sfwValueSource'"/>
+                    <select class="form-control input-sm" ng-options="variable for variable in $ctrl.queryParametersValues" type="text" title="{{$ctrl.durationModel.dictAttributes.sfwParameterValue}}" 
+                            ng-model="$ctrl.durationModel.dictAttributes.sfwParameterValue" ng-show="$ctrl.selected.valueSource == 'Parameter'" 
+                            undoredodirective model="$ctrl.durationModel" propertyname="'dictAttributes.sfwParameterValue'"/>
+                </div>
+                <processusertaskcommonproperties model="$ctrl.durationModel" is-disabledfor-versioning="$ctrl.isDisabledforVersioning" processtypes="$ctrl.processtypes" 
+                                                 istimerevent="true" showseconds="true" onchange-duration="$ctrl.calculateValue()" 
+                                                 ng-show="$ctrl.selected.valueSource == 'Constant'" ></processusertaskcommonproperties>
+            </fieldset>
+        </div>
+    </fieldset>
+</form>

@@ -1,0 +1,722 @@
+﻿<form ID="wfmLifeAnnualEnrollmentWizard" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2001" sfwType="FormLinkWizard" sfwTitle="Life Enrollment Wizard" version="3.5" WebSite="NeoSpinWSS" sfwEntity="entWssPersonAccountEnrollmentRequest" sfwTemplate="LifeAnnualEnrollmentWizard.html" isBasedOnWfm="true">
+  <initialload>
+    <callmethods sfwMethodName="NewAnnualEnrollmentPlanLifeEnrolledRequest" />
+  </initialload>
+  <items>
+    <sfwTable ID="Main" />
+    <sfwWizard ID="wizMain">
+      <items>
+        <sfwWizardStep ID="wzsIntro" Title="Intro" sfwRulesGroup="InitialLifeStep" sfwShowInHeader="True">
+          <items>
+            <sfwTable ID="tblStep4" />
+            <sfwLabel AssociatedControlID="lblRejectionReason" ID="capRejectionReasonIntro" sfwVisibleRule="IsStatusRejected" Text="Rejection Reason : " sfwIsCaption="True" />
+            <sfwLabel ID="lblRejectionReasonIntro" sfwVisibleRule="IsStatusRejected" sfwEntityField="RejectionReason" />
+            <sfwLiteral ID="GHE" Text="Life Insurance Plan Enrollment" />
+            <sfwlabel ID="lblLifeWizard" Text="NOTE: You may only submit two online life insurance applications per day.  If you have already met this maximum, please log in the next day to submit your online application, or you may complete the Life Insurance Enrollment/Change SFN 53803 available on the NDPERS website." />
+            <sfwLabel ID="lblLabel17" Text="&lt;br/&gt;&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwPanel ID="pnlMemberAccountExists" sfwCaption="Member Account Exists" sfwCollapsible="False" sfwVisibleRule="IsMemberAccountExists">
+              <items>
+                <sfwTable ID="tblNewPage6" />
+                <sfwPanel ID="pnlMain" sfwCaption="Plan Details">
+                  <items>
+                    <sfwTable ID="tblMain" />
+                    <sfwLabel ID="capPlanName" Text="Plan Name : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblPlanName" sfwEntityField="objMSSLifeWeb.objPlan.PlanName" />
+                    <sfwLabel ID="capPlanParticipationStatusDescription" Text="Plan Participation Status : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblPlanParticipationStatusDescription" sfwEntityField="objMSSLifeWeb.PlanParticipationStatusDescription" />
+                    <sfwLabel ID="capOrgName" Text="Provider : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblOrgName" sfwEntityField="objMSSLifeWeb.objProvider.OrgName" />
+                    <sfwLabel ID="capStartDate" Text="Start Date : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblStartDate" sfwDataFormat="{0:d}" sfwEntityField="objMSSLifeWeb.StartDate" />
+                    <sfwLabel ID="capEndDateNoNull" Text="End Date : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblEndDateNoNull" sfwDataFormat="{0:d}" sfwEntityField="objMSSLifeWeb.EndDate" />
+                    <sfwLabel ID="capIstrPreTax" sfwVisibleRule="VisibleRule-IsFlexPlanAvailableForLife" Text="Pre-tax Payroll Deduction :" sfwIsCaption="True" />
+                    <sfwLabel ID="lblPreTax" sfwVisibleRule="VisibleRule-IsFlexPlanAvailableForLife" sfwEntityField="objMSSLifeWeb.IstrPremiumFlag" />
+                    <sfwLabel ID="lblPersonEmploymentDtlId" Visible="False" sfwEntityField="objMSSLifeWeb.PersonEmploymentDtlId" />
+                    <sfwLabel ID="lblPersonAccountId" Visible="False" sfwEntityField="objMSSLifeWeb.PersonAccountId" />
+                    <sfwLabel ID="lblPlanId" Visible="False" sfwEntityField="objMSSLifeWeb.PlanId" />
+                    <sfwLabel ID="lblPersonId" Visible="False" sfwEntityField="objMSSLifeWeb.PersonId" />
+                    <sfwLabel ID="lblIstrMSSElectionStatus" Visible="False" sfwEntityField="objMSSLifeWeb.IstrMSSElectionStatus" />
+                    <sfwLabel ID="lblLabel2" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                    <sfwLabel ID="lblLabel3" Text="Contributing Employers " Visible="False" sfwIsCaption="True" />
+                    <sfwGridView AllowPaging="True" ID="grvEmploymentDetail" Visible="False" sfwEntityField="objMSSLifeWeb.lstEmploymentDetail" sfwGridEntity="entPersonEmploymentDetail">
+                      <Columns>
+                        <TemplateField HeaderText="Employer Name">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="objPersonEmployment.objOrganization.OrgName" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Start Date">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="StartDate" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="End Date">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EndDate" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Job Class" Visible="False">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="JobClassDescription" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Member Type" Visible="False">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="DerivedMemberTypeDescription" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Person Employment Dtl ID" Visible="False">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="PersonEmploymentDtlId" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Status">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="StatusDescription" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Type">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="TypeDescription" />
+                          </ItemTemplate>
+                        </TemplateField>
+                      </Columns>
+                    </sfwGridView>
+                  </items>
+                </sfwPanel>
+                <sfwPanel ID="pnlLevelofCov" sfwCaption="Level of Coverage">
+                  <items>
+                    <sfwTable ID="tblNewPage4" />
+                    <sfwGridView AllowPaging="True" ID="grvLifeOption" sfwEntityField="objMSSLifeWeb.lstLifeOption" sfwGridEntity="entPersonAccountLifeOption">
+                      <Columns>
+                        <TemplateField HeaderText="Account Life Option ID" Visible="False">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="AccountLifeOptionId" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Level Of Coverage">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="LevelOfCoverageDescription" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Coverage Amount" ItemStyle.HorizontalAlign="Right">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="ActualCoverageAmount" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Effective Start Date">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EffectiveStartDate" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Effective End Date">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EffectiveEndDate" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Employee Premium" Visible="False">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="EmployeePremiumAmount" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Employer Premium" Visible="False">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="EmployerPremiumAmount" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Monthly Premium" Visible="False">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="MonthlyPremium" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Plan Option Status" Visible="False">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="PlanOptionStatusDescription" />
+                          </ItemTemplate>
+                        </TemplateField>
+                      </Columns>
+                    </sfwGridView>
+                    <sfwLabel ID="lblIdecTotalMonthlyPremium" sfwDataFormat="{0:C}" Visible="False" sfwEntityField="objMSSLifeWeb.IdecTotalMonthlyPremium" />
+                  </items>
+                </sfwPanel>
+                <sfwPanel ID="pnlHistory" sfwCaption="History" sfwVisibleRule="IsANNEChangesMade">
+                  <items>
+                    <sfwTable ID="tblNewPages" />
+                    <sfwGridView AllowPaging="True" ID="grvPreviousHistory" sfwSortExpression="SequenceID" sfwEntityField="objMSSLifeWeb.lstPreviousHistory" sfwGridEntity="entPersonAccountLifeHistory">
+                      <Columns>
+                        <TemplateField HeaderText="Person Account Life History ID" Visible="False">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="PersonAccountLifeHistoryId" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Level of Coverage">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="LevelOfCoverageDescription" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Coverage Amount" ItemStyle.HorizontalAlign="Right">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="CoverageAmount" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Effective Start Date">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EffectiveStartDate" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Effective End Date">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EffectiveEndDate" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Sequence Id" Visible="False">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="SequenceID" />
+                          </ItemTemplate>
+                        </TemplateField>
+                      </Columns>
+                    </sfwGridView>
+                    <sfwLabel ID="lblIdecTotalMonthlyPremiumhis" sfwDataFormat="{0:C}" Visible="False" sfwEntityField="objMSSLifeWeb.IdecTotalMonthlyPremium" />
+                  </items>
+                </sfwPanel>
+                <sfwPanel ID="pnlBeneficiaries" sfwCaption="Beneficiaries">
+                  <items>
+                    <sfwTable ID="tblNewPage1" />
+                    <sfwButton ID="btnOpenEmploymentDetail" sfwActiveForm="wfmPersonEmploymentDetailMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintemploymentdetailid=PersonEmploymentDtlId" sfwRelatedControl="grvEmploymentDetail" Text="Open" Visible="False" />
+                    <sfwGridView AllowPaging="True" ID="grvMSSPersonAccountBeneficiaries" sfwEntityField="objMSSLifeWeb.lstMSSPersonAccountBeneficiaries" sfwGridEntity="entPersonBeneficiary">
+                      <Columns>
+                        <TemplateField HeaderText="Beneficiary Name">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="BeneficiaryName" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Relationship">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="RelationshipDescription" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Type">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="objPersonAccountBeneficiary.BeneficiaryTypeDescription" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Percentage" ItemStyle.HorizontalAlign="Right">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="objPersonAccountBeneficiary.DistPercent" sfwDataFormat="{0:#0.000" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Start Date">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="objPersonAccountBeneficiary.StartDate" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="End Date">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="objPersonAccountBeneficiary.EndDate" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Person Account Beneficiary ID" Visible="False">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="objPersonAccountBeneficiary.PersonAccountBeneficiaryId" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Beneficiary ID" Visible="False">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="BeneficiaryId" />
+                          </ItemTemplate>
+                        </TemplateField>
+                      </Columns>
+                    </sfwGridView>
+                    <sfwLabel ID="lblLabel4" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                    <sfwLabel ID="lblLabel" Text="To update or change your designation of beneficiary, you must complete and mail a " sfwIsCaption="True" />
+                    <sfwLinkButton ID="btnPdfCorrespondenceClick1" sfwMethodName="btn_OpenPDF" sfwNavigationParameter="pdf_file_name=IstrDownloadFileName" />
+                    <sfwTextBox ID="txtDownloadFileName" sfwEntityField="IstrDownloadFileName" />
+                    <sfwLabel ID="lblLabeltond" Text=" to NDPERS." sfwIsCaption="True" />
+                  </items>
+                </sfwPanel>
+                <sfwPanel ID="pnlUpdate" sfwCollapsible="False">
+                  <items>
+                    <sfwTable ID="tblNewPage" />
+                    <sfwLabel ID="lblLabel5" Text="Do you want to make any changes to your current enrollment?" sfwIsCaption="True" />
+                    <sfwDropDownList ID="ddlDropDownList" sfwClientVisibility="controllist:btnAnnualEnrollment,#Y:btnAnnualEnrollment;N:btnAnnualEnrollment;" sfwEntityField="IsChangesInAnneFlag">
+                      <ListItem />
+                      <ListItem Text="Yes" Value="Y" />
+                      <ListItem Text="No" Value="N" />
+                    </sfwDropDownList>
+                    <sfwButton ID="btnNext111" sfwMethodName="btnWizardNext_Click" Text="Continue Annual Enrollment" CssClass="hideControl" />
+                    <sfwButton ID="btnAnnualEnrollment" sfwMethodName="btnCancel_Click" OnClientClick="fnAnnualEnrollment(e);" />
+                  </items>
+                </sfwPanel>
+              </items>
+            </sfwPanel>
+            <sfwPanel ID="pnlNoMemberAccountExists" sfwCaption="No Member Account Exists" sfwCollapsible="False" sfwVisibleRule="IsMemberAccountNOTExists">
+              <items>
+                <sfwTable ID="tblNewPage7" />
+                <sfwLabel ID="lblSteps" Text="Steps to complete your Enrollment&lt;br/&gt;&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwImage ID="imgImage1" ImageUrl="images/arrow.gif" sfwBalloonTooltip="Arrow" />
+                <sfwLabel ID="lblStep1" Text="&lt;font style=&quot; padding-right:5px; padding-left:5px;display:inline-block;white-space:normal; text-align:justify;&quot;&gt;Step 1: Select your change reason&lt;/font&gt;&lt;br/&gt;&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwImage ID="imgImage2" ImageUrl="images/arrow.gif" sfwBalloonTooltip="Arrow" />
+                <sfwLabel ID="lblStep1a" Text="&lt;font style=&quot; padding-right:5px; padding-left:5px;display:inline-block;white-space:normal; text-align:justify;&quot;&gt;Step 2: Enter Supplemental coverage information&lt;/font&gt;&lt;br/&gt;&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwImage ID="imgImage3" ImageUrl="images/arrow.gif" sfwBalloonTooltip="Arrow" />
+                <sfwLabel ID="lblStep3" Text="&lt;font style=&quot; padding-right:5px; padding-left:5px;display:inline-block;white-space:normal; text-align:justify;&quot;&gt;Step 3: Enter Supplemental Dependent coverage information&lt;/font&gt;&lt;br/&gt;&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwImage ID="imgImage4" ImageUrl="images/arrow.gif" sfwBalloonTooltip="Arrow" />
+                <sfwLabel ID="lblLabel22" Text="&lt;font style=&quot; padding-right:5px; padding-left:5px;display:inline-block;white-space:normal; text-align:justify;&quot;&gt;Step 3: Enter Supplemental Spouse coverage information&lt;/font&gt;&lt;br/&gt;&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel7" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                <hr />
+                <sfwLabel ID="lblLabel37" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwPanel ID="pnlOption" sfwCaption="Option" sfwCollapsible="False">
+                  <items>
+                    <sfwPanel ID="capIstrGHDVPlanOptionSelection">
+                      <items>
+                        <sfwTable ID="tblNewPage15" />
+                        <sfwLabel ID="capIstrGHDVPlanOptionSelection" Text="Plan Enrollment Option Selection : " sfwIsCaption="True" />
+                        <sfwLabel ID="lblDdlPlanEnrollmentOptionValue" sfwClientVisibility="controllist:capReasonValue1,ddlReasonValue1#ADRD:capReasonValue1,ddlReasonValue1;RTFL:capReasonValue1,ddlReasonValue1;ANNE:capReasonValue1,ddlReasonValue1;UPDT:capReasonValue1,ddlReasonValue1;RETR:capReasonValue1,ddlReasonValue1;ENRL:capReasonValue1,ddlReasonValue1;" sfwEntityField="PlanEnrollmentOptionDescription" />
+                        <sfwLabel ID="capReasonValue1" Text="Change Reason : " sfwIsCaption="True" />
+                        <sfwLabel ID="lblDdlReasonValue1" sfwDefaultValue="''" sfwEntityField="ReasonDescription" />
+                      </items>
+                    </sfwPanel>
+                  </items>
+                </sfwPanel>
+                <sfwLabel ID="lblLabel21" Text="&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwButton ID="btnIntro" sfwMethodName="btnWizardNext_Click" Text="Begin Process" CssClass="hideControl" />
+                <sfwButton ID="btnBeginClick" sfwMethodName="btnCancel_Click" OnClientClick="fnAnnualEnrollment(e);" />
+              </items>
+            </sfwPanel>
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsStep1" Title="Basic Coverage" sfwRulesGroup="LifeBasic" sfwVisibleRule="IsANNEStep2Visible" sfwShowInHeader="True">
+          <items>
+            <sfwTable ID="tblStep" />
+            <sfwLabel AssociatedControlID="lblRejectionReason" ID="capRejectionReason1" sfwVisibleRule="IsStatusRejected" Text="Rejection Reason : " sfwIsCaption="True" />
+            <sfwLabel ID="lblRejectionReason1" sfwVisibleRule="IsStatusRejected" sfwEntityField="RejectionReason" />
+            <sfwLiteral ID="Life" Text="Life Insurance Plan Enrollment" />
+            <sfwLabel ID="lblLabel12" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="lblStep21" Text="&lt;ul class=&quot;steps&quot;&gt;&lt;li class=&quot;start&quot;&gt;Basic Coverage&lt;/li&gt;&lt;li class=&quot;next&quot;&gt;Supplemental and AD &amp; D&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Supplemental Dependent&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Supplemental Spouse&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Review Your Enrollment&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Acknowledgement&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Print Your Records&lt;/li&gt;&lt;li class=&quot;emptygray&quot;&gt;&lt;/li&gt;&lt;/ul&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="lblLabel13" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwPanel ID="pnlBasicCoverage" sfwCaption="Basic Coverage">
+              <items>
+                <sfwTable ID="tblNe" />
+                <sfwLabel ID="lblLabelnew" sfwVisibleRule="IsNOTTemporaryMember" Text="Your employer provides " sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel50" sfwVisibleRule="IsNOTTemporaryMember" sfwDataFormat="{0:$0,0}" sfwEntityField="IdecBasicCoverageAmount" />
+                <sfwLabel ID="lblLabel52" Text=" of Basic Life insurance coverage at no expense to you. You have the option of electing supplemental coverage at your own expense.&lt;br/&gt;&lt;br/&gt;" sfwVisibleRule="IsNOTTemporaryMember" sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel29" sfwVisibleRule="IsTemporaryMember" Text="As a part-time/temporary employee, you are eligible to participate in the Basic Life insurance plan for " sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel53" sfwVisibleRule="IsTemporaryMember" sfwDataFormat="{0:$0,0}" sfwEntityField="IdecBasicCoverageAmount" />
+                <sfwLabel ID="lblLabel54" sfwVisibleRule="IsTemporaryMember" Text=" at your own expense." sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel55" sfwVisibleRule="IsTemporaryMember" Text="You also have the option of electing supplemental coverage at your own expense." sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel56" sfwVisibleRule="IsTemporaryMember" Text="For rate information please visit &lt;a href=&quot;https://ndpers.nd.gov/active-members/insurance-plans/life/&quot;&gt;https://ndpers.nd.gov/active-members/insurance-plans/life/.&lt;/a&gt;&lt;br/&gt;&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwLabel ID="lblSuppAmount" sfwEntityField="IdecSupplementalAmount" sfwIsCaption="True" CssClass="hideControl" />
+                <sfwLabel ID="lblDepAmount" sfwEntityField="IdecDependentSupplementalAmount" sfwIsCaption="True" CssClass="hideControl" />
+                <sfwLabel ID="lblLabel1" Text="Do you wish to make a change to your Supplemental Life insurance?" sfwIsCaption="True" />
+                <sfwDropDownList ID="ddlIstrSupplementalParticipation" sfwEntityField="objMSSLifeOption.SupplementalWaiverFlag">
+                  <ListItem Text="Yes" Value="N" />
+                  <ListItem Text="No" Value="O" />
+                  <ListItem Text="Waive" Value="Y" />
+                </sfwDropDownList>
+                <sfwLabel ID="lblSuppParticipation1" Text="&lt;/br&gt;Do you wish to make a change to your Dependent Supplemental Life insurance?" sfwIsCaption="True" CssClass="hideControl" />
+                <sfwDropDownList ID="ddlIstrSupplementalParticipation1" sfwEntityField="objMSSLifeOption.DependentWaiverFlag" CssClass="hideControl">
+                  <ListItem />
+                  <ListItem Text="Yes" Value="N" />
+                  <ListItem Text="No" Value="O" />
+                  <ListItem Text="Waive" Value="Y" />
+                </sfwDropDownList>
+                <sfwLabel ID="lblSuppParticipation2" Text="&lt;/br&gt;Do you wish to make a change to your Spouse Supplemental Life insurance?" sfwVisibleRule="IsPersonMarried" sfwIsCaption="True" CssClass="hideControl" />
+                <sfwDropDownList ID="ddlIstrSupplementalParticipation2" sfwVisibleRule="IsPersonMarried" sfwEntityField="objMSSLifeOption.SpouseSupplementalWaiverFlag" CssClass="hideControl">
+                  <ListItem />
+                  <ListItem Text="Yes" Value="N" />
+                  <ListItem Text="No" Value="O" />
+                  <ListItem Text="Waive" Value="Y" />
+                </sfwDropDownList>
+                <sfwLabel ID="lblWaiveText" Text="&lt;/br&gt;If you select WAIVE, this will cancel your current supplemental life insurance." sfwIsCaption="True" />
+              </items>
+            </sfwPanel>
+            <sfwButton ID="btnPrevious4" sfwMethodName="btnWizardPrevious_Click" Text="Previous" CssClass="hideControl" />
+            <sfwButton ID="btnPreviousAnnual" sfwMethodName="btnCancel_Click" OnClientClick="fnPreviousAnnualEnrollment(e);" CssClass="hideControl" />
+            <sfwButton ID="btnNextBasic" sfwIsMinified="True" sfwMethodName="btnWizardNext_Click" Text="Next" CssClass="hideControl" />
+            <sfwButton ID="btnNextAnnual" sfwMethodName="btnCancel_Click" OnClientClick="fnAnnualEnrollment(e);" CssClass="hideControl" />
+            <sfwButton ID="btnSaveAndNext1" sfwMethodName="btnWizardSaveAndNext_Click" Text="Finish Later" sfwNavigationParameter="aintPlanId=objMSSLifeWeb.PlanId;aintPersonId=objMSSLifeWeb.PersonId;aintPersonEmploymentDetailId=objMSSLifeWeb.PersonEmploymentDtlId;aintRequestID=WssPersonAccountEnrollmentRequestId" sfwExecuteAfterSuccess="btnNavigateToPlan" />
+            <sfwButton ID="btnNavigateToPlan" sfwMethodName="btnWizardCancel_Click" />
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsStep2" Title="Supplemental coverages" sfwRulesGroup="LifeSupplemental" sfwVisibleRule="VisibleRuleIsSupplementANNE" sfwShowInHeader="True">
+          <items>
+            <sfwTable ID="tblStep1" />
+            <sfwLabel AssociatedControlID="lblRejectionReason" ID="capRejectionReason2" sfwVisibleRule="IsStatusRejected" Text="Rejection Reason : " sfwIsCaption="True" />
+            <sfwLabel ID="lblRejectionReason2" sfwVisibleRule="IsStatusRejected" sfwEntityField="RejectionReason" />
+            <sfwLiteral ID="Life" Text="Life Insurance Plan Enrollment" />
+            <sfwLabel ID="lblLabel12" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="lblStep21" Text="&lt;ul class=&quot;steps&quot;&gt;&lt;li class=&quot;nextstart&quot;&gt;Basic Coverage&lt;/li&gt;&lt;li class=&quot;startnext&quot;&gt;Supplemental and AD &amp; D&lt;/li&gt;&lt;li class=&quot;next&quot;&gt;Supplemental Dependent&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Supplemental Spouse&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Review Your Enrollment&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Acknowledgement&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Print Your Records&lt;/li&gt;&lt;li class=&quot;emptygray&quot;&gt;&lt;/li&gt;&lt;/ul&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="lblLabel17" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwPanel ID="pnlSupplemental" sfwCaption="Supplemental Life and AD &amp;D Election">
+              <items>
+                <sfwTable ID="tblNewPage1zx" />
+                <sfwLabel ID="lblSuppLifeLabel2" Text="During Annual Enrollment, you can increase your employee supplemental in increments up to per year to a maximum guarantee of without underwriting. &lt;br/&gt;&lt;br/&gt;For amounts larger than , or in excess of up to you must complete a  " sfwIsCaption="True" />
+                <sfwLabel ID="lblSuppAmount1" sfwDataFormat="{0:$0,0}" sfwEntityField="IdecSuppIncrement" />
+                <sfwLabel ID="lblSuppAmount2" sfwDataFormat="{0:$0,0}" sfwEntityField="IdecSuppIncrementLimit" />
+                <sfwLabel ID="lblSuppAmount3" sfwDataFormat="{0:$0,0}" sfwEntityField="IdecSupplementalGILimit" />
+                <sfwLabel ID="lblSuppAmount4" sfwDataFormat="{0:$0,0}" sfwEntityField="IdecSuppIncrementLimit" />
+                <sfwLabel ID="lblSuppAmount5" sfwDataFormat="{0:$0,0}" sfwEntityField="IdecSupplementalGILimit" />
+                <sfwLabel ID="lblSuppAmount6" sfwDataFormat="{0:$0,0}" sfwEntityField="IdecSupplementalLimit" />
+                <sfwTextBox ID="txtDownloadFileNameStep2" sfwEntityField="IstrDownloadFileName" />
+                <sfwLinkButton ID="btnPdfCorrespondenceClick2" sfwMethodName="btn_OpenPDF" sfwNavigationParameter="pdf_file_name=IstrDownloadFileName" />
+                <sfwLabel ID="lblLabel39" Text="The completed EOI must be returned to NDPERS and will be forwarded to the Carrier for underwriting. &lt;br/&gt;&lt;br/&gt;If you wish to increase your supplemental life coverage by (up to maximum guarantee issue of ) and also apply for an additional amount that requires EOI, you will need to submit 2 enrollment requests (one for the and one for the additional amount which will require EOI)." sfwIsCaption="True" />
+                <sfwLabel ID="lblSuppAmount7" sfwDataFormat="{0:$0,0}" sfwEntityField="IdecSuppIncrementLimit" />
+                <sfwLabel ID="lblSuppAmount8" sfwDataFormat="{0:$0,0}" sfwEntityField="IdecSupplementalGILimit" />
+                <sfwLabel ID="lblSuppAmount9" sfwDataFormat="{0:$0,0}" sfwEntityField="IdecSuppIncrementLimit" />
+                <sfwLabel ID="lblLabel14" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel35" Text="Your existing Supplemental Life is  " sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel36" sfwDataFormat="{0:$0,0}" sfwVisibleRule="VisibleRuleSupplementalAmountANNE1" sfwEntityField="IdecSupplementalAmount" />
+                <sfwLabel ID="lblLabel321" Text=". I wish to apply for a TOTAL (existing amount plus increased amount)  of  " sfwIsCaption="True" />
+                <sfwTextBox ID="txtSupplementalAmount" sfwDataFormat="{0:C}" sfwEntityField="objMSSLifeOption.SupplementalAmount" sfwValidationRules="IsSuppleWaivedAndAmountEntered;IsInValidSupplementalAmountEntered;IsSupplementalAmountNOTMultiplierof5000" />
+                <sfwLabel ID="capSupplementalAmount1" Text=" Supplemental life (must be in increments of )." sfwIsCaption="True" />
+                <sfwLabel ID="lblSuppAmount10" sfwDataFormat="{0:$0,0}" sfwEntityField="IdecSuppIncrement" />
+                <sfwLabel ID="lblLabel15" Text="&lt;br/&gt;" sfwVisibleRule="VisibleRule-IsFlexPlanAvailableForLife" sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel42" sfwVisibleRule="VisibleRule-IsFlexPlanAvailableForLife" Text="Your employee Supplemental Life insurance premium up to the first in coverage can be a pre-tax payroll deduction.&lt;br/&gt;If you pretax an insurance premium, you may not change or drop coverage during the plan year unless you experience an IRS Qualified Change of Status.&lt;br/&gt;Do you wish to have your insurance premium deducted as a pre-tax payroll deduction? " sfwIsCaption="True" />
+                <sfwLabel ID="lblSuppAmount11" sfwDataFormat="{0:$0,0}" sfwEntityField="IdecSuppPreTaxLimit" />
+                <sfwDropDownList ID="ddlIstrSupplementalDependentParticipation" sfwVisibleRule="VisibleRule-IsFlexPlanAvailableForLife" sfwEntityField="objMSSLifeOption.PreTaxPayrollDeduction">
+                  <ListItem Text="Yes" Value="Y" />
+                  <ListItem Text="No" Value="N" />
+                </sfwDropDownList>
+                <sfwLabel ID="lblLabel16" sfwVisibleRule="IsNOTTemporaryMember" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwLabel ID="lblDepAmountStep2" sfwEntityField="IdecDependentSupplementalAmount" sfwIsCaption="True" CssClass="hideControl" />
+                <sfwLabel ID="lblLabel5" Text="Do you wish to make a change to your Dependent Supplemental life insurance?" sfwIsCaption="True" />
+                <sfwDropDownList ID="ddlIstrSupplementalDependentParticipation1" sfwClientVisibility="controllist:lblLabel38,ddlDropDownList1#O:lblLabel38,ddlDropDownList1;default:;" sfwEntityField="objMSSLifeOption.DependentWaiverFlag" sfwValidationRules="IsOptionForDependentSuppSelectedSupp;IsEnrollInSpouse">
+                  <ListItem />
+                  <ListItem Text="Yes" Value="N" />
+                  <ListItem Text="No" Value="O" />
+                  <ListItem Text="Waive" Value="Y" />
+                </sfwDropDownList>
+                <sfwLabel ID="lblLabel25" sfwVisibleRule="IsNOTTemporaryMember" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwLabel ID="lblSpouseSupp" Text="Do you wish to make a change to your Spouse Supplemental life insurance?" sfwVisibleRule="IsPersonMarried" sfwIsCaption="True" CssClass="hideControl" />
+                <sfwDropDownList ID="ddlSpouseSupp" sfwVisibleRule="IsPersonMarried" sfwEntityField="objMSSLifeOption.SpouseSupplementalWaiverFlag" CssClass="hideControl">
+                  <ListItem />
+                  <ListItem Text="Yes" Value="N" />
+                  <ListItem Text="No" Value="O" />
+                  <ListItem Text="Waive" Value="Y" />
+                </sfwDropDownList>
+                <sfwLabel ID="lblWaiveText1" sfwIsCaption="True" Text="If you select WAIVE, this will cancel your current dependent supplemental life insurance. " />
+              </items>
+            </sfwPanel>
+            <sfwButton ID="btnPrevious2" sfwMethodName="btnWizardPrevious_Click" Text="Previous" CssClass="hideControl" />
+            <sfwButton ID="btnPreviousAnnual1" sfwMethodName="btnCancel_Click" OnClientClick="fnPreviousAnnualEnrollment(e);" CssClass="hideControl" />
+            <sfwButton ID="btnNext2" sfwMethodName="btnWizardNext_Click" Text="Next" CssClass="hideControl" />
+            <sfwButton ID="btnNextAnnual1" sfwMethodName="btnCancel_Click" OnClientClick="fnAnnualEnrollment(e);" CssClass="hideControl" />
+            <sfwButton ID="btnSaveAndNext2" sfwMethodName="btnWizardSaveAndNext_Click" Text="Finish Later" sfwNavigationParameter="aintPlanId=objMSSLifeWeb.PlanId;aintPersonId=objMSSLifeWeb.PersonId;aintPersonEmploymentDetailId=objMSSLifeWeb.PersonEmploymentDtlId;aintRequestID=WssPersonAccountEnrollmentRequestId" sfwExecuteAfterSuccess="btnNavigateToPlan1" />
+            <sfwButton ID="btnNavigateToPlan1" sfwMethodName="btnWizardCancel_Click" />
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsStep3" Title="Supplemental Dependent" sfwRulesGroup="LifeSupplementalDependent" sfwVisibleRule="VisibleRuleIsDependentSuppANNE" sfwShowInHeader="True">
+          <items>
+            <sfwTable ID="tblStep2" />
+            <sfwLabel AssociatedControlID="lblRejectionReason" ID="capRejectionReason3" sfwVisibleRule="IsStatusRejected" Text="Rejection Reason : " sfwIsCaption="True" />
+            <sfwLabel ID="lblRejectionReason3" sfwVisibleRule="IsStatusRejected" sfwEntityField="RejectionReason" />
+            <sfwLiteral ID="Life" Text="Life Insurance Plan Enrollment" />
+            <sfwLabel ID="lblLabel12" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="lblStep21" Text="&lt;ul class=&quot;steps&quot;&gt;&lt;li class=&quot;nextstart&quot;&gt;Basic Coverage&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Supplemental and AD &amp; D&lt;/li&gt;&lt;li class=&quot;startnext&quot;&gt;Supplemental Dependent&lt;/li&gt;&lt;li class=&quot;next&quot;&gt;Supplemental Spouse&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Review Your Enrollment&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Acknowledgement&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Print Your Records&lt;/li&gt;&lt;li class=&quot;emptygray&quot;&gt;&lt;/li&gt;&lt;/ul&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="lblLabel18" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwPanel ID="pnlSuppDep55" sfwCaption="Supplemental Dependent Life Insurance Election">
+              <items>
+                <sfwTable ID="tblNewPage2" />
+                <sfwLabel ID="lblLabel6" Text="When you are initially eligible for dependent coverage or during annual enrollment, you can elect it without providing evidence of insurability.&lt;/br&gt;You may elect one of the coverage levels for your spouse and the number of dependents covered." sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel23" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel40" Text="Your existing Dependent Supplemental is " sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel46" sfwDataFormat="{0:$0,0}" sfwVisibleRule="VisibleRuleSupplementalAmountANNE1" sfwEntityField="IdecDependentSupplementalAmount" />
+                <sfwLabel ID="lblLabel7" Text=". I wish to maintain or change my election to " sfwIsCaption="True" />
+                <sfwDropDownList ID="ddlDependentCoverageOptionValue" DataValueField="code_value" DataTextField="description" sfwLoadType="Method" sfwLoadSource="LoadDependentSupplementalAmount" sfwEntityField="objMSSLifeOption.DependentCoverageOptionValue" sfwValidationRules="IsSupplementalDependentNotEntered" />
+                <sfwLabel ID="lblLabel24" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel8" sfwVisibleRule="IsPersonMarried" Text="Do you wish to make a change to your Spouse Supplemental life insurance?" sfwIsCaption="True" />
+                <sfwDropDownList ID="ddlIstrSupplementalSpouseParticipation" sfwVisibleRule="IsPersonMarried" sfwEntityField="objMSSLifeOption.SpouseSupplementalWaiverFlag" sfwValidationRules="IsOptionForSpouseSuppSelectedSpouseSupp">
+                  <ListItem />
+                  <ListItem Text="Yes" Value="N" />
+                  <ListItem Text="No" Value="O" />
+                  <ListItem Text="Waive" Value="Y" />
+                </sfwDropDownList>
+                <sfwLabel ID="lblWaiveText2" sfwIsCaption="True" Text="If you select WAIVE, this will cancel your current spouse supplemental life insurance." />
+              </items>
+            </sfwPanel>
+            <sfwButton ID="btnPrevious1" sfwMethodName="btnWizardPrevious_Click" Text="Previous" CssClass="hideControl" />
+            <sfwButton ID="btnPreviousAnnual3" sfwMethodName="btnCancel_Click" OnClientClick="fnPreviousAnnualEnrollment(e);" CssClass="hideControl" />
+            <sfwButton ID="btnNext1" sfwMethodName="btnWizardNext_Click" Text="Next" CssClass="hideControl" />
+            <sfwButton ID="btnNextAnnual3" sfwMethodName="btnCancel_Click" OnClientClick="fnAnnualEnrollment(e);" CssClass="hideControl" />
+            <sfwButton ID="btnSaveAndNext3" sfwMethodName="btnWizardSaveAndNext_Click" Text="Finish Later" sfwNavigationParameter="aintPlanId=objMSSLifeWeb.PlanId;aintPersonId=objMSSLifeWeb.PersonId;aintPersonEmploymentDetailId=objMSSLifeWeb.PersonEmploymentDtlId;aintRequestID=WssPersonAccountEnrollmentRequestId" sfwExecuteAfterSuccess="btnNavigateToPlan2" />
+            <sfwButton ID="btnNavigateToPlan2" sfwMethodName="btnWizardCancel_Click" />
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsStep4" Title="Supplemental Spouse" sfwRulesGroup="LifeSupplementalSpouse" sfwVisibleRule="VisibleRuleSpouseSupplementalANNE" sfwShowInHeader="True">
+          <items>
+            <sfwTable ID="tblStep3" />
+            <sfwLabel AssociatedControlID="lblRejectionReason" ID="capRejectionReason4" sfwVisibleRule="IsStatusRejected" Text="Rejection Reason : " sfwIsCaption="True" />
+            <sfwLabel ID="lblRejectionReason4" sfwVisibleRule="IsStatusRejected" sfwEntityField="RejectionReason" />
+            <sfwLiteral ID="Life" Text="Life Insurance Plan Enrollment" />
+            <sfwLabel ID="lblLabel12" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="lblStep21" Text="&lt;ul class=&quot;steps&quot;&gt;&lt;li class=&quot;nextstart&quot;&gt;Basic Coverage&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Supplemental and AD &amp; D&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Supplemental Dependent&lt;/li&gt;&lt;li class=&quot;startnext&quot;&gt;Supplemental Spouse&lt;/li&gt;&lt;li class=&quot;next&quot;&gt;Review Your Enrollment&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Acknowledgement&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Print Your Records&lt;/li&gt;&lt;li class=&quot;emptygray&quot;&gt;&lt;/li&gt;&lt;/ul&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="lblLabel19" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwPanel ID="pnlSuppSpouse" sfwCaption="Supplemental Spouse Life Election">
+              <items>
+                <sfwTable ID="tblNewPage3" />
+                <sfwLabel ID="lblLabel9" Text="During annual enrollment, a " sfwIsCaption="True" />
+                <sfwTextBox ID="txtDownloadFileNameStep4" sfwEntityField="IstrDownloadFileName" />
+                <sfwLinkButton ID="btnLinkButton1" sfwMethodName="btn_OpenPDF" sfwNavigationParameter="pdf_file_name=IstrDownloadFileName" />
+                <sfwLabel ID="lblLabel27" Text=" must be completed for ANY increases to supplemental spouse life.  Supplemental spouse coverage is limited to of the employee’s supplemental life coverage not to exceed " sfwIsCaption="True" />
+                <sfwLabel ID="lblSuppSpousePercent" sfwDataFormat="{0:#0'%}" sfwEntityField="IdecSpouseSuppPercentage" />
+                <sfwLabel ID="lblLabel41" sfwDataFormat="{0:$0,0}" sfwEntityField="IdecSpouseSupplementalLimit" />
+                <sfwLabel ID="lblBreakLine" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwLabel ID="lblSpouseLifeTxt" sfwIsCaption="True" Text="The completed EOI must be returned to NDPERS and will be forwarded to the Carrier for underwriting. " />
+                <sfwLabel ID="lblLabel21" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel28" Text="Your existing Spouse Supplemental Life is " sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel45" sfwDataFormat="{0:$0,0}" sfwVisibleRule="VisibleRuleSupplementalAmountANNE1" sfwEntityField="IdecSpouseSupplementalAmount" />
+                <sfwLabel ID="lblLabel10" Text=". I wish to maintain or change my election to " sfwIsCaption="True" />
+                <sfwTextBox ID="txtSpouseSupplementalAmount" sfwDataFormat="{0:C}" sfwEntityField="objMSSLifeOption.SpouseSupplementalAmount" sfwValidationRules="IsSupplementalSpouseNOTmultiplierof5000;IsSpouseSupplementalAmountNotEntered;IsSpouseSupplementalAmountInValid" />
+              </items>
+            </sfwPanel>
+            <sfwButton ID="btnPrevious" sfwMethodName="btnWizardPrevious_Click" Text="Previous" CssClass="hideControl" />
+            <sfwButton ID="btnPreviousAnnual4" sfwMethodName="btnCancel_Click" OnClientClick="fnPreviousAnnualEnrollment(e);" CssClass="hideControl" />
+            <sfwButton ID="btnNextSp" sfwMethodName="btnWizardNext_Click" Text="Next" CssClass="hideControl" />
+            <sfwButton ID="btnNextAnnual4" sfwMethodName="btnCancel_Click" OnClientClick="fnAnnualEnrollment(e);" CssClass="hideControl" />
+            <sfwButton ID="btnSaveAndNext4" sfwMethodName="btnWizardSaveAndNext_Click" Text="Finish Later" sfwNavigationParameter="aintPlanId=objMSSLifeWeb.PlanId;aintPersonId=objMSSLifeWeb.PersonId;aintPersonEmploymentDetailId=objMSSLifeWeb.PersonEmploymentDtlId;aintRequestID=WssPersonAccountEnrollmentRequestId" sfwExecuteAfterSuccess="btnNavigateToPlan3" />
+            <sfwButton ID="btnNavigateToPlan3" sfwMethodName="btnWizardCancel_Click" />
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsStep5" Title="Review Your Enrollment" sfwShowInHeader="True">
+          <items>
+            <sfwTable ID="tblStep43" />
+            <sfwLabel AssociatedControlID="lblRejectionReason" ID="capRejectionReason5" sfwVisibleRule="IsStatusRejected" Text="Rejection Reason : " sfwIsCaption="True" />
+            <sfwLabel ID="lblRejectionReason5" sfwVisibleRule="IsStatusRejected" sfwEntityField="RejectionReason" />
+            <sfwLiteral ID="Life3" Text="Life Insurance Plan Enrollment" />
+            <sfwLabel ID="lblLabel12" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="lblStep21" Text="&lt;ul class=&quot;steps&quot;&gt;&lt;li class=&quot;nextstart&quot;&gt;Basic Coverage&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Supplemental and AD &amp; D&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Supplemental Dependent&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Supplemental Spouse&lt;/li&gt;&lt;li class=&quot;startnext&quot;&gt;Review Your Enrollment&lt;/li&gt;&lt;li class=&quot;next&quot;&gt;Acknowledgement&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Print Your Records&lt;/li&gt;&lt;li class=&quot;emptygray&quot;&gt;&lt;/li&gt;&lt;/ul&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="lblLabel20" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwPanel ID="pnlEnrollmentDetail" sfwCaption="Enrollment Detail">
+              <items>
+                <sfwTable ID="tblNewPage5" />
+                <sfwLabel AssociatedControlID="lblReasonDescription" ID="capReasonDescription" Text="Change Reason : " sfwIsCaption="True" />
+                <sfwLabel ID="lblReasonDescription" sfwEntityField="ReasonDescription" />
+                <sfwLabel AssociatedControlID="lblChangeEffectiveDate" ID="capChangeEffectiveDate" sfwVisibleRule="IsChangeReasonNotNewHire" Text="Change Date : " sfwIsCaption="True" />
+                <sfwLabel ID="lblChangeEffectiveDate" sfwDataFormat="{0:d}" sfwVisibleRule="IsChangeReasonNotNewHire" sfwEntityField="DateOfChange" />
+                <sfwLabel AssociatedControlID="lblPreTaxPayrollDeduction" ID="capPreTaxPayrollDeduction" sfwVisibleRule="VisibleRule-IsFlexPlanAvailableForLife" Text="Pre Tax Payroll Deduction : " sfwIsCaption="True" />
+                <sfwLabel ID="lblPreTaxPayrollDeduction" sfwVisibleRule="VisibleRule-IsFlexPlanAvailableForLife" sfwEntityField="objMSSLifeOption.PreTaxPayrollDeductionDesc" />
+                <sfwPanel GroupingText="&lt;b&gt;Basic Coverage&lt;/b&gt;" ID="pnlReviewBasic" sfwCaption="Basic Coverage" sfwCollapsible="False">
+                  <items>
+                    <sfwTable ID="tblN" />
+                    <sfwLabel ID="lblLabelReview" sfwVisibleRule="IsNOTTemporaryMember" Text="Your employer provides " sfwIsCaption="True" />
+                    <sfwLabel ID="lblLabel50Review" sfwVisibleRule="IsNOTTemporaryMember" sfwDataFormat="{0:$0,0}" sfwEntityField="IdecBasicCoverageAmount" />
+                    <sfwLabel ID="lblLabel52Review" Text=" of Basic Life insurance coverage at no expense to you. You have the option of electing supplemental coverage at your own expense.&lt;br/&gt;&lt;br/&gt;" sfwVisibleRule="IsNOTTemporaryMember" sfwIsCaption="True" />
+                    <sfwLabel ID="lblLabel29Review" sfwVisibleRule="IsTemporaryMember" Text="As a part-time/temporary employee, you are eligible to participate in the Basic Life insurance plan for " sfwIsCaption="True" />
+                    <sfwLabel ID="lblLabel53Review" sfwVisibleRule="IsTemporaryMember" sfwDataFormat="{0:$0,0}" sfwEntityField="IdecBasicCoverageAmount" />
+                    <sfwLabel ID="lblLabel54Review" sfwVisibleRule="IsTemporaryMember" Text=" at your own expense." sfwIsCaption="True" />
+                    <sfwLabel ID="lblLabel55Review" sfwVisibleRule="IsTemporaryMember" Text="You also have the option of electing supplemental coverage at your own expense." sfwIsCaption="True" />
+                    <sfwLabel ID="lblLabel56Review" sfwVisibleRule="IsTemporaryMember" Text="For rate information please visit &lt;a href=&quot;https://ndpers.nd.gov/active-members/insurance-plans/life/&quot;&gt;https://ndpers.nd.gov/active-members/insurance-plans/life/.&lt;/a&gt;&lt;br/&gt;&lt;br/&gt;" sfwIsCaption="True" />
+                  </items>
+                </sfwPanel>
+                <sfwPanel GroupingText="&lt;b&gt;Supplemental Life and AD&amp;D Election&lt;/b&gt;" ID="pnlSupp" sfwCaption="Supplemental Life and AD&amp;D Election" sfwCollapsible="False" sfwVisibleRule="VisibleRuleIsSupplemental">
+                  <items>
+                    <sfwTable ID="tblNew" />
+                    <sfwLabel ID="lblLabels" Text="I wish to apply for a TOTAL includes Basic of " sfwIsCaption="True" />
+                    <sfwLabel ID="lblBasicSupplementalAmount" sfwDataFormat="{0:C}" sfwEntityField="IdecBasicCoverageAmount" />
+                    <sfwLabel ID="lblSupplementalAmount" sfwDataFormat="{0:C}" sfwEntityField="objMSSLifeOption.SupplementalAmount" />
+                    <sfwLabel ID="capSupplementalAmount" Text=" Supplemental Life insurance." sfwIsCaption="True" />
+                  </items>
+                </sfwPanel>
+                <sfwPanel ID="pnlSuppWaive" sfwCollapsible="False" GroupingText="&lt;b&gt;Supplemental Life and AD&amp;D Election&lt;/b&gt;" sfwCaption="Supplemental Life and AD&amp;D Election" sfwVisibleRule="VisibleRuleIsSupplementalWaive">
+                  <items>
+                    <sfwTable ID="tblNewPage8" />
+                    <sfwLabel ID="lblLabel46" Text="I wish to waive Supplemental Life insurance." sfwIsCaption="True" />
+                  </items>
+                </sfwPanel>
+                <sfwPanel GroupingText="&lt;b&gt;Supplemental Dependent Life Insurance Election&lt;/b&gt;" ID="pnlSuppDep66" sfwCaption="Supplemental Dependent Life Insurance Election" sfwCollapsible="False" sfwVisibleRule="VisibleRuleSupplementalDependent">
+                  <items>
+                    <sfwTable ID="tblNewPag" />
+                    <sfwLabel ID="lblLabels7" Text="I wish to apply for a TOTAL of " sfwIsCaption="True" />
+                    <sfwLabel ID="lblDependentCoverageOptionValue" sfwDataFormat="{0:C}" sfwEntityField="objMSSLifeOption.DependentCoverageOptionValue" />
+                    <sfwLabel ID="capDependentCoverageOptionValue" Text=" Supplemental Dependent Life insurance." sfwIsCaption="True" />
+                  </items>
+                </sfwPanel>
+                <sfwPanel ID="pnlDepWaive" sfwCaption="Supplemental Dependent Life Insurance Election" GroupingText="&lt;b&gt;Supplemental Dependent Life Insurance Election&lt;/b&gt;" sfwCollapsible="False" sfwVisibleRule="VisibleRuleIsSupplementalDependentWaive">
+                  <items>
+                    <sfwTable ID="tblNewPage9" />
+                    <sfwLabel ID="lblLabel47" Text="I wish to waive Supplemental Dependent Life insurance." sfwIsCaption="True" />
+                  </items>
+                </sfwPanel>
+                <sfwPanel GroupingText="&lt;b&gt;Supplemental Spouse Life Election&lt;/b&gt;" ID="pnlSpouseSupp" sfwCaption="Supplemental Spouse Life Election" sfwCollapsible="False" sfwVisibleRule="VisibleRuleSupplementalSpouse">
+                  <items>
+                    <sfwTable ID="tblNeqw" />
+                    <sfwLabel ID="lblLabel10" Text="I wish to apply for a TOTAL of " sfwIsCaption="True" />
+                    <sfwLabel ID="lblSpouseSupplementalAmount" sfwDataFormat="{0:C}" sfwEntityField="objMSSLifeOption.SpouseSupplementalAmount" />
+                    <sfwLabel ID="capSpouseSupplementalAmount" Text=" Supplemental Spouse Life insurance." sfwIsCaption="True" />
+                  </items>
+                </sfwPanel>
+                <sfwPanel ID="pnlNewPanel" sfwCaption="Supplemental Spouse Life Election" GroupingText="&lt;b&gt;Supplemental Spouse Life Election&lt;/b&gt;" sfwCollapsible="False" sfwVisibleRule="VisibleRuleIsSupplementalSpouseWaive">
+                  <items>
+                    <sfwTable ID="tblNewPage10" />
+                    <sfwLabel ID="lblLabel48" Text="I wish to waive Supplemental Spouse Life insurance." sfwIsCaption="True" />
+                  </items>
+                </sfwPanel>
+                <sfwLabel AssociatedControlID="lblDocument" ID="capDocument" sfwVisibleRule="IsDocumentExists" Text="The following documents need to be submitted to NDPERS before your enrollment/change can be completed: " sfwIsCaption="True" />
+                <sfwLabel ID="lblDocument" sfwVisibleRule="IsSupportingDocumentExists" sfwEntityField="Document" />
+                <sfwLabel ID="lblLabel66" Text=" , " sfwVisibleRule="IsMoreThanOneDocument" sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel67" Text=" Evidence Of Insurability" sfwVisibleRule="IsEOIRequired" sfwIsCaption="True" />
+              </items>
+            </sfwPanel>
+            <sfwButton ID="btnPrevious3" sfwMethodName="btnWizardPrevious_Click" Text="Previous" CssClass="hideControl" />
+            <sfwButton ID="btnNext3" sfwMethodName="btnWizardNext_Click" Text="Next" CssClass="hideControl" />
+            <sfwLabel ID="lblPersonId1" Visible="False" sfwEntityField="PersonId" />
+            <sfwLabel ID="lblWssPersonAccountEnrollmentRequestId" Visible="False" sfwEntityField="WssPersonAccountEnrollmentRequestId" />
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsStep6" Title="Acknowledgement" sfwRulesGroup="LifeAuthorization" sfwNextButton="btnNextPrint" sfwPreviousButton="btnPrevious5" sfwShowInHeader="True">
+          <items>
+            <sfwTable ID="tblStep5" />
+            <sfwLabel AssociatedControlID="lblRejectionReason" ID="capRejectionReason6" sfwVisibleRule="IsStatusRejected" Text="Rejection Reason : " sfwIsCaption="True" />
+            <sfwLabel ID="lblRejectionReason6" sfwVisibleRule="IsStatusRejected" sfwEntityField="RejectionReason" />
+            <sfwLiteral ID="ltrLiteral" Text="Acknowledgement and Signature" />
+            <sfwLabel ID="lblLabel30" sfwEntityField="WssPersonAccountEnrollmentRequestId" CssClass="hideControl" />
+            <sfwLabel ID="lblLabel31" Text="&lt;ul class=&quot;steps&quot;&gt;&lt;li class=&quot;nextstart&quot;&gt;Basic Coverage&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Supplemental and AD &amp; D&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Supplemental Dependent&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Supplemental Spouse&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Review Your Enrollment&lt;/li&gt;&lt;li class=&quot;startnext&quot;&gt;Acknowledgement&lt;/li&gt;&lt;li class=&quot;next&quot;&gt;Print Your Records&lt;/li&gt;&lt;li class=&quot;emptygray&quot;&gt;&lt;/li&gt;&lt;/ul&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="lblLabel32" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwPanel ID="pnlAuthorization" sfwCaption="Authorization">
+              <items>
+                <sfwTable ID="tblNewPage44" />
+                <sfwGridView ID="grvAcknowledgementCheck" sfwShowEmptyTable="False" sfwEntityField="lstAcknowledgementCheck" CssClass="GridColumnHide">
+                  <Columns>
+                    <TemplateField HeaderText="Acknowledgement ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel Visible="False" sfwEntityField="AcknowledgementId" sfwRenderType="RichText" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Acknowledgement Text">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="AcknowledgementText" sfwRenderType="RichText" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+                <sfwLabel ID="lblLabel11" Text="To designate or change your beneficiary(ies), you must complete and submit a " sfwIsCaption="True" />
+                <sfwTextBox ID="txtDownloadFileNameStep6" sfwEntityField="IstrDownloadFileName" />
+                <sfwLinkButton ID="btnPdfCorrespondenceClick3" sfwMethodName="btn_OpenPDF" sfwNavigationParameter="pdf_file_name=IstrDownloadFileName" />
+                <sfwCheckBox ID="chkIsPlanWaivedFlag" sfwDefaultValue="N" sfwEntityField="AcknolwedgementPartDFlag" sfwValidationRules="IsAllAcknowledgementAreNotSelectedForLife" />
+                <sfwLabel ID="lblIstrConfirmationText" sfwEntityField="IstrConfirmationText" sfwRenderType="RichText" />
+              </items>
+            </sfwPanel>
+            <sfwButton ID="btnPrevious5" sfwMethodName="btnWizardPrevious_Click" Text="Previous" CssClass="hideControl" />
+            <sfwButton ID="btnFinish" sfwMethodName="btnWizardFinish_Click" Text="Finish" sfwNavigationParameter="aintRequestID=WssPersonAccountEnrollmentRequestId" sfwActiveForm="wfmLifeAnnualEnrollmentPrintMaintenance" CssClass="hideControl" />
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsStep7" Title="Print Your Records" sfwRulesGroup="LifeAuthorization" sfwShowInHeader="True">
+          <items>
+            <sfwTable ID="tblStep5" />
+            <sfwLiteral ID="ltrLiteral1" Text="Print For Your Records" />
+            <sfwLabel ID="lblWizardName" Text="WizPrintStep" Visible="False" sfwIsCaption="True" />
+            <sfwLabel ID="lblLabel49" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="lblLabel43" Text="&lt;ul class=&quot;steps&quot;&gt;&lt;li class=&quot;nextstart&quot;&gt;Basic Coverage&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Supplemental and AD &amp; D&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Supplemental Dependent&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Supplemental Spouse&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Review Your Enrollment&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Acknowledgement&lt;/li&gt;&lt;li class=&quot;startnext&quot;&gt;Print Your Records&lt;/li&gt;&lt;li class=&quot;emptyblue&quot;&gt;&lt;/li&gt;&lt;/ul&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="lblLabel51" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwPanel ID="pnlPanel" sfwCaption="Enrollment Detail">
+              <items>
+                <sfwTable ID="tblNewPage5" />
+                <sfwLabel AssociatedControlID="lblReasonDescription" ID="capReasonDescription" Text="Change Reason : " sfwIsCaption="True" />
+                <sfwLabel ID="lblReasonDescription" sfwEntityField="ReasonDescription" />
+                <sfwLabel AssociatedControlID="lblChangeEffectiveDate" ID="capChangeEffectiveDate" sfwVisibleRule="IsChangeReasonNotNewHire" Text="Change Date : " sfwIsCaption="True" />
+                <sfwLabel ID="lblChangeEffectiveDate" sfwDataFormat="{0:d}" sfwVisibleRule="IsChangeReasonNotNewHire" sfwEntityField="DateOfChange" />
+                <sfwLabel AssociatedControlID="lblPreTaxPayrollDeduction" ID="capPreTaxPayrollDeduction" sfwVisibleRule="VisibleRule-IsFlexPlanAvailableForLife" Text="Pre Tax Payroll Deduction : " sfwIsCaption="True" />
+                <sfwLabel ID="lblPreTaxPayrollDeduction" sfwVisibleRule="VisibleRule-IsFlexPlanAvailableForLife" sfwEntityField="objMSSLifeOption.PreTaxPayrollDeductionDesc" />
+                <sfwPanel GroupingText="&lt;b&gt;Basic Coverage&lt;/b&gt;" ID="pnlReviewBasic" sfwCaption="Basic Coverage" sfwCollapsible="False">
+                  <items>
+                    <sfwTable ID="tblN" />
+                    <sfwLabel ID="lblLabel" sfwVisibleRule="IsNOTTemporaryMember" Text="Your employer provides " sfwIsCaption="True" />
+                    <sfwLabel ID="lblLabel59" sfwVisibleRule="IsNOTTemporaryMember" sfwDataFormat="{0:$0,0}" sfwEntityField="IdecBasicCoverageAmount" />
+                    <sfwLabel ID="lblLabel60" Text=" of Basic Life insurance coverage at no expense to you. You have the option of electing supplemental coverage at your own expense.&lt;br/&gt;&lt;br/&gt;" sfwVisibleRule="IsNOTTemporaryMember" sfwIsCaption="True" />
+                    <sfwLabel ID="lblLabel229" sfwVisibleRule="IsTemporaryMember" Text="As a part-time/temporary employee, you are eligible to participate in the Basic Life insurance plan for " sfwIsCaption="True" />
+                    <sfwLabel ID="lblLabel61" sfwDataFormat="{0:$0,0}" sfwVisibleRule="IsTemporaryMember" sfwEntityField="IdecBasicCoverageAmount" />
+                    <sfwLabel ID="lblLabel62" Text=" at your own expense. &lt;br/&gt;You also have the option of electing supplemental coverage at your own expense.  &lt;br/&gt;For rate information please visit &lt;a href=&quot;https://ndpers.nd.gov/active-members/insurance-plans/life/&quot;&gt;https://ndpers.nd.gov/active-members/insurance-plans/life/.&lt;/a&gt;&lt;br/&gt;&lt;br/&gt;" sfwVisibleRule="IsTemporaryMember" sfwIsCaption="True" />
+                  </items>
+                </sfwPanel>
+                <sfwPanel GroupingText="&lt;b&gt;Supplemental Life and AD&amp;D Election&lt;/b&gt;" ID="pnlSupp" sfwCaption="Supplemental Life and AD&amp;D Election" sfwCollapsible="False" sfwVisibleRule="VisibleRuleIsSupplemental">
+                  <items>
+                    <sfwTable ID="tblNew" />
+                    <sfwLabel ID="lblLabels" Text="I wish to apply for " sfwIsCaption="True" />
+                    <sfwLabel ID="lblSupplementalAmount" sfwDataFormat="{0:C}" sfwEntityField="objMSSLifeOption.SupplementalAmount" />
+                    <sfwLabel ID="capSupplementalAmount" Text=" Supplemental Life insurance." sfwIsCaption="True" />
+                  </items>
+                </sfwPanel>
+                <sfwPanel ID="pnlSuppWaive" sfwCollapsible="False" GroupingText="&lt;b&gt;Supplemental Life and AD&amp;D Election&lt;/b&gt;" sfwCaption="Supplemental Life and AD&amp;D Election" sfwVisibleRule="VisibleRuleIsSupplementalWaive">
+                  <items>
+                    <sfwTable ID="tblNewPage8" />
+                    <sfwLabel ID="lblLabel46" Text="I wish to waive Supplemental Life insurance." sfwIsCaption="True" />
+                  </items>
+                </sfwPanel>
+                <sfwPanel GroupingText="&lt;b&gt;Supplemental Dependent Life Insurance Election&lt;/b&gt;" ID="pnlSuppDep77" sfwCaption="Supplemental Dependent Life Insurance Election" sfwCollapsible="False" sfwVisibleRule="VisibleRuleSupplementalDependent">
+                  <items>
+                    <sfwTable ID="tblNewPag" />
+                    <sfwLabel ID="lblLabels7" Text="I wish to apply for " sfwIsCaption="True" />
+                    <sfwLabel ID="lblDependentCoverageOptionValue" sfwDataFormat="{0:C}" sfwEntityField="objMSSLifeOption.DependentCoverageOptionValue" />
+                    <sfwLabel ID="capDependentCoverageOptionValue" Text=" Supplemental Dependent Life insurance." sfwIsCaption="True" />
+                  </items>
+                </sfwPanel>
+                <sfwPanel ID="pnlDepWaive" sfwCaption="Supplemental Dependent Life Insurance Election" GroupingText="&lt;b&gt;Supplemental Dependent Life Insurance Election&lt;/b&gt;" sfwCollapsible="False" sfwVisibleRule="VisibleRuleIsSupplementalDependentWaive">
+                  <items>
+                    <sfwTable ID="tblNewPage9" />
+                    <sfwLabel ID="lblLabel47" Text="I wish to waive Supplemental Dependent Life insurance." sfwIsCaption="True" />
+                  </items>
+                </sfwPanel>
+                <sfwPanel GroupingText="&lt;b&gt;Supplemental Spouse Life Election&lt;/b&gt;" ID="pnlSpouseSupp" sfwCaption="Supplemental Spouse Life Election" sfwCollapsible="False" sfwVisibleRule="VisibleRuleSupplementalSpouse">
+                  <items>
+                    <sfwTable ID="tblNeqw" />
+                    <sfwLabel ID="lblLabel10" Text="I wish to apply for " sfwIsCaption="True" />
+                    <sfwLabel ID="lblSpouseSupplementalAmount" sfwDataFormat="{0:C}" sfwEntityField="objMSSLifeOption.SpouseSupplementalAmount" />
+                    <sfwLabel ID="capSpouseSupplementalAmount" Text=" Supplemental Spouse Life insurance." sfwIsCaption="True" />
+                  </items>
+                </sfwPanel>
+                <sfwPanel ID="pnlNewPanel" sfwCaption="Supplemental Spouse Life Election" GroupingText="&lt;b&gt;Supplemental Spouse Life Election&lt;/b&gt;" sfwCollapsible="False" sfwVisibleRule="VisibleRuleIsSupplementalSpouseWaive">
+                  <items>
+                    <sfwTable ID="tblNewPage10" />
+                    <sfwLabel ID="lblLabel48" Text="I wish to waive Supplemental Spouse Life insurance." sfwIsCaption="True" />
+                  </items>
+                </sfwPanel>
+                <sfwLabel AssociatedControlID="lblDocument" ID="capDocument" sfwVisibleRule="IsSupportingDocumentExists" Text="The following documents need to be submitted to NDPERS before your enrollment/change can be completed: " sfwIsCaption="True" />
+                <sfwLabel ID="lblDocument" sfwVisibleRule="IsSupportingDocumentExists" sfwEntityField="Document" />
+              </items>
+            </sfwPanel>
+            <sfwPanel ID="pnlPanel1" sfwCaption="Authorization">
+              <items>
+                <sfwTable ID="tblNewPage44" />
+                <sfwGridView ID="grvAcknowledgementCheck" sfwShowEmptyTable="False" sfwEntityField="lstAcknowledgementCheck">
+                  <Columns>
+                    <TemplateField HeaderText="Acknowledgement ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel Visible="False" sfwEntityField="AcknowledgementId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Acknowledgement Text">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="AcknowledgementText" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+                <sfwLabel ID="lblLabel11" Text="To designate or change your beneficiary(ies), you must complete and submit a " sfwIsCaption="True" />
+                <sfwTextBox ID="txtDownloadFileNameStep7" sfwEntityField="IstrDownloadFileName" />
+                <sfwLinkButton ID="btnPdfCorrespondenceClick4" sfwMethodName="btn_OpenPDF" sfwNavigationParameter="pdf_file_name=IstrDownloadFileName" />
+                <sfwCheckBox ID="chkIsPlanWaivedFlag" sfwDefaultValue="N" sfwTwoWayBinding="False" sfwEntityField="AcknolwedgementPartDFlag" />
+                <sfwLabel ID="lblIstrConfirmationText" sfwEntityField="IstrConfirmationText" />
+              </items>
+            </sfwPanel>
+            <sfwButton ID="btnLoadOnDemandClick" Text="Return To Plans" sfwMethodName="btn_ReturnToPlansClickAnnual" />
+            <sfwButton ID="btnPrintPage" Text="Print" OnClientClick="PrintCenterMiddle(e)" sfwMethodName="btnOpen_Click" />
+          </items>
+        </sfwWizardStep>
+        <sfwTable ID="tblHeaderTemplate" />
+        <sfwWizardProgress />
+      </items>
+    </sfwWizard>
+  </items>
+  <loaddetails>
+    <entityfield ID="objMSSLifeWeb.objPlan" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objMSSLifeWeb" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objMSSLifeWeb.objProvider" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objMSSLifeWeb.lstEmploymentDetail" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objMSSLifeWeb.lstLifeOption" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objMSSLifeWeb.lstPreviousHistory" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objMSSLifeWeb.lstMSSPersonAccountBeneficiaries" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objMSSLifeOption" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstAcknowledgementCheck" sfwNewAutoLoad="True" sfwUpdateAutoLoad="True" />
+  </loaddetails>
+  <ExtraFields />
+</form>

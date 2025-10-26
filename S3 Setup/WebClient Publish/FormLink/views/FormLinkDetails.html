@@ -1,0 +1,504 @@
+﻿<div class="portlet-body file-inbound-content">
+    <ul class="nav nav-tabs" ng-init="selectedFormLinkTab='Details'">
+        <li ng-class="selectedFormLinkTab=='Details'?'active':''" ng-click="selectedFormLinkTab='Details'">
+            <a data-toggle="tab" aria-expanded="true">
+                Details
+            </a>
+        </li>
+        <li ng-class="selectedFormLinkTab=='Entity'?'active':''" ng-click="selectedFormLinkTab='Entity'">
+            <a data-toggle="tab" aria-expanded="false">
+                Entity
+            </a>
+        </li>
+        <li ng-show="FormLinkModel.dictAttributes.sfwType=='FormLinkMaintenance'" ng-class="selectedFormLinkTab=='Group'?'active':''" ng-click="selectedFormLinkTab='Group'">
+            <a data-toggle="tab" aria-expanded="false">
+                Group
+            </a>
+        </li>
+        <li ng-show="FormLinkModel.dictAttributes.sfwType=='FormLinkMaintenance'" ng-class="selectedFormLinkTab=='Session'?'active':''" ng-click="selectedFormLinkTab='Session'">
+            <a data-toggle="tab" aria-expanded="false">
+                Session
+            </a>
+        </li>
+        <li ng-show="showExtraFieldsTab" ng-class="selectedFormLinkTab=='ExtraFields'?'active':''" ng-click="selectedFormLinkTab ='ExtraFields'">
+            <a data-toggle="tab" aria-expanded="false">
+                Extra Fields
+            </a>
+        </li>
+    </ul>
+    <div class="tab-content form-details-label form-detail-tab-content">
+        <div ng-class="selectedFormLinkTab=='Details'?'tab-pane fade active in':'tab-pane fade'">
+
+                <div class="col-xs-6">
+
+                    <div class="form-group">
+                        <label class="control-label">Form Name(ID)</label>
+
+                        <input type="text" class="form-control input-sm" placeholder="Enter Form ID"
+                               title="{{FormLinkModel.dictAttributes.ID}}" ng-model="FormLinkModel.dictAttributes.ID" disabled="disabled">
+
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label">Html Template File</label>
+
+                        <input type="text" class="form-control input-sm " disabled
+                               title="{{FormLinkModel.dictAttributes.sfwTemplate}}" ng-model="FormLinkModel.dictAttributes.sfwTemplate">
+
+                    </div>
+
+
+
+                    <div class="form-group checkbox-row">
+                        <label class="control-label">Active</label>
+
+                        <div class="col-xs-12">
+                            <input type="checkbox" ng-model="FormLinkModel.dictAttributes.sfwActive" ng-true-value="'True'" ng-false-value="'False'" undoredodirective model='FormLinkModel'>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-show="FormLinkModel.dictAttributes.sfwType=='FormLinkMaintenance'">
+                        <label class="control-label">Log View Rule</label>
+
+                        <select class="form-control input-sm" ng-options="x.dictAttributes.ID as x.dictAttributes.ID for x in lstLogRules" title="{{FormLinkModel.dictAttributes.sfwLogViewRule}}" ng-model="FormLinkModel.dictAttributes.sfwLogViewRule" undoredodirective model='FormLinkModel'></select>
+
+                    </div>
+                    <div class="form-group" ng-show="FormLinkModel.dictAttributes.sfwType=='FormLinkLookup'">
+                        <label class="control-label">Max Count</label>
+
+
+                        <input type="text" class="form-control input-sm" title="{{FormLinkModel.dictAttributes.sfwMaxCount}}" ng-model="FormLinkModel.dictAttributes.sfwMaxCount" undoredodirective model='FormLinkModel' ">
+
+                        <span class="help-block">
+                            (Default Value of 'Max Count' is defined in Web.config file)
+                        </span>
+
+                    </div>
+
+
+                    <div class="form-group checkbox-row" ng-show="FormLinkModel.dictAttributes.sfwType=='FormLinkWizard'">
+
+                        <label class="control-label">Optimize Response</label>
+                        <div class="col-xs-12">
+                            <input type="checkbox" ng-model="FormLinkModel.dictAttributes.sfwOptimizeResponse" ng-true-value="'True'" ng-false-value="'False'" undoredodirective model='FormLinkModel'>
+                        </div>
+                    </div>
+
+
+
+                    <!--<div class="form-group checkbox-row" ng-show="FormLinkModel.dictAttributes.sfwType=='FormLinkWizard'">
+                        <label class="control-label">Display Sidebar</label>
+                        <div class="col-xs-12">
+                            <input type="checkbox" ng-model="FormLinkModel.dictAttributes.DisplaySideBar" ng-true-value="'True'" ng-false-value="'False'" undoredodirective model='FormLinkModel'>
+                        </div>
+                    </div>-->
+                </div>
+
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="control-label">Form Title</label>
+
+                        <input type="text" class="form-control input-sm " placeholder="Enter Title"
+                               title="{{FormLinkModel.dictAttributes.sfwTitle}}" ng-model="FormLinkModel.dictAttributes.sfwTitle" undoredodirective model='FormLinkModel'>
+
+                    </div>
+
+                    <div class="form-group" ng-show="FormLinkModel.dictAttributes.sfwType!='FormLinkWizard'">
+                        <label class="control-label">Default button</label>
+                        <div class='input-group'>
+                            <span class="info-tooltip dtc-span" ng-if="FormLinkModel.errors.sfwDefaultButtonID" ng-attr-title="{{FormLinkModel.errors.sfwDefaultButtonID}}" style="color:red"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                            <input type="text" class="form-control input-sm " ng-keydown="getButtonList($event)" ng-change="validateButtonName()" ng-keyup="validateButtonName()"
+                                   title="{{FormLinkModel.dictAttributes.sfwDefaultButtonID}}" ng-model="FormLinkModel.dictAttributes.sfwDefaultButtonID">
+                            <span class='input-group-addon button-intellisense' ng-click='showButtonList($event)'></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <resourceintellisensetemplate resourceid='FormLinkModel.dictAttributes.sfwResource' resourcelabelclass="control-label" resourcetextboxclass="col-xs-7" propertyname="'dictAttributes.sfwResource'" model='FormLinkModel' resourcetext="'Resources'" showresourcetext='true' showvertical="true"></resourceintellisensetemplate>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label">Website</label>
+
+                        <select class="form-control input-sm" ng-options="itm for itm in lstWebsite" title="{{FormLinkModel.dictAttributes.WebSite}}" ng-model="FormLinkModel.dictAttributes.WebSite" undoredodirective model='FormLinkModel'></select>
+
+                    </div>
+
+
+
+
+
+
+                </div>
+
+
+                <div class="form-group" ng-show="FormLinkModel.dictAttributes.sfwType=='FormLinkLookup'">
+                    <label class="control-label" ng-if='!MainQuery.dictAttributes.sfwQueryRef'>Main Query</label>
+                    <label class="control-label" ng-if='MainQuery.dictAttributes.sfwQueryRef'><a style="color: #5b9bd1!important;" ng-click='NavigateToEntityQuery(MainQuery.dictAttributes.sfwQueryRef)'>Main Query</a></label>
+
+                    <input name="Path" class="form-control input-sm ng-pristine ng-valid ng-not-empty ng-touched" type="text" title="{{MainQuery.dictAttributes.ID}}" ng-model="MainQuery.dictAttributes.ID" model="MainQuery" undoredodirective="">
+
+
+                    <entityqueryintellisense selecteditem="MainQuery.dictAttributes.sfwQueryRef" propertyname="'dictAttributes.sfwQueryRef'" model='MainQuery' showsearchbutton="true" onchangecallback="onMainQueryChange(MainQuery.dictAttributes.sfwQueryRef)"></entityqueryintellisense>
+
+
+
+                </div>
+
+                <div class="subquery-content-form-group" ng-show="FormLinkModel.dictAttributes.sfwType=='FormLinkLookup'">
+                    <label class="control-label">Sub Query</label>
+                        <div class="subquery-container">
+                            <div class="subquery-head">
+                                <span class="subquery-action">
+                                    <i class="fa fa-plus" title="Add Query" ng-click="openSubQueryDialog()" ng-disabled="!MainQuery.dictAttributes.sfwQueryRef"></i>
+                                    <i class="fa fa-minus" title="Delete Query" ng-click="deleteSelectedSubQuery()" ng-disabled="!canDelete()"></i>
+                                    <i class="fa fa-edit" title="Edit Query" ng-click="openEditQueryDialog()" ng-disabled="!canDelete()"></i>
+                                </span>
+
+                                <span class="subquery-prev-next">
+                                    <i class="fa fa-arrow-up" title="Move Up" ng-click="moveUpClick()" ng-disabled="canmoveUp()"></i>
+                                    <i class="fa fa-arrow-down" title="Move Down" ng-click="moveDownClick()" ng-disabled="canMoveDown()"></i>
+                                </span>
+                            </div>
+                            <div class="subquery-content manage-subquery-scroll">
+
+                                <table class="full-width">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th colspan="2">Field Name</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="obj in SubQueryCollection.Elements" ng-click="onSubQueryClick(obj)" ng-class="SelectedSubQuery==obj?'selected':''">
+                                            <td>
+                                                <input type="text"  class="form-control" name="Path" title="{{obj.dictAttributes.ID}}" ng-model="obj.dictAttributes.ID" undoredodirective model='obj' />
+                                            </td>
+                                            <td>
+                                                <entityqueryintellisense selecteditem="obj.dictAttributes.sfwQueryRef" propertyname="'dictAttributes.sfwQueryRef'" querytype="'SubSelectQuery'" model='obj' showsearchbutton="false" onchangecallback="onChangeSubQuery(QueryID)"></entityqueryintellisense>
+                                            </td>
+                                            <td>
+                                                <img ng-if="obj.dictAttributes.sfwQueryRef" src="images/entity/entity_navigation.svg" class="pull-right" ng-click="NavigateToEntityQuery(obj.dictAttributes.sfwQueryRef)" />
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                </div>
+                <div class="form-group" ng-show="FormLinkModel.dictAttributes.sfwType=='FormLinkLookup'">
+
+                </div>
+
+
+            
+        </div>
+        <div ng-class="selectedFormLinkTab=='Entity'?'tab-pane fade active in':'tab-pane fade'">
+            <div class="form-body">
+
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="control-label" ng-if='!FormLinkModel.dictAttributes.sfwEntity'>Entity</label>
+                        <label class="control-label" ng-if='FormLinkModel.dictAttributes.sfwEntity'><a style="color: #5b9bd1!important;" ng-click='openEntityClick(FormLinkModel.dictAttributes.sfwEntity)'>Entity</a></label>
+
+                        <fileintellisensetemplate model="FormLinkModel" filename="FormLinkModel.dictAttributes.sfwEntity" filetype="'Entity'" propertyname="'dictAttributes.sfwEntity'" onfilechange="populateXmlMethodsForEntityChange(FormLinkModel.dictAttributes.sfwEntity)" />
+
+
+                    </div>
+                    <div class="form-group checkbox-row" ng-show="FormLinkModel.dictAttributes.sfwType!='FormLinkLookup'">
+                        <label class="control-label">Same As New</label>
+                        <div class="col-xs-12">
+                            <input type="checkbox" name="Same as New" ng-model="FormLinkModel.IsSameAsNew" ng-change="IsSameAsNewChecked()" ng-disabled="IsSameAsNewDisabled" />
+                        </div>
+
+                    </div>
+                    <div class="form-group" ng-show="FormLinkModel.dictAttributes.sfwType=='FormLinkLookup' && MainQuery && (MainQuery && MainQuery.dictAttributes.sfwQueryRef)">
+                        <label class="control-label" ng-if="FormLinkModel.isSrvMethodChecked == 'true'">Load Method</label>
+
+                        <select ng-options="x.dictAttributes.ID as x.dictAttributes.ID  for x in SrvMethodCollection"
+                                ng-model="MainQuery.dictAttributes.sfwMethodName"
+                                class="form-control input-sm" ng-if="FormLinkModel.isSrvMethodChecked == 'true'"></select>
+
+
+                    </div>
+
+
+                </div>
+
+                <div class="col-xs-6">
+
+                    <div class="form-group checkbox-row">
+                        <label class="control-label">Method Type</label>
+                        <div class="col-xs-12">
+                            <input type="checkbox" ng-model="FormLinkModel.isSrvMethodChecked" ng-change="onMethodTypeChange()" ng-false-value="'false'" ng-true-value="'true'" class="ng-pristine ng-untouched ng-valid ng-empty" /> Is Srv Method
+                        </div>
+                    </div>
+
+                    <div class="form-group" ng-show="FormLinkModel.isSrvMethodChecked == 'true'">
+                        <label class="control-label">Remote Object</label>
+                        <select ng-options="remoteObject.dictAttributes.ID as remoteObject.dictAttributes.ID for remoteObject in FormLinkModel.RemoteObjectCollection"
+                                ng-model="FormLinkModel.dictAttributes.sfwRemoteObject"
+                                ng-change="onRemoteObjectChange()" class="form-control input-sm full-width" />
+
+                    </div>
+
+
+                </div>
+               
+                    <div class="form-group" ng-hide="FormLinkModel.dictAttributes.sfwType=='FormLinkLookup'">
+                        <div class="col-xs-12" ng-show="FormLinkModel.isSrvMethodChecked=='false'||!FormLinkModel.isSrvMethodChecked">
+                            <div class="col-xs-6">
+
+                                <div class="form-group">
+                                    <div class="panel  panel-primary">
+                                        <div class="panel-heading">New Method</div>
+                                        <div class="panel-body">
+                                            <div class="form-body entity-details">
+                                                <label class="control-label col-xs-5" ng-if='SelectedNewMethod.dictAttributes.sfwMethodName && FormLinkModel.isSrvMethodChecked == "false" && SelectedNewMethod.dictAttributes.sfwMethodName != "NewObject"'><u><a style="color: #5b9bd1!important;" ng-click='selectXmlMethodClick(SelectedNewMethod.dictAttributes.sfwMethodName)'>Method Name</a></u></label>
+                                                <div class="col-xs-12 entity-selection">
+                                                    <common-intellisense-without-undo-redo collection="XmlNewMethodsCollection" display-property-name="'ID'" selected-property-name="'ID'" selected-item="SelectedNewMethod.dictAttributes.sfwMethodName" change-callback="populateParamtersForNew(SelectedNewMethod)" model="SelectedNewMethod" propertyname="'dictAttributes.sfwMethodName'" is-reset="isReset" isinsidedialog="true"></common-intellisense-without-undo-redo>
+
+                                                    <!--<select class="form-control input-sm full-width" ng-options="method.dictAttributes.ID as method.dictAttributes.ID for method in XmlNewMethodsCollection" title="{{SelectedNewMethod.dictAttributes.sfwMethodName}}" ng-model="SelectedNewMethod.dictAttributes.sfwMethodName" undoredodirective model='SelectedNewMethod' ng-change="populateParamtersForNew(SelectedNewMethod)"></select>-->
+                                                </div>
+
+
+                                                <div class="form-group entity-content">
+
+                                                    <ul ng-if="paramtersForNewMethod.length>0">
+                                                        <li ng-repeat="item in paramtersForNewMethod" style="list-style:none">
+                                                            <div>
+                                                                <label ng-bind="item.dictAttributes.ID"></label>
+                                                            </div>
+
+                                                            <!--<div>
+
+                                                                <span contenteditable="false" class="dashoard-rules-span" data-placeholder="Parameter">{{item.dictAttributes.sfwParameter}}</span>
+                                                                <span contenteditable="false" class="dashoard-rules-span" data-placeholder="Load Type">{{item.dictAttributes.sfwLoadType}}</span>
+                                                                <span contenteditable="false" class="dashoard-rules-span" data-placeholder="Load Source">{{item.dictAttributes.sfwLoadSource}}</span>
+
+                                                            </div>-->
+                                                        </li>
+                                                    </ul>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <div class="panel  panel-primary">
+                                        <div class="panel-heading">Update Method</div>
+                                        <div class="panel-body">
+
+                                            <div class="form-body entity-details">
+                                                <label class="control-label col-xs-5" ng-if='SelectedUpdateMethod.dictAttributes.sfwMethodName && FormLinkModel.isSrvMethodChecked == "false"'><u><a style="color: #5b9bd1!important;" ng-click='selectXmlMethodClick(SelectedUpdateMethod.dictAttributes.sfwMethodName)'>Method Name</a></u></label>
+                                                <div class="col-xs-12 entity-selection">
+                                                    <common-intellisense-without-undo-redo collection="XmlUpdateMethodsCollection" display-property-name="'ID'" selected-property-name="'ID'" selected-item="SelectedUpdateMethod.dictAttributes.sfwMethodName" change-callback="populateParamtersForUpdate(SelectedUpdateMethod)" model="SelectedUpdateMethod" propertyname="'dictAttributes.sfwMethodName'" is-reset="isReset" is-disable="FormLinkModel.IsSameAsNew" isinsidedialog="true"></common-intellisense-without-undo-redo>
+                                                    <!--<select class="form-control input-sm full-width" ng-options="method.dictAttributes.ID as method.dictAttributes.ID for method  in XmlUpdateMethodsCollection" title="{{SelectedUpdateMethod.dictAttributes.sfwMethodName}}" ng-model="SelectedUpdateMethod.dictAttributes.sfwMethodName" undoredodirective model='SelectedUpdateMethod'
+                                                            ng-change="populateParamtersForUpdate(SelectedUpdateMethod)" ng-disabled="FormLinkModel.IsSameAsNew"></select>-->
+                                                </div>
+
+                                                <div class="form-group entity-content">
+                                                    <ul ng-if="paramtersForUpdateMethod.length>0">
+                                                        <li ng-repeat="item in paramtersForUpdateMethod">
+
+                                                            <div>
+                                                                <label ng-bind="item.dictAttributes.ID"></label>
+                                                            </div>
+
+                                                            <!--<div>
+                                                                <span contenteditable="false" class="dashoard-rules-span" data-placeholder="Parameter">{{item.dictAttributes.sfwParameter}}</span>
+                                                                <span contenteditable="false" class="dashoard-rules-span" data-placeholder="Load Type">{{item.dictAttributes.sfwLoadType}}</span>
+                                                                <span contenteditable="false" class="dashoard-rules-span" data-placeholder="Load Source">{{item.dictAttributes.sfwLoadSource}}</span>
+                                                            </div>-->
+
+                                                        </li>
+                                                    </ul>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row form-detail-border" ng-show="FormLinkModel.isSrvMethodChecked=='true'">
+                            <div class="col-xs-6">
+
+                                <div class="form-group">
+                                    <div class="panel  panel-primary">
+                                        <div class="panel-heading">New Method</div>
+                                        <div class="panel-body">
+                                            <div class="form-body entity-details entity-details-list-width">
+
+                                                <div class="col-xs-12 entity-selection">
+                                                    <select class="form-control input-sm full-width" ng-options="method.dictAttributes.ID as method.dictAttributes.ID for method in SrvNewMethodCollection" title="{{SelectedNewMethod.dictAttributes.sfwMethodName}}" ng-model="SelectedNewMethod.dictAttributes.sfwMethodName" undoredodirective model='SelectedNewMethod' ng-change="populateSrvParamtersForNew(SelectedNewMethod)"></select>
+                                                </div>
+
+
+                                                <div class="form-group entity-content entity-details-list-width">
+
+                                                    <ul ng-if="paramtersForNewMethod.length>0">
+                                                        <li ng-repeat="item in paramtersForNewMethod" style="list-style:none">
+                                                            <div>
+                                                                <label ng-bind="item.dictAttributes.ID"></label>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <div class="panel  panel-primary">
+                                        <div class="panel-heading">Update Method</div>
+                                        <div class="panel-body">
+
+                                            <div class="form-body entity-details entity-details-list-width">
+
+                                                <div class="col-xs-12 entity-selection">
+                                                    <select class="form-control input-sm full-width" ng-options="method.dictAttributes.ID as method.dictAttributes.ID for method  in SrvUpdateMethodCollection"
+                                                            title="{{SelectedUpdateMethod.dictAttributes.sfwMethodName}}" ng-model="SelectedUpdateMethod.dictAttributes.sfwMethodName"
+                                                            undoredodirective model='SelectedUpdateMethod' ng-change="populateSrvParamtersForUpdate(SelectedUpdateMethod)"
+                                                            ng-disabled="FormLinkModel.IsSameAsNew"></select>
+                                                </div>
+
+                                                <div class="form-group entity-content">
+                                                    <ul ng-if="paramtersForUpdateMethod.length>0">
+                                                        <li ng-repeat="item in paramtersForUpdateMethod">
+                                                            <div>
+                                                                <label ng-bind="item.dictAttributes.ID"></label>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                   </div>
+            </div>
+        </div>
+        <div ng-class="selectedFormLinkTab=='Group'?'tab-pane fade active in':'tab-pane fade'" ng-show="FormLinkModel.dictAttributes.sfwType=='FormLinkMaintenance'">
+            <div class="form-body">
+
+
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <!--<label class="control-label" ng-if='!FormLinkModel.dictAttributes.sfwInitialLoadGroup || !FormLinkModel.dictAttributes.sfwInitialLoadGroup.trim()'>Initial Load Group</label>
+                        <label class="control-label" ng-if='FormLinkModel.dictAttributes.sfwInitialLoadGroup && FormLinkModel.dictAttributes.sfwInitialLoadGroup.trim()'><a style="color: #5b9bd1!important;" ng-click='NavigateToEntityGroup(FormLinkModel.dictAttributes.sfwInitialLoadGroup)'>Initial Load Group</a></label>
+                        <div class='input-group'>
+
+                            <input type="text" class="form-control input-sm " placeholder="Enter Initial Load Group"
+                                   title="{{FormLinkModel.dictAttributes.sfwInitialLoadGroup}}" ng-model="FormLinkModel.dictAttributes.sfwInitialLoadGroup" ng-keydown="getGroupList($event)" undoredodirective model='FormLinkModel'>
+                            <span class='input-group-addon button-intellisense' ng-click="showGroupList($event);"></span>
+
+                        </div>-->
+                        <rulegroupintellisensewithoutundoredo model="FormLinkModel" modelvalue="FormLinkModel.dictAttributes.sfwInitialLoadGroup" entityid="FormLinkModel.dictAttributes.sfwEntity" propertyname="'dictAttributes.sfwInitialLoadGroup'" label-text="Initial Load Group" label-class="control-label col-xs-5" callback="OkClick()"></rulegroupintellisensewithoutundoredo>
+                    </div>
+                </div>
+
+                <div class="col-xs-6">
+
+                    <div class="form-group">
+                        <!--<label class="control-label" ng-if='!FormLinkModel.dictAttributes.sfwHardErrorGroup|| !FormLinkModel.dictAttributes.sfwInitialLoadGroup.trim()'>Hard Error Group </label>
+                        <label class="control-label" ng-if='FormLinkModel.dictAttributes.sfwHardErrorGroup && FormLinkModel.dictAttributes.sfwInitialLoadGroup.trim()'><a style="color: #5b9bd1!important;" ng-click='NavigateToEntityGroup(FormLinkModel.dictAttributes.sfwHardErrorGroup)'>Hard Load Group </a></label>
+                        <div class='input-group'>
+                            <input type="text" class="form-control input-sm " placeholder="Enter Hard Error Group"
+                                   title="{{FormLinkModel.dictAttributes.sfwHardErrorGroup}}" ng-model="FormLinkModel.dictAttributes.sfwHardErrorGroup" ng-keydown="getGroupList($event)" undoredodirective model='FormLinkModel'>
+                            <span class='input-group-addon button-intellisense' ng-click="showGroupList($event);"></span>
+                        </div>-->
+                        <rulegroupintellisensewithoutundoredo model="FormLinkModel" modelvalue="FormLinkModel.dictAttributes.sfwHardErrorGroup" entityid="FormLinkModel.dictAttributes.sfwEntity" propertyname="'dictAttributes.sfwHardErrorGroup'" label-text="Hard Error Group" label-class="control-label col-xs-5" callback="OkClick()"></rulegroupintellisensewithoutundoredo>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+        <div ng-class="selectedFormLinkTab=='Session'?'tab-pane fade active in':'tab-pane fade'" ng-if="FormLinkModel.dictAttributes.sfwType=='FormLinkMaintenance'">
+            <div class="form-body full-height">
+                <div class="form-group full-height">
+                    <div class="col-xs-5 full-height">
+                        <div class="panel panel-primary full-height">
+                            <div class="panel-heading">
+                                Entity Tree
+                            </div>
+                            <div class="form-session-fields-list form-content">
+                                <newentityobjecttreetemplate ischeckboxvisible="true" isallownavigation="false" selectedfield="SessionFields.SelecetdField" lstdisplayentity="SessionFields.LstDisplayedEntities" selectedentityobjecttreefields="SessionFields.lstselectedobjecttreefields" showonlycollection="false" entityname="FormLinkModel.dictAttributes.sfwEntity"></newentityobjecttreetemplate>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-1 add-btn-adjust sessions-tab">
+                        <input type="button" class="dialog-btn" value="Add" ng-click="addSessionFields()" />
+                    </div>
+                    <div class="col-xs-6 full-height">
+                        <div class="panel panel-primary full-height">
+                            <div class="panel-heading">
+                                Session Fields
+                            </div>
+                            <div class="col-xs-12 sorting_asc ui-resizable" tabindex="0" aria-controls="sample_editable_1" aria-label="Attribute activate to sort column ascending" aria-sort="ascending">
+                                <div class="panel-icons">
+                                    <i class="fa fa-minus" title="Delete" ng-click="deleteSelectedRow()" ng-disabled="!canDeleteRow()"></i>
+                                    <i class="fa fa-arrow-up" title="Move Up" ng-click="moveSelectedRowUp()" ng-disabled="canmoveSelectedRowUp()"></i>
+                                    <i class="fa fa-arrow-down" title="Move Down" ng-click="moveSelectedRowDown()" ng-disabled="canmoveSelectedRowDown()"></i>
+                                </div>
+                            </div>
+                            <div class="panel-body details-session-panel-body">
+                                <table class="table table-striped table-hover table-bordered dataTable no-footer " role="grid">
+                                    <thead>
+
+                                        <!--<tr role="heading">
+                                            <th tabindex="0" class="sorting_asc ui-resizable padding-0" aria-controls="sample_editable_1" aria-label="Attribute activate to sort column ascending" aria-sort="ascending" rowspan="1" colspan="13">
+                                                <div class="table-hader-actions">
+                                                    <i class="fa fa-minus" ng-click="deleteSelectedRow()" ng-disabled="!canDeleteRow()"></i>
+                                                    <i class="fa fa-arrow-up" ng-click="moveSelectedRowUp()" ng-disabled="canmoveSelectedRowUp()"></i>
+                                                    <i class="fa fa-arrow-down" ng-click="moveSelectedRowDown()" ng-disabled="canmoveSelectedRowDown()"></i>
+                                                </div>
+                                                <div class="ui-resizable-handle ui-resizable-e" style="z-index: 90;"></div>
+                                            </th>
+                                        </tr>-->
+
+                                        <tr>
+                                            <th>Session ID</th>
+                                            <th>Entity Field</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="obj in SessionFields.Elements" ng-click="selectedSessionFieldClick(obj)" ng-class="{'selected':obj==selectedCurrentSessionRow}">
+                                            <td><input type="text" class="form-control form-filter input-sm" title="{{obj.dictAttributes.ID}}" ng-model="obj.dictAttributes.ID" undoredodirective model="obj" /></td>
+                                            <td><input type="text" class="form-control form-filter input-sm" title="{{obj.dictAttributes.sfwEntityField}}" ng-model="obj.dictAttributes.sfwEntityField" disabled="disabled" /></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ng-class="selectedFormLinkTab=='ExtraFields'?'tab-pane fade active in':'tab-pane fade'">
+            <extra-field-directive extra-field-model="objFormHtmlExtraFields" is-tab="showExtraFieldsTab" obj-fn="objDirFunctions" form-name="formName" is-steps="false"></extra-field-directive>
+        </div>
+    </div>
+</div>
+
+<div class="form-actions">
+    <div class="col-xs-8 text-left">
+        <span class="alert-error-msg" ng-bind="FormHtxDetailsErrorMessage"></span>
+    </div>
+    <div class="col-xs-4">
+        <input type="button" value="OK" class="dialog-btn" ng-click="OkClick()" ng-disabled="validateFormHtxDetails()" />
+        <input type="button" value="Cancel" class="dialog-btn" ng-click="closeDetailDialog()" />
+    </div>
+</div>

@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entWssOtpActivation" sfwTableName="sgt_wss_otp_activation" sfwView="False">
+  <queries>
+    <query ID="LoadGeneratedOTP" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_WSS_OTP_ACTIVATION&#xD;&#xA;WHERE OTP_ACTIVATION_ID = @OTP_ACTIVATION_ID">
+      <parameters>
+        <parameter ID="@OTP_ACTIVATION_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="IsGeneratedOTPExpired" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT TOP 1 * FROM SGT_WSS_OTP_ACTIVATION&#xD;&#xA;WHERE PERSON_ID = @PERSON_ID&#xD;&#xA;AND SOURCE_VALUE = @SOURCE_VALUE&#xD;&#xA;AND DATEADD(MINUTE,30, ACTIVATION_CODE_DATE) &gt; GETDATE()&#xD;&#xA;ORDER BY ACTIVATION_CODE_DATE DESC">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+        <parameter ID="@SOURCE_VALUE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="IsOTPEnteredCorrect" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT TOP 1 * FROM SGT_WSS_OTP_ACTIVATION&#xD;&#xA;WHERE PERSON_ID = @PERSON_ID&#xD;&#xA;AND SOURCE_VALUE = @SOURCE_VALUE&#xD;&#xA;ORDER BY ACTIVATION_CODE_DATE DESC">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+        <parameter ID="@SOURCE_VALUE" sfwDataType="string" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="OtpActivationId" sfwType="Column" sfwValue="otp_activation_id" sfwIsNull="False" sfwKeyNo="1" sfwIsIdentity="True" sfwDataType="int" />
+    <attribute ID="PersonId" sfwType="Column" sfwValue="person_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="ReferenceId" sfwType="Column" sfwValue="reference_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="SourceDescription" sfwType="Description" sfwValue="source_description" />
+    <attribute ID="SourceId" sfwType="Column" sfwValue="source_id" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="7013" />
+    <attribute ID="SourceValue" sfwType="Column" sfwValue="source_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="ActivationCode" sfwType="Column" sfwValue="activation_code" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="ActivationCodeDate" sfwType="Column" sfwValue="activation_code_date" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="ActivationCodeValidate" sfwType="Column" sfwValue="activation_code_validate" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" />
+  </attributes>
+</entity>

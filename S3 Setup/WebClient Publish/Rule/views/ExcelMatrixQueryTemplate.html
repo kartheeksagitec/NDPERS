@@ -1,0 +1,66 @@
+﻿<div class="portlet-body">
+    <div class="form-body">
+        <div class="form-group">
+            <div class="col-xs-6">
+                <input  type="checkbox" ng-model="isCodeQuery" />
+                <span >Entity Query</span>
+            </div>
+            <div class="col-xs-6">
+                <label class="col-xs-2">QueryID :</label>
+                <div class="col-xs-8">
+                    <entityqueryintellisense selecteditem="QueryID" propertyname="'QueryID'" onchangecallback="setQueryBasedOnEntityandQueryID(QueryID)" disableflag="!isCodeQuery"></entityqueryintellisense>
+                    <!--<input type="text" class="form-control" ng-model="QueryID" onkeydown="onQueryIDActionKeyDown(event)" ng-change="setQueryBasedOnEntityandQueryID(QueryID)" ng-disabled="!objExcelMatrixDetails.isCodeQuery" />-->
+                </div>
+                <div class="panel-icons query-icons">
+                    <i title="Add No Lock" ng-click="AddNodeLockOperation()" class="fa fa-unlock-alt" style="cursor:pointer"><sub><i class="fa fa-plus-square-o"></i></sub></i>
+                    <i title="Format" ng-click="formatQuery()" class="fa fa-file-text-o" style="cursor:pointer"></i>
+                </div>
+            </div>
+        </div>
+        <hr style="color:aqua;height:5px" />
+        <div class="form-group">
+            <div class="col-xs-12">
+                <textarea class="form-control" ng-readonly="isCodeQuery" ng-model="objExcelMatrixDetails.ExcelQuery" style="height:180px!important" ng-blur="getParametersBasedOnQuery(objExcelMatrixDetails.ExcelQuery)"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-3">Parameters</label>
+            <div class="col-xs-9">
+                <img style="float:right" title="Get Parameter" src="images/Entity/get_parameter.svg" ng-click="getParametersBasedOnQuery(objExcelMatrixDetails.ExcelQuery)">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="portlet-body">
+                <div class="table-scrollable">
+                    <table id="sample_editable_1" class="table table-striped table-hover table-bordered dataTable no-footer" role="grid" aria-describedby="sample_editable_1_info">
+                        <thead>
+                            <tr role="row">
+                                <th aria-controls="sample_editable_1" rowspan="1" colspan="1">Parameter</th>
+                                <th aria-controls="sample_editable_1" rowspan="1" colspan="1">Type</th>
+                                <!--<th aria-controls="sample_editable_1" rowspan="1" colspan="1">Value</th>-->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr role="row" ng-repeat="parameter in QueryParameters">
+                                <td><span ng-bind="parameter.dictAttributes.ID"></span></td>
+                                <td><select class="form-control" ng-options="x for x in parameterTypes" title="{{parameter.dictAttributes.sfwDataType}}" ng-model="parameter.dictAttributes.sfwDataType"></select></td>
+                                <!--<td><input type="text" class="form-control" title="{{parameter.Value}}" ng-model="parameter.Value" /></td>-->
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="form-actions">
+    <div class="col-xs-8 text-left">
+        <span class="alert-error-msg" ng-if="QueryParameters.length>0">parameterized query is not allowed.</span>
+    </div>
+    <div class="col-xs-4">
+        <input type="button" class="dialog-btn-default" value="OK" ng-click="onOkQueryTemplateClick()" ng-disabled="QueryParameters.length>0" />
+        <input type="button" class="dialog-btn-default" value="Cancel" ng-click="onCloseQueryTemplateClick()" />
+    </div>
+</div>
+

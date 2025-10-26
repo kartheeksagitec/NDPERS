@@ -1,0 +1,60 @@
+﻿<div ng-controller="CreateButtonController" class="full-height">
+    <div class="portlet-body full-height">
+        <div class="form-body full-height">
+            <div class="col-xs-12">
+                <div class="form-group radio-btn-row">
+                    <input type="radio" ng-model="strButtonType" value="sfwButton" ng-change="onChangeButtonType()" /> <label class="control-label">Button</label>
+                    <input type="radio" ng-model="strButtonType" value="sfwLinkButton" ng-change="onChangeButtonType()" /> <label class="control-label">Link Button</label>
+                    <input type="radio" ng-model="strButtonType" value="sfwImageButton" ng-change="onChangeButtonType()" /> <label class="control-label">Image Button</label>
+                    <input type="radio" ng-model="strButtonType" value="CustomButton" ng-change="onChangeButtonType()" /> <label class="control-label">Custom Button</label>
+                </div>
+            </div>
+            <div class="col-xs-12" ng-show="strButtonType!='CustomButton'">
+                <div class="form-group">
+                    <div class="col-xs-6 no-left-padding">
+                        <label class="control-label ">Description </label>
+                        <input type="text" title="{{strFilterDescription}}" ng-model="strFilterDescription" class="form-control " />
+                    </div>
+                    <div class="col-xs-6 no-right-padding">
+                        <label class="control-label ">Method </label>
+                        <input type="text" title="{{strFilterMethod}}" ng-model="strFilterMethod" class="form-control " />
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 classic-menu-dropdown create-btn-table-wrap" ng-show="strButtonType!='CustomButton'">
+                <table class="sws-table ">
+                    <thead>
+                        <tr>
+                            <th width="48.9%">Description</th>
+                            <th width="51.1%">Method</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in ButtonsDetailsCollection | filter:{Description:strFilterDescription,Method:strFilterMethod}" tabindex="{{$index}}" key-up-down-with-element callbackfn="selectButton" objproperty="'item'" ng-click="selectButton(item)"
+                            ng-class="SelectedButtonDetail == item?'selected':''">
+                            <td width="50%"><span ng-bind="item.Description"></span></td>
+                            <td width="50%"><span ng-bind="item.Method"></span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div ng-show="strButtonType=='CustomButton'">
+                <div class="form-group">
+                    <div class="col-xs-6 no-left-padding">
+                        <label class="control-label ">Method Name </label>
+                        <input type="text" ng-model="strCustomMethod" class="form-control" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-actions">
+        <div class="col-xs-8 text-left">
+            <span class="alert-error-msg" ng-if="ErrorMessageForDisplay.length>0" ng-bind="ErrorMessageForDisplay"></span>
+        </div>
+        <div class="col-xs-4">
+            <input type="button" class="dialog-btn" value="OK" ng-click="onAddButtonOkClick(strButtonType)" ng-disabled="ValidateButton()" />
+            <input type="button" class="dialog-btn" value="Cancel" ng-click="onAddButtonCancelClick()" />
+        </div>
+    </div>
+</div>

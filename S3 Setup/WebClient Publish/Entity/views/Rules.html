@@ -1,0 +1,98 @@
+﻿
+<div class="entity-rules-form">
+    <div class="row">
+        <div class="entity-rules-caption"><label>ID :</label></div>
+        <div class="entity-rules-input"><input type="text" ng-model="objRuleSearch.strSearchRulesID" /></div>
+        <div class="entity-rules-checkboxes" style="width: 10%">
+            <input type="checkbox" ng-model="objRuleSearch.IsLogicalRuleChecked" /> <span><img src="images/logical_rule.svg" /></span><span>Logical Rule</span>
+            
+        </div>
+        <div class="entity-rules-checkboxes">
+            <input type="checkbox" ng-model="objRuleSearch.IsRulePrivateSelected" /><span>Is Private</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="entity-rules-caption"><label>Rule Status :</label></div>
+        <div class="entity-rules-input">
+            <select title="{{objRuleSearch.SelectedRuleStatus}}" ng-model="objRuleSearch.SelectedRuleStatus">
+                <option></option>
+                <option>Active</option>
+                <option>Inactive</option>
+            </select>
+        </div>
+        <div class="entity-rules-checkboxes" style="width: 10%">
+            <input type="checkbox" ng-model="objRuleSearch.IsDecisionTableChecked" /> <span><img src="images/decision_table.svg" /></span><span> Decision Table</span>
+            
+        </div>
+        <div class="entity-rules-checkboxes">
+            <input type="checkbox" ng-model="objRuleSearch.IsRuleStaticSelected" /><span>Is Static</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="entity-rules-caption"><label>Rule Return Type :</label></div>
+        <div class="entity-rules-input">
+            <select ng-model="objRuleSearch.SelectedReturnType">
+                <option></option>
+                <option value="bool">bool</option>
+                <option value="Collection">Collection</option>
+                <option value="decimal">decimal</option>
+                <option value="datetime">datetime</option>
+                <option value="double">double</option>
+                <option value="float">float</option>
+                <option value="int">int</option>
+                <option value="List">List</option>
+                <option value="long">long</option>
+                <option value="Object">Object</option>
+                <option value="short">short</option>
+                <option value="string">string</option>
+            </select>
+        </div>
+        <div class="entity-rules-checkboxes" style="width: 10%">
+            <input type="checkbox" ng-model="objRuleSearch.IsExcelMatrixChecked" /><span><img src="images/Excel_matrix.svg" /></span><span>Excel Matrix</span>
+        </div>
+    </div>
+    <div class="row">
+        <input type="button" value="Search" class="marg-left-10percent" ng-click="SearchRuleCommand()" />
+        <input type="button" value="Clear" ng-click="ClearCommand()" />
+    </div>
+
+</div>
+
+<div class="row grey-bottom-border no-padding  white-bg marg-top-10">
+    <ul class="panel-icons">
+        <li>
+            <div class="dropdown">
+                <a   class="icon-plus"  title="Add Rule" onclick="toggleAddRule(event)"></a>
+                <div id="rulesList" class="dropdown-content-projects" onclick="stopPropogation(event)">
+                    <span ng-click="addRulesFromEntity('LogicalRule')">Logical Rule</span>
+                    <span ng-click="addRulesFromEntity('DecisionTable')">Decision Table</span>
+                    <span ng-click="addRulesFromEntity('ExcelMatrix')">Excel Matrix</span>
+                </div>
+            </div>
+        </li>
+        <li><a  ng-click="removeRules('Rules')" ng-disabled="!canDeleteRules()" class="icon-minus"></a></li>
+    </ul>
+</div>
+<div class="entity-rule-result">
+    
+
+    <div class="row" ng-repeat="rule in lstEntityRules" ng-dblclick="onOpenRuleFile(rule.RuleFileDetails)" ng-class="{'selected':$index == selectedEntityRule}" ng-click="selectEntityRules($index)" ng-if="rule.IsVisible">
+        <div class="top-row">
+            <img ng-if="rule.RuleFileDetails.FileType == 'DecisionTable'" src="images/decision_table.svg" class="rule-list-icon" />
+            <img ng-if="rule.RuleFileDetails.FileType == 'ExcelMatrix'" src="images/Excel_matrix.svg" class="rule-list-icon" />
+            <img ng-if="rule.RuleFileDetails.FileType == 'LogicalRule'" src="images/logical_rule.svg" class="rule-list-icon" />
+            <h3>{{rule.ID}}</h3>
+        </div>
+        <div class="bottom-row">
+            <span contenteditable="false" class="placeholder" data-placeholder="Entity Scenario" ng-click="onOpenRuleFile(rule.EntityScenario)">{{rule.EntityScenario.FileName}}</span>
+            <span contenteditable="false" class="placeholder" data-placeholder="Object Based Scenario" ng-click="onOpenRuleFile(rule.ObjectBasedScenario)">{{rule.ObjectBasedScenario.FileName}}</span>
+            <span contenteditable="false" class="placeholder" data-placeholder="Excel Based Scenario" ng-click="onOpenRuleFile(rule.ExcelBasedScenario)">{{rule.ExcelBasedScenario.FileName}}</span>
+            <!--<span>Entity Scenario</span>-->
+        </div>
+
+    </div>
+
+
+</div>
+
+

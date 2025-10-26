@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entNotes" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoNotes" sfwObjectID="busNotes" sfwTableName="sgt_notes">
+  <rules>
+    <rule ID="Rule check if logged in user is not same as created by" sfwMessageId="76" sfwExpression="(this.icdoNotes.created_by != RFunc.GetValue&lt;String&gt;(this, &quot;iobjPassInfo.istrUserID&quot;))" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror />
+  <validatedelete>
+    <item ID="Rule check if logged in user is not same as created by" sfwMode="All" sfwStatus="Active" />
+  </validatedelete>
+  <groupslist />
+  <updateablecdo />
+  <commonproperties>
+    <item ID="person_id" sfwObjectField="icdoNotes.person_id" />
+  </commonproperties>
+  <expressionfields />
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from sgt_notes n &#xD;&#xA;where (isnull(n.specific_flag, 'N') = 'N' &#xD;&#xA;or (n.subsystem_value = @subsystem_value and &#xD;&#xA;((n.subsystem_ref_id is null)or(n.subsystem_ref_id = @subsystem_ref_id))))&#xD;&#xA; order by note_id desc">
+      <parameters>
+        <parameter ID="@subsystem_value" sfwDataType="string" />
+        <parameter ID="@subsystem_ref_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="PersonLookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from sgt_notes n &#xD;&#xA;where (isnull(n.specific_flag, 'N') = 'N' &#xD;&#xA;or (n.subsystem_value = @subsystem_value and &#xD;&#xA;((n.subsystem_ref_id is null)or(n.subsystem_ref_id = @subsystem_ref_id))))&#xD;&#xA;and n.person_id = @person_id&#xD;&#xA; order by note_id desc">
+      <parameters>
+        <parameter ID="@subsystem_value" sfwDataType="string" />
+        <parameter ID="@subsystem_ref_id" sfwDataType="int" />
+        <parameter ID="@person_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="OrgLookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from sgt_notes n &#xD;&#xA;where (isnull(n.specific_flag, 'N') = 'N' &#xD;&#xA;or (n.subsystem_value = @subsystem_value and &#xD;&#xA;((n.subsystem_ref_id is null)or(n.subsystem_ref_id = @subsystem_ref_id))))&#xD;&#xA;and n.org_id = @org_id&#xD;&#xA; order by note_id desc">
+      <parameters>
+        <parameter ID="@subsystem_value" sfwDataType="string" />
+        <parameter ID="@subsystem_ref_id" sfwDataType="int" />
+        <parameter ID="@org_id" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="NoteId" sfwType="Column" sfwValue="note_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PersonId" sfwType="Column" sfwValue="person_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="OrgId" sfwType="Column" sfwValue="org_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="SubsystemDescription" sfwType="Description" sfwValue="subsystem_description" />
+    <attribute ID="SubsystemId" sfwType="Column" sfwValue="subsystem_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="63" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="SubsystemValue" sfwType="Column" sfwValue="subsystem_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="SubsystemRefId" sfwType="Column" sfwValue="subsystem_ref_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="Notes" sfwType="Column" sfwValue="notes" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="2000" sfwRequired="False" />
+    <attribute ID="SpecificFlag" sfwType="Column" sfwValue="specific_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="1" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute sfwDataType="string" sfwType="Property" ID="OrgName" sfwValue="icdoNotes.org_name" />
+    <attribute sfwDataType="string" sfwType="Property" ID="PersonName" sfwValue="icdoNotes.person_name" />
+  </attributes>
+</entity>

@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entFile" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvAdmin" sfwType="BusinessRule" sfwMainCDO="icdoFile" sfwObjectID="busFile" sfwTableName="sgs_file">
+  <rules>
+    <rule ID="Cannot Delete" sfwMessageId="608" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entFileHdr.CountByFileId&quot;, this.icdoFile.file_id) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="Rule Check Description Is Blank" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="(string.IsNullOrEmpty(this.icdoFile.Description))" sfwMessageId="64" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror>
+    <item ID="Rule Check Description Is Blank" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete>
+    <item ID="Cannot Delete" sfwMode="All" sfwStatus="Active" />
+  </validatedelete>
+  <updateablecdo />
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * &#xD;&#xA;  from sgs_file &#xD;&#xA; order by file_id&#xD;&#xA;&#xD;&#xA;">
+      <parameters />
+    </query>
+    <query ID="LookUpInboundFiles" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * &#xD;&#xA;FROM SGS_FILE &#xD;&#xA;WHERE INBOUND_OUTBOUND_FLAG = 'I'&#xD;&#xA;ORDER BY DESCRIPTION">
+      <parameters />
+    </query>
+    <query ID="LookupESSInboundFiles" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT DISTINCT A.FILE_ID,HT.DESCRIPTION,HT.CODE_VALUE FROM SGS_FILE A&#xD;&#xA; INNER JOIN SGS_CODE_VALUE BT&#xD;&#xA;  ON BT.CODE_ID = 3504 AND FILE_ID = BT.DATA1&#xD;&#xA; INNER JOIN SGS_CODE_VALUE HT &#xD;&#xA;  ON HT.CODE_ID = 1212 AND HT.CODE_VALUE = BT.DATA3&#xD;&#xA; INNER JOIN SGT_PLAN P &#xD;&#xA;  ON P.BENEFIT_TYPE_VALUE = BT.DATA2&#xD;&#xA; INNER JOIN SGT_ORG_PLAN OP &#xD;&#xA;  ON OP.ORG_ID = @OrgId AND OP.PLAN_ID = P.PLAN_ID&#xD;&#xA; INNER JOIN&#xD;&#xA;  (&#xD;&#xA;   SELECT OC.ORG_ID,OC.PLAN_ID,OCR.CONTACT_ROLE_VALUE FROM SGT_ORG_CONTACT OC&#xD;&#xA;    INNER JOIN SGT_ORG_CONTACT_ROLE OCR &#xD;&#xA;     ON OC.ORG_CONTACT_ID = OCR.ORG_CONTACT_ID      &#xD;&#xA;    WHERE OC.ORG_ID = @OrgId AND OC.CONTACT_ID = @ContactId&#xD;&#xA;  ) AS OCR&#xD;&#xA;  ON OP.PLAN_ID = CASE WHEN OCR.CONTACT_ROLE_VALUE = 'PAAG' THEN OP.PLAN_ID &#xD;&#xA;    ELSE OCR.PLAN_ID END&#xD;&#xA;WHERE A.FILE_ID &lt;&gt; 12">
+      <parameters>
+        <parameter ID="@OrgId" sfwDataType="int" />
+        <parameter ID="@ContactId" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadHeaderTypeForESS" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT DISTINCT HT.CODE_VALUE ,HT.DESCRIPTION &#xD;&#xA;  FROM SGS_FILE A&#xD;&#xA; INNER JOIN SGS_CODE_VALUE BT&#xD;&#xA;  ON BT.CODE_ID = 3504 AND FILE_ID = BT.DATA1&#xD;&#xA; INNER JOIN SGS_CODE_VALUE HT &#xD;&#xA;  ON HT.CODE_ID = 1212 AND HT.CODE_VALUE = BT.DATA3&#xD;&#xA; INNER JOIN SGT_PLAN P &#xD;&#xA;  ON P.BENEFIT_TYPE_VALUE = BT.DATA2&#xD;&#xA; INNER JOIN SGT_ORG_PLAN OP &#xD;&#xA;  ON OP.ORG_ID = @OrgId AND OP.PLAN_ID = P.PLAN_ID&#xD;&#xA; INNER JOIN&#xD;&#xA;  (&#xD;&#xA;   SELECT OC.ORG_ID,OC.PLAN_ID,OCR.CONTACT_ROLE_VALUE FROM SGT_ORG_CONTACT OC&#xD;&#xA;    INNER JOIN SGT_ORG_CONTACT_ROLE OCR &#xD;&#xA;     ON OC.ORG_CONTACT_ID = OCR.ORG_CONTACT_ID      &#xD;&#xA;    WHERE OC.ORG_ID = @OrgId AND OC.CONTACT_ID = @ContactId&#xD;&#xA;  ) AS OCR&#xD;&#xA;  ON OP.PLAN_ID = CASE WHEN OCR.CONTACT_ROLE_VALUE = 'PAAG' THEN OP.PLAN_ID &#xD;&#xA;    ELSE OCR.PLAN_ID END">
+      <parameters>
+        <parameter ID="@OrgId" sfwDataType="int" />
+        <parameter ID="@ContactId" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LookupESSInboundFilesUpload" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT DISTINCT A.*,HT.CODE_VALUE,HT.CODE_VALUE AS HEADER_TYPE_VALUE,HT.DESCRIPTION &#xD;&#xA; AS HEADER_TYPE_DESC FROM SGS_FILE A&#xD;&#xA; INNER JOIN SGS_CODE_VALUE BT&#xD;&#xA;  ON BT.CODE_ID = 3504 AND FILE_ID = BT.DATA1&#xD;&#xA; INNER JOIN SGS_CODE_VALUE HT &#xD;&#xA;  ON HT.CODE_ID = 1212 AND HT.CODE_VALUE = BT.DATA3&#xD;&#xA; INNER JOIN SGT_PLAN P &#xD;&#xA;  ON P.BENEFIT_TYPE_VALUE = BT.DATA2&#xD;&#xA; INNER JOIN SGT_ORG_PLAN OP &#xD;&#xA;  ON OP.ORG_ID = @OrgId AND OP.PLAN_ID = P.PLAN_ID&#xD;&#xA; INNER JOIN&#xD;&#xA;  (&#xD;&#xA;   SELECT OC.ORG_ID,OC.PLAN_ID,OCR.CONTACT_ROLE_VALUE FROM SGT_ORG_CONTACT OC&#xD;&#xA;    INNER JOIN SGT_ORG_CONTACT_ROLE OCR &#xD;&#xA;     ON OC.ORG_CONTACT_ID = OCR.ORG_CONTACT_ID      &#xD;&#xA;    WHERE OC.ORG_ID = @OrgId AND OC.CONTACT_ID = @ContactId&#xD;&#xA;  ) AS OCR&#xD;&#xA;  ON OP.PLAN_ID = CASE WHEN OCR.CONTACT_ROLE_VALUE = 'PAAG' THEN OP.PLAN_ID &#xD;&#xA;    ELSE OCR.PLAN_ID END&#xD;&#xA;WHERE A.FILE_ID &lt;&gt; 12">
+      <parameters>
+        <parameter ID="@OrgId" sfwDataType="int" />
+        <parameter ID="@ContactId" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LookupESSInboundFilesUploadd" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT DISTINCT A.*,A.FILE_ID AS CODE_VALUE_ORDER,HT.DESCRIPTION &#xD;&#xA; AS HEADER_TYPE_DESC FROM SGS_FILE A&#xD;&#xA; INNER JOIN SGS_CODE_VALUE BT&#xD;&#xA;  ON BT.CODE_ID = 3504 AND FILE_ID = BT.DATA1&#xD;&#xA; INNER JOIN SGS_CODE_VALUE HT &#xD;&#xA;  ON HT.CODE_ID = 1212 AND HT.CODE_VALUE = BT.DATA3&#xD;&#xA; INNER JOIN SGT_PLAN P &#xD;&#xA;  ON P.BENEFIT_TYPE_VALUE = BT.DATA2&#xD;&#xA; INNER JOIN SGT_ORG_PLAN OP &#xD;&#xA;  ON OP.ORG_ID = @OrgId AND OP.PLAN_ID = P.PLAN_ID&#xD;&#xA; INNER JOIN&#xD;&#xA;  (&#xD;&#xA;   SELECT OC.ORG_ID,OC.PLAN_ID,OCR.CONTACT_ROLE_VALUE FROM SGT_ORG_CONTACT OC&#xD;&#xA;    INNER JOIN SGT_ORG_CONTACT_ROLE OCR &#xD;&#xA;     ON OC.ORG_CONTACT_ID = OCR.ORG_CONTACT_ID      &#xD;&#xA;    WHERE OC.ORG_ID = @OrgId AND OC.CONTACT_ID = @ContactId&#xD;&#xA;  ) AS OCR&#xD;&#xA;  ON OP.PLAN_ID = CASE WHEN OCR.CONTACT_ROLE_VALUE = 'PAAG' THEN OP.PLAN_ID &#xD;&#xA;    ELSE OCR.PLAN_ID END&#xD;&#xA;WHERE A.FILE_ID &lt;&gt; 12&#xD;&#xA;ORDER BY A.[FILE_ID] ASC">
+      <parameters>
+        <parameter ID="@OrgId" sfwDataType="int" />
+        <parameter ID="@ContactId" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="FileId" sfwType="Column" sfwValue="file_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="Description" sfwType="Column" sfwValue="description" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="DelimitedBy" sfwType="Column" sfwValue="delimited_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="10" />
+    <attribute ID="TransactionCodePos" sfwType="Column" sfwValue="transaction_code_pos" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="TransactionCodeLength" sfwType="Column" sfwValue="transaction_code_length" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="TransactionCodeValue" sfwType="Column" sfwValue="transaction_code_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="255" />
+    <attribute ID="HeaderGroupPos" sfwType="Column" sfwValue="header_group_pos" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="HeaderGroupLength" sfwType="Column" sfwValue="header_group_length" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="XmlLayoutFile" sfwType="Column" sfwValue="xml_layout_file" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="100" />
+    <attribute ID="InboundMask" sfwType="Column" sfwValue="inbound_mask" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="20" />
+    <attribute ID="MailboxPathCode" sfwType="Column" sfwValue="mailbox_path_code" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="20" />
+    <attribute ID="StagingPathCode" sfwType="Column" sfwValue="staging_path_code" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="20" />
+    <attribute ID="ErrorPathCode" sfwType="Column" sfwValue="error_path_code" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="20" />
+    <attribute ID="ProcessPathCode" sfwType="Column" sfwValue="process_path_code" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="20" />
+    <attribute ID="FileStatusDescription" sfwType="Description" sfwValue="file_status_description" />
+    <attribute ID="FileStatusId" sfwType="Column" sfwValue="file_status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="26" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="FileStatusValue" sfwType="Column" sfwValue="file_status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="InboundOutboundFlag" sfwType="Column" sfwValue="inbound_outbound_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="EmailNotification" sfwType="Column" sfwValue="email_notification" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="300" />
+    <attribute ID="OtherParameters" sfwType="Column" sfwValue="other_parameters" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="100" />
+    <attribute ID="GroupProcessFlag" sfwType="Column" sfwValue="group_process_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute sfwType="Collection" sfwEntity="entutlRecordLayout" ID="lstRecordLayout" sfwValue="iclbRecordLayout" />
+  </attributes>
+  <constraint />
+  <groupslist />
+  <methods />
+  <lifecycle />
+  <objectmethods />
+  <ExtraFields />
+</entity>

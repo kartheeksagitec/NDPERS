@@ -1,0 +1,77 @@
+﻿<form ID="wfmMSSAnnualStatementMaintenance" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2001" sfwType="FormLinkMaintenance" sfwTitle="Annual Statements" version="3.5" sfwEntity="entMSSHome" sfwTemplate="MSSAnnualStatementMaintenance.html" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmMSSAnnualStatementLookup" sfwFormObjectType="None" isBasedOnWfm="true">
+  <initialload>
+    <callmethods sfwMethodName="FindMSSAnnualStatements" />
+  </initialload>
+  <items>
+    <sfwTable ID="Main" />
+    <sfwPanel ID="pnlHeading" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblHeading" />
+        <sfwLiteral Text="Annual Statements" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlNewPage" sfwCaption="Information" sfwCollapsible="False" sfwVisibleRule="VisibleRuleIsNotMASPresentAndLimitedAccess">
+      <items>
+        <sfwTable ID="tblNewPage" />
+        <sfwLabel ID="lblLabel" sfwVisibleRule="VisibleRuleIsNotMASPresent" Text="&lt;br/&gt;An annual statement is not available for you at this time&lt;br/&gt;&lt;br/&gt;" sfwIsCaption="True" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlMain" sfwCaption="Annual Statement Details" sfwCollapsible="False" sfwVisibleRule="VisibleRuleIsMASPresentAndNotLimitedAccess" CssClass="GridColumnHide">
+      <items>
+        <sfwTable ID="tblMain" />
+        <sfwButton ID="btnGenerateReport" sfwMethodName="btn_OpenPDF" sfwNavigationParameter="pdf_file_name=IstrDownloadFileName" sfwSelection="One" Text="Open Report" />
+        <sfwTextBox ID="txtDownloadFileName" sfwEntityField="IstrDownloadFileName" />
+        <sfwButton ID="btnGenerateReportNew" sfwMethodName="btnDownload_Click" sfwObjectMethod="CreateMemberAnnualStatementDownload" sfwNavigationParameter="aintSelectionID=objMASSelection.MasSelectionId;astrReportName=ReportName" sfwRelatedControl="grvAnnualStatementsForLast3Yrs" Text="Open Report"/>
+        <sfwGridView AllowPaging="True" ID="grvAnnualStatementsForLast3Yrs" sfwEntityField="lstAnnualStatementsForLast3Yrs" sfwGridEntity="entMasStatementFile">
+          <Columns>
+            <TemplateField HeaderText="Annual Statement ID" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwLinkable="True" sfwRelatedControl="btnGenerateReportNew" sfwEntityField="objMASSelection.MasSelectionId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Year">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objMASSelection.objBatchRequest.StatementYear" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Statement Date">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwLinkable="True" sfwRelatedControl="btnGenerateReportNew" sfwEntityField="objMASSelection.objBatchRequest.StatementEffectiveDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Payee Account ID" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objMASSelection.PayeeAccountId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Group Type" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objMASSelection.objBatchRequest.GroupTypeDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Request Type" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objMASSelection.objBatchRequest.BatchRequestTypeDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Report Name" SortExpression="ReportName">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="ReportName" CssClass="hideControl" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Statement Type" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="StatementTypeDescription" />
+              </ItemTemplate>
+            </TemplateField>
+          </Columns>
+        </sfwGridView>
+        <sfwLiteral ID="ltrLiteral" Text="&lt;font style=&quot;padding-left:5px;&quot;&gt;Your Statement should open in a new window. If the new window doesn’t open, you may have your “Pop-Up” blocker on. Please turn off your pop-up blocker and try again&lt;/font&gt;" />
+      </items>
+    </sfwPanel>
+  </items>
+  <loaddetails>
+    <entityfield ID="lstAnnualStatementsForLast3Yrs" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+  </loaddetails>
+  <ExtraFields />
+</form>

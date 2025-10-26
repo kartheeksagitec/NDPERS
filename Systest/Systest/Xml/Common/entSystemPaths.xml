@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entSystemPaths" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvAdmin" sfwType="BusinessRule" sfwMainCDO="icdoSystemPaths" sfwObjectID="busSystemPaths" sfwTableName="sgs_system_paths">
+  <rules>
+    <rule ID="PathCodeExistsNew" sfwMessage="Path Code Exists. Please enter different Path Code" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entSystemPaths.PathCodeExistsNew&quot;, this.icdoSystemPaths.path_code) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="PathCodeExistsUpdate" sfwMessage="Path Code Exists. Please enter different Path Code" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entSystemPaths.PathCodeExistsUpdate&quot;, this.icdoSystemPaths.path_code, this.icdoSystemPaths.path_id) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="Path Code is Required" sfwMessage="Path Code is required" sfwExpression="(string.IsNullOrEmpty(this.icdoSystemPaths.path_code))" sfwObjectBased="True" />
+    <rule ID="Path Description is Required" sfwMessage="Path Description is required" sfwExpression="(string.IsNullOrEmpty(this.icdoSystemPaths.path_description))" sfwObjectBased="True" />
+    <rule ID="Path Value is Required" sfwMessage="Path Value is required" sfwExpression="(string.IsNullOrEmpty(this.icdoSystemPaths.path_value))" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror>
+    <item ID="PathCodeExistsNew" sfwMode="New" sfwStatus="Active" />
+    <item ID="PathCodeExistsUpdate" sfwMode="Update" sfwStatus="Active" />
+    <item ID="Path Code is Required" sfwMode="All" sfwStatus="Active" />
+    <item ID="Path Description is Required" sfwMode="All" sfwStatus="Active" />
+    <item ID="Path Value is Required" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <updateablecdo />
+  <queries>
+    <query ID="LookUp" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from sgs_system_paths&#xD;&#xA;order by path_code">
+      <parameters />
+    </query>
+    <query ID="PathCodeExistsNew" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) from sgs_system_paths&#xD;&#xA;where path_code = @path_code">
+      <parameters>
+        <parameter ID="@path_code" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="PathCodeExistsUpdate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) from sgs_system_paths&#xD;&#xA;where path_code = @path_code&#xD;&#xA;and path_id &lt;&gt; @path_id">
+      <parameters>
+        <parameter ID="@path_code" sfwDataType="string" />
+        <parameter ID="@path_id" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="PathDescription" sfwType="Description" sfwValue="path_description" />
+    <attribute ID="PathId" sfwType="Column" sfwValue="path_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PathCode" sfwType="Column" sfwValue="path_code" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="10" sfwRequired="False" />
+    <attribute ID="PathValue" sfwType="Column" sfwValue="path_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="255" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+  </attributes>
+</entity>

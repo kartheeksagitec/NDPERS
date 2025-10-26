@@ -1,0 +1,66 @@
+﻿<div class="portlet-body scenario-overflow-hide">
+
+    <div ng-class="objLogicalRule.dictAttributes.sfwRuleType == 'ExcelMatrix' ? 'excel-matrix-popup popup-wrapper-run-result' : 'popup-wrapper-run-result' " id="dvViewDiagram">
+
+        <!--<div class="popup-run-result-btn marg-bottom-5" ng-show="objLogicalRule.dictAttributes.sfwRuleType == 'ExcelMatrix'" style="background-color:transparent !important;">
+            <input type="button" value="LoadTopData" class="dialog-btn" ng-click="scrollupfunction(objSelectedLogicalRule)" />
+            <input type="button" value="LoadBottomData" class="dialog-btn" ng-click="scrolldownfunction(objSelectedLogicalRule)" />
+        </div>-->
+
+        <div class="form-group checkbox-row" ng-show="objLogicalRule.RuleType == 'DecisionTable'" >
+            <label class="control-label text-nowrap">Show Only Executed Path</label>
+
+            <input type="checkbox" value="Show Only Executed Path" ng-model="blnShowOnlyExecutedPath" ng-checked="blnShowOnlyExecutedPath" ng-change="ShowOnlyExecutedPath(blnShowOnlyExecutedPath, objSelectedLogicalRule)" 
+                   class="popup-single-checkbox fleft marg-right-10 marg-top-10"  />
+
+        </div>
+
+        <div class="run-result-spliter fleft  full-width" ng-class="objLogicalRule.dictAttributes.sfwRuleType == 'LogicalRule' ?  'full-height' : 'excelmatrix-result' ">
+            <div class="toolbox-wrapper execution-result-wrapper form-toolbox" ng-if="!IsDiagramDivExpanded && !IsRunResults">
+                <div class="client-visi-layout-inner" id="divRunResultsTable" >
+                    <div  class="client-visi-header">
+                        <span>Execution Data</span>
+                        <span class="toolbox-close-icon top-0" ng-click="ExpandCollapseDiagram()"> </span>
+                    </div>
+                    <div class="client-visi-content">
+                        <div class="popup-run-result-table scenario-table-scrollable">
+                            <table id="tblScenarioPopupRunResult" class="sws-table">
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Input Value</th>
+                                        <th>Expected Value</th>
+                                        <th>Actual Value</th>
+                                        <th>Result</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="obj in testExecutionResults">
+                                        <td><span ng-bind="obj.Id"></span></td>
+                                        <td><span ng-bind="obj.InputValue"></span></td>
+                                        <td><span ng-bind="obj.ExpectedValue"></span></td>
+                                        <td><span ng-bind="obj.ActualValue"></span></td>
+                                        <td><span ng-bind="obj.Status"></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+             
+            </div>
+            <div class="toolbox-sidebar" ng-if="IsDiagramDivExpanded && !IsRunResults">
+                <span class="toolbox-close-icon" ng-click="ExpandCollapseDiagram()" > </span>
+
+            </div>
+
+            <div ng-class="IsDiagramDivExpanded ? 'form-area-expanded execution-result-diagram-area-border' : 'form-area execution-result-diagram-area' " id="divRunResultsDiagram">
+                    <ruledirectiveforscenarioexecution logicalrule='objLogicalRule' objselectedlogicalrule="objEntityBasedScenario.SelectedStep.objSelectedLogicalRule" scenarioruntype="objEntityBasedScenario.SelectedStep.strRunType"></ruledirectiveforscenarioexecution>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-actions">
+    <input type="button" value="OK" ng-click="viewDiagramDialog.close()" class="fright dialog-btn" />
+</div>

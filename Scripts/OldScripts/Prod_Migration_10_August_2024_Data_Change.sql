@@ -1,0 +1,25 @@
+
+--------------Created By: Surendra
+--------------Purpose   : 1099R Issues
+IF EXISTS (SELECT 1 FROM SGT_PAYMENT_ITEM_TYPE WHERE PAYMENT_ITEM_TYPE_ID in (24,26) and TAXABLE_ITEM_FLAG = 'N')
+BEGIN
+	UPDATE SGT_PAYMENT_ITEM_TYPE SET TAXABLE_ITEM_FLAG = 'Y' WHERE PAYMENT_ITEM_TYPE_ID IN (24,26)
+END
+GO
+
+--------------Created By: Sarvesh
+--------------Purpose   : PIR 26489
+IF EXISTS (SELECT * FROM [DBO].[SGS_COR_TEMPLATES] WHERE TEMPLATE_NAME = 'PER-0053')
+BEGIN
+UPDATE [SGS_COR_TEMPLATES] SET [ASSOCIATED_FORMS] = 'wfmPersonMaintenance;wfmPersonAddressMaintenance;' WHERE [TEMPLATE_NAME] = 'PER-0053' and [TEMPLATE_ID] = 127 
+END
+GO
+
+--------------Created By: Vidya
+--------------Purpose   : PIR 26517
+IF NOT EXISTS (SELECT 1 FROM [DBO].[SGS_MESSAGES] WHERE MESSAGE_ID = 10505)
+BEGIN
+INSERT INTO SGS_MESSAGES ([MESSAGE_ID], [DISPLAY_MESSAGE], [SEVERITY_ID], [SEVERITY_VALUE], [INTERNAL_INSTRUCTIONS], [EMPLOYER_INSTRUCTIONS], [CREATED_BY], [CREATED_DATE], [MODIFIED_BY], [MODIFIED_DATE], [UPDATE_SEQ])
+VALUES(10505, 'Informational - Member''s hire date is in the same month as the termination date.  Review plan dates to ensure accuracy.',	16,	'I', NULL, NULL, 'PIR 26517', GETDATE(), 'PIR 26517', GETDATE(), 0)
+END
+GO

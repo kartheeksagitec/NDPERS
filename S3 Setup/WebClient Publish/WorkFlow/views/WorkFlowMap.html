@@ -1,0 +1,456 @@
+﻿
+<div ng-controller="WorkFlowMapsController" class="innerWrapper workflow-screen">
+    <!--<search-design ng-hide="selectedDesignSource" current-file="currentfile" select-element="selectElement(path)" traverse-model="traverseMainModel(path)" toggle-design="ToggleUIDesginAttribute(items, IsAction)"></search-design>-->
+    <div class="toolbox-wrapper correspondence-toolbar no-right-padding" ng-hide="selectedDesignSource">
+        <div class="toolbox toolbox-form">
+            <div style="height:100%;background-color:white;">
+                <select ng-options="x for x in lstBusinessObject" ng-model="objBusinessObjectTree.busObjectName" ng-change="onChangeBusinessObject(objBusinessObjectTree.busObjectName)" class="form-control input-sm"></select>
+                <!--<input class="form-control" type="text" ng-model="objBusinessObjectTree.busObjectName" undoredodirective readonly="readonly" />-->
+
+                <div style="height:calc(100% - 28px);">
+                    <div class="entity-tree-wrapper">
+                        <div class="full-height">
+                            <newbusobjecttreedirective lstmultipleselectedfields="objBusinessObjectTree.lstmultipleselectedfields" lstcurrentbusinessobjectproperties="objBusinessObjectTree.lstCurrentBusinessObjectProperties" lstdisplaybusinessobject="objBusinessObjectTree.lstdisplaybusinessobject" busobjectname="objBusinessObjectTree.busObjectName" isshowproperties="true" isshowmethods="false" isshowrules="false" selectedfield="objWorkFlow.SelecetdField"></newbusobjecttreedirective>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="workflow-content" ng-hide="selectedDesignSource">
+        <ul class="nav nav-tabs">
+
+            <li ng-click="ActiveTab('Activities')" ng-class="IsActivity==true?'active':''">
+                <a aria-expanded="true" data-toggle="tab">
+                    Activities
+                </a>
+            </li>
+
+            <li ng-click="ActiveTab('ProcessVariable')" ng-class="IsActivity==false?'active':''">
+                <a aria-expanded="false" data-toggle="tab">
+                    Process Variable
+                </a>
+            </li>
+
+        </ul>
+
+
+        <div class="tab-content ">
+            <div class="page-sidebar full-height full-width" ng-show="IsActivity" ng-class="IsActivity==true?'tab-pane fade active in':'tab-pane fade'">
+
+                <div class="col-xs-3 activity-links">
+                    <div class="form-group" style="padding:3px">
+                        <input type="text" class="form-control input-sm" placeholder="Search" ng-model="SearchByActivity" title="{{SearchByActivity}}" />
+                    </div>
+                    <ul class="page-sidebar-menu ">
+                        <li ng-class="{'active':obj==selectedCurrentActivityRecord}" ng-repeat="obj in WorkflowMapModel.Elements | filter:SearchByActivity" ng-if="obj.Name=='activity'" ng-click="SelectedActivityClick(obj)">
+                            <a title="obj.dictAttributes.ID" ng-bind="obj.dictAttributes.sfwDisplayName">
+
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col-xs-9 activity-content">
+                    <div class="page-heading">
+                        <span>{{selectedCurrentActivityRecord.dictAttributes.sfwDisplayName}}</span>
+                    </div>
+
+                    <div class="page-content-area">
+
+
+                        <div class="form-group no-bottom-margin">
+                            <div class="col-xs-4">
+                                <div class="form-group">
+                                    <label class="control-label">Reference ID</label>
+
+                                    <select class="form-control" ng-model="selectedCurrentActivityRecord.dictAttributes.sfwReferenceID" undoredodirective model='selectedCurrentActivityRecord'>
+                                        <option ng-repeat="x in objProcessDetails.Elements" ng-if="x.dictAttributes.ID">{{x.dictAttributes.ID}}</option>
+                                    </select>
+
+                                </div>
+
+                                <div class="form-group checkbox-row">
+                                    <input type="checkbox" ng-model="selectedCurrentActivityRecord.dictAttributes.sfwFirstActivityFlag" ng-true-value="'True'" ng-false-value="'False'" undoredodirective model='selectedCurrentActivityRecord'>
+                                    <label class="control-label">First Activity</label>
+
+
+                                    <input type="checkbox" ng-model="selectedCurrentActivityRecord.dictAttributes.sfwLastActivityFlag" ng-true-value="'True'" ng-false-value="'False'" undoredodirective model='selectedCurrentActivityRecord'>
+                                    <label class="control-label">Last Activity</label>
+
+
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label">Activity Type </label>
+                                    <input class="form-control" type="text" ng-model="selectedCurrentActivityRecord.dictAttributes.sfwActivityType" undoredodirective model="selectedCurrentActivityRecord" readonly="readonly" />
+
+
+                                </div>
+
+                                <div class="form-group" ng-if="selectedCurrentActivityRecord.dictAttributes.sfwActivityType=='GenerateCommunication' || selectedCurrentActivityRecord.dictAttributes.sfwActivityType=='SendCommunication'">
+                                    <label class="control-label">Template </label>
+                                    <select class="form-control input-sm" title="{{selectedCommunicationRecord.dictAttributes.sfwTemplate}}" ng-options="templete for templete in objWorkFlowDetail.CorTemplateCollection" ng-model='selectedCommunicationRecord.dictAttributes.sfwTemplate' undoredodirective model='selectedCommunicationRecord'></select>
+
+
+                                </div>
+
+                                <div class="form-group" ng-if="selectedCurrentActivityRecord.dictAttributes.sfwActivityType=='GenerateCommunication' || selectedCurrentActivityRecord.dictAttributes.sfwActivityType=='SendCommunication'">
+                                    <label class="control-label">Remote Business Object </label>
+                                    <select class="form-control input-sm" title="{{selectedCommunicationRecord.dictAttributes.sfwRemoteObject}}" ng-options="remoteObject.dictAttributes.ID as remoteObject.dictAttributes.ID for remoteObject in objRemoteObjectCollection" ng-model='selectedCommunicationRecord.dictAttributes.sfwRemoteObject' undoredodirective model='selectedCommunicationRecord' ng-change="onRemoteObjectChangedInWorkFlow()"></select>
+
+
+                                </div>
+
+                                <div class="form-group" ng-if="selectedCurrentActivityRecord.dictAttributes.sfwActivityType=='GenerateCommunication' || selectedCurrentActivityRecord.dictAttributes.sfwActivityType=='SendCommunication'">
+                                    <label class="control-label">Method </label>
+                                    <select class="form-control input-sm" title="{{selectedCommunicationRecord.dictAttributes.sfwMethodName}}" ng-options="method.dictAttributes.ID as method.dictAttributes.ID for method in SrvMethodCollection" ng-model='selectedCommunicationRecord.dictAttributes.sfwMethodName' undoredodirective model='selectedCommunicationRecord' ng-change="getParametersonMethodChange()"></select>
+
+                                </div>
+
+                                <div class="form-group" ng-if="selectedCurrentActivityRecord.dictAttributes.sfwActivityType=='Code' ">
+                                    <label class="control-label">Remote Business Object </label>
+                                    <select class="form-control input-sm" title="{{customMethodsModel.dictAttributes.sfwRemoteObject}}" ng-options="remoteObject.dictAttributes.ID as remoteObject.dictAttributes.ID for remoteObject in objRemoteObjectCollection" ng-model='customMethodsModel.dictAttributes.sfwRemoteObject' undoredodirective model='customMethodsModel' ng-change="onRemoteObjectChangedInWorkFlow()"></select>
+
+
+                                </div>
+
+                                <div class="form-group" ng-if="selectedCurrentActivityRecord.dictAttributes.sfwActivityType=='Code' ">
+                                    <label class="control-label">Method </label>
+                                    <select class="form-control input-sm" title="{{customMethodsModel.dictAttributes.sfwMethodName}}" ng-options="method.dictAttributes.ID as method.dictAttributes.ID for method in SrvMethodCollection" ng-model='customMethodsModel.dictAttributes.sfwMethodName' undoredodirective model='customMethodsModel' ng-change="getParametersonMethodChange()"></select>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <hr />
+
+
+                    </div>
+
+                    <div style="float:left;height:calc(100% - 270px);width:100%" ng-if="selectedCurrentActivityRecord.dictAttributes.sfwActivityType=='User' || selectedCurrentActivityRecord.dictAttributes.sfwActivityType=='Wait'">
+
+                        <div class="full-height">
+
+                            <ul class="nav nav-tabs marg-top-5">
+
+                                <li ng-click="changeTab('noRef')" ng-class="showRefID==true?'active':''">
+                                    <a aria-expanded="true" data-toggle="tab">
+                                        No Reference ID
+                                    </a>
+                                </li>
+
+                                <li ng-click="changeTab('withRef')" ng-class="showRefID==false?'active':''">
+                                    <a aria-expanded="false" data-toggle="tab">
+                                        With Reference ID
+                                    </a>
+                                </li>
+                            </ul>
+
+                            <div class="entity-tab-content form-details-label">
+
+                                <div class="query-inner-tab">
+
+                                    <div ng-show="showRefID" ng-class="showRefID==true?'tab-pane fade active in':'tab-pane fade'">
+                                        <div class="form-group"><label class="control-label"> <a ng-click="selectAssociateFormClick(objWithNoRef.dictAttributes.sfwFormName)">Associated Forms</a></label>
+                                            <activeformintellisensetemplate activeformname='objWithNoRef.dictAttributes.sfwFormName' model='objWithNoRef' formmodel='WorkflowMapModel' propertyname='"dictAttributes.sfwFormName"' formtype="'Maintenance,Lookup,Wizard,FormLinkMaintenance,FormLinkLookup,FormLinkWizard'" multiactiveformflag='false' onactiveformchange="OnActiveFormValueChangeInWorkFlow()" isupdatefromexternalprop="true" />
+                                           
+                                        </div>
+                                        <div class="form-group checkbox-row">
+
+                                            <input type="radio" name="method" value="new" ng-model="objWithNoRef.dictAttributes.sfwFormMode" ng-change="methodModeChange(objWithNoRef.dictAttributes.sfwFormMode)" /><span class="control-label">New</span>
+                                            <input type="radio" name="method" value="update" ng-model="objWithNoRef.dictAttributes.sfwFormMode" ng-change="methodModeChange(objWithNoRef.dictAttributes.sfwFormMode)" /><span class="control-label">Update</span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">Focus Control ID</label>
+                                            <input class="form-control" type="text" ng-model="objWithNoRef.dictAttributes.sfwFocusControlID" undoredodirective model="objWithNoRef" />
+
+                                        </div>
+
+                                        <div class="inner-query-table" style="width:100% !important">
+                                            <div class="workflow-grid-head">
+                                                Parameters
+
+                                            </div>
+                                            <div class="workflow-grid" style="height:200px !important; overflow:auto !important">
+                                                <table class="sws-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th> Parameter Source</th>
+                                                            <th> Parameter Name</th>
+                                                            <th> Data Type </th>
+                                                            <th>Value Source </th>
+                                                            <th>Field Name </th>
+                                                            <th>Parameter Value </th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                        <tr ng-repeat="objParam in objWithNoRef.Elements" ng-if="objWithNoRef.Elements.length>0" ng-click="selectNoRefParamter(objParam)" ng-class="{'selected':objParam==selectedNoRefParamter}">
+                                                            <td><span ng-bind="objParam.dictAttributes.sfwParameterSource"></span></td>
+                                                            <td><span ng-bind="objParam.dictAttributes.sfwParamaterName"></span></td>
+                                                            <td><span ng-bind="objParam.dictAttributes.sfwDataType"></span></td>
+                                                            <td>
+                                                                <select ng-model="objParam.dictAttributes.sfwValueSource" ng-options="x for x in lstValueSource" undoredodirective model='objParam' ng-change="ResetValues(objParam)"></select>
+                                                            </td>
+                                                            <td><span ng-bind="objParam.dictAttributes.sfwFieldName"></span></td>
+                                                            <td>
+                                                                <input class="form-control" type="text" ng-model="objParam.dictAttributes.sfwParameterValue" undoredodirective model="objParam" ng-show="objParam.dictAttributes.sfwValueSource=='Constant'|| !objParam.dictAttributes.sfwValueSource" />
+                                                                <!--<select class="form-control" ng-model="objParam.dictAttributes.sfwParameterValue" ng-options="x.dictAttributes.ID as x.dictAttributes.ID for x in objProcessDetails.Elements" ng-show="objParam.ParameterSource" ></select>-->
+
+
+                                                                <select class="form-control" ng-model="objParam.dictAttributes.sfwParameterValue" ng-show="objParam.dictAttributes.sfwValueSource=='Parameter'" undoredodirective model='objParam'>
+                                                                    <option ng-repeat="x in objProcessDetails.Elements" ng-if="x.dictAttributes.ID">{{x.dictAttributes.ID}}</option>
+                                                                </select>
+                                                                <div ng-show="objParam.dictAttributes.sfwValueSource=='Object Field'">
+                                                                    <objecttreeintellisensetemplate insidegrid="true" model="objParam" objtree="objBusinessObject.ObjTree" objectfield="objParam.dictAttributes.sfwParameterValue" isloadmethod="false" allowdrop="true"
+                                                                                                    busobject="objBusinessObjectTree.busObjectName"></objecttreeintellisensetemplate>
+                                                                </div>
+
+                                                            </td>
+                                                        </tr>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div ng-show="!showRefID" ng-class="showRefID==false?'tab-pane fade active in':'tab-pane fade'">
+
+                                        <div class="form-group">
+                                            <label class="control-label"> <a ng-click="selectAssociateFormClick(objWithRef.dictAttributes.sfwFormName)">Associated Forms</a></label>
+                                            <activeformintellisensetemplate activeformname='objWithRef.dictAttributes.sfwFormName' model='objWithRef' formmodel='WorkflowMapModel' propertyname='"dictAttributes.sfwFormName"' formtype="'Maintenance,Lookup,Wizard,FormLinkMaintenance,FormLinkLookup,FormLinkWizard'" multiactiveformflag='false' onactiveformchange="OnActiveFormValueChangeInWorkFlow()" isupdatefromexternalprop="true" />                                           
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">Focus Control ID</label>
+                                            <input class="form-control" type="text" ng-model="objWithRef.dictAttributes.sfwFocusControlID" undoredodirective model="objWithRef" />
+
+                                        </div>
+                                        <div class="inner-query-table" style="width:auto">
+                                            <div class="form-group margin-bottom-5 query-panel-head">
+
+                                                <div class="workflow-grid-head">Parameters</div>
+
+                                            </div>
+                                            <div class="workflow-grid" style="height:200px !important; overflow:auto !important">
+                                                <table class="sws-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th> Parameter Source</th>
+                                                            <th> Parameter Name</th>
+                                                            <th> Data Type </th>
+                                                            <th>Value Source </th>
+                                                            <th>Field Name </th>
+                                                            <th>Parameter Value </th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                        <tr ng-repeat="objParam in objWithRef.Elements" ng-if="objWithRef.Elements.length>0" ng-click="selectWithRefParamter(objParam)" ng-class="{'selected':objParam==selectedWithRefParamter}">
+                                                            <td><span ng-bind="objParam.dictAttributes.sfwParameterSource"></span></td>
+                                                            <td><span ng-bind="objParam.dictAttributes.sfwParamaterName"></span></td>
+                                                            <td><span ng-bind="objParam.dictAttributes.sfwDataType"></span></td>
+                                                            <td>
+                                                                <select ng-model="objParam.dictAttributes.sfwValueSource" ng-options="x for x in lstValueSource" undoredodirective model='objParam' ng-change="ResetValues(objParam)"></select>
+                                                            </td>
+                                                            <td><span ng-bind="objParam.dictAttributes.sfwFieldName"></span></td>
+                                                            <td>
+                                                                <input class="form-control" type="text" ng-model="objParam.dictAttributes.sfwParameterValue" undoredodirective model="objParam" ng-show="objParam.dictAttributes.sfwValueSource=='Constant'|| !objParam.dictAttributes.sfwValueSource" />
+                                                                <!--<select class="form-control" ng-model="objParam.dictAttributes.sfwParameterValue" ng-options="x.dictAttributes.ID as x.dictAttributes.ID for x in objProcessDetails.Elements" ng-show="objParam.ParameterSource"></select>-->
+
+                                                                <select class="form-control" ng-model="objParam.dictAttributes.sfwParameterValue" ng-show="objParam.dictAttributes.sfwValueSource=='Parameter'" undoredodirective model='objParam'>
+                                                                    <option ng-repeat="x in objProcessDetails.Elements" ng-if="x.dictAttributes.ID">{{x.dictAttributes.ID}}</option>
+                                                                </select>
+                                                                <div ng-show="objParam.dictAttributes.sfwValueSource=='Object Field'">
+                                                                    <objecttreeintellisensetemplate insidegrid="true" model="objParam" objtree="objBusinessObject.ObjTree" objectfield="objParam.dictAttributes.sfwParameterValue" isloadmethod="false"
+                                                                                                    busobject="objBusinessObjectTree.busObjectName" allowdrop="true"></objecttreeintellisensetemplate>
+                                                                </div>
+
+                                                            </td>
+                                                        </tr>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div ng-if="selectedCurrentActivityRecord.dictAttributes.sfwActivityType=='Code'">
+
+                        <div class="entity-inner-container full-height">
+
+
+
+                            <div class="entity-tab-content calc-query-entity-height form-details-label">
+
+                                <div class="query-inner-tab">
+                                    <div class="inner-query-table">
+                                        <div class="form-group margin-bottom-5 query-panel-head">
+                                            <div class="workflow-grid-head ">Parameters</div>
+
+                                        </div>
+                                        <div class="workflow-grid" style="height:200px !important; overflow:auto !important">
+                                            <table class="sws-table">
+                                                <thead>
+                                                    <tr>
+
+                                                        <th> Parameter</th>
+                                                        <th> Data Type </th>
+                                                        <th>Value Source </th>
+                                                        <th>Field Name </th>
+                                                        <th>Parameter Value</th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    <tr ng-repeat="objParam in customMethodsModel.Elements" ng-if="customMethodsModel.Elements.length>0" ng-click="selectCustomModelParamter(objParam)" ng-class="{'selected':objParam==selectedCustomModelParameter}">
+                                                        <td><span ng-bind="objParam.dictAttributes.sfwParamaterName"></span></td>
+                                                        <td><span ng-bind="objParam.dictAttributes.sfwDataType"></span></td>
+                                                        <td>
+                                                            <select ng-model="objParam.dictAttributes.sfwValueSource" ng-options="x for x in lstValueSource" undoredodirective model='objParam' ng-change="ResetValues(objParam)"></select>
+                                                        </td>
+                                                        <td><span ng-bind="objParam.dictAttributes.sfwFieldName"></span></td>
+                                                        <td>
+                                                            <input class="form-control" type="text" ng-model="objParam.dictAttributes.sfwParameterValue" undoredodirective model="objParam" ng-show="objParam.dictAttributes.sfwValueSource=='Constant'|| !objParam.dictAttributes.sfwValueSource" />
+                                                            <select class="form-control" ng-model="objParam.dictAttributes.sfwParameterValue" ng-options="x.dictAttributes.ID as x.dictAttributes.ID for x in objProcessDetails.Elements" ng-show="objParam.dictAttributes.sfwValueSource=='Parameter'" undoredodirective model='objParam'></select>
+                                                            <div ng-show="objParam.dictAttributes.sfwValueSource=='Object Field'">
+                                                                <objecttreeintellisensetemplate insidegrid="true" model="objParam" objtree="objBusinessObject.ObjTree" objectfield="objParam.dictAttributes.sfwParameterValue" isloadmethod="false"
+                                                                                                busobject="objBusinessObjectTree.busObjectName" allowdrop="true"></objecttreeintellisensetemplate>
+                                                            </div>
+
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div ng-if="selectedCurrentActivityRecord.dictAttributes.sfwActivityType=='GenerateCommunication' || selectedCurrentActivityRecord.dictAttributes.sfwActivityType=='SendCommunication'">
+
+                        <div class="entity-inner-container full-height">
+                            <div class="entity-tab-content calc-query-entity-height form-details-label">
+
+                                <div class="query-inner-tab">
+                                    <div class="inner-query-table">
+                                        <div class="form-group margin-bottom-5 query-panel-head">
+                                            <div class="workflow-grid-head ">Parameters</div>
+
+                                        </div>
+                                        <div class="workflow-grid" style="height:200px !important; overflow:auto !important">
+                                            <table class="sws-table">
+                                                <thead>
+                                                    <tr>
+
+                                                        <th> Parameter</th>
+                                                        <th> Data Type </th>
+                                                        <th>Value Source </th>
+                                                        <th>Field Name </th>
+                                                        <th>Parameter Value</th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    <tr ng-repeat="objParam in selectedCommunicationRecord.Elements" ng-if="selectedCommunicationRecord.Elements.length>0" ng-click="selectCustomModelParamter(objParam)" ng-class="{'selected':objParam==selectedCustomModelParameter}">
+                                                        <td><span ng-bind="objParam.dictAttributes.sfwParamaterName"></span></td>
+                                                        <td><span ng-bind="objParam.dictAttributes.sfwDataType"></span></td>
+                                                        <td>
+                                                            <select ng-model="objParam.dictAttributes.sfwValueSource" ng-options="x for x in lstValueSource" undoredodirective model='objParam' ng-change="ResetValues(objParam)"></select>
+                                                        </td>
+                                                        <td><span ng-bind="objParam.dictAttributes.sfwFieldName"></span></td>
+                                                        <td>
+                                                            <input class="form-control" type="text" ng-model="objParam.dictAttributes.sfwParameterValue" undoredodirective model="objParam" ng-show="objParam.dictAttributes.sfwValueSource=='Constant'|| !objParam.dictAttributes.sfwValueSource" />
+                                                            <select class="form-control" ng-model="objParam.dictAttributes.sfwParameterValue" ng-options="x.dictAttributes.ID as x.dictAttributes.ID for x in objProcessDetails.Elements" ng-show="objParam.dictAttributes.sfwValueSource=='Parameter'" undoredodirective model='objParam'></select>
+                                                            <div ng-show="objParam.dictAttributes.sfwValueSource=='Object Field'">
+                                                                <objecttreeintellisensetemplate insidegrid="true" model="objParam" objtree="objBusinessObject.ObjTree" objectfield="objParam.dictAttributes.sfwParameterValue" isloadmethod="false"
+                                                                                                busobject="objBusinessObjectTree.busObjectName" allowdrop="true"></objecttreeintellisensetemplate>
+                                                            </div>
+
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+            <div ng-show="!IsActivity" class="page-sidebar full-height full-width overflowA" ng-class="IsActivity==false?'tab-pane fade active in':'tab-pane fade'">
+
+                <div class="process-var-content">
+                    <div class="">
+                        <label class="page-subheading">Process Variable</label>
+                        <div class="fright">
+                            <i class="fa fa-plus" ng-click="addProcessVariable()"></i>
+                            <i class="fa fa-minus" ng-click="deleteProcessVariable()" ng-disabled="!canDeleteRow()"></i>
+                        </div>
+
+                    </div>
+                    <div>
+                        <table class="sws-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th> Object ID</th>
+                                    <th>Object Field</th>
+                                    <th> Data Type </th>
+
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr ng-repeat="objProcess in objProcessDetails.Elements" ng-if="objProcessDetails.Elements.length>0" ng-class="{'selected':objProcess==selectedProcessVariable}" ng-click="selectProcessVariable(objProcess)">
+                                    <td><input class="form-control" type="text" ng-model="objProcess.dictAttributes.ID" undoredodirective model="objProcess" /></td>
+                                    <td><input class="form-control" type="text" ng-model="objProcess.dictAttributes.sfwObjectID" undoredodirective model="objProcess" /></td>
+                                    <td>
+                                        <!--<objecttreeintellisensetemplate insidegrid="true" model="objParam" objtree="objBusinessObject.ObjTree" objectfield="objParam.dictAttributes.sfwParameterValue" isloadmethod="false"
+                                                                        busobject="objBusinessObjectTree.busObjectName" allowdrop="true"></objecttreeintellisensetemplate>-->
+                                        <input class="form-control" type="text" ng-model="objProcess.dictAttributes.sfwObjectField" model="objProcess" allowdrop="true" workflow-drop drop-data="objProcess" />
+                                    </td>
+                                    <td><span ng-bind="objProcess.dictAttributes.sfwDataType"></span></td>
+
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div ng-show="selectedDesignSource" class="full-height">
+        <form id="form1" class="full-height">
+            <textarea ondragstart="return false" id="code-html" ng-change="sourceChanged()" name="code-html" style="height:100%;width:100%;font-size:17px;" wrap="off" spellcheck="false" ng-model="xmlSource"></textarea>
+        </form>
+        <search-source ng-if="SearchSource.IsEnable" search-source="SearchSource"></search-source>
+    </div>
+</div>

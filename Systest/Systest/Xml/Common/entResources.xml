@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entResources" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvAdmin" sfwType="BusinessRule" sfwMainCDO="icdoResources" sfwObjectID="busResources" sfwTableName="sgs_resources">
+  <rules>
+    <rule ID="Resource already exists" sfwMessage="Resource already exists" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entResources.Count&quot;, this.icdoResources.resource_id) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="RuleCombinationCheck" sfwMessageId="6000" sfwExpression="((string.IsNullOrEmpty(this.icdoResources.resource_description)) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoResources.resource_type_value)))" sfwObjectBased="True" />
+    <rule ID="RuleCheckIfResourceTypeNotBlank" sfwMessageId="6002" sfwExpression="((string.IsNullOrEmpty(this.icdoResources.resource_description)) &amp;&amp; &#xA;!(string.IsNullOrEmpty(this.icdoResources.resource_type_value)))" sfwObjectBased="True" />
+    <rule ID="RuleCheckIfResourceDescriptionNotBlank" sfwMessageId="6001" sfwExpression="(!(string.IsNullOrEmpty(this.icdoResources.resource_description)) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoResources.resource_type_value)))" sfwObjectBased="True" />
+    <rule ID="NoResourceID" sfwMessage="Resource ID must be greater than 0" sfwExpression="(this.icdoResources.resource_id == 0)" sfwObjectBased="True" />
+  </rules>
+  <delete>
+    <property ID="lstSecurity" sfwMethodName="LoadSecurity" />
+  </delete>
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror>
+    <item ID="Resource already exists" sfwMode="New" sfwStatus="Active" />
+    <item ID="RuleCombinationCheck" sfwMode="All" sfwStatus="Active" />
+    <item ID="RuleCheckIfResourceTypeNotBlank" sfwMode="All" sfwStatus="Active" />
+    <item ID="RuleCheckIfResourceDescriptionNotBlank" sfwMode="All" sfwStatus="Active" />
+    <item ID="NoResourceID" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <updateablecdo />
+  <queries>
+    <query ID="ResourceList" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select resource_id, resource_description &#xD;&#xA;  from sgs_resources &#xD;&#xA; order by resource_description&#xD;&#xA;">
+      <parameters />
+    </query>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * &#xD;&#xA; from sgs_resources &#xD;&#xA;order by resource_description">
+      <parameters />
+    </query>
+    <query ID="Count" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*)&#xD;&#xA;  from sgs_resources&#xD;&#xA; where resource_id = @resource_id&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@resource_id" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="ResourceId" sfwType="Column" sfwValue="resource_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ResourceTypeDescription" sfwType="Description" sfwValue="resource_type_description" />
+    <attribute ID="ResourceTypeId" sfwType="Column" sfwValue="resource_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="12" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ResourceTypeValue" sfwType="Column" sfwValue="resource_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="ResourceDescription" sfwType="Column" sfwValue="resource_description" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="400" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute sfwType="Collection" sfwEntity="entSecurity" ID="lstSecurity" sfwValue="iclbSecurity" />
+    <attribute sfwType="Collection" sfwEntity="entResourcesScreen" ID="lstResourcesScreen" sfwValue="iclbResourcesScreen" />
+  </attributes>
+  <objectmethods>
+    <method ID="LoadSecurity" sfwReturnType="Void" />
+  </objectmethods>
+</entity>

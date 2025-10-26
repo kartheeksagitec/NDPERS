@@ -1,0 +1,280 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<form ID="wfmOrganizationIndexingMaintenance" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvOrganization" sfwResource="306 " sfwType="Maintenance" sfwTitle="Organization Maintenance" version="3.5" sfwEntity="entOrganizationRelease1">
+  <initialload>
+    <callmethods sfwMode="New" sfwMethodName="NewOrganizationRelease1" />
+    <callmethods sfwMode="Update" sfwMethodName="FindOrganizationRelease1" />
+  </initialload>
+  <sfwTable ID="Main">
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnltoolbar">
+          <sfwTable ID="toolbar">
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnSave" sfwMethodName="btnSave_Click" sfwNavigationParameter="Aintorgid=OrgId" Text="Save" />
+                <sfwButton ID="btnCancel" sfwMethodName="btnCancel_Click" Text="Refresh" />
+                <sfwButton ID="btnPrev" sfwMethodName="btnPrev_Click" Text="Prev" />
+                <sfwButton ID="btnNext" sfwMethodName="btnNext_Click" Text="Next" />
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlMain" sfwCaption="Organization Details">
+          <sfwTable CssClass="Table" ID="tblMain">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capOrgCode" Text="Org Code ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblOrgCode" sfwMode="Update" sfwEntityField="OrgCode" />
+                <sfwLabel ID="lblOrgId" sfwEntityField="OrgId" CssClass="hideControl" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ForeColor="White" SkinID="ReqInformation" Text="*" sfwIsCaption="True" ID="lblLabel1" />
+                <sfwLabel ID="capOrgName" Text="Organization Name : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtOrgName" sfwEntityField="OrgName" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ForeColor="White" SkinID="ReqInformation" Text="*" sfwIsCaption="True" ID="lblLabel2" />
+                <sfwLabel ID="capOrgTypeValue" Text="Organization Type : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlOrgTypeValue" sfwLoadType="CodeGroup" sfwLoadSource="201" sfwEntityField="OrgTypeValue" />
+                <sfwLabel ID="lblOrgTypeDescription" sfwMode="Update" sfwEntityField="OrgTypeDescription" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capEmpCategoryValue" Text="Employer Category : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlEmpCategoryValue" sfwLoadType="CodeGroup" sfwLoadSource="203" sfwEntityField="EmpCategoryValue" />
+                <sfwLabel ID="lblEmpCategoryDescription" sfwMode="Update" sfwEntityField="EmpCategoryDescription" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ForeColor="White" SkinID="ReqInformation" Text="*" sfwIsCaption="True" ID="lblLabel3" />
+                <sfwLabel ID="capStatusValue" Text="Status : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlStatusValue" sfwDefaultValue="PEND" sfwLoadType="CodeGroup" sfwLoadSource="214" sfwEntityField="StatusValue" />
+                <sfwLabel ID="lblStatusDescription" sfwEntityField="StatusDescription" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlDetailsTab" sfwCaption="Other Details">
+          <sfwTable ID="tblDetailsTab">
+            <sfwRow>
+              <sfwColumn>
+                <sfwTabContainer ID="tctDetailsTab">
+                  <Tabs>
+                    <sfwTabSheet HeaderText="Contact" ID="tshOrgcontact">
+                      <sfwTable ID="tblOrgcontact">
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwButton ID="btnNewOrgContact" sfwActiveForm="wfmOrgContactMaintenance" sfwMethodName="btnNew_Click" sfwNavigationParameter="AintOrgid=lblOrgId" Text="New" />
+                            <sfwButton ID="btnOpenOrgContact" sfwActiveForm="wfmOrgContactMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="AintOrgContactid=OrgContactId" sfwRelatedControl="grvOrgContact" Text="Open" sfwDisableViewOnly="True" />
+                            <sfwButton ID="btnDeleteOrgContact" sfwMethodName="btnDelete_Click" sfwRelatedControl="grvOrgContact" Text="Delete" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwGridView AllowPaging="True" AllowSorting="True" AutoGenerateColumns="False" ID="grvOrgContact" sfwSelection="Many" sfwEntityField="lstOrgContact" sfwGridEntity="entOrgContact">
+                              <Columns>
+                                <TemplateField HeaderText="Full Name">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpenOrgContact" sfwEntityField="objContact.FullName" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Phone Number">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwDataFormat="{0:(###)###-####}" sfwEntityField="objContact.PhoneNo" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Status">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="StatusDescription" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Fax">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwDataFormat="{0:(###)###-####}" sfwEntityField="objContact.FaxNo" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Email">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="objContact.EmailAddress" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Contact ID" Visible="False">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpenOrgContact" sfwEntityField="ContactId" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Org Contact ID">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="OrgContactId" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                              </Columns>
+                            </sfwGridView>
+                          </sfwColumn>
+                        </sfwRow>
+                      </sfwTable>
+                    </sfwTabSheet>
+                    <sfwTabSheet HeaderText="Contacts / Appointments" ID="tshContactsAppointments">
+                      <sfwTable ID="tblContactsAppointments">
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwButton ID="btnOpenOrganizationContactTicket" sfwActiveForm="wfmContactTicketMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintcontactticketid=ContactTicketId" sfwRelatedControl="grvOrganizationContactTicket" Text="Open" sfwDisableViewOnly="True" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwGridView AllowPaging="True" AllowSorting="True" AutoGenerateColumns="False" ID="grvOrganizationContactTicket" sfwSelection="Many" sfwEntityField="lstOrganizationContactTicket" sfwGridEntity="entContactTicket">
+                              <Columns>
+                                <TemplateField HeaderText="Ticket Number">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="ContactTicketId" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Contact Type">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="ContactTypeDescription" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Assigned to User ID">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="objUser.UserId" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Created Date">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="CreatedDate" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Ticket Status">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="StatusDescription" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Appointment Type">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="objAppointmentSchedule.AppointmentTypeDescription" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Counselor">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="objCounselor.UserId" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Appointment Date">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="objAppointmentSchedule.AppointmentDate" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                              </Columns>
+                            </sfwGridView>
+                          </sfwColumn>
+                        </sfwRow>
+                      </sfwTable>
+                    </sfwTabSheet>
+                    <sfwTabSheet HeaderText="Seminar Attendance" ID="tshSeminarAttendance" sfwVisibleRule="Rule check Org Type is not bank, Trustee, Estate, Consutant, vendor">
+                      <sfwTable ID="tblSeminarAttendance">
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwButton ID="btnOpenSeminarSchedule" sfwActiveForm="wfmContactTicketMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintcontactticketid=ContactTicketId" sfwRelatedControl="grvSeminarSchedule" Text="Open" sfwDisableViewOnly="True" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwGridView AllowPaging="True" AllowSorting="True" AutoGenerateColumns="False" ID="grvSeminarSchedule" sfwSelection="Many" sfwEntityField="lstSeminarSchedule" sfwGridEntity="entSeminarSchedule">
+                              <Columns>
+                                <TemplateField HeaderText="Ticket Number">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpenSeminarSchedule" sfwEntityField="ContactTicketId" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Seminar Type">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpenSeminarSchedule" sfwEntityField="SeminarTypeDescription" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Seminar Name">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="SeminarName" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Seminar Date">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="SeminarDate1" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Facilitator">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="objContactTicket.objFacilitator.UserId" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                              </Columns>
+                            </sfwGridView>
+                          </sfwColumn>
+                        </sfwRow>
+                      </sfwTable>
+                    </sfwTabSheet>
+                  </Tabs>
+                </sfwTabContainer>
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlAuditInfo" sfwCaption="Audit Information">
+          <sfwTable CssClass="Table" ID="tblAuditInfo">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capCreate" Text="Create : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblCreatedBy" sfwEntityField="CreatedBy" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblCreatedDate" sfwEntityField="CreatedDate" sfwDataFormat="{0:G}" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capModify" Text="Modify : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblModifiedBy" sfwEntityField="ModifiedBy" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblModifiedDate" sfwEntityField="ModifiedDate" sfwDataFormat="{0:G}" />
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+  </sfwTable>
+  <loaddetails>
+    <entityfield ID="lstOrgContact" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+    <entityfield ID="lstOrganizationContactTicket" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+    <entityfield ID="lstSeminarSchedule" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+  </loaddetails>
+</form>

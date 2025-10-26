@@ -1,0 +1,50 @@
+﻿<div class="portlet-body">
+    <div class="bpm-container">
+        <div class="bpm-container-title">
+            <span>Parameters</span>    
+            <img src="images/Scenario/icon-refresh.svg" class="image-icon-tools fright" ng-click="onRefreshParams()" title="Refresh Parameters"> 
+        </div>
+        <div class="bpm-container-body">
+            <div class="table-scrollable">
+                <table class="table table-striped table-hover table-bordered dataTable no-footer">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Data Type</th>
+                            <th>Value Source</th>
+                            <th>Parameter Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in model.Elements">
+                            <td><span ng-bind="item.dictAttributes.sfwParamaterName"></span></td>
+                            <td><span ng-bind="item.dictAttributes.sfwDataType"></span></td>
+                            <td>
+                                <select class="form-control input-sm" ng-disabled="IsDisabledforVersioning" title="{{item.dictAttributes.sfwValueSource}}" ng-model="item.dictAttributes.sfwValueSource" ng-change="onValueSourceChanged(item)">
+                                    <option value="Parameter">Parameter</option>
+                                    <option value="Constant">Constant</option>
+                                </select>
+                            </td>
+                            <td ng-show="item.dictAttributes.sfwValueSource === 'Parameter'">
+                                <select class="form-control input-sm" ng-disabled="IsDisabledforVersioning" title="{{item.dictAttributes.sfwParameterValue}}" ng-model="item.dictAttributes.sfwParameterValue" ng-options="x for x in queryParametersValues"></select>
+                            </td>
+                            <td ng-show="item.dictAttributes.sfwValueSource === 'Constant'">
+                                <input class="form-control input-sm" type="text" ng-disabled="IsDisabledforVersioning" title="{{item.dictAttributes.sfwParameterValue}}" ng-model="item.dictAttributes.sfwParameterValue" ng-hide="item.dictAttributes.sfwDataType == 'Object'" />
+                                <div class="input-group full-width" ng-show="item.dictAttributes.sfwDataType == 'Object'">
+                                    <input class="form-control form-filter input-sm" type="text" ng-model="item.valueModel.businessObjectModel.dictAttributes.sfwEntity" disabled />
+                                    <span title="Set XML Method" class='input-group-addon input-sm' ng-if="!IsDisabledforVersioning" ng-click="setParamEntityValue(item)">
+                                        <i class="fa fa-chevron-right"></i>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-actions">
+    <input type="button" class="dialog-btn-default" value="OK" ng-if="!IsDisabledforVersioning" ng-click="onOKClick()" />
+    <input type="button" class="dialog-btn" value="Cancel" ng-click="closeDialog()" />
+</div>

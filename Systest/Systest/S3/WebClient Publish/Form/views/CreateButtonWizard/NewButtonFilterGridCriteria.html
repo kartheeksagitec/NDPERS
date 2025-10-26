@@ -1,0 +1,99 @@
+﻿<div class="portlet-body">
+    <div class="form-body full-height">
+        <div class="lookup-field-details">
+            <div class="col-xs-4 pop-up-box">
+
+                <div class="popup-box-header">
+                    Available Fields
+                </div>
+                
+                <div class="popup-box-content">
+                    <div class="form-group">
+                        <input type="Text" placeholder="Search" class="tree-boxes-search-box form-control input-sm margin-bottom-10" title="{{objNewButtonFilterGridCriteria.SearchField}}" ng-model="objNewButtonFilterGridCriteria.SearchField" />
+                    </div>
+                    <div class="form-group form-entity-list-maintenance">
+                        <ul>
+                            <li ng-repeat="field in objNewButtonFilterGridCriteria.AvailableFieldColletion| filter:{ControlName:objNewButtonFilterGridCriteria.SearchField}"                               
+                                ng-class="field.IsSelected?'selected':''">
+                                <input type="checkbox" id="chk{{field.ControlName}}" class="ver-mid" ng-model="field.IsSelected" />
+                                <span class="datatype-iconproperties datatype-icon-{{field.DataType}}"></span>
+                                <span ng-bind="field.ControlName"></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-1 add-btn-adjust">
+                <div class="form-group">
+                    <input type="button" class="dialog-btn" value="Add" ng-click="objNewButtonFilterGridCriteria.addAvailableFields()" />
+                </div>
+            </div>
+
+            <div class="col-xs-7 pop-up-box">
+
+                <div class="popup-box-header">
+                    Search Criteria Fields
+                    <div class="fright">
+                        <i class="fa fa-arrow-up fright" title="Move Up" ng-click="objNewButtonFilterGridCriteria.onMoveUpClick()" ng-disabled="objNewButtonFilterGridCriteria.CanMoveUp()"></i>
+                        <i class="fa fa-arrow-down fright" title="Move Down" ng-click="objNewButtonFilterGridCriteria.onMoveDownClick()" ng-disabled="objNewButtonFilterGridCriteria.CanMoveDown()"></i>
+                        <i class="fa fa-minus fright" title="Delete Field" ng-click="objNewButtonFilterGridCriteria.onDeleteControlClick()" ng-disabled="objNewButtonFilterGridCriteria.SelectedGridField == undefined"></i>
+                    </div>
+
+                </div>
+                <div class="popup-box-content">
+                    <div class="column-number-row">
+                        <label>No of Columns :</label>
+                        <select class="form-control input-sm" ng-model="objNewButtonFilterGridCriteria.StrNoOfColumn" title="{{objNewButtonFilterGridCriteria.StrNoOfColumn}}" >
+                            <option value=""></option>
+                            <option value="2">2</option>
+                            <option value="4">4</option>
+                            <option value="6">6</option>
+                        </select>
+
+                    </div>
+                    <div class="lookup-field-details-search-table">
+                        <table class="pop-up-box-table lookup-result-field-table">
+                            <thead>
+                                <tr>
+                                    <th>Field Name</th>
+                                    <th>Caption</th>
+                                    <th>Control Type</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="field in objNewButtonFilterGridCriteria.GridNonAvailableControlCollection"
+                                    ng-click="objNewButtonFilterGridCriteria.SelectedGridField = field"
+                                    ng-class="objNewButtonFilterGridCriteria.SelectedGridField == field?'selected':''">
+                                    <td width="50%"><input type="text" class="form-control input-sm" title="{{field.ID}}" ng-model="field.ID" /></td>
+                                    <td width="50%"><span ng-bind="field.strCaption"></span></td>
+                                    <td>
+                                        <select ng-options="x for x in ControlTypes" title="{{field.ControlClass}}" ng-model="field.ControlClass" class="form-control form-filter input-sm"></select>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>                       
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="form-actions">
+    <div class="col-xs-6 text-left">
+        <span class="alert-error-msg" ng-if="objNewButtonFilterGridCriteria.ErrorMessageForDisplay.length>0" ng-bind="objNewButtonFilterGridCriteria.ErrorMessageForDisplay"></span>
+    </div>
+    <div class="col-xs-6">
+        <input type="button" class="dialog-btn" value="Cancel" ng-click="CloseWizardClick()" />
+        <input type="button" class="dialog-btn" wz-previous="onPrevious()" value="Back" />       
+        <input type="button" class="dialog-btn" wz-next="onNextForNewGridCreation();onNext()" value="Next"  ng-disabled="objNewButtonFilterGrid.SelectGridOption=='UseExistingGrid' || objNewButtonFilterGridCriteria.GridNonAvailableControlCollection.length==0" />    
+        <input type="button" class="dialog-btn" wz-finish value="Finish" ng-click="onFinishButtonWizardClick()" ng-disabled="objNewButtonFilterGridCriteria.IsFinishDisable() || objNewButtonFilterGrid.SelectGridOption=='CreateNewGrid'" disabled="disabled" />
+    </div>
+</div>
+

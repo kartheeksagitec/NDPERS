@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entDuesRateChangeRequest" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoDuesRateChangeRequest" sfwReadOnlyRule="IsStatusApprovedOrProcessed" sfwObjectID="busDuesRateChangeRequest" sfwTableName="sgt_dues_rate_change_request" sfwView="False">
+  <rules>
+    <rule ID="CanHideUpdateDuesButton" sfwExpression="!(this.IsLoginUserSameAsCreatedBy() == True) &amp;&amp; &#xA;!((this.icdoDuesRateChangeRequest.status_value == &quot;APPR&quot;) || &#xA;(this.icdoDuesRateChangeRequest.status_value == &quot;PROC&quot;))" sfwObjectBased="True" />
+    <rule ID="IsEffectiveDateFirstOfMonth" sfwMessageId="8211" sfwExpression="(this.IsEffectiveDateFirstOfMonth() == False)" sfwObjectBased="True" />
+    <rule ID="IsEffectiveDateNotEntered" sfwMessageId="8202" sfwExpression="(this.icdoDuesRateChangeRequest.effective_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsEffectiveDateValid" sfwMessageId="8212" sfwExpression="(this.IsEffectiveDateValid() &lt; 0)" sfwObjectBased="True" />
+    <rule ID="IsMonthlyAmountNotEntered" sfwMessageId="8206" sfwExpression="(this.icdoDuesRateChangeRequest.monthly_amount == 0)" sfwObjectBased="True" />
+    <rule ID="IsOrgTypeNotVendor" sfwMessageId="8209" sfwExpression="(this.icdoDuesRateChangeRequest.istrOrgCodeId == &quot;0&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusVendor.icdoOrganization.org_type_value&quot;) != &quot;VEND&quot;)" sfwObjectBased="True" />
+    <rule ID="IsRecordDuplicate" sfwMessageId="8208" sfwExpression="!(this.icdoDuesRateChangeRequest.monthly_amount == 0) &amp;&amp; &#xA;!(this.icdoDuesRateChangeRequest.effective_date == DateTime.MinValue) &amp;&amp; &#xA;!(this.icdoDuesRateChangeRequest.istrOrgCodeId == &quot;0&quot;) &amp;&amp; &#xA;(this.IsRecordDuplicate() == False)" sfwObjectBased="True" />
+    <rule ID="IsStatusApprovedOrProcessed" sfwExpression="((this.icdoDuesRateChangeRequest.status_value == &quot;APPR&quot;) || &#xA;(this.icdoDuesRateChangeRequest.status_value == &quot;PROC&quot;))" sfwObjectBased="True" />
+    <rule ID="IsValidVendor" sfwMessageId="8214" sfwExpression="!(this.icdoDuesRateChangeRequest.vendor_org_id &gt; 0)" sfwObjectBased="True" />
+    <rule ID="IsVendorActiveStatus" sfwMessageId="8210" sfwExpression="(this.icdoDuesRateChangeRequest.istrOrgCodeId == &quot;0&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusVendor.icdoOrganization.status_value&quot;) != &quot;ACTV&quot;)" sfwObjectBased="True" />
+    <rule ID="IsVendorOrgIDNull" sfwMessageId="8207" sfwExpression="(this.icdoDuesRateChangeRequest.istrOrgCodeId == &quot;0&quot;)" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="CanHideUpdateDuesButton" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="IsEffectiveDateNotEntered" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMonthlyAmountNotEntered" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsVendorOrgIDNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsRecordDuplicate" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsOrgTypeNotVendor" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsVendorActiveStatus" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEffectiveDateValid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEffectiveDateFirstOfMonth" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsValidVendor" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select * from sgt_dues_rate_change_request DR WITH(NOLOCK)&#xD;&#xA;inner join sgt_organization ORG WITH(NOLOCK) on ORG.org_id = DR.vendor_org_id order by 1 desc">
+      <parameters />
+    </query>
+    <query ID="LoadDuesPAPITDataByVendor" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT PAPIT.* FROM &#xD;&#xA; SGT_PAYEE_ACCOUNT_PAYMENT_ITEM_TYPE PAPIT WITH(NOLOCK)&#xD;&#xA; INNER JOIN &#xD;&#xA; (SELECT PA.PAYEE_ACCOUNT_ID&#xD;&#xA;  FROM SGT_PAYEE_ACCOUNT PA  WITH(NOLOCK)&#xD;&#xA;  INNER JOIN SGT_PAYEE_ACCOUNT_STATUS PAS WITH(NOLOCK) &#xD;&#xA;   ON PAS.PAYEE_ACCOUNT_ID = PA.PAYEE_ACCOUNT_ID  &#xD;&#xA;  INNER JOIN SGS_CODE_VALUE CV WITH(NOLOCK)&#xD;&#xA;   ON PAS.STATUS_ID= CV.CODE_ID AND PAS.STATUS_VALUE = CV.CODE_VALUE&#xD;&#xA;  WHERE (CV.DATA2 IN ('REVW','APRD','RECV','SPND'))&#xD;&#xA;  AND PAYEE_ACCOUNT_STATUS_ID  = &#xD;&#xA;   (SELECT TOP 1 PAYEE_ACCOUNT_STATUS_ID&#xD;&#xA;    FROM SGT_PAYEE_ACCOUNT_STATUS PAS1 (NOLOCK)&#xD;&#xA;    WHERE PAS1.PAYEE_ACCOUNT_ID = PA.PAYEE_ACCOUNT_ID&#xD;&#xA;    AND PAS1.STATUS_EFFECTIVE_DATE &lt;= @EFFECTIVEDATE&#xD;&#xA;    ORDER BY PAS1.STATUS_EFFECTIVE_DATE DESC,PAS1.PAYEE_ACCOUNT_STATUS_ID DESC&#xD;&#xA;   )&#xD;&#xA;  AND PAS.STATUS_EFFECTIVE_DATE &lt;= @EFFECTIVEDATE&#xD;&#xA;  AND BENEFIT_BEGIN_DATE &lt;= @EFFECTIVEDATE&#xD;&#xA;  AND (BENEFIT_END_DATE IS NULL OR BENEFIT_END_DATE &gt; @EFFECTIVEDATE)&#xD;&#xA; ) AS PAYEE&#xD;&#xA; ON PAPIT.PAYEE_ACCOUNT_ID = PAYEE.PAYEE_ACCOUNT_ID&#xD;&#xA;INNER JOIN SGT_PAYMENT_ITEM_TYPE PIT WITH(NOLOCK) &#xD;&#xA; ON PAPIT.PAYMENT_ITEM_TYPE_ID = PIT.PAYMENT_ITEM_TYPE_ID&#xD;&#xA;WHERE CHECK_COMPONENT_DESCRIPTION = 'DUES' &#xD;&#xA; AND VENDOR_ORG_ID = @VENDORORGID &#xD;&#xA; AND @EFFECTIVEDATE BETWEEN PAPIT.START_DATE &#xD;&#xA; AND (CASE WHEN PAPIT.END_DATE IS NULL THEN '12/31/9999' ELSE PAPIT.END_DATE END)&#xD;&#xA;ORDER BY PAPIT.PAYEE_ACCOUNT_ID DESC">
+      <parameters>
+        <parameter ID="@EFFECTIVEDATE" />
+        <parameter ID="@VENDORORGID" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="DuesRateChangeRequestId" sfwType="Column" sfwValue="dues_rate_change_request_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="EffectiveDate" sfwType="Column" sfwValue="effective_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="VendorOrgId" sfwType="Column" sfwValue="vendor_org_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="MonthlyAmount" sfwType="Column" sfwValue="monthly_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" sfwRequired="False" />
+    <attribute ID="StatusDescription" sfwType="Description" sfwValue="status_description" />
+    <attribute ID="StatusId" sfwType="Column" sfwValue="status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="4002" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusValue" sfwType="Column" sfwValue="status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="objVendor" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusVendor" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrOrgCodeId" sfwValue="icdoDuesRateChangeRequest.istrOrgCodeId" />
+  </attributes>
+  <objectmethods>
+    <method ID="btnUpdateDues" sfwReturnType="ArrayList" />
+  </objectmethods>
+</entity>

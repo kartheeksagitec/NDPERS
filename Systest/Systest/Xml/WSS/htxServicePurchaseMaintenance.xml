@@ -1,0 +1,35 @@
+﻿<form ID="wfmServicePurchaseMaintenance" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2001" sfwType="FormLinkMaintenance" sfwTitle="Service Purchase Maintenance" version="3.5" WebSite="NeoSpinWSS" sfwEntity="entServicePurchaseWeb" sfwTemplate="ServicePurchaseMaintenance.html" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmServicePurchaseLookup" sfwFormObjectType="None" isBasedOnWfm="true">
+  <initialload>
+    <callmethods sfwMethodName="NewServicePurchaseContracts" />
+  </initialload>
+  <items>
+    <sfwTable ID="Main" />
+    <sfwPanel ID="pnlNHeader" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblN" />
+        <sfwLiteral ID="ltrlMessage" Text="Service Credit Purchase" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlMain" sfwCaption="Service Credit Purchase">
+      <items>
+        <sfwTable ID="tblMain" />
+        <sfwLabel ID="lblLabel1" Text="&lt;br/&gt;&lt;br/&gt;" sfwIsCaption="True" />
+        <sfwLabel ID="lblLabel" Text="What would you like to do?  " sfwIsCaption="True" />
+        <sfwLabel ID="lblPersonId" sfwEntityField="objPerson.PersonId" CssClass="hideControl" />
+        <sfwDropDownList ID="ddlDropDownList" sfwLoadType="Method" sfwLoadSource="LoadParticipationStatusByBenefitType" sfwEntityField="IstrServicePurchaseType" DataTextField="description" DataValueField="code_value" />
+        <sfwButton ID="btnExecuteRefreshFromObject" sfwMethodName="btnGo_Click" Text="Go" CssClass="hideControl" />
+        <sfwButton ID="btnCancel" sfwMethodName="btnOpen" Text="Refresh" OnClientClick="NavigateToServicePurchase(e);" CssClass="hideControl" />
+        <sfwButton ID="btnSubmit" sfwMethodName="btnValidateExecuteBusinessMethod_Click" sfwObjectMethod="btnGo_click" sfwExecuteMethodType="ObjectMethod" sfwExecuteAfterSuccess="btnCancel" sfwRefreshFromObject="True" />
+        <sfwButton sfwMethodName="btnOpen_Click" Text="Open" ID="btnOpen" sfwActiveForm="wfmMSSServicePurchaseMaintenance" sfwNavigationParameter="aintPersonID=objPerson.PersonId" CssClass="hideControl" />
+        <sfwButton sfwMethodName="btnOpen_Click" Text="Open" ID="btnOpen1" sfwActiveForm="wfmServicePurchaseWebMaintenance" sfwNavigationParameter="aintPersonID=objPerson.PersonId" CssClass="hideControl" />
+        <sfwButton sfwMethodName="btnNew_Click" Text="Open" ID="btnOpen2" sfwActiveForm="wfmMSSServicePurchaseEstimateMaintenance" sfwNavigationParameter="aintPersonId=lblPersonId" CssClass="hideControl" />
+        <sfwLabel ID="lblMultiplePlans" Text="You are currently enrolled in, or have service credit, from multiple retirement plans. You must therefore request an official estimate from NDPERS instead." sfwIsCaption="True" sfwVisibleRule="IsEnrollInMultiplePlanOrHaveServiceCredit" />
+        <sfwLabel ID="lblSinglePlans" Text="You are currently not eligible to perform a service purchase cost estimate because you do not have 3 months of salary information on file." sfwIsCaption="True" sfwVisibleRule="IsMemberHasPostedLessThan3MonthSalary" />
+      </items>
+    </sfwPanel>
+  </items>
+  <loaddetails>
+    <entityfield ID="objPerson" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+  </loaddetails>
+  <ExtraFields />
+</form>

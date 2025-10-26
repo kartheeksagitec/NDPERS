@@ -1,0 +1,992 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+  <form ID="wfmPensionPlanMaintenance" sfwActive="True" sfwStatus="Valid" sfwRemoteObject="srvPerson" sfwResource="215 " sfwType="Maintenance" sfwTitle="Pension Plan Maintenance" version="3.5" sfwEntity="entPersonAccountRetirement">
+  <initialload>
+    <callmethods sfwMode="New" sfwMethodName="NewPersonAccountRetirement" />
+    <callmethods sfwMode="Update" sfwMethodName="FindPersonAccountRetirement" />
+  </initialload>
+  <sfwTable ID="Main">
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnltoolbar">
+          <sfwTable ID="toolbar">
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnSave" sfwMethodName="btnSave_Click" sfwNavigationParameter="AintPersonAccountID=PersonAccountId" sfwVisibleRule="IsPlanParticipationStatusTransferToDc" Text="Save" />
+                <sfwButton ID="btnCancel" sfwMethodName="btnCancel_Click" Text="Refresh" />
+                <sfwButton ID="btnPrev" sfwMethodName="btnPrev_Click" Text="Prev" />
+                <sfwButton ID="btnNext" sfwMethodName="btnNext_Click" Text="Next" />
+                <sfwButton ID="btnCorrespondence" sfwMethodName="btnCorrespondence_Click" Text="Correspondence" />
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlPersonInformation" sfwCaption="Person Information">
+          <sfwTable CssClass="Table" ID="tblPersonInformation">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capPersonId1" Text="PERSLink ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLinkButton ID="lblPersonId1" sfwActiveForm="wfmPersonMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintpersonid=objPerson.PersonId" sfwEntityField="objPerson.PersonId" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capFullName1" Text="Name : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblPersonName" sfwEntityField="objPerson.PersonName" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capLastFourDigitsOfSSN1" Text="Last 4 Digits of SSN : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblLastFourDigitsOfSSN1" sfwEntityField="objPerson.LastFourDigitsOfSSN" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capDateOfBirth1" Text="Date of Birth : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblDateOfBirth1" sfwDataFormat="{0:d}" sfwEntityField="objPerson.DateOfBirth" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn />
+              <sfwColumn>
+                <sfwLabel ID="lblPersonId" Visible="False" sfwEntityField="objPerson.PersonId" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlMain" sfwCaption="Pension Plan Details">
+          <sfwTable CssClass="Table" ID="tblMain">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capStatusDescription" Text="Status : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblStatusDescription" sfwEntityField="StatusDescription" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capSuppressWarningsFlag" Text="Suppress Warnings : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwCheckBox ID="chkSuppressWarningsFlag" sfwEntityField="SuppressWarningsFlag" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capPlanName" Text="Plan : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblPlanName" sfwEntityField="objPlan.PlanName" />
+                <sfwLabel ID="lblPlanID" sfwEntityField="objPlan.PlanId" CssClass="hideControl" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capPlanParticipationStatusValue" Text="Plan Participation Status : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlPlanParticipationStatusValue" sfwVisibleRule="VisibleRulePlanParticipationStatusDropDown" sfwLoadType="Method" sfwLoadSource="LoadParticipationStatusByBenefitType" sfwEntityField="PlanParticipationStatusValue" />
+                <sfwLabel ID="lblPlanParticipationStatusDescription" sfwMode="Update" sfwVisibleRule="VisibleRulePlanParticipationStatusLabel" sfwEntityField="PlanParticipationStatusDescription" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capStartDate" Text="Initial Plan Start Date : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtStartDate" sfwDataFormat="{0:d}" sfwVisibleRule="VisibleRuleForInitialStartDateField" sfwEntityField="StartDate" />
+                <sfwTextBox ID="txtStartDateRes" sfwDataFormat="{0:d}" sfwResource="238" sfwVisibleRule="VisibileRuleCheckEditableInitialDate" sfwEntityField="IdtInitialStartDate" />
+                <sfwLabel ID="lblStartDate" sfwVisibleRule="VisibleRuleForInitialStartDateLabel" sfwEntityField="StartDate" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capHistoryChangeDate" Text="Change Effective Date : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtHistoryChangeDate" sfwDataFormat="{0:d}" sfwEntityField="HistoryChangeDate" />
+                <sfwButton ID="btnGetADECValues" sfwMethodName="btnValidateExecuteBusinessMethod_Click" sfwObjectMethod="GetADECAmountValuesByEffectiveDate" Text="Get ADEC Values" sfwExecuteMethodType="ObjectMethod" sfwNavigationParameter="astrHistoryChangeDate=HistoryChangeDate;aintPersonEmploymentDtlId=PersonEmploymentDtlId;aintPersonAccountId=PersonAccountId" CssClass="hideControl" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capDcEligibilityDate" Text="DC Plan Eligibility Date : " sfwVisibleRule="VisibleRuleIsEnrolledAndNotDC2025" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtDcEligibilityDate" sfwDataFormat="{0:d}" sfwVisibleRule="VisibleRuleIsEnrolledAndNotDC2025" sfwEntityField="DcEligibilityDate1" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblLabelOverlap" Text="Allow Overlap History :" sfwIsCaption="True" sfwVisibleRule="VisibleRuleForOverlap" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwCheckBox ID="chkCheckBox" sfwDefaultValue="N" sfwEntityField="IstrAllowOverlapHistory" sfwVisibleRule="VisibleRuleForOverlap" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capVestedEmployerContPercent" Text="Vested Employer Contribution Percent : " sfwIsCaption="True" sfwVisibleRule="VisibleRuleIsNotDC2025" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblVestedEmployerContPercent" sfwDataFormat="{0:0%}" sfwEntityField="VestedEmployerContPercent" sfwVisibleRule="VisibleRuleIsNotDC2025" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capMutualFundWindowFlag" sfwVisibleRule="VisibleRuleForMutualFundFlag" Text="Mutual Fund Window : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwCheckBox ID="chkMutualFundWindowFlag" sfwDefaultValue="N" sfwVisibleRule="VisibleRuleForMutualFundFlag" sfwEntityField="MutualFundWindowFlag1" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capAddlEEContributionPercent" Text="Additional EE Contribution : " sfwIsCaption="True" sfwVisibleRule="VRADECUpdateLink" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblAddlContributionPercentage" sfwEntityField="lintAddlEEContributionPercent" Visible="False" />
+                <sfwLabel ID="lblAddlContributionPercentageZero" sfwEntityField="IstrAddleecontributionpercentzero" CssClass="hideControl" />
+                <sfwDropDownList ID="ddlAddlContributionPercentage" sfwEntityField="lintAddlEEContributionPercent" sfwLoadType="Method" sfwLoadSource="LoadADECAmountValues" DataTextField="code_value" DataValueField="code_id" sfwVisibleRule="VRADECUpdateLink" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capCapitalGain" Text="Capital Gain :" sfwIsCaption="True" sfwVisibleRule="VisibleRuleIsNotDC2025" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblCapitalGain" sfwDataFormat="{0:C}" sfwEntityField="IdecCapitalGainContribution" sfwVisibleRule="VisibleRuleIsNotDC2025" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capAdditionalEEPermContribution" Text="Additional EE Perm Contribution :" sfwVisibleRule="VRADECUpdateLink" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblAdditionalEEPermContribution" sfwVisibleRule="VRADECUpdateLink" sfwEntityField="AddlEEContributionPercent" sfwDataFormat="{0:#0.00'%}" />
+                <sfwLabel ID="lblAdditionalEEPermContributionZero" sfwVisibleRule="VRADECAmountZeroPerm" sfwDataFormat="{0:#0.00'%}" Text="0.00%" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capAdditionalEETempContribution" Text="Additional EE Temp Contribution :" sfwVisibleRule="VRADECUpdateLink" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblAdditionalEETempContribution" sfwVisibleRule="VRADECUpdateLink" sfwEntityField="AddlEEContributionPercentTemp" sfwDataFormat="{0:#0.00'%}" />
+                <sfwLabel ID="lblAdditionalEETempContributionZero" sfwVisibleRule="VRADECAmountZeroTemp" sfwDataFormat="{0:#0.00'%}" Text="0.00%" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="lblActivityInstanceId" sfwTwoWayBinding="True" Visible="False" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblIsFYTD" Visible="False" sfwEntityField="IsFYTD" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblPersonAccountId" sfwTwoWayBinding="True" sfwEntityField="PersonAccountId" CssClass="hideControl" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblPersonEmploymentDtlId" sfwTwoWayBinding="True" sfwEntityField="PersonEmploymentDtlId" CssClass="hideControl" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capIstrQDROExists" Text="QDRO on file : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwCheckBox ID="chkIstrQDROExists" sfwDefaultValue="N" sfwTwoWayBinding="False" sfwEntityField="IstrQDROExists" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capSuppressWarningsBy" Text="Suppress Warnings By : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblSuppressWarningsBy" sfwEntityField="SuppressWarningsBy" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="lblBenefitTeir" Text="Benefit Tier :" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblBenefitTierDesc" sfwEntityField="BenefitTierDescriptionDisplay" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capRhicBenfitAmount" Text="RHIC Benfit Amount : " Visible="False" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblRhicBenfitAmount" sfwDataFormat="{0:C}" sfwEntityField="RhicBenfitAmount1" CssClass="hideControl" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlValidationTab" sfwCaption="Other Details">
+          <sfwTable ID="tblValidationTab">
+            <sfwRow>
+              <sfwColumn>
+                <sfwTabContainer ID="tctValidationTab">
+                  <Tabs>
+                    <sfwTabSheet HeaderText="History" ID="tshNewPage">
+                      <sfwTable ID="tblNewPage">
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwGridView AllowPaging="True" AllowSorting="True" AutoGenerateColumns="False" ID="grvPersonAccountRetirementHistory" sfwEntityField="lstPersonAccountRetirementHistory" sfwGridEntity="entPersonAccountRetirementHistory">
+                              <Columns>
+                                <TemplateField HeaderText="Plan">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="objPlan.PlanName" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Plan Participation Status">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="PlanParticipationStatusDescription" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="DC Plan Eligibility Date">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="DcEligibilityDate" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Effective Start Date">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="StartDate" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Effective End Date">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EndDate" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Mutual Fund Window" sfwVisibleRule="VisibleRuleForMutualFundFlag">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="MutualFundWindowFlag" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Additional EE Contribution">
+                                  <ItemTemplate>
+                                    <sfwLabel Text="0.00%" sfwVisibleRule="VSAdditionalContributionZero" />
+                                    <sfwLabel sfwEntityField="AddlEEContributionPercent" sfwDataFormat="{0:#0.00'%}" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Person Account Retirement History ID" Visible="False">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="PersonAccountRetirementHistoryId" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Status" Visible="False">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="StatusDescription" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Suppress Warnings">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="SuppressWarningsFlag" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Suppressed By">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="SuppressWarningsBy" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Date">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="ModifiedDate" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="User">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="ModifiedBy" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                              </Columns>
+                            </sfwGridView>
+                          </sfwColumn>
+                        </sfwRow>
+                      </sfwTable>
+                    </sfwTabSheet>
+                    <sfwTabSheet HeaderText="Validation" ID="tshValidation">
+                      <sfwTable ID="tblValidation">
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwGridView AllowPaging="True" AllowSorting="True" AutoGenerateColumns="False" ID="grvError" sfwEntityField="InternalErrors" sfwGridEntity="entError">
+                              <Columns>
+                                <TemplateField HeaderText="Error/Warning">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="DisplayMessage" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Message ID" Visible="False">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="MessageId" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Severity">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="SeverityDescription" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                              </Columns>
+                            </sfwGridView>
+                          </sfwColumn>
+                        </sfwRow>
+                      </sfwTable>
+                    </sfwTabSheet>
+                    <sfwTabSheet HeaderText="Contribution Summary" ID="tshSummary">
+                      <sfwTable ID="tblSummary">
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="lbl" Text="lbl" Visible="False" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn Width="100px">
+                            <sfwLinkButton CssClass="GridOdd" Font.Bold="True" ID="lblFYTD" sfwActiveForm="wfmPensionContributionDetailMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="AintPrimaryID=lintFYTDID;AintPersonAccountID=PersonAccountId;astrIsFYTD=IsFYTD" Text="FYTD" Width="100px" Font.Underline="True" sfwActiveFormKey="lintFYTDID" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLinkButton CssClass="GridEven" Font.Bold="True" ID="lblLTD" sfwActiveForm="wfmPensionContributionDetailMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="AintPrimaryID=lintLTDID;AintPersonAccountID=PersonAccountId;astrIsFYTD=#N" Text="LTD" Font.Underline="True" sfwActiveFormKey="lintLTDID" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblLabel" Visible="False" sfwEntityField="lintFYTDID" />
+                            <sfwLabel ID="lblLabel1" Visible="False" sfwEntityField="lintLTDID" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capIdecPostTaxEmployeeContribution" Text="Post Tax Employee Contribution : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblPostTaxEeAmount" sfwDataFormat="{0:C}" sfwEntityField="PostTaxEeAmount" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblPostTaxEeAmountLtd" sfwDataFormat="{0:C}" sfwEntityField="PostTaxEeAmountLtd" />
+                          </sfwColumn>
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capIdecPostTaxEmployeeServiceCreditPurchaseContribution" Text="Post Tax Employee Service Credit Purchase Contribution : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblPostTaxEeSerPurCont" sfwDataFormat="{0:C}" sfwEntityField="PostTaxEeSerPurCont" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblPostTaxEeSerPurContLtd" sfwDataFormat="{0:C}" sfwEntityField="PostTaxEeSerPurContLtd" />
+                          </sfwColumn>
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capIdecRhicEmployeeContribution" Text="RHIC Employee Contribution : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblEeRhicAmount" sfwDataFormat="{0:C}" sfwEntityField="EeRhicAmount" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblEeRhicAmountLtd" sfwDataFormat="{0:C}" sfwEntityField="EeRhicAmountLtd" />
+                          </sfwColumn>
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capIdecRhicEmployerServiceCreditPurchaseContribution" Text="RHIC Employee Service Credit Contribution : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblEeRhicSerPurCont" sfwDataFormat="{0:C}" sfwEntityField="EeRhicSerPurCont" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblEeRhicSerPurContLtd" sfwDataFormat="{0:C}" sfwEntityField="EeRhicSerPurContLtd" />
+                          </sfwColumn>
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel Font.Bold="True" ID="capIdecPostTaxContribution" Text="Total Employee Post Tax Contribution : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel Font.Bold="True" ID="lblPostTaxContribution" sfwDataFormat="{0:C}" sfwEntityField="PostTaxTotalContribution" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel Font.Bold="True" ID="lblPostTaxContributionLtd" sfwDataFormat="{0:C}" sfwEntityField="PostTaxTotalContributionLtd" />
+                          </sfwColumn>
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn ColumnSpan="3">
+                            <hr />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capPreTaxEeAmount" Text="Pre-Tax Employee Contribution : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblPreTaxEeAmount" sfwDataFormat="{0:C}" sfwEntityField="PreTaxEeAmount" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblPreTaxEeAmountLtd" sfwDataFormat="{0:C}" sfwEntityField="PreTaxEeAmountLtd" />
+                          </sfwColumn>
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capIdecPreTaxEEEmployerPickup" Text="Pre-Tax EE Employer Pickup Contribution : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblEeErPickupAmount" sfwDataFormat="{0:C}" sfwEntityField="EeErPickupAmount" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblEeErPickupAmountLtd" sfwDataFormat="{0:C}" sfwEntityField="EeErPickupAmountLtd" />
+                          </sfwColumn>
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capIdecPreTaxEmployeeServiceCreditPurchaseContribution" Text="Pre-Tax Employee Service Credit Purchase Contribution : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblPreTaxEeSerPurCont" sfwDataFormat="{0:C}" sfwEntityField="PreTaxEeSerPurCont" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblPreTaxEeSerPurContLtd" sfwDataFormat="{0:C}" sfwEntityField="PreTaxEeSerPurContLtd" />
+                          </sfwColumn>
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capIdecVestedEmployerContribution" Text="Vested Employer Contribution : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblErVestedAmount" sfwDataFormat="{0:C}" sfwEntityField="ErVestedAmount" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblErVestedAmountLtd" sfwDataFormat="{0:C}" sfwEntityField="ErVestedAmountLtd" />
+                          </sfwColumn>
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capIdecInteresrAmt" Text="Interest : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblInterestAmount" sfwDataFormat="{0:C}" sfwEntityField="InterestAmount" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblInterestAmountLtd" sfwDataFormat="{0:C}" sfwEntityField="InterestAmountLtd" />
+                          </sfwColumn>
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel Font.Bold="True" ID="capIdecEEPreTaxContribution" Text="Total Employee Pre Tax Contribution : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel Font.Bold="True" ID="lblTotalEEPreTaxContribution" sfwDataFormat="{0:C}" sfwEntityField="IdecPreTaxEmployeeContributionToDisplay" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel Font.Bold="True" ID="lblTotalEEPreTaxContributionLtd" sfwDataFormat="{0:C}" sfwEntityField="IdecPreTaxEmployeeContributionLTDToDisplay" />
+                          </sfwColumn>
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn ColumnSpan="3">
+                            <hr />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel Font.Bold="True" ID="capIdecAccountBalance" Text="Account Balance : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel Font.Bold="True" ID="lblMemberAccountBalance" sfwDataFormat="{0:C}" sfwEntityField="IdecMemberAccountBalanceToDisplay" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel Font.Bold="True" ID="lblMemberAccountBalanceLtd" sfwDataFormat="{0:C}" sfwEntityField="IdecMemberAccountBalanceLTDToDisplay" />
+                          </sfwColumn>
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn ColumnSpan="3">
+                            <hr />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capPreTaxERAmount" Text="Employer Pre-Tax Contribution : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblPreTaxERAmount" sfwDataFormat="{0:C}" sfwEntityField="PreTaxErAmount" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblPreTaxERAmountLtd" sfwDataFormat="{0:C}" sfwEntityField="PreTaxErAmountLtd" />
+                          </sfwColumn>
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capIdecEEPreTaxSerPurAmount" Text="Employer Pre-Tax Service Credit Purchase Contribution : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblEEPreTaxSerPurAmount" sfwDataFormat="{0:C}" sfwEntityField="PreTaxErSerPurCont" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblEEPreTaxSerPurAmountLtd" sfwDataFormat="{0:C}" sfwEntityField="PreTaxErSerPurContLtd" />
+                          </sfwColumn>
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel Text="Employer Interest :" sfwIsCaption="True" ID="capIdecEmployerInterest" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="EmployerInterest" ID="lblEmployerInterest" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="EmployerInterestLtd" ID="lblEmployerInterestLtd" />
+                          </sfwColumn>
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capIdecRhicEmployerContribution" Text="RHIC Employer Contribution : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblErRhicAmount" sfwDataFormat="{0:C}" sfwEntityField="ErRhicAmount" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblErRhicAmountLtd" sfwDataFormat="{0:C}" sfwEntityField="ErRhicAmountLtd" />
+                          </sfwColumn>
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capIdecRhicEmployeeServiceCreditContribution" Text="RHIC Employer Service Credit Purchase Contribution :" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblErRhicSerPurCont" sfwDataFormat="{0:C}" sfwEntityField="ErRhicSerPurCont" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblErRhicSerPurContLtd" sfwDataFormat="{0:C}" sfwEntityField="ErRhicSerPurContLtd" />
+                          </sfwColumn>
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel Font.Bold="True" ID="capIdecERPreTaxContribution" Text="Total Employer Pre Tax Contribution : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel Font.Bold="True" ID="lblERPreTaxContribution" sfwDataFormat="{0:C}" sfwEntityField="PreTaxEmployerContribution" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel Font.Bold="True" ID="lblERPreTaxContributionLtd" sfwDataFormat="{0:C}" sfwEntityField="PreTaxEmployerContributionLtd" />
+                          </sfwColumn>
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn ColumnSpan="3">
+                            <hr />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capIdecADECContribution" Text="ADEC Contribution :" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblIdecADECContributionFYTD" sfwDataFormat="{0:C}" sfwEntityField="ADECAmount" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblIdecADECContributionLTD" sfwDataFormat="{0:C}" sfwEntityField="ADECAmountLtd" />
+                          </sfwColumn>
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel Font.Bold="True" ID="capTotalIdecADECContribution" Text="Total ADEC Contribution : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel Font.Bold="True" ID="lblTotalIdecADECContributionFYTD" sfwDataFormat="{0:C}" sfwEntityField="ADECAmountTotalContribution" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel Font.Bold="True" ID="lblTotalIdecADECContributionLTD" sfwDataFormat="{0:C}" sfwEntityField="ADECAmountTotalContributionLtd" />
+                          </sfwColumn>
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn ColumnSpan="3">
+                            <hr />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                      </sfwTable>
+                    </sfwTabSheet>
+                    <sfwTabSheet HeaderText="Missed Deposits" ID="tshMissedDeposits">
+                      <sfwTable ID="tblMissedDeposits">
+                        <sfwRow>
+                          <sfwColumn ColumnSpan="4">
+                            <sfwGridView AllowPaging="True" AllowSorting="True" AutoGenerateColumns="False" ID="grvPersonAccountMissedDeposit" sfwSortExpression="PayPeriodYearAndMonth desc" sfwEntityField="lstPersonAccountMissedDeposit" sfwGridEntity="entPersonAccountMissedDeposit" SortExpressionUpdated="true">
+                              <Columns>
+                                <TemplateField HeaderText="Month" Visible="False">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="PayPeriodMonth" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Year" Visible="False">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="PayPeriodYear" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Person Account Missed Deposit ID" Visible="False">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="PersonAccountMissedDepositId" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Missed Deposits">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwDataFormat="MM/yyyy" sfwEntityField="PayPeriodYearAndMonth" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                              </Columns>
+                            </sfwGridView>
+                          </sfwColumn>
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capIintMissedDepositCount" Text="Number of Months of missed DB or DC Deposits : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblIintMissedDepositCount" sfwEntityField="IintMissedDepositCount" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                      </sfwTable>
+                    </sfwTabSheet>
+                    <sfwTabSheet HeaderText="Employment Detail" ID="tshEmploymentDetail">
+                      <sfwTable ID="tblEmploymentDetail">
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwButton ID="btnOpenEmploymentDetail" sfwActiveForm="wfmPersonEmploymentDetailMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintemploymentdetailid=PersonEmploymentDtlId" sfwRelatedControl="grvEmploymentDetail" Text="Open" Visible="False" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwGridView AllowPaging="True" AllowSorting="True" AutoGenerateColumns="False" ID="grvEmploymentDetail" sfwEntityField="lstEmploymentDetail" sfwGridEntity="entPersonEmploymentDetail">
+                              <Columns>
+                                <TemplateField HeaderText="Org Code">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="objPersonEmployment.objOrganization.OrgCode" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Org Name">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpenEmploymentDetail" sfwEntityField="objPersonEmployment.objOrganization.OrgName" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Start Date">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="StartDate" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="End Date">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EndDate" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Job Class">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="JobClassDescription" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Member Type">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="DerivedMemberTypeDescription" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Person Employment Dtl ID" Visible="False">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="PersonEmploymentDtlId" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Retirement Participation Status">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="StatusDescription" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Type">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="TypeDescription" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                              </Columns>
+                            </sfwGridView>
+                          </sfwColumn>
+                        </sfwRow>
+                      </sfwTable>
+                    </sfwTabSheet>
+                    <sfwTabSheet HeaderText="Adjustment" ID="tshAdjustment">
+                      <sfwTable ID="tblAdjustment">
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwButton ID="btnNewAdjustment" sfwActiveForm="wfmPersonAccountAdjustmentMaintenance" sfwCopyActivitySessionVariables="True" sfwMethodName="btnNew_Click" sfwNavigationParameter="aintPersonAccountID=lblPersonAccountId" sfwResource="230" Text="New" />
+                            <sfwButton ID="btnOpenAdjustment" sfwActiveForm="wfmPersonAccountAdjustmentMaintenance" sfwCopyActivitySessionVariables="True" sfwMethodName="btnOpen_Click" sfwNavigationParameter="aintAdjustmentID=PersonAccountAdjustmentId" sfwRelatedControl="grvAdjustment" sfwResource="230" Text="Open" sfwDisableViewOnly="True" />
+                            <sfwButton ID="btnDeleteAdjustment" sfwMethodName="btnDelete_Click" sfwRelatedControl="grvAdjustment" sfwResource="230" Text="Delete" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwGridView AllowPaging="True" AllowSorting="True" AutoGenerateColumns="False" ID="grvAdjustment" sfwSelection="Many" sfwEntityField="lstAdjustment" sfwGridEntity="entPersonAccountAdjustment">
+                              <Columns>
+                                <TemplateField HeaderText="Person Account Adjustment ID">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpenAdjustment" sfwEntityField="PersonAccountAdjustmentId" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Transaction Date">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="TransactionDate" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Status">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="StatusDescription" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Posted By">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="PostedBy" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Posted Date">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="PostedDate" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                              </Columns>
+                            </sfwGridView>
+                          </sfwColumn>
+                        </sfwRow>
+                      </sfwTable>
+                    </sfwTabSheet>
+                    <sfwTabSheet HeaderText="DB/DC Transfer" ID="tshDBDCTransfer">
+                      <sfwTable ID="tblDBDCTransfer">
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwButton ID="btnNewDBDC" sfwActiveForm="wfmDBDCTransferEstimateMaintenance" sfwMethodName="btnNew_Click" sfwMode="Update" sfwNavigationParameter="AintPersonAcctID=lblPersonAccountId" sfwResource="229" Text="New" />
+                            <sfwButton ID="btnOpenDBDC" sfwActiveForm="wfmDBDCTransferEstimateMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintdbdctransferestimateid=DbDcTransferEstimateId" sfwRelatedControl="grvDBDCTransfer" sfwResource="229" Text="Open" sfwDisableViewOnly="True" />
+                            <sfwButton ID="btnDeleteDBDC" sfwMethodName="btnDelete_Click" sfwRelatedControl="grvDBDCTransfer" sfwResource="229" Text="Delete" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwGridView AllowPaging="True" AllowSorting="True" AutoGenerateColumns="False" ID="grvDBDCTransfer" sfwSelection="Many" sfwEntityField="lstDBDCTransfer" sfwGridEntity="entPersonAccountRetirementDbDcTransferEstimate">
+                              <Columns>
+                                <TemplateField HeaderText="DB DC Transfer Estimate ID" Visible="False">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="DbDcTransferEstimateId" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Estimated On">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwDataFormat="{0:d}" sfwLinkable="True" sfwRelatedControl="btnOpenDBDC" sfwEntityField="ModifiedDate" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Projected Monthly Salary">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="ProjMonthlySalaryAmount" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Projected Annual Salary">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="IdecProjectedAnnualSalary" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Months to Project Salary">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="ProjMonthNo" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Total Employee Contributions">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="ProjTotalEeAmount" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Total Employer Contributions">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="ProjTotalErAmount" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Projected Transfer Amount">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="ProjTotalTransferAmount" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                              </Columns>
+                            </sfwGridView>
+                          </sfwColumn>
+                        </sfwRow>
+                      </sfwTable>
+                    </sfwTabSheet>
+                    <sfwTabSheet HeaderText="Plan Transfer" ID="tshDBDBTransfer">
+                      <sfwTable ID="tblDBDBTransfer">
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwButton ID="btnNewDBDB" sfwActiveForm="wfmDBDBTransferMaintenance" sfwMethodName="btnNew_Click" sfwMode="Update" sfwNavigationParameter="AintPersonAcctID=lblPersonAccountId" sfwResource="232" Text="New" />
+                            <sfwButton ID="btnOpenDBDB" sfwActiveForm="wfmDBDBTransferMaintenance" sfwMethodName="btnOpen_Click" sfwMode="Update" sfwNavigationParameter="aintReferenceID=DbDbTransferId" sfwRelatedControl="grvDBDBTransfer" sfwResource="232" Text="Open" sfwDisableViewOnly="True" />
+                            <sfwButton ID="btnDeleteDBDB" sfwMethodName="btnDelete_Click" sfwMode="Update" sfwRelatedControl="grvDBDBTransfer" sfwResource="232" Text="Delete" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwGridView AllowPaging="True" AllowSorting="True" AutoGenerateColumns="False" ID="grvDBDBTransfer" PageSize="50" sfwSelection="Many" sfwEntityField="lstDBDBTransfer" sfwGridEntity="entPersonAccountRetirementDbDbTransfer">
+                              <Columns>
+                                <TemplateField HeaderText="Contribution Transfer ID">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpenDBDB" sfwEntityField="DbDbTransferId" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Transfer To Plan">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="IstrToPlanName" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Transfer From Member">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="IstrFromPersonName" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Transfer To Member">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="IstrToPersonName" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Transferred On Date">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="TransferDate" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Status">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="StatusDescription" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Post Tax Employee Contribution">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="IdecPostTaxEEAmount" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="RHIC Employee Contribution">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="IdecEERHICAmount" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Capital Gains" ItemStyle.HorizontalAlign="Right">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="CapitalGain" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Vested Employer Contributions">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="IdecERVestedAmount" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Interest">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="IdecInterestAmount" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Pre-Tax Employee Contribution">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="IdecPreTaxEEAmount" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Pre-Tax EE Employer Pickup">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="IdecEEERPickupAmount" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="RHIC Employer Contribution">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="IdecERRHICAmount" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                              </Columns>
+                            </sfwGridView>
+                          </sfwColumn>
+                        </sfwRow>
+                      </sfwTable>
+                    </sfwTabSheet>
+                  </Tabs>
+                </sfwTabContainer>
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlAuditInfo" sfwCaption="Audit Information">
+          <sfwTable CssClass="Table" ID="tblAuditInfo">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capCreate" Text="Create : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblCreatedBy" sfwEntityField="CreatedBy1" />
+                <sfwLabel ID="lblUpdateSeq" sfwTwoWayBinding="True" Visible="False" sfwEntityField="UpdateSeq1" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblCreatedDate" sfwEntityField="CreatedDate1" sfwDataFormat="{0:G}" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capModify" Text="Modify : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblModifiedBy" sfwEntityField="ModifiedBy1" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblModifiedDate" sfwEntityField="ModifiedDate1" sfwDataFormat="{0:G}" />
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+  </sfwTable>
+  <loaddetails>
+    <entityfield ID="objPerson" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+    <entityfield ID="objPlan" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+    <entityfield ID="lstPersonAccountRetirementHistory" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+    <entityfield ID="InternalErrors" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+    <entityfield ID="lstPersonAccountMissedDeposit" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+    <entityfield ID="lstEmploymentDetail" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+    <entityfield ID="lstAdjustment" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+    <entityfield ID="lstDBDCTransfer" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+    <entityfield ID="lstDBDBTransfer" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+  </loaddetails>
+</form>

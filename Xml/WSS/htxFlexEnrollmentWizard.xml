@@ -1,0 +1,441 @@
+﻿<form ID="wfmFlexEnrollmentWizard" sfwActive="True" sfwDescription="Flexible Compensation Enrollment" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2001" sfwType="FormLinkWizard" sfwTitle="Flex Enrollment Wizard" version="3.5" WebSite="NeoSpinWSS" sfwEntity="entWssPersonAccountEnrollmentRequest" sfwTemplate="FlexEnrollmentWizard.html" isBasedOnWfm="true">
+  <initialload>
+    <callmethods sfwMode="New" sfwMethodName="NewInsurancePlanFlexRequest" />
+    <callmethods sfwMode="Update" sfwMethodName="FindInsurancePlanFlexRequest" />
+  </initialload>
+  <items>
+    <sfwWizard ID="wizMain">
+      <items>
+        <sfwLiteral ID="ltrFlex" Text="Flex Comp Plan Enrollment " />
+        <sfwWizardStep ID="wzsIntro" Title="Intro" sfwRulesGroup="InitialFlex" sfwShowInHeader="True">
+          <items>
+            <sfwLabel ID="capRejectionReasonIntro" sfwVisibleRule="IsStatusRejected" Text="Rejection Reason : " sfwIsCaption="True" />
+            <sfwLabel ID="lblRejectionReasonIntro" sfwVisibleRule="IsStatusRejected" sfwEntityField="RejectionReason" />
+            <sfwPanel ID="pnlstepsBenefitEstimate" sfwCaption="Steps to complete your Enrollment">
+              <items>
+                <sfwLabel ID="lblLabel37" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwPanel ID="pnlOption" sfwCaption="Option" sfwCollapsible="False">
+                  <items>
+                    <sfwLabel ID="lblFlexIntroMsg" sfwIsCaption="True" sfwEntityField="IstrFlexIntroMessage" sfwVisibleRule="VR-FlexIntroMessage" />
+                    <sfwLabel ID="capIstrGHDVPlanOptionSelection" Text="Plan Enrollment Option Selection : " sfwIsCaption="True" sfwVisibleRule="VR-FlexPlanEnrlOption" />
+                    <sfwCascadingDropDownList ID="ddlPlanEnrollmentOptionValue" DataTextField="description" DataValueField="code_value" sfwClientVisibility="controllist:pnlQCIS,tblNewPage4,lblLabel41,lblLabel42,lblLabel43,lblLabel44,capReasonValue1,ddlReasonValue1#QCIS:capReasonValue1,ddlReasonValue1,pnlQCIS,tblNewPage4,lblLabel41,lblLabel42,lblLabel43,lblLabel44;ENRL:capReasonValue1,ddlReasonValue1;" sfwLoadType="Method" sfwLoadSource="LoadPlanEnrollmentOption" sfwEntityField="PlanEnrollmentOptionValue" sfwValidationRules="IsFlexPlanEnrollmentOptionNotEntered" sfwVisibleRule="VR-FlexPlanEnrlOption" />
+                    <sfwPanel ID="pnlQCIS" sfwCaption="QCIS Text" sfwCollapsible="False">
+                      <items>
+                        <sfwLabel ID="lblLabel41" Text="In most circumstances, your annual election amounts or any insurance premiums you are having payroll deducted pre-tax cannot be changed.&lt;br/&gt;You may change your election if you have a gain or loss of eligibility for coverage under this Plan or a plan maintained by your spouse’s employer&lt;br/&gt;or your dependent’s employer that is caused by a qualifying change in status and your election change is consistent with the gain or loss of coverage. " sfwIsCaption="True" />
+                        <sfwLabel ID="lblLabel42" Text="A change in election is allowable and consistent with IRS regulations only if the change in status results in you, or your spouse or&lt;br/&gt;dependent, gaining or losing eligibility for health coverage under either the cafeteria plan or health plan of the employee or the employer&lt;br/&gt; of your spouse or dependent and the election change is consistent with that gain or loss of coverage." sfwIsCaption="True" />
+                        <sfwLabel ID="lblLabel43" Text="If the change in status event is the birth of a child, and you are a participant in the Medical Spending Reimbursement Account and/or the&lt;br/&gt;Dependent Care Reimbursement Account at the time of birth, the effective date of coverage is the date of birth. If the change in status event is&lt;br/&gt;for reasons other than the birth of a child and you are a participant in the Medical Spending Reimbursement Account and/or the Dependent Care Reimbursement Account,&lt;br/&gt;the effective date of coverage is the first appropriate pay period following the receipt of the election form. " sfwIsCaption="True" />
+                        <sfwLabel ID="lblLabel44" Text="If you are not enrolled in either the Medical Spending Reimbursement Account and/or the Dependent Care Reimbursement Account prior to the&lt;br/&gt;change in status event, the effective date of coverage is the date the first payroll deducted contribution is received." sfwIsCaption="True" />
+                        <sfwLabel ID="lblChngReason" Text="A change in status request must be completed and submitted to NDPERS within 31 days of the qualified event." sfwIsCaption="True" />
+                      </items>
+                    </sfwPanel>
+                    <sfwLabel ID="capReasonValue1" AssociatedControlID="ddlReasonValue1" Text="Change Reason : " sfwIsCaption="True" />
+                    <sfwCascadingDropDownList ID="ddlReasonValue1" DataTextField="description" DataValueField="code_value" sfwParameters="astrPlanEnrollmentOption=ddlPlanEnrollmentOptionValue" sfwParentControl="ddlPlanEnrollmentOptionValue" sfwClientVisibility="controllist:#" sfwLoadType="Method" sfwLoadSource="LoadChangeReason" sfwEntityField="ReasonValue" />
+                  </items>
+                </sfwPanel>
+              </items>
+            </sfwPanel>
+            <sfwLabel ID="lblLabel21" Text="&lt;br/&gt;&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwButton ID="btnIntro" sfwMethodName="btnWizardNext_Click" Text="Begin Process" CssClass="hideControl" />
+            <sfwButton ID="btnBeginClick" sfwMethodName="btnCancel_Click" OnClientClick="fnAnnualEnrollment(e);" sfwVisibleRule="VR-FlexPlanEnrlOption" />
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsMedDepCareReimbursement" Title="Medical/Dependent Care Reimbursement" sfwRulesGroup="FlexEnrollment" sfwVisibleRule="IsPlanEnrollmentOptionNOTWaive" sfwShowInHeader="True">
+          <items>
+            <sfwLabel ID="capRejectionReasonReimbursement" sfwVisibleRule="IsStatusRejected" Text="Rejection Reason : " sfwIsCaption="True" />
+            <sfwLabel ID="lblRejectionReasonReimbursement" sfwVisibleRule="IsStatusRejected" sfwEntityField="RejectionReason" />
+            <sfwLiteral ID="ltrLiteral" Text="Flex Comp Plan Enrollment " />
+            <sfwPanel ID="pnlFlexCompPlanEnroll" sfwCaption="Flex Comp Plan Enrollment" sfwVisibleRule="IsPlanEnrollmentOptionQCIS">
+              <items>
+                <sfwLabel ID="lblLabel45" Text="&lt;/br&gt;" sfwVisibleRule="IsPlanEnrollmentOptionQCIS" sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel16" sfwVisibleRule="IsPlanEnrollmentOptionQCIS" Text="This Flex Comp Plan Enrollment will cancel any existing enrollment; therefore you must enter all enrollments&lt;br/&gt; including an existing election that you are not changing." sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel14" sfwVisibleRule="IsPlanEnrollmentOptionQCIS" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwLabel ID="lblPromptUserText" sfwEntityField="PromptUserText" sfwRenderType="RichText" />
+                <sfwLabel ID="lblLabel10" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwLabel ID="capDateOfCha" sfwVisibleRule="IsReasonNOTNewHire" Text="What date is the change effective?  " sfwIsCaption="True" />
+                <sfwTextBox ID="txtLabe" sfwDataFormat="{0:d}" sfwVisibleRule="IsReasonNOTNewHire" sfwEntityField="DateOfChange" sfwValidationRules="IsFlexDateofChangeNOTEntered;IsDateEventValidationFailsReason2;IsChangeEffectiveDateAFutureDate" />
+                <sfwLabel ID="capExplanationOfChangeQualifiedStatus" AssociatedControlID="txtExplanationOfChangeQualifiedStatus" sfwVisibleRule="IsPlanEnrollmentOptionQCIS" Text="Explain Consistency of Change in Status Event :" sfwIsCaption="True" />
+                <sfwTextBox ID="txtExplanationOfChangeQualifiedStatus" TextMode="MultiLine" Rows="3" sfwVisibleRule="IsPlanEnrollmentOptionQCIS" Width="800px" sfwEntityField="ExplanationOfChangeQualifiedStatus" sfwValidationRules="IsExplanationforConsistencyofStatusIsNull" />
+                <sfwRadioButtonList ID="rblUPLAOptions" sfwEntityField="UPLAOptions" sfwVisibleRule="IsReasonValueUPLA_Enrollment_QCIS" sfwValidationRules="IsFlexOptionUPLASelected">
+                  <ListItem Text="Prepay missed contribution with pre-tax payroll deductions prior to leave" Value="P" />
+                  <ListItem Text="Catch-up missed contributions with pre-tax payroll deductions upon return from leave" Value="C" />
+                  <ListItem Text="I do not wish to participate in the FlexComp plan while on leave. Your annual election will be reduced by the amount of missed contributions. Expenses incurred during leave cannot be submitted for reimbursement" Value="N" />
+                </sfwRadioButtonList>
+              </items>
+            </sfwPanel>
+            <sfwLabel ID="lblLabel46" Text="&lt;/br&gt;" sfwVisibleRule="IsPlanEnrollmentOptionQCIS" sfwIsCaption="True" />
+            <sfwPanel ID="pnlMedicalSpendingReimAcc" sfwCaption="Medical Spending Reimbursement Account">
+              <items>
+                <sfwPanel ID="pnlMedicalSpending" GroupingText="&lt;b&gt;Medical Spending Reimbursement Account&lt;/b&gt;" sfwCaption="Medical Spending Reimbursement Account" sfwCollapsible="False">
+                  <items>
+                    <sfwLabel ID="lblLabel26" Text="Plan participation is for the Plan Year starting " sfwIsCaption="True" />
+                    <sfwLabel ID="lblMsraEffectiveStartLongDate" sfwEntityField="MsraEffectiveStartLongDate" />
+                    <sfwLabel ID="lblLabel27" Text=" through &lt;b&gt;December 31, &lt;b/&gt;" sfwIsCaption="True" />
+                    <sfwLabel ID="lblMsraEffectiveStartYear" sfwEntityField="MsraEffectiveStartYear" />
+                    <sfwLabel ID="lblLabel122" Text="What is the total ANNUAL amount you want payroll deducted for this Plan Year? " sfwIsCaption="True" />
+                    <sfwTextBox ID="txtLabel13" sfwDataFormat="{0:C}" sfwEntityField="MedicalAnnualPledgeAmount" />
+                    <sfwLabel ID="lblLabel11" Text=" Annual Amount" sfwIsCaption="True" />
+                    <sfwLabel ID="lblLabel20" Text=" (Total cannot exceed " sfwIsCaption="True" />
+                    <sfwLabel ID="lblLabel39" sfwEntityField="ldecMSRA" sfwDataFormat="{0:C}" />
+                    <sfwLabel ID="lblLabel47" Text=" for the Plan Year.)" sfwIsCaption="True" />
+                  </items>
+                </sfwPanel>
+              </items>
+            </sfwPanel>
+            <sfwLabel ID="lblLabel4" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwPanel ID="pnlDependentCareReimAcc" sfwCaption="Dependent Care Reimbursement Account">
+              <items>
+                <sfwPanel ID="pnlDependentCare" GroupingText="&lt;b&gt;Dependent Care Reimbursement Account&lt;/b&gt;" sfwCaption="Dependent Care Reimbursement Account" sfwCollapsible="False">
+                  <items>
+                    <sfwLabel ID="lblLabel28" Text="Plan participation is for the Plan Year starting " sfwIsCaption="True" />
+                    <sfwLabel ID="lblDcraEffectiveStartLongDate" sfwEntityField="DcraEffectiveStartLongDate" />
+                    <sfwLabel ID="lblLabel29" Text=" through &lt;b&gt;December 31, &lt;b/&gt;" sfwIsCaption="True" />
+                    <sfwLabel ID="lblDcraEffectiveStartYear" sfwEntityField="DcraEffectiveStartYear" />
+                    <sfwLabel ID="lblLabel" Text="What is the total ANNUAL amount you want payroll deducted for this Plan Year?  " sfwIsCaption="True" />
+                    <sfwTextBox ID="txtTextBox" sfwDataFormat="{0:C}" sfwEntityField="DependentAnnualPledgeAmount" />
+                    <sfwLabel ID="lblLabel9" Text=" Annual Amount" sfwIsCaption="True" />
+                    <sfwLabel ID="lblLabel30" Text="(Total can not exceed " sfwIsCaption="True" />
+                    <sfwLabel ID="lblLabel40" sfwEntityField="ldecDCRA" sfwDataFormat="{0:C}" />
+                    <sfwLabel ID="lblLabel48" Text=" for a single parent, " sfwIsCaption="True" />
+                    <sfwLabel ID="lblLabel49" sfwEntityField="ldecDCRA" sfwDataFormat="{0:C}" />
+                    <sfwLabel ID="lblLabel50" Text=" for a married couple filing a joint tax return, or " sfwIsCaption="True" />
+                    <sfwLabel ID="lblLabel51" sfwEntityField="ldecDCRA1" sfwDataFormat="{0:C}" />
+                    <sfwLabel ID="lblLabel52" Text=" for a married person filing a single tax return.)" sfwIsCaption="True" />
+                  </items>
+                </sfwPanel>
+              </items>
+            </sfwPanel>
+            <sfwLabel ID="lblLabel5" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwButton ID="btnPrevious" sfwMethodName="btnWizardPrevious_Click" Text="Previous" />
+            <sfwButton ID="btnNext5" sfwMethodName="btnWizardNext_Click" Text="Next" />
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsNonNDPERSPreTax" Title="Non NDPERS Pre-Tax Premium Elections" sfwVisibleRule="IsPlanEnrollmentOptionNOTWaive" sfwRulesGroup="FlexEnrollment" sfwShowInHeader="True">
+          <items>
+            <sfwLabel ID="capRejectionReasonPreTax" sfwVisibleRule="IsStatusRejected" Text="Rejection Reason : " sfwIsCaption="True" />
+            <sfwLabel ID="lblRejectionReasonPreTax" sfwVisibleRule="IsStatusRejected" sfwEntityField="RejectionReason" />
+            <sfwLiteral ID="ltrLiteral3" Text="Flex Comp Plan Enrollment " Visible="False" />
+            <sfwLabel ID="lblLabel19" Text="&lt;/br&gt;" sfwIsCaption="True" />
+            <sfwPanel ID="pnlNonNdpersPlanPanel" sfwCaption="Non-NDPERS Plans">
+              <items>
+                <sfwPanel ID="pnlNewPanel" sfwCaption="Non-NDPERS Plans" sfwCollapsible="False" GroupingText="&lt;b&gt;Non-NDPERS Plans&lt;/b&gt;">
+                  <items>
+                    <sfwLabel ID="lblLabel22" Text="The following insurance products are not administered by NDPERS but may be paid through pre-tax payroll deductions.&lt;br/&gt;Please enter the insurance product(s) you wish to have payroll deducted pre-tax.&lt;br/&gt;&lt;br/&gt;If you elect to pretax an insurance premium, you may not change or drop the coverage during the plan year unless you experience an IRS Qualified Change of Status.&lt;br/&gt;" sfwIsCaption="True" />
+                    <sfwGridView ID="grvMSSFlexCompConversion" sfwTwoWayBinding="True" AllowEditing="True" sfwEntityField="lstMSSFlexCompConversion">
+                      <Columns>
+                        <TemplateField HeaderText="Select">
+                          <ItemTemplate>
+                            <sfwCheckBox sfwEntityField="IsSelected" sfwDefaultValue="N" sfwTwoWayBinding="False" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Provider">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="orgname" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Effective Start Date">
+                          <ItemTemplate>
+                            <sfwTextBox sfwDataFormat="{0:d}" sfwEntityField="EffectiveStartDate" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Org ID" Visible="False">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="OrgId" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Wss Person Flex Comp Conversion ID" Visible="False">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="WssPersonFlexCompConversionId" />
+                          </ItemTemplate>
+                        </TemplateField>
+                      </Columns>
+                    </sfwGridView>
+                  </items>
+                </sfwPanel>
+              </items>
+            </sfwPanel>
+            <sfwButton ID="btnPrevious21" sfwMethodName="btnWizardPrevious_Click" Text="Previous" CssClass="hideControl" />
+            <sfwButton ID="btnPreviousAnnual" sfwMethodName="btnCancel_Click" OnClientClick="fnPreviousAnnualEnrollment(e);" />
+            <sfwButton ID="btnNext2" sfwMethodName="btnWizardNext_Click" Text="Next" CssClass="hideControl" />
+            <sfwButton ID="btnNextAnnual" sfwMethodName="btnCancel_Click" OnClientClick="fnAnnualEnrollment(e);" />
+            <sfwButton ID="btnFinish11" sfwMethodName="btnWizardSaveAndNext_Click" sfwNavigationParameter="aintRequestId=WssPersonAccountEnrollmentRequestId" />
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsNDPERSPreTaxPremium" sfwRulesGroup="FlexEnrollment" Title="NDPERS Pre-Tax Premium Information" sfwVisibleRule="IsPlanEnrollmentOptionNOTWaive" sfwShowInHeader="True">
+          <items>
+            <sfwLabel ID="capRejectionReasonPreTaxPremium" sfwVisibleRule="IsStatusRejected" Text="Rejection Reason : " sfwIsCaption="True" />
+            <sfwLabel ID="lblRejectionReasonPreTaxPremium" sfwVisibleRule="IsStatusRejected" sfwEntityField="RejectionReason" />
+            <sfwLiteral ID="ltrLiteral2" Text="Flex Comp Plan Enrollment " Visible="False" />
+            <sfwLabel ID="lblLabel1" Text="&lt;/br&gt;" sfwIsCaption="True" />
+            <sfwPanel ID="pnlNDPERSPlansPanel" sfwCaption="NDPERS Plans">
+              <items>
+                <sfwPanel ID="pnlPreTaxPremiumElection" GroupingText="&lt;b&gt;NDPERS Plans&lt;/b&gt;" sfwCaption="NDPERS Plans" sfwCollapsible="False">
+                  <items>
+                    <sfwLabel ID="lblLabel32" Text="The premiums for the following NDPERS insurance plans are eligible to be paid through pre-tax payroll deductions:  &lt;br/&gt;" sfwIsCaption="True" />
+                    <sfwLabel ID="lblLabel34" Text="Your election to pre-tax these premiums is made when enrolling in these plans not through your Flex Comp enrollment process." sfwIsCaption="True" />
+                    <sfwPanel ID="pnlNDPERSPlan" sfwCaption="NDPERSPlan" sfwCollapsible="False">
+                      <items>
+                        <sfwTable ID="tblNewPage5" />
+                        <sfwLabel ID="lblLabel7" Text="Plan" sfwIsCaption="True" />
+                        <sfwLabel ID="lblLabel8" Text="Provider" sfwIsCaption="True" />
+                        <sfwLabel ID="capIstrLifePlanProviderName" AssociatedControlID="lblIstrLifePlanProviderName" Text="Supplemental Life insurance " sfwIsCaption="True" />
+                        <sfwLabel ID="lblIstrLifePlanProviderName" sfwEntityField="IstrLifePlanProviderName" />
+                        <sfwLabel ID="capIstrDentalPlanProviderName" AssociatedControlID="lblIstrDentalPlanProviderName" Text="Dental insurance" sfwIsCaption="True" />
+                        <sfwLabel ID="lblIstrDentalPlanProviderName" sfwEntityField="IstrDentalPlanProviderName" />
+                        <sfwLabel ID="capIstrVisionPlanProviderName" AssociatedControlID="lblIstrVisionPlanProviderName" Text="Vision insurance" sfwIsCaption="True" />
+                        <sfwLabel ID="lblIstrVisionPlanProviderName" sfwEntityField="IstrVisionPlanProviderName" />
+                      </items>
+                    </sfwPanel>
+                  </items>
+                </sfwPanel>
+              </items>
+            </sfwPanel>
+            <sfwButton ID="btnButton" sfwMethodName="btnWizardPrevious_Click" Text="Previous" />
+            <sfwButton ID="btnButton1" sfwMethodName="btnWizardNext_Click" Text="Next" />
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsReviewYourEnrollment" Title="Review Your Enrollment" sfwRulesGroup="FlexAcknowledgement" sfwVisibleRule="IsPlanEnrollmentOptionNOTWaive" sfwShowInHeader="True">
+          <items>
+            <sfwLabel ID="capRejectionReasonReview" sfwVisibleRule="IsStatusRejected" Text="Rejection Reason : " sfwIsCaption="True" />
+            <sfwLabel ID="lblRejectionReasonReview" sfwVisibleRule="IsStatusRejected" sfwEntityField="RejectionReason" />
+            <sfwLiteral ID="ltrFle" Text="Flex Comp Plan Enrollment" Visible="False" />
+            <sfwLabel ID="lblLabel24" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="lblLabel2" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwPanel ID="pnlEnrollment" sfwCaption="Enrollment Details">
+              <items>
+                <sfwPanel ID="pnlReason" sfwCollapsible="False">
+                  <items>
+                    <sfwTable ID="tblNewPage7" />
+                    <sfwLabel ID="capReasonValue" Text="Change Reason : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblDropDownList" sfwEntityField="ReasonDescription" />
+                    <sfwLabel ID="capMedicalSpending" AssociatedControlID="lblDependentSalaryPerPayPeriod" Text="Medical Spending : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblMedicalSalaryPerPayPeriod" sfwDataFormat="{0:C}" sfwEntityField="MedicalAnnualPledgeAmount" />
+                    <sfwLabel ID="capDateOfChange" Text="Date of Change : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblDateOfChange" sfwDataFormat="{0:d}" sfwEntityField="DateOfChange" />
+                    <sfwLabel ID="capDependentCare" AssociatedControlID="lblMedicalSalaryPerPayPeriod" Text="Dependent Care : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblDependentSalaryPerPayPeriod" sfwDataFormat="{0:C}" sfwEntityField="DependentAnnualPledgeAmount" />
+                    <sfwLabel ID="capExplanationOfChangeQualifiedStatus1" sfwVisibleRule="IsPlanEnrollmentOptionQCIS" Text="Explanation for Change in Status Event :" sfwIsCaption="True" />
+                    <sfwTextBox ID="txtExplanationOfChangeQualifiedStatus1" TextMode="MultiLine" Rows="5" sfwVisibleRule="IsPlanEnrollmentOptionQCIS" Width="600px" sfwEntityField="ExplanationOfChangeQualifiedStatus" />
+                    <sfwRadioButtonList ID="rblReviewUPLAOptions" sfwEntityField="UPLAOptions" sfwVisibleRule="IsReasonValueUPLA_Enrollment_QCIS">
+                      <ListItem Text="Prepay missed contribution with pre-tax payroll deductions prior to leave" Value="P" disabled="true" />
+                      <ListItem Text="Catch-up missed contributions with pre-tax payroll deductions upon return from leave" Value="C" disabled="true" />
+                      <ListItem disabled="true" Text="I do not wish to participate in the FlexComp plan while on leave. Your annual election will be reduced by the amount of missed contributions. Expenses incurred during leave cannot be submitted for reimbursement" Value="N" />
+                    </sfwRadioButtonList>
+                  </items>
+                </sfwPanel>
+                <sfwPanel ID="pnlNdpersPretaxconversion" GroupingText="&lt;b&gt;NDPERS Plan Premium Conversion &lt;/b&gt;" sfwCaption="NDPERS Plan Premium Conversion " sfwCollapsible="False" Visible="False">
+                  <items>
+                    <sfwTable ID="tblNewPage8" />
+                    <sfwLabel ID="lblLa" Text="Plan" sfwIsCaption="True" />
+                    <sfwLabel ID="Statu" Text="Status" sfwIsCaption="True" />
+                    <sfwLabel ID="PremiumConversi" Text="Premium Conversion" sfwIsCaption="True" />
+                    <sfwLabel ID="capIstrIsDentalPlanEnrol" Text="Dental " sfwIsCaption="True" />
+                    <sfwLabel ID="lbl" Width="10px" sfwIsCaption="True" />
+                    <sfwLabel ID="lblIstrDentalPlanStatus" sfwEntityField="objMSSPersonAccountFlexComp.IstrDentalPlanStatus" />
+                    <sfwLabel ID="lblIstrDentalPremiumFlag" sfwEntityField="objMSSPersonAccountFlexComp.IstrDentalPremiumFlag" />
+                    <sfwLabel ID="capIstrIsVisionPlanEnrolled" sfwVisibleRule="VisibleRuleForVisionLabelNo" Text="Vision" sfwIsCaption="True" />
+                    <sfwLabel ID="lblIstrVisionPlanStatus" sfwEntityField="objMSSPersonAccountFlexComp.IstrVisionPlanStatus" />
+                    <sfwLabel ID="lblIstrVisionPremiumFlag" sfwEntityField="objMSSPersonAccountFlexComp.IstrVisionPremiumFlag" />
+                    <sfwLabel ID="capIstrIsLifeEnrolled" sfwVisibleRule="VisibleRuleForLifeInsuranceLabelNo" Text="Life" sfwIsCaption="True" />
+                    <sfwLabel ID="lblIstrLifePlanStatus" sfwEntityField="objMSSPersonAccountFlexComp.IstrLifePlanStatus" />
+                    <sfwLabel ID="lblIstrLifePremiumFlag" sfwEntityField="objMSSPersonAccountFlexComp.IstrLifePremiumFlag" />
+                  </items>
+                </sfwPanel>
+                <sfwLabel ID="lblbr" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwPanel ID="pnlNonNdpers" GroupingText="&lt;b&gt;Non-NDPERS Pretax Premiums&lt;/b&gt;" sfwCaption="Non-NDPERS Pretax Premiums" sfwCollapsible="False">
+                  <items>
+                    <sfwGridView ID="grvGridView" sfwTwoWayBinding="True" AllowEditing="True" sfwEntityField="lstMSSFlexCompConversionSelected" CssClass="Non-NdepersPtetax">
+                      <Columns>
+                        <TemplateField HeaderText="Select">
+                          <ItemTemplate>
+                            <sfwCheckBox sfwEntityField="IsSelected" sfwDefaultValue="N" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Provider">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="orgname" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Effective Start Date">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EffectiveStartDate" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField Visible="False">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="OrgId" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Wss Person Flex Comp Conversion ID" Visible="False">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="WssPersonFlexCompConversionId" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Effective End Date">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EffectiveEndDate" />
+                          </ItemTemplate>
+                        </TemplateField>
+                      </Columns>
+                    </sfwGridView>
+                  </items>
+                </sfwPanel>
+              </items>
+            </sfwPanel>
+            <sfwPanel ID="pnlAgreement" sfwCaption="Member Authorization">
+              <items>
+                <sfwGridView ID="grvAcknowledgementMemAuth" sfwEntityField="lstAcknowledgementMemAuth" CssClass="GridColumnHide">
+                  <Columns>
+                    <TemplateField HeaderText="Acknowledgement Text">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="AcknowledgementText" sfwRenderType="RichText" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+                <sfwLabel ID="lblLabel35" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwTextBox ID="txtWssPersonAccountEnrollmentRequestId1" Visible="False" sfwEntityField="WssPersonAccountEnrollmentRequestId" />
+                <sfwCheckBox ID="chkCheckB" sfwDefaultValue="N" sfwEntityField="EeAcknowledgementAgreementFlag" sfwValidationRules="IsFlexAcknowledgementNOTSelected" />
+                <sfwLabel ID="lblIstrConfirmationText" sfwEntityField="IstrConfirmationText" sfwRenderType="RichText" />
+                <sfwLabel ID="lblLabel36" Text="&lt;br/&gt;" sfwIsCaption="True" />
+              </items>
+            </sfwPanel>
+            <sfwButton ID="btnPrevious1" sfwMethodName="btnWizardPrevious_Click" Text="Previous" />
+            <sfwButton ID="btnFinish" sfwMethodName="btnWizardSaveAndNext_Click" sfwNavigationParameter="aintRequestId=WssPersonAccountEnrollmentRequestId" />
+            <sfwLabel ID="lblPersonId" Visible="False" sfwEntityField="PersonId" />
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsPrint" Title="Print For Your Records" sfwVisibleRule="IsPlanEnrollmentOptionNOTWaive" sfwShowInHeader="True">
+          <items>
+            <sfwLiteral ID="ltrLiteral4" Text="Flex Comp Plan Enrollment" Visible="False" />
+            <sfwLabel ID="lblLabel6" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="lblLabel31" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwPanel ID="pnlPanel" sfwCaption="Enrollment Details">
+              <items>
+                <sfwPanel ID="pnlReason1" sfwCollapsible="False">
+                  <items>
+                    <sfwTable ID="tblNewPage7" />
+                    <sfwLabel ID="capReasonValue" Text="Change Reason : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblDropDownList1" sfwEntityField="ReasonDescription" />
+                    <sfwLabel ID="capMedicalSpending" AssociatedControlID="lblDependentSalaryPerPayPeriod1" Text="Medical Spending : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblMedicalSalaryPerPayPeriod1" sfwDataFormat="{0:C}" sfwEntityField="MedicalAnnualPledgeAmount" />
+                    <sfwLabel ID="capDateOfChange" Text="Date of Change : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblDateOfChange1" sfwDataFormat="{0:d}" sfwEntityField="DateOfChange" />
+                    <sfwLabel ID="capDependentCare" AssociatedControlID="lblMedicalSalaryPerPayPeriod2" Text="Dependent Care : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblDependentSalaryPerPayPeriod2" sfwDataFormat="{0:C}" sfwEntityField="DependentAnnualPledgeAmount" />
+                    <sfwLabel ID="capExplanationOfChangeQualifiedStatus1" sfwVisibleRule="IsPlanEnrollmentOptionQCIS" Text="Explanation for Change in Status Event :" sfwIsCaption="True" />
+                    <sfwTextBox ID="txtExplanationOfChangeQualifiedStatus11" TextMode="MultiLine" Rows="5" sfwVisibleRule="IsPlanEnrollmentOptionQCIS" Width="600px" sfwEntityField="ExplanationOfChangeQualifiedStatus" />
+                    <sfwRadioButtonList ID="rblPrintUPLAOptions" sfwEntityField="UPLAOptions" sfwVisibleRule="IsReasonValueUPLA_Enrollment_QCIS">
+                      <ListItem disabled="true" Text="Prepay missed contribution with pre-tax payroll deductions prior to leave" Value="P" />
+                      <ListItem disabled="true" Text="Catch-up missed contributions with pre-tax payroll deductions upon return from leave" Value="C" />
+                      <ListItem disabled="true" Text="I do not wish to participate in the FlexComp plan while on leave. Your annual election will be reduced by the amount of missed contributions. Expenses incurred during leave cannot be submitted for reimbursement" Value="N" />
+                    </sfwRadioButtonList>
+                  </items>
+                </sfwPanel>
+                <sfwPanel ID="pnlNdpersPretaxconversion1" GroupingText="&lt;b&gt;NDPERS Plan Premium Conversion &lt;/b&gt;" sfwCaption="NDPERS Plan Premium Conversion " sfwCollapsible="False" Visible="False">
+                  <items>
+                    <sfwTable ID="tblNewPage8" />
+                    <sfwLabel ID="lblLa" Text="Plan" sfwIsCaption="True" />
+                    <sfwLabel ID="Statu" Text="Status" sfwIsCaption="True" />
+                    <sfwLabel ID="PremiumConversi" Text="Premium Conversion" sfwIsCaption="True" />
+                    <sfwLabel ID="capIstrIsDentalPlanEnrol" Text="Dental " sfwIsCaption="True" />
+                    <sfwLabel ID="lbl" Width="10px" sfwIsCaption="True" />
+                    <sfwLabel ID="lblIstrDentalPlanStatus1" sfwEntityField="objMSSPersonAccountFlexComp.IstrDentalPlanStatus" />
+                    <sfwLabel ID="lblIstrDentalPremiumFlag1" sfwEntityField="objMSSPersonAccountFlexComp.IstrDentalPremiumFlag" />
+                    <sfwLabel ID="capIstrIsVisionPlanEnrolled" sfwVisibleRule="VisibleRuleForVisionLabelNo" Text="Vision" sfwIsCaption="True" />
+                    <sfwLabel ID="lblIstrVisionPlanStatus2" sfwEntityField="objMSSPersonAccountFlexComp.IstrVisionPlanStatus" />
+                    <sfwLabel ID="lblIstrVisionPremiumFlag2" sfwEntityField="objMSSPersonAccountFlexComp.IstrVisionPremiumFlag" />
+                    <sfwLabel ID="capIstrIsLifeEnrolled" sfwVisibleRule="VisibleRuleForLifeInsuranceLabelNo" Text="Life" sfwIsCaption="True" />
+                    <sfwLabel ID="lblIstrLifePlanStatus3" sfwEntityField="objMSSPersonAccountFlexComp.IstrLifePlanStatus" />
+                    <sfwLabel ID="lblIstrLifePremiumFlag3" sfwEntityField="objMSSPersonAccountFlexComp.IstrLifePremiumFlag" />
+                  </items>
+                </sfwPanel>
+                <sfwLabel ID="lblbr" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwPanel ID="pnlNonNdpers1" GroupingText="&lt;b&gt;Non-NDPERS Pretax Premiums&lt;/b&gt;" sfwCaption="Non-NDPERS Pretax Premiums" sfwCollapsible="False">
+                  <items>
+                    <sfwGridView ID="grvGridViewPrint" sfwTwoWayBinding="True" AllowEditing="True" sfwEntityField="lstMSSFlexCompConversionSelected">
+                      <Columns>
+                        <TemplateField HeaderText="Select" Visible="False">
+                          <ItemTemplate>
+                            <sfwCheckBox sfwEntityField="IsSelected" sfwDefaultValue="N" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Provider">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="orgname" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Effective Start Date">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EffectiveStartDate" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Org ID">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="OrgId"/>
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Wss Person Flex Comp Conversion ID" Visible="False">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="WssPersonFlexCompConversionId" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Effective End Date">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EffectiveEndDate" />
+                          </ItemTemplate>
+                        </TemplateField>
+                      </Columns>
+                    </sfwGridView>
+                  </items>
+                </sfwPanel>
+              </items>
+            </sfwPanel>
+            <sfwPanel ID="pnlPanel12" sfwCaption="Member Authorization">
+              <items>
+                <sfwGridView ID="grvAcknowledgementMemAuth1" sfwEntityField="lstAcknowledgementMemAuth" CssClass="GridColumnHide">
+                  <Columns>
+                    <TemplateField HeaderText="Acknowledgement Text">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="AcknowledgementText" sfwRenderType="RichText" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+                <sfwLabel ID="lblLabel35" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwTextBox ID="txtWssPersonAccountEnrollmentRequestId1" Visible="False" sfwEntityField="WssPersonAccountEnrollmentRequestId" />
+                <sfwCheckBox ID="chkCheckB" sfwDefaultValue="N" sfwEntityField="EeAcknowledgementAgreementFlag" />
+                <sfwLabel ID="lblIstrConfirmationText12" sfwEntityField="IstrConfirmationText" sfwRenderType="RichText" CssClass="view-inline" />
+                <sfwLabel ID="lblLabel36" Text="&lt;br/&gt;" sfwIsCaption="True" />
+              </items>
+            </sfwPanel>
+            <sfwButton ID="btnReturnToPlan" sfwMethodName="btnOpen_Click" sfwActiveForm="wfmActiveMemberBenefitPlansMaintenance" sfwNavigationParameter="aintPersonID=PersonId" />
+            <sfwButton ID="btnButton3" Text="Print" OnClientClick="PrintCenterMiddle(e)" sfwMethodName="btnOpen_Click" />
+            <sfwLabel ID="lblLabel38" Visible="False" sfwEntityField="PersonId" />
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsStep" Title="Waive" sfwRulesGroup="FlexWaiveAcknowledgement" sfwVisibleRule="IsPlanEnrollmentOptionWaive" sfwShowInHeader="True">
+          <items>
+            <sfwLabel ID="capRejectionReasonStep" sfwVisibleRule="IsStatusRejected" Text="Rejection Reason : " sfwIsCaption="True" />
+            <sfwLabel ID="lblRejectionReasonStep" sfwVisibleRule="IsStatusRejected" sfwEntityField="RejectionReason" />
+            <sfwLiteral ID="ltrLiteral1" Text="Flex Comp Plan Enrollment" Visible="False" />
+            <sfwLabel ID="lblLabel12" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwTextBox ID="txtWssPersonAccountEnrollmentRequestId" Visible="False" sfwEntityField="WssPersonAccountEnrollmentRequestId" />
+            <sfwLabel ID="lblLabel3" Text="I understand that by declining enrollment during my initial 31 day new hire eligibility period, I can only apply for coverage&lt;br/&gt;during the designated Annual Enrollment Season with coverage effective January 1st or during the plan year if I experience&lt;br/&gt;an IRS Qualified Change of Status." sfwIsCaption="True" />
+            <sfwCheckBox ID="chkIsPlanWaivedFlag" sfwDefaultValue="N" sfwTwoWayBinding="False" sfwEntityField="AcknolwedgementPartDFlag" />
+            <sfwLabel ID="lblLabel13" Text="Waive" sfwEntityField="IstrWaive" />
+            <sfwLabel ID="lblIstrConfirmationText1" sfwEntityField="IstrConfirmationText" sfwRenderType="RichText" />
+            <sfwButton ID="btnPrevious2" sfwMethodName="btnWizardPrevious_Click" Text="Previous" />
+            <sfwButton ID="btnFinish1" sfwActiveForm="wfmCompletionMaintenance" sfwMethodName="btnWizardFinish_Click" sfwNavigationParameter="aintRequestID=WssPersonAccountEnrollmentRequestId" Text="Finish" />
+          </items>
+        </sfwWizardStep>
+      </items>
+    </sfwWizard>
+  </items>
+  <loaddetails>
+    <entityfield ID="lstMSSFlexCompConversion" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objMSSPersonAccountFlexComp" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstMSSFlexCompConversionSelected" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstAcknowledgementMemAuth" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+  </loaddetails>
+  <ExtraFields />
+</form>

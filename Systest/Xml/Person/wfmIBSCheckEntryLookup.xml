@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+  <form ID="wfmIBSCheckEntryLookup" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvPerson" sfwResource="1922 " sfwType="Lookup" sfwTitle="IBS Check Entry Lookup" version="3.5" sfwEntity="entIbsCheckEntryHeader" sfwGridCollection="busIbsCheckEntryHeaderLookup.iclbIbsCheckEntryHeader">
+  <initialload>
+    <query ID="cdoIbsCheckEntryHeader" sfwQueryRef="entIbsCheckEntryHeader.Lookup" sfwMethodName="LoadIbsCheckEntryHeaders" />
+  </initialload>
+  <sfwTable ID="Main">
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlCriteria" sfwCaption="Criteria">
+          <sfwTable ID="tblCriteria">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="lblLabel" Text="Deposit Tape ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtTextBox" sfwDataField="deposit_tape_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="cdoIbsCheckEntryHeader" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capIbsCheckEntryHeaderId" Text="IBS Check Entry ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtIbsCheckEntryHeaderId" sfwDataField="ibs_check_entry_header_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="cdoIbsCheckEntryHeader" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capDepositDateFrom" Text="Deposit Date From : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtDepositDateFrom" sfwDataField="deposit_date" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="between" sfwQueryID="cdoIbsCheckEntryHeader" sfwRelatedControl="txtDepositDateTo" />
+                <CompareValidator ControlToValidate="txtDepositDateFrom" ErrorMessage="Deposit Date From must be in mm/dd/yyyy format." ID="valDepositDateFrom" Operator="DataTypeCheck" Text="*" Type="Date" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capDepositDateTo" Text="Deposit Date To : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtDepositDateTo" sfwDataField="deposit_date" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="between" sfwQueryID="cdoIbsCheckEntryHeader" />
+                <CompareValidator ControlToValidate="txtDepositDateTo" ErrorMessage="Deposit Date To must be in mm/dd/yyyy format." ID="valDepositDateTo" Operator="DataTypeCheck" Text="*" Type="Date" />
+                <CompareValidator ControlToCompare="txtDepositDateFrom" ControlToValidate="txtDepositDateTo" ErrorMessage="Deposit Date To cannot be less than Deposit Date From." ID="valDepositDateRange" Operator="GreaterThanEqual" Text="*" Type="Date" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capStatusValue" Text="Status : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlStatusValue" sfwDataField="status_value" sfwOperator="like" sfwQueryID="cdoIbsCheckEntryHeader" sfwLoadType="CodeGroup" sfwLoadSource="1507" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capDepositMethodValue" Text="Deposit Method : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlDepositMethodValue" sfwDataField="deposit_method_value" sfwOperator="like" sfwQueryID="cdoIbsCheckEntryHeader" sfwLoadType="CodeGroup" sfwLoadSource="1501" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnSearch" sfwMethodName="btnSearch_Click" Text="Search" />
+                <sfwButton ID="btnReset" sfwMethodName="btnReset_Click" Text="Reset" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwButton ID="btnStoreSearch" sfwMethodName="btnStoreUserDefaults_Click" Text="Store Search" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlResult" sfwCaption="Search Results">
+          <sfwTable CssClass="Table" ID="tblResult">
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnNew" sfwActiveForm="wfmIBSCheckEntryMaintenance" sfwMethodName="btnNew_Click" Text="New" />
+                <sfwButton ID="btnOpen" sfwActiveForm="wfmIBSCheckEntryMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="aintibscheckentryheaderid=IbsCheckEntryHeaderId" sfwRelatedControl="dgrResult" Text="Open" sfwDisableViewOnly="True" />
+                <sfwButton ID="btnDelete" sfwMethodName="btnDelete_Click" sfwRelatedControl="dgrResult" Text="Delete" />
+                <sfwButton ID="btnExportExcel" sfwMethodName="btnColumnsToExport_Click" sfwRelatedControl="dgrResult" Text="Export To Excel" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwGridView AllowPaging="True" AllowSorting="True" ID="dgrResult" sfwSelection="Many">
+                  <Columns>
+                    <TemplateField HeaderText="Deposit Tape ID">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpen" sfwEntityField="DepositTapeId" sfwShowZero="True" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="IBS Check Entry ID">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpen" sfwEntityField="IbsCheckEntryHeaderId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Deposit Method">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="DepositMethodDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Deposit Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="DepositDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Status">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="StatusDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Deposit Total">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="DepositTotal" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+  </sfwTable>
+  <loaddetails />
+</form>

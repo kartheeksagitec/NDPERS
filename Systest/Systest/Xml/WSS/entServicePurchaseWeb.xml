@@ -1,0 +1,50 @@
+﻿<entity ID="entServicePurchaseWeb" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoServicePurchaseWeb" sfwObjectID="busServicePurchaseWeb">
+  <rules>
+    <rule ID="IsAvailablePlanCountEqualsOne" sfwExpression="(this.iintAvailablePlanCount == 1)" sfwObjectBased="True" />
+    <rule ID="IsAvailablePlanCountMoreThanOne" sfwExpression="(this.iintAvailablePlanCount &gt; 1)" sfwObjectBased="True" />
+    <rule ID="VisibiilityIsNotDCMember" sfwExpression="!(this.IsDCMember() == True)" sfwObjectBased="True" />
+    <rule ID="IsEnrollInMultiplePlanOrHaveServiceCredit" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="((this.ibusServicePurchaseHeader != null) &amp;&amp;&#xA;(this.ibusServicePurchaseHeader.IsMemberIsTFFRdual())) ||&#xA;(this.iintAvailablePlanCount &gt; 1)" />
+    <rule ID="IsMemberHasPostedLessThan3MonthSalary" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.iintAvailablePlanCount == 1) &amp;&amp;&#xA;(this.iblnIsMemberHasLessThan3SalaryPosted)" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="IsAvailablePlanCountMoreThanOne" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAvailablePlanCountEqualsOne" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibiilityIsNotDCMember" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEnrollInMultiplePlanOrHaveServiceCredit" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMemberHasPostedLessThan3MonthSalary" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror />
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <attributes>
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrServicePurchaseType" sfwValue="istrServicePurchaseType" />
+    <attribute sfwDataType="int" sfwType="Property" ID="PlanId" sfwValue="icdoServicePurchaseWeb.plan_id" />
+    <attribute ID="objServicePurchaseHeader" sfwType="Object" sfwEntity="entServicePurchaseHeader" sfwValue="ibusServicePurchaseHeader" />
+    <attribute sfwType="Collection" sfwEntity="entConsolidatedPurchaseWeb" ID="lstConsolidatedPurchase" sfwValue="iclbConsolidatedPurchase" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecUnusedTotalTimeToPurchase" sfwValue="idecUnusedTotalTimeToPurchase" />
+    <attribute ID="objRetirementBenefitCalculation" sfwType="Object" sfwEntity="entRetirementBenefitCalculation" sfwValue="ibusRetirementBenefitCalculation" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IdecEstimatedSCYearlyForBenCalFormatted" sfwValue="idecEstimatedSCYearlyForBenCal_formatted" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecEstimatedSCForBenCal" sfwValue="idecEstimatedSCForBenCal" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IdecServiceAgeFormatted" sfwValue="idecServiceAge_formatted" />
+    <attribute sfwType="Collection" sfwEntity="entServicePurchaseAmortizationSchedule" ID="lstUnusedSickLeavePurchaseSchedule" sfwValue="iclbUnusedSickLeavePurchaseSchedule" />
+    <attribute sfwType="Collection" sfwEntity="entServicePurchaseAmortizationSchedule" ID="lstConsolidatedPurchaseSchedule" sfwValue="iclbConsolidatedPurchaseSchedule" />
+    <attribute sfwDataType="int" sfwType="Property" ID="PersonId" sfwValue="icdoServicePurchaseWeb.person_id" />
+    <attribute ID="objPerson" sfwType="Object" sfwEntity="entPerson" sfwPrivate="False" sfwValue="ibusPerson" />
+    <attribute ID="IstrDownloadFileName" sfwDataType="string" sfwPrivate="False" sfwValue="istrDownloadFileName" sfwType="Property" />
+  </attributes>
+  <objectmethods>
+    <method ID="LoadPlansForServicePurchase" sfwReturnType="Collection" sfwObjectID="cdoPlan" sfwEntity="entPlan" />
+    <method ID="btnCalculatedEstimatedServicePurchase_Click" sfwReturnType="ArrayList" />
+    <method ID="btnGo_click" sfwReturnType="ArrayList" />
+    <method ID="LoadParticipationStatusByBenefitType" />
+  </objectmethods>
+  <queries />
+  <constraint />
+  <methods />
+  <lifecycle />
+</entity>

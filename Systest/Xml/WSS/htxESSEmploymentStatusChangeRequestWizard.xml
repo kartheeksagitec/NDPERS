@@ -1,0 +1,200 @@
+﻿<form ID="wfmESSEmploymentStatusChangeRequestWizard" sfwActive="True" sfwDescription="Employment Status Change" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2021" sfwType="FormLinkWizard" sfwTitle="Employment Status Change Wizard" version="3.5" sfwEntity="entWssEmploymentChangeRequest" sfwTemplate="ESSEmploymentStatusChangeRequestWizard.html" isBasedOnWfm="true">
+  <initialload>
+    <callmethods sfwMode="New" sfwMethodName="NewWssEmploymentChangeRequest" />
+    <callmethods sfwMode="Update" sfwMethodName="FindWssEmploymentChangeRequest" />
+  </initialload>
+  <items>
+    <sfwTable ID="Main" />
+    <sfwWizard ID="wizMain">
+      <items>
+        <sfwWizardStep ID="wzsStep" sfwShowInHeader="True" Title="Member Information">
+          <items>
+            <sfwTable ID="tblStep" />
+            <sfwLabel ID="capFullName" Text="Name : " sfwIsCaption="True" />
+            <sfwLabel ID="lblFullName" sfwEntityField="objPerson.FullName" />
+            <sfwLabel ID="capPersonId" Text="NDPERS ID : " sfwIsCaption="True" />
+            <sfwLabel ID="lblPersonId" sfwEntityField="objPerson.PersonId" />
+            <sfwLabel ID="capLastFourDigitsOfSSN" Text="Last Four Digits of Social Security Number : " sfwIsCaption="True" />
+            <sfwLabel ID="lblLastFourDigitsOfSSN" sfwEntityField="objPerson.LastFourDigitsOfSSN" />
+            <sfwLabel ID="capDateOfBirth" Text="Date of Birth : " sfwIsCaption="True" />
+            <sfwLabel ID="lblDateOfBirth" sfwDataFormat="{0:d}" sfwEntityField="objPerson.DateOfBirth" />
+            <sfwLabel ID="capOrgName" Text="Organization Name : " sfwIsCaption="True" />
+            <sfwLabel ID="lblOrgName" sfwEntityField="objOrganization.OrgName" />
+            <sfwLabel ID="capOrgCode" Text="NDPERS Organization ID : " sfwIsCaption="True" />
+            <sfwLabel ID="lblOrgCode" sfwEntityField="objOrganization.OrgCode" />
+            <sfwButton ID="btnTypeofChange" sfwMethodName="btnWizardNext_Click" Text="Next" />
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsStep1" sfwRulesGroup="TypeOfChange" sfwShowInHeader="True" Title="Change of Status Notice">
+          <items>
+            <sfwTable ID="tblStep1" />
+            <sfwLabel ID="capTypeOfChange" Text="Type of Change : " sfwIsCaption="True" />
+            <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlChangeTypeValue" sfwLoadType="CodeGroup" sfwLoadSource="3506" sfwEntityField="ChangeTypeValue" />
+            <sfwButton ID="btnPrevious" sfwMethodName="btnWizardPrevious_Click" Text="Previous" />
+            <sfwButton ID="btnNext1" sfwMethodName="btnWizardNext_Click" Text="Next" />
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsLOA" sfwRulesGroup="LOA" sfwShowInHeader="True" sfwVisibleRule="IsChangeTypeLOA" Title="LOA/Leave without pay">
+          <items>
+            <sfwTable ID="tblStep2" />
+            <sfwLabel ID="capLoaStartDate" sfwVisibleRule="VisibleRuleLOAFields" Text="LOA Start Date:" sfwIsCaption="True" />
+            <sfwTextBox ID="txtLoaStartDate" sfwDataFormat="{0:d}" sfwVisibleRule="VisibleRuleLOAFields" sfwEntityField="LoaStartDate" />
+            <sfwLabel ID="capLoaReason" sfwVisibleRule="VisibleRuleLOAFields" Text="Reason for leave : " sfwIsCaption="True" />
+            <sfwTextBox ID="txtLoaReason" sfwVisibleRule="VisibleRuleLOAFields" TextMode="MultiLine" Width="400px" sfwEntityField="LoaReason" />
+            <sfwLabel ID="capDateOfReturn" sfwVisibleRule="IsEmploymentStatusLOAOrLOAM" Text="Date of Return : " sfwIsCaption="True" />
+            <sfwTextBox ID="txtDateOfReturn" sfwDataFormat="{0:d}" sfwVisibleRule="IsEmploymentStatusLOAOrLOAM" sfwEntityField="DateOfReturn" />
+            <sfwLabel ID="capRecertifiedDate" sfwVisibleRule="IsEmploymentStatusLOAOrLOAM" Text="Recertification Date:" sfwIsCaption="True" />
+            <sfwTextBox ID="txtRecertifiedDate" sfwDataFormat="{0:d}" sfwVisibleRule="IsEmploymentStatusLOAOrLOAM" sfwEntityField="RecertifiedDate" />
+            <sfwLabel ID="lblHeathInsurance" Text="Is NDPERS Health Insurance to be continued?" sfwIsCaption="True" />
+            <sfwRadioButtonList DataTextField="description" DataValueField="code_value" ID="rblRadioButtonList" RepeatDirection="Horizontal" sfwLoadType="CodeGroup" sfwLoadSource="3510" sfwEntityField="HealthInsuranceContinued" />
+            <sfwLabel ID="lblLifeInsurance" Text="Is NDPERS Life Insurance to be continued?" sfwIsCaption="True" />
+            <sfwRadioButtonList DataTextField="description" DataValueField="code_value" ID="rblRadioButtonList1" RepeatDirection="Horizontal" sfwLoadType="CodeGroup" sfwLoadSource="3510" sfwEntityField="LifeInsuranceContinued" />
+            <sfwLabel ID="lblDentalInsurance" Text="Is NDPERS Dental Insurance to be continued?" sfwIsCaption="True" />
+            <sfwRadioButtonList DataTextField="description" DataValueField="code_value" ID="rblRadioButtonList2" RepeatDirection="Horizontal" sfwLoadType="Query" sfwLoadSource="entWssEmploymentChangeRequest.LOAQuestions" sfwEntityField="DentalInsuranceContinued" />
+            <sfwLabel ID="lblVisionInsurance" Text="Is NDPERS Vision Insurance to be continued?" sfwIsCaption="True" />
+            <sfwRadioButtonList DataTextField="description" DataValueField="code_value" ID="rblRadioButtonList3" RepeatDirection="Horizontal" sfwLoadType="Query" sfwLoadSource="entWssEmploymentChangeRequest.LOAQuestions" sfwEntityField="VisionInsuranceContinued" />
+            <sfwLabel ID="lblEAPInsurance" Text="Is NDPERS EAP Insurance to be continued?" sfwIsCaption="True" />
+            <sfwRadioButtonList DataTextField="description" DataValueField="code_value" ID="rblRadioButtonList4" RepeatDirection="Horizontal" sfwLoadType="CodeGroup" sfwLoadSource="3510" sfwEntityField="EapInsuranceContinued" />
+            <sfwButton ID="btnPrevious1" sfwMethodName="btnWizardPrevious_Click" Text="Previous" />
+            <sfwButton ID="btnHS1" sfwMethodName="btnWizardNext_Click" Text="Next" />
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsClassificationChange" sfwRulesGroup="ClassificationChange" sfwShowInHeader="True" sfwVisibleRule="IsChangeTypeClassificationChange" Title="Classification Change">
+          <items>
+            <sfwTable ID="tblStep5" />
+            <sfwLabel ID="capJobClassValue" Text="Job Class : " sfwIsCaption="True" />
+            <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlJobClassValue" sfwLoadType="Method" sfwLoadSource="LoadJobClassByEmployerCategory" sfwEntityField="JobClassValue" />
+            <sfwLabel ID="capOfficialListValue" Text="Official List : " sfwIsCaption="True" />
+            <sfwDropDownList ID="ddlOfficialListValue" sfwLoadType="CodeGroup" sfwLoadSource="318" sfwEntityField="OfficialListValue" />
+            <sfwLabel ID="capTermBeginDate" Text="Term Begin Date : " sfwIsCaption="True" />
+            <sfwTextBox ID="txtTermBeginDate" sfwDataFormat="{0:d}" sfwEntityField="TermBeginDate" />
+            <sfwLabel ID="capJobClassChangeEffectiveDate" Text="Member’s Job Classification Change Effective Date : " sfwIsCaption="True" />
+            <sfwTextBox ID="txtJobClassChangeEffectiveDate" sfwDataFormat="{0:d}" sfwEntityField="JobClassChangeEffectiveDate" />
+            <sfwButton ID="btnPrevious5" sfwMethodName="btnWizardPrevious_Click" Text="Previous" />
+            <sfwButton ID="btnNext3" sfwMethodName="btnWizardNext_Click" Text="Next" />
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsEmpTypeChange" sfwRulesGroup="EmpTypeChange" sfwShowInHeader="True" sfwVisibleRule="IsChangeTypeEmpTypeChange" Title="Employment Type Change">
+          <items>
+            <sfwTable ID="tblStep4" />
+            <sfwLabel ID="capTypeValue" Text="Type : " sfwIsCaption="True" />
+            <sfwDropDownList DataTextField="code_value" DataValueField="code_value" ID="ddlTypeValue" sfwLoadType="CodeGroup" sfwLoadSource="313" sfwEntityField="TypeValue" />
+            <sfwLabel ID="capEmploymentStatusValue" Text="Employment Status : " sfwIsCaption="True" />
+            <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlEmploymentStatusValue" sfwData1EqualTo="Y" sfwLoadType="CodeGroup" sfwLoadSource="310" sfwEntityField="EmploymentStatusValue" />
+            <sfwLabel ID="capEmploymentTypeChangeEffectiveDate" Text="Employment Classification Change Effective Date : " sfwIsCaption="True" />
+            <sfwTextBox ID="txtEmploymentTypeChangeEffectiveDate" sfwDataFormat="{0:d}" sfwEntityField="EmploymentTypeChangeEffectiveDate" />
+            <sfwButton ID="btnPrevious2" sfwMethodName="btnWizardPrevious_Click" Text="Previous" />
+            <sfwButton ID="btnNext2" sfwMethodName="btnWizardNext_Click" Text="Next" />
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsStep3" sfwShowInHeader="True" sfwVisibleRule="IsChangeTypeLOAR" Title="LOA Recertification">
+          <items>
+            <sfwTable ID="tblStep7" />
+            <sfwLabel ID="lblLabelRecertificationDate" Text="LOA Recertification Date :" sfwIsCaption="True" />
+            <sfwTextBox ID="txtTextBoxRecertification" sfwDataFormat="{0:d}" sfwEntityField="RecertifiedDate" />
+            <sfwButton ID="btnPrevious6" sfwMethodName="btnWizardPrevious_Click" Text="Previous" />
+            <sfwButton ID="btnNext3" sfwMethodName="btnWizardNext_Click" Text="Next" />
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsStep2" sfwRulesGroup="SeasonalAndHourly" sfwShowInHeader="True" Title="Hourly and Seasonal">
+          <items>
+            <sfwTable ID="tblStep3" />
+            <sfwLabel ID="capHourlyValue" Text="Hourly : " sfwIsCaption="True" />
+            <sfwDropDownList ID="ddlHourlyValue" sfwLoadType="CodeGroup" sfwLoadSource="311" sfwEntityField="HourlyValue" />
+            <sfwLabel ID="capIstrLess12hourWorkIndicator" Text="Does member work less than 12 months per year? : " sfwIsCaption="True" />
+            <sfwCheckBox ID="chkIstrLess12hourWorkIndicator" sfwEntityField="IstrLess12hourWorkIndicator" />
+            <sfwLabel ID="capSeasonalValue" Text="Seasonal : " sfwIsCaption="True" />
+            <sfwDropDownList ID="ddlSeasonalValue" sfwLoadType="CodeGroup" sfwLoadSource="312" sfwEntityField="SeasonalValue" />
+            <sfwButton ID="btnPrevious3" sfwMethodName="btnWizardPrevious_Click" Text="Previous" />
+            <sfwButton ID="btnEnd1" sfwMethodName="btnWizardNext_Click" Text="Next" />
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsAuthorization" sfwRulesGroup="Finish" sfwShowInHeader="True" Title="Acknowledgment">
+          <items>
+            <sfwTable ID="tblStep6" />
+            <sfwLabel ID="capPersonId" Text="PERSLink ID : " sfwIsCaption="True" />
+            <sfwLabel ID="lblPersonId" sfwEntityField="objPerson.PersonId" />
+            <sfwLabel ID="capLastFourDigitsOfSSN" Text="Last 4 Digits of SSN : " sfwIsCaption="True" />
+            <sfwLabel ID="lblLastFourDigitsOfSSN" sfwEntityField="objPerson.LastFourDigitsOfSSN" />
+            <sfwLabel ID="capFullName" Text="Name : " sfwIsCaption="True" />
+            <sfwLabel ID="lblFullName" sfwEntityField="objPerson.FullName" />
+            <sfwLabel ID="capDateOfBirth" Text="Date of Birth : " sfwIsCaption="True" />
+            <sfwLabel ID="lblDateOfBirth" sfwDataFormat="{0:d}" sfwEntityField="objPerson.DateOfBirth" />
+            <sfwLabel ID="capOrgCode" Text="Org Code : " sfwIsCaption="True" />
+            <sfwLabel ID="lblOrgCode" sfwEntityField="objOrganization.OrgCode" />
+            <sfwLabel ID="capOrgName" Text="Org Name : " sfwIsCaption="True" />
+            <sfwLabel ID="lblOrgName" sfwEntityField="objOrganization.OrgName" />
+            <hr />
+            <sfwLabel ID="capJobClassChangeEffectiveDate" Text="Job Class Change Effective Date : " sfwIsCaption="True" />
+            <sfwLabel ID="lblJobClassChangeEffectiveDate" sfwDataFormat="{0:d}" sfwEntityField="JobClassChangeEffectiveDate" />
+            <sfwLabel ID="capJobClassDescription" Text="Job Class : " sfwIsCaption="True" />
+            <sfwLabel ID="lblJobClassDescription" sfwEntityField="JobClassDescription" />
+            <sfwLabel ID="capOfficialListDescription" Text="Official List : " sfwIsCaption="True" />
+            <sfwLabel ID="lblOfficialListDescription" sfwEntityField="OfficialListDescription" />
+            <sfwLabel ID="capTermBeginDate" Text="Term Begin Date : " sfwIsCaption="True" />
+            <sfwLabel ID="lblTermBeginDate" sfwDataFormat="{0:d}" sfwEntityField="TermBeginDate" />
+            <hr />
+            <sfwLabel ID="capEmploymentTypeChangeEffectiveDate" Text="Employment Type Change Effective Date : " sfwIsCaption="True" />
+            <sfwLabel ID="lblEmploymentTypeChangeEffectiveDate" sfwDataFormat="{0:d}" sfwEntityField="EmploymentTypeChangeEffectiveDate" />
+            <sfwLabel ID="capTypeDescription" Text="Type : " sfwIsCaption="True" />
+            <sfwLabel ID="lblTypeDescription" sfwEntityField="TypeDescription" />
+            <sfwLabel ID="capEmploymentStatusDescription" Text="Employment Status : " sfwIsCaption="True" />
+            <sfwLabel ID="lblEmploymentStatusDescription" sfwEntityField="EmploymentStatusDescription" />
+            <hr />
+            <sfwLabel ID="capDateOfReturn" Text="Date of Return : " sfwIsCaption="True" />
+            <sfwLabel ID="lblDateOfReturn" sfwDataFormat="{0:d}" sfwEntityField="DateOfReturn" />
+            <sfwLabel ID="capLoaStartDate" Text="LOA Start Date : " sfwIsCaption="True" />
+            <sfwLabel ID="lblLoaStartDate" sfwDataFormat="{0:d}" sfwEntityField="LoaStartDate" />
+            <sfwLabel ID="capRecertifiedDate" Text="Recertified Date : " sfwIsCaption="True" />
+            <sfwLabel ID="lblRecertifiedDate" sfwDataFormat="{0:d}" sfwEntityField="RecertifiedDate" />
+            <sfwLabel ID="capLoaReason1" Text="Reason of Leave : " sfwIsCaption="True" />
+            <sfwLabel ID="lblLoaReason" sfwEntityField="LoaReason" />
+            <sfwLabel ID="lblHeathInsurance" Text="Is NDPERS Health Insurance to be continued?" sfwIsCaption="True" />
+            <sfwLabel ID="lblLabel" sfwEntityField="IstrLOAHealthInsuranceContinue" />
+            <sfwLabel ID="lblLifeInsurance" Text="Is NDPERS Life Insurance to be continued?" sfwIsCaption="True" />
+            <sfwLabel ID="lblIstrLOALifeInsuranceContinue" sfwEntityField="IstrLOALifeInsuranceContinue" />
+            <sfwLabel ID="lblDentalInsurance" Text="Is NDPERS Dental Insurance to be continued?" sfwIsCaption="True" />
+            <sfwLabel ID="lblIstrLOADentalInsuranceContinue" sfwEntityField="IstrLOADentalInsuranceContinue" />
+            <sfwLabel ID="lblVisionInsurance" Text="Is NDPERS Vision Insurance to be continued?" sfwIsCaption="True" />
+            <sfwLabel ID="lblIstrLOAVisionInsuranceContinue" sfwEntityField="IstrLOAVisionInsuranceContinue" />
+            <sfwLabel ID="lblEAPInsurance" Text="Is NDPERS EAP Insurance to be continued?" sfwIsCaption="True" />
+            <sfwLabel ID="lblIstrLOAEAPInsuranceContinue" sfwEntityField="IstrLOAEAPInsuranceContinue" />
+            <hr />
+            <sfwLabel ID="capHourlyDescription" Text="Hourly : " sfwIsCaption="True" />
+            <sfwLabel ID="lblHourlyDescription" sfwEntityField="HourlyDescription" />
+            <sfwLabel ID="capSeasonalDescription" Text="Seasonal : " sfwIsCaption="True" />
+            <sfwLabel ID="lblSeasonalDescription" sfwEntityField="SeasonalDescription" />
+            <hr />
+            <sfwLabel ID="capDateOfLastRegularPaycheck" Text="Date of Last Regular Paycheck : " sfwIsCaption="True" />
+            <sfwLabel ID="lblDateOfLastRegularPaycheck" sfwDataFormat="{0:d}" sfwEntityField="DateOfLastRegularPaycheck" />
+            <sfwLabel ID="capLastMonthOnEmployerBilling" Text="Last Month on Employer Billing : " sfwIsCaption="True" />
+            <sfwLabel ID="lblLastMonthYearOnEmployerBilling" sfwEntityField="LastMonthYearOnEmployerBilling" />
+            <sfwLabel ID="capLastDateOfService" Text="Last Date of Service with Agency : " sfwIsCaption="True" />
+            <sfwLabel ID="lblLastDateOfService" sfwDataFormat="{0:d}" sfwEntityField="LastDateOfService" />
+            <sfwLabel ID="capLastRetirementTransmittalOfDeduction" Text="Last Retirement Transmittal of Deduction : " sfwIsCaption="True" />
+            <sfwLabel ID="lblLastRetirementTransmittalOfDeduction" sfwDataFormat="{0:d}" sfwEntityField="LastRetirementTransmittalOfDeduction" />
+            <sfwLabel ID="capLastRetirementTransmittalDue" Text="Last Retirement Transmittal Due Date: " sfwIsCaption="True" />
+            <sfwLabel ID="lblLastRetirementTransmittalDue" sfwDataFormat="{0:d}" sfwEntityField="LastRetirementTransmittalDue" />
+            <hr />
+            <sfwCheckBox ID="chkIstrIsTermsAndConditionsAgreed" sfwEntityField="IstrIsTermsAndConditionsAgreed" />
+            <sfwLabel ID="capIstrIsTermsAndConditionsAgreed" Text="I certify that the above information is true and correct. " sfwIsCaption="True" />
+            <sfwButton ID="btnPrevious4" sfwMethodName="btnWizardPrevious_Click" Text="Previous" />
+            <sfwButton ID="btnFinish" sfwActiveForm="wfmESSEmployeeLookup" sfwMethodName="btnWizardFinish_Click" sfwNavigationParameter="p.person_id=objPerson.PersonId" Text="Finish" />
+            <sfwLabel ID="lblPersonEmploymentDetailId" Visible="False" sfwEntityField="PersonEmploymentDetailId" />
+            <sfwLabel ID="lblPlanId" Visible="False" sfwEntityField="PlanId" />
+            <sfwLabel ID="lblPersonEmploymentId" Visible="False" sfwEntityField="PersonEmploymentId" />
+            <sfwLabel ID="lblPersonId1" Visible="False" sfwEntityField="PersonId" />
+            <sfwLabel ID="lblOrgId" Visible="False" sfwEntityField="OrgId" />
+            <sfwTextBox ID="txbContactId" Visible="False" sfwEntityField="ContactId" />
+          </items>
+        </sfwWizardStep>
+        <sfwTable ID="tblHeaderTemplate" />
+        <sfwWizardProgress />
+      </items>
+    </sfwWizard>
+  </items>
+  <loaddetails>
+    <entityfield ID="objPerson" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+    <entityfield ID="objOrganization" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+  </loaddetails>
+</form>

@@ -1,0 +1,25 @@
+#region Using directives
+
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Data.SqlClient;
+using System.Runtime.Serialization;
+using NeoSpin.DataObjects;
+
+#endregion
+
+namespace NeoSpin.CustomDataObjects
+{
+	/// <summary>
+	/// Class NeoSpin.CustomDataObjects.cdoPaymentElectionAdjustment:
+	/// Inherited from doPaymentElectionAdjustment, the class is used to customize the database object doPaymentElectionAdjustment.
+	/// </summary>
+    [Serializable]
+	public class cdoPaymentElectionAdjustment : doPaymentElectionAdjustment
+	{
+		public cdoPaymentElectionAdjustment() : base()
+		{
+		}
+    } 
+} 

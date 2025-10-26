@@ -1,0 +1,1185 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Sagitec Software Studio</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="images/Home/s3-fevicon.png" type="image/png" sizes="16x16">
+    <link href="bundles/s3-basic.min.css?6.0.10.0" rel="stylesheet" />
+    <!-- build:css bundles/s3-basic.min.css -->
+    <!--<link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/toastr.min.css" rel="stylesheet" />
+    <link href="css/font-awesome.min.css" rel="stylesheet" />
+    <link href="css/jquery-ui.min.css" rel="stylesheet" />-->
+    <!-- /build -->
+
+    <link href="bundles/s3-custom.min.css?6.0.10.0" rel="stylesheet" />
+    <!-- build:css bundles/s3-custom.min.css -->
+    <!--<link href="css/layout.css" rel="stylesheet" />
+    <link href="css/custom-bootstrap-styles.css" rel="stylesheet" />
+    <link href="css/form-structure-styles.css" rel="stylesheet" />
+    <link href="css/custom-jquery-ui.css" rel="stylesheet" />
+    <link href="css/loginPage.css" rel="stylesheet" />
+    <link href="css/components.css" rel="stylesheet" />
+    <link href="css/ExcelMatrixStyle.css" rel="stylesheet" />
+    <link href="css/bpm-bootstrap-styles.css" rel="stylesheet" />
+    <link href="css/style.css" rel="stylesheet" />
+    <link href="css/LogicalRuleStyle.css" rel="stylesheet" />
+    <link href="css/Dashboard.css" rel="stylesheet" />
+    <link href="css/EntityStyle.css" rel="stylesheet" />
+    <link href="css/datepicker3.css" rel="stylesheet" />
+    <link href="css/jquery.splitter.css" rel="stylesheet" />
+    <link href="css/Scenario-Styles.css" rel="stylesheet" />
+    <link href="css/tools.css" rel="stylesheet" />
+    <link href="css/create-new-object-styles.css" rel="stylesheet" />
+    <link href="css/correspondence-style.css" rel="stylesheet" />
+    <link href="css/constant-style.css" rel="stylesheet" />
+    <link href="css/file-style.css" rel="stylesheet" />-->
+    <!-- /build -->
+   
+    <!--minified third party javascript files -->
+    <script src="scripts/jquery.min.js"></script>
+    <script src="scripts/angular.min.js"></script>
+
+    <!--Uncomment below block only when this version of S3 is no longer supported.-->
+    <!--<script type="text/javascript">
+        window.location.href = 'error_page.html?ERROR_CODE=103';
+    </script>-->
+</head>
+<body s3-app ng-controller="MainController" class="page-header-fixed" spellcheck="false">
+    <!--when hub is not working - no template will load-->
+    <section ng-cloak ng-if="!$root.IsHubWorking&&$root.IsAppLoaded" class="login-bg full-height">
+        <div class="login-holder">
+            <div class="login-logo">
+                <img src="images/Home/s3-login-logo.png" />
+            </div>
+        </div>
+        <span ng-init="showError()"></span>
+    </section>
+    <!--when hub is working - user is not logged in yet -->
+    <section ng-cloak ng-if="$root.IsHubWorking && !$root.IsLogin" class="login-bg full-height">
+        <div ng-include="'LoginPage.html'"></div>
+    </section>
+    <!--when hub is working - user is has logged in successfully -->
+    <section ng-cloak ng-if="$root.IsHubWorking && $root.IsLogin" class="main-parent-wrapper">
+        <header class="page-header -i navbar navbar-fixed-top">
+            <div class="application-primary-header">
+                <div class="col-xs-2 no-padding" ondragstart="return false;">
+                    <div class="application-logo" ng-click="homepageclick()" ng-class="!CurrentProjectName ?'disabledlink':''">
+                        <a>
+                            <img alt="SWS-Logo" src="images/Home/s3-logo.png" />
+                        </a>
+                    </div>
+                </div>
+
+                <ul class="global-menu" ng-if="!$root.IsAdmin" ng-class="!CurrentProjectName ?'disabledlink':''">
+
+                    <li ng-class="$root.currentopenfile.file.FileType == 'Entity' ? 'entity-header' : ''" ondragstart="return false;">
+                        <a ng-click="slideOutLeftBar('Entity', $event)" title="Entity">
+                            <span class="img-wrapper">
+                                <img class="img-responsive" src="images/Home/header-entity.svg" />
+                            </span>
+                            <span ng-class="SideBarSearch.category == 'Entity' ? 'borderBWhite' : ''" class="global-menu-text">Entity</span>
+                        </a>
+                    </li>
+                    <li ng-class="$root.currentopenfile.file.FileType == 'Lookup' || $root.currentopenfile.file.FileType == 'Maintenance' || $root.currentopenfile.file.FileType == 'Wizard' || $root.currentopenfile.file.FileType == 'UserControl' || $root.currentopenfile.file.FileType == 'Tooltip'? 'form-header' : ''" ondragstart="return false;">
+                        <a ng-click="slideOutLeftBar('Form', $event)" title="Form">
+                            <span class="img-wrapper">
+                                <img class="img-responsive" src="images/Home/header-form.svg" />
+                            </span>
+                            <span ng-class="SideBarSearch.category == 'Form' ? 'borderBWhite' : ''" class="global-menu-text">Form</span>
+                        </a>
+                    </li>
+                    <li ng-class="$root.currentopenfile.file.FileType == 'FormLinkLookup' || $root.currentopenfile.file.FileType == 'FormLinkMaintenance' || $root.currentopenfile.file.FileType == 'FormLinkWizard'? 'htmlform-header' : ''" ondragstart="return false;">
+                        <a ng-click="slideOutLeftBar('HtmlForm', $event)" title="HtmlForm">
+                            <span class="img-wrapper">
+                                <img class="img-responsive" src="images/Home/header-html.svg" />
+                            </span>
+                            <span ng-class="SideBarSearch.category == 'HtmlForm' ? 'borderBWhite' : ''" class="global-menu-text">HTML</span>
+                        </a>
+                    </li>
+                    <li ng-class="$root.currentopenfile.file.FileType == 'Correspondence' || $root.currentopenfile.file.FileType == 'PDFCorrespondence'? 'correspondence-header' : ''" ondragstart="return false;" class="width-90">
+                        <a ng-click="slideOutLeftBar('Correspondence', $event)" title="Correspondence">
+                            <span class="img-wrapper">
+                                <img class="img-responsive" src="images/Home/header-corrospondence.svg" />
+                            </span>
+                            <span ng-class="SideBarSearch.category == 'Correspondence' ? 'borderBWhite' : ''" class="global-menu-text">Correspondence</span>
+                        </a>
+                    </li>
+                    <li ng-class="$root.currentopenfile.file.FileType == 'LogicalRule' || $root.currentopenfile.file.FileType == 'DecisionTable' || $root.currentopenfile.file.FileType == 'ExcelMatrix' ? 'rule-header' : ''" ondragstart="return false;">
+                        <a ng-click="slideOutLeftBar('Rule', $event)" title="Rule">
+                            <span class="img-wrapper">
+                                <img class="img-responsive" src="images/Home/header-rules.svg" />
+                            </span>
+                            <span ng-class="SideBarSearch.category == 'Rule' ? 'borderBWhite' : ''" class="global-menu-text">Rules</span>
+                        </a>
+                    </li>
+                    <li ng-class="$root.currentopenfile.file.FileType == 'ExcelScenario' || $root.currentopenfile.file.FileType == 'ObjectScenario' || $root.currentopenfile.file.FileType == 'ParameterScenario' ? 'scenario-header' : ''" ondragstart="return false;">
+                        <a ng-click="slideOutLeftBar('Scenario', $event)" title="Scenario">
+                            <span class="img-wrapper">
+                                <img class="img-responsive" src="images/Home/header-scenario.svg" />
+                            </span>
+                            <span ng-class="SideBarSearch.category == 'Scenario' ? 'borderBWhite' : ''" class="global-menu-text">Scenario</span>
+                        </a>
+                    </li>
+                    <li ng-class="$root.currentopenfile.file.FileType == 'BPMN' || $root.currentopenfile.file.FileType == 'BPMTemplate' ? 'bpm-header' : ''" ondragstart="return false;" ng-if="!$root.IsWorkFlowMap">
+                        <a ng-click="slideOutLeftBar('BPMN', $event)" title="BPMN">
+                            <span class="img-wrapper">
+                                <img class="img-responsive" src="images/Home/header-bpm.svg" />
+                            </span>
+                            <span ng-class="SideBarSearch.category == 'BPMN' || $root.currentopenfile.file.FileType == 'BPMTemplate' ? 'borderBWhite' : ''" class="global-menu-text">BPM</span>
+                        </a>
+                    </li>
+                    <li ng-class="$root.currentopenfile.file.FileType == 'WorkflowMap'  ? 'bpm-header' : ''" ondragstart="return false;" ng-if="$root.IsWorkFlowMap">
+                        <a ng-click="slideOutLeftBar('WorkflowMap', $event)" title="Workflow Map">
+                            <span class="img-wrapper">
+                                <img class="img-responsive" src="images/Home/header-bpm.svg" />
+                            </span>
+                            <span ng-class="SideBarSearch.category == 'WorkflowMap'  ? 'borderBWhite' : ''" class="global-menu-text">Workflow</span>
+                        </a>
+                    </li>
+                    <li ng-class="$root.currentopenfile.file.FileType == 'InboundFile' || $root.currentopenfile.file.FileType == 'OutboundFile'? 'file-header' : ''" ondragstart="return false;">
+                        <a ng-click="slideOutLeftBar('File', $event)" title="File">
+                            <span class="img-wrapper">
+                                <img class="img-responsive" src="images/Home/header-files.svg" />
+                            </span>
+                            <span ng-class="SideBarSearch.category == 'File' ? 'borderBWhite' : ''" class="global-menu-text">Files</span>
+                        </a>
+                    </li>
+                    <li ng-class="$root.currentopenfile.file.FileType == 'Report' ? 'report-header' : ''" ondragstart="return false;">
+                        <a ng-click="slideOutLeftBar('Report', $event)" title="Report">
+                            <span class="img-wrapper">
+                                <img class="img-responsive" src="images/Home/header-reports.svg" />
+                            </span>
+                            <span ng-class="SideBarSearch.category == 'Report' ? 'borderBWhite' : ''" class="global-menu-text">Report</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="top-right-menu menu" ondragstart="return false;">
+                    <div class="upper-menu-top">
+                        <ul>
+                            <li class="marg-right-20" ng-if="!$root.IsAdmin">
+                                <div class="btn-group">
+                                    <a class="dropdown-toggle project-name" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="true">
+                                        <span class="project-name-width" title="{{CurrentProjectName}}" ng-if="CurrentProjectName!=undefined&&CurrentProjectName!=''">{{CurrentProjectName}}</span>
+                                        <span ng-if="CurrentProjectName==undefined||CurrentProjectName==''">select Project</span>
+                                        <img src="images/Home/icon-logout-downarrWhite.svg">
+                                    </a>
+                                    <ul class="dropdown-menu pull-right project-menu" role="menu">
+                                        <li ng-repeat="project in lstprojects | orderBy:'ProjectName'" ng-class="selectedProject==project.ProjectName?'active':''" ng-click="loadSelectedProject(project)">
+                                            <a>
+                                                {{project.ProjectName}}
+                                            </a>
+                                        </li>
+
+                                        <li class="project-settings-link">
+                                            <a ng-click="openConfigureSettings(true)">
+                                                Settings
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="marg-right-20">
+                                <div class="login-user-wrapper">
+                                    <a class="dropdown-toggle user-data" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                        <div class="login-user-img">
+                                            <img src="images/Home/login-person.svg" class="image-user-info">
+                                        </div>
+                                        <span class="username-box">
+                                            <span ng-bind="$root.LoginName" class="login-person-name"></span>
+                                            <img src="images/Home/icon-logout-downarrWhite.svg">
+                                        </span>
+
+
+                                    </a>
+                                    <ul class="dropdown-menu pull-right">
+                                        <li ng-if="!$root.IsActiveDirectoryUser">
+                                            <a id="changePassword" ng-click="ChangePassword()">
+                                                <i class="icon-key"></i> Change Password
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a id="logout" ng-click="LogoutSession()">
+                                                <i class="icon-key"></i> Log Out
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <li>
+                                <div class="login-user-wrapper">
+                                    <a class="dropdown-toggle user-data" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                        <div class="login-user-img">
+                                            <img src="images/Home/top-right-help.svg" class="image-user-info">
+                                        </div>
+                                        <span class="username-box">
+                                            <span class="login-person-name">Help</span>
+                                            <img src="images/Home/icon-logout-downarrWhite.svg">
+                                        </span>
+                                    </a>
+                                    <ul class="dropdown-menu pull-right">
+                                        <li>
+                                            <a ng-click="$root.showHelp()">
+                                                <i class="icon-key"></i> S3 Help
+                                            </a>
+                                        </li>
+                                        <li ng-hide="true">
+                                            <a ng-click="$root.showHelp('0')">
+                                                <i class="icon-key"></i> Knowtion Help
+                                            </a>
+                                        </li>
+                                        <li ng-hide="true">
+                                            <a ng-click="showAbout()">
+                                                <i class="icon-key"></i> About S3
+                                            </a>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>
+
+
+                    <div class="upper-menu-bottom" ng-if="!$root.IsAdmin">
+                        <ul>
+                            <li class="navigation_align no-right-margin">
+                                <a ng-click="PreviousClick()" ng-disabled="$root.lstPrevious.length<2" title="Previous"><img ng-disabled="$root.lstPrevious.length<2" src="images/Home/prev.svg" class="navigation_small-icon" /></a>
+                            </li>
+                            <li class="navigation_align">
+                                <a ng-click="NextClick()" ng-disabled="$root.lstNext.length<1" title="Next"><img ng-disabled="$root.lstNext.length<1" src="images/Home/next.svg" class="navigation_small-icon" /></a>
+                            </li>
+                            <li title="Create New Item" ng-class="!CurrentProjectName ?'disabledlink':''">
+                                <div class="btn-group pull-right" title="Create New File">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="true">
+                                        <img src="images/Home/create-new-file.svg" class="image-icon-tools">
+                                    </a>
+
+                                    <ul class="dropdown-menu pull-right create-new-file-list" role="menu">
+                                        <li ng-click="onnewfileclick('Entity')">
+                                            <span class="home-fileType-icon home-fileType-Entity-icon">Entity</span>
+                                        </li>
+                                        <li ng-click="onnewfileclick('Forms')">
+                                            <span class="home-fileType-icon home-fileType-Maintenance-icon">Forms</span>
+                                        </li>
+                                        <li ng-click="onnewfileclick('Wizard')">
+                                            <span class="home-fileType-icon home-fileType-Wizard-icon">Wizard</span>
+                                        </li>
+                                        <li ng-click="onnewfileclick('UserControl')">
+                                            <span class="home-fileType-icon home-fileType-UserControl-icon">UserControl</span>
+                                        </li>
+                                        <li ng-click="onnewfileclick('Tooltip')">
+                                            <span class="home-fileType-icon home-fileType-Tooltip-icon">Tooltip</span>
+                                        </li>
+                                        <li ng-click="onnewfileclick('WorkflowMap')" ng-if="$root.IsWorkFlowMap">
+                                            <span class="home-fileType-icon home-fileType-WorkflowMap-icon"> Workflow Map</span>
+                                        </li>
+                                        <li ng-click="onnewfileclick('BPMN')" ng-if="!$root.IsWorkFlowMap">
+                                            <span class="home-fileType-icon home-fileType-BPMN-icon">BPMN</span>
+                                        </li>
+                                        <li ng-click="onnewfileclick('BPMTemplate')" ng-if="!$root.IsWorkFlowMap">
+                                            <span class="home-fileType-icon home-fileType-BPMTemplate-icon">BPM Template</span>
+                                        </li>
+                                        <li ng-click="onnewfileclick('Correspondence')">
+                                            <span class="home-fileType-icon home-fileType-Correspondence-icon">Correspondence</span>
+                                        </li>
+                                        <li ng-click="onnewfileclick('File')">
+                                            <span class="home-fileType-icon home-fileType-OutboundFile-icon">File</span>
+                                        </li>
+                                        <li ng-click="onnewfileclick('Report')">
+                                            <span class="home-fileType-icon home-fileType-Report-icon">Report</span>
+                                        </li>
+
+                                        <li ng-click="onnewfileclick('PrototypeLookup')">
+                                            <span class="home-fileType-icon home-fileType-Prototype-icon">Prototype Lookup</span>
+                                        </li>
+                                        <li ng-click="onnewfileclick('PrototypeMaintenance')">
+                                            <span class="home-fileType-icon home-fileType-Prototype-icon">Prototype Maintenance</span>
+                                        </li>
+                                        <li ng-click="onnewfileclick('PrototypeWizard')">
+                                            <span class="home-fileType-icon home-fileType-Prototype-icon">Prototype Wizard</span>
+                                        </li>
+
+                                        <li ng-click="onnewfileclick('HtxLookup')">
+                                            <span class="home-fileType-icon home-fileType-FormLinkLookup-icon">Htx Lookup</span>
+                                        </li>
+                                        <li ng-click="onnewfileclick('HtxMaintenance')">
+                                            <span class="home-fileType-icon home-fileType-FormLinkMaintenance-icon">Htx Maintenance</span>
+                                        </li>
+                                        <li ng-click="onnewfileclick('HtxWizard')">
+                                            <span class="home-fileType-icon home-fileType-FormLinkWizard-icon">Htx Wizard</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li ng-class="$root.lstopenedfiles.length <= 0 ?'disabledlink':''">
+                                <div class="btn-group pull-right" title="Open Files">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="true">
+                                        <img src="images/Home/open-files.svg" class="image-icon-tools">
+                                        <span class="home-openFileListCount" ng-bind="getactualFileCount()"></span>
+                                    </a>
+                                    <ul class="dropdown-menu pull-right open-files-menu" role="menu" style="width: 220px;">
+                                        <li ng-repeat="file in $root.lstopenedfiles track by file.file.FileName" ng-click="$root.openFile(file.file)" ng-class="{'notPhysical' : !file.file.FilePath }">
+                                            <a>
+                                                <span class="home-fileType-icon home-fileType-{{file.file.FileType}}-icon" title="{{file.file.FileName}}"
+                                                      ng-bind="file.file.FileName | cut:true:22:'...'" ng-show="file.file.FilePath "></span>
+                                                <span class="home-fileType-icon home-fileType-default-icon" title="{{file.file.FileName}}"
+                                                      ng-bind="file.file.FileName | cut:true:22:'...'" ng-show="!file.file.FilePath "></span>
+                                                <i class="file-close pull-right fa fa-close" title="Close File" ng-click="$root.CloseCurrentFiles(file.file);"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <li ng-class="!CurrentProjectName ?'disabledlink':''">
+                                <!--<img class="img-circle" src="images/Home/icon-setting.png" width="15" height="15">-->
+
+                                <div class="btn-group pull-right open-tools-menu-wrapper">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="true">
+                                        <img title="Tools" src="images/Home/top-right-tools.svg">
+                                    </a>
+                                    <ul class="dropdown-menu pull-right open-tools-menu" role="menu">
+                                        <!--<img src="images/Common/tools-menu-top.png" class="tools-menu-top" />-->
+                                        <li ng-repeat="tool in ::lstTools" ng-click="ShowSelectedTool(tool)">
+                                            <a>{{::tool}}</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <li>
+                                <input type="text" placeholder="e.g. entperson" ng-disabled="CurrentProjectName==undefined" class="text-searchbox" id="globalSearch" ng-keydown="getGlobalSearch()" ng-paste="getGlobalSearchPaste($event)" title="{{$root.globalSearchText}}" />
+                            </li>
+                            <li><span class="advance-search-icon" ng-click="openSearchFile()" ng-show="!(CurrentProjectName==undefined)" title="Advance Search"></span></li>
+                        </ul>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </header>
+        <section class="left-slider">
+            <div class="left-slider-content" ui-search-wrapper>
+                <div class="col-xs-11 padding0">
+                    <input type="text" id="searchfiletype" class="slider-search form-control input-sm" ng-keydown="SideBarSearchKeyDown($event)" ng-change="SearchFilterFileTypeWise()" ng-model="SideBarSearch.FilefilterText" placeholder="Search (min 3 letters)" />
+                </div>
+                <div class="col-xs-1 padding0">
+                    <span class="pull-right file-close fa fa-close fore-color-white" aria-hidden="true" ng-click="closeLeftBar()"></span>
+                </div>
+                <div class="left-slider-list-view">
+                    <div ng-show="SideBarSearch.listFile.length > 0" class="height100P">
+                        <div class="col-xs-12 left-slider-list-view-list-wrapper">
+                            <ul class="list-group" ng-scrolldown callback="SidebarScrollDown()" ngpausescroll="SideBarSearch.IsProcessing" ngscrollheight="9">
+                                <li ng-click="SideBarFileSelect(file)" class="list-group-item" id="{{'sideSearch' + file.FileName}}" ng-repeat="file in SideBarSearch.listFile" context-menu="$root.menuOptionsForFileList">
+                                    <div title="{{file.TFSState}}" class="col-xs-1 home-tfsState-icon home-tfsState-{{file.TFSState}}-icon no-padding" ng-if="$root.IsTFSConfigured"></div>
+                                    <div class="col-xs-1 home-fileType-icons home-filetype-{{file.FileType}} no-padding" ng-if="file.FileName.indexOf('wfp')!=0 && (!file.Data || (file.Data && !file.Data.IsStatic))"></div>
+                                    <div class="col-xs-1 home-fileType-icons home-filetype-Prototype{{file.FileType}} no-padding" ng-if="file.FileName.indexOf('wfp')==0"></div>
+                                    <div class="col-xs-1 home-fileType-staticrule-icons home-filetype-Static{{file.FileType}} no-padding" ng-if="file.FileName.indexOf('wfp')!=0 && (file.Data && file.Data.IsStatic)"></div>
+                                    <div>
+                                        <span title="{{file.FileType + ' : ' + file.FileName}}">{{file.FileName | cut:true:35:'...' }}</span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-xs-12 fore-color-white" style="margin-top:15px">
+                            <span ng-bind="SideBarSearch.listFile.length"></span> out of
+                            <span ng-bind="SideBarSearch.totalRecords"></span>
+                        </div>
+                    </div>
+                    <div ng-show="!SideBarSearch.listFile.length" class="left-slider-list-norecord fore-color-white">
+                        <strong class="left-slider-list-norecord-view">No files found for this type !</strong>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="mainWrapper spliter" id="main-wrapper">
+            <div class="a" style="height:100%">
+
+                <div id="StartPage" ng-if="$root.isstartpagevisible == true && !$root.IsAdmin" ng-include="'StartUp/views/DashBoard.html'" class="dashboard-outerWrapper">
+                </div>
+
+                <div ng-if="$root.isConfigureSettingsVisible == true && !$root.IsAdmin" ng-include src="'Tools/views/configureSettings.html'" class="full-height">
+                </div>
+                <div ng-if="$root.IsAdmin" ng-include src="'Admin/views/Admin.html'" class="full-height">
+                </div>
+
+                <div ng-controller="PageLayoutController" class="pagelayout-wrapper" ng-show="$root.lstopenedfiles.length>0 && !$root.isConfigureSettingsVisible && !$root.isstartpagevisible && !$root.IsAdmin">
+                    <div class="application-secondary-header form-header" ng-class="ClassForHeaderPanel" ondragstart="return false;">
+                        <div class="application-secondary-header-left">
+                            <ul>
+                                <li ng-hide="['RuleConstants','AuditLog','ExecuteQuery','ProjectConfiguration','CustomSettings','SearchFiles','ExcelScenario','VersionBPM','ERDiagram'].indexOf($root.currentopenfile.file.FileType) >= 0">
+                                    <img ng-disabled="$root.IsLoading || (selectDesignSource())" src="images/Common/icon-detail.svg" title="Details" ng-click="onDetailClick()" style="cursor:pointer">
+                                </li>
+                                <li ng-show="selectDesignSource()==false" ng-class="{'marg-left-30': ['WorkflowMap','ParameterScenario','ObjectScenario','ExcelScenario','BPMN','ExcelMatrix','FormLinkLookup','FormLinkMaintenance','FormLinkWizard'].indexOf($root.currentopenfile.file.FileType) < 0}">
+                                    <img ng-disabled="$root.IsLoading || isDeveloperView()" id="btnSave" src="images/Home/icon_save.svg" title="Save (Ctrl+S)" ng-click="onsavefileclick($root.currentopenfile)" />
+                                </li>
+                                <li ng-show="selectDesignSource()==true && $root.currentopenfile.file.FileType != 'ExecuteQuery'">
+                                    <img ng-disabled="$root.IsLoading || isDeveloperView()" id="btnSave" src="images/Home/icon_save.svg" title="Save (Ctrl+S)" ng-click="onsavefilexmlclick($root.currentopenfile)" />
+                                </li>
+                                <li class="marg-right-5" ng-hide="['ERDiagram'].indexOf($root.currentopenfile.file.FileType) >= 0">
+                                    <img id="btnUndo" src="images/Home/icon_undo.svg" title="Undo (Ctrl+Z)" ng-click="UndoClick()" ng-disabled="$root.IsLoading || isDeveloperView() || isHideUndoredobuttons || !($root.UndoRedoList[$root.currentopenfile.file.FileName] && $root.UndoRedoList[$root.currentopenfile.file.FileName].UndoList && $root.UndoRedoList[$root.currentopenfile.file.FileName].UndoList.length > 0)" />
+                                </li>
+                                <li ng-hide="['ERDiagram'].indexOf($root.currentopenfile.file.FileType) >= 0">
+                                    <img id="btnRedo" src="images/Home/icon_redo.svg" title="Redo (Ctrl+Y)" ng-click="RedoClick()" ng-disabled="$root.IsLoading || isDeveloperView() || isHideUndoredobuttons || !($root.UndoRedoList[$root.currentopenfile.file.FileName] && $root.UndoRedoList[$root.currentopenfile.file.FileName].RedoList && $root.UndoRedoList[$root.currentopenfile.file.FileName].RedoList.length > 0)" />
+                                </li>
+                                <li ng-show="selectDesignSource()==false && ['Maintenance','Wizard','Lookup','Tooltip','UserControl'].indexOf($root.currentopenfile.file.FileType) >= 0">
+
+                                    <img ng-disabled="$root.IsLoading || isDeveloperView()" id="quick-navigator" src="images/Form/quick_navigator.svg" ng-click="showFormTreeMap()" title="Quick Navigator" />
+                                    <!--<i class="fa fa-sitemap tree-icon" aria-hidden="true" ng-click="showFormTreeMap()" title="Quick Navigator"></i>-->
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="page-name" context-menu="$root.menuOptionForFiles">
+                            <div class="page-name-icon" ng-show="checkWarning()">
+                                <i id="validation-warning-btn" ng-click="showWarnings()" class="fa fa-exclamation-circle" aria-hidden="true" title="Warnings" style="color: #f0ad4e!important;"></i>
+                                <div id="validation-warning-list" style="display:none" class="validation-err-popup">
+                                    <ul class="list-unstyled">
+                                        <li ng-repeat="eorror in warningList track by $index">
+                                            <i ng-class="eorror.isExpand?'fa fa-minus-square':'fa fa-plus-square'" ng-click="toggleErrorList(eorror)" aria-hidden="true"></i>
+                                            <span ng-bind="eorror.Name"></span> -
+                                            <span ng-bind="eorror.dictAttributes.ID"></span>
+                                            <div ng-if="eorror.warnings && eorror.isExpand" style="margin-left: 25px;">
+                                                <ul class="list-unstyled">
+                                                    <li ng-repeat="errMsg in eorror.warnings">
+                                                        <span class="text-warning" ng-if="errMsg && !checkIfObject(errMsg)" ng-click="navigateToError(eorror)" ng-bind="errMsg"></span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="page-name-icon" ng-show="checkValidation()">
+                                <i id="validation-err-btn" ng-click="showErrorList()" class="fa fa-exclamation-circle" aria-hidden="true" title="Errors"></i>
+                                <div id="validation-error-list" style="display:none" class="validation-err-popup">
+                                    <ul class="list-unstyled">
+                                        <li ng-repeat="objError in errorListObj track by $index">
+                                            <i ng-class="objError.isExpand?'fa fa-minus-square':'fa fa-plus-square'" ng-click="toggleErrorList(objError)" aria-hidden="true"></i>
+                                            <span ng-bind="objError.Name"></span> -
+                                            <span ng-bind="objError.dictAttributes.ID"></span>
+                                            <div ng-if="objError.errors && objError.isExpand" style="margin-left: 25px;">
+                                                <ul class="list-unstyled">
+                                                    <li ng-repeat="errMsg in objError.errors">
+                                                        <span class="text-danger" ng-if="errMsg && !checkIfObject(errMsg)" ng-click="navigateToError(objError)" ng-bind="errMsg"></span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!--<div ng-class="getTfsIcon()" width="17" height="15"></div>-->
+                            <img src="images/BPM/Bpm_Maplock_icon.svg" ng-show="isBpmMapLocked" />
+                            <span title="{{getFileTitle()}}">{{getFileTitle() | cut:true:60:'...'}}</span>
+                            <span ng-show="isCurrentFileDirty()" class="dirty-mark">*</span>
+                        </div>
+
+
+                        <div class="application-secondary-header-right" ng-show="selectDesignSource()==false">
+
+
+                            <a class="navigation-link" href="" ng-click="openCurrentEntity(currentEntityName);">
+                                <span title="{{currentEntityName}}" ng-bind="currentEntityName | cut:true:30:'...'"></span>
+                            </a>
+
+
+
+                            <ul class="nav marg-top-2" ng-if="['Entity','Maintenance','Wizard','Lookup','Tooltip','UserControl','Correspondence','RuleConstants'].indexOf($root.currentopenfile.file.FileType)>-1">
+                                <li ng-if="!isDeveloperView()" id="validation-btn" title="Validate" ng-click="validateFile()">
+                                    <img src="images/Form/icon-validate-form.svg" />
+                                </li>
+                            </ul>
+                            <ul class="nav marg-top-2" ng-if="['Entity'].indexOf($root.currentopenfile.file.FileType)>-1">
+                                <li id="addnolock-btn" ng-if="!$root.IsOracleDB" title="Add NOLOCK to Queries" ng-click="addNoLockToQueries()">
+                                    <img src="images/Entity/add_no_lock_white.svg" />
+                                </li>
+                            </ul>
+                            <ul class="nav marg-top-2" ng-if="['Maintenance','Wizard','Lookup','Tooltip','UserControl'].indexOf($root.currentopenfile.file.FileType) > -1">
+                                <li ng-hide="$root.currentopenfile.file.FileName.indexOf('wfp') == 0" title="View this form with highlighted attributes" ng-click="getHightlightAttribute()">
+                                    <img src="images/Form/icon-analyst-view.svg" />
+                                </li>
+                                <li ng-show="isDeveloperView()" title="Switch back to normal view" ng-click="OnSwitchView()">
+                                    <img src="images/Form/icon-switch-view.svg" />
+                                </li>
+                                <!--<li title="Add Panel" ng-show="($root.currentopenfile.file.FileType=='Maintenance' || $root.currentopenfile.file.FileType=='Tooltip') && !isDeveloperView()" ng-click="OnAddPanelClick('Panel')" class="addPanelClass">
+                                    <i class="fa fa-plus"></i>
+                                </li>
+                                <li title="Add Wizard Step" ng-hide="$root.currentopenfile.file.FileType!='Wizard' || isDeveloperView()" ng-click="OnAddPanelClick('Wizard')" class="addPanelClass">
+                                    <i class="fa fa-plus"></i>
+                                </li>-->
+                                <li class="icon-validate-new" ng-if="($root.currentopenfile.file.FileName.indexOf('wfp')!=0) && ($root.currentopenfile.file.FileType=='Maintenance' || $root.currentopenfile.file.FileType=='Lookup') && !isDeveloperView()"
+                                    title="Validate New" ng-click="openValidateNew()">
+                                    <img src="images/Form/icon-validate-new.svg" />
+                                </li>
+                                <li ng-if="($root.currentopenfile.file.FileName.indexOf('wfp')!=0) && ($root.currentopenfile.file.FileType=='Maintenance' || $root.currentopenfile.file.FileType=='Wizard' || $root.currentopenfile.file.FileType=='Tooltip' ) && !isDeveloperView()"
+                                    title="Load Details" ng-click="openLoadDetails()">
+                                    <img src="images/Form/icon-load-details.svg" />
+                                </li>
+
+                                <li ng-if="($root.currentopenfile.file.FileName.indexOf('wfp')!=0) && ($root.currentopenfile.file.FileType=='Maintenance') && !isDeveloperView()"
+                                    title="Center Left" ng-click="openCentreLeft()">
+                                    <img src="images/Form/center_left.svg" />
+                                </li>
+                                <li ng-show="$root.currentopenfile.file.FileType=='Wizard' && !isDeveloperView()" title="Wizard Properties" ng-click="showWizardProperty()">
+                                    <img src="images/Common/wiz-property.svg">
+                                </li>
+
+                            </ul>
+                            <ul class="nav marg-top-2">
+                                <li ng-show="$root.currentopenfile.file.FileType=='WorkflowMap'" title="Refresh WorkFlow Map Information">
+                                    <img src="images/Scenario/icon-refresh.png" class="image-icon-tools" width="14" height="18" ng-click="RefreshWorkflowMap()">
+                                </li>
+                            </ul>
+                            <ul class="nav  marg-top-2" ng-if="$root.currentopenfile.file.FileType=='ParameterScenario' || $root.currentopenfile.file.FileType=='ObjectScenario' || $root.currentopenfile.file.FileType=='ExcelScenario'">
+                                <li ng-show="canShowNavigationImage('LogicalRule')" title="Navigate to Rule">
+                                    <img src="images/Scenario/icon-navigate-logical-rule.svg" ng-click="NavigateToRule()">
+                                </li>
+                                <li ng-show="canShowNavigationImage('DecisionTable')" title="Navigate to Rule">
+                                    <img src="images/Scenario/icon-navigate-decision-table.svg" ng-click="NavigateToRule()">
+                                </li>
+                                <li ng-show="canShowNavigationImage('ExcelMatrix')" title="Navigate to Rule">
+                                    <img src="images/Scenario/icon-navigate-excel-matrix.svg" ng-click="NavigateToRule()">
+                                </li>
+                                <li class="top-menu-scenario-icon">
+                                    <img src="images/Scenario/icon-run-all.svg" class="image-icon-tools" ng-click="ScenarioRunAllTests('AllRuleSteps')"
+                                         title="Run All Tests(All Rule Steps)">
+                                    <div class="btn-group pull-right sub-icon" title="Run All Tests">
+                                        <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="true">
+                                            <img src="images/Scenario/icon-down-arrow.svg" class="image-icon-tools">
+                                        </a>
+                                        <ul class="dropdown-menu pull-right" role="menu">
+                                            <li>
+                                                <a ng-click="ScenarioRunAllTests('OnlyResult')">
+                                                    Only Result
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a ng-click="ScenarioRunAllTests('CurrentRuleSteps')">
+                                                    Current Rule Steps
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a ng-click="ScenarioRunAllTests('AllRuleSteps')">
+                                                    All Rule Steps
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+
+                                <li ng-show="$root.currentopenfile.file.FileType=='ParameterScenario' || $root.currentopenfile.file.FileType=='ObjectScenario'" title="Refresh Scenario">
+                                    <img src="images/Scenario/icon-refresh.svg" class="image-icon-tools" ng-click="RefreshScenario()">
+                                </li>
+
+                                <li ng-show="canShowAddParameterBasedScenario()" title="Parameter Based Scenario">
+                                    <img src="images/Scenario/icon_add_scenario.svg" class="image-icon-tools" ng-click="onCreateParameterScenario()">
+                                </li>
+                            </ul>
+
+                            <ul class="nav marg-top-2" ng-if="$root.currentopenfile.file.FileType=='BPMN'">
+                                <li>
+                                    <i class="fa fa-picture-o image-icon-tools" ng-click="saveAsPng()" title="Show as Image" style="color: white;font-size: 20px;line-height: 20px;"></i>
+                                    <!--<button id="btnbpmntopng" class="btn btn-danger SaveBPMN" width="25" height="25" >Open</button>-->
+                                    <!--<button id="btnBpmnToPng" ng-show="!$root.isIEBrowser" class="btn btn-danger SaveBPMN" width="25" height="25" ng-click="saveAsPng()">Save</button>-->
+                                </li>
+                                <li title="Deploy Map">
+                                    <img src="images/BPM/deploy_Transperent_BG.svg" class="image-icon-tools" width="25" height="25" ng-click="deployBpmnMap()">
+                                </li>
+                                <li title="Re-Deploy Map">
+                                    <img src="images/BPM/Redeploy_Transperent_BG.svg" class="image-icon-tools" width="25" height="25" ng-click="deployBpmnMap(true)">
+                                </li>
+                                <li title="Load Versions" ng-click="versionWiseDisplay()">
+                                    <img src="images/BPM/BpmLoadVersion.svg" class="image-icon-tools">
+                                </li>
+
+                            </ul>
+                            <ul class="nav marg-top-2" ng-if="$root.currentopenfile.file.FileType=='LogicalRule'||$root.currentopenfile.file.FileType=='DecisionTable'||$root.currentopenfile.file.FileType=='ExcelMatrix'">
+                                <!--<li>
+                                    <button ng-click="saveRuleAsPng()">save</button>
+                                </li>-->
+                                <li title="View">
+                                    <div class="btn-group pull-right" title="View" id="dvViewMode">
+                                        <a ng-if="$root.currentopenfile.file.FileType!='ExcelMatrix'" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="true">
+                                            <img src="images/Rule/rule_view.svg" />
+                                        </a>
+                                        <ul class="dropdown-menu pull-right" role="menu">
+                                            <li ng-repeat="viewmode in lstViewModel" ng-model="ViewMode" ng-click="setViewMode(viewmode)">
+                                                <a>{{viewmode}}</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li title="Run Results">
+                                    <img src="images/Rule/rule_run_result.svg" ng-click="OpenRunResult()" />
+                                </li>
+                                <li title="Rule Errors">
+                                    <img src="images/Rule/rule_error.svg" ng-click="OpenRuleErrors()" />
+                                </li>
+                                <li title="Build Rule">
+                                    <div class="btn-group pull-right">
+                                        <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="true">
+                                            <img src="images/Rule/rule_build_rule.svg" ng-click="buildRuleClick()" />
+                                        </a>
+                                        <ul class="dropdown-menu pull-right" role="menu">
+                                            <li ng-click="buildRule(false)">
+                                                <a>Build Entity Rule</a>
+                                            </li>
+                                            <li ng-show="CanCreateObjectBasedScenario" ng-click="buildRule(true)">
+                                                <a>Build Object Rule</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <!--<li>
+                                   <input type="button" value="SAI" ng-click="SaveAsImage()" />
+                                </li>-->
+                                <li title="Rule Expression" ng-hide="$root.currentopenfile.file.FileType=='ExcelMatrix'">
+                                    <div class="btn-group pull-right">
+                                        <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="true">
+                                            <img src="images/Rule/rule_expression.svg" />
+                                        </a>
+                                        <ul class="dropdown-menu pull-right" role="menu">
+                                            <li ng-click="openRuleInExpression(false)">
+                                                <a>Rule in Expression</a>
+                                            </li>
+                                            <li ng-show="CanCreateObjectBasedScenario" ng-click="openRuleInExpression(true)">
+                                                <a>Object Rule in Expression</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li title="Scenarios">
+                                    <div class="btn-group pull-right">
+                                        <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="true">
+                                            <img src="images/Scenario/icon-run-scenario.svg" ng-click="ScenariosClick()" />
+                                        </a>
+                                        <ul class="dropdown-menu pull-right" role="menu">
+                                            <li ng-hide="HasRelatedParameterBasedScenario" ng-click="AddNewScenario('ParameterScenario',false)">
+                                                <a>
+                                                    <img src="images/Rule/icon-Add-navigation-scenario.png" />
+                                                    <span>Add Scenario</span>
+                                                </a>
+                                            </li>
+                                            <li ng-show="HasRelatedParameterBasedScenario" ng-click="NavigateToScenario('ParameterScenario')">
+                                                <a>
+                                                    <img src="images/Rule/icon-navigation-scenario.png" />
+                                                    <span>Navigate To Scenario</span>
+                                                </a>
+                                            </li>
+                                            <li ng-show="!HasRelatedObjectBasedScenario && CanCreateObjectBasedScenario" ng-click="AddNewScenario('ObjectScenario',false)">
+                                                <a>
+                                                    <img src="images/Rule/icon-Add-object-scenario.png" />
+                                                    <span>Add Object Scenario</span>
+                                                </a>
+                                            </li>
+                                            <li ng-show="HasRelatedObjectBasedScenario && CanCreateObjectBasedScenario" ng-click="NavigateToScenario('ObjectScenario')">
+                                                <a>
+                                                    <img src="images/Rule/icon-navigation-data-source.png" />
+                                                    <span>Navigate To Object Scenario</span>
+                                                </a>
+                                            </li>
+                                            <li ng-hide="HasRelatedXLBasedScenario" ng-click="AddNewScenario('ExcelScenario',false)">
+                                                <a>
+                                                    <img src="images/Rule/icon-open-add-scenario.png" />
+                                                    <span>Add Excel Scenario</span>
+                                                </a>
+                                            </li>
+                                            <li ng-show="HasRelatedXLBasedScenario" ng-click="AddNewScenario('ExcelScenario',true)">
+                                                <a>
+                                                    <img src="images/Rule/icon-update-excel.png" />
+                                                    <span>Update Excel</span>
+                                                </a>
+                                            </li>
+                                            <li ng-show="HasRelatedXLBasedScenario" ng-click="NavigateToScenario('ExcelScenario')">
+                                                <a>
+                                                    <img src="images/Rule/icon-open-scenario-excel.png" />
+                                                    <span>Navigate To Excel Scenario</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li title="Fix All Node Ids">
+                                    <img src="images/Rule/rule_error.svg" ng-click="FixAllNodeIds()" />
+                                </li>
+                            </ul>
+                            <ul class="nav marg-top-2" ng-if="$root.currentopenfile.file.FileType=='Correspondence'">
+                                <li>
+                                    <img src="images/Correspondence/corr_openworddoc.svg" title="Open Word Template" ng-click="openWordTemplateClick()" />
+                                </li>
+                                <li>
+                                    <img src="images/Correspondence/corr_synchronise.svg" title="Synchronise" ng-click="onSynchroniseClick()" />
+                                </li>
+                            </ul>
+                            <ul class="nav marg-top-2" ng-if="$root.currentopenfile.file.FileType=='FormLinkLookup' || $root.currentopenfile.file.FileType=='FormLinkMaintenance' || $root.currentopenfile.file.FileType=='FormLinkWizard'">
+                                <li>
+                                    <img src="images/Scenario/icon-refresh.svg" class="image-icon-tools" ng-click="onRefreshClick()" title="Refresh html">
+                                </li>
+
+                                <li>
+                                    <button width="100" height="18" ng-click="onDisplayUnmapColumnclick()" title="Display UnMapped Controls" class="btn-toolbar display-unmap-control-button"><img src="images/FormLink/icon-display-unmap-controls.svg" /></button>
+                                </li>
+
+                                <li class="icon-validate-new" ng-if="($root.currentopenfile.file.FileType=='FormLinkMaintenance' || $root.currentopenfile.file.FileType=='FormLinkLookup') && !isDeveloperView()"
+                                    title="Validate New" ng-click="openValidateNew()">
+                                    <img src="images/Form/icon-validate-new.svg" />
+                                </li>
+
+                                <li ng-if="($root.currentopenfile.file.FileType=='FormLinkMaintenance' || $root.currentopenfile.file.FileType=='FormLinkWizard') && !isDeveloperView()"
+                                    title="Load Details" ng-click="openLoadDetails()">
+                                    <img src="images/Form/icon-load-details.svg" />
+                                </li>
+                            </ul>
+
+                            <ul class="nav marg-top-2" ng-if="$root.currentopenfile.file.FileType=='RuleConstants'">
+                                <li>
+                                    <img src="images/Scenario/icon-refresh.svg" title="Refresh" width="16" height="17" ng-click="refreshConstants()" style="cursor:pointer">
+                                </li>
+                            </ul>
+                            <ul>
+                                <li ng-hide="isDeveloperView()" ng-click="toggleView('Source')">
+                                    <img id="btnViewSource" src="images/Common/icon_viewsource.svg" title="View Source" />
+                                </li>
+                                <li ng-click="UserFileAction('Pin', $root.currentopenfile.file )" ng-class="{ 'rotate45deg' : $root.currentopenfile.isPinned }">
+                                    <img src="images/Common/icon-pin.svg" ng-attr-title="{{$root.currentopenfile.isPinned?'Unpin':'Pin'}}" ng-show="$root.currentopenfile.file.FilePath" />
+                                </li>
+                                <li ng-click="closeFile($root.currentopenfile.file)">
+                                    <img id="btnClose" src="images/Common/close.svg" title="Close File" class="topbar-close-icon" />
+                                </li>
+                            </ul>
+
+                        </div>
+                        <div class="application-secondary-header-right" ng-show="selectDesignSource()==true || ['ExecuteQuery','SearchFiles','VersionBPM','ERDiagram'].indexOf($root.currentopenfile.file.FileType) > -1">
+                            <ul>
+                                <li>
+                                    <img id="btnViewDesign" src="images/Common/icon_viewdesign.svg" title="View Design" ng-hide="['ExecuteQuery','SearchFiles','VersionBPM','ERDiagram'].indexOf($root.currentopenfile.file.FileType) > -1" ng-click="toggleView('Design')" ng-show="selectDesignSource()==true" />
+                                </li>
+                                <li>
+                                    <img id="btnClose" src="images/Common/close.svg" title="Close File" ng-click="closeFile($root.currentopenfile.file)" />
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+
+                    <openfiledirective ng-repeat="obj in $root.lstopenedfiles" curobj="obj"></openfiledirective>
+
+
+                </div>
+
+            </div>
+
+            <div class="b" id="divbottompanel" style="display:none">
+                <div id="dvBuildResults" class="footer-slide-up">
+
+                    <div class="footer-header">
+
+                        <div class="col-xs-11">
+
+                            <span class="pull-left">Build Results</span>
+                        </div>
+                        <div class="footer-collapse-btn">
+                            <img src="images/Scenario/icon-down-arrow.png" style="cursor:pointer" title="Collapse Build Results" onclick="hideBuildResults()" />
+                        </div>
+                        <div class="footer-close-btn">
+                            <img title="Close Build Results" id="btnClose" style="cursor:pointer" src="images/Common/close.svg" onclick="closeBuildResults()">
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="footer">
+
+
+                    <div class="footer-btn-wrapper">
+                        <ul class="nav nav-tabs">
+                            <li ng-click="selectTab('Errors')" ng-class="selectedTab=='Errors'?'active':''">
+                                <a>Errors<sup>{{errorCount}}</sup></a>
+                            </li>
+                            <li ng-click="selectTab('Warnings')" ng-class="selectedTab=='Warnings'?'active':''">
+                                <a>Warnings<sup>{{warningCount}}</sup></a>
+                            </li>
+                            <li ng-click="selectTab('Messages')" ng-class="selectedTab=='Messages'?'active':''">
+                                <a>Messages<sup>{{messageCount}}</sup></a>
+                            </li>
+                        </ul>
+                        <div class="tab-content footer-content-wrapper">
+                            <div id="errorList" class="tab-pane" ng-style="selectedTab=='Errors'?{'display':'block'}:''">
+                                <table class="table table-condensed table-hover table-fixedheader">
+                                    <thead>
+                                        <tr>
+                                            <th width="50%">Description</th>
+                                            <th width="50%">Rule ID</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="error in ruleBuildResult.ilstErrors" ng-dblclick="showBuildErrorNode(error)">
+                                            <td width="50%">
+                                                <span ng-bind="error.istrMessage"></span>
+                                            </td>
+                                            <td width="50%">
+                                                <span ng-bind="error.istrRuleID"></span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="warningList" class="tab-pane" ng-style="selectedTab=='Warnings'?{'display':'block'}:''">
+                                <table class="table table-condensed table-hover table-fixedheader">
+                                    <thead>
+                                        <tr>
+                                            <th width="50%">Description</th>
+                                            <th width="50%">Rule ID</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="warning in ruleBuildResult.ilstWarnings">
+                                            <td width="50%">
+                                                <span ng-bind="warning.istrMessage"></span>
+                                            </td>
+                                            <td width="50%">
+                                                <span ng-bind="warning.istrRuleID"></span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="messageList" class="tab-pane" ng-style="selectedTab=='Messages'?{'display':'block'}:''">
+                                <table class="table table-condensed table-hover table-fixedheader">
+                                    <thead>
+                                        <tr>
+                                            <th width="50%">Description</th>
+                                            <th width="50%">Rule ID</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="message in ruleBuildResult.ilstMessages" ng-dblclick="OpenBuildedRuleFile(message)">
+                                            <td width="50%">
+                                                <span ng-bind="message.istrMessage"></span>
+                                            </td>
+                                            <td width="50%">
+                                                <span ng-bind="message.istrRuleID"></span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div id="dvFindResults" class="footer-slide-up">
+
+                </div>
+            </div>
+            <div class="bottom_BuildResultsdiv" id="divBuildResultsbutton" style="display:none" onclick="onClickBuildResultsDiv()">
+                Build Results
+                <span onclick="CloseBuildResultsButton(event)" style="margin-left:5px">
+                    x
+                </span>
+            </div>
+        </div>
+
+        <footer style="z-index:99999" ng-if="!$root.IsAdmin">
+            <div class="page-path">
+                <span title="{{$root.currentopenfile.file.TFSState}}" class="home-tfsState-icon home-tfsState-{{$root.currentopenfile.file.TFSState}}-icon no-padding" ng-if="$root.IsTFSConfigured && $root.currentopenfile.file.FilePath"></span>
+                <span ng-bind="$root.currentopenfile.file.FilePath"></span>
+            </div>
+            <div class="db-fw-version">
+                <span class="label label-danger blink-err-btn" style="cursor: pointer;font-size: 11px!important;" ng-show="fileErrorList && fileErrorList.length>0" ng-click="showErrorPage()">Invalid Files</span>
+                <span>{{strDBConnection}}</span>
+                <span>Version : {{strApplicationVersion}}</span>
+                <span>Fwk Version : {{strFwkVersion}}</span>
+            </div>
+
+        </footer>
+
+        <!--<div class="chat-help-parent" ng-cloak>
+            <span class="fa fa-angle-double-right fore-color-white chat-help-close" ng-if="iblnChatHelpVisible" ng-click="showAndHideHelpWindow(false,true)"></span>
+            <span class="fa fa-angle-double-left fore-color-white chat-help-close" ng-if="!iblnChatHelpVisible" ng-click="showAndHideHelpWindow(true,true)"></span>
+            <div class="chat-help" ng-click="showAndHideChatWindow(true)">
+                <span ng-click="showAndHideChatWindow(true)">How Can I Help You?</span>
+            </div>
+        </div>
+        <div ng-if="iblnChatWindowVisible" class="chat-window-close" ng-cloak>
+            <span class="fa fa-close fore-color-white" ng-click="showAndHideChatWindow(false)"></span>
+        </div>
+        <div ng-show="iblnChatWindowVisible" class="chat-window">
+            <iframe src='https://webchat.botframework.com/embed/SagitecFrameworkBot?s=UA6jG0zA5-0.cwA.MeY.bJyhaX-NC4Lm279oOMBfUDVJWKSYPl2l4EDyLlD7mag' style='height:100%'></iframe>
+        </div>-->
+    </section>
+    <section ng-cloak class="cs-loader" ng-if="$root.IsHubWorking && $root.IsProjectLoaded">
+        <div class="cs-loader-inner">
+            <div ng-hide="$root.projectLoadError">
+                <label>	●</label>
+                <label>	●</label>
+                <label>	●</label>
+                <label>	●</label>
+                <label>	●</label>
+                <label>	●</label>
+            </div>
+        </div>
+        <div class="cs-loader-text" ng-show="$root.IsLogin && !$root.projectLoadError">Loading files...</div>
+        <div class="cs-loader-text" ng-hide="$root.IsLogin">Authentication In Progress...</div>
+        <div ng-show="$root.projectLoadError">
+            <div class="cs-loader-text-error" ng-bind="$root.projectLoadErrormsg"></div>
+            <div class="cs-loader-text-error cs-loader-text-error-btn" ng-click="redirectToProjectSettings()">Click here to go to the configuration page</div>
+        </div>
+    </section>
+    <div ng-cloak id="dvIntellisense"></div>
+    <div ng-cloak class="loading-blocker" ng-show="$root.IsLoading" ng-if="$root.IsHubWorking && $root.IsLogin&&!$root.IsAdmin">
+        <img src="images/Common/loading.gif" />
+    </div>
+    <div class="print-solution">
+        <ul class='custom-menu' id="container-menu"></ul>
+    </div>
+    <!-- Active Files -->
+    <div class="modal hide" id="active-files">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" ng-if="activeFileInfo && $root.lstopenedfiles.length" style="padding-bottom:0">
+                    <h4 class="modal-title">{{activeFileInfo.file.FileName}}</h4>
+                    <span>{{activeFileInfo.file.FileType}}</span>
+                </div>
+                <div class="modal-body" ui-active-file-wrapper style="padding-top:0">
+                    <input type="text" value="" ng-keydown="activeFileListKeyDown($event)" autofocus />
+                    <div class="col-xs-12">
+                        <h4 class="badge text-assign-error-occur">Active Files</h4>
+                        <span class="badge badge-danger" ng-bind="getactualFileCount()"></span>
+                    </div>
+                    <div class="col-xs-12">
+                        <ul id="active-files-list" class="list-unstyled">
+                            <li ng-repeat="fileObj in $root.lstopenedfiles | orderBy:'file.TimeModified':true" ng-click="selectActiveFile(fileObj)" ng-class="{'notPhysical' : !fileObj.file.FilePath }">
+                                <a>
+                                    <span style="padding:6px" class="home-fileType-icon home-fileType-{{fileObj.file.FileType}}-icon" title="{{fileObj.file.FileName}}"
+                                          ng-bind="fileObj.file.FileName" ng-show="fileObj.file.FilePath "></span>
+                                    <span style="padding:6px" class="home-fileType-icon home-fileType-default-icon" title="{{fileObj.file.FileName}}"
+                                          ng-bind="fileObj.file.FileName" ng-show="!fileObj.file.FilePath "></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer" style="text-align:left" ng-if="activeFileInfo && $root.lstopenedfiles.length">
+                    <span class="pull-left" title="{{activeFileInfo.file.FilePath}}"><small ng-bind="activeFileInfo.file.FilePath | cut:true:100:'...'"></small></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End of Active file div -->
+    <!--minified third party javascript files -->
+    <script src="scripts/jquery-ui.min.js"></script>
+    <script src="scripts/bootstrap.min.js"></script>
+    <script src="scripts/angular-wizard.min.js"></script>
+    <script src="scripts/ngDialog.min.js"></script>
+    <script src="scripts/jquery.splitter.js"></script>
+    <script src="scripts/metronic.js"></script>
+    <script src="scripts/signalR.min.js"></script>
+    <script src="scripts/D3-charts.js"></script>
+    <script src="scripts/bootstrap-datepicker.js"></script>
+    <script src="scripts/components-pickers.js"></script>
+    <script src="scripts/toastr.js"></script>
+    <script src="scripts/angular-sanitize.min.js"></script>
+    <script src="scripts/ngCookies.js"></script>
+    <script src="scripts/smart-table.js"></script>
+    
+    <script src="bundles/js/Common/s3-Common.min.js?6.0.10.0"></script>
+    <!-- build:js bundles/js/Common/s3-Common.min.js -->
+    <!--<script src="Common/scripts/SignalRReceivingMethods.js"></script>
+    <script src="Common/scripts/app.js"></script>
+    <script src="Common/scripts/Utilities.js"></script>
+    <script src="Common/scripts/Directive/commonDirectives.js"></script>
+    <script src="Common/scripts/Directive/IntellisenseDirectives.js"></script>
+    <script src="Common/scripts/Directive/onScrollload.js"></script>
+    <script src="Common/scripts/Filters/Filters.js"></script>
+    <script src="Common/scripts/Services/sharedServices.js"></script>
+    <script src="Common/scripts/Services/entityServices.js"></script>
+    <script src="Common/scripts/Services/queryServices.js"></script>
+    <script src="Common/scripts/Controller/SearchIDDescription.js"></script>
+    <script src="Common/scripts/Controller/FindAdvanceFilesController.js"></script>
+    <script src="Common/scripts/Services/FormatQueryFactory.js"></script>
+    <script src="Common/scripts/Services/s3chart.js"></script>
+    <script src="Common/scripts/Services/entityValidationService.js"></script>
+    <script src="Common/scripts/Services/formValidationService.js"></script>-->
+    <!-- /build -->
+    
+    <script src="bundles/js/StartUp/s3-StartUp.min.js?6.0.10.0"></script>
+    <!-- build:js bundles/js/StartUp/s3-StartUp.min.js -->
+    <!--<script src="StartUp/scripts/LoginPage.js"></script>
+    <script src="StartUp/scripts/MainPage.js"></script>
+    <script src="StartUp/scripts/PageLayout.js"></script>
+    <script src="StartUp/scripts/CreateClient.js"></script>
+    <script src="StartUp/scripts/SearchFilesController.js"></script>
+    <script src="StartUp/scripts/DashboardController.js"></script>
+    <script src="StartUp/scripts/ChangePassword.js"></script>
+    <script src="StartUp/scripts/GetActiveDirectoryUsersController.js"></script>-->
+    <!-- /build -->
+
+    <script src="bundles/js/Form/s3-Form.min.js?6.0.10.0"></script>
+    <!-- build:js bundles/js/Form/s3-Form.min.js -->
+    <!--<script src="Form/scripts/Form.js"></script>
+    <script src="Form/scripts/FormNewStructure.js"></script>
+    <script src="Form/scripts/FormUtilityFunctions.js"></script>
+    <script src="Form/scripts/FormDirectives.js"></script>
+    <script src="Form/scripts/CustomAttributes.js"></script>
+    <script src="Form/scripts/RetrievalParameters.js"></script>
+    <script src="Form/scripts/RetrievalControls.js"></script>
+    <script src="Form/scripts/AutoCompleteParameter.js"></script>
+    <script src="Form/scripts/AutoCompleteColumns.js"></script>
+    <script src="Form/scripts/ParameterNavigation.js"></script>
+    <script src="Form/scripts/NavParamGridSearch.js"></script>
+    <script src="Form/scripts/NavigationParamForTooltipForm.js"></script>
+    <script src="Form/scripts/ClientVisibility.js"></script>
+    <script src="Form/scripts/CreateButtonWizard/CreateButtonControl.js"></script>
+    <script src="Form/scripts/CreateButtonWizard/NewButtonWizard.js"></script>
+    <script src="Form/scripts/BrowseForQuery.js"></script>
+    <script src="Form/scripts/SetValidationRules.js"></script>
+    <script src="Form/scripts/CreateButtonWizard/CreateButtonControl.js"></script>
+    <script src="Form/scripts/ActiveForm.js"></script>
+    <script src="Form/scripts/SearchActiveForm.js"></script>
+    <script src="Form/scripts/RetrievalButtonParameters.js"></script>
+    <script src="Form/scripts/ObjectTreeDragDropDialog.js"></script>
+    <script src="Form/scripts/CellFormat.js"></script>
+    <script src="Form/scripts/DataKeyAndSortExpression.js"></script>
+    <script src="Form/scripts/ImageCondition.js"></script>
+    <script src="Form/scripts/SetFooter.js"></script>
+    <script src="Form/scripts/CreateGridViewControl.js"></script>
+    <script src="Form/scripts/ParameterNavigationOpenReport.js"></script>
+    <script src="Form/scripts/ParaNavigationOpenWord.js"></script>
+    <script src="Form/scripts/GroupExpression.js"></script>
+    <script src="Form/scripts/CentreLeft.js"></script>
+    <script src="Form/scripts/BindToQuery.js"></script>
+    <script src="Form/scripts/FormControls.js"></script>-->
+    <!--<script src="Form/scripts/CreateChartControl.js"></script>-->
+    <!-- /build -->
+
+    <script src="bundles/js/BPM/s3-bpm.min.js?6.0.10.0"></script>
+    <!-- build:js bundles/js/BPM/s3-bpm.min.js -->
+    <!--<script src="BPM/scripts/Controllers/BPMN.js"></script>
+    <script src="BPM/scripts/Controllers/VersionController.js"></script>
+    <script src="BPM/scripts/Controllers/BPMExecutionController.js"></script>
+    <script src="BPM/scripts/Utilities/BpmnMapSVG.js"></script>
+    <script src="BPM/scripts/Utilities/AddingNewElements.js"></script>
+    <script src="BPM/scripts/Utilities/DragBPMNElement.js"></script>
+    <script src="BPM/scripts/Utilities/NewBPMNEdge.js"></script>
+    <script src="BPM/scripts/Utilities/ResizeElementAndRearrangeEdges.js"></script>
+    <script src="BPM/scripts/Directives/MapDirective.js"></script>
+    <script src="BPM/scripts/Directives/AssociationDirective.js"></script>
+    <script src="BPM/scripts/Directives/userTaskDirectives.js"></script>
+    <script src="BPM/scripts/Directives/PerformersDirectives.js"></script>-->
+    <!-- /build -->
+
+    <script src="bundles/js/Rule/s3-Rule.min.js?6.0.10.0"></script>
+    <!-- build:js bundles/js/Rule/s3-Rule.min.js -->
+    <!--<script src="Rule/scripts/RuleCommon.js"></script>
+    <script src="Rule/scripts/LogicalRuleDirectives.js"></script>
+    <script src="Rule/scripts/DecisionTableDirective.js"></script>
+    <script src="Rule/scripts/ExcelMatrixDirectives.js"></script>-->
+    <!-- /build -->
+
+    <script src="bundles/js/Entity/s3-Entity.min.js?6.0.10.0"></script>
+    <!-- build:js bundles/js/Entity/s3-Entity.min.js -->
+    <!--<script src="Entity/scripts/Entity.js"></script>
+    <script src="Entity/scripts/EntityDirectives.js"></script>
+    <script src="Entity/scripts/EntityCommonFunctions.js"></script>
+    <script src="Entity/scripts/ExpressionBuilder/BusinessObjectPropertyMethod.js"></script>
+    <script src="Entity/scripts/ExpressionBuilder/InternalFunctions.js"></script>
+    <script src="Entity/scripts/ExpressionBuilder/Query.js"></script>
+    <script src="Entity/scripts/EntityFilter.js"></script>-->
+    <!-- /build -->
+
+    <script src="bundles/js/Scenario/s3-Scenario.min.js?6.0.10.0"></script>
+    <!-- build:js bundles/js/Scenario/s3-Scenario.min.js -->
+    <!--<script src="Scenario/scripts/Scenario.js"></script>
+    <script src="Scenario/scripts/ScenarioDirectives.js"></script>
+    <script src="Scenario/scripts/ScenarioCommonFunctions.js"></script>
+    <script src="Scenario/scripts/LogicalRuleForScenarioExecution.js"></script>
+    <script src="Scenario/scripts/DecisionTableForScenarioExecution.js"></script>-->
+    <!-- /build -->
+    
+    <script src="bundles/js/CreateNewObject/s3-CreateNewObject.min.js?6.0.10.0"></script>
+    <!-- build:js bundles/js/CreateNewObject/s3-CreateNewObject.min.js -->
+    <!--<script src="CreateNewObject/scripts/CreateNewObject.js"></script>-->
+    <!-- /build -->
+
+    <script src="bundles/js/Report/s3-Report.min.js?6.0.10.0"></script>
+    <!-- build:js bundles/js/Report/s3-Report.min.js -->
+    <!--<script src="Report/scripts/Report.js"></script>-->
+    <!-- /build -->
+
+    <script src="bundles/js/Correspondence/s3-Correspondence.min.js?6.0.10.0"></script>
+    <!-- build:js bundles/js/Correspondence/s3-Correspondence.min.js -->
+    <!--<script src="Correspondence/scripts/Correspondence.js"></script>
+    <script src="Correspondence/scripts/CorrespondenceFunctions.js"></script>-->
+    <!-- /build -->
+
+    <script src="bundles/js/File/s3-file.min.js?6.0.10.0"></script>
+    <!-- build:js bundles/js/File/s3-file.min.js -->
+    <!--<script src="File/scripts/File.js"></script>-->
+    <!-- /build -->
+
+    <script src="bundles/js/Constants/s3-Constants.min.js?6.0.10.0"></script>
+    <!-- build:js bundles/js/Constants/s3-Constants.min.js -->
+    <!--<script src="Constants/scripts/Constants.js"></script>-->
+    <!-- /build -->
+
+    <script src="bundles/js/FormLink/s3-FormLink.min.js?6.0.10.0"></script>
+    <!-- build:js bundles/js/FormLink/s3-FormLink.min.js -->
+    <!--<script src="FormLink/scripts/FormLink.js"></script>
+    <script src="FormLink/scripts/FormLinkDirectives.js"></script>-->
+    <!-- /build -->
+
+    <script src="bundles/js/Tools/s3-Tools.min.js?6.0.10.0"></script>
+    <!-- build:js bundles/js/Tools/s3-Tools.min.js -->
+    <!--<script src="Tools/scripts/configureSettings.js"></script>
+    <script src="Tools/scripts/ExecuteQuery.js"></script>
+    <script src="Tools/scripts/AuditLog.js"></script>
+    <script src="Tools/scripts/CustomSettings.js"></script>
+    <script src="Tools/scripts/ProjectConfiguration.js"></script>
+    <script src="Tools/scripts/ConvertToHtxController.js"></script>
+    <script src="Tools/scripts/SelectEntitiesDiagram.js"></script>
+    <script src="Tools/scripts/NewERDiagram.js"></script>
+    <script src="Tools/scripts/AddCodeGroup.js"></script> 
+    <script src="Tools/scripts/ValidationUtility.js"></script>-->
+    <!-- /build -->
+
+    <script src="bundles/js/WorkFlow/s3-WorkFlow.min.js?6.0.10.0"></script>
+    <!-- build:js bundles/js/WorkFlow/s3-WorkFlow.min.js -->
+    <!--<script src="WorkFlow/script/WorkFlowMaps.js"></script>-->
+    <!-- /build -->
+   
+    <!--<script src="bundles/js/AceEditor/AceEditor.min.js?6.0.10.0"></script>-->
+    <!-- build:js bundles/js/AceEditor/AceEditor.min.js -->
+    <script src="AceEditor/ace.js"></script>
+    <script src="AceEditor/ext-language_tools.js"></script>
+    <script src="AceEditor/mode-xml.js"></script>
+    <script src="AceEditor/mode-sql.js"></script>
+    <script src="AceEditor/worker-xml.js"></script>
+    <script src="AceEditor/ace-search.js"></script>
+    <!-- /build -->
+
+    <script src="bundles/js/Admin/Admin.min.js?6.0.10.0"></script>
+    <!-- build:js bundles/js/Admin/Admin.min.js -->
+    <!--<script src="Admin/scripts/Admin.js"></script>-->
+    <!-- /build -->
+
+    <script src="bundles/js/User/User.min.js?6.0.10.0"></script>
+    <!-- build:js bundles/js/User/User.min.js -->
+    <!--<script src="User/scripts/userTypeListDirective.js"></script>-->
+    <!-- /build -->
+    <!--<script src="scripts/dom-to-image.js"></script>-->
+</body>
+</html>
+
+

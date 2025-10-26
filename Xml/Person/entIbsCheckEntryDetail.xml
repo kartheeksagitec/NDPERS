@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entIbsCheckEntryDetail" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoIbsCheckEntryDetail" sfwObjectID="busIbsCheckEntryDetail" sfwTableName="sgt_ibs_check_entry_detail" sfwView="False">
+  <rules>
+    <rule ID="IsPaidAmountInvalid" sfwMessageId="4182" sfwExpression="(this.icdoIbsCheckEntryDetail.amount_paid &lt;= 0.0)" sfwObjectBased="True" />
+    <rule ID="IsPaymendateNull" sfwMessageId="4112" sfwExpression="(this.icdoIbsCheckEntryDetail.payment_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsPersonIDNull" sfwMessageId="4181" sfwExpression="(this.icdoIbsCheckEntryDetail.person_id == 0)" sfwObjectBased="True" />
+    <rule ID="IsPersonNotEnrolledinInsruncePlan" sfwMessageId="4180" sfwExpression="!(this.icdoIbsCheckEntryDetail.person_id == 0) &amp;&amp; &#xA;(this.IsPersonNotEnrolledinIBS() == True)" sfwObjectBased="True" />
+    <rule ID="VisilbleRuleSaveButtinVislbe" sfwExpression="!(RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusIbsCheckEntryHeader.icdoIbsCheckEntryHeader.deposit_tape_id&quot;) &gt; 0)" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror>
+    <item ID="IsPersonIDNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPersonNotEnrolledinInsruncePlan" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPaymendateNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPaidAmountInvalid" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <expressionfields />
+  <queries>
+    <query ID="CheckDetails" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="DECLARE @HEADER_ID INT&#xD;&#xA;SET @HEADER_ID = @IBS_CHECK_ENTRY_HEADER_ID&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;DECLARE @MAXRUNDATE DATETIME&#xD;&#xA;DECLARE @IBS_HEADER_ID INT&#xD;&#xA;&#xD;&#xA;SELECT @MAXRUNDATE = MAX(RUN_DATE) &#xD;&#xA; FROM SGT_IBS_HEADER WITH(NOLOCK) &#xD;&#xA; WHERE REPORT_TYPE_VALUE = 'REG' &#xD;&#xA;  AND REPORT_STATUS_VALUE = 'PSTD'&#xD;&#xA;&#xD;&#xA;SELECT @IBS_HEADER_ID = IBS_HEADER_ID &#xD;&#xA; FROM SGT_IBS_HEADER WITH(NOLOCK) &#xD;&#xA;  WHERE RUN_DATE = @MAXRUNDATE&#xD;&#xA;  AND  REPORT_TYPE_VALUE = 'REG' &#xD;&#xA;  AND REPORT_STATUS_VALUE = 'PSTD'&#xD;&#xA;&#xD;&#xA;SELECT  A.IBS_CHECK_ENTRY_DETAIL_ID, A.PERSON_ID,&#xD;&#xA;  (ISNULL(FIRST_NAME,'')+' '+ISNULL(MIDDLE_NAME,'')+' '+ISNULL(LAST_NAME,'')) AS NAME,&#xD;&#xA;  A.AMOUNT_PAID,&#xD;&#xA;  (&#xD;&#xA;   isnull(b.BALANCE_FORWARD,0.00) +&#xD;&#xA;   ISNULL(b.ADJUSTMENT_AMOUNT,0) + &#xD;&#xA;   ISNULL(c.MEMBER_PREMIUM_AMOUNT,0) &#xD;&#xA;  ) - ISNULL(d.PAYMENTS_MADE,0) AS DUE_AMOUNT,&#xD;&#xA;  REFERENCE_NO,&#xD;&#xA;  PAYMENT_DATE&#xD;&#xA; FROM SGT_IBS_CHECK_ENTRY_DETAIL A WITH(NOLOCK)&#xD;&#xA; INNER JOIN SGT_PERSON E WITH(NOLOCK)&#xD;&#xA;  ON A.PERSON_ID = E.PERSON_ID&#xD;&#xA; LEFT OUTER JOIN &#xD;&#xA;  (&#xD;&#xA;   SELECT PERSON_ID,&#xD;&#xA;    isnull(BALANCE_FORWARD,0.00) AS BALANCE_FORWARD,&#xD;&#xA;    ISNULL(ADJUSTMENT_AMOUNT,0) ADJUSTMENT_AMOUNT&#xD;&#xA;   FROM SGT_IBS_PERSON_SUMMARY WITH(NOLOCK) &#xD;&#xA;   WHERE IBS_HEADER_ID = @IBS_HEADER_ID &#xD;&#xA;  ) AS B&#xD;&#xA;  ON A.PERSON_ID = B.PERSON_ID&#xD;&#xA; LEFT OUTER JOIN  &#xD;&#xA;  (SELECT PERSON_ID ,&#xD;&#xA;   SUM(ISNULL(MEMBER_PREMIUM_AMOUNT,0)) AS MEMBER_PREMIUM_AMOUNT&#xD;&#xA;   FROM SGT_IBS_DETAIL WITH(NOLOCK) &#xD;&#xA;   WHERE IBS_HEADER_ID = @IBS_HEADER_ID AND ISNULL(DETAIL_STATUS_VALUE, '') &lt;&gt; 'IGNR'&#xD;&#xA;   GROUP BY PERSON_ID&#xD;&#xA;  ) C&#xD;&#xA;  ON A.PERSON_ID = C.PERSON_ID&#xD;&#xA; LEFT OUTER JOIN&#xD;&#xA; (&#xD;&#xA;  SELECT REM.PERSON_ID,&#xD;&#xA;    SUM(ISNULL(REM.REMITTANCE_AMOUNT,0) - ISNULL(REM.ALLOCATED_NEGATIVE_DEPOSIT_AMOUNT,0) -&#xD;&#xA;     ISNULL(CASE WHEN REM.REFUND_STATUS_VALUE = 'PRCD' THEN&#xD;&#xA;        CASE WHEN REM.OVERRIDDEN_REFUND_AMOUNT IS NOT NULL &#xD;&#xA;          THEN ISNULL(REM.OVERRIDDEN_REFUND_AMOUNT,0.00) &#xD;&#xA;          ELSE ISNULL(REM.COMPUTED_REFUND_AMOUNT,0.00) &#xD;&#xA;        END&#xD;&#xA;       ELSE 0.00 END&#xD;&#xA;        ,0.00)) as PAYMENTS_MADE&#xD;&#xA;  FROM SGT_DEPOSIT DEP WITH(NOLOCK)  &#xD;&#xA;   INNER JOIN SGT_REMITTANCE REM WITH(NOLOCK) &#xD;&#xA;   ON REM.DEPOSIT_ID = DEP.DEPOSIT_ID &#xD;&#xA;  WHERE REM.APPLIED_DATE &gt; @MAXRUNDATE&#xD;&#xA;  AND REM.APPLIED_DATE &lt;= GETDATE()&#xD;&#xA;  AND DEP.STATUS_VALUE = 'APLD'&#xD;&#xA;  AND REM.REMITTANCE_TYPE_VALUE = 'IBSD'&#xD;&#xA;  GROUP BY REM.PERSON_ID&#xD;&#xA; ) as D on A.PERSON_ID = D.PERSON_ID&#xD;&#xA; WHERE A.IBS_CHECK_ENTRY_HEADER_ID = @HEADER_ID&#xD;&#xA;  ORDER BY A.CREATED_DATE">
+      <parameters>
+        <parameter ID="@IBS_CHECK_ENTRY_HEADER_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="IbsCheckEntryDetailId" sfwType="Column" sfwValue="ibs_check_entry_detail_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="IbsCheckEntryHeaderId" sfwType="Column" sfwValue="ibs_check_entry_header_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PersonId" sfwType="Column" sfwValue="person_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PaymentDate" sfwType="Column" sfwValue="payment_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ReferenceNo" sfwType="Column" sfwValue="reference_no" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="20" />
+    <attribute ID="AmountPaid" sfwType="Column" sfwValue="amount_paid" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="DepositId" sfwType="Column" sfwValue="deposit_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="objIbsCheckEntryHeader" sfwType="Object" sfwEntity="entIbsCheckEntryHeader" sfwValue="ibusIbsCheckEntryHeader" />
+    <attribute ID="objPerson" sfwType="Object" sfwEntity="entPerson" sfwValue="ibusPerson" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="DueAmount" sfwValue="icdoIbsCheckEntryDetail.due_amount" />
+    <attribute sfwDataType="string" sfwType="Property" ID="Name" sfwValue="icdoIbsCheckEntryDetail.name" />
+  </attributes>
+  <objectmethods>
+    <method ID="ReloadHandButtonData" sfwReturnType="ArrayList" />
+  </objectmethods>
+</entity>

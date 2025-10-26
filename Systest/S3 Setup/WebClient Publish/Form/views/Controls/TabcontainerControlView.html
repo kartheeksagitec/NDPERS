@@ -1,0 +1,25 @@
+﻿<div class="form-editable-tabs" ng-class="{'selected-Tab-Container' : model.IsSelected }" control-head ng-click="selectControl(model,$event)" ng-dblclick="selectControlOnDoubleClick(model,$event)" >
+    <ul class="nav nav-tabs" role="tablist" ng-init="SetParentVM(model,model.Elements[0])">
+        <li role="presentation" ng-repeat="tabs in model.Elements[0].Elements" ng-init="SetParentVM(model.Elements[0],tabs)" control-head ng-click="selectControl(tabs,$event)"
+            ng-dblclick="selectControlOnDoubleClick(tabs,$event)"
+            ng-class="{'active': model.Elements[0].SelectedTabSheet==tabs,'form-invisible-control': tabs.dictAttributes.Visible === 'False' }" context-menu='tabsheetmenuOptions' formcontroldroppable dropdata="tabs" formodel="formodel">
+            <a role="tab" data-toggle="tab" aria-expanded="true">
+                <span class='hidden-span' spellcheck=false contenteditable='true' content-editable ng-model='tabs.dictAttributes.HeaderText' model='tabs'>
+                </span>
+                <img cursor='pointer' class='image-icon-tools delete-tab-sheet' src='images/Common/icon_delete_dark.svg' ng-click='DeleteNewTabClick(model.Elements[0], tabs)'
+                     ng-hide="formodel.dictAttributes.sfwType =='Lookup' " />
+            </a>
+        </li>
+        <li role='presentation'>
+            <img class='image-icon-tools add-tab-sheet' src='images/Common/icon_add_light.svg' ng-click='AddNewTabClick(model.Elements[0])' ng-hide="formodel.dictAttributes.sfwType =='Lookup' " />
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div role='tabpanel' ng-repeat='tabs in model.Elements[0].Elements'
+             ng-class='{ "active tab-pane": model.Elements[0].SelectedTabSheet==tabs, "tab-pane": model.Elements[0].SelectedTabSheet!=tabs, "bckgGrey": tabs.isAdvanceSearched, "bckgGreen": tabs.isAdvanceSearched && model.Elements[0].SelectedTabSheet==tabs}'
+             id='{{getTabID(tabs,false)}}'>
+            <base-control-view ng-repeat='elem in tabs.Elements' entitytreename='entitytreename' lstdisplayentities='lstdisplayentities' ng-if='tabs.isLoaded' objparent='tabs' formodel='formodel'
+                             model='elem' lstloadedentitytrees='lstloadedentitytrees' lstloadedentitycolumnstree='lstloadedentitycolumnstree' buttons-collection='buttonsCollection' modelname="{{elem.Name}}"/>
+        </div>
+    </div>
+</div>

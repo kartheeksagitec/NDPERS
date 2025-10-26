@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entMSSTaxWithholding" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoPayeeAccountTaxWithholding" sfwObjectID="busMSSTaxWithholding" sfwParentEntity="entPayeeAccountTaxWithholding">
+  <rules>
+    <rule ID="IblnIsRecordExistsWithSameStartDate" sfwMessageId="5576" sfwExpression="!(this.icdoPayeeAccountTaxWithholding.start_date == DateTime.MinValue) &amp;&amp; &#xA;this.icdoPayeeAccountTaxWithholding.benefit_distribution_type_value == &quot;MNBF&quot; &amp;&amp;&#xA;(this.iblnIsRecordExistsWithSameStartDate() == True)" sfwObjectBased="True" />
+    <rule ID="IsStartDatePastDate" sfwMessageId="126" sfwExpression="(this.IsStartDatePastDate() == True)" sfwObjectBased="True" />
+    <rule ID="IsFutureDatedTaxWithholdingExisting" sfwMessageId="10269" sfwExpression="(this.IsFutureDatedElectionExisting() == True)" sfwObjectBased="True" />
+    <rule ID="IsMSSStartDateNotValid" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.IsMSSStartDateNotValid())" sfwMessageId="10398" />
+    <rule ID="IsFederalPercentLessThanMinimum" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="this.IsFederalPercentLessThanMinimum()" sfwMessageId="10470" />
+    <rule ID="IsAcknowledgementChecked" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.istrIsAcknowledged != &quot;Y&quot;) &amp;&amp; &#xA;(this.icdoPayeeAccountTaxWithholding.tax_identifier_value == &quot;FDRL&quot;)" sfwMessageId="10002" />
+    <rule ID="IsMSSStateTaxPanelVisible" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.icdoPayeeAccountTaxWithholding.tax_identifier_value == &quot;STAT&quot;) &amp;&amp; &#xA;(this.icdoPayeeAccountTaxWithholding.tax_ref == &quot;ST22&quot;) &amp;&amp; &#xA;(this.icdoPayeeAccountTaxWithholding.benefit_distribution_type_value == &quot;MNBF&quot;)" />
+    <rule ID="IsMSSDistributionNotMonthly" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.icdoPayeeAccountTaxWithholding.benefit_distribution_type_value != &quot;MNBF&quot;" />
+    <rule ID="ISMSSMonthlyBenfitDistribution" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.icdoPayeeAccountTaxWithholding.benefit_distribution_type_value == &quot;MNBF&quot;" />
+    <rule ID="IsMSSFederalVisible" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="(this.icdoPayeeAccountTaxWithholding.benefit_distribution_type_value == &quot;LSDB&quot; || &#xA;this.icdoPayeeAccountTaxWithholding.benefit_distribution_type_value == &quot;RMD&quot;) &amp;&amp;&#xA;(this.icdoPayeeAccountTaxWithholding.tax_identifier_value == &quot;FDRL&quot;) &amp;&amp; &#xA;(this.icdoPayeeAccountTaxWithholding.tax_ref == &quot;FD22&quot;)" />
+    <rule ID="IsMSSTaxOptionEnteredForState" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="(string.IsNullOrEmpty(this.icdoPayeeAccountTaxWithholding.tax_option_value)) &amp;&amp; &#xA;(this.icdoPayeeAccountTaxWithholding.tax_identifier_value == &quot;STAT&quot;) &amp;&amp; &#xA;(this.icdoPayeeAccountTaxWithholding.tax_ref == &quot;ST22&quot;)" sfwMessageId="5649" />
+    <rule ID="IsMSSTaxFilingStatusRequired" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.icdoPayeeAccountTaxWithholding.tax_identifier_value == &quot;FDRL&quot; &amp;&amp; &#xA;this.icdoPayeeAccountTaxWithholding.benefit_distribution_type_value == &quot;MNBF&quot; &amp;&amp;&#xA;!string.IsNullOrEmpty(this.icdoPayeeAccountTaxWithholding.tax_ref) &amp;&amp; &#xA;string.IsNullOrEmpty(this.icdoPayeeAccountTaxWithholding.filing_status_value)" sfwMessageId="10473" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="VisibleAreFieldsReadonly" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleAreFieldsNotReadonly" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleIsBenefitDistributionTypeMonthlyBenefit" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleIsBenefitDistributionTypePLSO" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleIsBenefitDistributionTypeRefund" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleIsTaxIdentifierFedTax" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleIsTaxIdentifierStateTax" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForNewFedStateTaxRefund" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleIsMonthlyBenefitForNewFDSTTax" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForNewFedTaxRefund" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleIsMonthlyStateTax" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsNewStateTaxST22Refund" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMSSStateTaxPanelVisible" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMSSDistributionNotMonthly" sfwMode="All" sfwStatus="Active" />
+    <item ID="ISMSSMonthlyBenfitDistribution" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMSSFederalVisible" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="IsStartDatePastDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAdditionalTaxAmountEnteredandStateTaxOptionNotIRSAndAddional" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAdditionalTaxAmountNotEnteredandFedTaxOptionIRSAndAddional" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAdditionalTaxAmountNotEnteredandStateTaxOptionIRSAndAddional" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAmountEnteredForPLSOOrLumpSum" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsBenefitOptionTransfers" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEndDateLessthanstartdate" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEndDateNotValid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsFederalTaxMandoryForMember" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPayeeNotinNorthDakota" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPayeeStatusCancelPendingOrCancelled" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsStartDateNotValid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsStartDateNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsStateTaxOptionBasedOnStateOrStateTableAndAdditional" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsTaxAllowanceNotNumeric" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsTaxOptionNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsTaxRecordValid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IblnIsRecordExistsWithSameStartDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAdditionalTaxAmountEnteredandFedTaxOptionNotIRSAndAddional" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsFutureDatedTaxWithholdingExisting" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsMSSStartDateNotValid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsFederalPercentLessThanMinimum" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAcknowledgementChecked" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMSSTaxOptionEnteredForState" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMSSTaxFilingStatusRequired" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <expressionfields />
+  <attributes>
+    <attribute sfwDataType="string" sfwType="Property" ID="MonthlybenefitSuppressWarning" sfwValue="icdoPayeeAccountTaxWithholding.monthlybenefit_suppress_warning" />
+    <attribute sfwDataType="string" sfwType="Property" ID="MaritalStatusValue" sfwValue="icdoPayeeAccountTaxWithholding.marital_status_value" />
+    <attribute sfwDataType="string" sfwType="Property" ID="MonthlyBenefitTaxOption" sfwValue="icdoPayeeAccountTaxWithholding.monthly_benefit_tax_option" />
+    <attribute sfwDataType="string" sfwType="Property" ID="NoOfTaxAllowance" sfwValue="icdoPayeeAccountTaxWithholding.no_of_tax_allowance" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="AdditionalTaxAmount" sfwValue="icdoPayeeAccountTaxWithholding.additional_tax_amount" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="StartDate" sfwValue="icdoPayeeAccountTaxWithholding.start_date" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="EndDate" sfwValue="icdoPayeeAccountTaxWithholding.end_date" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecTaxAmount" sfwValue="idecTaxAmount" />
+    <attribute sfwDataType="int" sfwType="Property" ID="PayeeAccountId" sfwValue="icdoPayeeAccountTaxWithholding.payee_account_id" />
+    <attribute sfwDataType="int" sfwType="Property" ID="PayeeAccountTaxWithholdingId" sfwValue="icdoPayeeAccountTaxWithholding.payee_account_tax_withholding_id" />
+    <attribute sfwDataType="string" sfwType="Property" ID="PlsoTaxOption" sfwValue="icdoPayeeAccountTaxWithholding.plso_tax_option" />
+    <attribute sfwDataType="string" sfwType="Property" ID="PlsoSupressWarning" sfwValue="icdoPayeeAccountTaxWithholding.plso_supress_warning" />
+    <attribute sfwDataType="string" sfwType="Property" ID="RefundTaxOption" sfwValue="icdoPayeeAccountTaxWithholding.refund_tax_option" />
+    <attribute sfwDataType="string" sfwType="Property" ID="RefundSupressWarning" sfwValue="icdoPayeeAccountTaxWithholding.refund_supress_warning" />
+    <attribute sfwType="Collection" sfwEntity="entPayeeAccountTaxWithholdingItemDetail" ID="lstMSSTaxWithHoldingTaxItems" sfwValue="iclbMSSTaxWithHoldingTaxItems" />
+    <attribute ID="objPayeeAccount" sfwType="Object" sfwEntity="entPayeeAccount" sfwValue="ibusPayeeAccount" />
+    <attribute ID="IstrConfirmationText" sfwDataType="string" sfwPrivate="False" sfwValue="istrConfirmationText" sfwType="Property" />
+    <attribute ID="lstrIsAcknowledged" sfwDataType="string" sfwPrivate="False" sfwValue="istrIsAcknowledged" sfwType="Property" />
+  </attributes>
+  <objectmethods>
+    <method ID="LoadTaxOptionBasedOnTaxIdentifier" sfwReturnType="Collection" sfwObjectID="cdoCodeValue" sfwEntity="entPostRetirementDeathApplication" />
+    <method ID="btnMSSCalculateTax" sfwReturnType="ArrayList" />
+    <method ID="LoadPLSOTaxOptionBasedOnTaxIdentifier" sfwReturnType="Collection" sfwObjectID="cdoCodeValue" sfwEntity="entPostRetirementDeathApplication" />
+  </objectmethods>
+</entity>

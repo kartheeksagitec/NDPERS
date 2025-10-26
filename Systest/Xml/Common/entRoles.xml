@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entRoles" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvAdmin" sfwType="BusinessRule" sfwMainCDO="icdoRoles" sfwObjectID="busRoles" sfwTableName="sgs_roles">
+  <rules>
+    <rule ID="Duplicate Desc New" sfwMessage="Role Description already exists" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entRoles.CountByDescNew&quot;, this.icdoRoles.role_description) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="Duplicate Desc Update" sfwMessage="Role Description already exists" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entRoles.CountByDescUpdate&quot;, this.icdoRoles.role_description, this.icdoRoles.role_id) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="Rule Delete Roles User not Active" sfwMessageId="5012" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entRoles.checkUserStatus&quot;, this.icdoRoles.role_id) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK ROLE DESC IS BLANK" sfwMessageId="2006" sfwExpression="(string.IsNullOrEmpty(this.icdoRoles.role_description))" sfwObjectBased="True" />
+  </rules>
+  <delete>
+    <property ID="lstSecurity" sfwMethodName="LoadSecurity" />
+  </delete>
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror>
+    <item ID="Duplicate Desc New" sfwMode="New" sfwStatus="Active" />
+    <item ID="Duplicate Desc Update" sfwMode="Update" sfwStatus="Active" />
+    <item ID="RULE CHECK ROLE DESC IS BLANK" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete>
+    <item ID="Rule Delete Roles User not Active" sfwMode="All" sfwStatus="Active" />
+  </validatedelete>
+  <updateablecdo />
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * &#xD;&#xA;  from sgs_roles &#xD;&#xA; order by role_description&#xD;&#xA;&#xD;&#xA;">
+      <parameters />
+    </query>
+    <query ID="ListOfRoles" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select role_id, role_description from sgs_roles order by role_description ">
+      <parameters />
+    </query>
+    <query ID="CountByDescNew" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) &#xD;&#xA;  from sgs_roles&#xD;&#xA; where role_description = @role_description">
+      <parameters>
+        <parameter ID="@role_description" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="CountByDescUpdate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) &#xD;&#xA;  from sgs_roles&#xD;&#xA; where role_description = @role_description&#xD;&#xA;and role_id &lt;&gt; @role_id">
+      <parameters>
+        <parameter ID="@role_description" sfwDataType="string" />
+        <parameter ID="@role_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="checkUserStatus" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) from SGS_USER_ROLES UR, SGS_USER U where &#xD;&#xA;UR.role_id=@role_id and &#xD;&#xA;U.USER_SERIAL_ID=UR.USER_SERIAL_ID &#xD;&#xA;AND U.USER_STATUS_VALUE='A'">
+      <parameters>
+        <parameter ID="@role_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="rptResourceBySecurityRole" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT R.ROLE_DESCRIPTION AS ROLENAME,RES.RESOURCE_DESCRIPTION AS RESOURCENAME, CV.DESCRIPTION AS RESOURCE_TYPE,CV1.DESCRIPTION AS SECURITY_LEVEL FROM SGS_ROLES R&#xD;&#xA;JOIN SGS_SECURITY S ON R.ROLE_ID = S.ROLE_ID AND S.SECURITY_VALUE &lt;&gt; 0&#xD;&#xA;JOIN SGS_RESOURCES RES ON S.RESOURCE_ID = RES.RESOURCE_ID&#xD;&#xA;JOIN SGS_CODE_VALUE CV ON RES.RESOURCE_TYPE_ID = CV.CODE_ID AND RES.RESOURCE_TYPE_VALUE = CV.CODE_VALUE&#xD;&#xA;JOIN SGS_CODE_VALUE CV1 ON S.SECURITY_ID = CV1.CODE_ID AND CAST(S.SECURITY_VALUE AS VARCHAR(4)) = CV1.CODE_VALUE">
+      <parameters />
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="RoleId" sfwType="Column" sfwValue="role_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="RoleDescription" sfwType="Column" sfwValue="role_description" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="400" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute sfwType="Collection" sfwEntity="entSecurity" ID="lstSecurity" sfwValue="iclbSecurity" />
+  </attributes>
+  <objectmethods>
+    <method ID="LoadSecurity" sfwReturnType="Void" />
+  </objectmethods>
+</entity>

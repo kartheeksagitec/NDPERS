@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<form ID="wfmOrgContactLookup" sfwActive="True" sfwStatus="Valid" sfwRemoteObject="srvOrganization" sfwResource="305 " sfwType="Lookup" sfwTitle="Org Contact Lookup" version="3.5" sfwEntity="entOrgContact" sfwGridCollection="busOrgContactLookup.icolOrgContact">
+  <initialload>
+    <query ID="cdoOrgContact" sfwQueryRef="entOrgContact.Lookup" sfwMethodName="LoadOrgContacts" />
+  </initialload>
+  <sfwTable ID="Main">
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlHeaderTab" sfwCaption="Search Parameters">
+          <sfwTable ID="tblHeaderTab">
+            <sfwRow>
+              <sfwColumn>
+                <sfwTabContainer ID="tctHeader">
+                  <Tabs>
+                    <sfwTabSheet HeaderText="Criteria" ID="tshCriteria">
+                      <sfwTable CssClass="Table" ID="tblCriteria">
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="lblorg_contact_id" Text="Org Contact ID : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txt_org_contact_id" sfwDataField="a.org_contact_id" sfwDataType="Numeric" sfwQueryID="cdoOrgContact" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capOrgCode" Text="Org Code ID : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtOrgCode" sfwDataField="org_code" sfwOperator="like" sfwQueryID="cdoOrgContact" />
+                            <sfwImageButton ID="btnRetrieve" ImageAlign="AbsMiddle" ImageUrl="~/Image/Lookup.jpg" sfwActiveForm="wfmOrganizationLookup" sfwMethodName="btnRetrieve_Click" sfwRelatedControl="txtOrgCode" sfwSelectedIndex="OrgCode" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="lblplan_id" Text="Plan ID : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList DataTextField="plan_name" DataValueField="plan_id" ID="txt_plan_id" sfwDataField="A.plan_id" sfwQueryID="cdoOrgContact" sfwLoadType="Query" sfwLoadSource="entPlan.DeffComplans" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblcontact_id" Text="Contact ID : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txt_contact_id" sfwDataField="a.contact_id" sfwDataType="Numeric" sfwQueryID="cdoOrgContact" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capLastName" Text="Last Name : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtLastName" sfwDataField="last_name" sfwOperator="like" sfwQueryID="cdoOrgContact" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capFirstName" Text="First Name : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtFirstName" sfwDataField="first_name" sfwOperator="like" sfwQueryID="cdoOrgContact" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capContactRoleValue" Text="Contact Role : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlContactRoleValue" sfwDataField="contact_role_value" sfwOperator="like" sfwQueryID="cdoOrgContact" sfwLoadType="CodeGroup" sfwLoadSource="515" />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwButton ID="btnSearch" sfwMethodName="btnSearch_Click" Text="Search" />
+                            <sfwButton ID="btnReset" sfwMethodName="btnReset_Click" Text="Reset" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwButton ID="btnStoreSearch" sfwMethodName="btnStoreUserDefaults_Click" Text="StoreSearch" />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                      </sfwTable>
+                    </sfwTabSheet>
+                    <sfwTabSheet HeaderText="Query" ID="tshSql" sfwResource="305">
+                      <sfwTable ID="tblSql">
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwTextBox ID="txbSql" Rows="5" sfwResource="305" TextMode="MultiLine" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwButton ID="btnExecuteQuery" sfwMethodName="btnSearch_Click" sfwRelatedControl="dgrResult" Text="Execute Query" />
+                          </sfwColumn>
+                        </sfwRow>
+                      </sfwTable>
+                    </sfwTabSheet>
+                  </Tabs>
+                </sfwTabContainer>
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlResult" sfwCaption="Search Results">
+          <sfwTable CssClass="Table" ID="tblResult">
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnNew" sfwActiveForm="wfmOrgContactMaintenance" sfwMethodName="btnNew_Click" Text="New" />
+                <sfwButton ID="btnOpen" sfwActiveForm="wfmOrgContactMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="AintOrgContactid=OrgContactId" sfwRelatedControl="dgrResult" Text="Open" />
+                <sfwButton ID="btnDelete" sfwMethodName="btnDelete_Click" sfwNavigationParameter="OrgContactId" sfwRelatedControl="dgrResult" Text="Delete" />
+                <sfwButton ID="btnExportExcel" sfwMethodName="btnColumnsToExport_Click" sfwRelatedControl="dgrResult" Text="Export To Excel" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwGridView AllowPaging="True" AllowSorting="True" ID="dgrResult" sfwSelection="Many">
+                  <Columns>
+                    <TemplateField HeaderText="Last Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpen" sfwEntityField="objContact.LastName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="First Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objContact.FirstName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Org Contact ID">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="OrgContactId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Contact ID">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="ContactId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Status">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="StatusDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Org Code ID">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="IstrOrgCode" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Plan ID">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="PlanId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Contact Role">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="IstrRoleValue" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+  </sfwTable>
+  <loaddetails />
+</form>

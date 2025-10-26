@@ -1,0 +1,109 @@
+﻿<div class="entity-xml-addmethod">
+    <div class="col-xs-4">
+        <div class="form-group">
+            <label class="control-label">Name</label>
+            <input class="form-control input-sm" ng-disabled="IsBaseAppFile && obj.IsBaseAppModel" type="text" title="{{obj.dictAttributes.ID}}" ng-model="obj.dictAttributes.ID" ng-change="canOkClick()" model="obj" undoredodirective="">
+
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">Description</label>
+            <input class="form-control input-sm" ng-disabled="IsBaseAppFile && obj.IsBaseAppModel" type="text" title="{{obj.dictAttributes.sfwDescription}}" ng-model="obj.dictAttributes.sfwDescription" model="obj" undoredodirective="">
+
+        </div>
+    </div>
+    <div class="col-xs-4">
+        <div class="form-group checkbox-row">
+            <label class="control-label">Load Method</label>
+            <div class="col-xs-12">
+                <input type="checkbox" ng-disabled="IsBaseAppFile && obj.IsBaseAppModel" class="load-method-checkbox" ng-model="obj.dictAttributes.sfwMethodType" model="obj" undoredodirective ng-false-value="'Other'" ng-true-value="'Load'" ng-change="ChangeMethodType(obj,chkMethodtype)">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">Load Method Mode</label>
+            <select class="form-control input-sm" ng-disabled="IsBaseAppFile && obj.IsBaseAppModel" title="{{obj.dictAttributes.sfwMode}}" ng-model="obj.dictAttributes.sfwMode" ng-disabled="!(obj.dictAttributes.sfwMethodType != undefined &amp;&amp; obj.dictAttributes.sfwMethodType.toLowerCase() == 'load')" model="obj" undoredodirective="">
+                <option value="All">All</option>
+                <option value="New">New</option>
+                <option value="Update">Update</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-xs-4">
+        <div class="form-group checkbox-row">
+            <label class="control-label">Load Main CDO</label>
+            <div class="col-xs-12">
+                <input type="checkbox" ng-disabled="IsBaseAppFile && obj.IsBaseAppModel" class="load-method-checkbox" ng-model="obj.dictAttributes.sfwLoadMainObject" model="obj" ng-change="onChangeLoadMainCDO(obj)" undoredodirective ng-false-value="'False'" ng-true-value="'True'">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">Load Query</label>
+            <entityqueryintellisense selecteditem="obj.dictAttributes.sfwLoadQuery" model="obj" showsearchbutton="true" disableflag="(obj.dictAttributes.sfwLoadMainObject != 'True'||(IsBaseAppFile && obj.IsBaseAppModel))" propertyname="'dictAttributes.sfwLoadQuery'" onchangecallback="onChangeLoadQuery(obj)"></entityqueryintellisense>
+        </div>
+    </div>
+    <div class="table-hader-actions font-size-15">
+        <i class="fa fa-edit" title="Set Navigation Parameters" ng-click="setXmlMethodNavigationParameter(obj)"></i>
+        <i class="fa fa-arrow-down" title="Move Down" ng-click="moveBusMethodDown(obj)" ng-disabled="!canMoveBusMethodDown(obj)||(IsBaseAppFile && obj.IsBaseAppModel)" />
+        <i class="fa fa-arrow-up" title="Move Up" ng-click="moveBusMethodUp(obj)" ng-disabled="!canMoveBusMethodUp(obj)||(IsBaseAppFile && obj.IsBaseAppModel)" />
+        <i class="fa fa-minus" title="Remove Selected Property" ng-click="deleteBusMethod(obj)" ng-disabled="!canDeleteBusMethod(obj)||(IsBaseAppFile && selectedMethodProperty.IsBaseAppModel)"></i>
+        <i class="fa fa-plus" title="Add Property" ng-click="addBusMethod(obj)"></i>
+    </div>
+
+    <div class="col-xs-8 marg-left-0  full-width entity-xml-addmethodlist overflowA" ondrop="onBusMethodDrop(event)" ondragover="onBusMethodDragOver(event)">
+        <table class="sws-table" id="tblBusinessObjectMethodChild" col-resizeable-jquery>
+            <thead>
+                <tr>
+                    <th style="width:25%">Name</th>
+                    <th style="width:25%">Parameter</th>
+                    <th style="width:15%">Load Type</th>
+                    <th style="width:15%">Load Source</th>
+                    <th style="width:10%">Order By</th>
+                    <th style="width:10%">Sort Order</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="method in obj.Elements" ng-if="method.Name=='item'" ng-click="setSelectedBusMethod(obj,$index)" ng-class="method.isSelected?'selected':'none'">
+                    <td>
+                        <input type="text" ng-show="IsBaseAppFile && method.IsBaseAppModel" class="form-control input-sm" ng-model="method.dictAttributes.ID" disabled title="{{method.dictAttributes.ID}}"/>
+                        <xmlmethodintellisensetemplate ng-hide="IsBaseAppFile && method.IsBaseAppModel" onchangecallback="removeUnwantedParameters()" type="'Column,Property,Collection,Object'"
+                                                       onpropertychanged="onPropertyChanged(objitem)" model="method" objectfield="method.dictAttributes.ID"
+                                                       propertyname="'dictAttributes.ID'" isxmlmethod="true" xml-method-object="obj"
+                                                       onmethodorrulechange="onMethodorRuleChange(objobjectmethodorrule, method)"
+                                                       lstbusbasemethods="lstBusBaseMethods" entityid="objEntity.dictAttributes.ID"></xmlmethodintellisensetemplate>
+                    </td>
+                    <td class="xml-method-param-column"><span ng-bind="method.dictAttributes.sfwParameter" title="{{method.dictAttributes.sfwParameter}}"></span></td>
+                    <td>
+                        <select class="form-control input-sm" ng-disabled="IsBaseAppFile && method.IsBaseAppModel" ng-options="loadType for loadType in lstLoadTypes" ng-change="resetLoadSource(method)" title="{{method.dictAttributes.sfwLoadType}}" ng-model="method.dictAttributes.sfwLoadType" undoredodirective model="method" ng-show="method.dictAttributes.sfwItemType == 'Collection' || method.dictAttributes.sfwItemType == 'Object'"></select>
+                    </td>
+                    <td>
+                        <div class="full-height;full-width" ng-show="method.dictAttributes.sfwLoadType == 'Query' && !(IsBaseAppFile && method.IsBaseAppModel)">
+                            <span ng-if="method.dictAttributes.sfwLoadType == 'Query'" ng-style="loadSourceError && loadSourceError.trim().length>0?{'display':'block'}:{'display':'none'}" style="font-size:20px;color:red !important;float:left" title="{{loadSourceError}}">!</span>
+                            <entityqueryintellisense selecteditem="method.dictAttributes.sfwLoadSource" isscalarquery="isScalarQuery" model="method" showsearchbutton="true" propertyname="'dictAttributes.sfwLoadSource'" onchangecallback="onChangeQuery(method)"></entityqueryintellisense>
+                        </div>
+                        <div class="full-height;full-width" ng-show="method.dictAttributes.sfwLoadType == 'ForeignKey' && !(IsBaseAppFile && method.IsBaseAppModel)">
+                            <common-intellisense model="method" propertyname="'dictAttributes.sfwLoadSource'" collection="method.foreignKeys" is-reset="true" selected-item="method.dictAttributes.sfwLoadSource" />
+                        </div>
+                        <input type="text" class="form-control input-sm" disabled title="{{method.dictAttributes.sfwLoadSource}}" ng-model="method.dictAttributes.sfwLoadSource" ng-show="(method.dictAttributes.sfwLoadType == 'ForeignKey'||method.dictAttributes.sfwLoadType == 'Query') && (IsBaseAppFile && method.IsBaseAppModel)" />
+                    </td>
+                    <td>
+                        <input type="text" disabled ng-model="method.dictAttributes.sfwOrderBy" ng-show="method.dictAttributes.sfwLoadType == 'ForeignKey' && (IsBaseAppFile && method.IsBaseAppModel)" />
+                        <entityfieldelementintellisense ng-show="method.dictAttributes.sfwLoadType == 'ForeignKey' && !(IsBaseAppFile && method.IsBaseAppModel)" isshowcolumns="true" propertyname="'dictAttributes.sfwOrderBy'" modebinding="method.dictAttributes.sfwOrderBy" model="method" entityid="method.relatedEntityId"></entityfieldelementintellisense>
+                    </td>
+                    <td>
+                        <select ng-show="method.dictAttributes.sfwLoadType == 'ForeignKey'" ng-disabled="IsBaseAppFile && method.IsBaseAppModel" class="form-control input-sm" ng-options="SortOrder.key as SortOrder.value for SortOrder in lstSortOrder" title="{{method.dictAttributes.sfwSortOrder}}" ng-model="method.dictAttributes.sfwSortOrder" undoredodirective model="method"></select>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="form-actions right">
+
+    <div class="col-xs-8 text-left">
+        <span class="text-danger" ng-if="ErrorMessageForDisplay.length>0">{{ErrorMessageForDisplay}}</span>
+    </div>
+    <div class="col-xs-4">
+        <input type="button" value="OK" class="dialog-btn-default" ng-click="onOkClick()" ng-disabled="ErrorMessageForDisplay" />
+        <input ng-show="!IsUpdate" type="button" value="Cancel" class="dialog-btn" ng-click="onCancelClick()" />
+    </div>
+</div>

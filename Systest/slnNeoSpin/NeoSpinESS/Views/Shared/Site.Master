@@ -1,0 +1,507 @@
+﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage<dynamic>" %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head id="Head1" runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+        <asp:ContentPlaceHolder ID="TitleContent" runat="server" />
+    </title>
+    <link rel="stylesheet" href="<%=System.Web.Optimization.BundleTable.Bundles.ResolveBundleUrl("~/bundles/FMStyle")%>" type="text/css" />
+    <link rel="stylesheet" href="<%=System.Web.Optimization.BundleTable.Bundles.ResolveBundleUrl("~/bundles/AppSideCSS")%>" type="text/css" />
+     <link href="~/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    
+    <style>
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        #page-loader {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 99999;
+            width: 100%;
+            height: 100%;
+            padding-top: 25px;
+            display: none;
+            background: rgba(0,0,0,.3);
+        }
+
+        /* default style */
+        .selectnav {
+            display: none;
+        }
+
+        /* small screen */
+        @media screen and (max-width: 900px) {
+            .js #MenuUl {
+                display: none;
+            }
+
+            .js .selectnav {
+                display: block;
+            }
+        }
+
+        .placeholder {
+            opacity: 0.4;
+            border: 1px dashed #a6a6a6;
+        }
+       
+    </style>
+</head>
+<body class="page-slideout-body page-slideout-body-collaped">
+    <%= Html.AntiForgeryToken() %>
+    
+    <div id="pnlLoading" style="z-index: 9999; height: 100%; width: 100%">
+        <table width="100%" height="100%">
+            <tr>
+                <td style="vertical-align: middle; text-align: center; font-size: x-large; color: green">
+                    <span>Please wait, initial page is loading...
+                    </span>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="MainSplitter" style="height: 100%; border: 0; opacity: 0;">
+        <div id="NorthSplitter" style="z-index: 9999; overflow: visible">
+            <div id="header">
+                <div class="header-topstrip">
+                    <div class="col-md-6 col-xs-8">
+                        <a href="http://www.nd.gov/">
+                        <img src="<%:Url.Content("~/Images/northdakota-logo.png")%>" class="img-responsive" />
+                         </a>
+                    </div>
+                    <div class="col-md-6 col-xs-4 text-right">
+                        <a href="http://www.ndtourism.com/">
+                        <img src="<%:Url.Content("~/Images/northlogo.png")%>" />
+                        </a>
+                    </div>
+                </div>
+                <div class="headerWrap">
+                    <div class="main-logo">
+                        <span id="btnHeaderSlideoutMenuDivCollapseExpand" class="menu-toggle mobile-view-head"></span>
+                        <a id="logo" class="logo">
+                            <img src="<%:Url.Content("~/Images/logo.png")%>" alt="logo" class="img-responsive desktop-logo" />
+                           <span class="mob-logo"> <img src="<%:Url.Content("~/Images/mob-logo.png")%>" /></span>
+
+                        </a>
+                    </div>                    
+                    <div class="portal-head ">                        
+                        <div class="col-md-8 col-xs-6 mob-hidden">                        
+                        <span class="welcome-text">
+Welcome to PERSLink Employer Self Service (ESS), serving our employees in the best way possible is top priority.</span>
+                            </div>
+                        <div class="col-md-4 col-xs-6 mob-menus">
+                            <ul class="sagi-nav">
+                                <li><a id="lnkDashboard" title="Go to Home" formname="wfmESSActiveMemberHomeMaintenance" href="#" class="home-icon active"></a></li>
+                                <li><a id="lnkContactUs" title="Contact Us" href="<%= Url.Content("~/Home/GetReport") %>" onclick="window.open(this.href, 'Contact Us','width=800,height=800,resizable=yes,toolbar=yes,scrollbars=yes,alwaysRaised=yes'); return false;" target="_blank" class="phone-icon"></a></li>
+
+                                <% if (!(Model.iobjSessionData["IsExternalLogin"] != null && Model.iobjSessionData["IsExternalLogin"] == true))
+                                { %>
+                                <li><a id="lnkSwitchMember" title="Switch to a different Contact" onclick="localStorage.clear(); sessionStorage.clear();" href="<%= Url.Content("~/Account/wfmImpersonateContact") %>" class="user-icon"></a></li>
+                                <%} %>
+                                <%
+                               if ((Model.iobjSessionData["dtbEmployerCount"] !=null && Model.iobjSessionData["dtbEmployerCount"] =="Multiple")) 
+                               {     
+                                 %>
+                                <li><a id="lnkSwitchOrganization" title="Switch to a different Organization" onclick="localStorage.clear(); sessionStorage.clear();" href="<%= Url.Content("~/Account/wfmEmployerSelectionInternal") %>" class="acc-icon" ></a></li>                 
+                               <%
+                               }%>                                
+                                <li id="liUserPreferencesStoreState1"><a id="lnkUserPreferencesStoreState0" onclick="nsEvents.btnStorePageStateUserDefaults_Click()" title="Store Form State" class="nav-store-state"></a></li>
+                                <li><a title="Press this link to return back to the previous page" onclick="nsEvents.btn_GoPreviousPage();" class="back-icon"></a></li>
+                                <li><a id="lnkLogout" href="#" title="Click this button to logoff from ESS" onclick="javascript:confirmation();" class="logoff-icon"></a></li>
+                            </ul>
+
+                            <div id="NotificationBar" data-bind="visible: DirtyFormListVisibile">
+                    <span class="cssmenu">
+                        <ul style="z-index: 999">
+                            <li>
+                                <a title="Unsaved forms">
+                                    <img src="<%:Url.Content("~/Images/save.png")%>"><span class="badge red" id="DirtyFormCount" data-bind="text: DirtyFormCount"></span>
+                                </a>
+                                <ul id="DirtyFormList" data-bind="html: DirtyFormList">
+                                </ul>
+
+                            </li>                            
+                        </ul>                  
+                    </span>
+                </div> 
+                <%if (Model.iobjSessionData != null && Model.iobjSessionData["WindowName"] != null)
+                { %>
+                        <input type="hidden" id="LoginWindowName" name="LoginWindowName" value="<%: Model.iobjSessionData["WindowName"].ToString()%>" />
+                <% }
+                else
+                { %>
+                        <input type="hidden" id="<%:"LoginWindowName"%>" name="LoginWindowName" />
+                <% } %>
+
+                <form id="wfmLogin" runat="server">
+                        <asp:HiddenField runat="server" ID="hfldLoginWindowName" />
+                </form>               
+                <input id="antiForgeryToken" type="hidden" value="<%: Model.AntiForgeryToken %>" />
+                <input type="hidden" id="LandingPage" value="<%=Convert.ToString(Model.iobjSessionData["Landing_Page"] ?? "") %>" />
+                <input type="hidden" id="SwitchOrg" value="<%=Model.iobjSessionData["dtbEmployerCount"] ?? ""%>" />
+                    </div>
+                         <div class="userinfo-welcome-menu">
+                              Welcome,<b> <%= Html.Encode(Model.iobjSessionData[UIConstants.USER_NAME])%></b>
+                              <span class="divider">|</span>
+                                    Contact ID:<b> <%= Html.Encode(Model.iobjSessionData["ContactID"])%></b>
+                                    <span class="divider">|</span>
+                                   
+                              
+                                    <span>Organization Name:<b> <%= Html.Encode(Model.iobjSessionData["OrgName"])%></b></span>    
+                              <span><b> <%= Html.Encode(Model.iobjSessionData["OrgCode"])%></b></span>
+                              
+                            </div> 
+                    </div>
+                </div>
+            </div>
+            <%--<div class="Chartconfiguration" id="Chartconfiguration" style="display: none">
+                <table>
+                    <tr>
+                        <td>
+                            <div class="configpanel" style="width: 170px;">
+                                <span class="confighead">Change Chart Type</span>
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <input id="typeBar" name="seriesType" class="ChartConfigRadio"
+                                                type="radio" value="bar" checked="checked" autocomplete="off" />
+                                            <label for="typeBar">Bars</label></td>
+                                        <td>
+                                            <input id="typeColumn" name="seriesType" class="ChartConfigRadio"
+                                                type="radio" value="column" autocomplete="off" />
+                                            <label for="typeColumn">Columns</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input id="typeLine" name="seriesType" class="ChartConfigRadio"
+                                                type="radio" value="line" autocomplete="off" />
+                                            <label for="typeLine">Lines</label></td>
+                                        <td></td>
+                                    </tr>
+                                </table>
+                                <input type="button" class="popbutton" value="Back" onclick="ns.MoveBackChart();" />
+                                <input type="button" class="popbutton" value="Clear All Filters" onclick="ns.ClearAllFilters();" />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="configpanel" id="ChartInfo" style="width: 170px;">
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+
+                <div id="GridGroupChart">.</div>
+            </div>--%>
+        </div>        
+        <div id="MiddleSplitter" style="left: -1px;">
+            <div id="CenterMiddle">
+                 <div class="page-slideout-left-wrapper toggle-menu-container">
+                    <div id="divHeaderSlideoutMenuContainer" <%-- class="toggle-menu-container"--%>>
+                        <%-- <div id="cssmenutest" class="cssmenu CssSliderLeftMenu CssSlideoutCenterLeftMenu" CssCenterLeftMenu></div>--%>
+                        <div class="toggle-menu-inner-content">
+                            <div class="cssmenu CssSlideoutCenterLeftMenu">
+                                   <ul>
+                                       <li class="active" id="ActiveMember">
+                                           <a href="javascript:;" class="nav-link nav-toggle alerts-img">
+                                               <i></i>
+                                               <span class="title">Alerts & Messages</span>
+
+                                           </a>
+                                           <ul class="sub-menu">
+                                               <li class="menuItem">
+                                                    <input id="PersonID" type="hidden" value="<%: Model.ReferenceID%>"/>  
+                                                   <a id="HLMSSMessageBoard" href="#" formname="wfmESSHomeMaintenance" class="nav-link ">You have 
+                                                <%= Model.iobjSessionData["MessageCount"] == null ? "0" : Convert.ToString(Model.iobjSessionData["MessageCount"])%> messages 
+                                                 </a>
+                                                   <img id="imgNewMsg" src="<%:Url.Content("~/images/new.svg")%>">
+                                               </li>
+                                           </ul>
+                                       </li>
+                                   </ul>
+                               </div>
+                            <div id="cssmenu" class="cssmenu CssSlideoutCenterLeftMenu"></div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="page-slideout-container-wrapper">
+                    <div id="CenterLeftTabs" class="SlideoutSplitter" style="display: none">
+                        <div id="SlideOuts" style="display: none">
+                            <div id="SearchTriger" title="Lookup Forms" class="trigger left LeftPanel_IconSearch lookups"></div>
+                            <div id="SlideOutLookup" class="panel left">
+                                <div id="LookupParent">
+                                    <div id="LookupName">
+                                        <span id="LookupFormTitle1"></span><a class='downarrow'></a>
+                                        <div id="LookupNameDiv">
+                                        </div>
+                                    </div>
+                                    <div id="drpLookupNamesParent">
+                                    </div>
+                                    <div style="padding: 10px;" role="group" id="LookupHolder">
+                                    </div>
+                                    <div class="lookups-image">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="navTreeTriger" class="trigger left navigation LeftPanel_IconNavigator navigator"></div>
+                            <div id="SlideOutTree" class="panel left">
+                                <div class="navDiv">
+                                    <div style="padding: 10px;" id="TabsTree"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="CenterSplitter">
+                        <div class="s-freezed-crumtoolbar-Container">
+                        <div class="s-freezed-crum-toolbar-wrapper">
+                            <div class="s-crumDivContainer">
+                                <span id="btnHeaderSlideoutMenuDivCollapseExpand" class="menu-toggle web-view-head"></span>
+                                <div id="crumDiv" class="crumDiv" style="width:30%;"></div>   
+                                <div class="div_TestTemplate">
+                                    <span>
+                                    <% if ((Model.iobjSessionData["Region_value"] != null && Convert.ToString(Model.iobjSessionData["Region_value"]) == "PROD"))
+                                    { %>
+                                        
+                                    <%} %> 
+                                    <% else { if (Model.iobjSessionData["Region_value"] != null)
+                                    {   %>
+                                        <label class="span_TestTemplate">TEST ENVIRONMENT</label>
+                                    <%}}%>                       
+                                    </span>
+                                </div>                                                     
+                            </div>                             
+                            <div class="s-freezed-button-toolbar" id="divFreezedButtonToolbar">                                
+                            </div>
+                            
+                        </div>                        
+                    </div>
+                     
+                        <%--<div id="GlobalMessageDiv"></div>--%>
+                        <%--<div id="DashBoard" style="padding: 10px;">
+                            <h1>My Dashboard</h1>
+                            <div class="dashboardContainer">
+                                <div id="DashboardList"></div>
+                            </div>
+                        </div>--%>
+                        <div id="ContentSplitter">
+
+                            <%--<div id="RptHolder" role="group" style="display: none">
+                                <div id="wfmReportClientMVVM_RptDiv">
+                                </div>
+                                <iframe id="ReportFrame" title="Report Frame" class="report-frame"></iframe>
+                            </div>--%>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="SouthSplitter">
+          <!-- BEGIN FOOTER -->
+                <div class="footer">
+                    <div class="footer-inner">
+                        <a class="footertxt" href="<%=Page.ResolveUrl("~/DisclaimerMaintenance.html")%>" onclick="javascript:void window.open(this.href,'_blank','width=650,height=600,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');
+                                return false;">Privacy Policy & Disclaimer  | SAGITEC © <%= DateTime.Now.Year%></a>
+                    </div>
+                </div>
+            <!-- END FOOTER -->
+
+        </div>
+
+    </div>
+
+    
+
+    <%--<div id="divWelcomeUserContainer" class="welcome-user-container">
+         <div class="welcome-user-inner-content">
+            <div class="welcome-user-wrapper">
+                <ul class="welcome-user-list">
+                    <li><a id="lnkResetFormsCache" title="Refresh forms cache" onclick="ns.SenderForm=''; nsEvents.raiseEvent(nsEvents.btnResetWebServerCache_Click,this);" class="header-form-cache">Form Cache</a></li>
+                    <li><a id="lnkLocalStorageClear" title="Clear Local Storage" onclick="javascript:localStorage.clear(); sessionStorage.clear();alert('done!');" class="header-browser-cache">Browser Cache</a></li>
+                    <li><a id="lnkContactUs" title="Contact Us" href="<%= Url.Content("~/Home/GetReport") %>" onclick="window.open(this.href, 'Contact Us','width=800,height=800,resizable=yes,toolbar=yes,scrollbars=yes,alwaysRaised=yes'); return false;" target="_blank";>Contact Us</a></li>                       
+                    <% if (!(Model.iobjSessionData["IsExternalLogin"] != null && Model.iobjSessionData["IsExternalLogin"] == true))
+                    { %>
+                    <li><a id="lnkSwitchMember" title="Switch to a different Contact" onclick="localStorage.clear(); sessionStorage.clear();" href="<%= Url.Content("~/Account/wfmImpersonateContact") %>" class="header-switch-member">Switch Contact</a></li>      
+                   <%} %>
+                    <li><a id="lnkSwitchOrganization" title="Switch to a different Organization" onclick="localStorage.clear(); sessionStorage.clear();" href="<%= Url.Content("~/Account/wfmEmployerSelectionInternal") %>" class="header-switch-member" >Switch Organization</a></li>                 
+                 
+                    <li id="liUserPreferencesStoreState"><a id="lnkUserPreferencesStoreState" onclick="javascript:nsEvents.btnStorePageStateUserDefaults_Click()" title="Store Form State" class="nav-store-state">Store State</a></li>
+                    <li><a id="lnkReset" title="Reset" onclick="location.reload();" class="icon-reset">Reset</a></li>
+                    <li><a title="Previous" onclick="nsEvents.btn_GoPreviousPage();" class="back-icon"></a></li>
+                    <li><a id="lnkLogout" href="#" title="Logout" onclick="javascript:confirmation();" class="header-logoff ">Logoff</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>--%>
+
+
+    <div id="page-loader" style="display: none;" class="preloader">
+        <table width="100%" height="100%">
+            <tr>
+                <td style="vertical-align: middle; text-align: center">
+                   <span class="page-loader-img"></span>
+                </td>
+            </tr>
+
+        </table>
+    </div>
+    <div style="display: none;" id='DivExportWindow'>
+        <div id="ExptColumnsMessage">Select the columns to be exported from the following list:</div>
+         <div id="DivExportAllCols" style="display: inline-block">
+            <table id="tblExcelColumns">
+                <tbody>
+                    <tr>
+                        <td>
+                            <input type="button" value="Select All" id="ExportChkSelectAll" class="buttonbg" /></td>
+                        <td>
+                            <input type="button" value="Clear All" id="ExportChkClearAll" class="buttonbg" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="DivExportCols"></div>
+        <button id="clickExcel">Download As Excel</button>
+    </div>
+    <div id="ToolTipDiv" class="tooltip configpanel"></div>
+
+    <div id="EditCorrDiv" style="display: none">
+        <div>
+            <input type="button" value="Save" onclick="javascript: SaveCorrespondence(); return false;">
+            <input type="button" value="Close" onclick="javascript: CloseCorrespondence(); return false;">
+            <input type="button" value="Print" onclick="javascript: PrintCorrespondence(); return false;">
+        </div>
+        <div>
+            <object height="700" width="1200" id="ControlWordExcelObj" classid="clsid:98BAE912-0171-4c9c-A4EC-FD5969E92D08">
+            </object>
+        </div>
+    </div>
+    <div id="SessionExpired" style="display: none">
+        <div id="ExpiredMessage">
+            <table style="width: 100%; height: 100%;">
+                <tr>
+                    <td>Your session will timeout in <span id="spnRemainTimeSec"></span> second(s), please click a "Continue Session" button or navigate to another page to refresh your session before it expires.                       
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;               
+                    </td>
+                </tr>
+                <tr>
+                    <td>Do you want to Continue Session?                       
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;             
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button id="btnContinue" class="k-button" onclick="ns.refreshSession();">Continue Session</button>
+                        <button id="btnLogout" class="k-button" onclick="ns.logoutSesssion();">Logout</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>   
+    <script id="treeview-template" type="text/kendo-ui-template"><span class="FormNode" LinkedTo="#:item.divID#">#:item.title#</span><a onclick='javascript: if(nsEvents != undefined && nsEvents.OnDeleteNodeClick != undefined) { nsEvents.OnDeleteNodeClick(this); }  else { OnDeleteNodeClick(this); }' class='delete-link'></a></script>
+
+    <div class="FilterBox" style="display: none;">
+        <div class="row">Filter value(s) that:</div>
+        <div class="row">
+            <select id='selectFilterOptions1'></select>
+        </div>
+        <div class="row">
+            <input type='text' id='filterBox1' />
+        </div>
+        <div class="row">
+            <label for="rdoAnd">
+                <input name="FilterCondition" value="and" type="radio" id="rdoAnd" />
+                And
+            </label>
+            /
+            <label for="rdoOr">
+                <input name="FilterCondition" value="or" type="radio" id="rdoOr" />
+                Or
+            </label>
+        </div>
+        <div class="row">
+            <select id='selectFilterOptions2'></select>
+        </div>
+        <div class="row">
+            <input type='text' id='filterBox2' />
+        </div>
+        <div class="row">
+            <input type='button' id='btnFilter' class="s-grid-btnFilter" value='Filter' />
+            <input type='button' id='btnClearFilter' class="s-grid-btnClearFilter" value='Clear' />
+        </div>
+
+    </div>
+    <div class="s-grid-settings-overlay" style="display: none;">
+        <div class="s-grid-settings-box" style="display: none;">
+            <h3>Settings <span class="s-grid-settings-box-close" title="Close"></span>
+            </h3>
+            <div class="s-grid-setting-content">
+                <div class="s-grid-setting-row s-grid-settings-sortmode">
+                    <div class="captiondiv">
+                        Sort Mode:
+                    </div>
+                    <div class="inputdiv">
+                        <div>
+                            <select class="s-grid-settings-sortmode-dropdown" id="ddlNeoGridSettingsSortMode"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="s-grid-setting-row s-grid-settings-pagesize">
+                    <div class="captiondiv">
+                        Page Size:
+                    </div>
+                    <div class="inputdiv">
+                        <div>
+                            <select class="s-grid-settings-pagesize-dropdown" id="ddlNeoGridSettingsPageSize"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="s-grid-setting-columns-row">
+                    <div class="captiondiv" title="Drag & drop the columns to rearrange.">
+                        Columns (Drag & drop to rearrange)
+                    </div>
+                    <div class="inputdiv">
+                        <div class="s-grid-settings-columns-div">
+                            <div class="s-grid-settings-columns" id="spnNeoGridHideColumns">
+                                <ul id="ulNeoGridSettingsColumns" class="s-grid-settings-columns-ul">
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="s-grid-settings-footer">
+                <input type="button" id="bntNeoGridSettingsApply" title="Apply settings" value="Apply" class="s-grid-settings-box-apply button" />
+                <input type="button" id="bntNeoGridSettingsOriginal" title="Reset settings to the original state" value="Reset & Apply" class="s-grid-settings-box-original button" />
+            </div>
+        </div>
+    </div>
+    <div id="popupdiv" title="Ignore Report Header" style="display: none; border:none;">
+    </div>
+    <script>
+        window.name = "";
+    </script>
+    <script src="<%=System.Web.Optimization.BundleTable.Bundles.ResolveBundleUrl("~/bundles/FMLibScript")%>" type="text/javascript"></script>
+    <script src="<%=System.Web.Optimization.BundleTable.Bundles.ResolveBundleUrl("~/bundles/FMScript")%>" type="text/javascript"></script>
+    <script src="<%=System.Web.Optimization.BundleTable.Bundles.ResolveBundleUrl("~/bundles/AppSideJS")%>" type="text/javascript"></script>
+</body>
+</html>

@@ -1,0 +1,208 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entPersonAddress" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvPerson" sfwType="BusinessRule" sfwMainCDO="icdoPersonAddress" sfwObjectID="busPersonAddress" sfwTableName="sgt_person_address" sfwView="False" sfwParentEntity="entExtendBase">
+  <rules>
+    <rule ID="IsStartDateInValidForAddressType" sfwMessageId="137" sfwExpression="(this.IsStartDateInValidForAddressType() == True)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK ADDRESS LINE 1 IS NULL" sfwMessageId="111" sfwExpression="(string.IsNullOrEmpty(this.icdoPersonAddress.addr_line_1))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK ADDRESS TYPE IS BLANK" sfwMessageId="122" sfwExpression="(string.IsNullOrEmpty(this.icdoPersonAddress.address_type_value))" sfwObjectBased="True" />
+    <rule ID="Rule Check Address Valid" sfwMessageId="127" sfwExpression="(this.istrSuppressWarning == &quot;N&quot;) &amp;&amp; &#xA;!(this.icdoPersonAddress.addr_country_value != &quot;0001&quot;) &amp;&amp; &#xA;(this.icdoPersonAddress.address_validate_flag == &quot;N&quot;) &amp;&amp; &#xA;(this.IsAddressAlreadyExists() == False)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK CITY IS NULL" sfwMessageId="112" sfwExpression="(string.IsNullOrEmpty(this.icdoPersonAddress.addr_city))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK COUNTRY IS NOT US" sfwMessageId="115" sfwExpression="(!string.IsNullOrEmpty(this.icdoPersonAddress.addr_country_value)) &amp;&amp; &#xA;((string.IsNullOrEmpty(this.icdoPersonAddress.foreign_province)) || &#xA;(string.IsNullOrEmpty(this.icdoPersonAddress.foreign_postal_code))) &amp;&amp; &#xA;(this.icdoPersonAddress.addr_country_value != &quot;0001&quot;)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK END DATE LESS THAN START DATE" sfwMessageId="117" sfwExpression="(this.icdoPersonAddress.start_date != DateTime.MinValue) &amp;&amp; &#xA;(this.icdoPersonAddress.end_date != DateTime.MinValue) &amp;&amp; &#xA;(this.icdoPersonAddress.start_date &gt; this.icdoPersonAddress.end_date)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF ADDR EXISTS WITHOUT END DATE" sfwMessageId="124" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entPersonAddress.CHECK_IF_END_DATE_NULL_IN_NEW&quot;, this.icdoPersonAddress.person_id, this.icdoPersonAddress.address_type_value) &gt; 0) &amp;&amp; &#xA;(this.icdoPersonAddress.start_date != DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF ADDR EXISTS WITHOUT END DATE UPDATE" sfwMessageId="124" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entPersonAddress.CHECK_IF_END_DATE_IS_NULL_IN_UPDATE&quot;, this.icdoPersonAddress.person_id, this.icdoPersonAddress.address_type_value, this.icdoPersonAddress.person_address_id) &gt; 0) &amp;&amp; &#xA;(this.icdoPersonAddress.start_date != DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="Rule Check if End Date is greater than equal to today date" sfwExpression="(this.icdoPersonAddress.end_date &gt;= RFunc.CurrentDate()) || &#xA;!(this.icdoPersonAddress.end_date != DateTime.MinValue) || &#xA;(this.IsBIAResource == True)" sfwObjectBased="True" />
+    <rule ID="Rule check if End Date is Less than Current date" sfwExpression="(this.icdoPersonAddress.end_date &lt; RFunc.CurrentDate()) &amp;&amp; &#xA;(this.icdoPersonAddress.end_date != DateTime.MinValue) &amp;&amp; &#xA;(this.IsBIAResource == False)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF START DATE IS PAST DATE NEW" sfwMessageId="126" sfwExpression="(this.icdoPersonAddress.start_date &lt; RFunc.CurrentDate()) &amp;&amp; &#xA;(this.icdoPersonAddress.start_date != DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF START DATE IS PAST DATE UPDATE" sfwMessageId="126" sfwExpression="(this.IsValidStartDate() == False) &amp;&amp; &#xA;(this.icdoPersonAddress.start_date != DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK OVERLAP DATE" sfwMessageId="125" sfwExpression="(this.icdoPersonAddress.start_date != DateTime.MinValue) &amp;&amp; &#xA;(this.IsDatesOverlapping() == True)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK START DATE IS NOT NULL" sfwMessageId="119" sfwExpression="!(this.icdoPersonAddress.start_date != DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK STATE IS BLANK" sfwMessageId="113" sfwExpression="!(!string.IsNullOrEmpty(this.icdoPersonAddress.addr_state_value)) &amp;&amp; &#xA;!(this.icdoPersonAddress.addr_country_value != &quot;0001&quot;)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK ZIP CODE IS NOT NUMERIC" sfwMessageId="118" sfwExpression="(!RFunc.IsNumeric(this.icdoPersonAddress.addr_zip_code))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK ZIP CODE IS NULL" sfwMessageId="114" sfwExpression="!(!string.IsNullOrEmpty(this.icdoPersonAddress.addr_zip_code)) &amp;&amp; &#xA;!(this.icdoPersonAddress.addr_country_value != &quot;0001&quot;)" sfwObjectBased="True" />
+    <rule ID="RuleCheckInvalidForeignAddress" sfwMessageId="129" sfwExpression="(this.icdoPersonAddress.addr_country_value != &quot;0001&quot;) &amp;&amp; &#xA;!(!(string.IsNullOrEmpty(this.icdoPersonAddress.foreign_postal_code)) || &#xA;!(string.IsNullOrEmpty(this.icdoPersonAddress.foreign_province)))" sfwObjectBased="True" />
+    <rule ID="RuleCheckInvalidUSAddress" sfwMessageId="129" sfwExpression="!(this.icdoPersonAddress.addr_country_value != &quot;0001&quot;) &amp;&amp; &#xA;(!(string.IsNullOrEmpty(this.icdoPersonAddress.foreign_postal_code)) || &#xA;!(string.IsNullOrEmpty(this.icdoPersonAddress.foreign_province)))" sfwObjectBased="True" />
+    <rule ID="VISIBILITY CHECK EDITABLE ADDRESS" sfwExpression="(this.icdoPersonAddress.start_date &gt;= RFunc.CurrentDate()) || &#xA;(this.IsBIAResource == True)" sfwObjectBased="True" />
+    <rule ID="VISIBILITY CHECK NON EDITABLE ADDRESS" sfwExpression="(this.icdoPersonAddress.start_date &lt; RFunc.CurrentDate()) &amp;&amp; &#xA;(this.IsBIAResource == False)" sfwObjectBased="True" />
+    <rule ID="Visible County if State is North Dakota" sfwExpression="(this.icdoPersonAddress.addr_state_value == &quot;ND&quot;)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleIgnoreWarning" sfwExpression="(this.IsIgnoreWarningButtonVisible() == False)" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="VISIBILITY CHECK EDITABLE ADDRESS" sfwMode="Update" sfwStatus="Active" />
+    <item ID="VISIBILITY CHECK NON EDITABLE ADDRESS" sfwMode="Update" sfwStatus="Active" />
+    <item ID="Rule check if End Date is Less than Current date" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check if End Date is greater than equal to today date" sfwMode="All" sfwStatus="Active" />
+    <item ID="Visible County if State is North Dakota" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check Address Valid" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleIgnoreWarning" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="RULE CHECK ADDRESS LINE 1 IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK CITY IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK STATE IS BLANK" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK ZIP CODE IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK COUNTRY IS NOT US" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK ZIP CODE IS NOT NUMERIC" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK END DATE LESS THAN START DATE" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK START DATE IS NOT NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK ADDRESS TYPE IS BLANK" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK IF ADDR EXISTS WITHOUT END DATE" sfwMode="New" sfwStatus="Inactive" />
+    <item ID="RULE CHECK OVERLAP DATE" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK IF START DATE IS PAST DATE NEW" sfwMode="New" sfwStatus="Active" />
+    <item ID="RULE CHECK IF ADDR EXISTS WITHOUT END DATE UPDATE" sfwMode="Update" sfwStatus="Inactive" />
+    <item ID="RULE CHECK IF START DATE IS PAST DATE UPDATE" sfwMode="All" sfwStatus="Inactive" />
+    <item ID="Rule Check Address Valid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsStartDateInValidForAddressType" sfwMode="All" sfwStatus="Active" />
+    <item ID="RuleCheckInvalidForeignAddress" sfwMode="All" sfwStatus="Active" />
+    <item ID="RuleCheckInvalidUSAddress" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties>
+    <item ID="person_id" sfwObjectField="icdoPersonAddress.person_id" />
+  </commonproperties>
+  <expressionfields />
+  <queries>
+    <query ID="getPrimaryAddress" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select pa.* from sgt_person_address pa, sgt_person p &#xD;&#xA;where  p.person_id=pa.person_id &#xD;&#xA;and p.primary_address_id=pa.person_address_id and p.person_id =@person_id &#xD;&#xA;and p.primary_address_id =@primary_address_id">
+      <parameters>
+        <parameter ID="@person_id" sfwDataType="int" />
+        <parameter ID="@primary_address_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="UpdatePrimaryAddress" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="update sgt_person set primary_address_id = @primary_address_id where person_id= @person_id">
+      <parameters>
+        <parameter ID="@primary_address_id" sfwDataType="int" />
+        <parameter ID="@person_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadAddresses" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_PERSON_ADDRESS WHERE PERSON_ID=@PERSON_ID AND PERSON_ADDRESS_ID &lt;&gt; @PERSON_ADDRESS_ID">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+        <parameter ID="@PERSON_ADDRESS_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="CHECK_OVERLAP_DATE_WITH_END_DATE_NEW" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*)  FROM SGT_PERSON_ADDRESS &#xD;&#xA;WHERE (PERSON_ID = @PERSON_ID)&#xD;&#xA;AND ADDRESS_TYPE_VALUE=@ADDR_TYPE_VALUE&#xD;&#xA;AND ((@SDATE BETWEEN START_DATE AND END_DATE) OR (@EDATE BETWEEN START_DATE AND END_DATE))&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+        <parameter ID="@SDATE" sfwDataType="DateTime" />
+        <parameter ID="@EDATE" sfwDataType="DateTime" />
+        <parameter ID="@ADDR_TYPE_VALUE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="CHECK_OVERLAP_DATE_WITHOUT_END_DATE_NEW" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*)  FROM SGT_PERSON_ADDRESS &#xD;&#xA;WHERE (PERSON_ID = @PERSON_ID)&#xD;&#xA;AND ADDRESS_TYPE_VALUE=@ADDR_TYPE_VALUE&#xD;&#xA;AND (@SDATE BETWEEN START_DATE AND END_DATE) ">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+        <parameter ID="@SDATE" sfwDataType="DateTime" />
+        <parameter ID="@ADDR_TYPE_VALUE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="IS_POA_EXISTS" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_PERSON_CONTACT WHERE PERSON_ID=@PERSON_ID AND RELATIONSHIP_VALUE=@RELATION_VALUE">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+        <parameter ID="@RELATION_VALUE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="CHECK_IF_END_DATE_NULL_IN_NEW" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_PERSON_ADDRESS WHERE PERSON_ID=@PERSON_ID AND END_DATE IS NULL AND ADDRESS_TYPE_VALUE=@ADDR_TYPE_VALUE">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+        <parameter ID="@ADDR_TYPE_VALUE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="CHECK_IF_END_DATE_IS_NULL_IN_UPDATE" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_PERSON_ADDRESS WHERE PERSON_ID=@PERSON_ID AND ADDRESS_TYPE_VALUE=@ADDRESS_TYPE AND END_DATE IS NULL AND PERSON_ADDRESS_ID !=@PERSON_ADDRESS_ID">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+        <parameter ID="@ADDRESS_TYPE" sfwDataType="string" />
+        <parameter ID="@PERSON_ADDRESS_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="CHECK_OVERLAP_DATE_WITH_END_DATE_UPDATE" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*)  FROM SGT_PERSON_ADDRESS &#xD;&#xA;WHERE (PERSON_ID = @PERSON_ID)&#xD;&#xA;AND (PERSON_ADDRESS_ID=@PERSON_ADDRESS_ID)&#xD;&#xA;AND ADDRESS_TYPE_VALUE=@ADDR_TYPE_VALUE&#xD;&#xA;AND ((@SDATE BETWEEN START_DATE AND END_DATE) OR (@EDATE BETWEEN START_DATE AND END_DATE))">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+        <parameter ID="@PERSON_ADDRESS_ID" sfwDataType="int" />
+        <parameter ID="@SDATE" sfwDataType="DateTime" />
+        <parameter ID="@EDATE" sfwDataType="DateTime" />
+        <parameter ID="@ADDR_TYPE_VALUE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="CHECK_OVERLAP_DATE_WITHOUT_END_DATE_UPDATE" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*)  FROM SGT_PERSON_ADDRESS &#xD;&#xA;WHERE (PERSON_ID = @PERSON_ID)&#xD;&#xA;AND (PERSON_ADDRESS_ID=@PERSON_ADDRESS_ID)&#xD;&#xA;AND ADDRESS_TYPE_VALUE=@ADDR_TYPE_VALUE&#xD;&#xA;AND (@SDATE BETWEEN START_DATE AND END_DATE) ">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+        <parameter ID="@PERSON_ADDRESS_ID" sfwDataType="int" />
+        <parameter ID="@SDATE" sfwDataType="DateTime" />
+        <parameter ID="@ADDR_TYPE_VALUE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="CheckResourceForLoggedInUser" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT distinct u.* from sgs_user u&#xD;&#xA;inner join sgs_user_roles ur on u.USER_SERIAL_ID = ur.USER_SERIAL_ID &#xD;&#xA;and ((ur.effective_start_DATE is null) or (ur.effective_start_date&lt;=convert(dateTime,convert(char,getdate(),103),103)))&#xD;&#xA;and ((ur.effective_end_DATE is null) or (ur.effective_end_date&gt;=convert(dateTime,convert(char,getdate(),103),103)))   &#xD;&#xA;inner join sgs_security s on s.role_id = ur.role_id and s.security_value != 0&#xD;&#xA;inner join sgs_resources r on r.resource_id = s.resource_id&#xD;&#xA;where s.resource_id = 209 and u.user_serial_id = @user_serial_id">
+      <parameters>
+        <parameter ID="@user_serial_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadAddressChangedMembers" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT&#xA;&#x9; * &#xA;FROM&#xA;&#x9; sgt_person_Address WITH(NOLOCK)  &#xA;WHERE&#xA;&#x9; ADDR_CHANGE_LETTER_STATUS_FLAG = '1'">
+      <parameters />
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="PersonAddressId" sfwType="Column" sfwValue="person_address_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PersonId" sfwType="Column" sfwValue="person_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AddrLine1" sfwType="Column" sfwValue="addr_line_1" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="60" />
+    <attribute ID="AddrLine2" sfwType="Column" sfwValue="addr_line_2" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="60" />
+    <attribute ID="AddrCity" sfwType="Column" sfwValue="addr_city" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="AddrStateDescription" sfwType="Description" sfwValue="addr_state_description" />
+    <attribute ID="AddrStateId" sfwType="Column" sfwValue="addr_state_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="150" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AddrStateValue" sfwType="Column" sfwValue="addr_state_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="AddrCountryDescription" sfwType="Description" sfwValue="addr_country_description" />
+    <attribute ID="AddrCountryId" sfwType="Column" sfwValue="addr_country_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="151" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AddrCountryValue" sfwType="Column" sfwValue="addr_country_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="AddrZipCode" sfwType="Column" sfwValue="addr_zip_code" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="5" />
+    <attribute ID="AddrZip4Code" sfwType="Column" sfwValue="addr_zip_4_code" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="StartDate" sfwType="Column" sfwValue="start_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="EndDate" sfwType="Column" sfwValue="end_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="AddressTypeDescription" sfwType="Description" sfwValue="address_type_description" />
+    <attribute ID="AddressTypeId" sfwType="Column" sfwValue="address_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="305" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AddressTypeValue" sfwType="Column" sfwValue="address_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="ForeignProvince" sfwType="Column" sfwValue="foreign_province" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ForeignPostalCode" sfwType="Column" sfwValue="foreign_postal_code" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="10" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AddressValidateFlag" sfwType="Column" sfwValue="address_validate_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="AddressValidateError" sfwType="Column" sfwValue="address_validate_error" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="100" />
+    <attribute ID="PeoplesoftFlag" sfwType="Column" sfwValue="peoplesoft_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="UndeliverableAddress" sfwType="Column" sfwValue="undeliverable_address" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="objPerson" sfwType="Object" sfwEntity="entPerson" sfwValue="ibusPerson" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrSuppressWarning" sfwValue="istrSuppressWarning" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrCounty" sfwValue="istrCounty" />
+    <attribute sfwType="Collection" sfwEntity="entPersonAddress" ID="lstOtherAddresses" sfwValue="iclbOtherAddresses" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AddrDescription" sfwValue="addr_description" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrAddressStreet1CAPS" sfwValue="icdoPersonCurrentAddress.istrAddressStreet1_CAPS" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrAddressStreet2CAPS" sfwValue="icdoPersonCurrentAddress.istrAddressStreet2_CAPS" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrAddressCityCAPS" sfwValue="icdoPersonCurrentAddress.istrAddressCity_CAPS" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrStateDescriptionCAPS" sfwValue="icdoPersonCurrentAddress.istrStateDescription_CAPS" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrCountryDescriptionCAPS" sfwValue="icdoPersonCurrentAddress.istrCountryDescription_CAPS" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ZipDescription" sfwValue="zip_description" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrAddressStreet1CAPS1" sfwValue="icdoPersonAddress.istrAddressStreet1_CAPS" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrAddressStreet2CAPS1" sfwValue="icdoPersonAddress.istrAddressStreet2_CAPS" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrAddressCityCAPS1" sfwValue="icdoPersonAddress.istrAddressCity_CAPS" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrStateDescriptionCAPS1" sfwValue="icdoPersonAddress.istrStateDescription_CAPS" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrCountryDescriptionCAPS1" sfwValue="icdoPersonAddress.istrCountryDescription_CAPS" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ForeignProvince1" sfwValue="icdoPersonCurrentAddress.foreign_province" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ForeignPostalCode1" sfwValue="icdoPersonCurrentAddress.foreign_postal_code" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AddrCountryValue1" sfwValue="icdoPersonCurrentAddress.addr_country_value" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AddrLine11" sfwValue="icdoPersonCurrentAddress.addr_line_1" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AddrLine21" sfwValue="icdoPersonCurrentAddress.addr_line_2" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AddrCity1" sfwValue="icdoPersonCurrentAddress.addr_city" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AddrStateValue1" sfwValue="icdoPersonCurrentAddress.addr_state_value" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AddrZipCode1" sfwValue="icdoPersonCurrentAddress.addr_zip_code" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AddrStateDescription1" sfwValue="icdoPersonCurrentAddress.addr_state_description" />
+    <attribute sfwValue="addr_change_letter_status_flag" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="char" sfwLength="1" sfwIsNull="True" ID="AddrChangeLetterStatusFlag" sfwCaption="Addr Change Letter Status Flag" />
+    <attribute ID="IstrPersonAddress" sfwDataType="string" sfwPrivate="False" sfwValue="icdoPersonCurrentAddress.istrPersonAddress" sfwType="Property" />
+    <attribute ID="IstrCityStateZIPAddress" sfwDataType="string" sfwPrivate="False" sfwValue="icdoPersonCurrentAddress.istrCityStateZIPAddress" sfwType="Property" />
+    <attribute ID="CareOf" sfwType="Column" sfwValue="care_of" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="100" />
+    <attribute ID="IstrAddressDescriptionWithCareOf" sfwDataType="string" sfwPrivate="False" sfwValue="istrAddressDescriptionWithCareOf" sfwType="Property" />
+  </attributes>
+</entity>

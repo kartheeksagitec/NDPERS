@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entPaymentItemType" sfwMainCDO="icdoPaymentItemType" sfwType="BusinessRule" sfwActive="True" sfwStatus="Review" sfwObjectID="busPaymentItemType" sfwTableName="sgt_payment_item_type" sfwView="False">
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from sgt_payment_item_type">
+      <parameters />
+    </query>
+    <query ID="LoadDeductionItems" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_PAYMENT_ITEM_TYPE(NOLOCK)&#xD;&#xA;WHERE DEDUCTION_VALUE='UPDT'">
+      <parameters />
+    </query>
+    <query ID="LoadPaymentItemType" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="&#xD;&#xA;SELECT  PAYMENT_ITEM_TYPE_ID,ITEM_TYPE_CODE,ITEM_TYPE_DESCRIPTION,TAXABLE_ITEM_FLAG,ITEM_TYPE_DIRECTION&#xD;&#xA;FROM   SGT_PAYMENT_ITEM_TYPE&#xD;&#xA;WHERE  ITEM_TYPE_CODE IN (&#xD;&#xA;   'ITEM2',&#xD;&#xA;   'ITEM3',&#xD;&#xA;   'ITEM7',&#xD;&#xA;   'ITEM6',&#xD;&#xA;   'ITEM4',&#xD;&#xA;   'ITEM19',&#xD;&#xA;   'ITEM8',&#xD;&#xA;   'ITEM120',&#xD;&#xA;   'ITEM20',&#xD;&#xA;   'ITEM21',&#xD;&#xA;   'ITEM452',&#xD;&#xA;   'ITEM5',&#xD;&#xA;   'ITEM449')&#xD;&#xA;ORDER BY TAXABLE_ITEM_FLAG">
+      <parameters />
+    </query>
+    <query ID="LoadGrossItems" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="declare @Count_Resource int&#xD;&#xA;SELECT @Count_Resource = COUNT(*) FROM SGS_USER U&#xD;&#xA;INNER JOIN SGS_USER_ROLES UR ON U.USER_SERIAL_ID = UR.USER_SERIAL_ID AND ISNULL(UR.EFFECTIVE_START_DATE, '29001231') &lt;= GETDATE() AND ISNULL(UR.EFFECTIVE_END_DATE, '29001231') &gt;= GETDATE()  &#xD;&#xA;INNER JOIN SGS_SECURITY S ON S.ROLE_ID = UR.ROLE_ID AND S.SECURITY_VALUE != 0&#xD;&#xA;INNER JOIN SGS_RESOURCES R ON R.RESOURCE_ID = S.RESOURCE_ID&#xD;&#xA;WHERE S.RESOURCE_ID = 2053 AND U.USER_SERIAL_ID = @USER_SERIAL_ID&#xD;&#xA;&#xD;&#xA;SELECT ITEM_TYPE_CODE+' - '+ITEM_TYPE_DESCRIPTION AS ITEM_DESCRIPTION,PAYMENT_ITEM_TYPE_ID FROM SGT_PAYMENT_ITEM_TYPE WITH(NOLOCK)&#xD;&#xA;WHERE &#xD;&#xA;((@Count_Resource &gt; 0 and (ITEM_TYPE_DIRECTION = 1 AND ITEM_USAGE_VALUE &lt;&gt; 'VNDP' or PAYMENT_ITEM_TYPE_ID IN (70,71,72,73)))&#xD;&#xA;or @Count_Resource = 0  and ITEM_TYPE_DIRECTION = 1 AND ITEM_USAGE_VALUE &lt;&gt; 'VNDP')">
+      <parameters>
+        <parameter ID="@USER_SERIAL_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="PaymentItemTypeId" sfwType="Column" sfwValue="payment_item_type_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ItemTypeCode" sfwType="Column" sfwValue="item_type_code" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="7" />
+    <attribute ID="ItemTypeDescription" sfwType="Column" sfwValue="item_type_description" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ItemPriority" sfwType="Column" sfwValue="item_priority" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ItemUsageDescription" sfwType="Description" sfwValue="item_usage_description" />
+    <attribute ID="ItemUsageId" sfwType="Column" sfwValue="item_usage_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="2208" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ItemUsageValue" sfwType="Column" sfwValue="item_usage_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="CheckTypeDescription" sfwType="Description" sfwValue="check_type_description" />
+    <attribute ID="CheckTypeId" sfwType="Column" sfwValue="check_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="2207" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="CheckTypeValue" sfwType="Column" sfwValue="check_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="ItemTypeDirection" sfwType="Column" sfwValue="item_type_direction" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="CheckComponentDescription" sfwType="Column" sfwValue="check_component_description" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="TaxableItemFlag" sfwType="Column" sfwValue="taxable_item_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="VendorFlag" sfwType="Column" sfwValue="vendor_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="Payment1099rFlag" sfwType="Column" sfwValue="payment_1099r_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="CheckGroupCodeDescription" sfwType="Description" sfwValue="check_group_code_description" />
+    <attribute ID="CheckGroupCodeId" sfwType="Column" sfwValue="check_group_code_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="2209" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="CheckGroupCodeValue" sfwType="Column" sfwValue="check_group_code_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="AdjustmentCodeDescription" sfwType="Description" sfwValue="adjustment_code_description" />
+    <attribute ID="AdjustmentCodeId" sfwType="Column" sfwValue="adjustment_code_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="2221" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AdjustmentCodeValue" sfwType="Column" sfwValue="adjustment_code_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="DeductionDescription" sfwType="Description" sfwValue="deduction_description" />
+    <attribute ID="DeductionId" sfwType="Column" sfwValue="deduction_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="2212" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="DeductionValue" sfwType="Column" sfwValue="deduction_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="RetroPaymentTypeDescription" sfwType="Description" sfwValue="retro_payment_type_description" />
+    <attribute ID="RetroPaymentTypeId" sfwType="Column" sfwValue="retro_payment_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="2204" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="RetroPaymentTypeValue" sfwType="Column" sfwValue="retro_payment_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="RetroItemCodeLink" sfwType="Column" sfwValue="retro_item_code_link" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="7" />
+    <attribute ID="SpecialTaxTreatmentCodeDescription" sfwType="Description" sfwValue="special_tax_treatment_code_description" />
+    <attribute ID="SpecialTaxTreatmentCodeId" sfwType="Column" sfwValue="special_tax_treatment_code_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="2222" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="SpecialTaxTreatmentCodeValue" sfwType="Column" sfwValue="special_tax_treatment_code_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="AllowRolloverCodeDescription" sfwType="Description" sfwValue="allow_rollover_code_description" />
+    <attribute ID="AllowRolloverCodeId" sfwType="Column" sfwValue="allow_rollover_code_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="2223" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AllowRolloverCodeValue" sfwType="Column" sfwValue="allow_rollover_code_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="RolloverItemCode" sfwType="Column" sfwValue="rollover_item_code" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="7" />
+    <attribute ID="PlsoFlag" sfwType="Column" sfwValue="plso_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="Comments" sfwType="Column" sfwValue="comments" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="200" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="RetroSpecialPaymentInd" sfwType="Column" sfwValue="retro_special_payment_ind" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="MonthlySummaryGroupDescription" sfwType="Description" sfwValue="monthly_summary_group_description" />
+    <attribute ID="MonthlySummaryGroupId" sfwType="Column" sfwValue="monthly_summary_group_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="2511" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="MonthlySummaryGroupValue" sfwType="Column" sfwValue="monthly_summary_group_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="MasterPaymentGroupDescription" sfwType="Description" sfwValue="master_payment_group_description" />
+    <attribute ID="MasterPaymentGroupId" sfwType="Column" sfwValue="master_payment_group_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="2512" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="MasterPaymentGroupValue" sfwType="Column" sfwValue="master_payment_group_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="AchCheckGroupDescription" sfwType="Description" sfwValue="ach_check_group_description" />
+    <attribute ID="AchCheckGroupId" sfwType="Column" sfwValue="ach_check_group_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="2514" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AchCheckGroupValue" sfwType="Column" sfwValue="ach_check_group_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="BaseAmountFlag" sfwType="Column" sfwValue="base_amount_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="ItemTypeCodeValue" sfwType="Column" sfwValue="item_type_code_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="PayeeDetailGroupDescription" sfwType="Description" sfwValue="payee_detail_group_description" />
+    <attribute ID="PayeeDetailGroupId" sfwType="Column" sfwValue="payee_detail_group_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="2519" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PayeeDetailGroupValue" sfwType="Column" sfwValue="payee_detail_group_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="CancelPayment1099rDescription" sfwType="Description" sfwValue="cancel_payment_1099r_description" />
+    <attribute ID="CancelPayment1099rId" sfwType="Column" sfwValue="cancel_payment_1099r_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="2903" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="CancelPayment1099rValue" sfwType="Column" sfwValue="cancel_payment_1099r_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="NonMonthlyPaymentGroupDescription" sfwType="Description" sfwValue="non_monthly_payment_group_description" />
+    <attribute ID="NonMonthlyPaymentGroupId" sfwType="Column" sfwValue="non_monthly_payment_group_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="2520" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="NonMonthlyPaymentGroupValue" sfwType="Column" sfwValue="non_monthly_payment_group_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="ReceiavableItemForRetroFlag" sfwType="Column" sfwValue="receiavable_item_for_retro_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="AdhocColaGroupDescription" sfwType="Description" sfwValue="adhoc_cola_group_description" />
+    <attribute ID="AdhocColaGroupId" sfwType="Column" sfwValue="adhoc_cola_group_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="3003" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AdhocColaGroupValue" sfwType="Column" sfwValue="adhoc_cola_group_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="UpdateProviderReportPaymentFlag" sfwType="Column" sfwValue="update_provider_report_payment_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="ReissueItemsFlag" sfwType="Column" sfwValue="reissue_items_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="ReceivableCreation1099rDescription" sfwType="Description" sfwValue="receivable_creation_1099r_description" />
+    <attribute ID="ReceivableCreation1099rId" sfwType="Column" sfwValue="receivable_creation_1099r_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="2908" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ReceivableCreation1099rValue" sfwType="Column" sfwValue="receivable_creation_1099r_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+  </attributes>
+</entity>

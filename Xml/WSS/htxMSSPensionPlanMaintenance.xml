@@ -1,0 +1,287 @@
+﻿<form ID="wfmMSSPensionPlanMaintenance" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2001" sfwType="FormLinkMaintenance" sfwTitle="Plan Overview Maintenance" version="3.5" sfwEntity="entMSSPersonAccountRetirementWeb" sfwTemplate="MSSPensionPlanMaintenance.html" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmMSSPensionPlanLookup" sfwFormObjectType="None" isBasedOnWfm="true">
+  <initialload>
+    <callmethods sfwMethodName="FindRetirementPlanOverviewEnrolled" />
+  </initialload>
+  <items>
+    <sfwTable ID="Main" />
+    <sfwPanel ID="pnltoolbar" sfwCaption="Back" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblNewPage4" />
+        <sfwButton ID="btnCancel" sfwMethodName="btnCancel_Click" Text="Refresh" CssClass="hideControl" />
+        <sfwImageButton ID="btnBack" ImageAlign="AbsMiddle" ImageUrl="~/Images/back.gif" sfwMethodName="btnBack_Click" />
+        <sfwImageButton ID="btnPrint" ImageUrl="~/Images/print.png" ImageAlign="AbsMiddle" OnClientClick="PrintCenterMiddle(e)" sfwMethodName="btnOpen_Click" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlNHeading" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblNewPage1" />
+        <sfwLiteral ID="ltrlMessage" Text="Pension Plan Info" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlMain" sfwCaption="Plan Details">
+      <items>
+        <sfwTable ID="tblMain" />
+        <sfwLabel ID="capPlanName" Text="Plan Name : " sfwIsCaption="True" />
+        <sfwLabel ID="lblPlanName" Visible="False" sfwEntityField="objPlan.PlanName" />
+        <sfwLabel ID="lblMssPlanName" sfwEntityField="objPlan.MssPlanName" />
+        <sfwLabel ID="capPlanParticipationStatusDescription" Text="Plan Participation Status : " sfwIsCaption="True" />
+        <sfwLabel ID="lblPlanParticipationStatusDescription" sfwEntityField="IstrPlanParticipation" />
+        <sfwLabel ID="capStartDate" Text="Start Date : " sfwIsCaption="True" />
+        <sfwLabel ID="lblStartDate" sfwDataFormat="{0:d}" sfwEntityField="IstrStartDate" />
+        <sfwLabel ID="capEndDateNoNull" Text="End Date : " sfwIsCaption="True" />
+        <sfwLabel ID="lblEndDateNoNull" sfwDataFormat="{0:d}" sfwEntityField="IstrEndDate" />
+        <sfwLabel ID="capBenefitTier" Text="Tier : " sfwIsCaption="True" />
+        <sfwLabel ID="lblBenefitTier" sfwEntityField="BenefitTierDescriptionDisplay" />
+        <sfwLabel ID="lblPersonAccountId" Visible="False" sfwEntityField="PersonAccountId" />
+        <sfwLabel ID="lblPersonId" Visible="False" sfwEntityField="PersonId" />
+        <sfwLabel ID="lblLabel2" Visible="False" sfwEntityField="PersonEmploymentDtlId" />
+        <sfwLabel ID="lblScreenDifferentiator" Visible="False" sfwEntityField="IstrMSSElectionStatus" />
+        <sfwLabel ID="lblPlanId" Visible="False" sfwEntityField="PlanId" />
+        <sfwLabel ID="capAddlContributionPercentage" Text="Additional Contribution :" sfwIsCaption="True" sfwVisibleRule="VisibleRuleIsPlanDC25" />
+        <sfwLabel ID="lblAddlContributionPercentageZero" sfwVisibleRule="VRADECAmount" sfwDataFormat="{0:#0.00'%}" />
+        <sfwLabel ID="lblAddlContributionPercentage" sfwEntityField="lintAddlEEContributionPercent" sfwDataFormat="{0:#0.00'%}" sfwVisibleRule="VisibleRuleIsPlanDC25" />
+        <sfwLinkButton ID="btnAddlContributionPercentageWizard" sfwActiveForm="wfmMSSAdditionalContributionWizard" sfwMethodName="btnOpen_Click" sfwNavigationParameter="aintPersonAccountId=PersonAccountId;aintPersonEmploymentDetailId=PersonEmploymentDtlId;aintRequestId=IintEnrollmentRequestID;astrScreenDifferentiator=IstrMSSElectionStatus;astrIsDcEligible=IstrIsDCEligible" sfwVisibleRule="VRADECUpdateLink" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlHistory" sfwCaption="History">
+      <items>
+        <sfwTable ID="tblNewPage5" />
+        <sfwGridView AllowPaging="True" ID="grvMSSHistory" sfwEntityField="lstMSSHistory" sfwGridEntity="entPersonAccountRetirementHistory">
+          <Columns>
+            <TemplateField HeaderText="Plan Participation Status">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="PlanParticipationStatusDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Start Date">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="StartDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="End Date">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EndDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Person Account Retirement History ID" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="PersonAccountRetirementHistoryId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Additional Employee Contribution" sfwVisibleRule="VisibleRuleIsPlanDC25">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:#0.00'%}" sfwEntityField="AddlEEContributionPercent" />
+                <sfwLabel Text="0.00%" sfwVisibleRule="VSAdditionalContributionZero" />
+              </ItemTemplate>
+            </TemplateField>
+          </Columns>
+        </sfwGridView>
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlContributingEmployers" sfwCaption="Contributing Employers">
+      <items>
+        <sfwTable ID="tblContributingEmployers" />
+        <sfwButton ID="btnOpenEmploymentDetail" sfwActiveForm="wfmPersonEmploymentDetailMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintemploymentdetailid=PersonEmploymentDtlId" sfwRelatedControl="grvEmploymentDetail" Text="Open" Visible="False" />
+        <sfwGridView AllowPaging="True" ID="grvEmploymentDetail" sfwEntityField="lstMSSPersonEmploymentDetail" sfwGridEntity="entPersonEmploymentDetail">
+          <Columns>
+            <TemplateField HeaderText="Employer Name">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objPersonEmployment.objOrganization.OrgName" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Employment Type">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="TypeDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="NDPERS Pension Plan Status">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="StatusDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Employment Start Date">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="StartDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Employment End Date">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EndDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Job Class" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="JobClassDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Member Type" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="DerivedMemberTypeDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Person Employment Dtl ID" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="PersonEmploymentDtlId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Recertified Date" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="RecertifiedDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Seasonal" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="SeasonalDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Hourly" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="HourlyDescription" />
+              </ItemTemplate>
+            </TemplateField>
+          </Columns>
+        </sfwGridView>
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlContributionSummary" sfwCaption="Contribution Summary">
+      <items>
+        <sfwTable ID="tblNewPage" />
+        <sfwLabel ID="capIdecMSSMemberContribution" Text="Member Contribution : " sfwIsCaption="True" />
+        <sfwLabel ID="lblIdecMSSMemberContribution" sfwDataFormat="{0:C}" sfwEntityField="MemberContribution" />
+        <sfwLabel ID="capIdecMSSTotalTaxable" Text="Total Taxable : " sfwIsCaption="True" />
+        <sfwLabel ID="lblIdecMSSTotalTaxable" sfwDataFormat="{0:C}" sfwEntityField="TotalTaxableAmount" />
+        <sfwLabel ID="capIdecMSSVestedEmployerContribution" Text="Vested Employer&#xA;Contribution (PEP) :" sfwIsCaption="True" />
+        <sfwLabel ID="lblIdecMSSVestedEmployerContribution" sfwDataFormat="{0:C}" sfwEntityField="VestedEmployerContriubtion" />
+        <sfwLabel ID="capIdecMSSTotalNonTaxable" Text="Total Non Taxable : " sfwIsCaption="True" />
+        <sfwLabel ID="lblIdecMSSTotalNonTaxable" sfwDataFormat="{0:C}" sfwEntityField="TotalNonTaxableAmount" />
+        <sfwLabel ID="capIdecMSSInterest" sfwVisibleRule="IsPlanNotDC" Text="Interest : " sfwIsCaption="True" />
+        <sfwLabel ID="lblIdecMSSInterest" sfwDataFormat="{0:C}" sfwVisibleRule="IsPlanNotDC" sfwEntityField="objMSSContributionSummaryForRetirementPlans.InterestAmountLtd" />
+        <sfwLabel ID="capIdecMSSRHICEEContribution" Text="RHIC Employee Contribution : " sfwIsCaption="True" />
+        <sfwLabel ID="lblIdecMSSRHICEEContribution" sfwDataFormat="{0:C}" sfwEntityField="objMSSContributionSummaryForRetirementPlans.EeRhicAmountLtd" />
+        <sfwLabel ID="capIdecMSSRHICServiceCreditContribution" Text="RHIC Employee Service Credit Contribution : " Visible="False" sfwIsCaption="True" />
+        <sfwLabel ID="lblIdecMSSRHICServiceCreditContribution" sfwDataFormat="{0:C}" Visible="False" sfwEntityField="objMSSContributionSummaryForRetirementPlans.IdecMSSRHICServiceCreditContribution" />
+        <sfwLabel AssociatedControlID="lblMemberAccountBalanceLtd" ID="capMemberAccountBalanceLtd" sfwVisibleRule="IsPlanNotDC" Text="Total Member Account Balance : " sfwIsCaption="True" />
+        <sfwLabel ID="lblMemberAccountBalanceLtd" sfwDataFormat="{0:C}" sfwVisibleRule="IsPlanNotDC" sfwEntityField="TotalMemberAccountBalance" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlPensionServiceCreditSummary" sfwCaption="Pension Service Credit Summary">
+      <items>
+        <sfwTable ID="tblNewPage9" />
+        <sfwLabel ID="capTotalPSC" Text="Total Pension Service Credit : " sfwIsCaption="True" />
+        <sfwLabel ID="lblPensionServiceCreditFormatted" sfwEntityField="PensionServiceCreditFormatted" />
+        <sfwLabel ID="capTotalVSC" Text="Total Vested Service Credit : " sfwIsCaption="True" />
+        <sfwLabel ID="lblVestedServiceCreditFormatted" sfwEntityField="VestedServiceCreditFormatted" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlAccruedBenefitSummary" sfwCaption="Accrued Benefit Summary" sfwVisibleRule="IsPlanNotDC">
+      <items>
+        <sfwTable ID="tblNewPage10" />
+        <sfwLabel ID="capIdecFAS" Text="Final Average Salary : " sfwIsCaption="True" />
+        <sfwLabel ID="lblIdecFAS" sfwDataFormat="{0:C}" sfwEntityField="IdecFAS" />
+        <sfwLabel ID="capIdecDisability" Text="Disability Benefit : " sfwIsCaption="True" />
+        <sfwLabel ID="lblIdecDisability" sfwDataFormat="{0:C}" sfwEntityField="IdecDisability" />
+        <sfwLabel ID="capIdecAccruedBenefit" Text="Unreduced Accrued Benefit : " sfwIsCaption="True" />
+        <sfwLabel ID="lblIdecAccruedBenefit" sfwDataFormat="{0:C}" sfwEntityField="IdecAccruedBenefit" />
+        <sfwLabel ID="capIdecAccruedRHICBenefit" Text="Accrued Retiree Health Insurance Credit : " sfwIsCaption="True" />
+        <sfwLabel ID="lblIdecAccruedRHICBenefit" sfwDataFormat="{0:C}" sfwEntityField="IdecAccruedRHICBenefit" />
+        <sfwLabel ID="capVestedEmployerContPercent" Text="Vested Employer Contribution Percent : " sfwIsCaption="True" />
+        <sfwLabel ID="lblVestedEmployerContPercent" sfwDataFormat="{0:0%}" sfwEntityField="VestedEmployerContPercent" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlBeneficiaries" sfwCaption="Beneficiaries">
+      <items>
+        <sfwTable ID="tblNewPage7" />
+        <sfwGridView AllowPaging="True" ID="grvMSSPersonAccountBeneficiaries" sfwEntityField="lstMSSPersonAccountBeneficiaries" sfwGridEntity="entPersonBeneficiary">
+          <Columns>
+            <TemplateField HeaderText="Beneficiary Name">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="BeneficiaryName" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Beneficiary DOB">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="BeneficiaryDOB" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Relationship">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="RelationshipDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Type">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objPersonAccountBeneficiary.BeneficiaryTypeDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Percentage" ItemStyle.HorizontalAlign="Right">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objPersonAccountBeneficiary.DistPercent" sfwDataFormat="{0:#0.000}" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Start Date">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="objPersonAccountBeneficiary.StartDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="End Date">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="objPersonAccountBeneficiary.EndDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Person Account Beneficiary ID" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objPersonAccountBeneficiary.PersonAccountBeneficiaryId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Beneficiary ID" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="BeneficiaryId" />
+              </ItemTemplate>
+            </TemplateField>
+          </Columns>
+        </sfwGridView>
+        <sfwLabel ID="lblLabel3" Text="&lt;br/&gt;" sfwIsCaption="True" />
+        <sfwLabel ID="lblText" Text="To update or change your designation  of beneficiary, you must complete and mail a Designation of Beneficiary to NDPERS: " sfwIsCaption="True" />
+        <sfwTextBox ID="txtDownloadFileName" sfwEntityField="IstrDownloadFileName" />
+        <sfwLinkButton ID="btnPdfCorrespondenceClick1" sfwMethodName="btn_OpenPDF" sfwNavigationParameter="pdf_file_name=IstrDownloadFileName" />
+        <sfwLinkButton ID="btnPdfCorrespondenceClick" sfwMethodName="btn_OpenMssForms" sfwNavigationParameter="SFN-2560.pdf" sfwDownloadFileName="SFN-2560.pdf" Visible="False" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlDC" sfwCaption="DC Mutual Fund Election" Visible="False">
+      <items>
+        <sfwTable ID="tblNewPage2" />
+        <sfwButton ID="btnExecuteRefreshData" sfwMethodName="btnValidateExecuteBusinessMethod_Click" sfwObjectMethod="btnUpdateMutualFundFlag_Click" sfwVisibleRule="IsMutualFundWindowFlagNotSelected" Text="Update Mutual Fund Window" />
+        <sfwLabel ID="lblLabel" sfwWrap="True" Text="I understand that mutual funds purchased through the Mutual Fund Window are not bank deposits, debts or obligations of, and are not insured or guaranteed by, any federal or state entity,  including the FDIC, NDPERS &lt;/br&gt; and the state of North Dakota.  I am aware that NDPERS neither endorses nor monitors the mutual funds available through the Mutual Fund Window, nor does NDPERS make any representation that the mutual funds available &lt;/br&gt;  through the Mutual Fund Window are proper investments for retirement monies.  I agree it is my responsibility to research the funds available, and that I should review all disclosure statements and available materials for each &lt;/br&gt;  of the funds I   consider prior to investing in them.  I understand that mutual funds  are subject to investment risk, which includes the possible loss of  the principal invested.I accept that risk, and acknowledge I am solely responsible &lt;/br&gt; for that risk and the investment results of my account.  I release, save and hold harmless NDPERS and the state of North Dakota from any and all liability based on my participation in the Mutual Fund Window." sfwIsCaption="True" />
+        <sfwLabel ID="lblLabel1" Text="Mutual Fund Window" sfwIsCaption="True" />
+        <sfwCheckBox ID="chkCheckBox" sfwEntityField="MutualFundWindowFlag" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlNewPage1" sfwCaption="New Page" sfwCollapsible="False" Visible="False">
+      <items>
+        <sfwTable ID="tblNewPage3" />
+        <sfwLinkButton ID="btnOpenDbRetirementEnrollment" sfwActiveForm="wfmMSSPensionPlanRetirementEnrollmentMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="aintRequestId=IintEnrollmentRequestID" sfwVisibleRule="VisibleRuleForOpenRequestDBRetirementEnrollment" Visible="False" />
+        <sfwLinkButton ID="btnOpenDBElectedOfficial" sfwActiveForm="wfmMSSDBElectedOfficialMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="aintRequestId=IintEnrollmentRequestID" sfwVisibleRule="VisibleRuleForOpenRequestDBElected" />
+        <sfwLinkButton ID="btnOpenDBOptional" sfwActiveForm="wfmMSSPensionPlanMainRetirementOptionalEnrollmentWizard" sfwMethodName="btnOpen_Click" sfwNavigationParameter="aintRequestId=IintEnrollmentRequestID" sfwVisibleRule="VisibleRuleForOpenRequestDBOptional" />
+        <sfwLinkButton ID="btnOpenDCOptional" sfwActiveForm="wfmMSSPensionPlanDCOptionalEnrollmentWizard" sfwMethodName="btnOpen_Click" sfwNavigationParameter="aintRequestId=IintEnrollmentRequestID" sfwVisibleRule="VisibleRuleForOpenDCOptional" />
+        <sfwLinkButton ID="btnOpenDCRetirementEnrollment" sfwActiveForm="wfmMSSPensionPlanRetirementEnrollmentMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="aintRequestId=IintEnrollmentRequestID" sfwVisibleRule="VisibleRuleForOpenDCEnrollment" />
+        <sfwButton ID="btnNewDBRetirement1" sfwActiveForm="wfmMSSPensionPlanRetirementEnrollmentMaintenance" sfwMethodName="btnNew_Click" sfwNavigationParameter="aintPlanId=lblPlanId;aintPersonId=lblPersonId;aintPersonEmploymentDetailId=lblLabel2" sfwVisibleRule="IsEligibleValueEnrolledForNewRequest" Text="Update" />
+        <sfwButton ID="btnNewDBOptional1" sfwActiveForm="wfmMSSPensionPlanMainRetirementOptionalEnrollmentWizard" sfwMethodName="btnNew_Click" sfwNavigationParameter="aintPlanId=lblPlanId;aintPersonId=lblPersonId;aintPersonEmploymentDetailId=lblLabel2" sfwVisibleRule="IsDBEligibleValueOptionalForNewRequest" Text="Update" />
+        <sfwButton ID="btnNewDCOptional1" sfwActiveForm="wfmMSSPensionPlanDCOptionalEnrollmentWizard" sfwMethodName="btnNew_Click" sfwNavigationParameter="aintPlanId=lblPlanId;aintPersonId=lblPersonId;aintPersonEmploymentDetailId=lblLabel2" sfwVisibleRule="IsDCEligibleOptionalForNewRequest" Text="Update" />
+        <sfwButton ID="btnNewDCEnrolled1" sfwActiveForm="wfmMSSPensionPlanDCRetirementEnrollmentMaintenance" sfwMethodName="btnNew_Click" sfwVisibleRule="IsDCEligibleEnrolledForNewRequest" Text="Update" />
+        <sfwButton ID="btnNewDBElectedOfficial1" sfwActiveForm="wfmMSSDBElectedOfficialMaintenance" sfwMethodName="btnNew_Click" sfwNavigationParameter="aintPlanId=lblPlanId;aintPersonId=lblPersonId;aintPersonEmploymentDetailId=lblLabel2" sfwVisibleRule="IsDBElectedOfficialForNewRequest" Text="Update" />
+        <sfwButton ID="btnNewFromDCEnrolled1" sfwActiveForm="wfmMSSPensionPlanDCRetirementEnrollmentMaintenance" sfwMethodName="btnNew_Click" sfwVisibleRule="SetUpdateButtonVisibilityForDCEnrollment" Text="Update" />
+        <sfwButton ID="btnButtonDCOptional" sfwActiveForm="wfmMSSPensionPlanDCOptionalEnrollmentWizard" sfwMethodName="btnNew_Click" sfwNavigationParameter="aintPlanId=lblPlanId;aintPersonId=lblPersonId;aintPersonEmploymentDetailId=lblLabel2" sfwVisibleRule="SetUpdateButtonVisibilityForDCOptionalEnrollment" Text="Update" />
+        <sfwLabel ID="lblIintEnrollmentRequestID" Visible="False" sfwEntityField="IintEnrollmentRequestID" />
+        <sfwLabel ID="lblIstrIsDCEligible" Visible="False" sfwEntityField="IstrIsDCEligible" />
+      </items>
+    </sfwPanel>
+  </items>
+  <loaddetails>
+    <entityfield ID="objPlan" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstMSSHistory" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstMSSPersonEmploymentDetail" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objMSSContributionSummaryForRetirementPlans" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstMSSPersonAccountBeneficiaries" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+  </loaddetails>
+  <ExtraFields />
+</form>

@@ -1,0 +1,452 @@
+﻿<entity ID="entContactTicket" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvCallCenter" sfwType="BusinessRule" sfwMainCDO="icdoContactTicket" sfwReadOnlyRule="IsTicketCreatedFromWorkflow" sfwObjectID="busContactTicket" sfwTableName="sgt_contact_ticket" sfwView="False" sfwParentEntity="entExtendBase">
+  <rules>
+    <rule ID="Check if Contact type is death or purchases or benefit estimate" sfwMessageId="3069" sfwExpression="(this.IsPerslinkNotEnteredForDetPurchaseEstimate() == True)" sfwObjectBased="True" />
+    <rule ID="Check if employer information not selected" sfwMessageId="3068" sfwExpression="(this.icdoContactTicket.contact_type_value == &quot;NEWG&quot;) &amp;&amp; &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusNewGroup.icdoNewGroup.emp_information_value&quot;)))" sfwObjectBased="True" />
+    <rule ID="Check if selected contact type is seminar or new group" sfwMessageId="3070" sfwExpression="((this.icdoContactTicket.contact_type_value == &quot;NEWG&quot;) || &#xA;(this.icdoContactTicket.contact_type_value == &quot;SEM&quot;)) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoContactTicket.istrOrgCodeID))" sfwObjectBased="True" />
+    <rule ID="Check if Status Null" sfwMessageId="3072" sfwExpression="(string.IsNullOrEmpty(this.icdoContactTicket.status_value))" sfwObjectBased="True" />
+    <rule ID="Disable attendee New Button" sfwMessageId="3065" sfwExpression="(this.icdoContactTicket.contact_type_value == &quot;SEM&quot;) &amp;&amp; &#xA;(this.ldtSeminarCompletionDate &lt; RFunc.CurrentDate())" sfwObjectBased="True" />
+    <rule ID="IsAdditionalGenericValuesNOTEntered" sfwMessageId="10076" sfwExpression="(this.IsAdditionalGenericServiceNOTEntered() == &quot;N&quot;)" sfwObjectBased="True" />
+    <rule ID="IsBenEstimateRetEffectiveDateEnteredForOtherThanOtherRetType" sfwMessageId="3076" sfwExpression="(this.icdoContactTicket.contact_type_value == &quot;RETB&quot;) &amp;&amp; &#xA;!(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusBenefitEstimate.icdoBenefitEstimate.retirement_effective_date&quot;) == DateTime.MinValue) &amp;&amp; &#xA;(this.IsRetirementTypeIsNotOtherTypeAndEffectiveDateEntered() == True)" sfwObjectBased="True" />
+    <rule ID="IsBenEstimateRetirementEffDateFirstOfTheMonth" sfwMessageId="3077" sfwExpression="(this.icdoContactTicket.contact_type_value == &quot;RETB&quot;) &amp;&amp; &#xA;!(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusBenefitEstimate.icdoBenefitEstimate.retirement_effective_date&quot;) == DateTime.MinValue) &amp;&amp; &#xA;!(this.IsRetirementEffectiveDateFirstOfMonth() == True)" sfwObjectBased="True" />
+    <rule ID="IsContactTicketTypeSeminarDisableDeleteButton" sfwExpression="(this.icdoContactTicket.contact_type_value == &quot;SEM&quot;) &amp;&amp; &#xA;(this.DisableDeleteButton() == False)" sfwObjectBased="True" />
+    <rule ID="IsDeceasedPerslinkIdIsValid" sfwMessageId="3084" sfwExpression="(this.iblnIsFromPortal == True) &amp;&amp; &#xA;(this.icdoContactTicket.contact_type_value == &quot;DETH&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusDeathNotice.icdoDeathNotice.perslink_id&quot;) != 0) &amp;&amp; &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusDeceasedPerson.icdoPerson.ssn&quot;)))" sfwObjectBased="True" />
+    <rule ID="IsDeceasedPERSLinkIdNotEntered" sfwMessageId="3083" sfwExpression="(this.iblnIsFromPortal == True) &amp;&amp; &#xA;(this.icdoContactTicket.contact_type_value == &quot;DETH&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusDeathNotice.icdoDeathNotice.deceased_member_flag&quot;) == &quot;Y&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusDeathNotice.icdoDeathNotice.perslink_id&quot;) == 0)" sfwObjectBased="True" />
+    <rule ID="IsESSDeceasedMemberDOBNull" sfwMessageId="3074" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusDeathNotice.icdoDeathNotice.deceased_member_flag&quot;) == &quot;Y&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusDeathNotice.icdoDeathNotice.deceased_member_date_of_birth&quot;) == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsESSDeceasedMemberLastFourDigitsOfSSNNull" sfwMessageId="3075" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusDeathNotice.icdoDeathNotice.deceased_member_flag&quot;) == &quot;Y&quot;) &amp;&amp; &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusDeathNotice.icdoDeathNotice.deacease_member_last_4_digits_of_ssn&quot;)))" sfwObjectBased="True" />
+    <rule ID="IsESSMemberDeceasedFlagChecked" sfwMessageId="3039" sfwExpression="((this.iblnIsFromPortal == True) &amp;&amp; &#xA;(RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusOrganization.icdoOrganization.org_id&quot;) &gt; 0)) &amp;&amp; &#xA;(this.icdoContactTicket.contact_type_value == &quot;DETH&quot;) &amp;&amp; &#xA;(this.ibusDeathNotice != null) &amp;&amp;&#xA;(RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusDeathNotice.icdoDeathNotice.perslink_id&quot;) == 0)" sfwObjectBased="True" />
+    <rule ID="IsMSSAppointmentRequestDatePastDate" sfwMessageId="3082" sfwExpression="(this.iblnIsFromPortal == True) &amp;&amp; &#xA;(this.icdoContactTicket.contact_type_value == &quot;APP&quot;) &amp;&amp; &#xA;!(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusAppointmentSchedule.icdoAppointmentSchedule.requested_date_from&quot;) == DateTime.MinValue) &amp;&amp; &#xA;!(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusAppointmentSchedule.icdoAppointmentSchedule.requested_date_to&quot;) == DateTime.MinValue) &amp;&amp; &#xA;((RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusAppointmentSchedule.icdoAppointmentSchedule.requested_date_from&quot;) &lt; RFunc.CurrentDate()) || &#xA;(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusAppointmentSchedule.icdoAppointmentSchedule.requested_date_to&quot;) &lt; RFunc.CurrentDate()))" sfwObjectBased="True" />
+    <rule ID="IsProblemTypeSelected" sfwMessageId="10047" sfwExpression="(this.iblnIsFromPortal == True) &amp;&amp; &#xA;(this.iblnIsFromReportAProblem == True) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoContactTicket.contact_type_value))" sfwObjectBased="True" />
+    <rule ID="IsReassignedSelectedForSeminarAppointmentDeathNotice" sfwMessageId="3073" sfwExpression="(this.icdoContactTicket.status_value == &quot;RASS&quot;) &amp;&amp; &#xA;(((this.icdoContactTicket.contact_type_value == &quot;APP&quot;) &amp;&amp; (RFunc.GetValue&lt;String&gt;(this, &quot;ibusAppointmentSchedule.icdoAppointmentSchedule.no_appointment_necessary&quot;) != &quot;Y&quot;) )|| &#xA;((this.icdoContactTicket.contact_type_value == &quot;DETH&quot;) &amp;&amp; (RFunc.GetValue&lt;String&gt;(this, &quot;ibusDeathNotice.icdoDeathNotice.death_already_reported&quot;) != &quot;Y&quot;) )|| &#xA;(this.icdoContactTicket.contact_type_value == &quot;SEM&quot;))" sfwObjectBased="True" />
+    <rule ID="IsRetirementDateNullIfTypeisOther" sfwMessageId="10078" sfwExpression="(this.iblnIsFromPortal == True) &amp;&amp; &#xA;(this.IsRetirementTypeOtherSelected() == True) &amp;&amp; &#xA;(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusBenefitEstimate.icdoBenefitEstimate.retirement_effective_date&quot;) == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsRetirementTypeNotSelected" sfwMessageId="10079" sfwExpression="(this.iblnIsFromPortal == True) &amp;&amp; &#xA;(this.icdoContactTicket.contact_type_value == &quot;RETB&quot;) &amp;&amp; &#xA;!(this.IsAnyRetirementTypeSelected() == True)" sfwObjectBased="True" />
+    <rule ID="IsTicketCreatedFromWorkflow" sfwExpression="(this.IsTicketCreatedFromWorkflow() == True)" sfwObjectBased="True" />
+    <rule ID="RULE APPOINTMENT END TIME IS NULL" sfwMessageId="3044" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusAppointmentSchedule.icdoAppointmentSchedule.no_appointment_necessary&quot;) != &quot;Y&quot;) &amp;&amp;&#xA;!(this.iblnIsFromPortal == True) &amp;&amp; &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusAppointmentSchedule.icdoAppointmentSchedule.end_time_value&quot;))) &amp;&amp; &#xA;(this.icdoContactTicket.contact_type_value == &quot;APP&quot;)" sfwObjectBased="True" />
+    <rule ID="RULE APPOINTMENT START TIME IS NULL" sfwMessageId="3043" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusAppointmentSchedule.icdoAppointmentSchedule.no_appointment_necessary&quot;) != &quot;Y&quot;) &amp;&amp;&#xA;!(this.iblnIsFromPortal == True) &amp;&amp; &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusAppointmentSchedule.icdoAppointmentSchedule.start_time_value&quot;))) &amp;&amp; &#xA;(this.icdoContactTicket.contact_type_value == &quot;APP&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule assign to not selected and Reassigned selected" sfwMessageId="3061" sfwExpression="(this.icdoContactTicket.assign_to_user_id == 0) &amp;&amp; &#xA;(this.icdoContactTicket.status_value == &quot;RASS&quot;)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK APPOINTMENT DATE IS NULL" sfwMessageId="3016" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusAppointmentSchedule.icdoAppointmentSchedule.no_appointment_necessary&quot;) != &quot;Y&quot;) &amp;&amp;&#xA;!(this.iblnIsFromPortal == True) &amp;&amp; &#xA;(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusAppointmentSchedule.icdoAppointmentSchedule.appointment_date&quot;) == DateTime.MinValue) &amp;&amp; &#xA;(this.icdoContactTicket.contact_type_value == &quot;APP&quot;)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK APPOINTMENT TYPE IS BLANK" sfwMessageId="3014" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusAppointmentSchedule.icdoAppointmentSchedule.no_appointment_necessary&quot;) != &quot;Y&quot;) &amp;&amp;&#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusAppointmentSchedule.icdoAppointmentSchedule.appointment_type_value&quot;))) &amp;&amp; &#xA;(this.icdoContactTicket.contact_type_value == &quot;APP&quot;)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK CONTACT TYPE IS SEMINAR AND COUNSELING" sfwExpression="(this.icdoContactTicket.contact_type_value == &quot;SEM&quot;)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK COUNSELOR IS NULL" sfwMessageId="3015" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusAppointmentSchedule.icdoAppointmentSchedule.no_appointment_necessary&quot;) != &quot;Y&quot;) &amp;&amp;&#xA;!(this.iblnIsFromPortal == True) &amp;&amp; &#xA;(RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusAppointmentSchedule.icdoAppointmentSchedule.counselor_user_id&quot;) == 0) &amp;&amp; &#xA;(this.icdoContactTicket.contact_type_value == &quot;APP&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule check Employee Not working in Org" sfwMessageId="8560" sfwExpression="(this.iblnIsFromPortal == True) &amp;&amp; &#xA;(this.IsEmployeeNotWorkingInSameOrg() == True)" sfwObjectBased="True" />
+    <rule ID="Rule check id date of death is past date" sfwMessageId="3064" sfwExpression="(this.icdoContactTicket.contact_type_value == &quot;DETH&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusDeathNotice.icdoDeathNotice.death_date&quot;) &gt; RFunc.CurrentDate())" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF ALL PERSLINK ORG AND CALLER NAME IS NULL" sfwMessageId="3013" sfwExpression="!(this.icdoContactTicket.person_id != 0) &amp;&amp; &#xA;!(this.icdoContactTicket.org_id != 0) &amp;&amp; &#xA;!(!string.IsNullOrEmpty(this.icdoContactTicket.caller_name)) &amp;&amp; &#xA;!((this.icdoContactTicket.contact_type_value == &quot;DETH&quot;) || &#xA;(this.icdoContactTicket.contact_type_value == &quot;RETC&quot;) || &#xA;(this.icdoContactTicket.contact_type_value == &quot;RETB&quot;)) &amp;&amp; &#xA;!((this.icdoContactTicket.contact_type_value == &quot;NEWG&quot;) || &#xA;(this.icdoContactTicket.contact_type_value == &quot;SEM&quot;))" sfwObjectBased="True" />
+    <rule ID="Rule check if App date entered is less than old date" sfwMessageId="3071" sfwExpression="(this.icdoContactTicket.contact_type_value == &quot;APP&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusAppointmentSchedule.icdoAppointmentSchedule.appointment_date&quot;) != DateTime.MinValue) &amp;&amp; &#xA;(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusAppointmentSchedule.icdoAppointmentSchedule.appointment_date&quot;) &lt; Convert.ToDateTime(this.ibusAppointmentSchedule.icdoAppointmentSchedule.ihstOldValues[&quot;appointment_date&quot;]))" sfwObjectBased="True" />
+    <rule ID="Rule check if Appointment date is not future date" sfwMessageId="3065" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusAppointmentSchedule.icdoAppointmentSchedule.no_appointment_necessary&quot;) != &quot;Y&quot;) &amp;&amp;&#xA;!(this.iblnIsFromPortal == True) &amp;&amp; &#xA;(this.icdoContactTicket.contact_type_value == &quot;APP&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusAppointmentSchedule.icdoAppointmentSchedule.appointment_date&quot;) &lt; RFunc.CurrentDate())" sfwObjectBased="True" />
+    <rule ID="Rule check if assign to selected and reassigned to not selected" sfwMessageId="3062" sfwExpression="(this.icdoContactTicket.assign_to_user_id != 0) &amp;&amp; &#xA;(this.icdoContactTicket.status_value != &quot;RASS&quot;)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF BOTH ORG AND CALLER NAME EXISTS" sfwMessageId="3001" sfwExpression="((this.icdoContactTicket.org_id != 0) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.icdoContactTicket.caller_name)))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF BOTH PERSLINK AND CALLER NAME EXISTS" sfwMessageId="3001" sfwExpression="((this.icdoContactTicket.person_id != 0) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.icdoContactTicket.caller_name)))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF BOTH PERSLINK AND ORG ID EXISTS" sfwMessageId="3001" sfwExpression="((this.icdoContactTicket.person_id != 0) &amp;&amp; &#xA;(this.icdoContactTicket.org_id != 0))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF CONTACT ADDRESS IS NULL" sfwMessageId="3021" sfwExpression="(this.ibusDeathNotice != null) &amp;&amp;&#xA;(this.ibusDeathNotice.icdoDeathNotice !=null) &amp;&amp;&#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusDeathNotice.icdoDeathNotice.death_already_reported&quot;) != &quot;Y&quot;) &amp;&amp;&#xA;(this.icdoContactTicket.contact_type_value == &quot;DETH&quot;) &amp;&amp; &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusDeathNotice.icdoDeathNotice.contact_address&quot;)))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF CONTACT CITY IS NULL" sfwMessageId="3022" sfwExpression="(this.ibusDeathNotice != null) &amp;&amp;&#xA;(this.ibusDeathNotice.icdoDeathNotice !=null) &amp;&amp;&#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusDeathNotice.icdoDeathNotice.death_already_reported&quot;) != &quot;Y&quot;) &amp;&amp;&#xA;(this.icdoContactTicket.contact_type_value == &quot;DETH&quot;) &amp;&amp; &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusDeathNotice.icdoDeathNotice.contact_city&quot;)))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF CONTACT NAME IS NULL" sfwMessageId="3020" sfwExpression="(this.ibusDeathNotice != null) &amp;&amp;&#xA;(this.ibusDeathNotice.icdoDeathNotice !=null) &amp;&amp;&#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusDeathNotice.icdoDeathNotice.death_already_reported&quot;) != &quot;Y&quot;) &amp;&amp;&#xA;(this.icdoContactTicket.contact_type_value == &quot;DETH&quot;) &amp;&amp; &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusDeathNotice.icdoDeathNotice.contact_name&quot;)))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF CONTACT PHONE IS NULL" sfwMessageId="3025" sfwExpression="(this.ibusDeathNotice != null) &amp;&amp;&#xA;(this.ibusDeathNotice.icdoDeathNotice !=null) &amp;&amp;&#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusDeathNotice.icdoDeathNotice.death_already_reported&quot;) != &quot;Y&quot;) &amp;&amp;&#xA;(this.icdoContactTicket.contact_type_value == &quot;DETH&quot;) &amp;&amp; &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusDeathNotice.icdoDeathNotice.contact_phone&quot;)))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF CONTACT STATE IS BLANK" sfwMessageId="3024" sfwExpression="(this.icdoContactTicket.contact_type_value == &quot;DETH&quot;) &amp;&amp; &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusDeathNotice.icdoDeathNotice.contact_state_value&quot;)))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF CONTACT TYPE IS BLANK" sfwMessageId="3009" sfwExpression="!(this.iblnIsFromPortal == True) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoContactTicket.contact_type_value))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF CONTACT ZIP IS NULL" sfwMessageId="3023" sfwExpression="(this.ibusDeathNotice != null) &amp;&amp;&#xA;(this.ibusDeathNotice.icdoDeathNotice !=null) &amp;&amp;&#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusDeathNotice.icdoDeathNotice.death_already_reported&quot;) != &quot;Y&quot;) &amp;&amp;&#xA;(this.icdoContactTicket.contact_type_value == &quot;DETH&quot;) &amp;&amp; &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusDeathNotice.icdoDeathNotice.contact_zip&quot;)))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF COVERED UNUSED SICK LEAVE HRS IS NULL" sfwMessageId="3032" sfwExpression="(RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusContactMgmtServicePurchase.icdoContactMgmtServicePurchase.unused_sick_leave_hours&quot;) == 0) &amp;&amp; &#xA;(this.icdoContactTicket.contact_type_value == &quot;RETC&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusContactMgmtServicePurchase.icdoContactMgmtServicePurchase.conver_unused_sick_leave_flag&quot;) == &quot;Y&quot;)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF DATE OF DEATH IS NULL" sfwMessageId="3019" sfwExpression="(this.ibusDeathNotice != null) &amp;&amp;&#xA;(this.ibusDeathNotice.icdoDeathNotice !=null) &amp;&amp;&#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusDeathNotice.icdoDeathNotice.death_already_reported&quot;) != &quot;Y&quot;) &amp;&amp;&#xA;(this.icdoContactTicket.contact_type_value == &quot;DETH&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusDeathNotice.icdoDeathNotice.death_date&quot;) == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF DECEASED DEPENDENT NAME IS NULL" sfwMessageId="3034" sfwExpression="(this.icdoContactTicket.contact_type_value == &quot;DETH&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusDeathNotice.icdoDeathNotice.deceased_dependant_flag&quot;) == &quot;Y&quot;) &amp;&amp; &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusDeathNotice.icdoDeathNotice.deceased_name&quot;)))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF DECEASED NOT SELECTED" sfwMessageId="3039" sfwExpression="(this.ibusDeathNotice != null) &amp;&amp;&#xA;(this.ibusDeathNotice.icdoDeathNotice !=null) &amp;&amp;&#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusDeathNotice.icdoDeathNotice.death_already_reported&quot;) != &quot;Y&quot;) &amp;&amp;&#xA;!((this.iblnIsFromPortal == True) &amp;&amp; &#xA;(RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusOrganization.icdoOrganization.org_id&quot;) &gt; 0)) &amp;&amp; &#xA;(this.icdoContactTicket.contact_type_value == &quot;DETH&quot;) &amp;&amp;  &#xA;(this.ibusDeathNotice != null) &amp;&amp; &#xA;(RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusDeathNotice.icdoDeathNotice.perslink_id&quot;) == 0)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF DEPARTNAME IS NULL" sfwMessageId="3026" sfwExpression="(this.icdoContactTicket.contact_type_value == &quot;NEWG&quot;) &amp;&amp; &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusNewGroup.icdoNewGroup.department_name&quot;)))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF GROUP NAME IS NULL" sfwMessageId="3035" sfwExpression="(this.icdoContactTicket.contact_type_value == &quot;NEWG&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusNewGroup.icdoNewGroup.emp_information_value&quot;) == &quot;TRNS&quot;) &amp;&amp; &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusNewGroup.icdoNewGroup.group_name&quot;)))" sfwObjectBased="True" />
+    <rule ID="Rule check if logged in user and assign to user are same" sfwMessageId="3060" sfwExpression="!(this.iblnIsFromPortal == True) &amp;&amp; &#xA;(this.icdoContactTicket.assign_to_user_id == this.iintLoggedinUser)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF NEW GROUP PLAN TYPE SELECTED" sfwMessageId="3040" sfwExpression="(this.icdoContactTicket.contact_type_value == &quot;NEWG&quot;) &amp;&amp; &#xA;(this.CheckNewPlantypeIsSelected() == True)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF NEWG CONTACT NAME IS NULL" sfwMessageId="3027" sfwExpression="(this.icdoContactTicket.contact_type_value == &quot;NEWG&quot;) &amp;&amp; &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusNewGroup.icdoNewGroup.contact_name&quot;)))" sfwObjectBased="True" />
+    <rule ID="Rule Check if Notes length exceeds 2000" sfwMessageId="3063" sfwExpression="(RFunc.Length(this.icdoContactTicket.notes) &gt; 2000)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF PHONE NUMBER IS NULL" sfwMessageId="3028" sfwExpression="(this.icdoContactTicket.contact_type_value == &quot;NEWG&quot;) &amp;&amp; &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusNewGroup.icdoNewGroup.phone_no&quot;)))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF RELATIONSHIP OF CALLER IS BLANK" sfwMessageId="3000" sfwExpression="!(this.iblnIsFromPortal == True) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoContactTicket.caller_relationship_value)) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.icdoContactTicket.caller_name))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF SEM DATE 1 IS GREATER THAN 2" sfwMessageId="3036" sfwExpression="(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_date2&quot;) &lt; RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_date1&quot;)) &amp;&amp; &#xA;(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_date2&quot;) != DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF SEMINAR DATE DAY 1 IS NULL" sfwMessageId="3031" sfwExpression="(this.icdoContactTicket.contact_type_value == &quot;SEM&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_date1&quot;) == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF SEMINAR DATE IS PAST DATE" sfwMessageId="3037" sfwExpression="(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_date1&quot;) &lt; RFunc.CurrentDate()) &amp;&amp; &#xA;(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_date1&quot;) != DateTime.MinValue) &amp;&amp; &#xA;(this.icdoContactTicket.contact_type_value == &quot;SEM&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule Check if Seminar day1 is not null" sfwMessageId="3056" sfwExpression="(this.icdoContactTicket.contact_type_value == &quot;SEM&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_date1&quot;) != DateTime.MinValue) &amp;&amp; &#xA;!(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_date1&quot;) &lt; RFunc.CurrentDate()) &amp;&amp; &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_date1_start_time_value&quot;)))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF SEMINAR DAY2 START TIME IS NESS THAN END TIME" sfwMessageId="3047" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_date2_start_time_value&quot;) &gt; RFunc.GetValue&lt;String&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_date2_end_time_value&quot;))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF SEMINAR NAME IS NULL" sfwMessageId="3029" sfwExpression="(this.icdoContactTicket.contact_type_value == &quot;SEM&quot;) &amp;&amp; &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_name&quot;)))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF SEMINAR TYPE IS BLANK" sfwMessageId="3030" sfwExpression="(this.icdoContactTicket.contact_type_value == &quot;SEM&quot;) &amp;&amp; &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_type_value&quot;)))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF SERVICE TYPE IS SELECTED BUT FROM DATE IS BLANK" sfwMessageId="3033" sfwExpression="((RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusSerPurServiceType.icdoSerPurServiceType.service_type_from_date&quot;) == DateTime.MinValue) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusSerPurServiceType.icdoSerPurServiceType.service_type_checked_flag&quot;) == &quot;Y&quot;))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF UNUSED SICK HRS IS NULL" sfwMessageId="3032" sfwExpression="(this.icdoContactTicket.contact_type_value == &quot;RETB&quot;) &amp;&amp; &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusBenefitEstimate.icdoBenefitEstimate.unused_sick_leave_hours&quot;))) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusBenefitEstimate.icdoBenefitEstimate.convert_unused_sick_leave_flag&quot;) == &quot;Y&quot;)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK ORG ID EXISTS" sfwMessageId="1027" sfwExpression="(RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusOrganization.icdoOrganization.org_id&quot;) == 0) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.icdoContactTicket.istrOrgCodeID))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK PERSLINK ID NOT EXISTS" sfwMessageId="3002" sfwExpression="(this.icdoContactTicket.person_id != 0) &amp;&amp; &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPerson.icdoPerson.ssn&quot;)))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK TICKET STATUS IS OPEN" sfwExpression="(this.icdoContactTicket.status_value == &quot;OPEN&quot;) &amp;&amp; &#xA;(this.icdoContactTicket.original_contact_ticket_id == 0)" sfwObjectBased="True" />
+    <rule ID="Rule if seminar date1 end time is null" sfwMessageId="3057" sfwExpression="(this.icdoContactTicket.contact_type_value == &quot;SEM&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_date1&quot;) != DateTime.MinValue) &amp;&amp; &#xA;!(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_date1&quot;) &lt; RFunc.CurrentDate()) &amp;&amp; &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_date1_end_time_value&quot;)))" sfwObjectBased="True" />
+    <rule ID="RULE IF SEMINAR DAY2 END TIME NULL" sfwMessageId="3046" sfwExpression="(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_date2&quot;) != DateTime.MinValue) &amp;&amp; &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_date2_end_time_value&quot;)))" sfwObjectBased="True" />
+    <rule ID="RULE IF SEMINAR DAY2 START TIME NULL" sfwMessageId="3048" sfwExpression="(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_date2&quot;) != DateTime.MinValue) &amp;&amp; &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_date2_start_time_value&quot;)))" sfwObjectBased="True" />
+    <rule ID="VISIBLE CHECK EDITABLE APPOINTMENT" sfwExpression="!(RFunc.GetValue&lt;String&gt;(this, &quot;ibusAppointmentSchedule.icdoAppointmentSchedule.appointment_cancel_flag&quot;) == &quot;Y&quot;)" sfwObjectBased="True" />
+    <rule ID="VISIBLE CHECK NON-EDITABLE APPOINTMENT" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusAppointmentSchedule.icdoAppointmentSchedule.appointment_cancel_flag&quot;) == &quot;Y&quot;)" sfwObjectBased="True" />
+    <rule ID="VISIBLE CONTACT TICKET SAVE BTN" sfwExpression="(this.DisableSaveButton() == False)" sfwObjectBased="True" />
+    <rule ID="VISIBLE RULE FOR CONTACT TYPE DESCRIPTION" sfwExpression="!((string.IsNullOrEmpty(this.icdoContactTicket.contact_type_value)) || &#xA;(this.icdoContactTicket.contact_type_value == &quot;WKRF&quot;))" sfwObjectBased="True" />
+    <rule ID="VISIBLE RULE FOR CONTACT TYPE DROPDOWN" sfwExpression="((string.IsNullOrEmpty(this.icdoContactTicket.contact_type_value)) || &#xA;(this.icdoContactTicket.contact_type_value == &quot;WKRF&quot;))" sfwObjectBased="True" />
+    <rule ID="VISIBLE SEM ATTENDEE DELETE  BTN" sfwExpression="(this.ldtSeminarCompletionDate &gt; RFunc.CurrentDate()) &amp;&amp; &#xA;(this.icdoContactTicket.contact_type_value == &quot;SEM&quot;)" sfwObjectBased="True" />
+    <rule ID="VISIBLE VALIDATE ADDRESS BUTTON" sfwExpression="!(string.IsNullOrEmpty(this.icdoContactTicket.contact_type_value)) &amp;&amp; &#xA;((this.icdoContactTicket.contact_type_value == &quot;DETH&quot;) || &#xA;(this.icdoContactTicket.contact_type_value == &quot;NEWG&quot;))" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForAppointmentAndDeathNotice" sfwExpression="(this.icdoContactTicket.contact_ticket_id == 0)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForEssDeathNotice" sfwExpression="((this.iblnIsFromPortal == True) &amp;&amp; &#xA;(RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusOrganization.icdoOrganization.org_id&quot;) &gt; 0))" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForMSSDeathNotice" sfwExpression="((this.iblnIsFromPortal == True) &amp;&amp; &#xA;(RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusPerson.icdoPerson.person_id&quot;) &gt; 0))" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForNewGuestAttendeeButton" sfwExpression="(this.icdoContactTicket.contact_type_value == &quot;SEM&quot;) &amp;&amp; &#xA;(this.VisibleRuleForNewGuestAttendeeButton() == True)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForSignUpButton" sfwExpression="(this.icdoContactTicket.contact_type_value == &quot;SEM&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_type_value&quot;) == &quot;PREN&quot;)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleIDBRemittanceButton" sfwExpression="(this.icdoContactTicket.contact_type_value == &quot;SEM&quot;) &amp;&amp; &#xA;(this.icdoContactTicket.status_value == &quot;CLOS&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;Decimal&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.attendee_fee&quot;) &gt; 0) &amp;&amp; &#xA;!(this.icdoContactTicket.idb_remittance_created_flag == &quot;Y&quot;)" sfwObjectBased="True" />
+    <rule ID="ISRequestedDateFRomGreaterThanRequestedDateTo" sfwMessageId="10088" sfwExpression="(this.iblnIsFromPortal == True) &amp;&amp; &#xA;(this.icdoContactTicket.contact_type_value == &quot;APP&quot;) &amp;&amp; &#xA;!(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusAppointmentSchedule.icdoAppointmentSchedule.requested_date_from&quot;) == DateTime.MinValue) &amp;&amp; &#xA;!(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusAppointmentSchedule.icdoAppointmentSchedule.requested_date_to&quot;) == DateTime.MinValue) &amp;&amp; &#xA;(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusAppointmentSchedule.icdoAppointmentSchedule.requested_date_from&quot;) &gt; RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusAppointmentSchedule.icdoAppointmentSchedule.requested_date_to&quot;))" sfwObjectBased="True" />
+    <rule ID="IsNewMode" sfwExpression="(this.icdoContactTicket.contact_ticket_id == 0)" sfwObjectBased="True" />
+    <rule ID="IsCallbackTelephoneNull" sfwMessage="Callback Phone Number is required." sfwExpression="(this.iblnIsFromPortal == True) &amp;&amp; &#xA;(this.iblnIsFromReportAProblem == True) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoContactTicket.callback_phone))" sfwObjectBased="True" />
+    <rule ID="RULE APPOINTMENT Requested Date From Required" sfwMessage="Appointment Requested Date From Is Required" sfwExpression="(this.iblnIsFromPortal == True) &amp;&amp; &#xA;(this.icdoContactTicket.contact_type_value == &quot;APP&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusAppointmentSchedule.icdoAppointmentSchedule.requested_date_from&quot;) == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="RULE APPOINTMENT Requested Date To Required" sfwMessage="Appointment Requested Date To Is Required" sfwExpression="(this.iblnIsFromPortal == True) &amp;&amp; &#xA;(this.icdoContactTicket.contact_type_value == &quot;APP&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusAppointmentSchedule.icdoAppointmentSchedule.requested_date_to&quot;) == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="Check if Attendee fee greater than zero" sfwExpression="(RFunc.GetValue&lt;Decimal&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.attendee_fee&quot;) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="Rule Seminar Schedule Callback Phone Required" sfwMessage="Callback Phone Number is required." sfwExpression="(string.IsNullOrEmpty(this.icdoContactTicket.callback_phone)) &amp;&amp; &#xA;(this.iblnIsFromESS == True) &amp;&amp; &#xA;(this.iblnIsFromSeminarSchedule == True)" sfwObjectBased="True" />
+    <rule ID="Rule check if Address Is not valid" sfwMessageId="127" sfwExpression="(this.ibusDeathNotice != null) &amp;&amp;&#xA;(this.ibusDeathNotice.icdoDeathNotice !=null) &amp;&amp;&#xA;(this.iblnIsFromESS == True) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusDeathNotice.icdoDeathNotice.address_validate_flag&quot;) == &quot;N&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule check if webcast is null" sfwMessage="Webcast option required." sfwExpression="(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.webcast_available&quot;))) &amp;&amp; &#xA;(this.icdoContactTicket.contact_type_value == &quot;SEM&quot;)" sfwObjectBased="True" />
+    <rule ID="Check If Contact Phone Number is Valid" sfwMessageId="1062" sfwExpression="(this.VerifyContactPhoneNumber() == False)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF SEMINAR REGRISTRAION CLOSED" sfwExpression="(this.IsSeminarRegistrationDateExpired() == True)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF NOTES IS BLANK" sfwMessageId="10246" sfwExpression="(this.iblnIsFromPortal == True) &amp;&amp; &#xA;(this.iblnIsFromReportAProblem == True) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoContactTicket.notes))" sfwObjectBased="True" />
+    <rule ID="Rule Check if Address Is Not Valid In Report a Death" sfwExpression="(this.ibusDeathNotice != null) &amp;&amp;&#xA;(this.ibusDeathNotice.icdoDeathNotice !=null) &amp;&amp;&#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusDeathNotice.icdoDeathNotice.address_validate_flag&quot;) == &quot;N&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule Check IF CallBack Telephone IS Blank" sfwMessageId="10276" sfwExpression="(this.iblnIsFromPortal == True) &amp;&amp; &#xA;(this.iblnIsFromSeminarSchedule == True) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoContactTicket.callback_phone))" sfwObjectBased="True" />
+    <rule ID="Rule IF CallBack Phone In ContactNdpers Is Empty" sfwMessageId="10276" sfwExpression="(this.iblnIsFromPortal == True) &amp;&amp; &#xA;(this.iblnIsFromMssContactNDPERS == True) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoContactTicket.callback_phone))" sfwObjectBased="True" />
+    <rule ID="Check If From Date Is Less Than To Date" sfwRuleType="Validation" sfwExpression="(this.iblnIsFromInternal || this.iblnIsFromPortal) &amp;&amp; (this.CheckDate()==3)" sfwMessageId="10296" sfwObjectBased="True" />
+    <rule ID="Check If From Date Is Empty" sfwRuleType="Validation" sfwExpression="(this.iblnIsFromInternal || this.iblnIsFromPortal) &amp;&amp; (this.CheckDate()==1)" sfwMessageId="10297" sfwObjectBased="True" />
+    <rule ID="Check If To Date Is Empty" sfwRuleType="Validation" sfwExpression="(this.iblnIsFromInternal || this.iblnIsFromPortal) &amp;&amp; (this.CheckDate()==2)" sfwMessageId="10298" sfwObjectBased="True" />
+    <rule ID="Check Last Reporting month is null" sfwRuleType="Validation" sfwExpression="(this.ibusDeathNotice != null) &amp;&amp;&#xA;(this.ibusDeathNotice.icdoDeathNotice !=null) &amp;&amp;&#xA;((this.iblnIsFromESS)&amp;&amp;&#xA;(this.icdoContactTicket.contact_type_value == &quot;DETH&quot; )&amp;&amp;&#xA;(this.ibusDeathNotice != null)&amp;&amp; &#xA;(this.ibusDeathNotice.icdoDeathNotice.iblnIsPersonEnrolledInRetirementPlan)&amp;&amp;&#xA;(this.IsLastReportingMonthForRetrContributionValid() == False ))&#xA;|| &#xA;((this.iblnIsFromInternal)&amp;&amp;&#xA;(this.icdoContactTicket.contact_type_value == &quot;DETH&quot; )&amp;&amp;&#xA;(!String.IsNullOrEmpty(this.ibusDeathNotice.icdoDeathNotice.reporting_Month)) &amp;&amp;&#xA;(this.IsLastReportingMonthForRetrContributionValid() == False ))" sfwMessageId="10311" sfwObjectBased="True" />
+    <rule ID="Check Last Regular Paycheck Date" sfwRuleType="Validation" sfwExpression="(this.iblnIsFromESS)&amp;&amp;&#xD;&#xA;(this.icdoContactTicket.contact_type_value == &quot;DETH&quot; )&amp;&amp;&#xD;&#xA;(this.ibusDeathNotice != null)&amp;&amp;&#xD;&#xA;(this.ibusDeathNotice.icdoDeathNotice.iblnIsPersonEnrolledInRetirementPlan)&amp;&amp;&#xD;&#xA;(this.ibusDeathNotice.icdoDeathNotice.last_regular_paycheck_date == DateTime.MinValue)" sfwMessageId="10312" sfwObjectBased="True" />
+    <rule ID="VisibleRulePerslinkIdIsZero" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.icdoContactTicket.person_id &gt; 0)" />
+    <rule ID="ValidateEmailAddress" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(!string.IsNullOrEmpty(this.icdoContactTicket.email)) &amp;&amp;&#xA;(this.ValidateEmailPattern() == False)" sfwMessageId="10343" />
+    <rule ID="ValidationForPublishToWSS" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.icdoContactTicket.status_value == &quot;RASS&quot;) &amp;&amp;&#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;this.icdoContactTicket.istrPublishToWss&quot;) == &quot;Y&quot;)" sfwMessageId="10347" />
+    <rule ID="VisibilityOfPanelOnMSS" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.iblnWSSIsHistoryInserted)" />
+    <rule ID="VisibityOfMSSSecureMessagePanel" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.iblnWSSIsHistoryInserted!= True)" />
+    <rule ID="VisibiltyForPublishToWSSFlag" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.icdoContactTicket.contact_type_value == &quot;PERS&quot;) ||&#xA;(this.icdoContactTicket.contact_type_value == &quot;RTPR&quot;) ||&#xA;(this.icdoContactTicket.contact_type_value == &quot;DFPR&quot;) ||&#xA;(this.icdoContactTicket.contact_type_value == &quot;INPR&quot;) ||&#xA;(this.icdoContactTicket.contact_type_value == &quot;OTPR&quot;)" />
+    <rule ID="Rule Retirement Effective Date cannot be a past date" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.iblnIsFromPortal) &amp;&amp;&#xA;(this.ibusContactMgmtServicePurchase != null) &amp;&amp;&#xA;(this.ibusContactMgmtServicePurchase.icdoContactMgmtServicePurchase !=null) &amp;&amp;&#xA;(this.ibusContactMgmtServicePurchase.icdoContactMgmtServicePurchase.retirement_effective_date != RFunc.MinDateTime()) &amp;&amp;&#xA;(this.ibusContactMgmtServicePurchase.icdoContactMgmtServicePurchase.retirement_effective_date &lt; RFunc.CurrentDate())" sfwMessageId="10417" />
+    <rule ID="RULE CHECK IF CONTACT DECEASED NAME IS NULL" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.ibusPerson!= null) &amp;&amp;&#xA;(this.ibusPerson.icdoPerson!=null) &amp;&amp;&#xA;(this.ibusDeathNotice != null) &amp;&amp;&#xA;(this.ibusDeathNotice.icdoDeathNotice !=null) &amp;&amp;&#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusDeathNotice.icdoDeathNotice.death_already_reported&quot;) != &quot;Y&quot;) &amp;&amp;&#xA;(this.icdoContactTicket.contact_type_value == &quot;DETH&quot;) &amp;&amp; &#xA;((this.ibusDeathNotice.icdoDeathNotice.perslink_id ==-1 &amp;&amp; !this.iblnisfromMSS) ||(this.ibusDeathNotice.icdoDeathNotice.perslink_id == this.ibusPerson.icdoPerson.person_id &amp;&amp; this.iblnisfromMSS)) &amp;&amp;&#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusDeathNotice.icdoDeathNotice.deceased_name&quot;)))" sfwMessageId="10528" />
+  </rules>
+  <delete>
+    <property ID="lstContactTicketHistory" sfwMethodName="LoadContactTicketHistory" />
+  </delete>
+  <checklist />
+  <initialload>
+    <item ID="RULE CHECK CONTACT TYPE IS SEMINAR AND COUNSELING" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK TICKET STATUS IS OPEN" sfwMode="All" sfwStatus="Active" />
+    <item ID="VISIBLE CHECK NON-EDITABLE APPOINTMENT" sfwMode="All" sfwStatus="Active" />
+    <item ID="VISIBLE CHECK EDITABLE APPOINTMENT" sfwMode="All" sfwStatus="Active" />
+    <item ID="VISIBLE SEM ATTENDEE DELETE  BTN" sfwMode="All" sfwStatus="Active" />
+    <item ID="VISIBLE CONTACT TICKET SAVE BTN" sfwMode="All" sfwStatus="Active" />
+    <item ID="VISIBLE VALIDATE ADDRESS BUTTON" sfwMode="All" sfwStatus="Active" />
+    <item ID="VISIBLE RULE FOR CONTACT TYPE DROPDOWN" sfwMode="All" sfwStatus="Active" />
+    <item ID="VISIBLE RULE FOR CONTACT TYPE DESCRIPTION" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsTicketCreatedFromWorkflow" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForEssDeathNotice" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForMSSDeathNotice" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleIDBRemittanceButton" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForSignUpButton" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsContactTicketTypeSeminarDisableDeleteButton" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForNewGuestAttendeeButton" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForAppointmentAndDeathNotice" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsNewMode" sfwStatus="Active" sfwMode="All" />
+    <item ID="Check if Attendee fee greater than zero" sfwStatus="Active" sfwMode="All" />
+    <item ID="Rule Seminar Schedule Callback Phone Required" sfwStatus="Active" sfwMode="All" />
+    <item ID="Rule check if Address Is not valid" sfwStatus="Active" sfwMode="All" />
+    <item ID="Rule check if webcast is null" sfwStatus="Active" sfwMode="All" />
+    <item ID="RULE CHECK IF SEMINAR REGRISTRAION CLOSED" sfwStatus="Active" sfwMode="All" />
+    <item ID="Rule Check if Address Is Not Valid In Report a Death" sfwStatus="Active" sfwMode="All" />
+    <item ID="VisibleRulePerslinkIdIsZero" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibityOfMSSSecureMessagePanel" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibilityOfPanelOnMSS" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibiltyForPublishToWSSFlag" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="RULE CHECK IF BOTH PERSLINK AND ORG ID EXISTS" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK IF RELATIONSHIP OF CALLER IS BLANK" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK PERSLINK ID NOT EXISTS" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK ORG ID EXISTS" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK IF CONTACT TYPE IS BLANK" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK IF ALL PERSLINK ORG AND CALLER NAME IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK IF BOTH ORG AND CALLER NAME EXISTS" sfwMode="All" sfwStatus="Inactive" />
+    <item ID="RULE CHECK IF BOTH PERSLINK AND CALLER NAME EXISTS" sfwMode="All" sfwStatus="Inactive" />
+    <item ID="RULE CHECK APPOINTMENT TYPE IS BLANK" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK COUNSELOR IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK APPOINTMENT DATE IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK IF DATE OF DEATH IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK IF CONTACT NAME IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK IF CONTACT ADDRESS IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK IF CONTACT CITY IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK IF CONTACT ZIP IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK IF CONTACT STATE IS BLANK" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK IF CONTACT PHONE IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK IF DEPARTNAME IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK IF NEWG CONTACT NAME IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK IF PHONE NUMBER IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK IF SEMINAR NAME IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK IF SEMINAR TYPE IS BLANK" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK IF SEMINAR DATE DAY 1 IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK IF SERVICE TYPE IS SELECTED BUT FROM DATE IS BLANK " sfwMode="All" sfwStatus="Inactive" />
+    <item ID="RULE CHECK IF UNUSED SICK HRS IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK IF DECEASED DEPENDENT NAME IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK IF GROUP NAME IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK IF COVERED UNUSED SICK LEAVE HRS IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK IF SEM DATE 1 IS GREATER THAN 2" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK IF SEMINAR DATE IS PAST DATE" sfwMode="New" sfwStatus="Active" />
+    <item ID="RULE CHECK IF DECEASED NOT SELECTED" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK IF NEW GROUP PLAN TYPE SELECTED " sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE APPOINTMENT START TIME IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE APPOINTMENT END TIME IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE IF SEMINAR DAY2 END TIME NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE IF SEMINAR DAY2 START TIME NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK IF SEMINAR DAY2 START TIME IS NESS THAN END TIME" sfwMode="All" sfwStatus="Inactive" />
+    <item ID="Rule Check if Seminar day1 is not null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule if seminar date1 end time is null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule assign to not selected and Reassigned selected" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule check if logged in user and assign to user are same" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule check if assign to selected and reassigned to not selected" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check if Notes length exceeds 2000" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule check id date of death is past date" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule check if Appointment date is not future date" sfwMode="New" sfwStatus="Active" />
+    <item ID="Check if employer information not selected" sfwMode="All" sfwStatus="Active" />
+    <item ID="Check if Contact type is death or purchases or benefit estimate" sfwMode="All" sfwStatus="Active" />
+    <item ID="Check if selected contact type is seminar or new group" sfwMode="All" sfwStatus="Inactive" />
+    <item ID="Rule check if App date entered is less than old date" sfwMode="Update" sfwStatus="Inactive" />
+    <item ID="Check if Status Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsReassignedSelectedForSeminarAppointmentDeathNotice" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsESSMemberDeceasedFlagChecked" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsBenEstimateRetEffectiveDateEnteredForOtherThanOtherRetType" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsBenEstimateRetirementEffDateFirstOfTheMonth" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMSSAppointmentRequestDatePastDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsDeceasedPerslinkIdIsValid" sfwMode="All" sfwStatus="InActive" />
+    <item ID="IsDeceasedPERSLinkIdNotEntered" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsProblemTypeSelected" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule check Employee Not working in Org" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAdditionalGenericValuesNOTEntered" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsRetirementDateNullIfTypeisOther" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsRetirementTypeNotSelected" sfwMode="All" sfwStatus="Active" />
+    <item ID="ISRequestedDateFRomGreaterThanRequestedDateTo" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsCallbackTelephoneNull" sfwStatus="Active" sfwMode="All" />
+    <item ID="RULE APPOINTMENT Requested Date From Required" sfwStatus="Active" sfwMode="All" />
+    <item ID="RULE APPOINTMENT Requested Date To Required" sfwStatus="Active" sfwMode="All" />
+    <item ID="Rule Seminar Schedule Callback Phone Required" sfwStatus="Active" sfwMode="All" />
+    <item ID="Rule check if Address Is not valid" sfwStatus="Active" sfwMode="All" />
+    <item ID="Rule check if webcast is null" sfwStatus="Active" sfwMode="All" />
+    <item ID="Check If Contact Phone Number is Valid" sfwStatus="Active" sfwMode="All" />
+    <item ID="RULE CHECK IF NOTES IS BLANK" sfwStatus="Active" sfwMode="All" />
+    <item ID="Rule Check IF CallBack Telephone IS Blank" sfwStatus="Active" sfwMode="All" />
+    <item ID="Rule IF CallBack Phone In ContactNdpers Is Empty" sfwStatus="Active" sfwMode="All" />
+    <item ID="Check If From Date Is Less Than To Date" sfwStatus="Active" sfwMode="All" />
+    <item ID="Check If From Date Is Empty" sfwStatus="Active" sfwMode="All" />
+    <item ID="Check If To Date Is Empty" sfwStatus="Active" sfwMode="All" />
+    <item ID="Check Last Reporting month is null" sfwStatus="Active" sfwMode="All" />
+    <item ID="Check Last Regular Paycheck Date" sfwStatus="Active" sfwMode="All" />
+    <item ID="ValidateEmailAddress" sfwMode="All" sfwStatus="Active" />
+    <item ID="ValidationForPublishToWSS" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Retirement Effective Date cannot be a past date" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK IF CONTACT DECEASED NAME IS NULL" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <expressionfields />
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select ct.*,org.org_code from sgt_contact_ticket ct&#xD;&#xA;left outer join sgt_organization org on ct.org_id = org.org_id&#xD;&#xA;order by created_date desc">
+      <parameters />
+    </query>
+    <query ID="VALIDATE PERSLINK ID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_PERSON&#xD;&#xA;WHERE PERSON_ID=@PERSON_ID">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="VALIDATE ORG ID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_ORGANIZATION&#xD;&#xA;WHERE ORG_CODE=@ORG_CODE">
+      <parameters>
+        <parameter ID="@ORG_CODE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="RPT_CALLCENTER_METRICS" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT 'CONTACT TICKETS' AS GROUPNAME,CV.DESCRIPTION,CT.CREATED_DATE AS DATE,COUNT(1) AS RECORDCOUNT FROM SGT_CONTACT_TICKET CT&#xD;&#xA;LEFT OUTER JOIN SGS_CODE_VALUE CV ON CT.CONTACT_TYPE_VALUE=CV.CODE_VALUE AND CT.CONTACT_TYPE_ID=CV.CODE_ID&#xD;&#xA;WHERE CT.CREATED_DATE BETWEEN @START_DATE AND @END_DATE&#xD;&#xA;GROUP BY CT.CONTACT_TYPE_VALUE,CT.CREATED_DATE,CV.DESCRIPTION&#xD;&#xA;&#xD;&#xA;UNION ALL&#xD;&#xA;&#xD;&#xA;SELECT 'APPOINTMENT SCHEDULE' AS GROUPNAME,CV.DESCRIPTION,APS.CREATED_DATE AS DATE,COUNT(1) FROM SGT_APPOINTMENT_SCHEDULE APS&#xD;&#xA;LEFT OUTER JOIN SGS_CODE_VALUE CV ON APS.APPOINTMENT_TYPE_VALUE=CV.CODE_VALUE AND APS.APPOINTMENT_TYPE_ID=CV.CODE_ID&#xD;&#xA;WHERE APS.CREATED_DATE BETWEEN @START_DATE AND @END_DATE AND APPOINTMENT_CANCEL_FLAG &lt;&gt; 'Y'&#xD;&#xA;GROUP BY APS.APPOINTMENT_TYPE_VALUE,APS.CREATED_DATE,CV.DESCRIPTION&#xD;&#xA;&#xD;&#xA;UNION ALL&#xD;&#xA;&#xD;&#xA;SELECT 'SEMINAR SCHEDULE' AS GROUPNAME,CV.DESCRIPTION,SS.CREATED_DATE AS DATE,COUNT(1) FROM SGT_SEMINAR_SCHEDULE SS&#xD;&#xA;LEFT OUTER JOIN SGS_CODE_VALUE CV ON SS.SEMINAR_TYPE_VALUE=CV.CODE_VALUE AND SS.SEMINAR_TYPE_ID=CV.CODE_ID&#xD;&#xA;WHERE SS.CREATED_DATE BETWEEN @START_DATE AND @END_DATE AND SEMINAR_CANCEL_FLAG &lt;&gt; 'Y'&#xD;&#xA;GROUP BY SS.SEMINAR_TYPE_VALUE,SS.CREATED_DATE,CV.DESCRIPTION&#xD;&#xA;&#xD;&#xA;UNION ALL&#xD;&#xA;&#xD;&#xA;SELECT 'CORRESPONDENCE' AS GROUPNAME,CV.DESCRIPTION,CORR.CREATED_DATE AS DATE,COUNT(1) FROM SGS_COR_TEMPLATES CORR&#xD;&#xA;LEFT OUTER JOIN SGS_CODE_VALUE CV ON CORR.TEMPLATE_GROUP_VALUE=CV.CODE_VALUE AND CORR.TEMPLATE_GROUP_ID=CV.CODE_ID&#xD;&#xA;WHERE CORR.CREATED_DATE BETWEEN @START_DATE AND @END_DATE&#xD;&#xA;GROUP BY CORR.TEMPLATE_GROUP_VALUE,CORR.CREATED_DATE,CV.DESCRIPTION">
+      <parameters>
+        <parameter ID="@START_DATE" sfwDataType="DateTime" />
+        <parameter ID="@END_DATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="RPT_CALL_DISTRIBUTION" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="/*&#xA;&#x9;BABY TICKET SHOULD NOT COUNT ANYWHERE&#xA;&#x9;--open -&gt; reassign -&gt; clos&#xA;*/&#xA;--Assisted will include those parent contact tickets whose current status is closed and which are not reassigned to anybody at any point in time&#xA;SELECT CT.CONTACT_TICKET_ID, 'Assisted' AS TICKET_TYPE,CT.CREATED_BY,CT.CREATED_DATE AS DATE_DATA_CREATED&#xA;FROM SGT_CONTACT_TICKET CT&#xA;INNER JOIN SGS_USER US ON CT.CREATED_BY=US.USER_ID &#xA;WHERE (CT.CREATED_BY=CT.MODIFIED_BY)&#xA;AND (((US.USER_SERIAL_ID=@USERID)AND (@USERID !=0)) OR (@USERID = 0))&#xA;AND (CT.CREATED_DATE BETWEEN @STARTDATE AND @ENDDATE)&#xA;AND CT.STATUS_VALUE='CLOS' AND CT.ORIGINAL_CONTACT_TICKET_ID IS NULL &#xA;AND NOT EXISTS (SELECT CONTACT_TICKET_HISTORY_ID FROM SGT_CONTACT_TICKET_HISTORY CTH&#xA;WHERE CTH.CONTACT_TICKET_ID = CT.CONTACT_TICKET_ID AND CTH.STATUS_VALUE = 'RASS')&#xA;&#xA;UNION ALL&#xA;&#xA;--Transferred will include those parent contact tickets which are reassigned to anybody irrespective of current ticket status&#xA;SELECT CT.CONTACT_TICKET_ID, 'Transferred' AS TICKET_TYPE,CT.CREATED_BY,&#xA;CT.CREATED_DATE AS DATE_DATA_CREATED FROM SGT_CONTACT_TICKET CT&#xA;INNER JOIN SGS_USER US ON CT.CREATED_BY=US.USER_ID &#xA;WHERE ((US.USER_SERIAL_ID=@USERID) OR (@USERID = 0))&#xA;AND (CT.CREATED_DATE BETWEEN @STARTDATE AND @ENDDATE)&#xA;AND CT.ORIGINAL_CONTACT_TICKET_ID IS NULL&#xA;AND EXISTS (SELECT CONTACT_TICKET_HISTORY_ID FROM SGT_CONTACT_TICKET_HISTORY CTH&#xA;WHERE CTH.CONTACT_TICKET_ID = CT.CONTACT_TICKET_ID AND CTH.STATUS_VALUE = 'RASS')">
+      <parameters>
+        <parameter ID="@STARTDATE" sfwDataType="DateTime" />
+        <parameter ID="@ENDDATE" sfwDataType="DateTime" />
+        <parameter ID="@USERID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LOADAPPOINTMENTFACILITATOR" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT DISTINCT u.user_serial_id,first_name +' '+ last_name full_name  from sgs_user u&#xD;&#xA;inner join sgs_user_roles ur on u.USER_SERIAL_ID = ur.USER_SERIAL_ID &#xD;&#xA;and ((ur.effective_start_DATE is null) or (ur.effective_start_date&lt;=convert(dateTime,convert(char,getdate(),103),103)))&#xD;&#xA;and ((ur.effective_end_DATE is null) or (ur.effective_end_date&gt;=convert(dateTime,convert(char,getdate(),103),103)))   &#xD;&#xA;inner join sgs_security s on s.role_id = ur.role_id and s.security_value != 0&#xD;&#xA;inner join sgs_resources r on r.resource_id = s.resource_id&#xD;&#xA;where s.resource_id = 53 order by full_name">
+      <parameters />
+    </query>
+    <query ID="LOADSEMINARCOUNSELOR" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT DISTINCT u.user_serial_id,first_name +' '+last_name full_name  from sgs_user u&#xD;&#xA;inner join sgs_user_roles ur on u.USER_SERIAL_ID = ur.USER_SERIAL_ID &#xD;&#xA;and ((ur.effective_start_DATE is null) or (ur.effective_start_date&lt;=convert(dateTime,convert(char,getdate(),103),103)))&#xD;&#xA;and ((ur.effective_end_DATE is null) or (ur.effective_end_date&gt;=convert(dateTime,convert(char,getdate(),103),103)))   &#xD;&#xA;inner join sgs_security s on s.role_id = ur.role_id and s.security_value != 0&#xD;&#xA;inner join sgs_resources r on r.resource_id = s.resource_id&#xD;&#xA;where s.resource_id = 52 order by full_name">
+      <parameters />
+    </query>
+    <query ID="GetAssignedToUserByContactTicket" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select b.user_id from sgt_contact_ticket a&#xD;&#xA;inner join sgs_user b on a.assign_to_user_id = b.user_serial_id&#xD;&#xA; where contact_ticket_id = @contactTicketID">
+      <parameters>
+        <parameter ID="@contactTicketID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetCounselorUserByContactTicket" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select c.user_id from sgt_contact_ticket a&#xD;&#xA;inner join sgt_appointment_schedule b on a.contact_ticket_id = b.contact_ticket_id&#xD;&#xA;inner join sgs_user c on b.counselor_user_id = c.user_serial_id&#xD;&#xA;where a.contact_ticket_id = @contactTicketID">
+      <parameters>
+        <parameter ID="@contactTicketID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadMSSContactTickets" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from sgt_contact_ticket a&#xD;&#xA;left outer join sgt_appointment_schedule b on a.contact_ticket_id = b.contact_ticket_id&#xD;&#xA;where a.person_id = @personID&#xD;&#xA;AND( &#xD;&#xA; a.status_value &lt;&gt; 'CLOS' OR &#xD;&#xA; (a.status_value = 'CLOS' AND datediff(dd,a.modified_date,getDate()) &lt;= 90)&#xD;&#xA; )&#xD;&#xA; and a.IS_TICKET_CREATED_FROM_PORTAL_FLAG = 'Y'">
+      <parameters>
+        <parameter ID="@personID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadESSContactTickets" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from sgt_contact_ticket a&#xD;&#xA;left outer join sgt_appointment_schedule b on a.contact_ticket_id = b.contact_ticket_id&#xD;&#xA;where a.org_id = @orgID&#xD;&#xA;AND( &#xD;&#xA; a.status_value &lt;&gt; 'CLOS' OR &#xD;&#xA; (a.status_value = 'CLOS' AND datediff(dd,a.modified_date,getDate()) &lt;= 90)&#xD;&#xA; )&#xD;&#xA;  and a.IS_TICKET_CREATED_FROM_PORTAL_FLAG = 'Y'">
+      <parameters>
+        <parameter ID="@orgID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadAllUnpaidFeeAttendees" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select a.*,b.* from sgt_seminar_attendee_detail a&#xD;&#xA;inner join sgt_seminar_schedule b on a.seminar_schedule_id = b.seminar_schedule_id&#xD;&#xA;inner join sgt_contact_ticket c on b.contact_ticket_id = c.contact_ticket_id&#xD;&#xA;where b.attendee_fee &gt; 0 and (a.attendee_fee_paid_flag is null or a.attendee_fee_paid_flag = 'N')">
+      <parameters />
+    </query>
+    <query ID="rptUnpaidSeminar" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from SGT_SEMINAR_ATTENDEE_DETAIL&#xD;&#xA;where payment_method_value = 'PRCK'&#xD;&#xA;AND (ATTENDEE_FEE_PAID_FLAG IS NULL OR ATTENDEE_FEE_PAID_FLAG = 'N')">
+      <parameters />
+    </query>
+    <query ID="rptSeminarIDB" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT b.CONTACT_TICKET_ID,&#xA;&#x9;   a.*,&#xA;&#x9;   b.* &#xA;FROM&#xA;&#x9; sgt_seminar_attendee_detail a &#xA;&#x9;INNER JOIN sgt_seminar_schedule b ON a.seminar_schedule_id = b.seminar_schedule_id &#xA;&#x9;INNER JOIN sgt_person c ON a.person_id = c.person_id  &#xA;WHERE&#xA;&#x9; a.payment_method_value = 'IDBL' AND&#xA;&#x9; b.CONTACT_TICKET_ID = case when isnull(@ContactTicketID ,0) = 0 &#xA;&#x9;                                 then b.CONTACT_TICKET_ID&#xA;                            else @ContactTicketID &#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;     end &#xA;ORDER BY &#xA;        CASE @SortBy WHEN 0 THEN c.LAST_NAME ELSE NULL END,&#xA;        CASE @SortBy WHEN 1 THEN c.PERSON_ID ELSE NULL END">
+      <parameters>
+        <parameter ID="@ContactTicketID" sfwDataType="int" />
+        <parameter ID="@SortBy" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="SeminarWorkflowReminderBatchQuery" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select a.person_id,a.org_id,a.contact_ticket_id,b.activity_instance_id from sgt_contact_ticket a WITH(NOLOCK)&#xD;&#xA;inner join sgw_bpm_activity_instance b WITH(NOLOCK) on b.reference_id = a.contact_ticket_id&#xD;&#xA;inner join sgw_bpm_process_instance d WITH(NOLOCK) on d.process_instance_id = b.process_instance_id&#xD;&#xA;inner join sgw_bpm_process e WITH(NOLOCK) on d.process_id=e.process_id&#xD;&#xA;inner join SGW_BPM_PROCESS_ID_DESC f WITH(NOLOCK) on f.process_id=213 and f.DESCRIPTION=e.DESCRIPTION&#xD;&#xA;inner join sgt_seminar_schedule c WITH(NOLOCK) on c.contact_ticket_id = a.contact_ticket_id&#xD;&#xA;where a.CONTACT_TYPE_VALUE = 'SEM' and a.status_value not in ('CANC','CLOS')&#xD;&#xA;and SEMINAR_CANCEL_FLAG &lt;&gt; 'Y' &#xD;&#xA;and datediff(day,getdate(),SEMINAR_DATE1) &lt;= 30  and SEMINAR_DATE1 &gt; getdate() &#xD;&#xA;and b.status_value = 'SUSP'&#xD;&#xA;union&#xD;&#xA;select a.person_id,a.org_id,a.contact_ticket_id,0&#xD;&#xA;from sgt_contact_ticket a WITH(NOLOCK)&#xD;&#xA;inner join sgt_seminar_schedule c WITH(NOLOCK) on c.contact_ticket_id = a.contact_ticket_id&#xD;&#xA;where a.CONTACT_TYPE_VALUE = 'SEM' and a.status_value not in ('CANC','CLOS')&#xD;&#xA;and SEMINAR_CANCEL_FLAG &lt;&gt; 'Y'&#xD;&#xA;and datediff(day,getdate(),SEMINAR_DATE1) &lt;= 30 and SEMINAR_DATE1 &gt; getdate()&#xD;&#xA;and NOT EXISTS(select 1 from sgw_bpm_activity_instance at WITH(NOLOCK)&#xD;&#xA;inner join sgw_bpm_process_instance b WITH(NOLOCK) on at.process_instance_id = b.process_instance_id&#xD;&#xA;inner join sgw_bpm_process e WITH(NOLOCK) on b.process_id=e.process_id&#xD;&#xA;inner join SGW_BPM_PROCESS_ID_DESC f WITH(NOLOCK) on f.PROCESS_ID=213 and f.DESCRIPTION=e.DESCRIPTION&#xD;&#xA;inner join sgw_bpm_case_instance ci WITH(NOLOCK) on b.case_instance_id=ci.case_instance_id&#xD;&#xA;where ci.reference_id = a.contact_ticket_id)">
+      <parameters />
+    </query>
+    <query ID="LimitedAppointmentTypesForMSS" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGS_CODE_VALUE&#xD;&#xA;WHERE CODE_ID=1007&#xD;&#xA;AND ISNULL(DATA1,'') &lt;&gt; 'N'">
+      <parameters />
+    </query>
+    <query ID="LoadESSReportedProblems" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * &#xD;&#xA;FROM&#xD;&#xA;&#x9;SGT_CONTACT_TICKET WITH (NOLOCK)&#xD;&#xA;WHERE &#xD;&#xA;&#x9;ORG_ID = @ORGID AND CONTACT_TYPE_VALUE IN ('RTPR', 'DFPR', 'INPR', 'OTPR')&#xD;&#xA;&#x9;AND (STATUS_VALUE &lt;&gt; 'CLOS' OR (STATUS_VALUE = 'CLOS' AND datediff(DD, MODIFIED_DATE, GETDATE()) &lt;= 90)&#xD;&#xA;&#x9;) and IS_TICKET_CREATED_FROM_PORTAL_FLAG = 'Y'&#xD;&#xA;ORDER BY CONTACT_TICKET_ID DESC">
+      <parameters>
+        <parameter ID="@ORGID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadESSAppointments" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * &#xD;&#xA;FROM &#xD;&#xA;&#x9;SGT_CONTACT_TICKET SCT&#xD;&#xA;INNER JOIN &#xD;&#xA;&#x9;SGT_APPOINTMENT_SCHEDULE SAS ON SCT.CONTACT_TICKET_ID = SAS.CONTACT_TICKET_ID&#xD;&#xA;WHERE SCT.ORG_ID = @ORGID&#xD;&#xA;AND( &#xD;&#xA;&#x9; SCT.STATUS_VALUE &lt;&gt; 'CLOS' OR &#xD;&#xA;&#x9; (SCT.STATUS_VALUE = 'CLOS' AND DATEDIFF(DD, SCT.MODIFIED_DATE, GETDATE()) &lt;= 90)&#xD;&#xA;&#x9;)&#xD;&#xA;AND SCT.IS_TICKET_CREATED_FROM_PORTAL_FLAG = 'Y'&#xD;&#xA;ORDER BY SCT.CONTACT_TICKET_ID DESC">
+      <parameters>
+        <parameter ID="@ORGID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadESSDeathNotices" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * &#xD;&#xA;FROM &#xD;&#xA;&#x9;SGT_CONTACT_TICKET SCT&#xD;&#xA;INNER JOIN &#xD;&#xA;&#x9;SGT_DEATH_NOTICE SDN ON SCT.CONTACT_TICKET_ID = SDN.CONTACT_TICKET_ID&#xD;&#xA;WHERE SCT.ORG_ID = @ORGID&#xD;&#xA;AND( &#xD;&#xA;&#x9; SCT.STATUS_VALUE &lt;&gt; 'CLOS' OR &#xD;&#xA;&#x9; (SCT.STATUS_VALUE = 'CLOS' AND DATEDIFF(DD, SCT.MODIFIED_DATE, GETDATE()) &lt;= 90)&#xD;&#xA;&#x9;)&#xD;&#xA;AND SCT.IS_TICKET_CREATED_FROM_PORTAL_FLAG = 'Y'&#xD;&#xA;ORDER BY SCT.CONTACT_TICKET_ID DESC">
+      <parameters>
+        <parameter ID="@ORGID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadContactTicketByPerson" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT CON.CONTACT_TICKET_ID  , CON.CREATED_DATE , CON.STATUS_VALUE, HIS.NOTES FROM SGT_CONTACT_TICKET CON WITH(NOLOCK)&#xD;&#xA;JOIN SGT_CONTACT_TICKET_HISTORY HIS WITH(NOLOCK) ON CON.CONTACT_TICKET_ID = HIS.CONTACT_TICKET_ID &#xD;&#xA;WHERE CON.PERSON_ID = @PERSON_ID &#xD;&#xA;&#x9;AND  HIS.CONTACT_TICKET_HISTORY_ID = (&#xD;&#xA;&#x9;&#xD;&#xA;&#x9;SELECT TOP 1 HIST.CONTACT_TICKET_HISTORY_ID &#xD;&#xA;&#x9;FROM SGT_CONTACT_TICKET_HISTORY HIST WITH(NOLOCK) &#xD;&#xA;&#x9;WHERE HIST.CONTACT_TICKET_ID = CON.CONTACT_TICKET_ID &#xD;&#xA;&#xD;&#xA;&#x9;&#x9;) &#xD;&#xA;&#x9;AND (CON.STATUS_VALUE &lt;&gt; 'CLOS' &#xD;&#xA;&#x9;&#x9;OR (CON.STATUS_VALUE = 'CLOS' AND DATEDIFF(DAY,CON.MODIFIED_DATE,GETDATE()) &lt;= 90 ))&#xD;&#xA;&#x9;&#x9;AND CON.IS_TICKET_CREATED_FROM_PORTAL_FLAG = 'Y'&#xD;&#xA;&#x9;&#x9;AND CON.CONTACT_TYPE_VALUE = 'PERS'&#xD;&#xA;ORDER BY CONTACT_TICKET_ID DESC">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadContactTicketDetailHistory" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT&#x9;CONTACT_TICKET_HISTORY_ID, CONTACT_TICKET_ID,  STATUS_VALUE, NOTES , MODIFIED_DATE, CREATED_BY, CREATED_DATE&#xD;&#xA;FROM&#x9;SGT_CONTACT_TICKET_HISTORY&#xD;&#xA;WHERE&#x9;CONTACT_TICKET_ID = @CONTACT_TICKET_ID AND PUBLISH_WSS = 'Y'&#xD;&#xA;ORDER BY CONTACT_TICKET_HISTORY_ID DESC">
+      <parameters>
+        <parameter ID="@CONTACT_TICKET_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetAssignedToUserByContactTicketForBPM" sfwQueryType="ScalarQuery" sfwDataType="int" sfwSql="select assign_to_user_id &#xA;from sgt_contact_ticket where contact_ticket_id = @contactTicketID">
+      <parameters>
+        <parameter ID="@contactTicketID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetCounselorUserByContactTicketForBPM" sfwQueryType="ScalarQuery" sfwDataType="int" sfwSql="SELECT COUNSELOR_USER_ID FROM SGT_APPOINTMENT_SCHEDULE A WITH(NOLOCK)&#xA;INNER JOIN SGT_CONTACT_TICKET C WITH(NOLOCK) ON A.CONTACT_TICKET_ID = C.CONTACT_TICKET_ID&#xA;WHERE C.CONTACT_TICKET_ID = @CONTACTTICKETID">
+      <parameters>
+        <parameter ID="@CONTACTTICKETID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadDeceasedContactAndDependent" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT &#xA;PERSON_ID,&#xA;ISNULL(FIRST_NAME,'') + ' ' +  &#xA;ISNULL(MIDDLE_NAME,'') + ' ' + ISNULL(LAST_NAME,'') + ', ' + CAST(PERSON_ID AS VARCHAR(20)) 'FULL_NAME'&#xA;FROM&#xA;SGT_PERSON&#xA;WHERE PERSON_ID IN (&#xA;SELECT DISTINCT PERSON_ID FROM SGT_PERSON WHERE PERSON_ID=@PERSON_ID &#xA;UNION&#xA;SELECT DISTINCT PERSON_ID FROM SGT_PERSON_CONTACT WHERE PERSON_ID=@PERSON_ID &#xA;UNION&#xA;SELECT DISTINCT CONTACT_PERSON_ID AS PERSON_ID FROM SGT_PERSON_CONTACT WHERE PERSON_ID=@PERSON_ID AND RELATIONSHIP_VALUE = 'SPOU' AND STATUS_VALUE ='ACT'&#xA;UNION&#xA;SELECT DISTINCT DEPENDENT_PERSLINK_ID AS PERSON_ID FROM SGT_PERSON_DEPENDENT SPD WITH(NOLOCK)&#xA;INNER JOIN SGT_PERSON_ACCOUNT_DEPENDENT SPAD WITH(NOLOCK) ON SPAD.PERSON_DEPENDENT_ID=SPD.PERSON_DEPENDENT_ID&#xA;INNER JOIN SGT_PERSON_ACCOUNT SPA WITH(NOLOCK) ON SPA.PERSON_ACCOUNT_ID=SPAD.PERSON_ACCOUNT_ID&#xA;INNER JOIN SGT_PLAN PLN WITH(NOLOCK) ON PLN.PLAN_ID=SPA.PLAN_ID&#xA;LEFT OUTER JOIN SGT_PERSON P WITH(NOLOCK) ON SPD.DEPENDENT_PERSLINK_ID = P.PERSON_ID &#xA;WHERE SPD.PERSON_ID=@PERSON_ID AND SPD.RELATIONSHIP_VALUE &lt;&gt; 'SPOU' AND SPAD.END_DATE IS NULL&#xA;UNION&#xA;SELECT DISTINCT BENEFICIARY_PERSON_ID AS PERSON_ID FROM SGT_PERSON_BENEFICIARY SPD WITH(NOLOCK)&#xA;INNER JOIN SGT_PERSON_ACCOUNT_BENEFICIARY SPAD WITH(NOLOCK) ON SPAD.BENEFICIARY_ID=SPD.BENEFICIARY_PERSON_ID&#xA;INNER JOIN SGT_PERSON_ACCOUNT SPA WITH(NOLOCK) ON SPA.PERSON_ACCOUNT_ID=SPAD.PERSON_ACCOUNT_ID&#xA;INNER JOIN SGT_PLAN PLN WITH(NOLOCK) ON PLN.PLAN_ID=SPA.PLAN_ID&#xA;LEFT OUTER JOIN SGT_PERSON P WITH(NOLOCK) ON SPD.BENEFICIARY_PERSON_ID = P.PERSON_ID &#xA;WHERE SPD.PERSON_ID=@PERSON_ID AND SPD.RELATIONSHIP_VALUE &lt;&gt; 'SPOU' AND SPAD.END_DATE IS NULL)">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="ContactTicketId" sfwType="Column" sfwValue="contact_ticket_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PersonId" sfwType="Column" sfwValue="person_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="OrgId" sfwType="Column" sfwValue="org_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusDescription" sfwType="Description" sfwValue="status_description" />
+    <attribute ID="StatusId" sfwType="Column" sfwValue="status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="1002" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusValue" sfwType="Column" sfwValue="status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="CallbackPhone" sfwType="Column" sfwValue="callback_phone" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="Email" sfwType="Column" sfwValue="email" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ContactTypeDescription" sfwType="Description" sfwValue="contact_type_description" />
+    <attribute ID="ContactTypeId" sfwType="Column" sfwValue="contact_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="1001" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ContactTypeValue" sfwType="Column" sfwValue="contact_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="EventTypeDescription" sfwType="Description" sfwValue="event_type_description" />
+    <attribute ID="EventTypeId" sfwType="Column" sfwValue="event_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="1006" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="EventTypeValue" sfwType="Column" sfwValue="event_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="CallerName" sfwType="Column" sfwValue="caller_name" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="100" />
+    <attribute ID="CallerRelationshipDescription" sfwType="Description" sfwValue="caller_relationship_description" />
+    <attribute ID="CallerRelationshipId" sfwType="Column" sfwValue="caller_relationship_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="1012" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="CallerRelationshipValue" sfwType="Column" sfwValue="caller_relationship_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="ContactMethodDescription" sfwType="Description" sfwValue="contact_method_description" />
+    <attribute ID="ContactMethodId" sfwType="Column" sfwValue="contact_method_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="1003" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ContactMethodValue" sfwType="Column" sfwValue="contact_method_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="ResponseMethodDescription" sfwType="Description" sfwValue="response_method_description" />
+    <attribute ID="ResponseMethodId" sfwType="Column" sfwValue="response_method_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="1004" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ResponseMethodValue" sfwType="Column" sfwValue="response_method_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="AssignToUserId" sfwType="Column" sfwValue="assign_to_user_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="Notes" sfwType="Column" sfwValue="notes" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="2000" />
+    <attribute ID="TicketTypeDescription" sfwType="Description" sfwValue="ticket_type_description" />
+    <attribute ID="TicketTypeId" sfwType="Column" sfwValue="ticket_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="1008" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="TicketTypeValue" sfwType="Column" sfwValue="ticket_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="CopyStatusFlag" sfwType="Column" sfwValue="copy_status_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="OriginalContactTicketId" sfwType="Column" sfwValue="original_contact_ticket_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="TimeOfDayDescription" sfwType="Description" sfwValue="time_of_day_description" />
+    <attribute ID="TimeOfDayId" sfwType="Column" sfwValue="time_of_day_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="5006" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="TimeOfDayValue" sfwType="Column" sfwValue="time_of_day_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="IdbRemittanceCreatedFlag" sfwType="Column" sfwValue="idb_remittance_created_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="IsTicketCreatedFromPortalFlag" sfwType="Column" sfwValue="is_ticket_created_from_portal_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="WebContactId" sfwType="Column" sfwValue="web_contact_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="objPerson" sfwType="Object" sfwEntity="entPerson" sfwValue="ibusPerson" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrOrgCodeID" sfwValue="icdoContactTicket.istrOrgCodeID" />
+    <attribute ID="objOrganization" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusOrganization" />
+    <attribute sfwType="Collection" sfwEntity="entContactTicketHistory" ID="lstContactTicketHistory" sfwValue="iclbContactTicketHistory" />
+    <attribute ID="objAppointmentSchedule" sfwType="Object" sfwEntity="entAppointmentSchedule" sfwValue="ibusAppointmentSchedule" />
+    <attribute ID="objBenefitEstimate" sfwType="Object" sfwEntity="entBenefitEstimate" sfwValue="ibusBenefitEstimate" />
+    <attribute ID="objDeathNotice" sfwType="Object" sfwEntity="entDeathNotice" sfwValue="ibusDeathNotice" />
+    <attribute ID="objNewGroup" sfwType="Object" sfwEntity="entNewGroup" sfwValue="ibusNewGroup" />
+    <attribute ID="objSeminarSchedule" sfwType="Object" sfwEntity="entSeminarSchedule" sfwValue="ibusSeminarSchedule" />
+    <attribute ID="objContactMgmtServicePurchase" sfwType="Object" sfwEntity="entContactMgmtServicePurchase" sfwValue="ibusContactMgmtServicePurchase" />
+    <attribute ID="objUser" sfwType="Object" sfwEntity="entUser" sfwValue="ibusUser" />
+    <attribute ID="objCounselor" sfwType="Object" sfwEntity="entUser" sfwValue="ibusCounselor" />
+    <attribute ID="objFacilitator" sfwType="Object" sfwEntity="entUser" sfwValue="ibusFacilitator" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IintContactTicketActivityInstanceID" sfwValue="iintContactTicketActivityInstanceID" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrActivityDisplayName" sfwValue="istrActivityDisplayName" />
+    <attribute sfwType="Collection" sfwEntity="entContactTicket" ID="lstESSAppointments" sfwValue="iclbESSAppointments" />
+    <attribute sfwDataType="int" sfwType="Property" ID="PortalLaunchScreenID" sfwValue="icdoContactTicket.PortalLaunchScreenID" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrSuppressWarning" sfwValue="istrSuppressWarning" />
+    <attribute sfwType="Collection" sfwEntity="entContactTicket" ID="lstESSDeathNotices" sfwValue="iclbESSDeathNotices" />
+    <attribute sfwType="Collection" sfwEntity="entContactTicket" ID="lstESSReportedProblems" sfwValue="iclbESSReportedProblems" />
+    <attribute sfwDataType="string" sfwType="Property" ID="SeminarTicketStatus" sfwValue="SeminarTicketStatus" />
+    <attribute ID="objContactTicketHistory" sfwType="Object" sfwEntity="entContactTicketHistory" sfwPrivate="False" sfwValue="ibusContactTicketHistory" />
+    <attribute ID="lstContactTicket" sfwType="Collection" sfwValue="iclbContactTicket" sfwEntity="entContactTicket" sfwPrivate="False" />
+    <attribute ID="lblnNeedHistory" sfwDataType="string" sfwPrivate="False" sfwValue="icdoContactTicket.istrPublishToWss" sfwType="Property" />
+    <attribute ID="lblnWSSIsHistoryInserted" sfwDataType="bool" sfwPrivate="False" sfwValue="iblnWSSIsHistoryInserted" sfwType="Property" />
+    <attribute ID="lstContactTicketDetailHistory" sfwType="Collection" sfwValue="iclbContactTicketDetailHistory" sfwEntity="entContactTicketHistory" sfwPrivate="False" />
+    <attribute ID="lintContactTicketId" sfwDataType="int" sfwPrivate="False" sfwValue="iintContactTicketId" sfwType="Property" />
+    <attribute ID="lstrAmntMonths" sfwDataType="string" sfwPrivate="False" sfwValue="istrAmntMonths" sfwType="Property" />
+    <attribute ID="lsElligibleOrRolloverPlan" sfwDataType="string" sfwPrivate="False" sfwValue="isElligibleOrRolloverPlan" sfwType="Property" />
+    <attribute sfwValue="callback_phone_2" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="50" sfwIsNull="True" ID="CallbackPhone2" sfwCaption="Callback Phone 2" />
+    <attribute sfwValue="extn" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="50" sfwIsNull="True" ID="Extn" sfwCaption="Extn" />
+    <attribute sfwValue="extn2" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="50" sfwIsNull="True" ID="Extn2" sfwCaption="Extn2" />
+  </attributes>
+  <objectmethods>
+    <method ID="btnCreateIDBRemittance_Click" sfwReturnType="ArrayList" />
+    <method ID="btnGetPersonAndOrgDetails_Click" sfwReturnType="ArrayList" />
+    <method ID="ReloadHandButtonData" sfwReturnType="ArrayList" />
+    <method ID="ValidateAddressDeathNotice" sfwReturnType="ArrayList" />
+    <method ID="ValidateAddressNewGroup" sfwReturnType="ArrayList" />
+    <method ID="UpdateStatusAttended" sfwReturnType="ArrayList">
+      <parameters>
+        <parameter ID="aarrSelectedObjects" sfwDataType="ArrayList" />
+      </parameters>
+    </method>
+    <method ID="UpdateStatusGuest" sfwReturnType="ArrayList">
+      <parameters>
+        <parameter ID="aarrSelectedObjects" sfwDataType="ArrayList" />
+      </parameters>
+    </method>
+    <method ID="LoadContactTicketHistory" sfwReturnType="Void" />
+    <method ID="LoadDeceasedContactandDependentNames" sfwReturnType="Collection" sfwObjectID="cdoPerson" sfwEntity="entPerson" />
+    <method ID="btnRetriveDeceasedData_Click" sfwReturnType="ArrayList" />
+  </objectmethods>
+  <constraint />
+  <methods />
+  <lifecycle />
+  <ExtraFields />
+</entity>

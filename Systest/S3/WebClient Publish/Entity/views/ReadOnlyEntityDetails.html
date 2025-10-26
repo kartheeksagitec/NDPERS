@@ -1,0 +1,237 @@
+﻿<div class="portlet-body entityDetailsModal">
+    <ul class="nav nav-tabs tabs-border" id="menu">
+        <li ng-click="selectEntityDetailsDialogTab('Details')" ng-class="SelectedEntityDetailsDialogTab=='Details'?'active':''"><a>Details</a></li>
+        <li ng-if="objEntityBusinessObject" ng-click="selectEntityDetailsDialogTab('BusinessObject')" ng-class="SelectedEntityDetailsDialogTab=='BusinessObject'?'active':''"><a>Business Object Details</a></li>
+        <li ng-if="showExtraFieldsTab" ng-click="selectEntityDetailsDialogTab('ExtraFields')" ng-class="SelectedEntityDetailsDialogTab=='ExtraFields'?'active':''"><a>Extra Fields</a></li>
+
+    </ul>
+    <div class="tab-content form-details-label">
+        <div ng-show="SelectedEntityDetailsDialogTab=='Details'">
+            <div class="form-body">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="control-label ">File Name </label>
+                        <input ng-show="!iblnShowAppEntity" type="text" class="form-control input-sm" title="{{objEntityID}}" ng-model="objEntityID" disabled>
+                        <input ng-show="iblnShowAppEntity" type="text" class="form-control input-sm" title="{{currentfile.FileID}}" ng-model="currentfile.FileID" disabled>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label "> Description</label>
+                        <textarea rows="5" ng-model="objEnitityDescription" class="form-control input-sm" disabled/>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label ">Table Name</label>
+                        <label class="input-control" ng-bind="objEntityTableName"></label>
+
+                    </div>
+
+                    <div class="form-group" ng-if="objEntityTableName">
+                        <label class="control-label"></label>
+                        <input type="checkbox" ng-true-value="'True'" ng-false-value="'False'" ng-model="$parent.objHistoryEnabled" disabled /> <span>Enable Table History</span>
+
+                    </div>
+                    <div class="form-group" ng-if="!blnShowCreateWithClass">
+
+                        <label class="control-label">Error Table</label>
+                        <div class="input-group">
+                            <span class="info-tooltip dtc-span" ng-if="objEntityDetails.errors.sfwErrorTable" ng-attr-title="{{objEntityDetails.errors.sfwErrorTable}}" style="left:0px;color:red !important"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                            <input type="text" class="form-control input-sm" title="{{objEntityDetails.sfwErrorTable}}" ng-model="objEntityDetails.sfwErrorTable" undoredodirective model="objEntity"
+                                   onkeydown="onActionKeyDownForErrortables(event)" disabled ng-change="PopulateErrorDetails(objEntityDetails,objEntityDetails.sfwErrorTable)" />
+                            <span class='input-group-addon button-intellisense' ></span>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group" ng-if="!blnShowCreateWithClass">
+
+                        <label class="control-label">Status Column</label>
+                        <div style="position:relative">
+                            <span class="info-tooltip" ng-if='!objEntityDetails.sfwStatusColumn && objEntityDetails.sfwErrorTable' ng-attr-title='Status column can not be empty' style="color:red">
+                                <i class='fa fa-exclamation-circle' aria-hidden='true'></i>
+                            </span>
+                            <input type="text" class="form-control input-sm" title="{{objEntityDetails.sfwStatusColumn}}" ng-model="objEntityDetails.sfwStatusColumn"
+                                   undoredodirective model="objEntity" disabled />
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="control-label">Parent Entity</label>
+                        <input type="text" class="form-control input-sm" ng-model="strParentEntity" disabled/>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label"> AS400</label>
+                        <input type="text" title="{{objEnitityAS400}}" ng-model="objEnitityAS400" disabled class="form-control input-sm" />
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label"> Database Name</label>
+                        <input type="text" title="{{objEnitityDatabaseName}}" disabled ng-model="objEnitityDatabaseName" class="form-control input-sm" />
+
+                    </div>
+                    <div class="form-group" ng-if="blnShowCreateWithClass">
+                        <label class="control-label"> Business Object</label>
+
+                        <label class="input-control" ng-bind="objEntityBusinessObject"></label>
+
+                    </div>
+
+                    <div class="form-group" ng-if="!blnShowCreateWithClass">
+
+                        <label class="control-label">Parent Key</label>
+
+                        <input type="text" class="form-control input-sm" title="{{objEntityDetails.sfwParentKey}}" ng-model="objEntityDetails.sfwParentKey"
+                               undoredodirective model="objEntity" ng-disabled="true" disabled/>
+
+                    </div>
+
+                    <div class="form-group" ng-if="!blnShowCreateWithClass">
+
+                        <label class="control-label">Parent Key Value</label>
+
+                        <div style="position:relative">
+                            <span class="info-tooltip" ng-if='!objEntityDetails.sfwParentKeyValue && objEntityDetails.sfwErrorTable' ng-attr-title='Parent key value can not be empty' style="color:red">
+                                <i class='fa fa-exclamation-circle' aria-hidden='true'></i>
+                            </span>
+                            <input type="text" class="form-control input-sm" title="{{objEntityDetails.sfwParentKeyValue}}" ng-model="objEntityDetails.sfwParentKeyValue"
+                                   undoredodirective model="objEntity" disabled/>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+
+            </div>
+        </div>
+
+        <div ng-if="objEntityBusinessObject" ng-show="SelectedEntityDetailsDialogTab=='BusinessObject'">
+            <div class="form-body">
+                <div class="col-xs-6">
+                    <div class="form-group">
+
+                        <label class="control-label">Main CDO</label>
+
+                        <div class='input-group'>
+                            <span class="info-tooltip dtc-span" ng-if="objEntityDetails.errors.sfwMainCDO || objEntityDetails.errors.empty_id || objEntityDetails.errors.inValid_id" ng-attr-title="{{objEntityDetails.errors.sfwMainCDO || objEntityDetails.errors.empty_id || objEntityDetails.errors.inValid_id}}" style="left:0px;color:red !important"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                            <input type="text" class="form-control input-sm" title="{{objEntityDetails.sfwMainCDO}}" ng-model='objEntityDetails.sfwMainCDO' undoredodirective model='model' errorprop="objEntityDetails.errors.sfwMainCDO" disabled />
+                            <span class='input-group-addon button-intellisense' ></span>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label class="control-label">Error Table</label>
+                        <div class="input-group">
+                            <span class="info-tooltip dtc-span" ng-if="objEntityDetails.errors.sfwErrorTable" ng-attr-title="{{objEntityDetails.errors.sfwErrorTable}}" style="left:0px;color:red !important"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                            <input type="text" class="form-control input-sm" title="{{objEntityDetails.sfwErrorTable}}" ng-model="objEntityDetails.sfwErrorTable" undoredodirective model="objEntity"
+                                   disabled/>
+                            <span class='input-group-addon button-intellisense' ></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+
+                        <label class="control-label">Parent Key</label>
+
+                        <input type="text" class="form-control input-sm" title="{{objEntityDetails.sfwParentKey}}" ng-model="objEntityDetails.sfwParentKey"
+                               undoredodirective model="objEntity" ng-disabled="true" />
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label class="control-label">Parent Key Value</label>
+                        <div style="position:relative">
+                            <span class="info-tooltip" ng-if='!objEntityDetails.sfwParentKeyValue && objEntityDetails.sfwErrorTable' ng-attr-title='Parent key value can not be empty' style="color:red">
+                                <i class='fa fa-exclamation-circle' aria-hidden='true'></i>
+                            </span>
+                            <input type="text" class="form-control input-sm" title="{{objEntityDetails.sfwParentKeyValue}}" ng-model="objEntityDetails.sfwParentKeyValue"
+                                   undoredodirective model="objEntity" disabled />
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label class="control-label">Status Column</label>
+
+                        <div style="position:relative">
+                            <span class="info-tooltip" ng-if='!objEntityDetails.sfwStatusColumn && objEntityDetails.sfwErrorTable' ng-attr-title='Status column can not be empty' style="color:red">
+                                <i class='fa fa-exclamation-circle' aria-hidden='true'></i>
+                            </span>
+                            <input type="text" class="form-control input-sm" title="{{objEntityDetails.sfwStatusColumn}}" ng-model="objEntityDetails.sfwStatusColumn"
+                                   undoredodirective model="objEntity" disabled/>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+
+                        <label class="control-label">Expression Table</label>
+                        <select disabled class="form-control input-sm" ng-options="x for x in lstExpressionTable" title="{{objEntityDetails.sfwExpressionTable}}"
+                                ng-model="objEntityDetails.sfwExpressionTable">
+                            {{x}}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label">ReadOnly Rule</label>
+                        <input type="text" class="form-control input-sm"  ng-model="objEntityDetails.sfwReadOnlyRule" disabled/>
+                    </div>
+
+                    <div class="form-group custome-fieldset" style="margin-top: 16px">
+                        <fieldset>
+                            <legend>Check List</legend>
+                            <div class="col-sm-12">
+                                <div class="form-group manage-btn-default-search">
+                                    <input type="text" class="form-control input-sm" ng-model="objEntity.dictAttributes.sfwChecklistId" disabled />
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+
+                                    <label class="control-label">Checklist Table</label>
+                                    <div class="input-group">
+                                        <span class="info-tooltip dtc-span" ng-if="objEntityDetails.errors.sfwChecklistTable" ng-attr-title="{{objEntityDetails.errors.sfwChecklistTable}}" style="left:0px;color:red !important"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                                        <input type="text" class="form-control input-sm" title="{{objEntityDetails.sfwChecklistTable}}"
+                                               ng-model="objEntityDetails.sfwChecklistTable" undoredodirective model="objEntity" disabled />
+                                        <span class='input-group-addon button-intellisense'></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label"></label>
+                        <input type="checkbox" ng-true-value="'True'" ng-false-value="'False'" ng-model="objEntityDetails.sfwActive"
+                               undoredodirective model="objEntity" disabled/> <span>Active</span>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div ng-show="SelectedEntityDetailsDialogTab=='ExtraFields' ">
+            <extra-field-directive is-file-creation="false" extra-field-model="objEntityExtraFields" is-tab="showExtraFieldsTab" obj-fn="objDirFunctions" form-name="formName" is-steps="false"></extra-field-directive>
+        </div>
+    </div>
+</div>
+<div class="form-actions">
+    <div class="col-xs-8 text-left">
+        <span class="alert-error-msg" ng-bind="EntityDetailsErrorMessage"></span>
+    </div>
+    <div class="col-xs-4">
+        <input class="dialog-btn" type="button" value="Ok" ng-click="closeEntityDetails()" />
+    </div>
+</div>

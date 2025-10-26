@@ -1,0 +1,399 @@
+﻿<div ng-controller="projectconfigurationcontroller" class="innerWrapper">
+    <div ng-show="selectedDesignSource" class="full-height">
+        <div id="editor_projectconfiguration" class="ace-editor-div"></div>
+    </div>
+    <div ng-hide="selectedDesignSource" class="full-height project-configuration-screen col-xs-12">
+        <div>
+            <ul class="nav nav-tabs">
+                <li ng-class="SelectedTab=='CommonProperties'?'active':''" ng-click="selectCommonPropertiesTab()"><a>Common Properties</a></li>
+                <li ng-class="SelectedTab=='Correspondance'?'active':''" ng-click="selectCorrespondanceTab()"><a>Correspondence</a></li>
+                <li ng-class="SelectedTab=='ServerMethods'?'active':''" ng-click="selectServerMethods()"><a>Server Methods</a></li>
+                <li ng-class="SelectedTab=='GlobalParameters'?'active':''" ng-click="selectGlobalParametersTab()"><a>Global Parameters</a></li>
+                <li ng-class="SelectedTab=='Portals'?'active':''" ng-click="selectPortalsTab()"><a>Application Portals</a></li>
+            </ul>
+        </div>
+        <div class="tool-form-body" ng-if="loadedTabs.indexOf('Correspondance')>-1" ng-show="SelectedTab=='Correspondance'">
+            <div class="tool-main-body tool-main-body-padding">
+                <div class="col-xs-12 tool-heading">
+                    <div class="pull-right">
+                        <a ng-click="addStandardBookmark()"><img src="images/Common/icon_add_dark.svg" /></a>
+                        <a ng-click="deleteStandardBookmark()" ng-disabled="!canDeleteStandardBookmark()"><img src="images/Common/icon_delete_dark.svg" /></a>
+                    </div>
+                </div>
+                <div class="col-xs-12 div-border tool-form-body">
+                    <div class="col-xs-12 no-padding">
+                        <div class="col-xs-4">ID</div>
+                        <div class="col-xs-4">XML Method</div>
+                        <div class="col-xs-4">Common Property</div>
+                    </div>
+                    <div class="col-xs-12 div-bottom-border">
+                        <!-- Leaves empty div for bottom border -->
+                    </div>
+                    <div class="col-xs-12 tool-form-body tool-form-body-scroll configure-correspondance">
+                        <div class="form-group" ng-repeat="object in stdBookmarksModel.Elements" ng-click="selectStandardBookmark(object)" ng-class="selectedStandardBookmark == object?'selected':''">
+                            <div>
+                                <div ng-class="object.IsObjectVisibility?'callactivity-arrow-down':'callactivity-arrow-right'" ng-click="toggleStandardBookmarkExpander(object)"></div>
+                                <div class="col-xs-3">
+                                    <div class="textbox-autocomplete-block">
+                                        <fileintellisensetemplate model="object" filename="object.dictAttributes.ID" filetype="'Entity'" propertyname="'dictAttributes.ID'" onfileblur="onCorrespondanceEntityChanged(object)" />
+                                    </div>
+                                </div>
+                                <div class="col-xs-4">
+                                    <div class="textbox-autocomplete-block">
+                                        <common-intellisense model="object" propertyname="'dictAttributes.sfwXmlMethod'" collection="object.xmlMethods" display-property-name="'ID'" selected-property-name="'ID'" selected-item="object.dictAttributes.sfwXmlMethod" is-reset="true" />
+                                    </div>
+
+                                </div>
+                                <div class="col-xs-4">
+                                    <div class="textbox-autocomplete-block">
+                                        <common-intellisense model="object" propertyname="'dictAttributes.sfwCommonProperty'" collection="propertiesModel.Elements" display-property-name="'ID'" selected-property-name="'ID'" selected-item="object.dictAttributes.sfwCommonProperty" />
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div ng-show="object.IsObjectVisibility">
+                                <div class="tool-panel">
+                                    <div class="col-xs-12 white-bg padding-10">
+                                        <div class="correspondence-table-buttons">
+                                            <div class="pull-right">
+                                                <a ng-click="addStandardBookmarkItem(object)"><img src="images/Common/icon_add_dark.svg" /></a>
+                                                <a ng-click="deleteStandardBookmarkItem(object)" ng-disabled="!canDeleteStandardBookmarkItem(object)"><img src="images/Common/icon_delete_dark.svg" /></a>
+                                            </div>
+                                        </div>
+
+                                        <table class="sws-table">
+                                            <thead>
+                                                <tr>
+                                                    <th width="50%">ID</th>
+                                                    <th width="50%">Entity Field</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="item in object.Elements" ng-dblclick="AddOrEditStandardBookMark(object,item,'Edit')" ng-click="selectStandardBookmarkItem(object,item)" ng-class="object.selectedStandardBookmarkItem == item?'selected':''">
+                                                    <td><label title="{{item.dictAttributes.ID}}" ng-bind="item.dictAttributes.ID" /></td>
+                                                    <td>
+                                                        <label title="{{item.dictAttributes.sfwEntityField}}" ng-bind="item.dictAttributes.sfwEntityField" />
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tool-form-body" ng-if="loadedTabs.indexOf('CommonProperties')>-1" ng-show="SelectedTab=='CommonProperties'">
+            <div class="tool-main-body">
+                <div class="col-xs-3 full-height">
+                    <div class="form-group full-height">
+                        <div class="div-border tool-heading">
+                            <div class="form-group properties-margin-bottom-0">
+                                <b>Properties</b>
+
+                                <div class="pull-right">
+                                    <a ng-click="addEditCommonProperty()"><img src="images/Common/icon_add_dark.svg" /></a>
+                                    <a ng-click="deleteCommonProperty()" ng-disabled="!canDeleteCommonProperty()"><img src="images/Common/icon_delete_dark.svg" /></a>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="div-border tool-form-body tool-left-form-body tool-form-body-scroll">
+                            <table class="table table-striped table-hover table-bordered dataTable no-footer">
+                                <thead>
+                                    <tr>
+                                        <th width="50%">ID</th>
+                                        <th width="50%">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in propertiesModel.Elements" ng-click="selectCommonProperty(item)" ng-dblclick="addEditCommonProperty(item)" ng-class="selectedCommonProperty == item?'selected':''">
+                                        <td width="50%">
+                                            <span title="{{item.dictAttributes.ID}}" ng-bind="item.dictAttributes.ID"></span>
+                                        </td>
+                                        <td width="50%">
+                                            <span title="{{item.dictAttributes.sfwDescription}}" ng-bind="item.dictAttributes.sfwDescription"></span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-xs-9 full-height">
+                    <div class="form-group full-height">
+                        <div class="div-border tool-heading">
+                            <div class="col-xs-9"><b>Objects</b></div>
+                            <div class="col-xs-3">
+                                <div class="pull-right">
+                                    <a ng-click="addObject()"><img src="images/Common/icon_add_dark.svg" /></a>
+                                    <a ng-disabled="!canDeleteObject()" ng-click="deleteObject()"><img src="images/Common/icon_delete_dark.svg" /></a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 div-border tool-form-body tool-form-body-scroll project-config-common-prop">
+                            <div class="form-group full-height">
+
+                                <div class="col-xs-12">
+                                    <div class="col-xs-3">
+                                        <label class="control-label">ID</label>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12">
+                                    <div class="form-group" ng-repeat="object in objCommonproperties.Elements" ng-click="selectObject(object)" ng-if="object.Name=='object'" ng-class="selectedObject == object?'selected':''">
+                                        <div class="col-xs-1 width-sm">
+
+                                            <div class="callactivity-arrow-right" ng-class="object.IsObjectVisibility?'callactivity-arrow-down':'callactivity-arrow-right'" ng-click="toggleObjectExpander(object)"></div>
+
+                                        </div>
+                                        <div class="col-xs-11 width-lg">
+                                            <div class="textbox-autocomplete-block">
+                                                <fileintellisensetemplate model="object" filename="object.dictAttributes.ID" filetype="'Entity'" propertyname="'dictAttributes.ID'" onfileblur="onEntityChanged(object.dictAttributes.ID)" />
+                                            </div>
+
+                                        </div>
+
+                                        <div class="tool-panel" ng-show="object.IsObjectVisibility">
+
+                                            <div class="col-xs-12 padding-10 white-bg">
+                                                <div class="correspondence-table-buttons">
+                                                    <div class="pull-right">
+                                                        <a ng-click="addObjectItem(object)"><img src="images/Common/icon_add_dark.svg" /></a>
+                                                        <a ng-click="deleteObjectItem(object)" ng-disabled="!canDeleteObjectItem(object)"><img src="images/Common/icon_delete_dark.svg" /></a>
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 no-padding">
+                                                    <table class="sws-table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th width="30%">ID</th>
+                                                                <th width="30%">Entity Field</th>
+                                                                <th width="10%">OR</th>
+                                                                <th width="30%">Object Method</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr ng-repeat="item in object.Elements" ng-class="object.selectedObjectItem == item?'selected':''" ng-click="selectObjectItem(object,item)">
+                                                                <td width="30%">
+                                                                    <div class="textbox-autocomplete-block">
+                                                                        <common-intellisense model="item" propertyname="'dictAttributes.ID'" collection="propertiesModel.Elements" display-property-name="'ID'" selected-property-name="'ID'" selected-item="item.dictAttributes.ID" />
+
+                                                                    </div>
+
+                                                                </td>
+                                                                <td width="30%">
+                                                                    <div class="textbox-autocomplete-block">
+
+                                                                        <entityfieldelementintellisense modebinding="item.dictAttributes.sfwEntityField" model="item" entityid="object.dictAttributes.ID" propertyname="'dictAttributes.sfwEntityField'" isshowonetoone="true" isshowcolumns="true" isshowproperty="true" onblurcallback="onObjectFieldChanged(item)" isaddthis="true" />
+                                                                    </div>
+
+                                                                </td>
+                                                                <td width="10%"> OR </td>
+                                                                <td width="30%">
+                                                                    <div class="input-group">
+                                                                        <input type="text" class="form-control input-sm" title="{{item.dictAttributes.sfwObjectMethod}}" ng-model="item.dictAttributes.sfwObjectMethod" ng-change="onObjectMethodChanged(item)" ng-keydown='getObjectMethodList(object.dictAttributes.ID,$event)' undoredodirective model="item" />
+                                                                        <span class='input-group-addon button-intellisense' ng-click="showObjectMethodList(object.dictAttributes.ID,$event)"></span>
+                                                                    </div>
+
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tool-form-body" ng-if="loadedTabs.indexOf('ServerMethods')>-1" ng-show="SelectedTab=='ServerMethods'">
+            <div class="container-fluid height100P no-padding">
+                <div class="col-md-12 no-padding height100P marg-top-8">
+                    <!--SELECT OR ADD SERVER METHOD / METHOD GROUP -->
+                    <div class="col-md-5 main-section-server-method height100P no-padding">
+                        <!--SELECT OR ADD METHOD GROUP -->
+                        <div class="col-md-6 server-method-list no-left-padding" id="server-method-list">
+                            <div class="full-height white-bg Padding-all-5 app-box-shaddow">
+                                <div class="col-md-12 searchrow" list-header style="height:30px;">
+                                    <span ng-class="serverMethodFilters.isServiceFilterVisible?'hidden-text':'visible-text'">{{objServerMethods.Name}}</span>
+                                    <filter-list collection="objServerMethods.Elements" change-callback="selectAndScrollSrvMethod(obj)" propertyname="'dictAttributes.ID'" slide-left="serverMethodFilters.isServiceFilterVisible" css-class="no-left-padding col-xs-9" style="top:-7px"></filter-list>
+                                    <i class="fa fa-refresh marg-left-10 fright" ng-click="refreshAllRemoteObjects()" title="Refresh Server "></i>
+                                    <i class="fa fa-plus marg-left-10 fright" ng-click="OpenAddMethodGroup()" title="Add method Group"></i>
+                                    <span ng-show="serverMethodFilters.isServiceFilterVisible" class="entity-tab-head-textbox-close fa fa-close no-top" ng-click="serverMethodFilters.isServiceFilterVisible=false;" style="float:right;margin-right:0px;"></span>
+                                    <a class="fright" ng-show="!serverMethodFilters.isServiceFilterVisible" title="Search Server Methods"><img src="images/Entity/entity-dashboard-search.svg" ng-click="serverMethodFilters.isServiceFilterVisible=true;" /></a>
+                                </div>
+                                <ul>
+                                    <li class="col-md-12 searchrow" ng-click="getCurrentSrvMethod(serverMethods)" ng-repeat="serverMethods in objServerMethods.Elements" ng-class="{'searchrowSelected':(currentSrvMethod==serverMethods)}">
+                                        <a>
+                                            {{serverMethods.dictAttributes.ID}}
+                                            <i ng-if="currentSrvMethod==serverMethods" class="fa fa-minus fore-color-white marg-left-10 fright" ng-click="DeleteMethodGroup()" title="Delete Method Group"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                        </div>
+                        <!--SELECT OR ADD SERVER METHOD -->
+                        <div class="col-md-6 no-padding height100P" ng-if="currentSrvMethod" id="remote-method-list">
+                            <div class="full-height white-bg Padding-all-5 app-box-shaddow">
+                                <div class="col-md-12 searchrow" list-header title="{{currentSrvMethod.dictAttributes.ID}}" style="height:30px;">
+                                    <span ng-class="serverMethodFilters.isServerMethodFilterVisible?'hidden-text':'visible-text'">Remote Methods - ({{currentSrvMethod.dictAttributes.ID | cut : true : 15 : '...' }})</span>
+                                    <filter-list collection="currentSrvMethod.Elements" change-callback="selectAndScrollRemoteMethod(obj)" propertyname="'dictAttributes.ID'" slide-left="serverMethodFilters.isServerMethodFilterVisible" css-class="no-left-padding col-xs-9" style="top:-7px"></filter-list>
+                                    <i class="fa fa-refresh marg-left-10 fright" ng-click="refreshRemoteObject(currentSrvMethod)" title="Refresh methods"></i>
+                                    <i class="fa fa-plus marg-left-10 fright" ng-click="OpenAddMethodWindow()" title="Add method"></i>
+                                    <span ng-show="serverMethodFilters.isServerMethodFilterVisible" class="entity-tab-head-textbox-close fa fa-close no-top " ng-click="clearServerMethodFilter()" style="float:right;margin-right:0px;"></span>
+                                    <a class="fright" ng-show="!serverMethodFilters.isServerMethodFilterVisible" title="Search Remote Methods"><img src="images/Entity/entity-dashboard-search.svg" ng-click="serverMethodFilters.isServerMethodFilterVisible=true;" /></a>
+                                </div>
+                                <ul>
+                                    <li class="col-xs-12 searchrow" ng-click="getCurrentMethod(methods)" ng-repeat="methods in currentSrvMethod.Elements" ng-class="{'searchrowSelected':(currentMethod==methods)}">
+                                        <a>
+                                            {{methods.dictAttributes.ID}}
+                                            <i ng-if="currentMethod==methods" class="fa fa-minus fore-color-white marg-left-10 fright" ng-click="DeleteMethod()" title="Delete Method"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!--METHOD DETAILS-->
+                    <div class="col-md-7 main-section-server-method height100P no-right-padding">
+                        <div class="details-server-method" ng-if="currentMethod">
+                            <div class="form-group">
+                                <span class="col-xs-3">Method ID</span>
+                                <div class="col-xs-9">
+                                    <input type="text" ng-model="currentMethod.dictAttributes.ID" class="form-control input-sm" ng-disabled="true" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <span class="col-xs-3">Mode</span>
+                                <div class="col-xs-9">
+                                    <select class="form-control input-sm" ng-model="currentMethod.dictAttributes.sfwMode">
+                                        <option value="All">All</option>
+                                        <option value="New">New</option>
+                                        <option value="Update">Update</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-if="currentMethod.Elements && currentMethod.Elements.length > 0">
+                                <label class="para-table-head">
+                                    Parameters
+                                    <i class="fa fa-refresh fore-color-black marg-left-10 fright" ng-click="refreshRemoteMethod(currentSrvMethod.dictAttributes.ID, currentMethod)" title="Refresh Parameters"></i>
+                                </label>
+                                <table class="sws-table">
+                                    <thead>
+                                        <tr>
+                                            <th width="40%">Parameter ID</th>
+                                            <th width="30%">Data Type</th>
+                                            <th width="30%">Old ID</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="param in currentMethod.Elements">
+                                            <td width="40%" ng-bind="param.dictAttributes.ID"></td>
+                                            <td width="30%" ng-bind="param.dictAttributes.sfwDataType"></td>
+                                            <td width="30%">
+                                                <span ng-bind="param.dictAttributes.OldID" class="old-id-text"></span>
+                                                <i class="fa fa-close" title="Remove Old ID" ng-click="removeOldID(param)" ng-if="param.dictAttributes.OldID" style="display:inline;float:left"></i>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ng-if="loadedTabs.indexOf('GlobalParameters')>-1" ng-show="SelectedTab=='GlobalParameters'" class="tool-form-body padding-10">
+            <div class="table-hader-actions fixed-table-top">
+                <a class="pull-right" title="Remove Selected Global Parameter" ng-click="deleteGlobalParameter()" ng-disabled="!canDeleteGlobalParameter()"><img src="images/Common/icon_delete_dark.svg" /></a>
+                <a class="pull-right" title="Add Global Parameter" ng-click="addGlobalParameter()"><img src="images/Common/icon_add_dark.svg" /></a>
+
+            </div>
+            <div class="property-table">
+                <table class="sws-table" col-resizeable-jquery>
+                    <thead>
+                        <tr role="heading">
+                            <th tabindex="0" class="sorting_asc ui-resizable padding-0" aria-controls="sample_editable_1" aria-label="Attribute activate to sort column ascending" aria-sort="ascending" rowspan="1" colspan="2">
+
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>ID</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="parameter in globalParametersModel.Elements" ng-click="selectGlobalParameter(parameter)" ng-class="selectedGlobalParameter == parameter?'selected':''">
+                            <td>
+                                <input type="text" class="form-control input-sm" title="{{parameter.dictAttributes.ID}}" ng-model="parameter.dictAttributes.ID" undoredodirective model="parameter" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control input-sm" title="{{item.dictAttributes.Description}}" ng-model="parameter.dictAttributes.Description" undoredodirective model="parameter" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div ng-if="loadedTabs.indexOf('Portals')>-1" ng-show="SelectedTab=='Portals'" class="tool-form-body padding-10">
+            <div class="table-hader-actions fixed-table-top">
+                <a class="pull-right" title="Remove Selected Portal" ng-click="deletePortal()" ng-disabled="!canDeletePortal()"><img src="images/Common/icon_delete_dark.svg" /></a>
+                <a class="pull-right" title="Add Portal" ng-click="addPortal()"><img src="images/Common/icon_add_dark.svg" /></a>
+            </div>
+            <div class="property-table">
+                <table class="sws-table" col-resizeable-jquery>
+                    <thead>
+                        <tr role="heading">
+                            <th tabindex="0" class="sorting_asc ui-resizable padding-0" aria-controls="sample_editable_1" aria-label="Attribute activate to sort column ascending" aria-sort="ascending" rowspan="1" colspan="2">
+
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>ID</th>
+                            <th>Portal Name</th>
+                            <th>Portal Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="portal in portalsModel.Elements" ng-click="selectPortal(portal)" ng-class="selectedPortal == portal?'selected':''">
+                            <td>
+                                <div style="position:relative;">
+                                    <span class='info-tooltip dtc-span' ng-if='portal.errors && portal.errors.ID' ng-attr-title='{{portal.errors.ID}}' style='color:red !important'><i class='fa fa-exclamation-circle' aria-hidden='true'></i></span>
+                                    <input type="text" class="form-control input-sm" title="{{portal.dictAttributes.ID}}" ng-model="portal.dictAttributes.ID" undoredodirective model="portal" ng-blur="validatePortals()"/>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="position:relative;">
+                                    <span class='info-tooltip dtc-span' ng-if='portal.errors && portal.errors.sfwPortalName' ng-attr-title='{{portal.errors.sfwPortalName}}' style='color:red !important'><i class='fa fa-exclamation-circle' aria-hidden='true'></i></span>
+                                    <input type="text" class="form-control input-sm" title="{{portal.dictAttributes.sfwPortalName}}" ng-model="portal.dictAttributes.sfwPortalName" undoredodirective model="portal"  ng-blur="validatePortals()" />
+                                </div>
+                            </td>
+                            <td>
+                                <select class="form-control input-sm" title="{{portal.dictAttributes.sfwPortalType}}" ng-model="portal.dictAttributes.sfwPortalType" undoredodirective model="portal">
+                                    <option>MVVM</option>
+                                    <option>WebForm</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

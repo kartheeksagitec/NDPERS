@@ -1,0 +1,513 @@
+﻿<div ng-controller="CreateGridViewController" class="full-height">
+    <wizard wizard-title-update hide-indicators="true" on-finish="OnFinishClick()" current-step="SelectedStep" class="full-height">
+
+        <wz-step wz-title="{{GridFirstStepTitle}}" class="full-height">
+            <div class="portlet-body" style="overflow:hidden!important" ng-show="!objGridView.dictAttributes.sfwBoundToQuery ||  (objGridView.dictAttributes.sfwBoundToQuery && objGridView.dictAttributes.sfwBoundToQuery.toLowerCase() == 'false')">
+                <div class="form-body full-height">
+
+                    <newentityobjecttreetemplate ischeckboxvisible="true" iscollectionnextlevelload="false" showonlycollection="false" lstpreselectedfields="objGridView.preselectedfields" lstpredisabledfields="objGridView.lstPreDisabledField" lstdisplayentity="objGridView.LstDisplayedEntities" lstselectedmultiplelevelfield="objGridView.lstselectedmultiplelevelfield" selectedentityobjecttreefields="objGridView.lstselectedobjecttreefields" selectedfield="objGridView.selectedfield" entityname="ParentEntityName"></newentityobjecttreetemplate>
+                </div>
+            </div>
+            <div class="portlet-body" style="overflow:hidden!important" ng-hide="!objGridView.dictAttributes.sfwBoundToQuery ||  (objGridView.dictAttributes.sfwBoundToQuery && objGridView.dictAttributes.sfwBoundToQuery.toLowerCase() == 'false')">
+                <div class="form-group  form-entity-list-lookup" entitytreescroll>
+
+                    <ul>
+                        <li ng-repeat="field in ObjgridBoundedQuery.SortedColumns" ng-class="field == SelectedQueryField?'selected':''" ng-mousedown="SelectQueryField(field, $event)" draggable="true" ondragstart="onEntityTreeDragStart(event)" drag-id="{{field.ID}}" drag-object="{{field}}" drag-boolparenttype="false" drag-display-name="" drag-datatype="{{field.DataType}}" drag-fieldtype="Column">
+                            <input type="checkbox" ng-model="field.IsSelected" class="grid-tree-checkbox-style"  ng-disabled="field.IsCheckboxDisabled"/>
+                            <span class="datatype-iconproperties datatype-icon-{{field.DataType}}"></span>
+                            <span ng-bind="field.ID"></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="form-actions">
+                <div class="col-xs-6 text-left">
+                    <span class="alert-error-msg" ng-if="objGridView.ErrorMessageForDisplay.length>0" ng-bind="objGridView.ErrorMessageForDisplay"></span>
+                </div>
+                <div class="col-xs-6">
+                    <input type="button" value="Cancel" ng-click="onSfxGridCancelClick()" class="dialog-btn" />
+                    <input type="button" wz-previous="onPrevious()" value="Back" ng-disabled="true" class="dialog-btn" />
+                    <input type="button" wz-next="onCollectionStepNext();onNext()" value="Next" class="dialog-btn" ng-disabled="isNextDisableForGrid()" />
+                    <input type="button" wz-finish value="Finish" ng-disabled="true" class="dialog-btn" />
+                </div>
+            </div>
+        </wz-step>
+
+        <wz-step wz-title="Select the buttons to be displayed in the grid" class="full-height" wz-disabled="{{IsAddColumnSelected || skipSecondStep}}">
+            <div class="portlet-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <tbody>
+                            <tr>
+                                <td style="width:5%">
+                                    <input type="button" value=">" ng-click="showParametersForGrid('New')" ng-disabled="!objGridView.NewformID" class="dialog-btn" />
+                                </td>
+
+                                <td style="width:5%">
+                                    <input type="checkbox" ng-model="objGridView.isNewSelected" ng-checked="objGridView.isNewSelected" ng-true-value="'True'" ng-false-value="'False'" class="icheck" ng-change="onChangeGridCheckBox('New')" />
+                                </td>
+
+                                <td style="width:10%">
+                                    <label>New</label>
+                                </td>
+
+                                <td style="width:5%">
+                                    <label>
+                                        ID
+                                    </label>
+                                </td>
+                                <td style="width:35%">
+                                    <input type="text" title="{{objGridView.NewbuttonID}}" ng-model="objGridView.NewbuttonID" ng-disabled="true" class="form-control input-sm" />
+                                </td>
+                                <td style="width:5%">
+                                    <label>
+                                        Form
+                                    </label>
+                                </td>
+                                <td style="width:35%">
+                                    <activeformintellisensetemplate activeformname='objGridView.NewformID' formtype="'Maintenance'" multiactiveformflag='false' canhidesearchactiveformwindow="true"
+                                                                    isdisabledinput="objGridView.isNewSelected!='True'" onactiveformchange="populateParamtersForform(objGridView.NewformID,'New')" />
+                                </td>
+                            </tr>
+                            <tr ng-if="ShowNewParameters==true">
+                                <td colspan="8">
+                                    <div class="grid-tree scr-not">
+
+                                        <div class="available-filds-section mar-top4 pull-left">
+                                            <span class="grid-tree-head">Available Fields :</span>
+                                            <ul>
+                                                <li ng-repeat="field in FieldControlCollection" class="common-tree-list">
+                                                    <div customattributetreetemplate></div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="data-grid-wrapper available-filds-section pull-right">
+                                            <div class="data-grid">
+                                                <span class="grid-tree-head">Parameter Fields :</span>
+                                                <table class="table table-bordered table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Type</th>
+                                                            <th>Parameter Field</th>
+                                                            <th>Parameter Value</th>
+                                                            <th>Constant</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr ng-repeat="objparam in FormNewParameters track by $index">
+                                                            <td>
+                                                                <span ng-bind="objparam.ParmeterType"></span>
+                                                            </td>
+                                                            <td>
+                                                                <span ng-bind="objparam.ParmeterField"></span>
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" title="{{objparam.ParmeterValue}}" ng-model="objparam.ParmeterValue" entitytreefielddroppable dropdata="objparam" fieldname="'ParmeterValue'" class="form-control input-sm" />
+                                                            </td>
+                                                            <td>
+                                                                <input type="checkbox" ng-model="objparam.ParmeterConstant" ng-checked="objparam.ParmeterConstant" ng-true-value="'True'" ng-false-value="'False'" class="icheck" />
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                        </div>
+
+
+                                    </div>
+                                </td>
+
+                            </tr>
+
+                            <tr>
+                                <td style="width:5%">
+                                    <input type="button" value=">" ng-click="showParametersForGrid('Open')" ng-disabled="!objGridView.OpenformID" class="dialog-btn" />
+                                </td>
+
+                                <td style="width:5%">
+                                    <input type="checkbox" ng-model="objGridView.isOpenSelected" ng-checked="objGridView.isOpenSelected" ng-true-value="'True'" ng-false-value="'False'" class="icheck"
+                                           ng-change="onChangeGridCheckBox('Open')" />
+                                </td>
+
+                                <td style="width:10%">
+                                    <label>Open</label>
+                                </td>
+                                <td style="width:5%">
+                                    <label>
+                                        ID
+                                    </label>
+                                </td>
+                                <td style="width:35%">
+                                    <input type="text" class="form-control input-sm" title="{{objGridView.OpenbuttonID}}" ng-model="objGridView.OpenbuttonID" ng-disabled="true">
+                                </td>
+                                <td style="width:5%">
+                                    <label>
+                                        Form
+                                    </label>
+                                </td>
+                                <td style="width:35%">
+                                    <activeformintellisensetemplate activeformname='objGridView.OpenformID' formtype="'Maintenance'" multiactiveformflag='false' canhidesearchactiveformwindow="true"
+                                                                    isdisabledinput="objGridView.isOpenSelected!='True'" onactiveformchange="populateParamtersForform(objGridView.OpenformID, 'Open')" />
+                                </td>
+                            </tr>
+                            <tr ng-if="ShowOpenParameters==true">
+                                <td colspan="8">
+                                    <div class="grid-tree scr-not">
+                                        <div class="available-filds-section mar-top4 pull-left">
+                                            <span class="grid-tree-head">Available Fields :</span>
+                                            <ul>
+                                                <li ng-repeat="field in FieldControlCollection" class="common-tree-list">
+                                                    <div customattributetreetemplate></div>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="data-grid-wrapper available-filds-section pull-right">
+                                            <div class="data-grid">
+                                                <span class="grid-tree-head">Parameter Fields :</span>
+                                                <table class="table table-bordered table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Type</th>
+                                                            <th>Parameter Field</th>
+                                                            <th>Parameter Value</th>
+                                                            <th>Constant</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr ng-repeat="objparam in FormOpenParameters track by $index">
+                                                            <td>
+                                                                <span ng-bind="objparam.ParmeterType"></span>
+                                                            </td>
+                                                            <td>
+                                                                <span ng-bind="objparam.ParmeterField"></span>
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" title="{{objparam.ParmeterValue}}" ng-model="objparam.ParmeterValue" entitytreefielddroppable dropdata="objparam" fieldname="'ParmeterValue'" class="form-control input-sm" />
+                                                            </td>
+                                                            <td>
+                                                                <input type="checkbox" ng-model="objparam.ParmeterConstant" ng-checked="objparam.ParmeterConstant" ng-true-value="'True'" ng-false-value="'False'" class="icheck" />
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style="width:5%">
+                                    <input type="button" value=">" ng-click="showParametersForGrid('Lookup')" ng-disabled="!objGridView.OpenLookupformID" class="dialog-btn" />
+                                </td>
+
+                                <td style="width:5%">
+                                    <input type="checkbox" ng-model="objGridView.isOpenLookupSelected" ng-checked="objGridView.isOpenLookupSelected" ng-true-value="'True'" ng-false-value="'False'" class="icheck"
+                                           ng-change="onChangeGridCheckBox('OpenLookup')" />
+                                </td>
+                                <td style="width:10%">
+                                    <label>Open Lookup</label>
+                                </td>
+                                <td style="width:5%">
+                                    <label>
+                                        ID
+                                    </label>
+                                </td>
+                                <td style="width:35%">
+                                    <input type="text" title="{{objGridView.OpenLookupbuttonID}}" ng-model="objGridView.OpenLookupbuttonID" ng-disabled="true" class="form-control input-sm" />
+                                </td>
+
+                                <td style="width:5%">
+                                    <label>
+                                        Form
+                                    </label>
+                                </td>
+                                <td style="width:35%">
+                                    <activeformintellisensetemplate activeformname='objGridView.OpenLookupformID' formtype="'Lookup'" multiactiveformflag='false' canhidesearchactiveformwindow="true"
+                                                                    isdisabledinput="objGridView.isOpenLookupSelected!='True'" onactiveformchange="populateParamtersForform(objGridView.OpenLookupformID, 'OpenLookup')" />
+
+
+                                </td>
+                            </tr>
+                            <tr ng-if="ShowOpenLookupParameters==true">
+                                <td colspan="8">
+
+                                    <div class="grid-tree scr-not">
+                                        <div class="available-filds-section mar-top4 pull-left">
+                                            <span class="grid-tree-head">Available Fields :</span>
+                                            <ul>
+                                                <li ng-repeat="field in FieldControlCollection" class="common-tree-list">
+                                                    <div customattributetreetemplate></div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="data-grid-wrapper available-filds-section pull-right">
+                                            <div class="data-grid">
+                                                <span class="grid-tree-head">Parameter Fields :</span>
+                                                <table col-resizeable-jquery>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Type</th>
+                                                            <th>Parameter Field</th>
+                                                            <th>Parameter Value</th>
+                                                            <th>Constant</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr ng-repeat="objparam in FormOpenLookupParameters track by $index">
+                                                            <td>
+                                                                <span ng-bind="objparam.ParmeterType"></span>
+                                                            </td>
+                                                            <td>
+                                                                <span ng-bind="objparam.ParmeterField"></span>
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" title="{{objparam.ParmeterValue}}" ng-model="objparam.ParmeterValue" entitytreefielddroppable dropdata="objparam" fieldname="'ParmeterValue'" class="form-control input-sm" />
+                                                            </td>
+                                                            <td>
+                                                                <input type="checkbox" ng-model="objparam.ParmeterConstant" ng-checked="objparam.ParmeterConstant" ng-true-value="'True'" ng-false-value="'False'" class="icheck" />
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style="width:5%">
+                                    <input type="button" value=">" ng-click="showParametersForGrid('Maintenance')" ng-disabled="!objGridView.OpenMaintenanceformID" class="dialog-btn" />
+                                </td>
+                                <td style="width:5%">
+                                    <input type="checkbox" ng-model="objGridView.isOpenMaintenanceSelected" ng-checked="objGridView.isOpenMaintenanceSelected" ng-true-value="'True'" ng-false-value="'False'" class="icheck"
+                                           ng-change="onChangeGridCheckBox('OpenMaintenance')" />
+                                </td>
+                                <td style="width:10%">
+                                    <label>Open Maintenance</label>
+                                </td>
+                                <td style="width:5%">
+                                    <label>
+                                        ID
+                                    </label>
+                                </td>
+                                <td style="width:35%">
+                                    <input type="text" title="{{objGridView.OpenMaintenancebuttonID}}" ng-model="objGridView.OpenMaintenancebuttonID" ng-disabled="true" class="form-control input-sm" />
+                                </td>
+                                <td style="width:5%">
+                                    <label>
+                                        Form
+                                    </label>
+                                </td>
+                                <td style="width:35%">
+                                    <activeformintellisensetemplate activeformname='objGridView.OpenMaintenanceformID' formtype="'Maintenance'" multiactiveformflag='false' canhidesearchactiveformwindow="true"
+                                                                    isdisabledinput="objGridView.isOpenMaintenanceSelected!='True'" onactiveformchange="populateParamtersForform(objGridView.OpenMaintenanceformID, 'OpenMaintenance')" />
+
+
+                                </td>
+                            </tr>
+                            <tr ng-if="ShowOpenMaintenanceParameters==true">
+                                <td colspan="8">
+
+                                    <div class="grid-tree scr-not">
+                                        <div class="available-filds-section mar-top4 pull-left">
+                                            <span class="grid-tree-head">Available Fields :</span>
+                                            <ul>
+                                                <li ng-repeat="field in FieldControlCollection" class="common-tree-list">
+                                                    <div customattributetreetemplate></div>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="data-grid-wrapper available-filds-section pull-right">
+                                            <div class="data-grid">
+                                                <span class="grid-tree-head">Parameter Fields :</span>
+                                                <table col-resizeable-jquery>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Type</th>
+                                                            <th>Parameter Field</th>
+                                                            <th>Parameter Value</th>
+                                                            <th>Constant</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr ng-repeat="objparam in FormOpenMaintenanceParameters track by $index">
+                                                            <td>
+                                                                <span ng-bind="objparam.ParmeterType"></span>
+                                                            </td>
+                                                            <td>
+                                                                <span ng-bind="objparam.ParmeterField"></span>
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" title="{{objparam.ParmeterValue}}" ng-model="objparam.ParmeterValue" entitytreefielddroppable dropdata="objparam" fieldname="'ParmeterValue'" class="form-control input-sm" />
+                                                            </td>
+                                                            <td>
+                                                                <input type="checkbox" ng-model="objparam.ParmeterConstant" ng-checked="objparam.ParmeterConstant" ng-true-value="'True'" ng-false-value="'False'" class="icheck" />
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                            <tr>
+                                <td style="width:5%"></td>
+                                <td style="width:5%">
+                                    <input type="checkbox" ng-model="objGridView.isDeleteSelected" ng-checked="objGridView.isDeleteSelected" ng-true-value="'True'" ng-false-value="'False'" class="icheck" />
+                                </td>
+                                <td style="width:10%">
+                                    <label>Delete</label>
+                                </td>
+                                <td style="width:5%">
+                                    <label>
+                                        ID
+                                    </label>
+                                </td>
+                                <td style="width:35%">
+                                    <input type="text" title="{{objGridView.DeletebuttonID}}" ng-model="objGridView.DeletebuttonID" ng-disabled="true" class="form-control input-sm" />
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td style="width:5%"></td>
+                                <td style="width:5%">
+                                    <input type="checkbox" ng-model="objGridView.isExportToExcelSelected" ng-checked="objGridView.isExportToExcelSelected" ng-true-value="'True'" ng-false-value="'False'" class="icheck" />
+                                </td>
+                                <td style="width:10%">
+                                    <label>Export To Excel</label>
+                                </td>
+                                <td style="width:5%">
+                                    <label>
+                                        ID
+                                    </label>
+                                </td>
+                                <td style="width:35%">
+                                    <input type="text" title="{{objGridView.ExportbuttonID}}" ng-model="objGridView.ExportbuttonID" ng-disabled="true" class="form-control input-sm" />
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="form-actions">
+                <div class="col-xs-6 text-left">
+                    <span class="alert-error-msg" ng-if="objGridView.ErrorMessageForGridButton.length>0" ng-bind="objGridView.ErrorMessageForGridButton"></span>
+                </div>
+                <div class="col-xs-6">
+                    <input type="button" class="dialog-btn" value="Cancel" ng-click="onSfxGridCancelClick()" />
+                    <input type="button" class="dialog-btn" wz-previous="onPrevious()" value="Back" />
+                    <input type="button" class="dialog-btn" wz-next="onNext()" value="Next" ng-click="onAddButtonsNextClick()" ng-disabled="isNextDisableForGridButton()" />
+                    <input type="button" class="dialog-btn" wz-finish value="Finish" ng-disabled="true" />
+                </div>
+
+            </div>
+        </wz-step>
+
+        <wz-step wz-title="Arrange the fields and set field properties" class="full-height">
+
+            <div class="portlet-body">
+
+
+                <div class="Result-grid">
+                    <span>Result Grid</span>
+                    <ul>
+                        <li title="Move Up"><i class="fa fa-arrow-up" ng-click="MoveUpField()" ng-disabled="isMoveUp()"></i></li>
+                        <li title="Move Down"><i class="fa fa-arrow-down" ng-click="MoveDownField()" ng-disabled="isMoveDown()"></i></li>
+                    </ul>
+                </div>
+                <div id="create-result-grid" class="table-responsive full-width" style="height: calc(100% - 58px);overflow-y: auto;">
+                    <table class="table table-bordered table-hover">
+
+                        <thead>
+                            <tr>
+                                <th>Field Name</th>
+                                <th>Data Type</th>
+                                <th>Header</th>
+                                <th>Control Type</th>
+                                <th ng-hide="FormModel.dictAttributes.sfwType == 'Lookup'">Related Control</th>
+                                <!--<th>Format</th>
+                                <th>Key</th>-->
+                                <th ng-hide="IsAddColumnSelected">Sort Expression</th>
+                                <th ng-hide="IsAddColumnSelected">Default Order</th>
+                                <th>Visible</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="objfield in FieldCollection track by $index" ng-click="SelectField(objfield)" ng-class="SelectedField==objfield?'selected':''">
+                                <td>
+                                    <span ng-bind="objfield.istrPropertyName"></span>
+                                </td>
+
+                                <td>
+                                    <span ng-bind="objfield.istrDataType"></span>
+                                </td>
+
+                                <td>
+                                    <input type="text" title="{{objfield.istrHeader}}" ng-model="objfield.istrHeader" class="form-control input-sm" />
+                                </td>
+
+                                <td ng-if="$root.currentopenfile.file.FileType == 'Tooltip'">
+                                    <span ng-bind="objfield.istrControlType"></span>
+                                </td>
+                                <td ng-if="$root.currentopenfile.file.FileType != 'Tooltip'">
+                                    <select ng-options="controltype for controltype in ArrControlTypes" title="{{objfield.istrControlType}}" ng-model="objfield.istrControlType" class="form-control input-sm" />
+                                </td>
+
+                                <td ng-hide="FormModel.dictAttributes.sfwType == 'Lookup'">
+                                    <select ng-options="controltype for controltype in ArrRelativeControl" title="{{objfield.istrRelatedControl}}" ng-model="objfield.istrRelatedControl" class="form-control input-sm"/>
+                                </td>
+
+                                <!--<td>
+                                    <select ng-options="controltype for controltype in ArrDataFormat" title="{{objfield.istrFormat}}" ng-model="objfield.istrFormat" class="form-control input-sm" />
+                                </td>
+
+
+                                <td>
+                                    <select ng-options="controltype for controltype in ArrDataKey" title="{{objfield.istrKey}}" ng-model="objfield.istrKey" class="form-control input-sm" />
+                                </td>-->
+                                <td ng-hide="IsAddColumnSelected">
+                                    <select ng-options="controltype for controltype in ArrSort" title="{{objfield.istrSort}}" ng-model="objfield.istrSort" class="form-control input-sm" ng-change="ChangeSortExpression(objfield)" />
+                                </td>
+                                <td ng-hide="IsAddColumnSelected">
+                                    <select ng-disabled="!objfield.istrSort" ng-options="controltype for controltype in ArrOrder" title="{{objfield.istrOrder}}" ng-model="objfield.istrOrder" class="form-control input-sm" />
+                                </td>
+                                <td>
+                                    <input type="checkbox" ng-model="objfield.istrVisible" ng-checked="objfield.istrVisible" ng-true-value="'True'" ng-false-value="'False'" class="icheck" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <input type="button" class="dialog-btn" value="Cancel" ng-click="onSfxGridCancelClick()" />
+                <input type="button" class="dialog-btn" wz-previous="onPrevious()" value="Back" />
+                <input type="button" class="dialog-btn" wz-next="onNext()" value="Next" ng-disabled="true" />
+                <input type="button" class="dialog-btn" wz-finish value="Finish" ng-click="onSfxGridFinishClick()" />
+            </div>
+        </wz-step>
+
+    </wizard>
+</div>

@@ -1,0 +1,180 @@
+﻿<form ID="wfmUpdateTermEmploymentLOAWithoutPayWizard" sfwActive="True" sfwDescription="Employment Status Change" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2021" sfwType="FormLinkWizard" sfwTitle="Employment LOA Without Pay Wizard" version="3.5" sfwEntity="entWssEmploymentChangeRequest" sfwTemplate="UpdateTermEmploymentLOAWithoutPayWizard.html" isBasedOnWfm="true">
+  <initialload>
+    <callmethods sfwMode="New" sfwMethodName="NewWssEmploymentChangeRequest" />
+    <callmethods sfwMode="Update" sfwMethodName="FindWssEmploymentChangeRequest" />
+  </initialload>
+  <items>
+    <sfwTable ID="Main" />
+    <sfwWizard ID="wizMain">
+      <items>
+        <sfwWizardStep ID="wzsLOA" sfwRulesGroup="LOA" Title="Leave Of Absence" sfwShowInHeader="True">
+          <items>
+            <sfwTable ID="tblStep1" />
+            <sfwLiteral ID="LOAWithoutPay" Text="Leave Of Absence" />
+            <sfwLabel ID="lblLOAWithoutPay" Text="&lt;ul class=&quot;steps&quot;&gt;&lt;li class=&quot;start&quot;&gt;Leave Of Absence&lt;/li&gt;&lt;li class=&quot;next&quot;&gt;Leave Of Absence Summary&lt;/li&gt;&lt;li class=&quot;emptygray&quot;&gt;&lt;/li&gt;&lt;/ul&gt;" sfwIsCaption="True" />
+            <sfwPanel ID="pnlEmployee" sfwCaption="Employee">
+              <items>
+                <sfwTable ID="tblNewPage" />
+                <sfwLabel ID="lblLabel12" Text="PERSLink ID : " sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel3" sfwEntityField="objPerson.PersonId" />
+                <sfwLabel ID="lblLabel13" Text="Name : " sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel14" sfwEntityField="objPerson.FullName" />
+                <sfwLabel ID="lblLabel15" Text="Last 4 Digits of SSN : " sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel16" sfwEntityField="objPerson.LastFourDigitsOfSSN" />
+                <sfwLabel ID="lblEmp" Text="Employer : " sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel17" sfwEntityField="objOrganization.OrgName" />
+                <sfwLabel ID="lblLabel28" Text="Employee Hire Date : " sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel29" sfwDataFormat="{0:d}" sfwEntityField="objPersonEmployment.StartDate" />
+              </items>
+            </sfwPanel>
+            <sfwPanel ID="pnlLeavewithoutpay" sfwCaption="Leave Of Absence">
+              <items>
+                <sfwTable ID="tblStep2" />
+                <sfwLabel ID="lblLabel26" SkinID="ReqInformation" Text="*" sfwVisibleRule="VisibleRuleLOAFields" sfwIsCaption="True" />
+                <sfwLabel ID="lblTypeOfLeave" Text="Type of Leave :" sfwVisibleRule="VisibleRuleLOAFields" sfwIsCaption="True" />
+                <sfwDropDownList ID="ddlLOAType" sfwVisibleRule="VisibleRuleLOAFields" sfwEntityField="ChangeTypeValue" sfwValidationRules="IsLOATypeSelected" sfwLoadType="Items">
+                  <ListItem />
+                  <ListItem Value="LOAL" Text="LOA/Leave without pay" />
+                  <ListItem Text="Leave Of Absence – Military" Value="LOAM" />
+                  <ListItem Text="Family and Medical Leave Act" Value="FMLA" />
+                </sfwDropDownList>
+                <sfwLabel ID="lblUpdateTermLOAWizard" Text="wfmUpdateTermEmploymentLOAWithoutPayWizard" SkinID="btnServerSideRefresh" sfwIsCaption="True" CssClass="hideControl" />
+                <sfwLabel ID="lblTypeOfLeave1" Text="Type of Leave :" sfwVisibleRule="IsEmploymentStatusLOAorLOAMorFMLA" sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel5" sfwVisibleRule="IsEmploymentStatusLOAorLOAMorFMLA" sfwEntityField="IstrEmpDetailStatusDescription" />
+                <sfwLabel ID="lblLabel1" SkinID="ReqInformation" Text="*" sfwIsCaption="True" />
+                <sfwLabel ID="capLoaStartDate" Text="LOA Start Date :" sfwIsCaption="True" />
+                <sfwTextBox ID="txtLoaStartDate" sfwDataFormat="{0:d}" sfwVisibleRule="VisibleRuleLOAFields" sfwEntityField="LoaStartDate" sfwValidationRules="IsLOAStartDateNull;IsLOADateInvalid;IsLoaStartDateValid;IsLOALDateValidated" />
+                <sfwLabel ID="lblLOAStartDate" sfwVisibleRule="IsEmploymentStatusLOAorLOAMorFMLA" sfwDataFormat="{0:d}" sfwEntityField="IstrEmpDetailStartDate" />
+                <sfwLabel ID="lblLabel27" SkinID="ReqInformation" Text="*" sfwIsCaption="True" />
+                <sfwLabel ID="capLoaReason" Text="Reason for leave : " sfwIsCaption="True" sfwVisibleRule="VisibleRuleForReasonForLeave" />
+                <sfwTextBox ID="txtLoaReason" TextMode="MultiLine" Width="400px" sfwEntityField="LoaReason" sfwValidationRules="IsLOAReasonForLeaveNull" sfwVisibleRule="VisibleRuleForReasonForLeave" />
+                <sfwLabel ID="lblReturnDate" Text="Return from LOA Date :" sfwVisibleRule="IsEmploymentStatusLOAOrLOAM" sfwIsCaption="True" />
+                <sfwTextBox ID="txtTextBoxLOAReturnDate" sfwDataFormat="{0:d}" sfwVisibleRule="IsEmploymentStatusLOAOrLOAM" sfwEntityField="DateOfReturn" />
+                <sfwLabel ID="lblLOA" sfwWrap="True" sfwVisibleRule="IsEmploymentStatusLOA" sfwIsCaption="True" Text="&lt;b&gt;Note : If the employee has stopped any NDPERS sponsored plans and the leave period exceeded 31 calendar days, they will need to reapply within 31 calendar days from 'Return from LOA Date' in order to reinstate benefits.&lt;/b&gt;" />
+                <sfwLabel ID="lblLOAM" sfwWrap="True" sfwVisibleRule="IsEmploymentStatusLOAM" sfwIsCaption="True" Text="&lt;b&gt;Note : If the employee has stopped any NDPERS sponsored plans and the leave period exceeded 31 calendar days, they will need to reapply within 31 calendar days from 'Return from LOA Date' in order to reinstate benefits.&lt;/b&gt;" />
+                <sfwLabel ID="lblLOAAndLOAM" sfwWrap="True" sfwIsCaption="True" Text="&lt;b&gt;For additional benefit information upon return from Leave of Absence, please refer to the insurance plan section of the Resource Library.&lt;/b&gt;" />
+                <sfwLabel ID="lblRecertificationDate" Text="Recertification Date :" sfwVisibleRule="IsEmploymentStatusLOAOrLOAM" sfwIsCaption="True" />
+                <sfwTextBox ID="txtTextBoxRecertification" sfwDataFormat="{0:d}" sfwVisibleRule="IsEmploymentStatusLOAOrLOAM" sfwEntityField="RecertifiedDate" />
+                <sfwLabel ID="lblNote" Text="&lt;b&gt;Note : A Leave of Absence cannot exceed one year without being recertified. If leave will exceed one year enter recertification date.&lt;/b&gt;" sfwWrap="True" sfwVisibleRule="IsEmploymentStatusLOAOrLOAM" sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel19" SkinID="ReqInformation" Text="*" sfwVisibleRule="IsPlanHealthVisible" sfwIsCaption="True" />
+                <sfwLabel ID="lblHeathInsurance" Text="Continue NDPERS Health Insurance ?" sfwVisibleRule="IsPlanHealthVisible" sfwIsCaption="True" />
+                <sfwDropDownList ID="ddlHealth" DataTextField="description" DataValueField="code_value" sfwVisibleRule="IsPlanHealthVisible" sfwLoadType="CodeGroup" sfwLoadSource="3510" sfwEntityField="HealthInsuranceContinued" />
+                <sfwLabel ID="lblLabel18" SkinID="ReqInformation" Text="*" sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel9" Text="Last Month of Coverage : " SkinID="HiddenControl" sfwIsCaption="True" />
+                <sfwTextBox ID="txtTextBox" sfwDataFormat="{0:MM/YYYY}" sfwEntityField="IstrLastMonthOnEmployerBilling" />
+                <sfwLabel ID="lblLabel20" SkinID="ReqInformation" Text="*" sfwVisibleRule="IsPlanDentalVisible" sfwIsCaption="True" />
+                <sfwLabel ID="lblDentalInsurance" Text="Continue NDPERS Dental Insurance ?" sfwVisibleRule="IsPlanDentalVisible" sfwIsCaption="True" />
+                <sfwDropDownList ID="ddlDental" DataTextField="description" DataValueField="code_value" sfwVisibleRule="IsPlanDentalVisible" sfwLoadType="CodeGroup" sfwLoadSource="3510" sfwEntityField="DentalInsuranceContinued" />
+                <sfwLabel ID="lblCoverageNote" Text="&lt;b&gt;Coverage should end first of the month following leave effective date.&lt;/b&gt;" sfwWrap="True" sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel21" SkinID="ReqInformation" Text="*" sfwVisibleRule="IsPlanVisionVisible" sfwIsCaption="True" />
+                <sfwLabel ID="lblVisionInsurance" Text="Continue NDPERS Vision Insurance ?" sfwVisibleRule="IsPlanVisionVisible" sfwIsCaption="True" />
+                <sfwDropDownList ID="ddlVision" DataTextField="description" DataValueField="code_value" sfwVisibleRule="IsPlanVisionVisible" sfwLoadType="CodeGroup" sfwLoadSource="3510" sfwEntityField="VisionInsuranceContinued" />
+                <sfwLabel ID="lblLabel22" SkinID="ReqInformation" Text="*" sfwVisibleRule="IsPlanLifeVisible" sfwIsCaption="True" />
+                <sfwLabel ID="lblLifeInsurance" Text="Continue NDPERS Life Insurance ?" sfwVisibleRule="IsPlanLifeVisible" sfwIsCaption="True" />
+                <sfwDropDownList ID="ddlLife" DataTextField="description" DataValueField="code_value" sfwVisibleRule="IsPlanLifeVisible" sfwLoadType="CodeGroup" sfwLoadSource="3510" sfwEntityField="LifeInsuranceContinued" />
+                <sfwLabel ID="lblLabel23" SkinID="ReqInformation" Text="*" sfwVisibleRule="IsPlanEAPVisible" sfwIsCaption="True" />
+                <sfwLabel ID="lblEAPInsurance" Text="Continue NDPERS EAP Insurance ?" sfwVisibleRule="IsPlanEAPVisible" sfwIsCaption="True" />
+                <sfwDropDownList ID="ddlEAP" DataTextField="description" DataValueField="code_value" sfwVisibleRule="IsPlanEAPVisible" sfwLoadType="CodeGroup" sfwLoadSource="3510" sfwEntityField="EapInsuranceContinued" />
+                <sfwLabel ID="lblLabel24" SkinID="ReqInformation" Text="*" sfwVisibleRule="IsPlanLTCVisible" sfwIsCaption="True" />
+                <sfwLabel ID="lblLTCInsurance" Text="Continue NDPERS LTC ?" sfwVisibleRule="IsPlanLTCVisible" sfwIsCaption="True" />
+                <sfwDropDownList ID="ddlLTC" DataTextField="description" DataValueField="code_value" sfwVisibleRule="IsPlanLTCVisible" Visible="False" sfwLoadType="CodeGroup" sfwLoadSource="3510" sfwEntityField="LtcContinued" />
+                <sfwLabel ID="lblLabel25" SkinID="ReqInformation" Text="*" sfwVisibleRule="IsPlanFlexVisible" sfwIsCaption="True" />
+                <sfwLabel ID="lblFlexInsurance" Text="Continue NDPERS Flex Comp ?" sfwVisibleRule="IsPlanFlexVisible" sfwIsCaption="True" />
+                <sfwDropDownList ID="ddlFlex" DataTextField="description" DataValueField="code_value" sfwVisibleRule="IsPlanFlexVisible" sfwLoadType="CodeGroup" sfwLoadSource="3510" sfwEntityField="FlexCompContinued" />
+              </items>
+            </sfwPanel>
+            <sfwButton ID="btnCancel1" Text="Cancel" sfwActiveForm="wfmESSEmployeeHomeMaintenance" sfwMethodName="btnOpen_Click" />
+            <sfwButton ID="btnHS1" sfwMethodName="btnWizardNext_Click" Text="Next" sfwRefreshFromObject="True" OnClientClick="TriggerChange()" />
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsAuthorization" sfwRulesGroup="Finish" Title="Leave Of Absence Summary" sfwShowInHeader="True">
+          <items>
+            <sfwTable ID="tblStep1" />
+            <sfwLiteral ID="Life" Text="Leave Of Absence" />
+            <sfwLabel ID="lblStep21" Text="&lt;ul class=&quot;steps&quot;&gt;&lt;li class=&quot;nextstart&quot;&gt;Leave Of Absence&lt;/li&gt;&lt;li class=&quot;startnext&quot;&gt;Leave Of Absence Summary&lt;/li&gt;&lt;li class=&quot;emptyblue&quot;&gt;&lt;/li&gt;&lt;/ul&gt;" sfwIsCaption="True" />
+            <sfwPanel ID="pnlEmployee" sfwCaption="Employee">
+              <items>
+                <sfwTable ID="tblNewPage" />
+                <sfwLabel ID="lblLabel12" Text="PERSLink ID : " sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel32" sfwEntityField="objPerson.PersonId" />
+                <sfwLabel ID="lblLabel13" Text="Name : " sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel33" sfwEntityField="objPerson.FullName" />
+                <sfwLabel ID="lblLabel15" Text="Last 4 Digits of SSN : " sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel34" sfwEntityField="objPerson.LastFourDigitsOfSSN" />
+                <sfwLabel ID="lblEmp" Text="Employer : " sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel35" sfwEntityField="objOrganization.OrgName" />
+                <sfwLabel ID="lblLabel31" Text="Employee Hire Date : " sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel30" sfwDataFormat="{0:d}" sfwEntityField="objPersonEmployment.StartDate" />
+              </items>
+            </sfwPanel>
+            <sfwPanel ID="pnlSummary" sfwCaption="Leave Of Absence Summary">
+              <items>
+                <sfwTable ID="tblStep6" />
+                <sfwLabel ID="lblLabel7" Text="Type of Leave : " sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel8" sfwEntityField="ChangeTypeDescription" />
+                <sfwLabel ID="capLoaStartDateAck" Text="LOA Start Date : " sfwIsCaption="True" />
+                <sfwLabel ID="lblLoaStartDate" sfwDataFormat="{0:d}" sfwVisibleRule="VisibleRuleLOAFields" sfwEntityField="LoaStartDate" />
+                <sfwLabel ID="lblLabel6" sfwVisibleRule="IsEmploymentStatusLOAOrLOAM" sfwDataFormat="{0:d}" sfwEntityField="IstrEmpDetailStartDate" />
+                <sfwLabel ID="capLoaReason1" Text="Reason for Leave : " sfwIsCaption="True" />
+                <sfwLabel ID="lblLoaReason" sfwEntityField="LoaReason" />
+                <sfwLabel ID="lblReturnLOADate" Text="Return From LOA Date :" sfwVisibleRule="VisibleRuleDateOfReturn" sfwIsCaption="True" />
+                <sfwLabel ID="lblDateOfReturn" sfwVisibleRule="VisibleRuleDateOfReturn" sfwEntityField="DateOfReturn" />
+                <sfwLabel ID="CapRecertificationDate" Text="Recertification Date :" sfwVisibleRule="VisibleRuleRecertificationDate" sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel4" sfwDataFormat="{0:d}" sfwVisibleRule="VisibleRuleRecertificationDate" sfwEntityField="RecertifiedDate" />
+                <sfwLabel ID="lblHeathInsuranceContinue" Text="Continue NDPERS Health Insurance ?" sfwVisibleRule="IsPlanHealthVisible" sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel" sfwVisibleRule="IsPlanHealthVisible" sfwEntityField="IstrLOAHealthInsuranceContinue" />
+                <sfwLabel ID="lblLabel10" Text="Last Month of Coverage : " sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel11" sfwDataFormat="{0:MM/YYYY}" sfwVisibleRule="IsMemberEnrolledInsurancePlans" sfwEntityField="IstrLastMonthOnEmployerBilling" />
+                <sfwLabel ID="lblDentalInsuranceContinue" Text="Continue NDPERS Dental Insurance ?" sfwVisibleRule="IsPlanDentalVisible" sfwIsCaption="True" />
+                <sfwLabel ID="lblIstrLOADentalInsuranceContinue" sfwVisibleRule="IsPlanDentalVisible" sfwEntityField="IstrLOADentalInsuranceContinue" />
+                <sfwLabel ID="lblVisionInsuranceContinue" Text="Continue NDPERS Vision Insurance ?" sfwVisibleRule="IsPlanVisionVisible" sfwIsCaption="True" />
+                <sfwLabel ID="lblIstrLOAVisionInsuranceContinue" sfwVisibleRule="IsPlanVisionVisible" sfwEntityField="IstrLOAVisionInsuranceContinue" />
+                <sfwLabel ID="lblLifeInsuranceContinue" Text="Continue NDPERS Life Insurance ?" sfwVisibleRule="IsPlanLifeVisible" sfwIsCaption="True" />
+                <sfwLabel ID="lblIstrLOALifeInsuranceContinue" sfwVisibleRule="IsPlanLifeVisible" sfwEntityField="IstrLOALifeInsuranceContinue" />
+                <sfwLabel ID="lblEAPInsuranceContinue" Text="Continue NDPERS EAP Insurance ?" sfwVisibleRule="IsPlanEAPVisible" sfwIsCaption="True" />
+                <sfwLabel ID="lblIstrLOAEAPInsuranceContinue" sfwVisibleRule="IsPlanEAPVisible" sfwEntityField="IstrLOAEAPInsuranceContinue" />
+                <sfwLabel ID="lblLTCInsuranceContinue" Text="Continue NDPERS LTC ?" sfwVisibleRule="IsPlanLTCVisible" sfwIsCaption="True" />
+                <sfwLabel ID="lblIstrLOALTCInsuranceContinue" sfwVisibleRule="IsPlanLTCVisible" sfwEntityField="IstrLOALTCInsuranceContinue" />
+                <sfwLabel ID="lblFlexInsuranceContinue" Text="Continue NDPERS Flex Comp ?" sfwVisibleRule="IsPlanFlexVisible" sfwIsCaption="True" />
+                <sfwLabel ID="lblIstrLOAFlexInsuranceContinue" sfwVisibleRule="IsPlanFlexVisible" sfwEntityField="IstrLOAFlexInsuranceContinue" />
+                <hr ID="hr" />
+                <sfwCheckBox ID="chkIstrIsTermsAndConditionsAgreed" sfwEntityField="IstrIsTermsAndConditionsAgreed" sfwValidationRules="IsAcknowledgementFlagnotChecked" />
+                <sfwLabel ID="capIstrIsTermsAndConditionsAgreed" Text="&lt;b&gt;I certify that the above information is true and correct.&lt;/b&gt;" sfwIsCaption="True" />
+                <sfwLabel ID="capDate" Text="Date : " sfwIsCaption="True" sfwVisibleRule="IsWssEmploymentChangeRequestIsRejected" />
+                <sfwLabel ID="lblDate" sfwEntityField="ModifiedDate" sfwDataFormat="{0:d}" sfwVisibleRule="IsWssEmploymentChangeRequestIsRejected" />
+                <sfwLabel ID="lblPlanId" Visible="False" sfwEntityField="PlanId" />
+                <sfwLabel ID="lblPersonEmploymentDetailId" Visible="False" sfwEntityField="PersonEmploymentDetailId" />
+                <sfwLabel ID="lblOrgId" Visible="False" sfwEntityField="OrgId" />
+                <sfwLabel ID="lblchangeRequestId" Visible="False" sfwEntityField="EmploymentChangeRequestId" />
+                <sfwLabel ID="lblPersonEmploymentId" Visible="False" sfwEntityField="PersonEmploymentId" />
+                <sfwTextBox ID="txbContactId" Visible="False" sfwEntityField="ContactId" />
+                <sfwLabel ID="lblPersonId1" Visible="False" sfwEntityField="PersonId" />
+              </items>
+            </sfwPanel>
+            <sfwPanel ID="plnRjectionDetails" sfwCaption="Rejection Details" sfwVisibleRule="IsWssEmploymentChangeRequestIsRejected">
+              <items>
+                <sfwLabel ID="capRejectedReason" Text="Rejection Reason : " sfwIsCaption="True" />
+                <sfwLabel ID="lblRejectedReason" sfwEntityField="RejectionReason" CssClass="white-space-nowrap" />
+                <sfwLabel ID="capRejectedBy" Text="Rejected By : " sfwIsCaption="True" />
+                <sfwLabel ID="lblRejectedBy" sfwEntityField="lstrRejectedByName" />
+                <sfwLabel ID="capRejectedDate" Text="Rejected Date : " sfwIsCaption="True" />
+                <sfwLabel ID="lblRejectedDate" sfwDataFormat="{0:d}" sfwEntityField="lstrRejectedDate" />
+              </items>
+            </sfwPanel>
+            <sfwButton ID="btnCancel3" Text="Cancel" sfwActiveForm="wfmESSEmployeeHomeMaintenance" sfwMethodName="btnOpen_Click" />
+            <sfwButton ID="btnPrevious3" sfwMethodName="btnWizardPrevious_Click" Text="Previous" sfwMode="New" />
+            <sfwButton ID="btnFinish" sfwActiveForm="wfmESSCompletionMaintenance" sfwMethodName="btnWizardFinish_Click" sfwNavigationParameter="aintRequestID=EmploymentChangeRequestId" Text="Submit" />
+          </items>
+        </sfwWizardStep>
+        <sfwTable ID="tblHeaderTemplate" />
+        <sfwWizardProgress ID="wizLOAWithoutPay" />
+      </items>
+    </sfwWizard>
+  </items>
+  <loaddetails>
+    <entityfield ID="objPerson" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+    <entityfield ID="objOrganization" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+    <entityfield ID="objPersonEmployment" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+  </loaddetails>
+  <ExtraFields />
+</form>

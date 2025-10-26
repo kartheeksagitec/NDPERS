@@ -1,0 +1,80 @@
+﻿<entity ID="entMSSRetBenAppWeb" sfwType="BusinessRule" sfwActive="True" sfwStatus="Review" sfwObjectID="busMSSRetBenAppWeb">
+  <commonproperties />
+  <checklist />
+  <initialload>
+    <item ID="VisibleRulePlanOptionsBeShown" sfwStatus="Active" sfwMode="All" />
+    <item ID="VisibleRuleNotEligibleMessage" sfwStatus="Active" sfwMode="All" />
+    <item ID="VisibleRuleIsMarriedButNoSpouseContactOrSpouseDeceased" sfwStatus="Active" sfwMode="All" />
+    <item ID="VisibleRuleSavedWSSApplications" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibilityTerminatioDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForEmailIsNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForEmailIsNotNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="visibleRuleRefund" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleBenAppIdIsNotNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForPlan" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <delete />
+  <validatedelete />
+  <softerror />
+  <groupslist />
+  <harderror />
+  <constraint />
+  <rules>
+    <rule ID="VisibleRulePlanOptionsBeShown" sfwRuleType="Validation" sfwExpression="(this.AreApplicationPlanOptionsBeShown() == True)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleNotEligibleMessage" sfwRuleType="Validation" sfwExpression="(!String.IsNullOrEmpty(this.istrDisplayErrorMsgText))" sfwObjectBased="True" />
+    <rule ID="VisibleRuleIsMarriedButNoSpouseContactOrSpouseDeceased" sfwRuleType="Validation" sfwExpression="(this.iblnDisplayUpdateContactInfoLink)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleSavedWSSApplications" sfwObjectBased="False" sfwExpression="lblnIsShowSavedApplications" />
+    <rule ID="VisibilityTerminatioDate" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.VisibilityTerminationDate() )==true" />
+    <rule ID="VisibleRuleForEmailIsNotNull" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="!(String.IsNullOrEmpty(this.ibusPerson.icdoPerson.email_address))" />
+    <rule ID="VisibleRuleForEmailIsNull" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(String.IsNullOrEmpty(this.ibusPerson.icdoPerson.email_address))" />
+    <rule ID="visibleRuleRefund" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.istrBenRetOption == &quot;RFND&quot; )" />
+    <rule ID="VisibleRuleBenAppIdIsNotNull" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.iblnBenAppIdIsNotNull() == true" />
+    <rule ID="VisibleRuleForPlan" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.iblnPlanVisible() ==true)" />
+  </rules>
+  <attributes>
+    <attribute sfwDataType="int" sfwType="Property" ID="IintPersonId" sfwValue="iintPersonId" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrBenRetOption" sfwValue="istrBenRetOption" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrDisplayErrorMsgText" sfwValue="istrDisplayErrorMsgText" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IintPlanId" sfwValue="iintPlanId" />
+    <attribute ID="lstBenApps" sfwType="Collection" sfwValue="iclbBenApps" sfwEntity="entBenefitApplication" sfwPrivate="False" />
+    <attribute ID="lstWSSBenApps" sfwType="Collection" sfwValue="iclbWSSBenApps" sfwEntity="entWssBenApp" sfwPrivate="False" />
+    <attribute ID="lblnIsShowSavedApplications" sfwDataType="bool" sfwPrivate="False" sfwValue="iblnIsShowSavedApplications" sfwType="Property" />
+    <attribute ID="lstWssBenAppsSACL" sfwType="Collection" sfwValue="iclbWSSBenAppsSACL" sfwEntity="entWssBenApp" sfwPrivate="False" />
+    <attribute ID="IdtTerminationDate" sfwDataType="datetime" sfwPrivate="False" sfwValue="idtTerminationDate" sfwType="Property" />
+    <attribute ID="IintSACLWSSApplicationId" sfwDataType="int" sfwPrivate="False" sfwValue="iintSACLWSSApplicationId" sfwType="Property" />
+    <attribute ID="IblnEmailAddressIsNull" sfwDataType="bool" sfwPrivate="False" sfwValue="iblnEmailAddressIsNull" sfwType="Property" />
+    <attribute ID="objPerson" sfwType="Object" sfwEntity="entPerson" sfwPrivate="False" sfwValue="ibusPerson" />
+    <attribute ID="IstrNewEmailAddress" sfwDataType="string" sfwPrivate="False" sfwValue="istrNewEmailAddress" sfwType="Property" />
+    <attribute ID="istrBenTypeValue" sfwDataType="string" sfwPrivate="False" sfwValue="istrBenTypeValue" sfwType="Property" />
+  </attributes>
+  <objectmethods>
+    <method ID="LoadSuspendedRetPlanAccountsScreen" sfwReturnType="Collection" sfwObjectID="cdoPlan" sfwEntity="entPlan" />
+    <method ID="ValidateSelectedPlan" sfwReturnType="ArrayList" />
+    <method ID="SaveEmailAddress" sfwReturnType="ArrayList" />
+    <method ID="btnDeleteBenApp" sfwReturnType="ArrayList">
+      <parameters>
+        <parameter ID="aintWssBenAppId" sfwDataType="int" />
+      </parameters>
+    </method>
+  </objectmethods>
+  <queries>
+    <query ID="LoadBenAppDetails" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select WSS_BEN_APP_ID,PERSON_ID,BEN_TYPE_VALUE,BEN_OPT_VALUE,MODIFIED_DATE from SGT_WSS_BEN_APP where PERSON_ID=@PERSON_ID">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadBenAppRecords" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select BEN_TYPE_VALUE ,* from SGT_WSS_BEN_APP where PERSON_ID=@PERSON_ID order by CREATED_DATE desc">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="DeleteBenAppRecord" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="DELETE FROM SGT_WSS_BEN_APP_DISA_OTHER_BENEFITS WHERE WSS_BEN_APP_ID = @WSS_BEN_APP_ID&#xA;DELETE FROM SGT_WSS_BEN_APP_DISA_SICKNESS_OR_INJURY WHERE WSS_BEN_APP_ID = @WSS_BEN_APP_ID&#xA;DELETE FROM SGT_WSS_BEN_APP_DISA_EDUCATION WHERE WSS_BEN_APP_ID = @WSS_BEN_APP_ID&#xA;DELETE FROM SGT_WSS_BEN_APP_DISA_MILITARY_SERVICE WHERE WSS_BEN_APP_ID = @WSS_BEN_APP_ID&#xA;DELETE FROM SGT_WSS_BEN_APP_DISA_WORK_HISTORY WHERE WSS_BEN_APP_ID = @WSS_BEN_APP_ID&#xA; &#xA;DELETE FROM SGT_WSS_BEN_APP_ACH_DETAIL WHERE WSS_BEN_APP_ID = @WSS_BEN_APP_ID&#xA;DELETE FROM SGT_WSS_BEN_APP_TAX_WITHHOLDING WHERE WSS_BEN_APP_ID = @WSS_BEN_APP_ID&#xA;DELETE FROM SGT_WSS_BEN_APP_ROLLOVER_DETAIL WHERE WSS_BEN_APP_ID = @WSS_BEN_APP_ID&#xA;DELETE FROM SGT_WSS_BEN_APP  WHERE WSS_BEN_APP_ID = @WSS_BEN_APP_ID">
+      <parameters>
+        <parameter ID="@WSS_BEN_APP_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <methods />
+  <lifecycle />
+  <ExtraFields />
+</entity>

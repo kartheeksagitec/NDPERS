@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entMiscellaneousCorrection" sfwActive="True" sfwStatus="Review" sfwType="BusinessRule" sfwObjectID="busMiscellaneousCorrection" sfwMainCDO="icdoPayeeAccountPaymentItemType" sfwParentEntity="entPayeeAccountPaymentItemType">
+  <rules>
+    <rule ID="IsAmountInvalid" sfwMessageId="6718" sfwExpression="!(this.icdoPayeeAccountPaymentItemType.amount &gt; 0)" sfwObjectBased="True" />
+    <rule ID="IsEndDateGreaterThanStartDate" sfwMessageId="6716" sfwExpression="!(this.IsEndDateGreaterThanStartDate() == True)&#xD;&#xA;&amp;&amp;&#xD;&#xA;!(this.IsPaymentTypeCodeReceivables == true)" sfwObjectBased="True" />
+    <rule ID="IsEndDateNotLastDayofMonth" sfwMessageId="6710" sfwExpression="!(this.IsEndDateLastDayofMonth() == True)" sfwObjectBased="True" />
+    <rule ID="IsEndDateNotValid" sfwMessageId="6711" sfwExpression="!(this.IsEndDateValid() == True)&#xD;&#xA;&amp;&amp;&#xD;&#xA;!(this.IsPaymentTypeCodeReceivables == true)" sfwObjectBased="True" />
+    <rule ID="IsPaymentItemNotValid" sfwMessageId="6715" sfwExpression="(this.IsOpenItemAvailable() == True)" sfwObjectBased="True" />
+    <rule ID="IsRHICItemNotAllowable" sfwMessageId="6724" sfwExpression="(this.IsRHICItemAllowable() == False)" sfwObjectBased="True" />
+    <rule ID="IsSaveButtonVisible" sfwExpression="!(RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusPaymentItemType.icdoPaymentItemType.item_type_direction&quot;) == -1)&#xD;&#xA;&amp;&amp;&#xD;&#xA;!(this.IsPaymentTypeCodeReceivables == true)" sfwObjectBased="True" />
+    <rule ID="IsStartDateNotValid" sfwMessageId="6712" sfwExpression="!(this.IsStartDateValid() == True)" sfwObjectBased="True" />
+    <rule ID="IsStartDateNotValidForTaxableItem" sfwMessageId="6725" sfwExpression="!(this.IsStartDateValidForTaxableAmount() == True)" sfwObjectBased="True" />
+    <rule ID="IsStartDateOverlapping" sfwMessageId="6717" sfwExpression="(this.IsStartDateOverlapping() == True)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleAmountTextbox" sfwExpression="(this.IsAmountFieldEditable() == True)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleAmountLabel" sfwExpression="!(this.IsAmountFieldEditable() == True)" sfwObjectBased="True" />
+    <rule ID="IsSaveButtonVisibleForReceivables" sfwExpression="(RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusPaymentItemType.icdoPaymentItemType.item_type_direction&quot;) == -1)&#xD;&#xA;&amp;&amp;&#xD;&#xA;(this.IsPaymentTypeCodeReceivables == true)&#xD;&#xA;" sfwObjectBased="True" />
+    <rule ID="IsSaveButtonVisibleForInsurancePremium" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="(this.IsPaymentTypeCodeInsurancePremium== true)" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="IsSaveButtonVisible" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleAmountTextbox" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleAmountLabel" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsSaveButtonVisibleForReceivables" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsSaveButtonVisibleForInsurancePremium" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="IsEndDateNotLastDayofMonth" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEndDateNotValid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsStartDateNotValid" sfwMode="New" sfwStatus="Active" />
+    <item ID="IsPaymentItemNotValid" sfwMode="New" sfwStatus="Active" />
+    <item ID="IsEndDateGreaterThanStartDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsStartDateOverlapping" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAmountInvalid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsRHICItemNotAllowable" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsStartDateNotValidForTaxableItem" sfwMode="New" sfwStatus="Active" />
+    <item ID="IsPAStatusCPorCLD" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties>
+    <item ID="person_id" sfwObjectField="ibusPayeeAccount.icdoPayeeAccount.payee_perslink_id" sfwBeforeMethodName="LoadPayeeAccount" />
+  </commonproperties>
+  <attributes>
+    <attribute sfwDataType="int" sfwType="Property" ID="PayeeAccountId" sfwValue="icdoPayeeAccountPaymentItemType.payee_account_id" />
+    <attribute sfwDataType="int" sfwType="Property" ID="PayeeAccountPaymentItemTypeId" sfwValue="icdoPayeeAccountPaymentItemType.payee_account_payment_item_type_id" />
+    <attribute ID="objPaymentItemType" sfwType="Object" sfwEntity="entPaymentItemType" sfwValue="ibusPaymentItemType" />
+    <attribute sfwDataType="int" sfwType="Property" ID="PaymentItemTypeId" sfwValue="icdoPayeeAccountPaymentItemType.payment_item_type_id" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="StartDate" sfwValue="icdoPayeeAccountPaymentItemType.start_date" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="EndDate" sfwValue="icdoPayeeAccountPaymentItemType.end_date" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="Amount" sfwValue="icdoPayeeAccountPaymentItemType.amount" />
+    <attribute sfwType="Collection" sfwEntity="entMiscellaneousCorrection" ID="lstPAPIT" sfwValue="iclbPAPIT" />
+    <attribute sfwDataType="string" sfwType="Property" ID="CreatedBy" sfwValue="icdoPayeeAccountPaymentItemType.created_by" />
+    <attribute sfwDataType="int" sfwType="Property" ID="UpdateSeq" sfwValue="icdoPayeeAccountPaymentItemType.update_seq" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="CreatedDate" sfwValue="icdoPayeeAccountPaymentItemType.created_date" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ModifiedBy" sfwValue="icdoPayeeAccountPaymentItemType.modified_by" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="ModifiedDate" sfwValue="icdoPayeeAccountPaymentItemType.modified_date" />
+    <attribute ID="VendorOrg" sfwDataType="int" sfwValue="iintVendorOrgID" sfwType="Property" />
+    <attribute ID="lintUserSerialID" sfwDataType="int" sfwPrivate="False" sfwValue="iintUserSerialID" sfwType="Property" />
+  </attributes>
+</entity>

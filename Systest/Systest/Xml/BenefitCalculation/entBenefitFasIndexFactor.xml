@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entBenefitFasIndexFactor" sfwMainCDO="icdoBenefitFasIndexFactor" sfwType="BusinessRule" sfwActive="True" sfwStatus="Review" sfwObjectID="busBenefitFasIndexFactor" sfwTableName="sgt_benefit_fas_index_factor">
+  <queries>
+    <query ID="LoadFASIndexingFactor" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT &#xD;&#xA;FAS_START_DATE=(CASE WHEN FAS_START_DATE &gt; @TERMINATION_DATE THEN FAS_START_DATE ELSE @TERMINATION_DATE END),&#xD;&#xA;FAS_END_DATE=(CASE WHEN FAS_END_DATE &lt; @COMMENCEMENT_DATE THEN FAS_END_DATE ELSE @COMMENCEMENT_DATE END),&#xD;&#xA;AVERAGE_INCREASE_FACTOR&#xD;&#xA;FROM&#xD;&#xA;SGT_BENEFIT_FAS_INDEX_FACTOR&#xD;&#xA;WHERE BENEFIT_FAS_INDEX_FACTOR_ID &gt;= (SELECT TOP 1 BENEFIT_FAS_INDEX_FACTOR_ID FROM  SGT_BENEFIT_FAS_INDEX_FACTOR&#xD;&#xA;WHERE @TERMINATION_DATE BETWEEN FAS_START_DATE AND FAS_END_DATE&#xD;&#xA;AND EFFECTIVE_DATE &lt;=@CALCULATION_DATE&#xD;&#xA;ORDER BY EFFECTIVE_DATE DESC)&#xD;&#xA;AND BENEFIT_FAS_INDEX_FACTOR_ID &lt;= CASE WHEN ISNULL((SELECT TOP 1 BENEFIT_FAS_INDEX_FACTOR_ID FROM  SGT_BENEFIT_FAS_INDEX_FACTOR&#xD;&#xA;WHERE @COMMENCEMENT_DATE BETWEEN FAS_START_DATE AND FAS_END_DATE&#xD;&#xA;AND EFFECTIVE_DATE &lt;=@CALCULATION_DATE&#xD;&#xA;ORDER BY EFFECTIVE_DATE DESC),0)=0 then BENEFIT_FAS_INDEX_FACTOR_ID ELSE (SELECT TOP 1 BENEFIT_FAS_INDEX_FACTOR_ID FROM  SGT_BENEFIT_FAS_INDEX_FACTOR&#xD;&#xA;WHERE @COMMENCEMENT_DATE BETWEEN FAS_START_DATE AND FAS_END_DATE&#xD;&#xA;AND EFFECTIVE_DATE &lt;=@CALCULATION_DATE&#xD;&#xA;ORDER BY EFFECTIVE_DATE DESC) END&#xD;&#xA;AND PLAN_ID=@PLAN_ID &#xD;&#xA;ORDER BY FAS_START_DATE ASC">
+      <parameters>
+        <parameter ID="@TERMINATION_DATE" sfwDataType="DateTime" />
+        <parameter ID="@COMMENCEMENT_DATE" sfwDataType="DateTime" />
+        <parameter ID="@PLAN_ID" sfwDataType="int" />
+        <parameter ID="@CALCULATION_DATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="BenefitFasIndexFactorId" sfwType="Column" sfwValue="benefit_fas_index_factor_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="FasStartDate" sfwType="Column" sfwValue="fas_start_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="FasEndDate" sfwType="Column" sfwValue="fas_end_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="AverageIncreaseFactor" sfwType="Column" sfwValue="average_increase_factor" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,6" />
+    <attribute ID="PlanId" sfwType="Column" sfwValue="plan_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="EffectiveDate" sfwType="Column" sfwValue="effective_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+  </attributes>
+</entity>

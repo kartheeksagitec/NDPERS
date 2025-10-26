@@ -1,0 +1,227 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entOrgContact" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvOrganization" sfwType="BusinessRule" sfwMainCDO="icdoOrgContact" sfwObjectID="busOrgContact" sfwTableName="sgt_org_contact" sfwParentEntity="entExtendBase">
+  <rules>
+    <rule ID="Check Org Type is Employer or Provider" sfwExpression="((RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;EMPL&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;PRVD&quot;))" sfwObjectBased="True" />
+    <rule ID="ESS Visible Rule For Save button" sfwExpression="(this.IsSaveButtonVisible() == True)" sfwObjectBased="True" />
+    <rule ID="Rule Check Active contacts count greater than 1" sfwMessageId="4160" sfwExpression="((RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) != &quot;EMPL&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) != &quot;PRVD&quot;)) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entOrgContact.GetCountOfActiveContact&quot;, this.icdoOrgContact.org_id) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="Rule Check Contact Id exists" sfwMessageId="4084" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entOrgContact.CheckContactExists&quot;, this.icdoOrgContact.contact_id) &lt; 1) &amp;&amp; &#xA;!(this.icdoOrgContact.contact_id == 0)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK CONTACT ID IS NULL" sfwMessageId="4034" sfwExpression="(this.icdoOrgContact.contact_id == 0)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK INSERT PRIMARY AUTHORIZED AGENT FIRST" sfwMessageId="4033" sfwExpression="(this.CheckPrimaryAuthorizedAgentSelectedAndNotExists() == False)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK MULTIPLE PRIMARY AUTHRIZED AGENT EXISTS" sfwMessageId="4046" sfwExpression="(this.CheckMultipleActivePrimaryAuthAgentExists() == True)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK PLAN IS NULL" sfwMessageId="4035" sfwExpression="((RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;EMPL&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;PRVD&quot;)) &amp;&amp; &#xA;(this.icdoOrgContact.plan_id == 0) &amp;&amp; &#xA;!(this.CheckPrimaryAuthAgentSelected() == True)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK PLANS FOR ROLE" sfwMessageId="4036" sfwExpression="(this.ValidatePlansForContactRole() == True)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK PRIMARY AUTHORIZED AGENT DELETE" sfwMessageId="4047" sfwExpression="(this.AllowPrimaryAuthAgentDelete() == False)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK ROLE ELIGIBILITY FOR EMPLOYER" sfwMessageId="4086" sfwExpression="(this.CheckRoleEligiblityforEmployer() == True)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK ROLE FOR DEFF COMP AND EAP PROVIDER" sfwMessageId="4087" sfwExpression="(this.CheckIfOrgContactRoleIsAgent() == True)" sfwObjectBased="True" />
+    <rule ID="RULL CHECK STATUS IS NULL" sfwMessageId="4085" sfwExpression="(string.IsNullOrEmpty(this.istrConsolidatSetStatusValue))" sfwObjectBased="True" />
+    <rule ID="Check Update Address Click" sfwExpression="(this.iblnIsUpdateAddressClicked == True)" sfwObjectBased="True" />
+    <rule ID="Rule Check Update Address Not Clicked" sfwExpression="!(this.iblnIsUpdateAddressClicked == True)" sfwObjectBased="True" />
+    <rule ID="Rule Check Address Valid" sfwMessageId="127" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;(!string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusContact.ibusContactPrimaryAddress.icdoOrgContactAddress.addr_line_1&quot;))) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrgContactAddress.icdoOrgContactAddress.country_value&quot;) != &quot;0001&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusContact.ibusContactPrimaryAddress.icdoOrgContactAddress.address_validate_flag&quot;) == &quot;N&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule Phone Number Valid" sfwMessage="Phone Number cannnot be less than 10 Digits" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;(this.VerifyContactPhoneNumber() == False) &amp;&amp; &#xA;(!string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusContact.icdoContact.phone_no&quot;)))" sfwObjectBased="True" />
+    <rule ID="Rule Fax Number Valid" sfwMessage="Fax Number cannot be less than 10 digits." sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;(this.VerifyContactFaxNumber() == False) &amp;&amp; &#xA;(!string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusContact.icdoContact.fax_no&quot;)))" sfwObjectBased="True" />
+    <rule ID="Rule Check Update Address Clicked" sfwExpression="(this.iblnIsUpdateAddressClicked == True)" sfwObjectBased="True" />
+    <rule ID="RuleUpdateVisiblePAAG" sfwExpression="(this.iblnPAAG == True) &amp;&amp; &#xA;!(this.iblnIsUpdateAddressClicked == True)" sfwObjectBased="True" />
+    <rule ID="ValidateEmail" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(!string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusContact.icdoContact.EMAIL_ADDRESS&quot;)))  &amp;&amp;&#xA;(this.ValidateEmailPattern() == False)" sfwMessageId="10343" />
+    <rule ID="Rule Is Org Provide Insurance Plan" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.iblnIsOrgProvideInsurancePlan" />
+    <rule ID="Rule Is Org Provide Retirement Plan" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.iblnIsOrgProvideRetirementPlan" />
+    <rule ID="Rule Is Org Provide Def Comp Plan" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.iblnIsOrgProvideDefCompPlan" />
+    <rule ID="Rule Is Org Provide Flex Plan" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.iblnIsOrgProvideFlexPlan" />
+    <rule ID="Rule Is Plan or Role selected" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="!CheckRolePlanSelected()" sfwMessageId="10480" />
+    <rule ID="Rule is Plan Selected For Authorized Agent" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="CheckAuthorizedAgentAndPlanSelected()" sfwMessageId="10481" />
+    <rule ID="Rule Is Role Not selected" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="CheckNoRoleIsSelected()" sfwMessageId="4065" />
+    <rule ID="Rule Is Conatct Active" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.iblnIsContactActive == True)" sfwMessageId="10509" />
+  </rules>
+  <delete>
+    <property ID="lstOrgContactRole" sfwMethodName="LoadContactTypes" />
+  </delete>
+  <checklist />
+  <initialload>
+    <item ID="Check Org Type is Employer or Provider" sfwMode="All" sfwStatus="Active" />
+    <item ID="ESS Visible Rule For Save button" sfwMode="All" sfwStatus="Active" />
+    <item ID="Check Update Address Click" sfwStatus="Active" sfwMode="All" />
+    <item ID="Rule Check Update Address Not Clicked" sfwStatus="Active" sfwMode="All" />
+    <item ID="Rule Check Address Valid" sfwStatus="Active" sfwMode="All" />
+    <item ID="Rule Check Update Address Clicked" sfwStatus="Active" />
+    <item ID="RuleUpdateVisiblePAAG" sfwStatus="Active" sfwMode="All" />
+    <item ID="Rule Is Org Provide Insurance Plan" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Is Org Provide Retirement Plan" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Is Org Provide Def Comp Plan" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Is Org Provide Flex Plan" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="RULE CHECK CONTACT ID IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK PLAN IS NULL" sfwMode="All" sfwStatus="Inactive" />
+    <item ID="RULE CHECK PLANS FOR ROLE" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK MULTIPLE PRIMARY AUTHRIZED AGENT EXISTS" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULL CHECK STATUS IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK ROLE ELIGIBILITY FOR EMPLOYER" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK ROLE FOR DEFF COMP AND EAP PROVIDER" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check Contact Id exists" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check Active contacts count greater than 1" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check Address Valid" sfwStatus="Active" sfwMode="All" />
+    <item ID="Rule Phone Number Valid" sfwStatus="Active" sfwMode="All" />
+    <item ID="Rule Fax Number Valid" sfwStatus="Active" sfwMode="All" />
+    <item ID="ValidateEmail" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Is Plan or Role selected" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule is Plan Selected For Authorized Agent" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Is Role Not selected" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Is Conatct Active" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete>
+    <item ID="RULE CHECK PRIMARY AUTHORIZED AGENT DELETE" sfwMode="All" sfwStatus="Active" />
+  </validatedelete>
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <queries>
+    <query ID="LoadOtherOrgCotacts" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_ORG_CONTACT WHERE ORG_ID=@ORG_ID AND ORG_CONTACT_ID &lt;&gt; @ORG_CONTACT_ID ">
+      <parameters>
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+        <parameter ID="@ORG_CONTACT_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetOrgAndContactAddresses" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from SGT_ORG_CONTACT_ADDRESS where org_id = @org_id or contact_id = @contact_id">
+      <parameters>
+        <parameter ID="@org_id" sfwDataType="int" />
+        <parameter ID="@contact_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="CheckPrimaryAuthorizedAgentExists" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_ORG_CONTACT_ROLE d &#xD;&#xA;INNER JOIN SGT_ORG_CONTACT c on c.ORG_CONTACT_ID=d.ORG_CONTACT_ID&#xD;&#xA;WHERE C.ORG_ID=@ORG_ID AND D.CONTACT_ROLE_VALUE='PAAG'&#xD;&#xA;AND c.status_value = 'ACTV'&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="CheckPrimaryAuthorizedAgentExistsUpdate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_ORG_CONTACT_ROLE d &#xD;&#xA;INNER JOIN SGT_ORG_CONTACT c on c.ORG_CONTACT_ID=d.ORG_CONTACT_ID&#xD;&#xA;WHERE C.ORG_ID=@ORG_ID AND CONTACT_ID &lt;&gt; @CONTACT_ID  AND D.CONTACT_ROLE_VALUE='PAAG' &#xD;&#xA;AND c.status_value = 'ACTV'">
+      <parameters>
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+        <parameter ID="@CONTACT_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="SelectApplicablePlans" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT DISTINCT a.Plan_ID FROM&#xD;&#xA;&#xD;&#xA;SGT_ORG_PLAN a&#xD;&#xA;&#xD;&#xA;LEFT JOIN SGT_ORG_CONTACT b ON a.ORG_ID = b.ORG_ID and a.plan_id = b.plan_id&#xD;&#xA;&#xD;&#xA;WHERE a.ORG_ID =@org_id AND PARTICIPATION_END_DATE IS NULL AND b.Plan_ID IS NULL&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@org_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_ORG_CONTACT A LEFT JOIN SGT_ORGANIZATION B ON A.ORG_ID=B.ORG_ID &#xD;&#xA;LEFT JOIN SGT_PLAN C ON A.PLAN_ID=C.PLAN_ID &#xD;&#xA;LEFT JOIN SGT_CONTACT D ON A.CONTACT_ID=D.CONTACT_ID&#xD;&#xA;LEFT OUTER JOIN SGT_ORG_CONTACT_ROLE ROLE ON ROLE.ORG_CONTACT_ID = A.ORG_CONTACT_ID&#xD;&#xA;ORDER BY A.STATUS_VALUE">
+      <parameters />
+    </query>
+    <query ID="GetCountOfOrgContact" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) from sgt_org_contact where org_id=@org_id">
+      <parameters>
+        <parameter ID="@org_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetPlansforProviders" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select b.plan_code from sgt_org_plan a inner join sgt_plan b on a.plan_id=b.plan_id&#xD;&#xA;where a.org_id=@org_id">
+      <parameters>
+        <parameter ID="@org_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="CheckContactExists" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select count(*) from sgt_contact where contact_id = @contact_id">
+      <parameters>
+        <parameter ID="@contact_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetCountOfActiveContact" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select count(*) from sgt_org_contact where org_id = @org_id&#xD;&#xA;and status_value ='ACTV'">
+      <parameters>
+        <parameter ID="@org_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadOrgDetails" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT DISTINCT ORG.ORG_ID,ORG.ORG_CODE,ORG.ORG_NAME,CV.DESCRIPTION AS EMP_TYPE,&#xD;&#xA;CNT.CONTACT_ID&#xD;&#xA;FROM SGT_ORG_CONTACT CNT WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_ORGANIZATION ORG WITH(NOLOCK) ON CNT.ORG_ID = ORG.ORG_ID&#xD;&#xA;INNER JOIN SGT_CONTACT C WITH(NOLOCK) ON C.CONTACT_ID = CNT.CONTACT_ID&#xD;&#xA;INNER JOIN SGS_CODE_VALUE CV WITH(NOLOCK) ON ORG.EMP_CATEGORY_ID = CV.CODE_ID AND ORG.EMP_CATEGORY_VALUE = CV.CODE_VALUE&#xD;&#xA;WHERE CNT.CONTACT_ID = @CONTACTID&#xD;&#xA;AND CNT.STATUS_VALUE = 'ACTV'&#xD;&#xA;AND ORG.STATUS_VALUE = 'ACTV'&#xD;&#xA;AND C.STATUS_VALUE = 'ACTV' ORDER BY ORG.ORG_NAME">
+      <parameters>
+        <parameter ID="@CONTACTID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="IsPrimaryAuthAgent" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select 1 from sgt_org_contact_role a&#xD;&#xA;inner join sgt_org_contact b on a.org_contact_id = b.org_contact_id&#xD;&#xA;where b.org_id = @orgID and b.contact_id = @contactID&#xD;&#xA;and a.contact_role_value = 'PAAG' and b.STATUS_VALUE &lt;&gt; 'INCV' ">
+      <parameters>
+        <parameter ID="@orgID" sfwDataType="int" />
+        <parameter ID="@contactID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadOrgContactForESSMessage" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT   ORGCNT.*&#xD;&#xA;FROM   SGT_ORGANIZATION ORG WITH(NOLOCK)&#xD;&#xA; INNER JOIN SGT_ORG_CONTACT ORGCNT WITH(NOLOCK)&#xD;&#xA;  ON  ORGCNT.ORG_ID = ORG.ORG_ID&#xD;&#xA; INNER JOIN SGT_CONTACT CNT WITH(NOLOCK)&#xD;&#xA;  ON  ORGCNT.CONTACT_ID = CNT.CONTACT_ID&#xD;&#xA; INNER JOIN SGT_ORG_CONTACT_ROLE CNTROL WITH(NOLOCK)&#xD;&#xA;  ON  CNTROL.ORG_CONTACT_ID = ORGCNT.ORG_CONTACT_ID&#xD;&#xA;WHERE   ORG.STATUS_VALUE = 'ACTV'&#xD;&#xA;  AND  ORG.ORG_TYPE_VALUE = 'EMPL'&#xD;&#xA;  AND  CNT.STATUS_VALUE = 'ACTV'&#xD;&#xA;  AND  ORGCNT.STATUS_VALUE = 'ACTV'&#xD;&#xA;  AND  ORG.ORG_ID = CASE WHEN @ORGID = -9 THEN ORG.ORG_ID ELSE @ORGID END&#xD;&#xA;  AND  ORG.EMP_CATEGORY_VALUE = CASE WHEN @EMPCATEGORY = '0' THEN ORG.EMP_CATEGORY_VALUE ELSE @EMPCATEGORY END&#xD;&#xA;  AND  ORGCNT.CONTACT_ID = CASE WHEN @CONTACTID = -9 THEN ORGCNT.CONTACT_ID ELSE @CONTACTID END&#xD;&#xA;  AND  ISNULL(ORGCNT.PLAN_ID,0) = CASE WHEN @PLANID = -9 THEN ISNULL(ORGCNT.PLAN_ID,0) ELSE @PLANID END&#xD;&#xA;  AND  CNTROL.CONTACT_ROLE_VALUE = CASE WHEN @CONTACTROLE = '0' THEN CNTROL.CONTACT_ROLE_VALUE ELSE @CONTACTROLE END">
+      <parameters>
+        <parameter ID="@ORGID" sfwDataType="int" />
+        <parameter ID="@EMPCATEGORY" sfwDataType="string" />
+        <parameter ID="@CONTACTID" sfwDataType="int" />
+        <parameter ID="@PLANID" sfwDataType="int" />
+        <parameter ID="@CONTACTROLE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="GetActiveContactForMSS" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT A.*,D.* FROM SGT_ORG_CONTACT A WITH(NOLOCK) &#xD;&#xA;INNER JOIN SGT_ORGANIZATION B WITH(NOLOCK) ON A.ORG_ID=B.ORG_ID &#xD;&#xA;INNER JOIN SGT_PLAN C WITH(NOLOCK) ON A.PLAN_ID=C.PLAN_ID &#xD;&#xA;INNER JOIN SGT_CONTACT D WITH(NOLOCK) ON A.CONTACT_ID=D.CONTACT_ID&#xD;&#xA;INNER JOIN SGT_ORG_CONTACT_ROLE ROLE WITH(NOLOCK) ON ROLE.ORG_CONTACT_ID = A.ORG_CONTACT_ID&#xD;&#xA;AND  ROLE.Contact_role_value='AGNT' AND A.PLAN_ID = 19&#xD;&#xA;and A.status_value='ACTV'">
+      <parameters />
+    </query>
+    <query ID="GetOrgContactIds" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT DISTINCT(CONTACT_ID) AS CONTACT_ID FROM SGT_ORG_CONTACT &#xD;&#xA;WHERE ORG_ID = @ORG_ID AND STATUS_VALUE = 'ACTV'&#xD;&#xA;&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadAgentOrgContact" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT oc.ORG_CONTACT_ID from sgt_org_contact oc&#xD;&#xA;inner JOIN SGT_ORG_CONTACT_ROLE ocr&#xD;&#xA;ON oc.ORG_CONTACT_ID = ocr.ORG_CONTACT_ID&#xD;&#xA;where CONTACT_ROLE_VALUE = 'AGNT'&#xD;&#xA;AND oc.org_ID = @org_id&#xD;&#xA;AND oc.plan_id = @plan_id&#xD;&#xA;AND oc.status_value = 'ACTV'">
+      <parameters>
+        <parameter ID="@org_id" sfwDataType="int" />
+        <parameter ID="@plan_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadPlanAndRole" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT DISTINCT BENEFIT_TYPE_VALUE,CONTACT_ROLE_VALUE  FROM SGT_ORG_CONTACT OC &#xD;&#xA;LEFT JOIN SGT_PLAN P ON P.PLAN_ID = OC.PLAN_ID&#xD;&#xA;LEFT JOIN SGT_ORG_CONTACT_ROLE R ON R.ORG_CONTACT_ID = OC.ORG_CONTACT_ID&#xD;&#xA;WHERE STATUS_VALUE = 'ACTV' AND OC.CONTACT_ID = @CONTACT_ID AND OC.ORG_ID = @ORG_ID  ORDER BY CONTACT_ROLE_VALUE">
+      <parameters>
+        <parameter ID="@CONTACT_ID" sfwDataType="int" />
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetDisctinctContactRolesForContact" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT DISTINCT CONTACT_ROLE_VALUE, CV.DESCRIPTION,&#xA;(CASE CONTACT_ROLE_VALUE&#xA;     WHEN 'PAAG' THEN 1&#xA;     WHEN 'AUTH' THEN 2&#xA;     WHEN 'FINA' THEN 3&#xA;     WHEN 'WELC' THEN 4&#xA;     WHEN 'OTHR' THEN 5&#xA;&#x9; WHEN 'AGNT' THEN 6&#xA;     ELSE 99 &#xA;     END) AS SORTORDER&#xA;FROM SGT_ORG_CONTACT OC &#xA;LEFT JOIN SGT_ORG_CONTACT_ROLE R ON R.ORG_CONTACT_ID = OC.ORG_CONTACT_ID&#xA;LEFT JOIN SGS_CODE_VALUE CV ON CV.CODE_ID = R.CONTACT_ROLE_ID AND CV.CODE_VALUE = R.CONTACT_ROLE_VALUE&#xA;WHERE STATUS_VALUE = 'ACTV' AND OC.CONTACT_ID = @CONTACT_ID AND OC.ORG_ID = @ORG_ID&#xA;ORDER BY SORTORDER ASC">
+      <parameters>
+        <parameter ID="@CONTACT_ID" sfwDataType="int" />
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="OrgContactId" sfwType="Column" sfwValue="org_contact_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="OrgId" sfwType="Column" sfwValue="org_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PlanId" sfwType="Column" sfwValue="plan_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ContactId" sfwType="Column" sfwValue="contact_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusDescription" sfwType="Description" sfwValue="status_description" />
+    <attribute ID="StatusId" sfwType="Column" sfwValue="status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="215" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusValue" sfwType="Column" sfwValue="status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="PrimaryAddressId" sfwType="Column" sfwValue="primary_address_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="objContact" sfwType="Object" sfwEntity="entContact" sfwValue="ibusContact" />
+    <attribute ID="objOrgAndContactPrimaryAddress" sfwType="Object" sfwEntity="entOrgContactAddress" sfwValue="ibusOrgAndContactPrimaryAddress" />
+    <attribute ID="objPlan" sfwType="Object" sfwEntity="entPlan" sfwValue="ibusPlan" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ContactRoleDescription" sfwValue="icdoContactRole.contact_role_description" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrOrgCode" sfwValue="istrOrgCode" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrRoleValue" sfwValue="istrRoleValue" />
+    <attribute ID="objOrganization" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusOrganization" />
+    <attribute sfwType="CDOCollection" sfwEntity="entOrgContactRole" ID="lstOrgContactRole" sfwValue="iclbOrgContactRole" />
+    <attribute sfwType="Collection" sfwEntity="entOrgContactAddress" ID="lstOrgAndContactAddresses" sfwValue="iclbOrgAndContactAddresses" />
+    <attribute sfwType="Collection" sfwEntity="entOrgContact" ID="lstOtherOrgContacts" sfwValue="iclbOtherOrgContacts" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IintContactId" sfwValue="iintContactId" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IintPAAG" sfwValue="iintPAAG" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrSuppressWarning" sfwValue="istrSuppressWarning" />
+    <attribute ID="objOrgContactAddress" sfwType="Object" sfwEntity="entOrgContactAddress" sfwValue="ibusOrgContactAddress" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrContactRoles" sfwValue="istrContactRoles" />
+    <attribute ID="lstOrgContactGroupByRole" sfwType="Collection" sfwValue="iclbOrgContactGroupByRole" sfwEntity="entOrgContactRole" sfwPrivate="False" />
+    <attribute ID="lstScreenNotes" sfwType="Collection" sfwValue="iclbScreenNotes" sfwEntity="entScreenNotes" sfwPrivate="False" />
+    <attribute ID="lstrPlans" sfwDataType="string" sfwPrivate="False" sfwValue="istrPlans" sfwType="Property" />
+    <attribute ID="IstrContactRole" sfwDataType="string" sfwPrivate="False" sfwValue="istrContactRole" sfwType="Property" />
+    <attribute ID="lstrStatusValue" sfwDataType="string" sfwPrivate="False" sfwValue="istrStatusValue" sfwType="Property" />
+    <attribute ID="lstOrgContactPlanAndRole" sfwType="Collection" sfwValue="iclbOrgContactPlanAndRole" sfwEntity="entOrgContactPlanAndRole" sfwPrivate="False" />
+    <attribute ID="IblnIsContactAffiliatedWithNoOrg" sfwDataType="string" sfwPrivate="False" sfwValue="iblnIsContactAffiliatedWithNoOrg" sfwType="Property" />
+    <attribute ID="lstrConsolidatSetStatusValue" sfwDataType="string" sfwPrivate="False" sfwValue="istrConsolidatSetStatusValue" sfwType="Property" />
+    <attribute ID="lstContactRolesDescription" sfwType="CDOCollection" sfwValue="iclbContactRolesDescription" sfwEntity="entOrgContactRole" sfwPrivate="False" />
+    <attribute ID="iblnIsContactActive" sfwDataType="bool" sfwPrivate="False" sfwValue="iblnIsContactActive" sfwType="Property" />
+  </attributes>
+  <objectmethods>
+    <method ID="ApplyToAllPlans_Click" sfwReturnType="ArrayList" />
+    <method ID="LoadPlanCollection" sfwReturnType="Collection" sfwObjectID="cdoPlan" sfwEntity="entPlan" />
+    <method ID="SetPrimaryAddress" sfwReturnType="ArrayList">
+      <parameters>
+        <parameter ID="aintAddressId" sfwDataType="int" />
+      </parameters>
+    </method>
+    <method ID="UpdateAddressClick" sfwReturnType="ArrayList" />
+    <method ID="LoadContactTypes" sfwReturnType="Void" />
+  </objectmethods>
+</entity>

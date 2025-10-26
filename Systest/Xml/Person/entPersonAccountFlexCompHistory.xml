@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entPersonAccountFlexCompHistory" sfwMainCDO="icdoPersonAccountFlexCompHistory" sfwType="BusinessRule" sfwActive="True" sfwStatus="Review" sfwObjectID="busPersonAccountFlexCompHistory" sfwTableName="sgt_person_account_flex_comp_history" sfwView="False">
+  <queries>
+    <query ID="UpdateReportGeneratedFlag" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="UPDATE SGT_PERSON_ACCOUNT_FLEX_COMP_HISTORY SET IS_ENROLLMENT_REPORT_GENERATED = 'N'&#xD;&#xA;WHERE PERSON_ACCOUNT_FLEX_COMP_HISTORY_ID IN&#xD;&#xA;(&#xD;&#xA;SELECT PERSON_ACCOUNT_FLEX_COMP_HISTORY_ID FROM SGT_PERSON_ACCOUNT_FLEX_COMP_HISTORY &#xD;&#xA;WHERE PERSON_ACCOUNT_ID = @PERSON_ACCOUNT_ID and EFFECTIVE_START_DATE IN &#xD;&#xA;(SELECT MAX(EFFECTIVE_START_DATE) FROM SGT_PERSON_ACCOUNT_FLEX_COMP_HISTORY &#xD;&#xA;WHERE PERSON_ACCOUNT_ID = @PERSON_ACCOUNT_ID)&#xD;&#xA;)">
+      <parameters>
+        <parameter ID="@PERSON_ACCOUNT_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="UpdatePreviousEnrolledFlag" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="UPDATE SGT_PERSON_ACCOUNT_FLEX_COMP_HISTORY SET IS_ENROLLMENT_REPORT_GENERATED = 'Y' &#xD;&#xA;WHERE PERSON_ACCOUNT_FLEX_COMP_HISTORY_ID  IN&#xD;&#xA;(&#xD;&#xA; SELECT max(PERSON_ACCOUNT_FLEX_COMP_HISTORY_ID) FROM SGT_PERSON_ACCOUNT_FLEX_COMP_HISTORY &#xD;&#xA; WHERE PERSON_ACCOUNT_ID = @PERSON_ACCOUNT_ID AND  PLAN_PARTICIPATION_STATUS_VALUE = 'ENL4'&#xD;&#xA; GROUP BY LEVEL_OF_COVERAGE_VALUE &#xD;&#xA;)">
+      <parameters>
+        <parameter ID="@PERSON_ACCOUNT_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetChangeReason" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT TOP 1 CV.DESCRIPTION FROM SGT_PERSON_ACCOUNT_FLEX_COMP_HISTORY PAH&#xD;&#xA;LEFT JOIN SGS_CODE_VALUE CV ON CV.CODE_ID = PAH.REASON_ID and CV.CODE_VALUE = PAH.REASON_VALUE&#xD;&#xA;WHERE PAH.PERSON_ACCOUNT_ID = @PERSON_ACCOUNT_ID AND PAH.EFFECTIVE_END_DATE IS NULL AND &#xD;&#xA;PAH.PLAN_PARTICIPATION_STATUS_VALUE IN ('SUS4','CAN4')">
+      <parameters>
+        <parameter ID="@PERSON_ACCOUNT_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="PersonAccountFlexCompHistoryId" sfwType="Column" sfwValue="person_account_flex_comp_history_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PersonAccountId" sfwType="Column" sfwValue="person_account_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StartDate" sfwType="Column" sfwValue="start_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="EndDate" sfwType="Column" sfwValue="end_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="PlanParticipationStatusDescription" sfwType="Description" sfwValue="plan_participation_status_description" />
+    <attribute ID="PlanParticipationStatusId" sfwType="Column" sfwValue="plan_participation_status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="337" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PlanParticipationStatusValue" sfwType="Column" sfwValue="plan_participation_status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="StatusDescription" sfwType="Description" sfwValue="status_description" />
+    <attribute ID="StatusId" sfwType="Column" sfwValue="status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="337" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusValue" sfwType="Column" sfwValue="status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="FromPersonAccountId" sfwType="Column" sfwValue="from_person_account_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ToPersonAccountId" sfwType="Column" sfwValue="to_person_account_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="SuppressWarningsFlag" sfwType="Column" sfwValue="suppress_warnings_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="SuppressWarningsBy" sfwType="Column" sfwValue="suppress_warnings_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="SuppressWarningsDate" sfwType="Column" sfwValue="suppress_warnings_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="LevelOfCoverageDescription" sfwType="Description" sfwValue="level_of_coverage_description" />
+    <attribute ID="LevelOfCoverageId" sfwType="Column" sfwValue="level_of_coverage_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="408" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="LevelOfCoverageValue" sfwType="Column" sfwValue="level_of_coverage_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="EffectiveStartDate" sfwType="Column" sfwValue="effective_start_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="EffectiveEndDate" sfwType="Column" sfwValue="effective_end_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="AnnualPledgeAmount" sfwType="Column" sfwValue="annual_pledge_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="9,2" />
+    <attribute ID="PremiumConversionWaiverFlag" sfwType="Column" sfwValue="premium_conversion_waiver_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="DirectDepositFlag" sfwType="Column" sfwValue="direct_deposit_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="InsideMailFlag" sfwType="Column" sfwValue="inside_mail_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="FlexCompTypeDescription" sfwType="Description" sfwValue="flex_comp_type_description" />
+    <attribute ID="FlexCompTypeId" sfwType="Column" sfwValue="flex_comp_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="342" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="FlexCompTypeValue" sfwType="Column" sfwValue="flex_comp_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ProviderOrgId" sfwType="Column" sfwValue="provider_org_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ReasonDescription" sfwType="Description" sfwValue="reason_description" />
+    <attribute ID="ReasonId" sfwType="Column" sfwValue="reason_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="332" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ReasonValue" sfwType="Column" sfwValue="reason_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="IsEnrollmentReportGenerated" sfwType="Column" sfwValue="is_enrollment_report_generated" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwDefaultValue="N" sfwLength="1" />
+    <attribute ID="PsFileChangeEventDescription" sfwType="Description" sfwValue="ps_file_change_event_description" />
+    <attribute ID="PsFileChangeEventId" sfwType="Column" sfwValue="ps_file_change_event_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="368" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PsFileChangeEventValue" sfwType="Column" sfwValue="ps_file_change_event_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="PeopleSoftFileSentFlag" sfwType="Column" sfwValue="people_soft_file_sent_flag" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="1" />
+    <attribute ID="objPlan" sfwType="Object" sfwEntity="entPlan" sfwValue="ibusPlan" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecMsraAnnualPledgeAmount" sfwValue="idecMsraAnnualPledgeAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecDcraAnnualPledgeAmount" sfwValue="idecDcraAnnualPledgeAmount" />
+  </attributes>
+</entity>

@@ -1,0 +1,84 @@
+﻿<form ID="wfmESSNewReportAProblemMaintenance" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2006" sfwType="FormLinkMaintenance" sfwTitle="Report a Problem" version="3.5" sfwEntity="entContactTicket" sfwTemplate="ESSNewReportAProblemMaintenance.html" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmESSNewReportAProblemLookup" sfwFormObjectType="None" isBasedOnWfm="true" sfwDefaultButtonID="btnSave">
+  <initialload>
+    <callmethods sfwMode="New" sfwMethodName="NewESSReportAProblem" />
+    <callmethods sfwMode="Update" sfwMethodName="FindESSReportAProblem" />
+  </initialload>
+  <items>
+    <sfwTable ID="Main" />
+    <sfwPanel ID="pnlHeader" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblN" />
+        <sfwLiteral ID="ltrlReportProblemMsg" Text="Report a Problem" />
+      </items>
+    </sfwPanel>
+    <sfwButton ID="btnRefreshCancel" sfwMethodName="btnCancel_Click" Text="Refresh" CssClass="hideControl" />
+    <sfwPanel ID="pnlNewMsgPanelForContactOnESS" sfwCaption="Successfully Submitted" sfwVisibleRule="VisibilityOfPanelOnMSS">
+      <items>
+        <sfwTable ID="tblNewPage" />
+        <sfwLiteral ID="ltrLiteral" Text="&lt;font style=&quot;font-size:12px; text-align:center; font-weight:bold;&quot;&gt;Thank you for your message. You can view the response to your request by opening the Ticket Number below. &lt;/br&gt;&lt;/br&gt;If you have provided an email address, NDPERS will notify you through email when you have received an online response through this portal. &lt;/br&gt;&lt;/br&gt;Thank you for letting us help.&lt;/font&gt;" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlMain" sfwCaption="Report a Problem" sfwVisibleRule="VisibityOfMSSSecureMessagePanel">
+      <items>
+        <sfwTable ID="tblMain" />
+        <sfwLabel ID="capContactTypeId" Text="Ticket Number : " sfwIsCaption="True" />
+        <sfwLabel ID="lblContactTypeId" sfwEntityField="ContactTicketId" />
+        <sfwLabel ID="capStatusDescription" Text="Ticket Status : " sfwIsCaption="True" />
+        <sfwLabel ID="lblStatusDescription" sfwEntityField="StatusDescription" />
+        <sfwLabel ID="lblLabel" SkinID="ReqInformation" Text="*" sfwIsCaption="True" />
+        <sfwLabel ID="capContactTypeValue" Text="Problem Type : " sfwIsCaption="True" />
+        <sfwDropDownList ID="ddlContactTypeValue" sfwData1EqualTo="Y" sfwLoadType="CodeGroup" sfwLoadSource="1001" sfwEntityField="ContactTypeValue" sfwValidationRules="IsProblemTypeSelected" />
+        <sfwLabel ID="lblLabel2" SkinID="ReqInformation" Text="*" sfwIsCaption="True" />
+        <sfwLabel ID="capCallbackPhone" Text="Callback Phone Number : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtCallbackPhone" sfwDataFormat="{0:(###)###-####}" sfwEntityField="CallbackPhone" sfwValidationRules="IsCallbackTelephoneNull;Check If Contact Phone Number is Valid" />
+        <sfwLabel ID="capTimeOfDayValue" Text="Time Of Day to Contact : " sfwIsCaption="True" Visible="False" />
+        <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlTimeOfDayValue" sfwLoadType="CodeGroup" sfwLoadSource="5006" sfwEntityField="TimeOfDayValue" Visible="False" />
+        <sfwLabel ID="lblLabel3" SkinID="ReqInformation" Text="*" sfwIsCaption="True" />
+        <sfwLabel ID="capNotes" Text="My Message : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtNotes" Rows="4" TextMode="MultiLine" Width="800px" sfwEntityField="Notes" sfwValidationRules="RULE CHECK IF NOTES IS BLANK" />
+        <sfwLabel ID="lblLabel1" Text="If you require immediate assistance, please call our offices at 800-803-7377." sfwIsCaption="True" />
+        <sfwButton ID="btnSave" sfwMethodName="btnSave_Click" sfwNavigationParameter="aintContactTicketId=ContactTicketId" Text="Save" />
+        <sfwButton ID="btnCancel" sfwMethodName="btnCancel_Click" Text="Refresh" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlHistory" sfwCaption="History">
+      <items>
+        <sfwTable ID="tblNew" />
+        <sfwButton ID="btnButton" sfwActiveForm="wfmESSUpdateReportAProblemMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="aintContactTicketId=ContactTicketId" sfwRelatedControl="grvReportedProblems" Text="Open" />
+        <sfwGridView ID="grvReportedProblems" AllowPaging="True" AllowSorting="True" sfwSelection="Many" sfwEntityField="lstESSReportedProblems" sfwGridEntity="entContactTicket">
+          <Columns>
+            <TemplateField HeaderText="Ticket Number">
+              <ItemTemplate>
+                <sfwLabel sfwLinkable="True" sfwRelatedControl="btnButton" sfwEntityField="ContactTicketId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Contact Type">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="ContactTypeDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Submitted Date">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="CreatedDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Ticket Status">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="StatusDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Created By">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="CreatedBy" />
+              </ItemTemplate>
+            </TemplateField>
+          </Columns>
+        </sfwGridView>
+      </items>
+    </sfwPanel>
+  </items>
+  <loaddetails>
+    <entityfield ID="lstESSReportedProblems" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+  </loaddetails>
+  <ExtraFields />
+</form>

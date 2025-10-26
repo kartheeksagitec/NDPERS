@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entPaymentCheckBook" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoPaymentCheckBook" sfwObjectID="busPaymentCheckBook" sfwTableName="sgt_payment_check_book">
+  <rules>
+    <rule ID="IsEffectiveDateInvalid" sfwMessageId="5532" sfwExpression="(this.IsEffectivedateNotValid() == True)" sfwObjectBased="True" />
+    <rule ID="IsEffectiveDateNull" sfwMessageId="4140" sfwExpression="(this.icdoPaymentCheckBook.effective_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsFirstCheckNumberBlank" sfwMessageId="6407" sfwExpression="(string.IsNullOrEmpty(this.icdoPaymentCheckBook.first_check_number))" sfwObjectBased="True" />
+    <rule ID="IsFirstCheckNumberNotNumeric" sfwMessageId="9409" sfwExpression="!(string.IsNullOrEmpty(this.icdoPaymentCheckBook.first_check_number)) &amp;&amp; &#xA;(!RFunc.IsNumeric(this.icdoPaymentCheckBook.first_check_number))" sfwObjectBased="True" />
+    <rule ID="IsLastCheckNumberBlank" sfwMessageId="6409" sfwExpression="(string.IsNullOrEmpty(this.icdoPaymentCheckBook.last_check_number))" sfwObjectBased="True" />
+    <rule ID="IsLastCheckNumberLessThanFirstCheckNumber" sfwMessageId="6408" sfwExpression="!(string.IsNullOrEmpty(this.icdoPaymentCheckBook.last_check_number)) &amp;&amp; &#xA;!(string.IsNullOrEmpty(this.icdoPaymentCheckBook.first_check_number)) &amp;&amp; &#xA;!(!RFunc.IsNumeric(this.icdoPaymentCheckBook.first_check_number)) &amp;&amp; &#xA;!(!RFunc.IsNumeric(this.icdoPaymentCheckBook.last_check_number)) &amp;&amp; &#xA;(this.IsLastCheckNumberLessThanFirstCheckNumber() == True)" sfwObjectBased="True" />
+    <rule ID="IsLastCheckNumberNotNumeric" sfwMessageId="9409" sfwExpression="!(string.IsNullOrEmpty(this.icdoPaymentCheckBook.last_check_number)) &amp;&amp; &#xA;(!RFunc.IsNumeric(this.icdoPaymentCheckBook.last_check_number))" sfwObjectBased="True" />
+    <rule ID="IsMaxCheckNumberBlank" sfwMessageId="6426" sfwExpression="(string.IsNullOrEmpty(this.icdoPaymentCheckBook.max_check_number))" sfwObjectBased="True" />
+    <rule ID="IsMaxCheckNumberLessThanLastCheckNumber" sfwMessageId="6427" sfwExpression="!(string.IsNullOrEmpty(this.icdoPaymentCheckBook.max_check_number)) &amp;&amp; &#xA;!(string.IsNullOrEmpty(this.icdoPaymentCheckBook.last_check_number)) &amp;&amp; &#xA;!(!RFunc.IsNumeric(this.icdoPaymentCheckBook.max_check_number)) &amp;&amp; &#xA;!(!RFunc.IsNumeric(this.icdoPaymentCheckBook.last_check_number)) &amp;&amp; &#xA;(this.IsMaxCheckNumberLessThanLastCheckNumber() == True)" sfwObjectBased="True" />
+    <rule ID="IsMaxCheckNumberNotNumeric" sfwMessageId="9409" sfwExpression="!(string.IsNullOrEmpty(this.icdoPaymentCheckBook.max_check_number)) &amp;&amp; &#xA;(!RFunc.IsNumeric(this.icdoPaymentCheckBook.max_check_number))" sfwObjectBased="True" />
+    <rule ID="IsRecordAllowedToDelete" sfwMessageId="6415" sfwExpression="(RFunc.EvaluateRule(&quot;IsEffectiveDateInvalid&quot;, this))" sfwObjectBased="True" />
+    <rule ID="IsRecordExist" sfwMessageId="6414" sfwExpression="(this.IsCheckBookExistsforGivenDate() == True)" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror>
+    <item ID="IsFirstCheckNumberBlank" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsLastCheckNumberLessThanFirstCheckNumber" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsFirstCheckNumberNotNumeric" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMaxCheckNumberNotNumeric" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsLastCheckNumberNotNumeric" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEffectiveDateNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEffectiveDateInvalid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsRecordExist" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsLastCheckNumberBlank" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMaxCheckNumberBlank" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMaxCheckNumberLessThanLastCheckNumber" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete>
+    <item ID="IsRecordAllowedToDelete" sfwMode="All" sfwStatus="Active" />
+  </validatedelete>
+  <updateablecdo />
+  <queries>
+    <query ID="UpdateCheckBook" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="UPDATE SGT_PAYMENT_CHECK_BOOK&#xD;&#xA;SET  LAST_CHECK_NUMBER =(SELECT MAX(CHECK_NUMBER) FROM SGT_PAYMENT_HISTORY_DISTRIBUTION WITH(NOLOCK))">
+      <parameters />
+    </query>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select * from sgt_payment_check_book WITH(NOLOCK)">
+      <parameters />
+    </query>
+    <query ID="GetAvailableCheck" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT isnull(CAST(MAX_CHECK_NUMBER AS INT) - CAST(LAST_CHECK_NUMBER as int),0) AS no_of_checks_available&#xD;&#xA;FROM SGT_PAYMENT_CHECK_BOOK &#xD;&#xA;WHERE EFFECTIVE_DATE=(SELECT MAX(EFFECTIVE_DATE)&#xD;&#xA;      FROM SGT_PAYMENT_CHECK_BOOK&#xD;&#xA;       WHERE EFFECTIVE_DATE&lt;=@paymentdate)&#xD;&#xA;&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@paymentdate" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="GetAvailableChecksByBenefitType" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT ISNULL(CAST(MAX_CHECK_NUMBER AS INT) - CAST(LAST_CHECK_NUMBER AS INT),0) AS NO_OF_CHECKS_AVAILABLE &#xD;&#xA;&#x9;,CV.CODE_VALUE AS BENEFIT_TYPE_VALUE&#xD;&#xA;INTO #TEMP_AVAILABLE&#xD;&#xA;FROM SGS_CODE_VALUE CV&#xD;&#xA;INNER JOIN SGT_PAYMENT_CHECK_BOOK C ON C.CHECK_BOOK_ID = CV.DATA3&#xD;&#xA;WHERE CODE_ID = 7005&#xD;&#xA;AND CODE_VALUE IN (&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;SELECT DISTINCT CASE WHEN P.BENEFIT_TYPE_VALUE = 'INSR' THEN 'INSR' ELSE 'RETR' END&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;FROM SGT_PAYMENT_HISTORY_HEADER PHH&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;JOIN SGT_PLAN P ON P.PLAN_ID = PHH.PLAN_ID&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;WHERE PHH.PAYMENT_SCHEDULE_ID = @PAYMENT_SCHEDULE_ID&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;)&#xD;&#xA;&#xD;&#xA;SELECT CASE WHEN P.BENEFIT_TYPE_VALUE = 'INSR' THEN 'INSR' ELSE 'RETR' END AS BENEFIT_TYPE_VALUE, COUNT(*) AS NO_OF_CHECKS_NEEDED&#xD;&#xA;INTO #TEMP_NEEDED&#xD;&#xA;FROM SGT_PAYMENT_HISTORY_HEADER PHH&#xD;&#xA;JOIN SGT_PLAN P ON P.PLAN_ID = PHH.PLAN_ID&#xD;&#xA;WHERE PHH.PAYMENT_SCHEDULE_ID = @PAYMENT_SCHEDULE_ID&#xD;&#xA;GROUP BY CASE WHEN P.BENEFIT_TYPE_VALUE = 'INSR' THEN 'INSR' ELSE 'RETR' END&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;SELECT TA.NO_OF_CHECKS_AVAILABLE - TD.NO_OF_CHECKS_NEEDED AS NO_OF_CHECKS_AVAILABLE_AFTER&#xD;&#xA;FROM #TEMP_AVAILABLE TA&#xD;&#xA;JOIN #TEMP_NEEDED TD ON TA.BENEFIT_TYPE_VALUE = TD.BENEFIT_TYPE_VALUE&#xD;&#xA;&#xD;&#xA;DROP TABLE #TEMP_AVAILABLE&#xD;&#xA;DROP TABLE #TEMP_NEEDED">
+      <parameters>
+        <parameter ID="@PAYMENT_SCHEDULE_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="CheckBookId" sfwType="Column" sfwValue="check_book_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="EffectiveDate" sfwType="Column" sfwValue="effective_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="FirstCheckNumber" sfwType="Column" sfwValue="first_check_number" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="20" sfwRequired="False" />
+    <attribute ID="MaxCheckNumber" sfwType="Column" sfwValue="max_check_number" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="20" sfwRequired="False" />
+    <attribute ID="LastCheckNumber" sfwType="Column" sfwValue="last_check_number" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="20" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+  </attributes>
+</entity>

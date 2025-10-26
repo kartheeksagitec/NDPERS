@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entPsAddress" sfwMainCDO="icdoPsAddress" sfwType="BusinessRule" sfwActive="True" sfwStatus="Review" sfwObjectID="busPsAddress" sfwTableName="sgt_ps_address" sfwView="False">
+  <queries>
+    <query ID="GetPsAddressBySSN" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT TOP 1 [PS_ADDRESS_ID]&#xD;&#xA;      ,[SSN]&#xD;&#xA;      ,[ADDR_LINE_1]&#xD;&#xA;      ,CASE WHEN LEN([ADDR_LINE_2]) &gt; 0 THEN [ADDR_LINE_2] ELSE NULL END AS [ADDR_LINE_2]&#xD;&#xA;      ,[ADDR_CITY]&#xD;&#xA;      ,[ADDR_STATE_VALUE]&#xD;&#xA;      ,[ADDR_COUNTRY_VALUE]&#xD;&#xA;      ,[ADDR_ZIP_CODE]&#xD;&#xA;      ,CASE WHEN LEN([ADDR_ZIP_4_CODE]) &gt; 0 THEN [ADDR_ZIP_4_CODE] ELSE NULL END AS [ADDR_ZIP_4_CODE]&#xD;&#xA;      ,[ADDR_START_DATE]&#xD;&#xA;      ,[PROCESSED_FLAG]&#xD;&#xA;      ,[CREATED_BY]&#xD;&#xA;      ,[CREATED_DATE]&#xD;&#xA;      ,[MODIFIED_BY]&#xD;&#xA;      ,[MODIFIED_DATE] &#xD;&#xA;FROM SGT_PS_ADDRESS where SSN =@SSN AND PROCESSED_FLAG = 'N' ORDER BY PS_ADDRESS_ID">
+      <parameters>
+        <parameter ID="@SSN" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="GetTop10PsAddress" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_PS_ADDRESS where SSN IN('502065124','123456789') AND PROCESSED_FLAG='N'">
+      <parameters />
+    </query>
+    <query ID="GetUnprocessedPsAddress" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT TEMP_ADDR.* FROM &#xD;&#xA;(SELECT &#xD;&#xA;&#x9;  [PS_EMPLOYMENT_ID]&#xD;&#xA;&#x9;  ,[SSN]&#xD;&#xA;      ,[EMPL_START_DATE]&#xD;&#xA;      ,[EMPL_END_DATE]&#xD;&#xA;&#x9;  FROM &#xD;&#xA;(SELECT  ROW_NUMBER() OVER (PARTITION BY SSN ORDER BY PS_EMPLOYMENT_ID) AS ROWNUM,* FROM SGT_PS_EMPLOYMENT WHERE PROCESSED_FLAG = 'N') TEMP&#xD;&#xA;&#xD;&#xA;WHERE TEMP.ROWNUM = 1) AS TEMP_EMP &#xD;&#xA;&#xD;&#xA;RIGHT JOIN &#xD;&#xA;&#xD;&#xA;(SELECT [PS_ADDRESS_ID]&#xD;&#xA;      ,[SSN]&#xD;&#xA;      ,[ADDR_LINE_1]&#xD;&#xA;      ,CASE WHEN LEN([ADDR_LINE_2]) &gt; 0 THEN [ADDR_LINE_2] ELSE NULL END AS [ADDR_LINE_2]&#xD;&#xA;      ,[ADDR_CITY]&#xD;&#xA;      ,[ADDR_STATE_VALUE]&#xD;&#xA;      ,[ADDR_COUNTRY_VALUE]&#xD;&#xA;      ,[ADDR_ZIP_CODE]&#xD;&#xA;      ,CASE WHEN LEN([ADDR_ZIP_4_CODE]) &gt; 0 THEN [ADDR_ZIP_4_CODE] ELSE NULL END AS [ADDR_ZIP_4_CODE]&#xD;&#xA;      ,[ADDR_START_DATE]&#xD;&#xA;      ,[PROCESSED_FLAG]&#xD;&#xA;      ,[CREATED_BY]&#xD;&#xA;      ,[CREATED_DATE]&#xD;&#xA;      ,[MODIFIED_BY]&#xD;&#xA;      ,[MODIFIED_DATE] FROM &#xD;&#xA;(SELECT  ROW_NUMBER() OVER (PARTITION BY SSN ORDER BY PS_ADDRESS_ID) AS ROWNUM,* FROM SGT_PS_ADDRESS WHERE PROCESSED_FLAG = 'N') TEMP&#xD;&#xA;WHERE TEMP.ROWNUM = 1) AS  TEMP_ADDR&#xD;&#xA; ON TEMP_EMP.SSN=TEMP_ADDR.SSN &#xD;&#xA; WHERE ((TEMP_EMP.PS_EMPLOYMENT_ID IS NOT NULL AND TEMP_EMP.EMPL_START_DATE  &lt;=DATEADD(DAY, 30, GETDATE())) OR  (TEMP_EMP.PS_EMPLOYMENT_ID IS NULL)&#xD;&#xA;  AND (TEMP_EMP.EMPL_END_DATE IS NULL OR TEMP_EMP.EMPL_END_DATE &lt;= DATEADD(DAY, 30, GETDATE())))">
+      <parameters />
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="PsAddressId" sfwType="Column" sfwValue="ps_address_id" sfwKeyNo="1" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" />
+    <attribute ID="Ssn" sfwType="Column" sfwValue="ssn" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="9" />
+    <attribute ID="AddrLine1" sfwType="Column" sfwValue="addr_line_1" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="60" />
+    <attribute ID="AddrLine2" sfwType="Column" sfwValue="addr_line_2" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="60" />
+    <attribute ID="AddrCity" sfwType="Column" sfwValue="addr_city" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="AddrStateValue" sfwType="Column" sfwValue="addr_state_value" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="AddrCountryValue" sfwType="Column" sfwValue="addr_country_value" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="AddrZipCode" sfwType="Column" sfwValue="addr_zip_code" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="5" />
+    <attribute ID="AddrZip4Code" sfwType="Column" sfwValue="addr_zip_4_code" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="AddrStartDate" sfwType="Column" sfwValue="addr_start_date" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="ProcessedFlag" sfwType="Column" sfwValue="processed_flag" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="1" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="Error" sfwValue="error" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="1" sfwIsNull="True"  sfwCaption="Error" sfwDefaultValue="N" />
+  </attributes>
+</entity>

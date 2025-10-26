@@ -1,0 +1,124 @@
+﻿<entity ID="entWssPersonAccountACHDetail" sfwType="BusinessRule" sfwActive="True" sfwStatus="Active" sfwObjectID="busWssPersonAccountACHDetail" sfwMainCDO="icdoPersonAccountAchDetail" sfwParentEntity="entPersonAccountAchDetail">
+  <commonproperties />
+  <checklist />
+  <initialload>
+    <item ID="VisibilityRuleForLife" sfwStatus="Active" sfwMode="All" />
+    <item ID="VisibilityRuleForVision" sfwStatus="Active" sfwMode="All" />
+    <item ID="VisibilityRuleForDental" sfwStatus="Active" sfwMode="All" />
+    <item ID="VisibilityRuleForHealthMedicare" sfwStatus="Active" sfwMode="All" />
+    <item ID="VisibilityRuleForStepBankAccountInfo" sfwStatus="Active" sfwMode="All" />
+    <item ID="VisibilityRuleForStepRetPaymentAccount" sfwStatus="Active" sfwMode="All" />
+  </initialload>
+  <delete />
+  <validatedelete />
+  <softerror />
+  <groupslist>
+    <group ID="EnrolledPlans">
+      <item ID="VisibilityRuleForHealthMedicare" sfwStatus="Active" sfwMode="All" />
+      <item ID="VisibilityRuleForDental" sfwStatus="Active" sfwMode="All" />
+      <item ID="VisibilityRuleForVision" sfwStatus="Active" sfwMode="All" />
+      <item ID="VisibilityRuleForLife" sfwStatus="Active" sfwMode="All" />
+      <item ID="PaymentElectionNotSelectedForHealthMedicare" sfwStatus="Active" sfwMode="All" />
+      <item ID="PaymentElectionNotSelectedForDental" sfwStatus="Active" sfwMode="All" />
+      <item ID="PaymentElectionNotSelectedForVision" sfwStatus="Active" sfwMode="All" />
+      <item ID="PaymentElectionNotSelectedForLife" sfwStatus="Active" sfwMode="All" />
+      <item ID="CheckIfPayeeAccountStatusIsApprOrRecv" sfwStatus="Active" sfwMode="All" />
+    </group>
+    <group ID="BankAccountInfo">
+      <item ID="IsRoutingNumberLengthLessThan9" sfwStatus="Active" sfwMode="All" />
+      <item ID="IsRoutingNumberNull" sfwStatus="Active" sfwMode="All" />
+      <item ID="IsAccountNumberNull" sfwStatus="Active" sfwMode="All" />
+      <item ID="IsAccountTypeNull" sfwStatus="Active" sfwMode="All" />
+      <item ID="IsBankNameNullIfRoutingNoDoesNotExists" sfwStatus="Active" sfwMode="All" />
+      <item ID="IsBankNameLengthGreaterThan50" sfwStatus="Active" sfwMode="All" />
+      <item ID="IsRoutingNumberNotNumeric" sfwStatus="Active" sfwMode="All" />
+    </group>
+    <group ID="RetirementPaymentAccount">
+      <item ID="PaymentAccountNotSelected" sfwStatus="Active" sfwMode="All" />
+      <item ID="IsPremiumDeductionNegative" sfwStatus="Active" sfwMode="All" />
+    </group>
+    <group ID="ReviewAndAuthorize">
+      <item ID="IsAcknowledgmentNotSelected" sfwStatus="Active" sfwMode="All" />
+      <item ID="IsACHDetailRecordExistsWithSameStartDate" sfwMode="All" sfwStatus="Active" />
+    </group>
+  </groupslist>
+  <harderror>
+    <item ID="IsRoutingNumberLengthLessThan9" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsRoutingNumberNull" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsAccountTypeNull" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsAccountNumberNull" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsAcknowledgmentNotSelected" sfwStatus="Active" sfwMode="All" />
+    <item ID="PaymentElectionNotSelectedForHealthMedicare" sfwStatus="Active" sfwMode="All" />
+    <item ID="PaymentElectionNotSelectedForDental" sfwStatus="Active" sfwMode="All" />
+    <item ID="PaymentElectionNotSelectedForVision" sfwStatus="Active" sfwMode="All" />
+    <item ID="PaymentElectionNotSelectedForLife" sfwStatus="Active" sfwMode="All" />
+    <item ID="CheckIfPayeeAccountStatusIsApprOrRecv" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsBankNameNullIfRoutingNoDoesNotExists" sfwStatus="Active" sfwMode="All" />
+    <item ID="PaymentAccountNotSelected" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsPremiumDeductionNegative" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsBankNameLengthGreaterThan50" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsRoutingNumberNotNumeric" sfwStatus="Active" sfwMode="All" />
+  </harderror>
+  <constraint />
+  <rules>
+    <rule ID="IsRoutingNumberLengthLessThan9" sfwRuleType="Validation" sfwExpression="(!string.IsNullOrEmpty(this.ibusPersonAccountACHDetail.icdoPersonAccountAchDetail.istrRoutingNumber))&#xD;&#xA;&amp;&amp; &#xD;&#xA;(RFunc.Length(this.ibusPersonAccountACHDetail.icdoPersonAccountAchDetail.istrRoutingNumber) != 9)&#xD;&#xA;" sfwMessageId="4058" sfwObjectBased="True" />
+    <rule ID="IsRoutingNumberNull" sfwRuleType="Validation" sfwExpression="String.IsNullOrEmpty(this.ibusPersonAccountACHDetail.icdoPersonAccountAchDetail.istrRoutingNumber)&#xD;&#xA;&#xD;&#xA;" sfwMessageId="10321" sfwObjectBased="True" />
+    <rule ID="IsAccountNumberNull" sfwRuleType="Validation" sfwExpression="(string.IsNullOrEmpty(this.ibusPersonAccountACHDetail.icdoPersonAccountAchDetail.bank_account_number))&#xD;&#xA;" sfwMessageId="4602" sfwObjectBased="True" />
+    <rule ID="IsAccountTypeNull" sfwRuleType="Validation" sfwExpression="(string.IsNullOrEmpty(this.ibusPersonAccountACHDetail.icdoPersonAccountAchDetail.bank_account_type_value))&#xD;&#xA;" sfwMessageId="4014" sfwObjectBased="True" />
+    <rule ID="IsAcknowledgmentNotSelected" sfwRuleType="Validation" sfwExpression="(this.IsAcknowledgementNotSelected() == True)&#xD;&#xA;" sfwMessageId="10002" sfwObjectBased="True" />
+    <rule ID="VisibilityRuleForHealthMedicare" sfwRuleType="Validation" sfwExpression="(this.IsHealthMedicareEnrolled() == True)&#xD;&#xA;" sfwObjectBased="True" />
+    <rule ID="VisibilityRuleForDental" sfwRuleType="Validation" sfwExpression="(this.IsDentalEnrolled() == True)&#xD;&#xA;" sfwObjectBased="True" />
+    <rule ID="VisibilityRuleForVision" sfwRuleType="Validation" sfwExpression="(this.IsVisionEnrolled() == True)&#xD;&#xA;" sfwObjectBased="True" />
+    <rule ID="VisibilityRuleForLife" sfwRuleType="Validation" sfwExpression="(this.IsLifeEnrolled() == True)&#xD;&#xA;" sfwObjectBased="True" />
+    <rule ID="PaymentElectionNotSelectedForHealthMedicare" sfwRuleType="Validation" sfwExpression="(this.IsHealthMedicareEnrolled() == True) &amp;&amp;&#xD;&#xA;(string.IsNullOrEmpty(this.istrPaymentElectionHealthMedicare))&#xD;&#xA;" sfwMessageId="10332" sfwObjectBased="True" />
+    <rule ID="PaymentElectionNotSelectedForDental" sfwRuleType="Validation" sfwExpression="(this.IsDentalEnrolled() == True) &amp;&amp;&#xD;&#xA;(string.IsNullOrEmpty(this.istrPaymentElectionDental))" sfwMessageId="10332" sfwObjectBased="True" />
+    <rule ID="PaymentElectionNotSelectedForVision" sfwRuleType="Validation" sfwExpression="(this.IsVisionEnrolled() == True) &amp;&amp;&#xD;&#xA;(string.IsNullOrEmpty(this.istrPaymentElectionVision))" sfwMessageId="10332" sfwObjectBased="True" />
+    <rule ID="PaymentElectionNotSelectedForLife" sfwRuleType="Validation" sfwExpression="(this.IsLifeEnrolled() == True) &amp;&amp;&#xD;&#xA;(string.IsNullOrEmpty(this.istrPaymentElectionLife))" sfwMessageId="10332" sfwObjectBased="True" />
+    <rule ID="VisibilityRuleForStepBankAccountInfo" sfwRuleType="Validation" sfwExpression="(this.istrPaymentElectionHealthMedicare == &quot;PRDE&quot;) ||&#xD;&#xA;(this.istrPaymentElectionDental == &quot;PRDE&quot;) ||&#xD;&#xA;(this.istrPaymentElectionVision == &quot;PRDE&quot;) ||&#xD;&#xA;(this.istrPaymentElectionLife == &quot;PRDE&quot;) " sfwObjectBased="True" />
+    <rule ID="VisibilityRuleForStepRetPaymentAccount" sfwRuleType="Validation" sfwExpression="(this.istrPaymentElectionHealthMedicare == &quot;BEPT&quot;) ||&#xD;&#xA;(this.istrPaymentElectionDental == &quot;BEPT&quot;) ||&#xD;&#xA;(this.istrPaymentElectionVision == &quot;BEPT&quot;) ||&#xD;&#xA;(this.istrPaymentElectionLife == &quot;BEPT&quot;) " sfwObjectBased="True" />
+    <rule ID="CheckIfPayeeAccountStatusIsApprOrRecv" sfwRuleType="Validation" sfwExpression="(this.IsPaymentOptionSelectedBEPT() == true) &amp;&amp;&#xD;&#xA;(this.IsPayeeAccountApprovedOrReceiving() == false)" sfwMessageId="10331" sfwObjectBased="True" />
+    <rule ID="IsBankNameNullIfRoutingNoDoesNotExists" sfwRuleType="Validation" sfwExpression="string.IsNullOrEmpty(this.ibusPersonAccountACHDetail.icdoPersonAccountAchDetail.istrBankName) &amp;&amp;&#xD;&#xA;(this.iblnOrgIDDoesNotExist == true)" sfwMessageId="10333" sfwObjectBased="True" />
+    <rule ID="PaymentAccountNotSelected" sfwRuleType="Validation" sfwExpression="(this.iintPayeeAccountACHID == 0)" sfwMessageId="10335" sfwObjectBased="True" />
+    <rule ID="IsPremiumDeductionNegative" sfwRuleType="Validation" sfwExpression="(this.IsPremiumDeductionNegative() == true)" sfwMessageId="10336" sfwObjectBased="True" />
+    <rule ID="IsBankNameLengthGreaterThan50" sfwRuleType="Validation" sfwExpression="(this.iblnOrgIDDoesNotExist == true)&#xD;&#xA;&amp;&amp; &#xD;&#xA;(RFunc.Length(this.ibusPersonAccountACHDetail.icdoPersonAccountAchDetail.istrBankName) &gt; 50)&#xD;&#xA;" sfwMessageId="10337" sfwObjectBased="True" />
+    <rule ID="IsRoutingNumberNotNumeric" sfwRuleType="Validation" sfwExpression="!string.IsNullOrEmpty(this.ibusPersonAccountACHDetail.icdoPersonAccountAchDetail.istrRoutingNumber) &amp;&amp; &#xD;&#xA;!RFunc.IsNumeric(this.ibusPersonAccountACHDetail.icdoPersonAccountAchDetail.istrRoutingNumber)&#xD;&#xA;" sfwMessageId="4057" sfwObjectBased="True" />
+    <rule ID="IsACHDetailRecordExistsWithSameStartDate" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(IsACHDetailRecordExistsWithSameStartDate())" sfwMessageId="10454" />
+  </rules>
+  <attributes>
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPaymentElectionHealthMedicare" sfwValue="istrPaymentElectionHealthMedicare" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPaymentElectionDental" sfwValue="istrPaymentElectionDental" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPaymentElectionVision" sfwValue="istrPaymentElectionVision" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPaymentElectionLife" sfwValue="istrPaymentElectionLife" />
+    <attribute ID="objPersonAccountACHDetail" sfwType="Object" sfwEntity="entPersonAccountAchDetail" sfwValue="ibusPersonAccountACHDetail" />
+    <attribute sfwDataType="boolean" sfwType="Property" ID="IblnIsRoutingNumberExists" sfwValue="iblnIsRoutingNumberExists" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IintPayeeAccountACHID" sfwValue="iintPayeeAccountACHID" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPaymentElectionHealthMedicareDisplay" sfwValue="istrPaymentElectionHealthMedicareDisplay" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPaymentElectionDentalDisplay" sfwValue="istrPaymentElectionDentalDisplay" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPaymentElectionVisionDisplay" sfwValue="istrPaymentElectionVisionDisplay" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPaymentElectionLifeDisplay" sfwValue="istrPaymentElectionLifeDisplay" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrBenefitAccountType" sfwValue="istrBenefitAccountType" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPlanName" sfwValue="istrPlanName" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrBenefitOption" sfwValue="istrBenefitOption" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrBenefitAmount" sfwValue="istrBenefitAmount" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrAcknowledgementFlag" sfwValue="istrAcknowledgementFlag" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrConfirmationText" sfwValue="istrConfirmationText" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="IdtEffectiveDateHealthMedicare" sfwValue="idtEffectiveDateHealthMedicare" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="IdtEffectiveDateDental" sfwValue="idtEffectiveDateDental" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="IdtEffectiveDateVision" sfwValue="idtEffectiveDateVision" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="IdtEffectiveDateLife" sfwValue="idtEffectiveDateLife" />
+    <attribute ID="lstAck" sfwType="Collection" sfwValue="iclbACHDetailsAcknowledgement" sfwEntity="entWssAcknowledgement" sfwPrivate="False" />
+    <attribute ID="lblnRNExists" sfwDataType="bool" sfwPrivate="False" sfwValue="iblnRNExists" sfwType="Property" />
+    <attribute ID="lstrUPMWAcknowledgementText" sfwDataType="string" sfwPrivate="False" sfwValue="istrUPMWAcknowledgementText" sfwType="Property" />
+    <attribute ID="IstrHealthandMedicarePersonAccountIds" sfwDataType="string" sfwPrivate="False" sfwValue="istrHealthandMedicarePersonAccountIds" sfwType="Property" />
+    <attribute ID="IstrDentalPersonAccountId" sfwDataType="string" sfwPrivate="False" sfwValue="istrDentalPersonAccountId" sfwType="Property" />
+    <attribute ID="IstrVisionPersonAccountId" sfwDataType="string" sfwPrivate="False" sfwValue="istrVisionPersonAccountId" sfwType="Property" />
+    <attribute ID="IstrLifePersonAccountId" sfwDataType="string" sfwPrivate="False" sfwValue="istrLifePersonAccountId" sfwType="Property" />
+  </attributes>
+  <objectmethods>
+    <method ID="LoadRetirementPayeeAccount" sfwReturnType="Collection" sfwObjectID="cdoPayeeAccount" sfwEntity="entPayeeAccount" />
+  </objectmethods>
+  <queries />
+  <methods />
+  <lifecycle />
+  <ExtraFields />
+</entity>

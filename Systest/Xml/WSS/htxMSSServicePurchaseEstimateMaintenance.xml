@@ -1,0 +1,103 @@
+﻿<form ID="wfmMSSServicePurchaseEstimateMaintenance" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2001" sfwType="FormLinkMaintenance" sfwTitle="Service Purchase Estimate Maintenance" version="3.5" sfwEntity="entContactTicket" sfwTemplate="MSSServicePurchaseEstimateMaintenance.html" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmMSSServicePurchaseEstimateLookup" sfwFormObjectType="None" isBasedOnWfm="true" sfwDefaultButtonID="btnSave">
+  <initialload>
+    <callmethods sfwMode="New" sfwMethodName="NewMSSContactMGMTServicePurchase" />
+    <callmethods sfwMode="Update" sfwMethodName="FindMSSContactMGMTServicePurchase" />
+  </initialload>
+  <items>
+    <sfwTable ID="Main" />
+    <sfwPanel ID="pnltoolbar" sfwCaption="New Page" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblNewPage1" />
+        <sfwImageButton ID="btnBack" ImageAlign="AbsMiddle" ImageUrl="~/Images/back.gif" sfwMethodName="btnBack_Click" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlHeader" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblNewPage" />
+        <sfwLiteral ID="ltrlMessage" Text="Service Purchase Request" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlMain" sfwCaption="Request Information">
+      <items>
+        <sfwTable ID="tblMain" />
+        <sfwLabel ID="capContactTicketId" Text="Ticket Number : " sfwIsCaption="True" />
+        <sfwLabel ID="lblContactTicketId" sfwEntityField="ContactTicketId" />
+        <sfwLabel ID="capStatusDescription" Text="Ticket Status : " sfwIsCaption="True" />
+        <sfwLabel ID="lblStatusDescription" sfwEntityField="StatusDescription" />
+        <sfwLabel ID="capConverUnusedSickLeaveFlag" Text="Please enter the unused sick leave hours, if any, that you would like to include for this purchase " sfwIsCaption="True" />
+        <sfwTextBox ID="txtUnusedSickLeaveHours1" sfwEntityField="objContactMgmtServicePurchase.UnusedSickLeaveHours" />
+        <sfwLabel ID="capUnusedSickLeaveHours1" Text=" hours" sfwIsCaption="True" />
+        <sfwLabel ID="capTypesOfService" Text="If you would like to include other types of service in this purchase, please select the type of purchase from the list below and enter the service from/to dates" Width="250px" sfwIsCaption="True" />
+        <sfwGridView AllowPaging="True" ID="grvSerPurServiceType" sfwTwoWayBinding="True" sfwEntityField="objContactMgmtServicePurchase.lstSerPurServiceType" sfwGridEntity="entSerPurServiceType" AllowEditing="True">
+          <Columns>
+            <TemplateField HeaderText="Ser Pur Service Type ID" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="SerPurServiceTypeId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField>
+              <ItemTemplate>
+                <sfwCheckBox sfwEntityField="ServiceTypeCheckedFlag" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField ItemStyle.HorizontalAlign="Left">
+              <ItemTemplate>
+                <sfwLabel sfwTwoWayBinding="True" sfwEntityField="ServiceTypeDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="From Date" HeaderStyle.HorizontalAlign="Center">
+              <ItemTemplate>
+                <sfwTextBox sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwEntityField="ServiceTypeFromDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="To Date" HeaderStyle.HorizontalAlign="Center">
+              <ItemTemplate>
+                <sfwTextBox sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwEntityField="ServiceTypeToDate" />
+              </ItemTemplate>
+            </TemplateField>
+          </Columns>
+        </sfwGridView>
+        <sfwLabel ID="lblLabel" Text="Would you like to add additional / generic service type to this purchase?   " sfwIsCaption="True" />
+        <sfwDropDownList ID="ddlDropDownList" sfwClientVisibility="controllist:lblLabel1,ddlDropDownList1#Y:lblLabel1,ddlDropDownList1;N:;" sfwEntityField="objContactMgmtServicePurchase.AddiGenericFlag">
+          <ListItem />
+          <ListItem Text="Yes" Value="Y" />
+          <ListItem Text="No" Value="N" />
+        </sfwDropDownList>
+        <sfwLabel ID="lblLabel1" Text="Should your additional/generic purchase be based on number of months or amount of available funds?  " sfwIsCaption="True" />
+        <sfwDropDownList ID="ddlDropDownList1" sfwClientVisibility="controllist:lblLabel2,txtAddiGenericMonth,lblLabel3,lblLabel4,txtAddiGenericAmount#MONT:lblLabel2,txtAddiGenericMonth,lblLabel3;CURR:lblLabel4,txtAddiGenericAmount;" sfwEntityField="lstrAmntMonths">
+          <ListItem />
+          <ListItem Text="Months" Value="MONT" />
+          <ListItem Text="Amount" Value="CURR" />
+        </sfwDropDownList>
+        <sfwLabel ID="lblLabel2" Text="Enter Additional / Generic Service (up to 60 months) : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtAddiGenericMonth" sfwEntityField="objContactMgmtServicePurchase.AddiGenericMonth" />
+        <sfwLabel ID="lblLabel3" Text=" months" sfwIsCaption="True" />
+        <sfwLabel ID="lblLabel4" Text="Enter in the dollar amount of funds:  " sfwIsCaption="True" />
+        <sfwTextBox ID="txtAddiGenericAmount" sfwDataFormat="{0:C}" sfwEntityField="objContactMgmtServicePurchase.AddiGenericAmount" />
+        <sfwLabel ID="lblLabel6" Text="Are you planning to use eligible rollover/transfer funds for your service purchase?  " sfwIsCaption="True" />
+        <sfwDropDownList ID="ddlCascadingDropDownList1" sfwClientVisibility="controllist:lblLabel8,capRolloverTransferInfo1,cblIbusServicePurchase1,lblLabel7,capEstFundsToBeUtilAmount,txtEstFundsToBeUtilAmount,capForRetirementPortionOfPurchaseOnly1#Y:lblLabel8,capRolloverTransferInfo1,cblIbusServicePurchase1,lblLabel7,capEstFundsToBeUtilAmount,txtEstFundsToBeUtilAmount,capForRetirementPortionOfPurchaseOnly1;N:;" sfwEntityField="lsElligibleOrRolloverPlan">
+          <ListItem />
+          <ListItem Text="Yes" Value="Y" />
+          <ListItem Text="No" Value="N" />
+        </sfwDropDownList>
+        <sfwLabel ID="lblLabel8" Text="If yes, check the type of plan from the list below." sfwIsCaption="True" />
+        <sfwLabel ID="capRolloverTransferInfo1" Text="Rollover/Transfer Info :" Width="250px" sfwIsCaption="True" />
+        <sfwCheckBoxList ID="cblIbusServicePurchase1" RepeatColumns="4" sfwValueChecked="Y" sfwValueUnChecked="N" sfwEntityField="objContactMgmtServicePurchase.lstIclcSerPurRolloverInfo" sfwCheckBoxField="RolloverValue" sfwLoadType="CodeGroup" sfwLoadSource="1019" />
+        <sfwLabel ID="lblLabel7" Text="If you would like NDPERS to determine the amount of service credit your rollover funds can purchase,&lt;br/&gt;enter in the dollar amount of rollover funds available." sfwIsCaption="True" />
+        <sfwLabel ID="capEstFundsToBeUtilAmount" Text="Estimated Funds to be Utilized as Rollover : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtEstFundsToBeUtilAmount" sfwDataFormat="{0:C2}" sfwEntityField="objContactMgmtServicePurchase.EstFundsToBeUtilAmount" />
+        <sfwLabel ID="capForRetirementPortionOfPurchaseOnly1" Text=" (for retirement portion of purchase only)" sfwIsCaption="True" />
+        <sfwLabel ID="lblLabel5" Text="NDPERS will provide you with retirement benefit estimates with and without your service purchase. The estimate will be prepared&lt;br/&gt;using your Normal Retirement Date unless you indicate a different Retirement Effective Date.Retirement Effective Date is typically the first of the month after your last paycheck." sfwIsCaption="True" />
+        <sfwLabel ID="capRetirementEffectiveDate1" Text="Retirement Effective Date (MM/YYYY) :" sfwIsCaption="True" />
+        <sfwTextBox ID="txtRetirementEffectiveDate1" sfwDataFormat="{0:MM/yyyy}" sfwEntityField="objContactMgmtServicePurchase.RetirementEffectiveDate" />
+        <sfwButton ID="btnSave" sfwMethodName="btnSave_Click" sfwMode="New" sfwNavigationParameter="aintContactTicketId=ContactTicketId" Text="Save" sfwMessageId="10395" />
+      </items>
+    </sfwPanel>
+  </items>
+  <loaddetails>
+    <entityfield ID="objContactMgmtServicePurchase" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objContactMgmtServicePurchase.lstSerPurServiceType" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objContactMgmtServicePurchase.lstIclcSerPurRolloverInfo" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+  </loaddetails>
+  <ExtraFields />
+</form>

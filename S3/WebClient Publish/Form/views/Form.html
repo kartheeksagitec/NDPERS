@@ -1,0 +1,229 @@
+﻿<div ng-controller="FormController" ng-mousedown="setDisplayNoneToTable()" ng-class="isDeveloperView==true?'innerWrapper highlight-view':'innerWrapper' ">
+    <div class="xml-control-tree">
+        <div class="col-xs-12" style="margin-top: -4px;">
+            <div class="col-xs-8">
+                <input type="text" placeholder="Search(Type and press Enter)" ng-title="TreeObject.ID" class="form-control input-sm" ng-model="TreeObject.ID" ng-blur="searchControlID($event)" />
+            </div>
+            <div class="col-xs-3 no-left-padding">
+                <i title="Search" class="fa fa-search ng-scope" ng-click="searchControlID($event)"></i>
+                <input class="inline marg-left-5 top-3" type="checkbox" ng-click="expandOrCollapseAll()" title="{{TreeObject.btnLabel}}">
+            </div>
+        </div> 
+        <div xml-tree-content style="margin-top: 24px;" id="tree-map" ng-if="viewTreeMap" xml-node-tree-directive data="TreeObject.formTableModel" selectfunction="findParentAndChildObject"></div>
+    </div>
+
+    <div class="toolbox-sidebar" ng-show="!selectedDesignSource && IsToolsDivCollapsed && !isDeveloperView">
+        <div class="toolbox-sidebardiv" ng-click="toggleSideBar()"></div>
+    </div>
+    <div class="toolbox-wrapper form-toolbox" ng-show="!selectedDesignSource && !IsToolsDivCollapsed">
+        <span class="toolbox-close-icon" ng-click="toggleSideBar()"> </span>
+        <div class="toolbox toolbox-form" ng-init="ActiveTabForForm='Toolbox'">
+            <ul class="nav nav-tabs">
+                <li ng-class="ActiveTabForForm=='Toolbox'?'active':''" ng-click="OnSelectLeftFormTab('Toolbox')" knowtion-id="3.1">
+                    <a data-toggle="tab" aria-expanded="true">
+                        Toolbox
+                    </a>
+                </li>
+                <li ng-class="ActiveTabForForm=='Properties'?'active':''" ng-click="OnSelectLeftFormTab('Properties')" knowtion-id="3.2">
+                    <a data-toggle="tab" aria-expanded="false">
+                        Properties
+                    </a>
+                </li>
+                <li ng-class="ActiveTabForForm=='Entity'?'active':''" ng-click="OnSelectLeftFormTab('Entity')" knowtion-id="3.3">
+                    <a data-toggle="tab" aria-expanded="false">
+                        Entity
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content no-padding">
+                <div ng-class="ActiveTabForForm=='Toolbox'?'tab-pane fade active in':'tab-pane fade'" ng-show="ActiveTabForForm=='Toolbox'" onselectstart="return false;">
+                    <div class="toolbox-items" ng-mousedown="ClearSelectFields()" ng-if="FormModel">
+                        <div class="toolbox-items-heading">
+                            Basic
+                        </div>
+                        <div ng-repeat="control in lstControl | controlbyFormtype : 'toolbox' : 'basic' : FormModel | orderBy : 'Name'" class="col-xs-6 no-padding toolbox-items-wrapper" formcontroldraggable dragdata="control.method" title="{{control.method}}">
+                            <img class="image-icon-tools" ng-src="{{control.icon}}" />
+                            <span>{{control.Name | cut:false:18:'...'}}</span>
+                        </div>
+                        <div class="toolbox-items-heading" ng-if="FormModel.dictAttributes.sfwType !== 'Tooltip'">
+                            Advanced
+                        </div>
+                        <div ng-repeat="control in lstControl | controlbyFormtype : 'toolbox' : 'advanced' : FormModel | orderBy : 'Name'" class="col-xs-6 no-padding toolbox-items-wrapper" formcontroldraggable dragdata="control.method" title="{{control.method}}">
+                            <img class="image-icon-tools" ng-src="{{control.icon}}" />
+                            <span>{{control.Name | cut:false:18:'...'}}</span>
+                        </div>
+                        <div class="toolbox-items-heading">
+                            Html
+                        </div>
+                        <div ng-repeat="control in lstControl | controlbyFormtype : 'toolbox' : 'html' : FormModel | orderBy : 'Name'" class="col-xs-6 no-padding toolbox-items-wrapper" formcontroldraggable dragdata="control.method" title="{{control.method}}">
+                            <img class="image-icon-tools" ng-src="{{control.icon}}" />
+                            <span>{{control.Name | cut:false:18:'...'}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div ng-class="ActiveTabForForm=='Properties'?'tab-pane fade active in':'tab-pane fade'">
+                    <div class="control-common-properties" id="dvcommonProperties">
+                        <div class="common-properties-header form-common-properties-header">
+                            <span>{{FormModel.SelectedControl.Name}} - </span>
+                            <span ng-show="FormModel.SelectedControl.dictAttributes.ID" title="{{FormModel.SelectedControl.dictAttributes.ID}}">{{FormModel.SelectedControl.dictAttributes.ID}}</span>
+                            <span class="blank-id-text" ng-hide="FormModel.SelectedControl.dictAttributes.ID">[BLANK]</span>
+
+                        </div>
+
+                        <div class="common-properties-content">
+                            <commonpropertiesdirective model="FormModel.SelectedControl" objgridboundedquery="ObjgridBoundedQuery" parent="FormModel.SelectedControl.ParentVM" formobject="FormModel" lstloadedentitytrees="lstLoadedEntityTrees" lstloadedentitycolumnstree="lstLoadedEntityColumnsTree"
+                                                       currentpanel="CurrPanel" entity-tree-name="entityTreeName"></commonpropertiesdirective>
+                        </div>
+
+                    </div>
+                </div>
+                <div ng-class="ActiveTabForForm=='Entity'?'tab-pane fade active in':'tab-pane fade'">
+                    <div class="entity-tree-wrapper">
+                        <div class="full-height col-sm-12">
+                            <div class="full-height" ng-show="FormModel.IsLookupCriteriaEnabled==false && !ObjgridBoundedQuery.IsQuery && !IsGridCollectionEmpty">
+                                <newentityobjecttreetemplate ischeckboxvisible="false" iscollectionnextlevelload="false" lstdisplayentity="LstDisplayedEntities" selectedentityobjecttreefields="currentEntiyTreeObject.lstselectedobjecttreefields" lstentity="currentEntiyTreeObject.lstselectedobjecttreefields" selectedfield="currentEntiyTreeObject.selectedobjecttreefield" entityname="entityTreeName"
+                                                             ismainentity="currentEntiyTreeObject.IsMainEntity"></newentityobjecttreetemplate>
+
+                            </div>
+                            <div class="toolbox-entity-search" ng-if="FormModel.IsLookupCriteriaEnabled==false && ObjgridBoundedQuery.IsQuery">
+                                <input type="text" class="form-control input-sm full-width marg-top-5" style="width:90% !important" placeholder="Search Here.." ng-model="QueryFieldSearch" ng-change="sortcolumnslist(ObjgridBoundedQuery,QueryFieldSearch)" />
+                                <i class="fa fa-refresh" title="Refresh Attributes" ng-click="onRefreshBoundtoQueryFields()"></i>
+                            </div>
+                            <div class="form-group  form-entity-list-lookup" entitytreescroll ng-show="FormModel.IsLookupCriteriaEnabled==false && ObjgridBoundedQuery.IsQuery">
+                                <ul>
+                                    <li ng-repeat="field in ObjgridBoundedQuery.SortedColumns" ng-class="field.IsRecordSelected?'selected':''" ng-mousedown="selectField(field, $event)" draggable="true" ondragstart="onEntityTreeDragStart(event)" drag-id="{{field.ID}}" drag-object="{{field}}" drag-boolparenttype="false" drag-display-name="" drag-datatype="{{field.DataType}}" drag-fieldtype="Column">
+                                        <span class="datatype-iconproperties datatype-icon-{{field.DataType}}"></span>
+                                        <span ng-bind="field.ID"></span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <select ng-options="query.dictAttributes.ID for query in lstQueryID" class="form-control input-sm marg-top-5" title="{{SelectedQuery.dictAttributes.ID}}" ng-model="SelectedQuery" ng-change="populateQueryFieldsFromLookupTree(SelectedQuery, true)" ng-show="FormModel.dictAttributes.sfwType =='Lookup' && FormModel.IsLookupCriteriaEnabled==true" />
+                            <div class="toolbox-entity-search" ng-if="FormModel.dictAttributes.sfwType =='Lookup' && FormModel.IsLookupCriteriaEnabled==true && (MainQuery || (SelectedQuery && SelectedQuery.dictAttributes.ID))">
+                                <input type="text" class="form-control input-sm full-width marg-top-5" style="width:90% !important" placeholder="Search Here.." ng-model="LookUpSearch" ng-change="sortcolumnslist(lookupTreeObject,LookUpSearch)" />
+                                <i class="fa fa-refresh" title="Refresh Attributes" ng-click="onRefreshQueryFields()"></i>
+                            </div>
+                            <div class="form-group  form-entityqueryfield-list-lookup" entitytreescroll ng-show="FormModel.dictAttributes.sfwType =='Lookup' && FormModel.IsLookupCriteriaEnabled==true && (MainQuery || (SelectedQuery && SelectedQuery.dictAttributes.ID) )">
+                                <ul>
+                                    <li ng-repeat="field in lookupTreeObject.SortedColumns| limitTo:ColumnsLimitCount" ng-class="field.IsRecordSelected?'selected':''" ng-mousedown="selectField(field, $event)" draggable="true" ondragstart="onEntityTreeDragStart(event)" drag-id="{{field.ID}}" drag-object="{{field}}" drag-boolparenttype="false" drag-display-name="" drag-datatype="{{field.DataType}}" drag-fieldtype="Column" drag-fieldquery="{{lookupTreeObject.EntityName}}">
+                                        <span class="datatype-iconproperties datatype-icon-{{field.DataType}}"></span>
+                                        <span ng-bind="field.ID"></span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="form-entity-list-lookup" ng-show="FormModel.dictAttributes.sfwType =='Lookup' && FormModel.IsLookupCriteriaEnabled==true && (!MainQuery && (!SelectedQuery || (SelectedQuery && !SelectedQuery.dictAttributes.ID)))">
+                                <newentityobjecttreetemplate ischeckboxvisible="false" iscollectionnextlevelload="false" lstdisplayentity="LstDisplayedEntities" selectedentityobjecttreefields="lstselectedobjecttreefields" lstentity="lstselectedobjecttreefields" selectedfield="selectedobjecttreefield"
+                                                             entityname="entityTreeName" showonlycolumns="true" showvalueofcolumn="true"></newentityobjecttreetemplate>
+                            </div>
+                        </div>
+
+                        <div class="form-floating-table">
+                            <div ng-click="AddControlFromObjectTree('sfwLabel')" title="Label" ondragstart="return false;" ng-hide="FormModel.dictAttributes.sfwType =='Lookup' && FormModel.IsLookupCriteriaEnabled==true">
+                                <img class="image-icon-tools" src="images/Form/icon-label.svg">
+                            </div>
+                            <div ng-click="AddControlFromObjectTree('sfwTextBox')" title="TextBox" ondragstart="return false;" ng-hide="FormModel.dictAttributes.sfwType =='Tooltip' || (FormModel.dictAttributes.sfwType == 'Lookup' && (IsGridSeleected==true || isTemplateFieldSelected==true))">
+                                <img class="image-icon-tools" src="images/Form/icon-textbox.svg">
+                            </div>
+                            <div ng-click="AddControlFromObjectTree('sfwDropDownList')" title="DropDown" ondragstart="return false;" ng-hide="FormModel.dictAttributes.sfwType =='Tooltip' || (FormModel.dictAttributes.sfwType == 'Lookup' && (IsGridSeleected==true || isTemplateFieldSelected==true))">
+                                <img class="image-icon-tools" src="images/Form/icon-form-dropdown.svg">
+                            </div>
+                            <div ng-click="AddControlFromObjectTree('sfwCascadingDropDownList')" title="CascadindgDropDownList" ng-hide="FormModel.dictAttributes.sfwType =='Tooltip' || (FormModel.dictAttributes.sfwType == 'Lookup' && (IsGridSeleected==true || isTemplateFieldSelected==true))" ondragstart="return false;">
+                                <img class="image-icon-tools" src="images/Form/icon-cascading-dropdown.svg">
+                            </div>
+                            <div ng-click="AddControlFromObjectTree('sfwMultiSelectDropDownList')" title="MultiSelectDropDownList" ondragstart="return false;" ng-hide="FormModel.dictAttributes.sfwType =='Tooltip' || (FormModel.dictAttributes.sfwType == 'Lookup' && (IsGridSeleected==true || isTemplateFieldSelected==true)) ">
+                                <img class="image-icon-tools" src="images/Form/icon-dropdown.svg">
+                            </div>
+                            <div ng-click="AddControlFromObjectTree('sfwRadioButton')" title="RadioButton" ng-hide="FormModel.dictAttributes.sfwType == 'Lookup' || FormModel.dictAttributes.sfwType =='Tooltip'" ondragstart="return false;">
+                                <img class="image-icon-tools" src="images/Form/icon-radio.svg">
+                            </div>
+                            <div ng-click="AddControlFromObjectTree('sfwCheckBox')" title="CheckBox" ondragstart="return false;" ng-hide="FormModel.dictAttributes.sfwType =='Tooltip' || (FormModel.dictAttributes.sfwType == 'Lookup' && (IsGridSeleected==true || isTemplateFieldSelected==true))">
+                                <img class="image-icon-tools" src="images/Form/icon-checkbox.svg">
+                            </div>
+                            <div ng-click="AddControlFromObjectTree('sfwCheckBoxList')" title="CheckBoxList" ng-hide="IsGridSeleected==true || FormModel.dictAttributes.sfwType =='Tooltip' || (FormModel.dictAttributes.sfwType == 'Lookup' &&  isTemplateFieldSelected==true)" ondragstart="return false;">
+                                <img class="image-icon-tools" src="images/Form/icon-checkboxlist.svg">
+                            </div>
+                            <div ng-click="AddControlFromObjectTree('sfwRadioButtonList')" title="RadioButtonList" ng-hide="IsGridSeleected==true || FormModel.dictAttributes.sfwType =='Tooltip' || (FormModel.dictAttributes.sfwType == 'Lookup' &&  isTemplateFieldSelected==true)" ondragstart="return false;">
+                                <img class="image-icon-tools" src="images/Form/icon-radiobuttonlist.svg">
+                            </div>
+                            <div ng-click="AddControlFromObjectTree('Grid')" title="Grid" ng-show="(FormModel.dictAttributes.sfwType != 'Lookup' && !IsGridSeleected) || IsListViewSelected" ondragstart="return false;">
+                                <img class="image-icon-tools" src="images/Form/icon-mant3.svg">
+                            </div>
+                            <div ng-click="AddControlFromObjectTree('UserControl')" title="UserControl" ng-hide="FormModel.dictAttributes.sfwType == 'Lookup' || FormModel.dictAttributes.sfwType == 'UserControl' || FormModel.dictAttributes.sfwType =='Tooltip' || IsGridSeleected==true" ondragstart="return false;">
+                                <img class="image-icon-tools" src="images/Form/new-user-main.svg">
+                            </div>
+                            <div ng-click="AddControlFromObjectTree('sfwRange')" title="Range" ng-hide="FormModel.dictAttributes.sfwType != 'Lookup' || FormModel.dictAttributes.sfwType =='Tooltip' || IsGridSeleected==true" ondragstart="return false;">
+                                <img class="image-icon-tools" src="images/Form/icon-range.svg">
+                            </div>
+                            <div ng-click="AddControlFromObjectTree('SfxChart')" title="Chart" ng-hide="FormModel.dictAttributes.sfwType == 'Lookup' || IsGridSeleected==true" ondragstart="return false;">
+                                <img class="image-icon-tools" src="images/Form/icon-chart.svg">
+                            </div>
+                            <div ng-click="AddControlFromObjectTree('sfwDateTimePicker')" title="DateTime Picker" ondragstart="return false;" ng-hide="FormModel.dictAttributes.sfwType =='Tooltip' || (FormModel.dictAttributes.sfwType == 'Lookup' && (IsGridSeleected==true || isTemplateFieldSelected==true))">
+                                <img class="image-icon-tools" src="images/Form/icon-DateTimepicker.png">
+                            </div>
+                            <div ng-click="AddControlFromObjectTree('sfwCalendar')" title="Calendar" ondragstart="return false;" ng-show="!IsGridSeleected && (FormModel.dictAttributes.sfwType =='Maintenance' || FormModel.dictAttributes.sfwType =='Wizard')">
+                                <img class="image-icon-tools" src="images/Form/icon-calendar.png">
+                            </div>
+                            <div ng-click="AddControlFromObjectTree('sfwListView')" title="Repeater Control" ondragstart="return false;" ng-hide="IsGridSeleected==true || FormModel.dictAttributes.sfwType == 'Lookup' || FormModel.dictAttributes.sfwType =='Tooltip'" ng-show="FormModel.dictAttributes.sfwType =='Maintenance' || FormModel.dictAttributes.sfwType =='Wizard'">
+                                <img class="image-icon-tools" src="images/Form/icon-repeater-control.svg">
+                            </div>
+                            <div ng-click="AddControlFromObjectTree('sfwJSONData')" ng-hide="FormModel.dictAttributes.sfwType == 'Lookup' || FormModel.dictAttributes.sfwType =='Tooltip'" title="Json Data" ondragstart="return false;">
+                                <img class="image-icon-tools" src="images/Form/JSON_Data.svg">
+                            </div>
+                            <div ng-click="AddControlFromObjectTree('sfwScheduler')" title="Scheduler" ng-show="!IsGridSeleected && (FormModel.dictAttributes.sfwType =='Maintenance' || FormModel.dictAttributes.sfwType =='Wizard')" ondragstart="return false;">
+                                <img class="image-icon-tools" src="images/Form/icon-scheduler.svg">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--for property highlighter - transformed html comes here-->
+    <div id="transformedxml" ng-style="blackStyle">
+    </div>
+    <div ng-class="IsToolsDivCollapsed?'form-area-expanded':'form-area'" ng-show="!selectedDesignSource && !isDeveloperView">
+        <search-design main-model="FormModel" current-file="currentfile" select-element="selectElement(path)" traverse-model="objectPath(path)" toggle-design="ToggleUIDesginAttribute(items,IsAction)" class="design-search"></search-design>
+        <div class="inner-container" ng-class="$root.currentopenfile.file.FileType=='UserControl'?'white-bg':''">
+            <div class="form-area-editable">
+                <div class="panel-group accordion scrollable" id="{{MainPanelID}}">
+                    <input type="button" value="Add Panel" ng-if="!MainPanels.length>0" ng-show="($root.currentopenfile.file.FileType=='Maintenance' || $root.currentopenfile.file.FileType=='Tooltip')" ng-click="OnAddPanelClick('Panel')" />
+                    <input type="button" value="Add Wizard Step" ng-if="!MainPanels.length>0" ng-show="($root.currentopenfile.file.FileType=='Wizard')" ng-click="OnAddWizardStepClick(-1,false)" />
+
+                    <panelaccordiantemplate ng-click="selectPanelControl(HeaderTemplate)" lstdisplayentities="LstDisplayedEntities" model="HeaderTemplate" entitytreename="entityTreeName"
+                                            initialvisibilty="HeaderTemplate.initialvisibilty" parentaccordianid="MainPanelID" formodel="FormModel" ng-if="FormModel.dictAttributes.sfwType == 'Wizard' && HeaderTemplate"
+                                            lstloadedentitytrees="lstLoadedEntityTrees" lstloadedentitycolumnstree="lstLoadedEntityColumnsTree" buttons-collection="ButtonsDetailsCollection"
+                                            ng-dblclick="selectControlOnDoubleClick(HeaderTemplate,$event)"></panelaccordiantemplate>
+                    <panelaccordiantemplate ng-if="$root.currentopenfile.file.FileType != 'UserControl'" ng-repeat="panel in MainPanels" ng-click="selectPanelControl(panel, $event)"
+                                            lstdisplayentities="LstDisplayedEntities" entitytreename="entityTreeName" model="panel" parentaccordianid="MainPanelID" formodel="FormModel"
+                                            initialvisibilty="panel.initialvisibilty" panelindex="{{$index}}" lstloadedentitytrees="lstLoadedEntityTrees" lstloadedentitycolumnstree="lstLoadedEntityColumnsTree"
+                                            buttons-collection="ButtonsDetailsCollection" ng-dblclick="selectControlOnDoubleClick(panel,$event)"></panelaccordiantemplate>
+                    <div ng-if="$root.currentopenfile.file.FileType == 'UserControl'">
+                        <base-control-view ng-repeat='objChild in FormModel.Elements' entitytreename="entityTreeName" lstdisplayentities="LstDisplayedEntities" lstloadedentitytrees="lstLoadedEntityTrees"
+                                           lstloadedentitycolumnstree="lstLoadedEntityColumnsTree" formodel='FormModel' model='objChild' objparent='FormModel' buttons-collection="ButtonsDetailsCollection"
+                                           ng-click='selectControl(objChild, $event)' ng-if="objChild.Name=='sfwTable'" modelname="{{objChild.Name}}"></base-control-view>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-show="selectedDesignSource" class="full-height">
+        <div id="editor_{{currentfile.FileName}}" class="ace-editor-div"></div>
+    </div>
+    <div class="Highlight-color-block-titles" ng-if="isDeveloperView==true">
+        <table>
+            <tr>
+                <td><span class="blk-red"></span><p>Auto Query</p></td>
+                <td><span class="blk-blue"></span><p>Visible Rule</p></td>
+            </tr>
+            <tr>
+                <td><span class="blk-green"></span><p>Retrieval Query</p></td>
+                <td><span class="blk-purple"></span><p>Read Only Rule</p></td>
+            </tr>
+            <tr>
+                <td><span class="blk-brown"></span><p>Validation Rules</p></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+
+    <addrowsandcolumnstotable></addrowsandcolumnstotable>
+</div>

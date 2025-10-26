@@ -1,0 +1,65 @@
+﻿<div ng-controller="ValidationUtilityControl" class="full-height full-width">
+    <div class="form-group">
+        <div class="col-xs-6">
+            <input type="radio" name="moduleType" ng-disabled="iblnProcessing" ng-change="onModuleTypeChange('Form')" ng-model="moduleType" value="Form">Form
+            <input type="radio" name="moduleType" ng-disabled="iblnProcessing" ng-change="onModuleTypeChange('Entity')" ng-model="moduleType" value="Entity" class="marg-left-10">Entity
+        </div>
+        <div class="col-xs-2">
+            <input type="button" class="dialog-btn-default" value="Validate" ng-click="Validate()" />
+        </div>
+        <div class="col-xs-2">
+            <input type="button" class="dialog-btn-default" value="Export" ng-disabled="iblnProcessing" ng-click="ExportvalidationReport()" />
+        </div>
+    </div>
+    <div class="form-group col-xs-12">
+        <div class="col-xs-7" ng-style="iblnFailed?{'color':'red'}:{}">
+            <b>{{istrStatusMessage}}</b>
+        </div>
+        <div class="col-xs-5">
+            <b>{{istrFilevalidatedMsg}}</b>
+        </div>
+    </div>
+    <div class="col-xs-12 overflowA" style="height:calc(100% - 80px)">
+        <table class="validation_utility table table-condensed error-list-table">
+            <thead>
+                <tr>
+                    <th>
+                        <a href="#" ng-click="orderByField='FileName'; reverseSort = !reverseSort">
+                            File Name
+                            <span ng-show="orderByField == 'FileName'">
+                                <span ng-show="reverseFileNameSort"><i class="fa fa-caret-up"></i></span>
+                                <span ng-show="!reverseFileNameSort"><i class="fa fa-caret-down"></i></span>
+                            </span>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="#" ng-click="orderByField='status'; reverseSort = !reverseSort">
+                            Status
+                            <span ng-show="orderByField == 'status'">
+                                <span ng-show="reverseSort"><i class="fa fa-caret-up"></i></span>
+                                <span ng-show="!reverseSort"><i class="fa fa-caret-down"></i></span>
+                            </span>
+                        </a>
+                    </th>
+                    <th style="padding-left:20px;">Error</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="Files in lstValidatedFiles | orderBy:orderByField:reverseSort" ng-visible="errorList.length>0">
+                    <td><span class="mar-rgt-10 bold" title="{{Files.FileName}}">{{Files.FileName}}</span></td>
+                    <td><span class="mar-rgt-10 bold" title="{{Files.status}}" ng-style="Files.status==='Failed'?{'color':'red'}:{}">{{Files.status}}</span></td>
+                    <td>
+                        <ul class="tree-list" style="margin-left:20px;">
+                            <li ng-repeat="lobjerror in Files.errorList">
+                                <span class="mar-rgt-10 bold">{{ lobjerror.istrControl}}</span>
+                                <ul class="tree-list">
+                                    <li ng-repeat="(key, value) in lobjerror.errors" class="pad">{{key}}-{{value}}</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

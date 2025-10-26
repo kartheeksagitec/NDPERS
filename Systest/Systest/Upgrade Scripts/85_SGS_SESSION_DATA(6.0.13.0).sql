@@ -1,0 +1,59 @@
+IF OBJECT_ID('dbo.GetSessionObject', 'P') IS NOT NULL 
+  DROP PROCEDURE dbo.GetSessionObject;
+GO
+
+IF OBJECT_ID('dbo.UpdateSessionData', 'P') IS NOT NULL 
+  DROP PROCEDURE dbo.UpdateSessionData;
+GO
+
+
+-- DROP TABLE--
+IF OBJECT_ID('dbo.SGS_SESSION_DATA', 'U') IS NOT NULL 
+  DROP TABLE dbo.SGS_SESSION_DATA;
+GO
+
+CREATE TABLE [dbo].[SGS_SESSION_DATA]
+(
+	[SESSION_ID] [nvarchar](50) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+	[SESSION_OBJECT] [varbinary](max) NULL,
+	[DATE_CREATED] [datetime] NOT NULL,
+	[DELETE_FLAG] [varchar](1) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+
+ CONSTRAINT [PK_SGS_SESSION_DATA]  PRIMARY KEY NONCLUSTERED 
+(
+	[SESSION_ID]
+))
+GO
+
+
+CREATE PROCEDURE [dbo].[GetSessionObject]
+	-- Add the parameters for the stored procedure here
+	@SESSION_ID varchar(100) 
+AS
+BEGIN
+   --Insert statements for the stored procedure here
+ SELECT SESSION_OBJECT FROM DBO.SGS_SESSION_DATA  where SESSION_ID=@SESSION_ID 
+END
+GO
+
+
+CREATE PROCEDURE [dbo].[UpdateSessionData]
+	-- Add the parameters for the stored procedure here
+	
+	@SESSION_OBJECT varbinary(max),
+	 @DATE_CREATED datetime ,
+	 @SESSION_ID varchar(100) 
+AS
+BEGIN
+   --Insert statements for the stored procedure here
+   DECLARE @ROW_COUNT INT  ;
+    SET @ROW_COUNT = 0; 
+	SELECT @ROW_COUNT = 1 FROM  DBO.SGS_SESSION_DATA WHERE SESSION_ID = @SESSION_ID ;
+	IF @ROW_COUNT =1 
+			UPDATE DBO.SGS_SESSION_DATA SET SESSION_OBJECT = @SESSION_OBJECT, DATE_CREATED = @DATE_CREATED WHERE SESSION_ID = @SESSION_ID;
+	ELSE 
+			INSERT INTO DBO.SGS_SESSION_DATA (SESSION_ID,SESSION_OBJECT, DATE_CREATED) VALUES (@SESSION_ID,@SESSION_OBJECT, @DATE_CREATED)
+END
+GO
+
+

@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entPersonAccountRetirementDbDcTransferEstimate" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwErrorTable="sgt_person_account_retirement_db_dc_transfer_error" sfwParentKey="db_dc_transfer_estimate_id" sfwParentKeyValue="icdoPersonAccountRetirementDbDcTransferEstimate.db_dc_transfer_estimate_id" sfwMainCDO="icdoPersonAccountRetirementDbDcTransferEstimate" sfwStatusColumn="status_value" sfwObjectID="busPersonAccountRetirementDbDcTransferEstimate" sfwTableName="sgt_person_account_retirement_db_dc_transfer_estimate">
+  <rules>
+    <rule ID="DBEndGreaterThanDCEligibility" sfwMessageId="7086" sfwExpression="(this.iblnIsDBEndGreaterThanDCEligibility == True)" sfwObjectBased="True" />
+    <rule ID="MonthToProjectGreaterThanSix" sfwMessageId="7080" sfwExpression="!(this.icdoPersonAccountRetirementDbDcTransferEstimate.proj_month_no &lt;= 6) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoPersonAccountRetirementDbDcTransferEstimate.suppress_warnings_flag) || this.icdoPersonAccountRetirementDbDcTransferEstimate.suppress_warnings_flag == &quot;N&quot;)" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload />
+  <softerror>
+    <item ID="MonthToProjectGreaterThanSix" sfwMode="All" sfwStatus="Active" sfwPublic="False" />
+    <item ID="DBEndGreaterThanDCEligibility" sfwMode="All" sfwStatus="Active" />
+  </softerror>
+  <harderror />
+  <validatedelete />
+  <updateablecdo />
+  <queries>
+    <query ID="GetBalanceForPersonAccount" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="DECLARE @FIRST_OF_CURRENT_MONTH DATETIME&#xD;&#xA;SELECT @FIRST_OF_CURRENT_MONTH = DATEADD(MONTH, DATEDIFF(MONTH, 0, CURRENT_TIMESTAMP), 0)&#xD;&#xA;&#xD;&#xA;select IsNull(Sum(POST_TAX_EE_AMOUNT) + Sum(PRE_TAX_EE_AMOUNT) + Sum(EE_ER_PICKUP_AMOUNT) +&#xD;&#xA;sum(ER_VESTED_AMOUNT) + Sum(INTEREST_AMOUNT), 0) as ACCOUNT_BALANCE from SGT_PERSON_ACCOUNT_RETIREMENT_CONTRIBUTION cont WITH(NOLOCK)&#xD;&#xA;inner join SGT_PERSON_ACCOUNT acc WITH(NOLOCK) on acc.person_account_id = cont.person_account_id&#xD;&#xA;where acc.end_date is null and cont.effective_date &lt; @FIRST_OF_CURRENT_MONTH &#xD;&#xA;and cont.person_account_id = @Person_Account_Id&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@Person_Account_Id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetContributionRateEmployee" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select Sum(EE_PRE_TAX) + Sum(EE_POST_TAX) + Sum(EE_EMP_PICKUP) + Sum(EE_RHIC) as Rate from sgt_plan_retirement_rate a&#xD;&#xA;inner join SGT_PERSON_EMPLOYMENT_DETAIL b on a.member_type_value = b.member_type_value&#xD;&#xA;inner join SGT_PERSON_ACCOUNT_EMPLOYMENT_DETAIL c on c.person_employment_dtl_id = b.person_employment_dtl_id&#xD;&#xA;where c.person_account_id = @Person_Account_Id and b.end_date is null&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@Person_Account_Id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetContributionRateEmployer" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select Sum(ER_POST_TAX) as Rate from sgt_plan_retirement_rate a&#xD;&#xA;inner join SGT_PERSON_EMPLOYMENT_DETAIL b on a.member_type_value = b.member_type_value&#xD;&#xA;inner join SGT_PERSON_ACCOUNT_EMPLOYMENT_DETAIL c on c.person_employment_dtl_id = b.person_employment_dtl_id&#xD;&#xA;where c.person_account_id = @Person_Account_Id and b.end_date is null&#xD;&#xA; &#xD;&#xA;">
+      <parameters>
+        <parameter ID="@Person_Account_Id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetActualEmployerContribution" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="DECLARE @FIRST_OF_CURRENT_MONTH DATETIME&#xD;&#xA;SELECT @FIRST_OF_CURRENT_MONTH = DATEADD(MONTH, DATEDIFF(MONTH, 0, CURRENT_TIMESTAMP), 0)&#xD;&#xA;&#xD;&#xA;select effective_date, IsNull(Sum(Post_Tax_ER_Amount) + Sum(Pre_tax_er_amount),0) as ActualContribution from SGT_PERSON_ACCOUNT_RETIREMENT_contribution cont&#xD;&#xA;inner join SGT_PERSON_ACCOUNT acc on acc.person_account_id = cont.person_account_id&#xD;&#xA;where acc.end_date is null and cont.effective_date &lt; @FIRST_OF_CURRENT_MONTH&#xD;&#xA;and cont.person_account_id = @Person_Account_Id&#xD;&#xA;group by effective_Date&#xD;&#xA;order by effective_Date">
+      <parameters>
+        <parameter ID="@Person_Account_Id" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="DbDcTransferEstimateId" sfwType="Column" sfwValue="db_dc_transfer_estimate_id" sfwIsNull="False" sfwKeyNo="1" sfwIsIdentity="True" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="PersonAccountId" sfwType="Column" sfwValue="person_account_id" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="ProjMonthlySalaryAmount" sfwType="Column" sfwValue="proj_monthly_salary_amount" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" sfwIsSequence="False" />
+    <attribute ID="ProjMonthNo" sfwType="Column" sfwValue="proj_month_no" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="ProjTotalEeAmount" sfwType="Column" sfwValue="proj_total_ee_amount" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" sfwIsSequence="False" />
+    <attribute ID="ProjTotalErAmount" sfwType="Column" sfwValue="proj_total_er_amount" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" sfwIsSequence="False" />
+    <attribute ID="ProjTotalTransferAmount" sfwType="Column" sfwValue="proj_total_transfer_amount" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" sfwIsSequence="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwIsSequence="False" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwIsSequence="False" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="ProjEeInterestAmount" sfwType="Column" sfwValue="proj_ee_interest_amount" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" sfwIsSequence="False" />
+    <attribute ID="ProjErInterestAmount" sfwType="Column" sfwValue="proj_er_interest_amount" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" sfwIsSequence="False" />
+    <attribute ID="StatusValue" sfwType="Column" sfwValue="status_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwIsSequence="False" />
+    <attribute ID="StatusDescription" sfwType="Description" sfwValue="status_description" />
+    <attribute ID="StatusId" sfwType="Column" sfwValue="status_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="336" />
+    <attribute ID="SuppressWarningsFlag" sfwType="Column" sfwValue="suppress_warnings_flag" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="1" />
+    <attribute ID="SuppressWarningsBy" sfwType="Column" sfwValue="suppress_warnings_by" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="SuppressWarningsDate" sfwType="Column" sfwValue="suppress_warnings_date" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="objPersonAccount" sfwType="Object" sfwEntity="entPersonAccount" sfwValue="ibusPersonAccount" />
+    <attribute ID="objPlan" sfwType="Object" sfwEntity="entPlan" sfwValue="ibusPlan" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecProjectedAnnualSalary" sfwValue="idecProjectedAnnualSalary" />
+  </attributes>
+</entity>

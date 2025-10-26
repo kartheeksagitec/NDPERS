@@ -1,0 +1,51 @@
+﻿<form ID="wfmMSSAppointmentScheduleMaintenance" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2001" sfwType="FormLinkMaintenance" sfwTitle="Appointment Schedule Maintenance" version="3.5" sfwEntity="entContactTicket" sfwTemplate="MSSAppointmentScheduleMaintenance.html" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmMSSAppointmentScheduleLookup" sfwFormObjectType="None" isBasedOnWfm="true" sfwDefaultButtonID="btnSave">
+  <initialload>
+    <callmethods sfwMode="New" sfwMethodName="NewMSSAppointmentSchedule" />
+    <callmethods sfwMode="Update" sfwMethodName="FindMSSAppointmentSchedule" />
+  </initialload>
+  <items>
+    <sfwTable ID="Main" />
+    <sfwPanel ID="pnlHeading" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblHeading" />
+        <sfwLiteral Text="Schedule an Appointment" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlMain" sfwCaption="Appointment Schedule" CssClass="AppointmentMaint">
+      <items>
+        <sfwTable ID="tblMain" />
+        <sfwLabel ID="capContactTicketId" Text="Ticket Number : " sfwIsCaption="True" />
+        <sfwLabel ID="lblContactTicketId" sfwEntityField="ContactTicketId" />
+        <sfwLabel ID="capStatusDescription" Text="Ticket Status : " sfwIsCaption="True" />
+        <sfwLabel ID="lblStatusDescription" sfwEntityField="StatusDescription" />
+        <sfwLabel ID="capAppointmentTypeValue" Text="Appointment Type : " sfwIsCaption="True" />
+        <sfwDropDownList DataTextField="data1" DataValueField="code_value" ID="ddlAppointmentTypeValue" sfwVisibleRule="VisibleRuleForAppointmentAndDeathNotice" sfwLoadType="Query" sfwLoadSource="entContactTicket.LimitedAppointmentTypesForMSS" sfwEntityField="objAppointmentSchedule.AppointmentTypeValue" sfwValidationRules="RULE CHECK APPOINTMENT TYPE IS BLANK" />
+        <sfwLabel ID="lblAppointmentTypeDescription" sfwMode="Update" sfwEntityField="objAppointmentSchedule.AppointmentTypeDescription" />
+        <sfwLabel ID="lblApptype1" sfwVisibleRule="VisibleRuleForAppointmentAndDeathNotice" SkinID="ReqInformation" Text="&amp;nbsp;*" sfwIsCaption="True" />
+        <sfwLabel ID="capNotes" Text="Reason For Appointment : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtNotes" Rows="3" TextMode="MultiLine" Width="500px" sfwEntityField="Notes" />
+        <sfwLabel ID="capRequestedDateFrom" Text="Date Range : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtRequestedDateFrom" sfwDataFormat="{0:d}" sfwEntityField="objAppointmentSchedule.RequestedDateFrom" sfwValidationRules="IsMSSAppointmentRequestDatePastDate;ISRequestedDateFRomGreaterThanRequestedDateTo;RULE APPOINTMENT Requested Date From Required" />
+        <sfwLabel ID="lblDate1" SkinID="ReqInformation" Text="&amp;nbsp;*&amp;nbsp;" sfwIsCaption="True" />
+        <sfwTextBox ID="txtRequestedDateTo" sfwDataFormat="{0:d}" sfwEntityField="objAppointmentSchedule.RequestedDateTo" sfwValidationRules="IsMSSAppointmentRequestDatePastDate;RULE APPOINTMENT Requested Date To Required" />
+        <sfwLabel ID="lblDate2" SkinID="ReqInformation" Text="&amp;nbsp;*&amp;nbsp;" sfwIsCaption="True" />
+        <sfwLiteral ID="ltrDisclaimer" Text="(Mon - Fri , Except Holidays)" />
+        <CompareValidator ID="cmvRequestedDateRange" />
+        <sfwLabel ID="capTimeOfDayValue" Text="Time Of Day : " sfwIsCaption="True" Visible="False" />
+        <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlTimeOfDayValue" sfwLoadType="CodeGroup" sfwLoadSource="5006" sfwEntityField="objAppointmentSchedule.TimeOfDayValue" Visible="False" />
+        <sfwLabel ID="capCallbackPhone" Text="Callback Phone Number : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtCallbackPhone" sfwDataFormat="{0:(###)###-####}" sfwEntityField="CallbackPhone" sfwValidationRules="Rule Check IF CallBack Telephone IS Blank" />
+        <sfwLabel ID="lblCallBackRqd" SkinID="ReqInformation" Text="&amp;nbsp;*" sfwIsCaption="True" />
+        <sfwLabel ID="capEmail" Text="Email : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtEmail" sfwEntityField="Email" />
+        <sfwLabel ID="lblLabel" SkinID="ReqInformation" Text="&amp;nbsp;*&amp;nbsp; are mandatory fields." sfwIsCaption="True" />
+        <sfwButton ID="btnSave" sfwMethodName="btnSave_Click" sfwNavigationParameter="aintContactTicketId=ContactTicketId" sfwVisibleRule="VisibleRuleForAppointmentAndDeathNotice" Text="Save" sfwMessageId="10397" />
+        <sfwButton ID="btnCancel" sfwMethodName="btnCancel_Click" sfwVisibleRule="VisibleRuleForAppointmentAndDeathNotice" Text="Cancel" />
+      </items>
+    </sfwPanel>
+  </items>
+  <loaddetails>
+    <entityfield ID="objAppointmentSchedule" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+  </loaddetails>
+  <ExtraFields />
+</form>

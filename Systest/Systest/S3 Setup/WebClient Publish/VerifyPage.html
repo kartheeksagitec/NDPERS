@@ -1,0 +1,182 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="images/Home/s3-fevicon.png" type="image/png" sizes="16x16">
+    <title>S3 Authentication</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/components.css" rel="stylesheet" />
+    <link href="css/custom-bootstrap-styles.css" rel="stylesheet" />
+    <link href="css/jquery-ui.min.css" rel="stylesheet" />
+    <link href="css/custom-jquery-ui.css" rel="stylesheet" />
+    <script src="scripts/jquery.min.js"></script>
+    <script src="scripts/jquery-ui.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            clearhtml();
+            var tempuserName = window.location.search.substring(window.location.search.indexOf("userName") + 9, window.location.search.indexOf("pass") - 1);
+            var temppassword = window.location.search.substring(window.location.search.indexOf("pass") + 5, window.location.search.indexOf("isAdUser") - 4);
+            var isAduser = window.location.search.substring(window.location.search.indexOf("isAdUser") + 9, window.location.search.length);
+            $.ajax({
+                url: 'api/Login/verifyUser',
+                type: 'POST',
+                async: false,
+                dataType: 'json',
+                data: { UserName: tempuserName, Password: temppassword, isAduser: isAduser },
+                success: function (response) {
+                    if (response == "InvalidUrl") {
+                        var template = getMessageTemplate("Invalid Url.")
+                        $("#msg").append(template);
+                        $("#msg").dialog({
+                            title: "Error"
+                        });
+                        $(".ui-dialog-titlebar-close").hide();
+                    }
+                    else if (response == "AlreadyActive") {
+                        var template = getMessageTemplate("Your account is already activated.")
+                        $("#msg").append(template);
+                        $("#msg").dialog({
+                        });
+                        $(".ui-dialog-titlebar-close").hide();
+                    }
+                    else if (isAduser == "True") {
+                        if (response != null && response != "" && response !== "AccessError" && response !== "UserNotExist") {
+                            document.cookie = "UserDetails=" + JSON.stringify(JSON.stringify(response));
+                        }                       
+                        window.location.href = "mainpage.html";
+                    }
+                    else {
+                        //toastr.success("Your account has been activated");
+                        var template = getPasswordtemplate(response);
+                        $("#passwordDialog").append(template);
+                        var dialog = $("#passwordDialog").dialog({
+                            title: 'New Password', height: 210, width: 500
+                        });
+                        $(".ui-dialog-titlebar-close").hide();
+                    }
+                },
+                error: function (response) {
+                    var objError = JSON.parse(response.responseText);
+                    if (objError && objError.Message) {
+                        var msg = objError.Message;
+                        if (objError.ExceptionMessage) {
+                            msg = msg + "\n" + objError.ExceptionMessage;
+                        }
+                        var template = getMessageTemplate(msg);
+                        $("#msg").append(template);
+                        $("#msg").dialog({
+                            title: 'Error'
+                        });
+                        $(".ui-dialog-titlebar-close").hide();
+                    }
+                }
+            });
+
+        });
+        function closeDialog() {
+            $(".ui-dialog").remove();
+            clearhtml();
+        }
+        function getMessageTemplate(msg) {
+            var template = "<div class='portlet-body'> <div class='form-group'><label class='control-label'>" + msg + "</label></div></div>" +
+                "<div class='form-actions right'><input type='button' id='okbtn' value='Ok'onclick='closeDialog()' class='dialog-btn-default'/></div>";
+            return template;
+        }
+        function getPasswordtemplate(tempuserName) {
+            var template = '<div class="portlet-body"><div class="form-group"><label class="control-label">User Name </label><div class="input-icon right">' +
+                '<input type="text" class="form-control input-sm" placeholder="User Name" id="UserName" disabled value="' + tempuserName + '"/></div></div><div class="form-group">' +
+                '<label class="control-label">Password *</label><div class="input-icon right"><input type="password" class="form-control input-sm required" placeholder="Password" id="Password" onkeyup="checkPassword()" />' +
+                '</div></div><div class="form-group"><label class="control-label">Confirm Password *</label><div class="input-icon right"><input type="password" class="form-control input-sm required" placeholder="Password" id="confirmPassword" onkeyup="checkPassword()" />' +
+                '</div></div><div class="form-group"><label class="control-label" id="errormsg" style="color:red"></label></div></div><div class="form-actions right"><input type="submit" id="changePasswordbtn" onclick="changePasswordOkClick()" value="Submit" class="dialog-btn" /></div>';
+            return template;
+        }
+        function changePasswordOkClick() {
+            if (checkPassword()) {
+                var tempuserName = window.location.search.substring(window.location.search.indexOf("userName") + 9, window.location.search.indexOf("pass") - 1);
+                var strUrl = window.location.href.substring(0, window.location.href.indexOf("/VerifyPage.html")) + "/MainPage.Html";
+                var pass = $("#Password").val();
+                var conpass = $("#confirmPassword").val();
+                $.ajax({
+                    url: 'api/Login/changePasswordNew',
+                    type: 'POST',
+                    async: false,
+                    dataType: 'json',
+                    data: { UserName: tempuserName, Password: pass },
+                    success: function (response) {
+                        if (response == "passwordMatch") {
+                            alert("Password has been used in past.");
+                        }
+                        else {
+                            alert("Your account has been activated,you can login now.");
+                            $("#loginUrl").append("<h2><a href='" + strUrl + "'>Click here to Login</a></h2>");
+                            $(".ui-dialog").remove();
+                            $("#msg").html("");
+                            $("#passwordDialog").html("");
+                        }
+                    },
+                    error: function (response) {
+                        var objError = JSON.parse(response.responseText);
+                        if (objError && objError.Message) {
+                            var msg = objError.Message;
+                            if (objError.ExceptionMessage) {
+                                msg = msg + "\n" + objError.ExceptionMessage;
+                            }
+                            var template = getMessageTemplate(msg);
+                            $("#msg").append(template);
+                            $("#msg").dialog({
+                                title: 'Error'
+                            });
+                            $(".ui-dialog-titlebar-close").hide();
+                        }
+                    }
+                });
+            }
+        }
+        function checkPassword() {
+            $("#errormsg").text("");
+            var pass = $("#Password").val();
+            if (pass == "") {
+                $("#errormsg").text("Password Required.");
+                return false;
+            }
+
+            if (pass != "") {
+                var conpass = $("#confirmPassword").val();
+                var re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{6,}/;
+                var result = re.test(pass);
+                if (!result) {
+                    $("#errormsg").text("Password must Contain at least one Uppercase Alphabet, one Lowercase Alphabet, one Number, one Special Character and minimum six characters");
+                    return false;
+                }
+                else if (conpass == "") {
+                    $("#errormsg").text("Please confirm your password.");
+                    return false;
+                }
+                else if (pass != conpass) {
+                    $("#errormsg").text("Password confirmation does't match password.");
+                    return false;
+                }
+                else return true;
+            }
+
+        }
+
+        function clearhtml() {
+            $("#msg").html("");
+            $("#passwordDialog").html("");
+            $("#loginUrl").html("");
+        }
+    </script>
+</head>
+<body>
+    <div id="msg"></div>
+    <div id="passwordDialog">
+    </div>
+    <div id="loginUrl" >
+    </div>
+</body>
+</html>
+
+

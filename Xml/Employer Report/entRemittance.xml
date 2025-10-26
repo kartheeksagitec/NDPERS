@@ -1,0 +1,291 @@
+﻿<entity ID="entRemittance" sfwActive="True" sfwStatus="Valid" sfwRemoteObject="srvEmployerReport" sfwType="BusinessRule" sfwMainCDO="icdoRemittance" sfwObjectID="busRemittance" sfwTableName="sgt_remittance" sfwView="False">
+  <rules>
+    <rule ID="IsOrgNotEmployer" sfwMessageId="8542" sfwExpression="(this.IsOrganizationNotEmployer() == True)" sfwObjectBased="True" />
+    <rule ID="IsPersonAccountNotExist" sfwMessageId="4660" sfwExpression="(this.IsPersonAccountNotExist() == True) &amp;&amp; &#xA;(this.icdoRemittance.remittance_type_value != &quot;SMNR&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule Check If Remitances Type Plan Exists" sfwMessageId="4142" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entRemittance.ValidateRemitanceTypePlanID&quot;, this.icdoRemittance.plan_id, this.icdoRemittance.remittance_type_value) == 0)" sfwObjectBased="True" />
+    <rule ID="Rule Check If Remittance Amount is Less than or Equals Zero" sfwMessageId="4118" sfwExpression="(this.icdoRemittance.remittance_amount &lt;= 0)" sfwObjectBased="True" />
+    <rule ID="Rule Check If Remittance Amount Valid" sfwMessageId="4117" sfwExpression="(this.IsValidRemittanceAmount() == False)" sfwObjectBased="True" />
+    <rule ID="Rule Check If Remittance Type is Blank" sfwMessageId="4119" sfwExpression="(string.IsNullOrEmpty(this.icdoRemittance.remittance_type_value))" sfwObjectBased="True" />
+    <rule ID="Rule Check Save Button Visibility" sfwExpression="(this.IsSaveButtonVisible() == True)" sfwObjectBased="True" />
+    <rule ID="Rule IF both PERSLinkID and ORGCodeID Entered" sfwMessageId="4110" sfwExpression="(this.icdoRemittance.person_id != 0) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.istrOrgCodeID))" sfwObjectBased="True" />
+    <rule ID="Rule Valdiate Delete Remittances" sfwMessageId="4149" sfwExpression="((RFunc.GetValue&lt;String&gt;(this, &quot;ibusDeposit.icdoDeposit.status_value&quot;) == &quot;APLD&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusDeposit.icdoDeposit.status_value&quot;) == &quot;IVLD&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusDeposit.icdoDeposit.status_value&quot;) == &quot;NSF&quot;))" sfwObjectBased="True" />
+    <rule ID="RuleCheckRemittanceOrgDiffFromDeposit" sfwMessageId="8565" sfwExpression="(this.IsOrgDifferFromDeposit() == True)" sfwObjectBased="True" />
+    <rule ID="Rule-CheckSaveButtonVisibilityFalse" sfwExpression="!(this.IsSaveButtonVisible() == True)" sfwObjectBased="True" />
+    <rule ID="RuleIfBothOrgAndPersonIDNotEntered" sfwMessageId="4109" sfwExpression="!(!string.IsNullOrEmpty(this.istrOrgCodeID)) &amp;&amp; &#xA;!(this.icdoRemittance.person_id != 0)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleAllocateNegativeDeposit" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusDeposit.icdoDeposit.status_value&quot;) == &quot;APLD&quot;) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.istrOrgCodeID)) &amp;&amp; &#xA;!(this.icdoRemittance.remittance_type_value == &quot;NEDE&quot;)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleIsRemittanceStatusInvalidated" sfwRuleType="Validation" sfwExpression="(this.IsRemittanceStatusInvalidated() == true)" sfwObjectBased="True" />
+    <rule ID="IsOrgPlanExists" sfwRuleType="Validation" sfwExpression="this.IsOrgOrPersonPlanMatch() == True" sfwMessageId="10303" sfwObjectBased="True" />
+    <rule ID="IsCancelRefundButtonVisible" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.IsCancelRefundButtonVisible()" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="Rule Check Save Button Visibility" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleAllocateNegativeDeposit" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule-CheckSaveButtonVisibilityFalse" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleIsRemittanceStatusInvalidated" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsCancelRefundButtonVisible" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="Rule Check If Remittance Amount Valid" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Remittance Amount is Less than or Equals Zero" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Remittance Type is Blank" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Remitances Type Plan Exists" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule IF both PERSLinkID and ORGCodeID Entered" sfwMode="All" sfwStatus="Active" />
+    <item ID="RuleIfBothOrgAndPersonIDNotEntered" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPersonAccountNotExist" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsOrgNotEmployer" sfwMode="All" sfwStatus="Active" />
+    <item ID="RuleCheckRemittanceOrgDiffFromDeposit" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsOrgPlanExists" sfwStatus="Active" sfwMode="All" />
+  </harderror>
+  <validatedelete>
+    <item ID="Rule Valdiate Delete Remittances" sfwMode="All" sfwStatus="Active" />
+  </validatedelete>
+  <groupslist />
+  <updateablecdo />
+  <commonproperties>
+    <item ID="person_id" sfwObjectField="icdoRemittance.person_id" />
+  </commonproperties>
+  <expressionfields />
+  <constraint />
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM &#xD;&#xA;(&#xD;&#xA;SELECT R.*,&#xD;&#xA; (&#xD;&#xA;  REMITTANCE_AMOUNT  - ISNULL(B.ALLOCATED_AMOUNT,0) - &#xD;&#xA;  ISNULL(ALLOCATED_NEGATIVE_DEPOSIT_AMOUNT,0) -&#xD;&#xA;   (&#xD;&#xA;    CASE WHEN REFUND_STATUS_VALUE = 'PRCD' THEN &#xD;&#xA;     CASE WHEN ISNULL(OVERRIDDEN_REFUND_AMOUNT,0) &gt; 0  &#xD;&#xA;       THEN ISNULL(OVERRIDDEN_REFUND_AMOUNT,0) &#xD;&#xA;       ELSE ISNULL(COMPUTED_REFUND_AMOUNT,0) &#xD;&#xA;     END&#xD;&#xA;    ELSE 0 END&#xD;&#xA;   )&#xD;&#xA; ) AS BALANCE_AMOUNT,&#xD;&#xA;&#xD;&#xA; CASE WHEN &#xD;&#xA;  (&#xD;&#xA;   REMITTANCE_AMOUNT  - ISNULL(B.ALLOCATED_AMOUNT,0) - &#xD;&#xA;   ISNULL(ALLOCATED_NEGATIVE_DEPOSIT_AMOUNT,0) -&#xD;&#xA;    (&#xD;&#xA;     CASE WHEN REFUND_STATUS_VALUE = 'PRCD' THEN &#xD;&#xA;      CASE WHEN ISNULL(OVERRIDDEN_REFUND_AMOUNT,0) &gt; 0  &#xD;&#xA;        THEN ISNULL(OVERRIDDEN_REFUND_AMOUNT,0) &#xD;&#xA;        ELSE ISNULL(COMPUTED_REFUND_AMOUNT,0) &#xD;&#xA;      END&#xD;&#xA;     ELSE 0 END&#xD;&#xA;    )&#xD;&#xA;  )&#xD;&#xA;&#xD;&#xA; = 0 THEN 'ALTD' ELSE 'UALT' END AS ALLOCATION_STATUS &#xD;&#xA;FROM SGT_REMITTANCE R&#xD;&#xA;LEFT OUTER JOIN &#xD;&#xA;(&#xD;&#xA; SELECT REMITTANCE_ID,SUM(ALLOCATED_AMOUNT) AS ALLOCATED_AMOUNT &#xD;&#xA; FROM &#xD;&#xA; ( SELECT REMITTANCE_ID,ALLOCATED_AMOUNT &#xD;&#xA;   FROM SGT_IBS_REMITTANCE_ALLOCATION &#xD;&#xA;   --WHERE IBS_ALLOCATION_STATUS_VALUE = 'ALTD'&#xD;&#xA;&#xD;&#xA;  UNION ALL&#xD;&#xA;&#xD;&#xA;  SELECT REMITTANCE_ID,APPLIED_AMOUNT AS ALLOCATED_AMOUNT  &#xD;&#xA;   FROM SGT_SERVICE_PURCHASE_PAYMENT_ALLOCATION &#xD;&#xA;   --WHERE POSTED_FLAG = 'Y'&#xD;&#xA;   &#xD;&#xA;  UNION ALL&#xD;&#xA;   &#xD;&#xA;  SELECT REMITTANCE_ID,APPLIED_AMOUNT AS ALLOCATED_AMOUNT  &#xD;&#xA;   FROM SGT_SEMINAR_ATTENDEE_PAYMENT_ALLOCATION&#xD;&#xA;&#xD;&#xA;  UNION ALL&#xD;&#xA;&#xD;&#xA;  SELECT REMITTANCE_ID,ALLOCATED_AMOUNT &#xD;&#xA;   FROM SGT_PAYMENT_RECOVERY_HISTORY&#xD;&#xA;&#xD;&#xA;  UNION ALL&#xD;&#xA;&#xD;&#xA;  SELECT REMITTANCE_ID,ISNULL(ALLOCATED_AMOUNT,0.00)  &#xD;&#xA;  --(CASE WHEN ISNULL(DIFFERENCE_TYPE_VALUE,'') IN ('UCRP','URRP') THEN ISNULL(DIFFERENCE_AMOUNT,0.00) ELSE 0.00 END) -- PIR 14938 &#xD;&#xA;  AS ALLOCATED_AMOUNT &#xD;&#xA;   FROM SGT_EMPLOYER_REMITTANCE_ALLOCATION &#xD;&#xA;   WHERE PAYROLL_ALLOCATION_STATUS_VALUE = 'ALOC'&#xD;&#xA;&#xD;&#xA;  UNION ALL&#xD;&#xA;&#xD;&#xA;  SELECT REMITTANCE_ID,ALLOCATED_AMOUNT &#xD;&#xA;   FROM SGT_JS_RHIC_REMITTANCE_ALLOCATION &#xD;&#xA;   WHERE RHIC_ALLOCATION_STATUS_VALUE = 'ALTD'&#xD;&#xA; ) TEMP&#xD;&#xA; GROUP BY REMITTANCE_ID&#xD;&#xA;) AS B&#xD;&#xA;ON R.REMITTANCE_ID = B.REMITTANCE_ID&#xD;&#xA;)r&#xD;&#xA;left join sgt_deposit sd with(nolock) on sd.deposit_id=r.deposit_id&#xD;&#xA;left join sgt_deposit_tape sdt with(nolock) on sdt.deposit_tape_id=sd.deposit_tape_id&#xD;&#xA;order by r.REMITTANCE_ID DESC">
+      <parameters />
+    </query>
+    <query ID="LookupSubQuery" sfwQueryType="SubSelectQuery" sfwSql="SELECT * FROM dbo.SGT_DEPOSIT d WITH(NOLOCK)&#xD;&#xA;left join sgt_deposit_tape tape on tape.deposit_tape_id= d.deposit_tape_id&#xD;&#xA;where d.DEPOSIT_ID = r.DEPOSIT_ID">
+      <parameters />
+    </query>
+    <query ID="GetRemittanceTypeByBankAccountType" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT CV.* FROM SGS_CODE_VALUE CV&#xD;&#xA;INNER JOIN SGT_ITEM_TYPE_SOURCE_TYPE_CROSSREF IT ON IT.ITEM_TYPE_ID=CV.CODE_ID AND IT.ITEM_TYPE_VALUE=CV.CODE_VALUE&#xD;&#xA;INNER JOIN SGT_REMIT_TYPE_BANK_ACCT_CROSSREF RT ON RT.REMITTANCE_TYPE_ID=CV.CODE_ID AND RT.REMITTANCE_TYPE_VALUE=CV.CODE_VALUE&#xD;&#xA;WHERE CV.CODE_ID=1302 AND IT.SOURCE_TYPE_VALUE='REMI' AND RT.BANK_ACCOUNT_VALUE=@BANK_ACCOUNT_VALUE">
+      <parameters>
+        <parameter ID="@BANK_ACCOUNT_VALUE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="GetRemittedTotalAmountByDepositID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT SUM(REMITTANCE_AMOUNT) FROM SGT_REMITTANCE&#xD;&#xA;WHERE DEPOSIT_ID=@DEPOSIT_ID">
+      <parameters>
+        <parameter ID="@DEPOSIT_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetTFFRDepositID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select top 1 Deposit_id from SGT_DEPOSIT A&#xD;&#xA;&#xD;&#xA;Where A.Org_id=(Select b.Org_id as iintJSRHOrgID from SGT_ORGANIZATION B Inner Join &#xD;&#xA;&#xD;&#xA;      sgs_code_value c  on Org_code = data1 &#xD;&#xA;&#xD;&#xA;      where c.code_value = 'TFRV' AND c.CODE_ID = 52)&#xD;&#xA;&#xD;&#xA;and A.status_value='REVW' order by PAYMENT_DATE desc">
+      <parameters />
+    </query>
+    <query ID="GetPlanByBankAccountType" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_PLAN WHERE  ALLOW_DEPOSIT_FLAG='Y' AND BANK_ACCOUNT_TYPE_VALUE=@BANK_ACCOUNT_TYPE">
+      <parameters>
+        <parameter ID="@BANK_ACCOUNT_TYPE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="GetPlanByAmountDeposit" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_PLAN WHERE ALLOW_DEPOSIT_FLAG='Y'">
+      <parameters />
+    </query>
+    <query ID="LoadOtherRemittances" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_REMITTANCE (NOLOCK) SR&#xD;&#xA;INNER JOIN SGT_DEPOSIT (NOLOCK) SD ON SR.DEPOSIT_ID = SD.DEPOSIT_ID&#xD;&#xA;INNER JOIN SGT_PLAN SP (NOLOCK) ON SP.PLAN_ID = SR.PLAN_ID&#xD;&#xA;LEFT JOIN SGT_ORGANIZATION SO (NOLOCK) ON SO.ORG_ID = SR.ORG_ID&#xD;&#xA;WHERE SR.DEPOSIT_ID=@DEPOSIT_ID&#xD;&#xA;AND SR.REMITTANCE_ID !=@REMITTANCE_ID">
+      <parameters>
+        <parameter ID="@DEPOSIT_ID" sfwDataType="int" />
+        <parameter ID="@REMITTANCE_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetPlanIDByPlanCode" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT PLAN_ID FROM SGT_PLAN WHERE PLAN_CODE=@PLAN_CODE">
+      <parameters>
+        <parameter ID="@PLAN_CODE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="ValidateOrgExistsinPlan" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_ORG_PLAN WHERE ORG_ID=@ORG_ID AND PLAN_ID=@PLAN_ID">
+      <parameters>
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+        <parameter ID="@PLAN_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="CheckOrgActiveByOrgCode" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_ORGANIZATION&#xD;&#xA;WHERE ORG_CODE = @ORG_CODE AND STATUS_VALUE='ACTV'">
+      <parameters>
+        <parameter ID="@ORG_CODE" />
+      </parameters>
+    </query>
+    <query ID="GetRevRemittanceDist" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT &#xD;&#xA;ISNULL(SERA.EMPLOYER_PAYROLL_HEADER_ID,0) AS PAYROLLHEADERID,&#xD;&#xA;0 AS SEMINARID ,&#xD;&#xA;0 AS AGREEMENTID,&#xD;&#xA;0 AS PYMTRECEIVABLEID,&#xD;&#xA;ISNULL(SERA.ALLOCATED_AMOUNT,0) AS APPLIEDAMOUNT,&#xD;&#xA;ISNULL(SR.REMITTANCE_AMOUNT,0) AS REPORTEDAMOUNT&#xD;&#xA;FROM SGT_EMPLOYER_REMITTANCE_ALLOCATION SERA&#xD;&#xA;INNER JOIN SGT_REMITTANCE SR ON SR.REMITTANCE_ID=SERA.REMITTANCE_ID&#xD;&#xA;WHERE SR.REMITTANCE_ID=@REMITTANCE_ID&#xD;&#xA;&#xD;&#xA;UNION ALL&#xD;&#xA;&#xD;&#xA;SELECT &#xD;&#xA;0 AS PAYROLLHEADERID,&#xD;&#xA;0 AS SEMINARID ,&#xD;&#xA;0 AS AGREEMENTID,&#xD;&#xA;ISNULL(SSPPA.SERVICE_PURCHASE_HEADER_ID,0) AS PYMTRECEIVABLEID,&#xD;&#xA;ISNULL(SSPPA.APPLIED_AMOUNT,0) AS APPLIEDAMOUNT,&#xD;&#xA;ISNULL(SR.REMITTANCE_AMOUNT,0) AS REPORTEDAMOUNT&#xD;&#xA;FROM SGT_SERVICE_PURCHASE_PAYMENT_ALLOCATION SSPPA&#xD;&#xA;INNER JOIN SGT_REMITTANCE SR ON SR.REMITTANCE_ID=SSPPA.REMITTANCE_ID&#xD;&#xA;WHERE SR.REMITTANCE_ID=@REMITTANCE_ID">
+      <parameters>
+        <parameter ID="@REMITTANCE_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LookupOrgCode" sfwQueryType="SubSelectQuery" sfwSql="SELECT * FROM SGT_ORGANIZATION ORG WITH(NOLOCK) &#xD;&#xA;WHERE ORG.ORG_ID=r.org_id">
+      <parameters />
+    </query>
+    <query ID="GetDepositIDforPaymentFile" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select deposit_id from sgt_deposit where reference_no=@reference_no and org_id=@org_id and status_value='REVW'">
+      <parameters>
+        <parameter ID="@reference_no" sfwDataType="string" />
+        <parameter ID="@org_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="ValidateRemitanceTypePlanID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_ACCOUNT_REFERENCE WHERE &#xD;&#xA;SOURCE_TYPE_VALUE = 'REMI' AND &#xD;&#xA;STATUS_TRANSITION_VALUE = 'APPL' AND &#xD;&#xA;PLAN_ID= CASE WHEN @REMITANCE_TYPE = 'IBSD' THEN 12 ELSE &#xD;&#xA;CASE WHEN @REMITANCE_TYPE = 'SMNR' THEN 1 ELSE @PLAN_ID END END AND &#xD;&#xA;ITEM_TYPE_VALUE  = @REMITANCE_TYPE&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@PLAN_ID" sfwDataType="int" />
+        <parameter ID="@REMITANCE_TYPE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="GetAppliedAmountByRemittanceID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT SUM(ALLOCATED_AMOUNT) TOTAL_REMITTANCE_AMOUNT FROM SGT_EMPLOYER_REMITTANCE_ALLOCATION WHERE  &#xD;&#xA;REMITTANCE_ID=@REMITTANCE_ID">
+      <parameters>
+        <parameter ID="@REMITTANCE_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="ValidateOrgExists" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_ORGANIZATION WHERE ORG_ID=@ORG_ID AND STATUS_VALUE='ACTV'">
+      <parameters>
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="ValidateByBankAccountRemittanceType" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_REMIT_TYPE_BANK_ACCT_CROSSREF&#xD;&#xA;WHERE REMITTANCE_TYPE_VALUE=@REMITTANCE_TYPE&#xD;&#xA;AND BANK_ACCOUNT_VALUE=@BANK_ACCT_TYPE">
+      <parameters>
+        <parameter ID="@REMITTANCE_TYPE" sfwDataType="string" />
+        <parameter ID="@BANK_ACCT_TYPE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="GetAppliedRemittanceByRemittanceID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select rem.*,dep.* from sgt_remittance rem WITH(NOLOCK) &#xD;&#xA;inner join sgt_deposit dep WITH(NOLOCK) on dep.deposit_id = rem.deposit_id&#xD;&#xA;where dep.status_value = 'APLD' and rem.remittance_id= @remittance_id">
+      <parameters>
+        <parameter ID="@remittance_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetAppliedRemittance" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT REM.* FROM SGT_REMITTANCE REM WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_DEPOSIT DEP WITH(NOLOCK) ON DEP.DEPOSIT_ID = REM.DEPOSIT_ID&#xD;&#xA;INNER JOIN SGT_PLAN P WITH(NOLOCK) ON P.PLAN_ID=REM.PLAN_ID AND P.BENEFIT_TYPE_VALUE=@BENEFIT_TYPE AND @BENEFIT_TYPE &lt;&gt; ''&#xD;&#xA;LEFT JOIN (SELECT REMITTANCE_ID,SUM(ALLOCATED_AMOUNT) AS ALLOCATED_AMOUNT&#xD;&#xA;   FROM SGT_EMPLOYER_REMITTANCE_ALLOCATION WITH(NOLOCK)&#xD;&#xA;   GROUP BY REMITTANCE_ID&#xD;&#xA;) ALLOC ON ALLOC.REMITTANCE_ID = REM.REMITTANCE_ID&#xD;&#xA;WHERE DEP.STATUS_VALUE = 'APLD'&#xD;&#xA;AND REM.REMITTANCE_AMOUNT - ISNULL(ALLOC.ALLOCATED_AMOUNT,0.00) - &#xD;&#xA;  ISNULL(ALLOCATED_NEGATIVE_DEPOSIT_AMOUNT,0) -&#xD;&#xA;   (&#xD;&#xA;    CASE WHEN REFUND_STATUS_VALUE = 'PRCD' THEN &#xD;&#xA;     CASE WHEN ISNULL(OVERRIDDEN_REFUND_AMOUNT,0) &gt; 0  &#xD;&#xA;       THEN ISNULL(OVERRIDDEN_REFUND_AMOUNT,0) &#xD;&#xA;       ELSE ISNULL(COMPUTED_REFUND_AMOUNT,0) &#xD;&#xA;     END&#xD;&#xA;    ELSE 0 END&#xD;&#xA;   ) &gt; 0  &#xD;&#xA;   AND REM.ORG_ID=@ORG_ID&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@benefit_type" sfwDataType="string" />
+        <parameter ID="@org_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetAppliedRemittanceByPlanOrgRemittanceType" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select rem.* from sgt_remittance rem &#xD;&#xA;inner join sgt_deposit dep on dep.deposit_id = rem.deposit_id&#xD;&#xA;where dep.status_value = 'APLD' and rem.remittance_type_value= @remittance_type_value&#xD;&#xA;and rem.plan_id=@plan_id and rem.org_id = @org_id">
+      <parameters>
+        <parameter ID="@remittance_type_value" sfwDataType="string" />
+        <parameter ID="@plan_id" sfwDataType="int" />
+        <parameter ID="@org_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetRemitBankCrossRefByRemitType" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT CV.* FROM SGT_REMIT_TYPE_BANK_ACCT_CROSSREF BREF&#xD;&#xA;INNER JOIN SGS_CODE_VALUE CV ON BREF.REMITTANCE_TYPE_ID=CV.CODE_ID AND BREF.REMITTANCE_TYPE_VALUE=CV.CODE_VALUE&#xD;&#xA;WHERE BREF.REMITTANCE_TYPE_VALUE=@REMIT_TYPE_VALUE">
+      <parameters>
+        <parameter ID="@REMIT_TYPE_VALUE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="CreateRemittance" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="INSERT INTO SGT_REMITTANCE&#xD;&#xA;(&#xD;&#xA;DEPOSIT_ID, PERSON_ID, ORG_ID, REMITTANCE_TYPE_ID, REMITTANCE_TYPE_VALUE, REMITTANCE_AMOUNT, PLAN_ID, APPLIED_DATE, CREATED_BY, CREATED_DATE, MODIFIED_BY, MODIFIED_DATE, UPDATE_SEQ&#xD;&#xA;)&#xD;&#xA;SELECT DEPOSIT.DEPOSIT_ID,&#xD;&#xA; DEPOSIT.PERSON_ID, &#xD;&#xA; NULL AS ORG_ID,&#xD;&#xA; 1302 AS REMITTANCE_TYPE_ID,&#xD;&#xA; 'IBSD' AS REMITTANCE_TYPE_VALUE,&#xD;&#xA; DEPOSIT_AMOUNT as REMITTANCE_AMOUNT,&#xD;&#xA; DEPOSIT.PLAN_ID,&#xD;&#xA; PAYMENT_DATE as APPLIED_DATE, &#xD;&#xA; 'PERSLink Batch'+' '+ convert(nvarchar,@batchscheduleid) AS CREATED_BY,&#xD;&#xA; GETDATE() AS CREATED_DATE,&#xD;&#xA; 'PERSLink Batch'+' '+ convert(nvarchar,@batchscheduleid) AS MODIFIED_BY,&#xD;&#xA; GETDATE() AS MODIFIED_DATE,&#xD;&#xA; 0 AS UPDATE_SEQ&#xD;&#xA;FROM &#xD;&#xA;(&#xD;&#xA;SELECT PHH.PAYMENT_HISTORY_HEADER_ID AS REFERENCE_NO,PS.EFFECTIVE_DATE AS PAYMENT_DATE ,PHH.PERSON_ID,SUM(AMOUNT) AS DEPOSIT_AMOUNT,DEP.DEPOSIT_ID, 12 as PLAN_ID&#xD;&#xA; FROM SGT_PAYMENT_HISTORY_DETAIL PHD&#xD;&#xA; INNER JOIN SGT_PAYMENT_HISTORY_HEADER  PHH&#xD;&#xA;  ON PHH.PAYMENT_HISTORY_HEADER_ID = PHD.PAYMENT_HISTORY_HEADER_ID&#xD;&#xA; INNER JOIN SGT_PAYMENT_ITEM_TYPE PIT&#xD;&#xA;  ON PHD.PAYMENT_ITEM_TYPE_ID = PIT.PAYMENT_ITEM_TYPE_ID&#xD;&#xA; INNER JOIN SGT_PAYMENT_SCHEDULE PS &#xD;&#xA;  ON PHH.PAYMENT_SCHEDULE_ID = PS.PAYMENT_SCHEDULE_ID&#xD;&#xA;&#xD;&#xA; INNER JOIN SGT_DEPOSIT DEP ON DEP.PAYMENT_HISTORY_HEADER_ID = PHH.PAYMENT_HISTORY_HEADER_ID &#xD;&#xA; WHERE PHH.PAYMENT_SCHEDULE_ID = @PAYMENTSCHEDULEID&#xD;&#xA;  AND ITEM_TYPE_DIRECTION = -1 &#xD;&#xA;  AND  ITEM_USAGE_VALUE = 'MNTP'&#xD;&#xA;  AND PLSO_FLAG = 'N'&#xD;&#xA;  AND RETRO_PAYMENT_TYPE_VALUE IS NULL&#xD;&#xA;  AND DEDUCTION_VALUE='RONL'&#xD;&#xA; GROUP BY PHH.PAYMENT_HISTORY_HEADER_ID,EFFECTIVE_DATE ,PHH.PERSON_ID,DEP.DEPOSIT_ID&#xD;&#xA;) AS DEPOSIT">
+      <parameters>
+        <parameter ID="@PAYMENTSCHEDULEID" sfwDataType="int" />
+        <parameter ID="@batchscheduleid" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="UpdateDepositRefundStatusToProcessed" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="DECLARE @MAXRUNDATE DATETIME&#xD;&#xA;SELECT @MAXRUNDATE = MAX(RUN_DATE) FROM SGT_IBS_HEADER WITH(NOLOCK) &#xD;&#xA;WHERE REPORT_TYPE_VALUE = 'REG' AND REPORT_STATUS_VALUE = 'PSTD'&#xD;&#xA;&#xD;&#xA;DECLARE @IBSHEADERID INT&#xD;&#xA;SELECT @IBSHEADERID = IBS_HEADER_ID FROM SGT_IBS_HEADER WITH(NOLOCK) &#xD;&#xA;WHERE REPORT_TYPE_VALUE = 'REG' AND REPORT_STATUS_VALUE = 'PSTD'&#xD;&#xA;AND RUN_DATE = @MAXRUNDATE&#xD;&#xA;&#xD;&#xA;UPDATE D SET D.REFUND_STATUS_VALUE='PRCD',&#xD;&#xA;    D.MODIFIED_BY='PERSLink Batch'+' '+ convert(nvarchar,@batchscheduleid),&#xD;&#xA;    D.MODIFIED_DATE=GETDATE(),&#xD;&#xA;    D.UPDATE_SEQ = D.UPDATE_SEQ+1&#xD;&#xA;FROM SGT_REMITTANCE D INNER JOIN SGT_PAYMENT_HISTORY_HEADER PHH&#xD;&#xA;   ON PHH.PAYMENT_HISTORY_HEADER_ID=D.PAYMENT_HISTORY_HEADER_ID&#xD;&#xA;WHERE PHH.PAYMENT_SCHEDULE_ID =@PAYMENT_SCHEDULE_ID&#xD;&#xA;AND CASE WHEN ISNULL(D.OVERRIDDEN_REFUND_AMOUNT,0)&gt;0 &#xD;&#xA;THEN D.OVERRIDDEN_REFUND_AMOUNT ELSE ISNULL(D.COMPUTED_REFUND_AMOUNT,0) END &gt; 0&#xD;&#xA;&#xD;&#xA;UPDATE IBSSUM&#xD;&#xA;  SET IBSSUM.BALANCE_FORWARD = ISNULL(IBSSUM.BALANCE_FORWARD,0.00)+&#xD;&#xA;         TEMP.REFUND_AMOUNT,&#xD;&#xA;  IBSSUM.REMITTANCE_BALANCE_FORWARD = ISNULL(IBSSUM.REMITTANCE_BALANCE_FORWARD,0.00)-&#xD;&#xA;         TEMP.REFUND_AMOUNT,&#xD;&#xA;  IBSSUM.MODIFIED_BY='PERSLink Batch'+' '+ convert(nvarchar,@batchscheduleid),&#xD;&#xA;  IBSSUM.MODIFIED_DATE=GETDATE(),&#xD;&#xA;  IBSSUM.UPDATE_SEQ = UPDATE_SEQ+1&#xD;&#xA;FROM SGT_IBS_PERSON_SUMMARY IBSSUM&#xD;&#xA;INNER JOIN &#xD;&#xA; (&#xD;&#xA;  SELECT D.PERSON_ID,&#xD;&#xA;   SUM(&#xD;&#xA;     CASE WHEN ISNULL(D.OVERRIDDEN_REFUND_AMOUNT,0)&gt;0 &#xD;&#xA;       THEN D.OVERRIDDEN_REFUND_AMOUNT &#xD;&#xA;       ELSE ISNULL(D.COMPUTED_REFUND_AMOUNT,0) END&#xD;&#xA;    )&#xD;&#xA;   AS REFUND_AMOUNT&#xD;&#xA;  FROM &#xD;&#xA;  SGT_REMITTANCE D &#xD;&#xA;  INNER JOIN SGT_PAYMENT_HISTORY_HEADER PHH&#xD;&#xA;   ON PHH.PAYMENT_HISTORY_HEADER_ID=D.PAYMENT_HISTORY_HEADER_ID&#xD;&#xA;  WHERE PHH.PAYMENT_SCHEDULE_ID = @PAYMENT_SCHEDULE_ID&#xD;&#xA;  AND CASE WHEN ISNULL(D.OVERRIDDEN_REFUND_AMOUNT,0)&gt;0 &#xD;&#xA;  THEN D.OVERRIDDEN_REFUND_AMOUNT ELSE ISNULL(D.COMPUTED_REFUND_AMOUNT,0) END &gt; 0&#xD;&#xA;  AND D.APPLIED_DATE &lt; @MAXRUNDATE&#xD;&#xA;  AND D.REMITTANCE_TYPE_VALUE = 'IBSD'&#xD;&#xA;  AND PHH.OLD_PAYMENT_HISTORY_HEADER_ID IS NULL&#xD;&#xA;  GROUP BY D.PERSON_ID&#xD;&#xA; ) TEMP&#xD;&#xA;ON IBSSUM.PERSON_ID = TEMP.PERSON_ID AND IBSSUM.IBS_HEADER_ID = @IBSHEADERID&#xD;&#xA;&#xD;&#xA;--PROD PIR 2362&#xD;&#xA;--START--&#xD;&#xA;SELECT ORG_ID,PLAN_ID,MAX(RUN_DATE) AS RUN_DATE INTO #TEMP&#xD;&#xA;FROM SGT_EMPLOYER_PAYROLL_MONTHLY_STATEMENT&#xD;&#xA;GROUP BY ORG_ID,PLAN_ID&#xD;&#xA;&#xD;&#xA;UPDATE EMPMONTHSTAT&#xD;&#xA;  SET EMPMONTHSTAT.BEGINNING_BALANCE_AMT = ISNULL(EMPMONTHSTAT.BEGINNING_BALANCE_AMT,0.00)+&#xD;&#xA;         TMP.REFUND_AMOUNT,&#xD;&#xA;  EMPMONTHSTAT.MODIFIED_BY='PERSLink Batch'+' '+ convert(nvarchar,@batchscheduleid),&#xD;&#xA;  EMPMONTHSTAT.MODIFIED_DATE=GETDATE(),&#xD;&#xA;  EMPMONTHSTAT.UPDATE_SEQ = UPDATE_SEQ + 1&#xD;&#xA;FROM  SGT_EMPLOYER_PAYROLL_MONTHLY_STATEMENT EMPMONTHSTAT&#xD;&#xA;INNER JOIN &#xD;&#xA;( SELECT TMP.ORG_ID,TMP.PLAN_ID,TMP.RUN_DATE,SUM(REFUND_AMOUNT) AS REFUND_AMOUNT&#xD;&#xA; FROM  #TEMP TMP&#xD;&#xA; INNER JOIN &#xD;&#xA;  (&#xD;&#xA;   SELECT D.ORG_ID,D.PLAN_ID,D.APPLIED_DATE,&#xD;&#xA;    CASE WHEN ISNULL(D.OVERRIDDEN_REFUND_AMOUNT,0)&gt;0 &#xD;&#xA;        THEN D.OVERRIDDEN_REFUND_AMOUNT &#xD;&#xA;        ELSE ISNULL(D.COMPUTED_REFUND_AMOUNT,0) END&#xD;&#xA;    AS REFUND_AMOUNT&#xD;&#xA;   FROM &#xD;&#xA;   SGT_REMITTANCE D &#xD;&#xA;   INNER JOIN SGT_PAYMENT_HISTORY_HEADER PHH&#xD;&#xA;    ON PHH.PAYMENT_HISTORY_HEADER_ID=D.PAYMENT_HISTORY_HEADER_ID&#xD;&#xA;   WHERE PHH.PAYMENT_SCHEDULE_ID = @PAYMENT_SCHEDULE_ID&#xD;&#xA;   AND CASE WHEN ISNULL(D.OVERRIDDEN_REFUND_AMOUNT,0)&gt;0 &#xD;&#xA;   THEN D.OVERRIDDEN_REFUND_AMOUNT ELSE ISNULL(D.COMPUTED_REFUND_AMOUNT,0) END &gt; 0  &#xD;&#xA;   AND PHH.OLD_PAYMENT_HISTORY_HEADER_ID IS NULL&#xD;&#xA;  ) TEMP&#xD;&#xA; ON TMP.ORG_ID = TEMP.ORG_ID AND TMP.PLAN_ID = TEMP.PLAN_ID&#xD;&#xA; WHERE TEMP.APPLIED_DATE &lt; TMP.RUN_DATE&#xD;&#xA; GROUP BY TMP.ORG_ID,TMP.PLAN_ID,TMP.RUN_DATE&#xD;&#xA;) TMP&#xD;&#xA;ON TMP.ORG_ID = EMPMONTHSTAT.ORG_ID AND TMP.PLAN_ID = EMPMONTHSTAT.PLAN_ID AND TMP.RUN_DATE = EMPMONTHSTAT.RUN_DATE&#xD;&#xA;&#xD;&#xA;DROP TABLE #TEMP&#xD;&#xA;--END--">
+      <parameters>
+        <parameter ID="@PAYMENT_SCHEDULE_ID" sfwDataType="int" />
+        <parameter ID="@batchscheduleid" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetAvailableRemittanceForBalanceForwardIBS" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT    REM.*,REM.REMITTANCE_AMOUNT - ISNULL(ERA.ALLOCATED_AMOUNT,0) AS IDECAVAILABLEREMITTANCEAMOUNT&#xD;&#xA;FROM    SGT_REMITTANCE REM WITH(NOLOCK)&#xD;&#xA;LEFT OUTER JOIN  (SELECT REMITTANCE_ID,SUM(ISNULL(ALLOCATED_AMOUNT,0)) AS ALLOCATED_AMOUNT&#xD;&#xA;     FROM SGT_IBS_REMITTANCE_ALLOCATION WITH(NOLOCK)&#xD;&#xA;     GROUP BY REMITTANCE_ID) ERA&#xD;&#xA;    ON ERA.REMITTANCE_ID = REM.REMITTANCE_ID&#xD;&#xA;WHERE    REM.APPLIED_DATE &lt; @BILLINGDATE&#xD;&#xA;   AND  REM.REMITTANCE_AMOUNT - ISNULL(ERA.ALLOCATED_AMOUNT,0) &gt; 0&#xD;&#xA;   AND  REM.REMITTANCE_TYPE_VALUE = 'IBSD'">
+      <parameters>
+        <parameter ID="@BILLINGDATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="GetPayments" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="DECLARE @MAXRUNDATE DATETIME&#xD;&#xA;SELECT @MAXRUNDATE = MAX(RUN_DATE) FROM SGT_IBS_HEADER WITH(NOLOCK) &#xD;&#xA;WHERE REPORT_TYPE_VALUE = 'REG' AND REPORT_STATUS_VALUE = 'PSTD'&#xD;&#xA;&#xD;&#xA;SELECT REM.PERSON_ID,&#xD;&#xA;  SUM(ISNULL(REM.REMITTANCE_AMOUNT,0) - ISNULL(REM.ALLOCATED_NEGATIVE_DEPOSIT_AMOUNT,0) -&#xD;&#xA;   ISNULL(CASE WHEN REM.REFUND_STATUS_VALUE = 'PRCD' THEN&#xD;&#xA;      CASE WHEN REM.OVERRIDDEN_REFUND_AMOUNT IS NOT NULL &#xD;&#xA;        THEN ISNULL(REM.OVERRIDDEN_REFUND_AMOUNT,0.00) &#xD;&#xA;        ELSE ISNULL(REM.COMPUTED_REFUND_AMOUNT,0.00) &#xD;&#xA;      END&#xD;&#xA;     ELSE 0.00 END&#xD;&#xA;      ,0.00)) AS PAYMENTS_MADE&#xD;&#xA;FROM SGT_DEPOSIT DEP WITH(NOLOCK)  &#xD;&#xA;INNER JOIN SGT_REMITTANCE REM WITH(NOLOCK) &#xD;&#xA; ON REM.DEPOSIT_ID = DEP.DEPOSIT_ID &#xD;&#xA; and REM.PERSON_ID = @PERSONID&#xD;&#xA;WHERE CONVERT(DATE, REM.APPLIED_DATE) &gt;= CONVERT(DATE, @MAXRUNDATE)&#xD;&#xA;AND REM.APPLIED_DATE &lt;= GETDATE()&#xD;&#xA;AND DEP.STATUS_VALUE = 'APLD'&#xD;&#xA;AND REM.REMITTANCE_TYPE_VALUE = 'IBSD'&#xD;&#xA;GROUP BY REM.PERSON_ID">
+      <parameters>
+        <parameter ID="@PERSONID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadAppliedSeminarRemittances" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select a.* from sgt_remittance a&#xD;&#xA;inner join sgt_deposit b on a.deposit_id = b.deposit_id&#xD;&#xA;where b.status_value = 'APLD' and a.remittance_type_value = 'SMNR'&#xD;&#xA;AND a.person_id = @personID">
+      <parameters>
+        <parameter ID="@personID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LookupDepositTape" sfwQueryType="SubSelectQuery" sfwSql="select * from sgt_deposit_tape tape WITH(NOLOCK)&#xD;&#xA;where tape.deposit_tape_id=dep.deposit_id">
+      <parameters />
+    </query>
+    <query ID="LookupBenefitType" sfwQueryType="SubSelectQuery" sfwSql="SELECT * FROM SGT_PLAN PLN WITH(NOLOCK) &#xD;&#xA;WHERE PLN.PLAN_ID=R.PLAN_ID">
+      <parameters />
+    </query>
+    <query ID="LoadAvailableRemittanceForEmpARBatch" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT REM.* FROM SGT_REMITTANCE REM WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_DEPOSIT DEP WITH(NOLOCK) ON REM.DEPOSIT_ID = DEP.DEPOSIT_ID&#xD;&#xA;LEFT JOIN (SELECT REMITTANCE_ID,SUM(ALLOCATED_AMOUNT) AS ALLOCATED_AMOUNT&#xD;&#xA;   FROM SGT_EMPLOYER_REMITTANCE_ALLOCATION WITH(NOLOCK)&#xD;&#xA;   GROUP BY REMITTANCE_ID&#xD;&#xA;) ALLOC ON ALLOC.REMITTANCE_ID = REM.REMITTANCE_ID&#xD;&#xA;WHERE DEP.STATUS_VALUE IN ('APLD','VALD')&#xD;&#xA;AND REM.ORG_ID IS NOT NULL&#xD;&#xA;AND REM.REMITTANCE_AMOUNT - ISNULL(ALLOC.ALLOCATED_AMOUNT,0.00)- &#xD;&#xA;  ISNULL(ALLOCATED_NEGATIVE_DEPOSIT_AMOUNT,0) -&#xD;&#xA;   (&#xD;&#xA;    CASE WHEN REFUND_STATUS_VALUE = 'PRCD' THEN &#xD;&#xA;     CASE WHEN ISNULL(OVERRIDDEN_REFUND_AMOUNT,0) &gt; 0  &#xD;&#xA;       THEN ISNULL(OVERRIDDEN_REFUND_AMOUNT,0) &#xD;&#xA;       ELSE ISNULL(COMPUTED_REFUND_AMOUNT,0) &#xD;&#xA;     END&#xD;&#xA;    ELSE 0 END&#xD;&#xA;   ) &gt; 0&#xD;&#xA;AND REM.APPLIED_DATE &lt;= @BATCHRUNDDATE&#xD;&#xA;AND REM.ORG_ID = @ORGID&#xD;&#xA;AND REM.REMITTANCE_TYPE_VALUE = @REMITTANCETYPEVALUE&#xD;&#xA;AND REM.PLAN_ID = @PLANID&#xD;&#xA;ORDER BY REM.ORG_ID">
+      <parameters>
+        <parameter ID="@BATCHRUNDDATE" sfwDataType="DateTime" />
+        <parameter ID="@ORGID" sfwDataType="int" />
+        <parameter ID="@REMITTANCETYPEVALUE" sfwDataType="string" />
+        <parameter ID="@PLANID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetAllRemittanceAfterLastIBS" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="DECLARE @MAXRUNDATE DATETIME&#xD;&#xA;SELECT @MAXRUNDATE = MAX(RUN_DATE) FROM SGT_IBS_HEADER WITH(NOLOCK) &#xD;&#xA;WHERE REPORT_TYPE_VALUE = 'REG' AND REPORT_STATUS_VALUE = 'PSTD'&#xD;&#xA;&#xD;&#xA;SELECT REM.PERSON_ID,&#xD;&#xA;  SUM(ISNULL(REM.REMITTANCE_AMOUNT,0) - ISNULL(REM.ALLOCATED_NEGATIVE_DEPOSIT_AMOUNT,0) -&#xD;&#xA;   ISNULL(CASE WHEN REM.REFUND_STATUS_VALUE = 'PRCD' THEN&#xD;&#xA;      CASE WHEN REM.OVERRIDDEN_REFUND_AMOUNT IS NOT NULL &#xD;&#xA;        THEN ISNULL(REM.OVERRIDDEN_REFUND_AMOUNT,0.00) &#xD;&#xA;        ELSE ISNULL(REM.COMPUTED_REFUND_AMOUNT,0.00) &#xD;&#xA;      END&#xD;&#xA;     ELSE 0.00 END&#xD;&#xA;      ,0.00)) AS PAYMENTS_MADE&#xD;&#xA;FROM SGT_DEPOSIT DEP WITH(NOLOCK)  &#xD;&#xA;INNER JOIN SGT_REMITTANCE REM WITH(NOLOCK) &#xD;&#xA; ON REM.DEPOSIT_ID = DEP.DEPOSIT_ID &#xD;&#xA;WHERE REM.APPLIED_DATE &gt; @MAXRUNDATE&#xD;&#xA;AND REM.APPLIED_DATE &lt;= @BATCHRUNDATE&#xD;&#xA;AND DEP.STATUS_VALUE = 'APLD'&#xD;&#xA;AND REM.REMITTANCE_TYPE_VALUE = 'IBSD'&#xD;&#xA;GROUP BY REM.PERSON_ID">
+      <parameters>
+        <parameter ID="@BATCHRUNDATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="ESSLookupOrgCode" sfwQueryType="SubSelectQuery" sfwSql="SELECT * FROM SGT_ORGANIZATION ORG WITH(NOLOCK) &#xD;&#xA;WHERE ORG.ORG_ID=r.org_id and sd.status_value = 'APLD' and sdt.DEPOSIT_METHOD_VALUE != 'WITR' &#xD;&#xA;">
+      <parameters />
+    </query>
+    <query ID="ESSLookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM &#xD;&#xA;(&#xD;&#xA;SELECT R.*,&#xD;&#xA; (&#xD;&#xA;  REMITTANCE_AMOUNT  - ISNULL(B.ALLOCATED_AMOUNT,0) - &#xD;&#xA;  ISNULL(ALLOCATED_NEGATIVE_DEPOSIT_AMOUNT,0) -&#xD;&#xA;   (&#xD;&#xA;    CASE WHEN REFUND_STATUS_VALUE = 'PRCD' THEN &#xD;&#xA;     CASE WHEN ISNULL(OVERRIDDEN_REFUND_AMOUNT,0) &gt; 0  &#xD;&#xA;       THEN ISNULL(OVERRIDDEN_REFUND_AMOUNT,0) &#xD;&#xA;       ELSE ISNULL(COMPUTED_REFUND_AMOUNT,0) &#xD;&#xA;     END&#xD;&#xA;    ELSE 0 END&#xD;&#xA;   )&#xD;&#xA; ) AS BALANCE_AMOUNT,&#xD;&#xA;&#xD;&#xA; CASE WHEN &#xD;&#xA;  (&#xD;&#xA;   REMITTANCE_AMOUNT  - ISNULL(B.ALLOCATED_AMOUNT,0) - &#xD;&#xA;   ISNULL(ALLOCATED_NEGATIVE_DEPOSIT_AMOUNT,0) -&#xD;&#xA;    (&#xD;&#xA;     CASE WHEN REFUND_STATUS_VALUE = 'PRCD' THEN &#xD;&#xA;      CASE WHEN ISNULL(OVERRIDDEN_REFUND_AMOUNT,0) &gt; 0  &#xD;&#xA;        THEN ISNULL(OVERRIDDEN_REFUND_AMOUNT,0) &#xD;&#xA;        ELSE ISNULL(COMPUTED_REFUND_AMOUNT,0) &#xD;&#xA;      END&#xD;&#xA;     ELSE 0 END&#xD;&#xA;    )&#xD;&#xA;  )&#xD;&#xA;&#xD;&#xA; = 0 THEN 'ALTD' ELSE 'UALT' END AS ALLOCATION_STATUS &#xD;&#xA;FROM SGT_REMITTANCE R&#xD;&#xA;LEFT OUTER JOIN &#xD;&#xA;(&#xD;&#xA; SELECT REMITTANCE_ID,SUM(ALLOCATED_AMOUNT) AS ALLOCATED_AMOUNT &#xD;&#xA; FROM &#xD;&#xA; ( SELECT REMITTANCE_ID,ALLOCATED_AMOUNT &#xD;&#xA;   FROM SGT_IBS_REMITTANCE_ALLOCATION &#xD;&#xA;   --WHERE IBS_ALLOCATION_STATUS_VALUE = 'ALTD'&#xD;&#xA;&#xD;&#xA;  UNION ALL&#xD;&#xA;&#xD;&#xA;  SELECT REMITTANCE_ID,APPLIED_AMOUNT AS ALLOCATED_AMOUNT  &#xD;&#xA;   FROM SGT_SERVICE_PURCHASE_PAYMENT_ALLOCATION &#xD;&#xA;   --WHERE POSTED_FLAG = 'Y'&#xD;&#xA;   &#xD;&#xA;  UNION ALL&#xD;&#xA;   &#xD;&#xA;  --SELECT REMITTANCE_ID,APPLIED_AMOUNT AS ALLOCATED_AMOUNT  &#xD;&#xA;  -- FROM SGT_SEMINAR_ATTENDEE_PAYMENT_ALLOCATION&#xD;&#xA;&#xD;&#xA;  --UNION ALL&#xD;&#xA;&#xD;&#xA;  SELECT REMITTANCE_ID,ALLOCATED_AMOUNT &#xD;&#xA;   FROM SGT_PAYMENT_RECOVERY_HISTORY&#xD;&#xA;&#xD;&#xA;  UNION ALL&#xD;&#xA;&#xD;&#xA;  SELECT REMITTANCE_ID,ISNULL(ALLOCATED_AMOUNT,0.00)  &#xD;&#xA;  --(CASE WHEN ISNULL(DIFFERENCE_TYPE_VALUE,'') IN ('UCRP','URRP') THEN ISNULL(DIFFERENCE_AMOUNT,0.00) ELSE 0.00 END) -- PIR 14938 &#xD;&#xA;  AS ALLOCATED_AMOUNT &#xD;&#xA;   FROM SGT_EMPLOYER_REMITTANCE_ALLOCATION &#xD;&#xA;   WHERE PAYROLL_ALLOCATION_STATUS_VALUE = 'ALOC'&#xD;&#xA;&#xD;&#xA;  UNION ALL&#xD;&#xA;&#xD;&#xA;  SELECT REMITTANCE_ID,ALLOCATED_AMOUNT &#xD;&#xA;   FROM SGT_JS_RHIC_REMITTANCE_ALLOCATION &#xD;&#xA;   WHERE RHIC_ALLOCATION_STATUS_VALUE = 'ALTD'&#xD;&#xA; ) TEMP&#xD;&#xA; GROUP BY REMITTANCE_ID&#xD;&#xA;) AS B&#xD;&#xA;ON R.REMITTANCE_ID = B.REMITTANCE_ID&#xD;&#xA;)r&#xD;&#xA;left join sgt_deposit sd with(nolock) on sd.deposit_id=r.deposit_id&#xD;&#xA;left join sgt_deposit_tape sdt with(nolock) on sdt.deposit_tape_id=sd.deposit_tape_id&#xD;&#xA;where R.REMITTANCE_AMOUNT &gt;= 0 and r.remittance_type_value not in ('SESE','SMNR')&#xD;&#xA;order by sdt.DEPOSIT_DATE DESC">
+      <parameters />
+    </query>
+    <query ID="UpdateDepositRefundStatusToProcessedFromMonthly" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="UPDATE D SET D.REFUND_STATUS_VALUE='PRCD',&#xD;&#xA;    D.MODIFIED_BY='PERSLink Batch'+' '+ convert(nvarchar,@batchscheduleid),&#xD;&#xA;    D.MODIFIED_DATE=GETDATE(),&#xD;&#xA;    D.UPDATE_SEQ = D.UPDATE_SEQ+1&#xD;&#xA;FROM SGT_REMITTANCE D INNER JOIN SGT_PAYMENT_HISTORY_HEADER PHH&#xD;&#xA;   ON PHH.PAYMENT_HISTORY_HEADER_ID=D.PAYMENT_HISTORY_HEADER_ID&#xD;&#xA;WHERE PHH.PAYMENT_SCHEDULE_ID =@PAYMENT_SCHEDULE_ID AND REMITTANCE_TYPE_VALUE IN ('P501', 'P502', 'P503','P504','P505')&#xD;&#xA;AND CASE WHEN ISNULL(D.OVERRIDDEN_REFUND_AMOUNT,0)&gt;0 &#xD;&#xA;THEN D.OVERRIDDEN_REFUND_AMOUNT ELSE ISNULL(D.COMPUTED_REFUND_AMOUNT,0) END &gt; 0">
+      <parameters>
+        <parameter ID="@batchscheduleid" sfwDataType="int" />
+        <parameter ID="@PAYMENT_SCHEDULE_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="RemittanceId" sfwType="Column" sfwValue="remittance_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="DepositId" sfwType="Column" sfwValue="deposit_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PersonId" sfwType="Column" sfwValue="person_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="OrgId" sfwType="Column" sfwValue="org_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="RemittanceTypeDescription" sfwType="Description" sfwValue="remittance_type_description" />
+    <attribute ID="RemittanceTypeId" sfwType="Column" sfwValue="remittance_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="1302" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="RemittanceTypeValue" sfwType="Column" sfwValue="remittance_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="RemittanceAmount" sfwType="Column" sfwValue="remittance_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="10,2" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PlanId" sfwType="Column" sfwValue="plan_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AppliedDate" sfwType="Column" sfwValue="applied_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ComputedRefundAmount" sfwType="Column" sfwValue="computed_refund_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="OverriddenRefundAmount" sfwType="Column" sfwValue="overridden_refund_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="RefundStatusDescription" sfwType="Description" sfwValue="refund_status_description" />
+    <attribute ID="RefundStatusId" sfwType="Column" sfwValue="refund_status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="2510" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="RefundStatusValue" sfwType="Column" sfwValue="refund_status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="RefundPendBy" sfwType="Column" sfwValue="refund_pend_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="RefundApprBy" sfwType="Column" sfwValue="refund_appr_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="PaymentHistoryHeaderId" sfwType="Column" sfwValue="payment_history_header_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AllocatedNegativeDepositAmount" sfwType="Column" sfwValue="allocated_negative_deposit_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="RefundToDescription" sfwType="Description" sfwValue="refund_to_description" />
+    <attribute ID="RefundToId" sfwType="Column" sfwValue="refund_to_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="5014" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="RefundToValue" sfwType="Column" sfwValue="refund_to_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="RefundToPersonId" sfwType="Column" sfwValue="refund_to_person_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="RefundToOrgId" sfwType="Column" sfwValue="refund_to_org_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="Notes" sfwType="Column" sfwValue="notes" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1000" />
+    <attribute ID="objDepositTape" sfwType="Object" sfwEntity="entDepositTape" sfwValue="ibusDepositTape" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrOrgCodeID" sfwValue="istrOrgCodeID" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPERSLinkID" sfwValue="istrPERSLinkID" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPlanName" sfwValue="istrPlanName" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="LdclAppliedAmount" sfwValue="ldclAppliedAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="LdclBalanceAmount" sfwValue="ldclBalanceAmount" />
+    <attribute ID="objDeposit" sfwType="Object" sfwEntity="entDeposit" sfwValue="ibusDeposit" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecDepositTapeIDRemittanceID" sfwValue="idecDepositTapeIDRemittanceID" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecDepositIDRemittanceID" sfwValue="idecDepositIDRemittanceID" />
+    <attribute ID="objOrganization" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusOrganization" />
+    <attribute sfwDataType="string" sfwType="Property" ID="LstrOrgCodeID" sfwValue="lstrOrgCodeID" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrRemittancePersonName" sfwValue="istrRemittancePersonName" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AllocationStatusDescription" sfwValue="icdoRemittance.allocation_status_description" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="LdclTotalRemittanceAmount" sfwValue="ldclTotalRemittanceAmount" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPersonName" sfwValue="istrPersonName" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrOrgName" sfwValue="istrOrgName" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrSuppressWarnings" sfwValue="istrSuppressWarnings" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrRemittanceOrgName" sfwValue="istrRemittanceOrgName" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecRefundAmount" sfwValue="icdoRemittance.idecRefundAmount" />
+    <attribute sfwType="Collection" sfwEntity="entcdoReviewRemittanceDistribution" ID="lstRevRemittance" sfwValue="iclbRevRemittance" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecGrossReductionAmount" sfwValue="icdoRemittance.idecGrossReductionAmount" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="IdtAppliedDate" sfwValue="icdoRemittance.idtAppliedDate" />
+    <attribute ID="IstrSSN" sfwDataType="string" sfwPrivate="False" sfwValue="istrSSN" sfwType="Property" />
+    <attribute ID="lstrLastName" sfwDataType="string" sfwPrivate="False" sfwValue="istrLastName" sfwType="Property" />
+    <attribute ID="ldecDepositAmount" sfwDataType="decimal" sfwPrivate="False" sfwValue="idecDepositAmount" sfwType="Property" />
+    <attribute ID="lstrCheckNo" sfwDataType="string" sfwPrivate="False" sfwValue="istrCheckNo" sfwType="Property" />
+    <attribute ID="lstrPlanCode" sfwDataType="string" sfwPrivate="False" sfwValue="istrPlanCode" sfwType="Property" />
+    <attribute sfwValue="refund_notes" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="1000" sfwIsNull="True" ID="RefundNotes" sfwCaption="Refund Notes" />
+    <attribute ID="objPlan" sfwType="Object" sfwEntity="entPlan" sfwPrivate="False" sfwValue="ibusPlan" />
+  </attributes>
+  <objectmethods>
+    <method ID="btnAllocateNegativeDeposit_Click" sfwReturnType="ArrayList" />
+    <method ID="GetRemittanceType" sfwReturnType="Collection" sfwObjectID="cdoCodeValue" sfwEntity="entPostRetirementDeathApplication" />
+    <method ID="GetPlan" sfwReturnType="Collection" sfwObjectID="cdoPlan" sfwEntity="entPlan" />
+    <method ID="ReloadHandButtonData" sfwReturnType="ArrayList" />
+    <method ID="btnCancelRefund_Click" sfwReturnType="ArrayList" />
+  </objectmethods>
+  <methods />
+  <lifecycle />
+  <ExtraFields />
+</entity>

@@ -1,0 +1,71 @@
+﻿
+<div ng-controller="auditlogcontroller" class="innerWrapper">
+    <div class="col-xs-12" ng-hide="selectedDesignSource">
+        <div class="col-xs-6">
+            <div class="form-group">
+                <button ng-repeat="button in btns" ng-class="button.state?'blue-hoki':''" class="btn btn-default margin-right-10" ng-click="toggle(button)">{{button.label}}</button>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="form-group">
+                <div class="col-xs-3">
+                    <input type="checkbox" id="chkSelectAll" ng-model="selectedTable.IncludeAll" undoredodirective model="selectedTable" ng-change="toggleSelectAll()" ng-disabled="!selectedTable">
+                    <label for="chkSelectAll">Select All</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 file-height" ng-hide="selectedDesignSource">
+        <div class="col-xs-6 full-height">
+            <div id="dvAuditLogTables" ng-scrolldown callback="onTableScroll()" ngscrollheight="5" class="div-border full-height overflowA">
+                <table class="table table-striped table-hover table-bordered dataTable no-footer" role="grid">
+                    <thead>
+                        <tr>
+                            <th>Table Name</th>
+                            <th>On Insert</th>
+                            <th>On Update</th>
+                            <th>On Delete</th>
+                            <th>Excluded</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="table in lstTables | limitTo:tableCount" ng-click="selectTable(table)" ng-class="selectedTable == table?'selected':''">
+                            <td><span ng-bind="::table.TableName"></span></td>
+                            <td><input type="checkbox" ng-model="table.OnInsert" undoredodirective model="table" /></td>
+                            <td><input type="checkbox" ng-model="table.OnUpdate" undoredodirective model="table" /></td>
+                            <td><input type="checkbox" ng-model="table.OnDelete" undoredodirective model="table" /></td>
+                            <td><input type="checkbox" ng-model="table.IsExcluded" undoredodirective model="table" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-xs-6 full-height">
+            <div id="dvSelectedAuditLogTableColumns" class="div-border full-height overflowA"  ng-scrolldown callback="onColumnScroll()" ngscrollheight="5" >
+                <table class="table table-striped table-hover table-bordered dataTable no-footer" role="grid">
+                    <thead>
+                        <tr>
+                            <th>Audit</th>
+                            <th>Column Name</th>
+                            <th>Data Type</th>
+                            <th>Length</th>
+                            <th>Nullable</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="column in selectedTable.lstAuditTableDetails | limitTo:selectedTable.columnCount">
+                            <td><input type="checkbox" ng-model="column.IsAudit" undoredodirective model="column" /></td>
+                            <td><span ng-bind="::column.ColumnName"></span></td>
+                            <td><span ng-bind="::column.DataType"></span></td>
+                            <td><span ng-bind="::column.Length"></span></td>
+                            <td><span ng-bind="::column.Nullable"></span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div ng-show="selectedDesignSource" class="full-height">
+        <div id="editor_auditlog" class="ace-editor-div"></div>
+    </div>
+</div>

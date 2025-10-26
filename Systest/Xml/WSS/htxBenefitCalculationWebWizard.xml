@@ -1,0 +1,499 @@
+﻿<form ID="wfmBenefitCalculationWebWizard" sfwActive="True" sfwDescription="Benefit Calculation Web" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2001" sfwType="FormLinkWizard" sfwTitle="Benefit Calculation Web Wizard" version="3.5" sfwEntity="entBenefitCalculatorWeb" sfwTemplate="BenefitCalculationWebWizard.html" isBasedOnWfm="true">
+  <initialload>
+    <callmethods sfwMethodName="NewBenefitCalculationWeb" />
+  </initialload>
+  <items>
+    <sfwWizard ID="wizMain">
+      <items>
+        <sfwWizardStep ID="wzsIntroStep" Title="Intro" sfwShowInHeader="True" sfwRulesGroup="WizardStepIntro">
+          <items>
+            <sfwLiteral ID="ltrL1Calculator" Text="Benefit Estimate Calculator&lt;br/&gt;&lt;br/&gt;" />
+            <sfwLabel ID="lblSteps" />
+            <sfwPanel ID="pnlstepsBenefitEstimate" sfwCaption="Disclaimer :">
+              <items>
+                <sfwLabel ID="lblLabel3" Text="&lt;br/&gt;Disclaimer :" sfwIsCaption="True" CssClass="hideControl" />
+                <sfwLabel ID="lblLabel1" sfwWrap="True" Text="&lt;font style=&quot; padding-right:5px; padding-left:5px;display:inline-block;white-space:normal; text-align:justify;&quot;&gt;The NDPERS Retirement Benefit Estimate Calculator is provided solely as a tool for an individual to obtain an UNOFFICIAL estimate of their potential retirement or disability benefits.  This calculator uses both information provided by the member and information contained in NDPERS’ records.  NDPERS accepts no responsibility for any errors or defects in the calculator or in any data a member may input.&lt;/font&gt;&lt;br/&gt;&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel4" Text="&lt;font style=&quot; padding-right:5px; padding-left:5px;display:inline-block;white-space:normal; text-align:justify;&quot;&gt;NDPERS has the sole authority under law to determine a member’s retirement and disability benefits.  No estimate produced by this calculator shall in any way constitute a benefit determination by NDPERS or be binding upon NDPERS.  All data used in the actual calculation of a member’s retirement allowance is subject to audit, verification, and possible recalculation if any subsequent errors are discovered.&lt;/font&gt;&lt;br/&gt;&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel5" Text="&lt;font style=&quot; padding-right:5px; padding-left:5px;display:inline-block;white-space:normal; text-align:justify;&quot;&gt;By using this calculator, you indicate your understanding and agreement that this calculator is merely providing an UNOFFICIAL estimate of your potential retirement or disability benefits.  You agree to hold NDPERS harmless for any damages arising from your use of this calculator, now and in the future.  NDPERS EXPRESSLY DISCLAIMS ANY AND ALL WARRANTIES RELATED TO THIS CALCULATOR, INCLUDING ANY WARRANTY FOR FITNESS FOR A PARTICULAR PURPOSE.&lt;/font&gt;&lt;br/&gt;&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel6" Text="&lt;font style=&quot; padding-right:5px; padding-left:5px;display:inline-block;white-space:normal; text-align:justify;&quot;&gt;As you near retirement, you should request an OFFICIAL estimate directly from NDPERS.  If you would like an OFFICIAL estimate prepared by NDPERS, &lt;/font&gt;" sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel31" Text="&lt;font style=&quot; padding-right:5px; padding-left:5px;display:inline-block;white-space:normal; text-align:justify;&quot;&gt;please complete a    &lt;/font&gt;" sfwIsCaption="True" />
+                <sfwLinkButton ID="btnPdfCorrespondenceClick1" sfwActiveForm="wfmMSSBenefitEstimateMaintenance" sfwMethodName="btnNew_Click" />
+                <sfwLabel ID="lblLabel7" Text="&lt;br/&gt;&lt;br/&gt;&lt;font style=&quot; padding-right:5px; padding-left:5px;display:inline-block;white-space:normal; text-align:justify;&quot;&gt;By clicking below, you indicate your agreement with the above.&lt;/font&gt;&lt;br/&gt;&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwButton ID="btnIntro" sfwMethodName="btnWizardNext_Click" Text="Benefit Estimate Calculator" />
+                <sfwButton ID="btnBenefitEstimate" sfwMethodName="btnCancel_Click" />
+              </items>
+            </sfwPanel>
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsStep1" sfwRulesGroup="WizardStep1" Title="Benefit Estimate - Step 1" sfwShowInHeader="True">
+          <items>
+            <sfwTable ID="tblStep" />
+            <sfwPanel ID="pnlEnrollment" sfwCaption="Enrollment">
+              <items>
+                <sfwLabel ID="lblLabel3069" Text="&lt;br/&gt;&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwLabel ID="capPlanId" Text="Plan : " sfwIsCaption="True" />
+                <sfwDropDownList ID="ddlPlanId" DataTextField="plan_name" DataValueField="plan_id" sfwVisibleRule="IsAvailablePlanCountMoreThanOne" sfwLoadType="Method" sfwLoadSource="LoadPlansForBenefitCalculation" sfwEntityField="PlanId" />
+                <sfwLabel ID="lblMssPlanName" sfwEntityField="objPlan.MssPlanName" />
+                <sfwLabel ID="lblPlanName" Visible="False" sfwEntityField="objPlan.PlanName" />
+                <sfwButton ID="btnExecuteRefreshFromObject" sfwMethodName="btnValidateExecuteBusinessMethod_Click" sfwObjectMethod="btnRefreshPlanBasedRules" Text="Refresh Plan related rules" Visible="False" />
+                <sfwLabel ID="lblBenefitAccountType" Text="Benefit Account Type : " sfwIsCaption="True" />
+                <sfwDropDownList ID="ddlBenefitAccountTypeValueNONDC" DataTextField="description" DataValueField="code_value" sfwClientVisibility="controllist:capRetirementDate,lblBenefitBeginDate#DETH:lblBenefitBeginDate;default:capRetirementDate;" sfwLoadType="Method" sfwLoadSource="LoadBenefitAccountType" sfwEntityField="IstrBenefitAccountTypeValue" sfwVisibleRule="IsAvailablePlanCountOne" />
+                <sfwDropDownList ID="ddlBenefitAccountTypeValueonPlan" DataTextField="description" DataValueField="code_value" sfwEntityField="IstrBenefitAccountTypeValue" sfwVisibleRule="IsAvailablePlanCountMoreThanOne" sfwClientVisibility="controllist:capRetirementDate,lblBenefitBeginDate#DETH:lblBenefitBeginDate;default:capRetirementDate;" />
+                <sfwLabel ID="capTerminationDate" Text="Last Date of Employment : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtTerminationDate" sfwDataFormat="{0:d}" sfwEntityField="objBenefitCalculation.TerminationDate" />
+                <sfwLabel ID="capIstrIsDisability" Text="Disability Retirement : " Visible="False" sfwIsCaption="True" />
+                <sfwCheckBox ID="chkIstrIsDisability" sfwDefaultValue="N" Visible="False" sfwEntityField="IsDisability" />
+                <sfwLabel ID="capRetirementDate" Text="Retirement Date : " sfwIsCaption="True" />
+                <sfwLabel ID="lblBenefitBeginDate" Text="Benefit Begin Date :" sfwIsCaption="True" />
+                <sfwDropDownList ID="ddlRetirementMonth" sfwEntityField="IintRetirementMonth" CssClass="DropdownWidth">
+                  <ListItem />
+                  <ListItem Text="January" Value="1" />
+                  <ListItem Text="February" Value="2" />
+                  <ListItem Text="March" Value="3" />
+                  <ListItem Text="April" Value="4" />
+                  <ListItem Text="May" Value="5" />
+                  <ListItem Text="June" Value="6" />
+                  <ListItem Text="July" Value="7" />
+                  <ListItem Text="August" Value="8" />
+                  <ListItem Text="September" Value="9" />
+                  <ListItem Text="October" Value="10" />
+                  <ListItem Text="November" Value="11" />
+                  <ListItem Text="December" Value="12" />
+                </sfwDropDownList>
+                <sfwDropDownList ID="ddlRetirementYear" DataTextField="description" DataValueField="code_value" sfwLoadType="Method" sfwLoadSource="LoadRetirementYear" sfwEntityField="IstrRetirementYear" CssClass="DropdownWidth" />
+                <sfwLabel ID="capSpouseDateOfBirth" sfwVisibleRule="VisibleRuleForNonDc" Text="Spouse Date of Birth : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtSpouseDateOfBirth" sfwDataFormat="{0:d}" sfwVisibleRule="VisibleRuleForNonDc" sfwEntityField="objMember.objSpouse.DateOfBirth" />
+                <sfwLabel ID="lblLiteral" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel10" Text="If you do not indicate a Termination Date and Retirement Date, the benefit estimate will project continued employment until you reach your Normal Retirement Date." sfwIsCaption="True" />
+                <sfwPanel ID="pnlNewPage" sfwCaption="hr" sfwCollapsible="False" sfwVisibleRule="VisibleRuleForNonDc">
+                  <items />
+                </sfwPanel>
+                <sfwLabel ID="lblLabel32" sfwVisibleRule="VisibleRuleForNonDc" Text="Would you like to factor annual salary increases into your Final Average Salary? If yes, please enter" sfwIsCaption="True" />
+                <sfwLabel ID="capPercentageSalaryIncrease" sfwVisibleRule="VisibleRuleForNonDc" Text="Monthly Salary Percent Increase : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtPercentageSalaryIncrease" sfwVisibleRule="VisibleRuleForNonDc" sfwEntityField="objBenefitCalculation.PercentageSalaryIncrease" />
+                <sfwLabel ID="lblLabel39" sfwVisibleRule="VisibleRuleForNonDc" Text="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;" sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel33" sfwVisibleRule="VisibleRuleForNonDc" Text="Enter the typical salary percent increase you receive annually.  Example:  If you receive 4%, enter a 4" sfwIsCaption="True" />
+                <sfwLabel ID="capSalaryMonthIncrease" sfwVisibleRule="VisibleRuleForNonDc" Text="Month Salary Increase Effective : " sfwIsCaption="True" />
+                <sfwDropDownList ID="ddlSalaryMonthIncrease" sfwVisibleRule="VisibleRuleForNonDc" sfwEntityField="objBenefitCalculation.SalaryMonthIncrease">
+                  <ListItem />
+                  <ListItem Text="January" Value="1" />
+                  <ListItem Text="February" Value="2" />
+                  <ListItem Text="March" Value="3" />
+                  <ListItem Text="April" Value="4" />
+                  <ListItem Text="May" Value="5" />
+                  <ListItem Text="June" Value="6" />
+                  <ListItem Text="July" Value="7" />
+                  <ListItem Text="August" Value="8" />
+                  <ListItem Text="September" Value="9" />
+                  <ListItem Text="October" Value="10" />
+                  <ListItem Text="November" Value="11" />
+                  <ListItem Text="December" Value="12" />
+                </sfwDropDownList>
+                <sfwLabel ID="lblLabas" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwPanel ID="pnlhr1" sfwCaption="hr2" sfwCollapsible="False" sfwVisibleRule="VisibleRuleForNonDc">
+                  <items />
+                </sfwPanel>
+                <sfwLabel ID="lblLabel" sfwVisibleRule="VisibleRuleForNonDc" Text="Would you like to include a new purchase of eligible service? If yes, what type?" sfwIsCaption="True" />
+                <sfwDropDownList ID="ddlDropDownList1" DataTextField="description" DataValueField="code_value" sfwVisibleRule="VisibleRuleForNonDc" sfwLoadType="CodeGroup" sfwLoadSource="6008" sfwEntityField="EstimatedServicePurchaseTypeValue" />
+                <sfwLabel ID="lblLabel3222" sfwVisibleRule="VisibleRuleForNonDc" Text="Would you like to add Deductions (Health / Dental / Vision / Life / Taxes) ?" sfwIsCaption="True" Visible="False" />
+                <sfwDropDownList ID="ddlIstrDeductionsFlag" sfwVisibleRule="VisibleRuleForNonDc" sfwEntityField="IsEstimateAddedFlag" CssClass="DropdownWidth" Visible="False">
+                  <ListItem />
+                  <ListItem Text="Yes" Value="Y" />
+                  <ListItem Text="No" Value="N" />
+                </sfwDropDownList>
+                <sfwPanel ID="pnlExistingPurchaseCalculations" GroupingText="&lt;b&gt;Existing Purchase Calculations&lt;/b&gt;" sfwCaption="Existing Purchase Calculations" sfwCollapsible="False" sfwVisibleRule="VisibleRuleServicePurchase">
+                  <items>
+                    <sfwLabel ID="lblLabel41" Text="Do you wish to include the “Remaining Service” of your existing purchase contract to be included in this benefit estimate? If Yes, check the box under 'Include Remaining Service'" sfwIsCaption="True" CssClass="alignleft" />
+                    <sfwGridView ID="grvBenefitServicePurchaseAll" AllowPaging="True" sfwShowEmptyTable="False" sfwTwoWayBinding="True" sfwEntityField="objBenefitCalculation.lstBenefitServicePurchaseAll" sfwGridEntity="entBenefitServicePurchase">
+                      <Columns>
+                        <TemplateField HeaderText="Purchase ID" Visible="False">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="ServicePurchaseHeaderId" CssClass="alignleft" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Purchase ID">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="ServicePurchaseHeaderId" CssClass="alignleft" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Type">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="IstrServicePurchaseType" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Action Status">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="IstrActionStatus" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Remaining Service">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:0.0000}" sfwEntityField="RemainingPsc" CssClass="alignleft" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Include Remaining Service">
+                          <ItemTemplate>
+                            <sfwCheckBox sfwEntityField="IstrIncludeRemainder" sfwDefaultValue="N" CssClass="alignleft" />
+                          </ItemTemplate>
+                        </TemplateField>
+                      </Columns>
+                    </sfwGridView>
+                  </items>
+                </sfwPanel>
+                <sfwLabel ID="capQdroAmount1" sfwVisibleRule="VisibleRuleForQDRO" Text="QDRO Amount : " sfwIsCaption="True" />
+                <sfwLabel ID="lblQdroAmount" sfwDataFormat="{0:C}" sfwVisibleRule="VisibleRuleForQDRO" sfwEntityField="objBenefitCalculation.QdroAmount" />
+                <sfwLabel ID="lblLabel2" sfwVisibleRule="IsTFFRServiceNill" Text="TFFR TIAA-CREF Service" sfwIsCaption="True" />
+                <sfwGridView ID="grvTffrTiaaService" AllowPaging="True" AllowSorting="True" sfwVisibleRule="IsTFFRServiceNill" sfwEntityField="lstTffrTiaaService" sfwGridEntity="entPersonTffrTiaaService">
+                  <Columns>
+                    <TemplateField HeaderText="Person ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="PersonId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="TFFR Service Months" ItemStyle.HorizontalAlign="Left">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="TffrService" CssClass="alignleft" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="TFFR Service Status">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="TffrServiceStatusDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Tffr Service Status ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="TffrServiceStatusId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Tffr Tiaa Service ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="TffrTiaaServiceId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="TIAA Service Months">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="TiaaService" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Tiaa Service Status ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="TiaaServiceStatusId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="TIAA Service Status" SortExpression="TiaaServiceStatusValue">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="TiaaServiceStatusDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+                <sfwButton ID="btnNext1" sfwMethodName="btnWizardNext_Click" sfwNavigationParameter="BenefitCalculationId" Text="Next" />
+                <sfwLabel ID="lblRetirementDate" sfwDataFormat="{0:d}" Visible="False" sfwEntityField="objBenefitCalculation.RetirementDate" />
+                <sfwLabel ID="lblBenefitCalculationId" Visible="False" sfwEntityField="BenefitCalculationId" />
+              </items>
+            </sfwPanel>
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsStep2" sfwRulesGroup="WizardStep2" sfwVisibleRule="VisibleRuleForWizardStep2" Title="Benefit Estimate - Step 2" sfwShowInHeader="True">
+          <items>
+            <sfwLabel ID="lblLabel33456" Text="&lt;br/&gt;&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwPanel ID="pnlUnusedSickLeave" sfwCaption="Unused Sick Leave Purchase" sfwVisibleRule="IsUnusedSickLeaveChecked">
+              <items>
+                <sfwTable ID="tblNewPage1" />
+                <sfwLabel ID="capUnusedSickLeaveHours" Text="Unused Sick Leave Purchase : &lt;br&gt; (Enter projected hours of unused sick leave at termination of employment) " sfwIsCaption="True" />
+                <sfwTextBox ID="txtUnusedSickLeaveHours" sfwEntityField="objSickLeavePurchase.objPrimaryServicePurchaseDetail.UnusedSickLeaveHours1" />
+                <sfwLabel ID="lblLabel12" Text=" hours" sfwIsCaption="True" />
+              </items>
+            </sfwPanel>
+            <sfwPanel ID="pnlConsolidatedPurchase" sfwCaption="Service Purchase" sfwVisibleRule="IsAdditionalServiceMonthsChecked">
+              <items>
+                <sfwGridView ID="grvConsolidatedPurchase" AllowPaging="True" sfwTwoWayBinding="True" sfwEntityField="lstConsolidatedPurchase" sfwGridEntity="entConsolidatedPurchaseWeb" AllowEditing="True">
+                  <Columns>
+                    <TemplateField HeaderText="Purchase Type">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="IstrConsolidatePurchaseType" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="From Date">
+                      <ItemTemplate>
+                        <sfwTextBox sfwEntityField="IdtFromDate" sfwDataFormat="{0:d}" sfwReadOnlyRule="IsAdditionalSCConsolidatedPurchaseType" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="To Date">
+                      <ItemTemplate>
+                        <sfwTextBox sfwDataFormat="{0:d}" sfwReadOnlyRule="IsAdditionalSCConsolidatedPurchaseType" sfwEntityField="IdtToDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Additional Service Credits" HeaderStyle.HorizontalAlign="Left">
+                      <ItemTemplate>
+                        <sfwTextBox sfwReadOnlyRule="IsPurchaseTypeOtherthanAdditionSC" sfwEntityField="IintAdditionalServiceCredits" sfwShowZero="True" sfwDefaultValue="0" CssClass="alignleft" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </items>
+            </sfwPanel>
+            <sfwPanel ID="pnlPaymentElection" sfwCaption="Service Purchase Payment Election" sfwVisibleRule="IsAdditionalServiceMonthsChecked">
+              <items>
+                <sfwLabel ID="lblLabel6" Text="&lt;font style=&quot; padding-right:5px; padding-left:5px;display:inline-block;white-space:normal; text-align:justify;&quot;&gt;As you near retirement, you should request an OFFICIAL estimate directly from NDPERS.  If you would like an OFFICIAL estimate prepared by NDPERS, &lt;/font&gt;" sfwIsCaption="True" />
+                <sfwLabel ID="lblLa" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwLabel ID="capIdecDownPaymentAmount" Text="&lt;b&gt;1.&lt;/b&gt; If you would like the payment schedule to consider a down payment, please enter Down Payment Amount : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtIdecDownPaymentAmount" sfwDataFormat="{0:C}" sfwEntityField="DownPayments" />
+                <sfwLabel ID="capIintNumberofPayments" Text="&lt;b&gt;2.&lt;/b&gt; If you would like the payment schedule to consider a specific number of payments, enter the Number of Payments : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtIintNumberofPayments" sfwDefaultValue="180" sfwEntityField="NumberOfPayments" />
+                <sfwLabel ID="lblLabel14" Text="&lt;ul class=&quot;steps&quot;&gt;&lt;li class=&quot;start&quot;&gt;Calculation Info&lt;/li&gt;&lt;li class=&quot;next&quot;&gt;Service Purchase&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Deductions&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Review&lt;/li&gt;&lt;li class=&quot;emptygray&quot;&gt;&lt;/li&gt;&lt;/ul&gt;" sfwIsCaption="True" />
+                <sfwLabel ID="capIdecPaymentAmount" Text="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;If you would like the payment schedule to consider a specific payment amount, enter the Payment Amount : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtIdecPaymentAmount" sfwDataFormat="{0:C}" sfwEntityField="PaymentAmount" />
+                <sfwLabel ID="lblLabe" Text="&lt;b&gt;3.&lt;/b&gt; Please select a Payment Frequency :" sfwIsCaption="True" />
+                <sfwDropDownList ID="ddlIstrWhatIfPaymentFrequency" DataTextField="description" DataValueField="code_value" sfwLoadType="CodeGroup" sfwLoadSource="330" sfwEntityField="PaymentFrequencyValue" />
+              </items>
+            </sfwPanel>
+            <sfwButton ID="btnPrevious" sfwMethodName="btnWizardPrevious_Click" Text="Previous" />
+            <sfwButton ID="btnNext2" sfwMethodName="btnWizardNext_Click" Text="Next" />
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsStep4" Title="Benefit Estimate - Summary" sfwShowInHeader="True">
+          <items>
+            <sfwLabel ID="lblLabel303" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwLiteral ID="ltrLiteral1" Text="Review Your Selections&lt;br/&gt;" />
+            <sfwLabel ID="lblLabel27" Text="Please review your selections; if correct,  click the Finish button at the bottom of this page.  If you need to change any information,&lt;br/&gt;click the Previous button and modify your selections." sfwIsCaption="True" />
+            <sfwPanel ID="pnlMemberDetailsSummary" sfwCaption="Member Details">
+              <items>
+                <sfwTable ID="tblNewPage4" />
+                <sfwLabel ID="lblLabel8" Text="Plan : " sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel9" sfwEntityField="objPlan.MssPlanName" />
+                <sfwLabel ID="lblLabel14" Text="&lt;ul class=&quot;steps&quot;&gt;&lt;li class=&quot;start&quot;&gt;Calculation Info&lt;/li&gt;&lt;li class=&quot;next&quot;&gt;Service Purchase&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Deductions&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Review&lt;/li&gt;&lt;li class=&quot;emptygray&quot;&gt;&lt;/li&gt;&lt;/ul&gt;" sfwIsCaption="True" />
+                <sfwLabel ID="lblBenefitacctty" sfwEntityField="objBenefitCalculation.BenefitAccountTypeDescription" />
+                <sfwLabel ID="lblLabel13" Text="Termination Date : " sfwIsCaption="True" />
+                <sfwLabel ID="lblTextBox1" sfwDataFormat="{0:d}" sfwEntityField="objBenefitCalculation.TerminationDate" />
+                <sfwLabel ID="lblLabel11" Text="Retirement Date : " sfwIsCaption="True" />
+                <sfwLabel ID="lblTextBox" sfwDataFormat="{0:d}" sfwEntityField="objBenefitCalculation.RetirementDate" />
+                <sfwLabel ID="lblLabel16" sfwVisibleRule="VisibleRuleForNonDc" Text="Monthly Salary Percent Increase : " sfwIsCaption="True" />
+                <sfwLabel ID="lblTextBox3" sfwVisibleRule="VisibleRuleForNonDc" sfwEntityField="objBenefitCalculation.PercentageSalaryIncrease" />
+                <sfwLabel ID="lblLabel17" sfwVisibleRule="VisibleRuleForNonDc" Text="Month Salary Increase Effective : " sfwIsCaption="True" />
+                <sfwLabel ID="lblTextBox4" sfwVisibleRule="VisibleRuleForNonDc" sfwEntityField="objBenefitCalculation.SalaryMonthIncreaseMonth" />
+                <sfwLabel ID="lblLabel15" sfwVisibleRule="VisibleRuleForNonDc" Text="Spouse Date of Birth : " sfwIsCaption="True" />
+                <sfwLabel ID="lblTextBox2" sfwDataFormat="{0:d}" sfwVisibleRule="VisibleRuleForNonDc" sfwEntityField="objMember.objSpouse.DateOfBirth" />
+                <sfwLabel ID="lblTextBox5" Visible="False" sfwEntityField="TffrTiaaServiceCredit" />
+                <sfwLabel ID="lblLabel18" sfwVisibleRule="VisibleRuleForNonDc" Text="Service Credit Change :" sfwIsCaption="True" />
+                <sfwCheckBox ID="chkCheckBox1" sfwDefaultValue="N" sfwTwoWayBinding="False" sfwVisibleRule="VisibleRuleForNonDc" sfwEntityField="UnusedServicePurchaseSelected" />
+                <sfwLabel ID="lblLabel19" sfwVisibleRule="VisibleRuleForNonDc" Text="Unused Sick Leave Purchase" sfwIsCaption="True" />
+                <sfwCheckBox ID="chkCheckBox2" sfwDefaultValue="N" sfwTwoWayBinding="False" sfwVisibleRule="VisibleRuleForNonDc" sfwEntityField="AdditionalSerivcePurchaseSelected" />
+                <sfwLabel ID="lblLabel20" sfwVisibleRule="VisibleRuleForNonDc" Text="Additional Service Months" sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel21" Text="TFFR / TIAA - CREF Service Credit " Visible="False" sfwIsCaption="True" />
+                <sfwCheckBox ID="chkCheckBox3" sfwDefaultValue="N" sfwTwoWayBinding="False" Visible="False" sfwEntityField="IsTffrTiaaServiceFlag" />
+                <sfwPanel ID="pnlPurchases" GroupingText="&lt;b&gt;Purchases&lt;/b&gt;" sfwCaption="Purchases" sfwCollapsible="False" sfwVisibleRule="VisibleRuleServicePurchase">
+                  <items>
+                    <sfwGridView ID="grvGridView" AllowPaging="True" sfwTwoWayBinding="True" sfwVisibleRule="VisibleRuleForNonDc" sfwEntityField="objBenefitCalculation.lstBenefitServicePurchaseAll" sfwGridEntity="entBenefitServicePurchase">
+                      <Columns>
+                        <TemplateField HeaderText="Purchase ID" Visible="False">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="ServicePurchaseHeaderId" CssClass="alignleft" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Purchase ID">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="ServicePurchaseHeaderId" CssClass="alignleft" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Type">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="IstrServicePurchaseType" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Action Status">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="IstrActionStatus" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Remaining Service">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:0.0000}" sfwEntityField="RemainingPsc" CssClass="alignleft" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Include Remaining Service">
+                          <ItemTemplate>
+                            <sfwCheckBox sfwEntityField="IstrIncludeRemainder" sfwDefaultValue="N" CssClass="alignleft" />
+                          </ItemTemplate>
+                        </TemplateField>
+                      </Columns>
+                    </sfwGridView>
+                  </items>
+                </sfwPanel>
+                <sfwLabel ID="lblLabel23" sfwVisibleRule="VisibleRuleForQDRO" Text="QDRO Amount : " sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel24" Text="&lt;ul class=&quot;steps&quot;&gt;&lt;li class=&quot;nextstart&quot;&gt;Calculation Info&lt;/li&gt;&lt;li class=&quot;startnext&quot;&gt;Service Purchase&lt;/li&gt;&lt;li class=&quot;next&quot;&gt;Deductions&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Review&lt;/li&gt;&lt;li class=&quot;emptygray&quot;&gt;&lt;/li&gt;&lt;/ul&gt;" sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel25" sfwVisibleRule="IsTFFRServiceNill" Text="TFFR TIAA-CREF Service" sfwIsCaption="True" />
+                <sfwGridView ID="grvGridView1" AllowPaging="True" AllowSorting="True" sfwVisibleRule="IsTFFRServiceNill" sfwEntityField="lstTffrTiaaService" sfwGridEntity="entPersonTffrTiaaService">
+                  <Columns>
+                    <TemplateField HeaderText="Person ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="PersonId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="TFFR Service Months">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="TffrService" CssClass="alignleft" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="TFFR Service Status">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="TffrServiceStatusDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Tffr Service Status ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="TffrServiceStatusId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Tffr Tiaa Service ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="TffrTiaaServiceId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="TIAA Service Months">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="TiaaService" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Tiaa Service Status ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="TiaaServiceStatusId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="TIAA Service Status" SortExpression="TiaaServiceStatusValue">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="TiaaServiceStatusDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </items>
+            </sfwPanel>
+            <sfwPanel ID="pnlUnusedSickLeavePurchases" sfwCaption="Unused Sick Leave Purchase" sfwVisibleRule="IsUnusedSickLeaveChecked">
+              <items>
+                <sfwTable ID="tblNewPage41" />
+                <sfwLabel ID="capUnusedSickLeaveHours1" Text="Unused Sick Leave Purchase :" sfwIsCaption="True" />
+                <sfwLabel ID="lblUnusedSickLeaveHours1" sfwEntityField="objSickLeavePurchase.objPrimaryServicePurchaseDetail.UnusedSickLeaveHours1" />
+              </items>
+            </sfwPanel>
+            <sfwPanel ID="pnlConsolidatedPurchaseSection" sfwCaption="Service Purchase" sfwVisibleRule="IsAdditionalServiceMonthsChecked">
+              <items>
+                <sfwGridView ID="grvConsolidatedPurchase1" AllowPaging="True" sfwEntityField="lstConsolidatedPurchase" sfwGridEntity="entConsolidatedPurchaseWeb">
+                  <Columns>
+                    <TemplateField HeaderText="Purchase Type">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="IstrConsolidatePurchaseType" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="From Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="IdtFromDate" sfwDataFormat="{0:d}" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="To Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="IdtToDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Additional Service Credits">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="IintAdditionalServiceCredits" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </items>
+            </sfwPanel>
+            <sfwPanel ID="pnlPaymentElectionSection" sfwCaption="Service Purchase Payment Election" sfwVisibleRule="VisibleRuleForWizardStep2">
+              <items>
+                <sfwTable ID="tblNewPage43" />
+                <sfwLabel ID="capIdecDownPaymentAmount1" Text="Down Payment Amount : " sfwIsCaption="True" />
+                <sfwLabel ID="lblIdecDownPaymentAmount" sfwDataFormat="{0:C}" sfwEntityField="DownPayments" />
+                <sfwLabel ID="capIdecPaymentAmount1" Text="Payment Amount : " sfwIsCaption="True" />
+                <sfwLabel ID="lblIdecPaymentAmount" sfwDataFormat="{0:C}" sfwEntityField="PaymentAmount" />
+                <sfwLabel ID="capIintNumberofPayments1" Text="Number of Payments : " sfwIsCaption="True" />
+                <sfwLabel ID="lblIintNumberofPayments4" sfwEntityField="NumberOfPayments" />
+                <sfwLabel ID="capPaymentFrequencyDescription" AssociatedControlID="lblPaymentFrequencyDescription" Text="Payment Frequency : " sfwIsCaption="True" />
+                <sfwLabel ID="lblPaymentFrequencyDescription" sfwEntityField="PaymentFrequencyDescription" />
+              </items>
+            </sfwPanel>
+            <sfwPanel ID="pnlDeductionsSection" sfwCaption="Deductions" sfwVisibleRule="VisibleRuleForWizardStep3">
+              <items>
+                <sfwPanel ID="pnlghdv" GroupingText="&lt;b&gt;Health / Dental / Vision&lt;/b&gt;" sfwCaption="Health / Dental / Vision Coverage" sfwCollapsible="False">
+                  <items>
+                    <sfwTable ID="tblNewPage8" />
+                    <sfwLabel ID="capCoverageCode1" Text="Level of Coverage" sfwIsCaption="True" />
+                    <sfwLabel ID="lbHealth" Text="Health :" sfwIsCaption="True" />
+                    <sfwLabel ID="lblLabel29" sfwEntityField="IstrHealthCoverage" />
+                    <sfwLabel ID="lblDental" Text="Dental :" sfwIsCaption="True" />
+                    <sfwLabel ID="lblLabel35" sfwEntityField="objDeductionCalculationWeb.objBenefitDentalDeduction.LevelOfCoverageDescription" />
+                    <sfwLabel ID="lblVision" Text="Vision :" sfwIsCaption="True" />
+                    <sfwLabel ID="lblLabel36" sfwEntityField="objDeductionCalculationWeb.objBenefitVisionDeduction.LevelOfCoverageDescription" />
+                  </items>
+                </sfwPanel>
+                <sfwPanel ID="pnllife" GroupingText="&lt;b&gt;Life&lt;/b&gt;" sfwCaption="Life" sfwCollapsible="False">
+                  <items>
+                    <sfwTable ID="tblNewPage7" />
+                    <sfwLabel ID="capIdecLifeBasicPremiumAmt1" Text="Basic Coverage Amount : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblIdecLifeBasicPremiumAmt" sfwDataFormat="{0:C}" sfwEntityField="IdecLifeBasicPremiumAmt" />
+                    <sfwLabel ID="capIdecLifeSupplementalPremiumAmount1" sfwVisibleRule="VisibleRuleForDeductionsLife" Text="Supplemental Coverage Amount : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblIdecLifeSupplementalPremiumAmount" sfwDataFormat="{0:C}" sfwVisibleRule="VisibleRuleForDeductionsLife" sfwEntityField="IdecLifeSupplementalPremiumAmount" />
+                    <sfwLabel ID="capIdecDependentSupplementalPremiumAmt1" sfwVisibleRule="VisibleRuleForDeductionsLife" Text="Dependent Supplemental Coverage Amount : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblIdecDependentSupplementalPremiumAmt" sfwDataFormat="{0:C}" sfwVisibleRule="VisibleRuleForDeductionsLife" sfwEntityField="IstrDepedendentCoverageOptionValue" />
+                    <sfwLabel ID="capIdecSpouseSupplementalPremiumAmt1" sfwVisibleRule="VisibleRuleForDeductionsLife" Text="Spouse Supplemental Coverage Amount : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblIdecSpouseSupplementalPremiumAmt" sfwDataFormat="{0:C}" sfwVisibleRule="VisibleRuleForDeductionsLife" sfwEntityField="IdecSpouseSupplementalPremiumAmt" />
+                  </items>
+                </sfwPanel>
+                <sfwPanel ID="pnlIT" GroupingText="&lt;b&gt;Income Tax Info&lt;/b&gt;" sfwCaption="Income Tax Info" sfwCollapsible="False">
+                  <items>
+                    <sfwTable ID="tblNewPage" />
+                    <sfwLabel ID="lblFedTax1" Text="Federal Tax :" sfwIsCaption="True" />
+                    <sfwLabel ID="lblBenefitPayeeTaxWithholdingId1" Visible="False" sfwEntityField="objDeductionCalculationWeb.objBenefitPayeeStateTaxWithholding.BenefitPayeeTaxWithholdingId" />
+                    <sfwLabel ID="lblStateTax1" Text="State Tax :" sfwIsCaption="True" />
+                    <sfwLabel ID="lblBenefitPayeeTaxWithholdingId12" Visible="False" sfwEntityField="objDeductionCalculationWeb.objBenefitPayeeStateTaxWithholding.BenefitPayeeTaxWithholdingId" />
+                    <sfwLabel ID="capTaxOptionValue1" Text="ND State Tax Option : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblLabel37" sfwEntityField="objDeductionCalculationWeb.objBenefitPayeeFedTaxWithholding.TaxOptionDescription" />
+                    <sfwLabel ID="capTaxOptionValue12" Text="ND State Tax Option : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblLabel40" sfwEntityField="objDeductionCalculationWeb.objBenefitPayeeStateTaxWithholding.TaxOptionDescription" />
+                    <sfwLabel ID="capMaritalStatusValue1" Text="Marital Status : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblLabel38" sfwEntityField="objDeductionCalculationWeb.objBenefitPayeeFedTaxWithholding.MaritalStatusDescription" />
+                    <sfwLabel ID="capMaritalStatusValue12" Text="Marital Status : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblLabel42" sfwEntityField="objDeductionCalculationWeb.objBenefitPayeeStateTaxWithholding.MaritalStatusDescription" />
+                    <sfwLabel ID="capTaxAllowance1" Text="Allowance : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblTaxAllowance1" sfwEntityField="objDeductionCalculationWeb.objBenefitPayeeFedTaxWithholding.TaxAllowance" />
+                    <sfwLabel ID="capTaxAllowance12" Text="Allowance : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblTaxAllowance12" sfwEntityField="objDeductionCalculationWeb.objBenefitPayeeStateTaxWithholding.TaxAllowance" />
+                    <sfwLabel ID="capAdditionalTaxAmount1" Text="Additional State Tax Amount :" sfwIsCaption="True" />
+                    <sfwLabel ID="lblAdditionalTaxAmount1" sfwDataFormat="{0:C}" sfwEntityField="objDeductionCalculationWeb.objBenefitPayeeFedTaxWithholding.AdditionalTaxAmount" />
+                    <sfwLabel ID="capAdditionalTaxAmount12" Text="Additional State Tax Amount :" sfwIsCaption="True" />
+                    <sfwLabel ID="lblAdditionalTaxAmount12" sfwDataFormat="{0:C}" sfwEntityField="objDeductionCalculationWeb.objBenefitPayeeStateTaxWithholding.AdditionalTaxAmount" />
+                  </items>
+                </sfwPanel>
+              </items>
+            </sfwPanel>
+            <sfwLabel ID="lblWssBenefitCalculatorId1" Visible="False" sfwEntityField="WssBenefitCalculatorId" />
+            <sfwButton ID="btnButton1" sfwMethodName="btnWizardPrevious_Click" Text="Previous" />
+            <sfwButton ID="btnButton3" sfwActiveForm="wfmBenefitCalculatorSummaryMaintenance" sfwMethodName="btnWizardFinish_Click" sfwNavigationParameter="aintBenefitCalculatorId=WssBenefitCalculatorId;aintPersonId=objMember.PersonId" Text="Finish" />
+          </items>
+        </sfwWizardStep>
+      </items>
+    </sfwWizard>
+  </items>
+  <loaddetails>
+    <entityfield ID="objPlan" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objBenefitCalculation" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objMember.objSpouse" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objBenefitCalculation.lstBenefitServicePurchaseAll" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstTffrTiaaService" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objSickLeavePurchase.objPrimaryServicePurchaseDetail" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstConsolidatedPurchase" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objDeductionCalculationWeb.objBenefitHealthDeduction" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objDeductionCalculationWeb.objBenefitDentalDeduction" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objDeductionCalculationWeb.objBenefitVisionDeduction" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objDeductionCalculationWeb" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objDeductionCalculationWeb.objBenefitPayeeFedTaxWithholding" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objDeductionCalculationWeb.objBenefitPayeeStateTaxWithholding" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objMember" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+  </loaddetails>
+  <ExtraFields />
+</form>

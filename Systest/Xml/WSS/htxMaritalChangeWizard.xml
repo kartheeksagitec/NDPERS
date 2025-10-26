@@ -1,0 +1,387 @@
+﻿<form ID="wfmMaritalChangeWizard" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2001" sfwType="FormLinkWizard" sfwTitle="Marital Status Change Wizard" version="3.5" sfwEntity="entMaritalStatusChangeWeb" sfwTemplate="MaritalChangeWizard.html" isBasedOnWfm="true">
+  <initialload>
+    <callmethods sfwMethodName="NewMSSPersonMaritalChangeWizard" />
+  </initialload>
+  <items>
+    <sfwWizard ID="wizMain">
+      <items>
+        <sfwWizardStep ID="wzsIntro" sfwRulesGroup="Intro" Title="Intro" sfwShowInHeader="True">
+          <items>
+            <sfwLiteral ID="ltrL1Calculator" Text="Name/Marital Status Change&lt;br/&gt;&lt;br/&gt;" />
+            <sfwPanel ID="pnlStepToChangeName" sfwCaption="Steps to change your Name/Marital Status">
+              <items />
+            </sfwPanel>
+            <sfwLabel ID="lblLabel7" Text="&lt;br/&gt;&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwButton ID="btnIntro" sfwMethodName="btnWizardNext_Click" Text="Change Name and Marital Status" />
+            <sfwButton ID="btnNameOnly" sfwMethodName="btnWizardNext_Click" Text="Change Name Only" />
+            <sfwButton ID="btnNameAndMarital" sfwMethodName="btnCancel_Click" />
+            <sfwTextBox ID="txtNameOnly" sfwEntityField="IblnChangeNameOnly" />
+            <sfwButton ID="btnChangeNameOnly" sfwMethodName="btnCancel_Click" />
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsStep" sfwRulesGroup="Step1" Title="Status Selection" sfwShowInHeader="True">
+          <items>
+            <sfwTable ID="tblStep" />
+            <sfwPanel ID="pnlStatusSelection" sfwCaption="Status Selection">
+              <items>
+                <sfwLabel ID="lblLab11" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwLabel ID="capLastName" AssociatedControlID="txtLastName" Text="Last Name : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtLastName" sfwEntityField="objPerson.LastName" />
+                <sfwLabel ID="capMiddleName" AssociatedControlID="txtMiddleName" Text="Middle Name : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtMiddleName" sfwEntityField="objPerson.MiddleName" />
+                <sfwLabel ID="capFirstName" AssociatedControlID="txtFirstName" Text="First Name : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtFirstName" sfwEntityField="objPerson.FirstName" />
+                <sfwLabel ID="capMaritalStatusValue" sfwVisibleRule="IsChangeNameAndMaritalStatus" Text="Marital Status : " sfwIsCaption="True" />
+                <sfwDropDownList ID="ddlMaritalStatusValue" DataTextField="description" DataValueField="code_value" sfwVisibleRule="IsChangeNameAndMaritalStatus" sfwLoadType="CodeGroup" sfwLoadSource="6002" sfwEntityField="objPerson.MaritalStatusValue" sfwValidationRules="IsMaritalStatusChangedFromMarriedToSingle;IsMaritalStatusChangeValid;IsMaritalStatusNotChanged" />
+                <sfwLabel ID="capMsChangeDate" sfwVisibleRule="IsChangeNameAndMaritalStatus" Text="Marital Status Change Date : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtMsChangeDate" sfwDataFormat="{0:d}" sfwVisibleRule="IsChangeNameAndMaritalStatus" sfwEntityField="objPerson.MsChangeDate" sfwValidationRules="IsMaritalStatusChangeDateNull;IsMaritalStatusChangeDateValid" />
+                <sfwLabel ID="lblLabel10" sfwVisibleRule="IsChangeNameAndMaritalStatus" SkinID="ReqInformation" Text="*" sfwIsCaption="True" />
+                <sfwLabel ID="lblMaritalStatusChangeMsg" sfwVisibleRule="IsChangeNameAndMaritalStatus" />
+                <sfwLabel ID="lblLabel112" Text="&lt;br/&gt;" sfwIsCaption="True" />
+              </items>
+            </sfwPanel>
+            <sfwButton ID="btnNext1" sfwMethodName="btnWizardNext_Click" Text="Next" />
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsStep1" sfwRulesGroup="Step2" sfwVisibleRule="IsMaritalStatusWidowed" Title="Death Notice" sfwShowInHeader="True">
+          <items>
+            <sfwPanel ID="pnlDeathNoticePlan1" sfwCaption="Death Notice">
+              <items>
+                <sfwTable ID="tblStep1" />
+                <sfwLabel ID="lblLabel221" Text="&lt;br/&gt;&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwLabel ID="capStatusDescription" Text="Ticket Status : " sfwIsCaption="True" />
+                <sfwLabel ID="lblStatusDescription" sfwEntityField="objDeathNoticeContactTicket.StatusDescription" />
+                <sfwLabel ID="lblDeceased" SkinID="ReqInformation" Text="*&amp;nbsp;" sfwIsCaption="True" />
+                <sfwLabel ID="capDeceasedMemberFlag" Text="Deceased Is :" sfwIsCaption="True" />
+                <sfwCheckBox ID="chkDeceasedSpouseFlag" sfwDefaultValue="Y" sfwEntityField="objDeathNoticeContactTicket.objDeathNotice.DeceasedSpouseFlag" />
+                <sfwLabel ID="lblLabel1" Text="Spouse" sfwIsCaption="True" />
+                <sfwCheckBox ID="chkDeceasedDependantFlag" sfwDefaultValue="N" sfwEntityField="objDeathNoticeContactTicket.objDeathNotice.DeceasedDependantFlag" />
+                <sfwLabel ID="lblLabel2" Text="Dependent" sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel3" Text="Name :" sfwIsCaption="True" />
+                <sfwTextBox ID="txtLabel3" sfwEntityField="objDeathNoticeContactTicket.objDeathNotice.DeceasedName" sfwValidationRules="RULE CHECK IF DECEASED DEPENDENT NAME IS NULL" />
+                <sfwLabel ID="lblLabel8" SkinID="ReqInformation" Text="*&amp;nbsp;" sfwIsCaption="True" />
+                <sfwLabel ID="capContactAddress" Text="Contact Address : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtContactAddress" sfwEntityField="objDeathNoticeContactTicket.objDeathNotice.ContactAddress" sfwValidationRules="RULE CHECK IF CONTACT ADDRESS IS NULL" />
+                <sfwLabel ID="lblLabel13" SkinID="ReqInformation" Text="*&amp;nbsp;" sfwIsCaption="True" />
+                <sfwLabel ID="capDeathDate" Text="Date of Death : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtDeathDate" sfwDataFormat="{0:d}" sfwEntityField="objDeathNoticeContactTicket.objDeathNotice.DeathDate" sfwValidationRules="RULE CHECK IF DATE OF DEATH IS NULL;Rule check id date of death is past date" />
+                <sfwLabel ID="lblLabel9" SkinID="ReqInformation" Text="*&amp;nbsp;" sfwIsCaption="True" />
+                <sfwLabel ID="capContactCity" Text="Contact City : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtContactCity" sfwEntityField="objDeathNoticeContactTicket.objDeathNotice.ContactCity" sfwValidationRules="RULE CHECK IF CONTACT CITY IS NULL" />
+                <sfwLabel ID="lblLabel14" SkinID="ReqInformation" Text="*&amp;nbsp;" sfwIsCaption="True" />
+                <sfwLabel ID="capContactName" Text="Contact Name : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtContactName" sfwEntityField="objDeathNoticeContactTicket.objDeathNotice.ContactName" sfwValidationRules="RULE CHECK IF CONTACT NAME IS NULL" />
+                <sfwLabel ID="lblLabel10" sfwVisibleRule="IsChangeNameAndMaritalStatus" SkinID="ReqInformation" Text="*&amp;nbsp;" sfwIsCaption="True" />
+                <sfwLabel ID="capContactStateValue" Text="Contact State : " sfwIsCaption="True" />
+                <sfwDropDownList ID="ddlContactStateValue" sfwDefaultValue="ND" sfwLoadType="CodeGroup" sfwLoadSource="150" sfwEntityField="objDeathNoticeContactTicket.objDeathNotice.ContactStateValue" sfwValidationRules="RULE CHECK IF CONTACT STATE IS BLANK" />
+                <sfwLabel ID="capContactPhone" Text="Contact Daytime Phone Number : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtContactPhone" sfwDataFormat="{0:(###)###-####}" sfwEntityField="objDeathNoticeContactTicket.objDeathNotice.ContactPhone" sfwValidationRules="RULE CHECK IF CONTACT PHONE IS NULL" />
+                <sfwLabel ID="lblLabel12" SkinID="ReqInformation" Text="*&amp;nbsp;" sfwIsCaption="True" />
+                <sfwLabel ID="capContactZip" Text="Contact Zip : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtContactZip" sfwEntityField="objDeathNoticeContactTicket.objDeathNotice.ContactZip" sfwValidationRules="RULE CHECK IF CONTACT ZIP IS NULL" />
+                <sfwLabel ID="lblLabel15" SkinID="ReqInformation" Text="*&amp;nbsp;" sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel" SkinID="ReqInformation" Text="&amp;nbsp;*  are mandatory fields." sfwIsCaption="True" />
+                <sfwButton ID="btnPrevious" sfwMethodName="btnWizardPrevious_Click" Text="Previous" />
+                <sfwButton ID="btnNext2" sfwMethodName="btnWizardNext_Click" Text="Next" />
+              </items>
+            </sfwPanel>
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsStep2" sfwRulesGroup="Step3" sfwVisibleRule="IsChangeNameAndMaritalStatus" Title="Contacts" sfwShowInHeader="True">
+          <items>
+            <sfwLabel ID="lblLabel331" Text="&lt;br/&gt;&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwButton ID="btnAdd" sfwMethodName="btnNewPopupDialog_Click" sfwRelatedControl="dgrContactResult" sfwRelatedDialogPanel="pnlContact" Text="Add New" />
+            <sfwPanel ID="pnlContactPlan" sfwCaption="Contact">
+              <items>
+                <sfwGridView ID="dgrContactResult" AllowPaging="True" sfwAllowNew="True" sfwEntityField="lstMSSPersonContact" sfwGridEntity="entMSSPersonContact">
+                  <Columns>
+                    <TemplateField>
+                      <ItemTemplate>
+                        <sfwButton sfwMethodName="btnOpenPopupDialog_Click" sfwRelatedDialogPanel="pnlContact" Text="Update" sfwRelatedControl="dgrContactResult" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Person Contact ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="PersonContactId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Contact Type">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="RelationshipDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="PERSLink ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="ContactPersonId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Person Name" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objContactPerson.FullName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Org Code ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="IstrOrgCodeID" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Org Name" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objOrganization.OrgName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Contact Name" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="ContactName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Status">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="StatusDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="POA Type" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="PoaContactTypeDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="IstrMSSGender" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="IstrMSSGender" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Name Prefix">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="IstrMSSNamePrefix" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="First Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="IstrMSSFirstName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Middle Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="IstrMSSMiddleName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Last Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="IstrMSSLastName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Name Suffix">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="IstrMSSNameSuffix" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="SSN" SortExpression="IstrMSSSSN">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:XXX-XX-0000}" sfwEntityField="IstrMSSLastFourDigitsOfSSN" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Address">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="AddressLine1" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Same AsMember Address">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="IstrSameAsMemberAddressFlag" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Contact DOB">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="IdtMSSContactDOB" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+                <sfwLabel ID="lblLabel16" Text="To remove a contact please update the status to 'Inactive'." sfwIsCaption="True" CssClass="alignleft fullwidth" />
+              </items>
+            </sfwPanel>
+            <sfwDialogPanel ID="pnlContact" sfwCaption="Contact Info">
+              <items>
+                <sfwTable ID="tblNewPage3" />
+                <sfwLabel ID="capIstrMSSNamePrefix" Text="Name Prefix : " sfwIsCaption="True" />
+                <sfwDropDownList ID="ddlIstrMSSNamePrefix" DataTextField="description" DataValueField="code_value" sfwLoadType="CodeGroup" sfwLoadSource="301" sfwEntityField="IstrMSSNamePrefix" />
+                <sfwLabel ID="capIstrMSSNameSuffix" Text="Name Suffix : " sfwIsCaption="True" />
+                <sfwDropDownList ID="ddlIstrMSSNameSuffix" DataTextField="description" DataValueField="code_value" sfwLoadType="CodeGroup" sfwLoadSource="302" sfwEntityField="IstrMSSNameSuffix" />
+                <sfwLabel ID="capIstrMSSFirstName" Text="First Name : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtIstrMSSFirstName" sfwEntityField="IstrMSSFirstName" />
+                <sfwLabel ID="capIstrMSSMiddleName" Text="Middle Name : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtIstrMSSMiddleName" sfwEntityField="IstrMSSMiddleName" />
+                <sfwLabel ID="capIstrMSSLastName" Text="Last Name : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtIstrMSSLastName" sfwEntityField="IstrMSSLastName" />
+                <sfwLabel ID="capIstrMSSGender" Text="Gender : " sfwIsCaption="True" />
+                <sfwDropDownList ID="ddlIstrMSSGender" DataTextField="description" DataValueField="code_value" sfwData1EqualTo="Y" sfwLoadType="CodeGroup" sfwLoadSource="300" sfwEntityField="IstrMSSGender" />
+                <sfwLabel ID="capIdtMSSContactDOB" Text="Date of Birth : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtIdtMSSContactDOB" sfwDataFormat="{0:d}" sfwEntityField="IdtMSSContactDOB" />
+                <sfwLabel ID="capIstrMSSSSN" Text="SSN : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtIstrMSSSSN" sfwDataFormat="{0:000-##-####}" sfwEntityField="IstrMSSSSN" />
+                <sfwLabel ID="capRelationshipDescription" Text="Relationship to Member : " sfwIsCaption="True" />
+                <sfwDropDownList ID="ddlRelationshipValue" DataTextField="description" DataValueField="code_value" sfwData1EqualTo="Y" sfwLoadType="CodeGroup" sfwLoadSource="304" sfwEntityField="RelationshipValue" />
+                <sfwLabel ID="capPoaContactTypeValue" Text="Power of Attorney Type : " Visible="False" sfwIsCaption="True" />
+                <sfwDropDownList ID="ddlPoaContactTypeValue" Visible="False" sfwLoadType="CodeGroup" sfwLoadSource="319" sfwEntityField="PoaContactTypeValue" />
+                <sfwLabel ID="lblSameAddressAsMember" Text="Same as Member Address : " sfwIsCaption="True" />
+                <sfwCheckBox ID="chkLintSameAsPersonAddressNew" sfwDefaultValue="N" sfwEntityField="SameAsMemberAddress" />
+                <sfwLabel ID="capStatusValue" Text="Status : " sfwIsCaption="True" />
+                <sfwDropDownList ID="ddlStatusValue" sfwDefaultValue="ACT" sfwLoadType="CodeGroup" sfwLoadSource="308" sfwEntityField="StatusValue" sfwValidationRules="Check if Status Null" />
+                <sfwLabel ID="capAddressLine1" Text="Address Line 1 : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtTextBox1" sfwEntityField="AddressLine1" />
+                <sfwLabel ID="capAddressLine2" Text="Address Line 2 : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtTextBox2" sfwEntityField="AddressLine2" />
+                <sfwLabel ID="capAddressCity" Text="City : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtTextBox3" sfwEntityField="AddressCity" />
+                <sfwLabel ID="capAddressStateValue" Text="State : " sfwIsCaption="True" />
+                <sfwDropDownList ID="ddlAddressStateValue" DataTextField="description" DataValueField="code_value" sfwDefaultValue="ND" sfwLoadType="CodeGroup" sfwLoadSource="150" sfwEntityField="AddressStateValue" />
+                <sfwLabel ID="capAddressCountryValue" Text="Address Country : " sfwIsCaption="True" />
+                <sfwDropDownList ID="ddlAddressCountryValue" DataTextField="description" DataValueField="code_value" sfwDefaultValue="0001" sfwLoadType="CodeGroup" sfwLoadSource="151" sfwEntityField="AddressCountryValue" />
+                <sfwLabel ID="capAddressZip4Code" Text=" Zip Code : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtAddressZipCode" sfwEntityField="AddressZipCode" sfwCustomAttributes="maxlength=5" />
+                <sfwTextBox ID="txtTextBox4" sfwEntityField="AddressZip4Code" sfwCustomAttributes="maxlength=4" />
+                <sfwLabel ID="capWorkPhoneNo" Text="Contact Telephone : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtTextBox5" sfwDataFormat="{0:(###)###-####}" sfwEntityField="ContactPhoneNo" />
+                <sfwLabel ID="capEmailAddress" Text="Email : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtTextBox6" sfwEntityField="EmailAddress" />
+                <sfwLabel ID="capIstrSuppressWarning" Text="Suppress Warning : " sfwIsCaption="True" />
+                <sfwCheckBox ID="chkIstrSuppressWarning" sfwDefaultValue="N" sfwEntityField="IstrMSSSuppressWarning" />
+                <sfwTextBox ID="txtContactPersonId" Visible="False" sfwEntityField="ContactPersonId" />
+                <sfwButton ID="btnFinishPopupDialogClick" sfwMethodName="btnFinishPopupDialog_Click" sfwRelatedControl="dgrContactResult" sfwRelatedDialogPanel="pnlContact" Text="Finish" />
+              </items>
+            </sfwDialogPanel>
+            <sfwButton ID="btnPrevious3" sfwMethodName="btnWizardPrevious_Click" Text="Previous" />
+            <sfwButton ID="btnNext3" sfwMethodName="btnWizardNext_Click" Text="Next" />
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsStep4" Title="Summary" sfwShowInHeader="True">
+          <items>
+            <sfwLabel ID="lblLabel441" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwPanel ID="pnlNewPage" sfwCaption="New Page" sfwCollapsible="False" sfwVisibleRule="IsChangeNameAndMaritalStatus">
+              <items>
+                <sfwTable ID="tblNewPage2" />
+                <sfwLabel ID="capMaritalStatusDescription" Text="Marital Status : " sfwIsCaption="True" />
+                <sfwLabel ID="lblMaritalStatusDescription" sfwEntityField="objPerson.MaritalStatusDescription" />
+              </items>
+            </sfwPanel>
+            <sfwTable ID="tblNewPage" />
+            <sfwPanel ID="pnlDeathNoticePlan" sfwCaption="Death Notice" sfwVisibleRule="IsMaritalStatusWidowed">
+              <items>
+                <sfwLabel ID="capStatusDescription" Text="Ticket Status : " sfwIsCaption="True" sfwVisibleRule="IsMaritalStatusWidowed" />
+                <sfwLabel ID="lblStatusDescription" sfwEntityField="objDeathNoticeContactTicket.StatusDescription" sfwVisibleRule="IsMaritalStatusWidowed" />
+                <sfwLabel ID="capDeceasedMemberFlag" Text="Deceased Is :" sfwIsCaption="True" sfwVisibleRule="IsMaritalStatusWidowed" />
+                <sfwCheckBox ID="chkDeceasedSpouseFlag1" sfwDefaultValue="Y" sfwEntityField="objDeathNoticeContactTicket.objDeathNotice.DeceasedSpouseFlag" sfwVisibleRule="IsMaritalStatusWidowed" sfwTwoWayBinding="False" />
+                <sfwLabel ID="lblLabel1" Text="Spouse" sfwIsCaption="True" sfwVisibleRule="IsMaritalStatusWidowed" />
+                <sfwLabel ID="capEssDeceasedMemberFlag" Text="Deceased Is : " sfwIsCaption="True" sfwVisibleRule="IsMaritalStatusWidowed" />
+                <sfwCheckBox ID="chkEssDeceasedMemberFlag" sfwDefaultValue="N" sfwTwoWayBinding="False" sfwEntityField="objDeathNoticeContactTicket.objDeathNotice.DeceasedMemberFlag" sfwVisibleRule="IsMaritalStatusWidowed" />
+                <sfwLabel ID="lblLabel6" Text="Member" sfwIsCaption="True" sfwVisibleRule="IsMaritalStatusWidowed" />
+                <sfwLabel ID="capDeathDate" Text="Date of Death : " sfwIsCaption="True" sfwVisibleRule="IsMaritalStatusWidowed" />
+                <sfwLabel ID="lblDeathDate" sfwDataFormat="{0:d}" sfwEntityField="objDeathNoticeContactTicket.objDeathNotice.DeathDate" sfwVisibleRule="IsMaritalStatusWidowed" />
+                <sfwCheckBox ID="chkDeceasedDependantFlag" sfwDefaultValue="N" sfwEntityField="objDeathNoticeContactTicket.objDeathNotice.DeceasedDependantFlag" sfwVisibleRule="IsMaritalStatusWidowed" />
+                <sfwLabel ID="lblLabel2" Text="Dependent &amp;nbsp;" sfwIsCaption="True" sfwVisibleRule="IsMaritalStatusWidowed" />
+                <sfwLabel ID="lblLabel3" Text="Name :" sfwIsCaption="True" sfwVisibleRule="IsMaritalStatusWidowed" />
+                <sfwLabel ID="lblLabel31" sfwEntityField="objDeathNoticeContactTicket.objDeathNotice.DeceasedName" sfwVisibleRule="IsMaritalStatusWidowed" />
+                <sfwLabel ID="lblLabel4" Text="DOB :" sfwIsCaption="True" sfwVisibleRule="IsMaritalStatusWidowed" />
+                <sfwLabel ID="lblTextBox" sfwDataFormat="{0:d}" sfwEntityField="objDeathNoticeContactTicket.objDeathNotice.DeceasedMemberDateOfBirth" sfwVisibleRule="IsMaritalStatusWidowed" />
+                <sfwLabel ID="lblLabel5" Text="Last 4 of SSN :" sfwIsCaption="True" sfwVisibleRule="IsMaritalStatusWidowed" />
+                <sfwLabel ID="lblTextBox1" Width="40px" sfwEntityField="objDeathNoticeContactTicket.objDeathNotice.DeaceaseMemberLast4DigitsOfSsn" sfwVisibleRule="IsMaritalStatusWidowed" />
+                <sfwLabel ID="capContactName" Text="Contact Name : " sfwIsCaption="True" sfwVisibleRule="IsMaritalStatusWidowed" />
+                <sfwLabel ID="lblContactName" sfwEntityField="objDeathNoticeContactTicket.objDeathNotice.ContactName" sfwVisibleRule="IsMaritalStatusWidowed" />
+                <sfwLabel ID="capContactAddress" Text="Contact Address : " sfwIsCaption="True" sfwVisibleRule="IsMaritalStatusWidowed" />
+                <sfwLabel ID="lblContactAddress" sfwEntityField="objDeathNoticeContactTicket.objDeathNotice.ContactAddress" sfwVisibleRule="IsMaritalStatusWidowed" />
+                <sfwLabel ID="capContactCity" Text="Contact City : " sfwIsCaption="True" sfwVisibleRule="IsMaritalStatusWidowed" />
+                <sfwLabel ID="lblContactCity" sfwEntityField="objDeathNoticeContactTicket.objDeathNotice.ContactCity" sfwVisibleRule="IsMaritalStatusWidowed" />
+                <sfwLabel ID="capContactStateValue" Text="Contact State : " sfwIsCaption="True" sfwVisibleRule="IsMaritalStatusWidowed" />
+                <sfwLabel ID="lblContactStateValue" sfwEntityField="objDeathNoticeContactTicket.objDeathNotice.ContactStateDescription" sfwVisibleRule="IsMaritalStatusWidowed" />
+                <sfwLabel ID="capContactZip" Text="Contact Zip : " sfwIsCaption="True" sfwVisibleRule="IsMaritalStatusWidowed" />
+                <sfwLabel ID="lblContactZip" sfwEntityField="objDeathNoticeContactTicket.objDeathNotice.ContactZip" sfwVisibleRule="IsMaritalStatusWidowed" />
+                <sfwLabel ID="capContactPhone" Text="Contact Daytime Phone Number : " sfwIsCaption="True" sfwVisibleRule="IsMaritalStatusWidowed" />
+                <sfwLabel ID="lblContactPhone" sfwDataFormat="{0:(###)###-####}" sfwEntityField="objDeathNoticeContactTicket.objDeathNotice.ContactPhone" sfwVisibleRule="IsMaritalStatusWidowed" />
+              </items>
+            </sfwPanel>
+            <sfwPanel ID="pnlContacts" sfwVisibleRule="IsChangeNameAndMaritalStatus">
+              <items>
+                <sfwGridView ID="grvGridView" AllowPaging="True" sfwEntityField="lstMSSPersonContact" sfwGridEntity="entMSSPersonContact">
+                  <Columns>
+                    <TemplateField HeaderText="Person Contact ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="PersonContactId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Contact Type">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="RelationshipDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="PERSLink ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="IstrPERLSinkId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="PERSLink ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="IstrPERLSinkId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Person Name" SortExpression="objContactPerson.FullName">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="IstrFullName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Org Code ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="IstrOrgCodeID" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Org Name" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objOrganization.OrgName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Status">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="StatusDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="POA Type" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="PoaContactTypeDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Address">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="AddressLine1" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Same As Member Address">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="IstrSameAsMemberAddressFlag" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </items>
+            </sfwPanel>
+            <sfwLabel ID="lblIstrConfirmationText" sfwEntityField="IstrConfirmationText" sfwRenderType="RichText" />
+            <sfwLabel ID="lblLabel" SkinID="ReqInformation" Text="&amp;nbsp;*  are mandatory fields." sfwIsCaption="True" />
+            <sfwButton ID="btnPrevious2" sfwMethodName="btnWizardPrevious_Click" Text="Previous" />
+            <sfwButton ID="btnFinish" sfwMethodName="btnWizardFinish_Click" sfwNavigationParameter="aintPersonID=objPerson.PersonId" Text="Finish" sfwRefreshFromObject="True" />
+            <sfwButton ID="btnOpenActive" sfwActiveForm="wfmMSSActiveMemberHomeMaintenance" sfwMethodName="btnOpen_Click" Text="Open" sfwNavigationParameter="aintPersonID=objPerson.PersonId" />
+            <sfwButton ID="btnOpenProfile" sfwActiveForm="wfmMSSProfileMaintenance" sfwMethodName="btnOpen_Click" Text="Open" sfwNavigationParameter="aintPersonID=objPerson.PersonId" />
+            <sfwButton ID="btnOpenInsurance" sfwActiveForm="wfmInsurancePlansMaintenance" sfwMethodName="btnOpen_Click" Text="Open" sfwNavigationParameter="aintPersonID=objPerson.PersonId" />
+            <sfwLabel ID="lblPersonId" Visible="False" sfwEntityField="objPerson.PersonId" />
+            <sfwLabel ID="lblEligible" sfwEntityField="lintEligibleInsurancePlans" sfwTwoWayBinding="True" sfwShowZero="True" />
+            <sfwLabel ID="lblEnroll" sfwEntityField="lintEnrolledInsurancePlans" sfwTwoWayBinding="True" sfwShowZero="True" />
+          </items>
+        </sfwWizardStep>
+      </items>
+    </sfwWizard>
+  </items>
+  <loaddetails>
+    <entityfield ID="objPerson" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objDeathNoticeContactTicket" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objDeathNoticeContactTicket.objDeathNotice" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstMSSPersonContact" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+  </loaddetails>
+  <ExtraFields />
+</form>

@@ -1,0 +1,182 @@
+﻿<form ID="wfmESSEmployeeLookup" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2021" sfwType="FormLinkLookup" sfwTitle="ESSEmployee Lookup" version="3.5" WebSite="NeoSpinWSS" sfwEntity="entPerson" sfwGridCollection="busPersonLookup.icolPerson" sfwTemplate="ESSEmployeeLookup.html" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmESSEmployeeLookup" isBasedOnWfm="true" sfwDefaultButtonID="btnSearch" sfwMaxCount="10000">
+  <initialload>
+    <query ID="cdoWssMemberRecordRequest" sfwQueryRef="entWssMemberRecordRequest.LookupEmployee" sfwMethodName="LoadEmployees" />
+    <query ID="cdoWssMemberRecordRequest1" sfwQueryRef="entWssMemberRecordRequest.subLookupEmployee" />
+  </initialload>
+  <items>
+    <sfwTable ID="Main" />
+    <sfwPanel ID="pnlHeader" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblN" />
+        <sfwLiteral ID="ltrlEmployee" Text="Employee Lookup" />
+        <sfwLabel ID="lblEnrollInOther457" Text="Enroll Any Employee In Other 457/403(b)." CssClass="lblTextAlignLeft hideControl" ForeColor="Red" sfwIsCaption="True" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlCriteria" sfwCaption="Criteria">
+      <items>
+        <sfwTable ID="tblCriteria" />
+        <sfwLabel ID="capLastName" Text="Last Name : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtLastName" sfwDataField="p.last_name" sfwOperator="like" sfwQueryID="cdoWssMemberRecordRequest" />
+        <sfwLabel ID="capFirstName" Text="First Name : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtFirstName" sfwDataField="p.first_name" sfwOperator="like" sfwQueryID="cdoWssMemberRecordRequest" />
+        <sfwLabel ID="capPersonId" Text="PERSLink ID : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtPersonIdLookUp" sfwDataField="p.person_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="cdoWssMemberRecordRequest" />
+        <sfwLabel ID="capSsn" Text="Last 4 Digits of SSN : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtSsn" sfwDataField="substring(p.ssn, 6, 4)" sfwOperator="like" sfwQueryID="cdoWssMemberRecordRequest" />
+        <sfwLabel ID="capPlanId" Text="Plan : " sfwIsCaption="True" />
+        <sfwDropDownList ID="ddlPlanId" DataTextField="plan_name" DataValueField="plan_id" sfwDataField="spa.plan_id" sfwQueryID="cdoWssMemberRecordRequest1" sfwLoadType="ServerMethod" sfwLoadSource="GetPlanByOrganization" />
+        <sfwLabel ID="lblMsgDisplay" Text="To display ALL employees click ‘Search’ without entering any criteria." sfwIsCaption="True" />
+        <sfwButton ID="btnSearch" sfwMethodName="btnSearch_Click" Text="Search" />
+        <sfwButton ID="btnReset" sfwMethodName="btnReset_Click" Text="Reset" />
+        <sfwButton ID="btnStoreSearch" sfwMethodName="btnStoreUserDefaults_Click" Text="Store Search" CssClass="hideControl" />
+        <sfwTextBox ID="txbOrgId" sfwDataField="b.org_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="SubQueryByOrg" Visible="False" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlResult" sfwCaption="Search Results">
+      <items>
+        <sfwTable ID="tblResult" />
+        <sfwButton ID="btnOpen" sfwActiveForm="wfmESSEmployeeMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="aintpersonid=PersonId;aintOrgId=objCurrentEmployment.OrgId" sfwRelatedControl="dgrResult" Text="Open" />
+        <sfwButton ID="btnUpdateTerminateButton" sfwActiveForm="wfmUpdateTermEmploymentMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="aintemploymentId=objCurrentEmployment.PersonEmploymentId;aintemploymentdetailid=objCurrentEmployment.objLatestEmploymentDetail.PersonEmploymentDtlId" sfwRelatedControl="dgrResult" Text="Open" />
+        <sfwButton ID="btnEnrollOther" sfwMethodName="btnOpen_Click" Text="Open" sfwActiveForm="wfmESSEnrollFourFiveSevenMaintenance" sfwRelatedControl="dgrResult" sfwNavigationParameter="aintemploymentId=objCurrentEmployment.PersonEmploymentId;aintemploymentdetailid=objCurrentEmployment.objLatestEmploymentDetail.PersonEmploymentDtlId" />
+        <sfwButton ID="btnExportExcel" sfwMethodName="btnColumnsToExport_Click" sfwRelatedControl="dgrResult" Text="Export To Excel" />
+        <sfwButton ID="btnTerminateButton" sfwActiveForm="wfmTerminateEmploymentWizard" sfwMethodName="btnOpen_Click" sfwNavigationParameter="aintemploymentId=objCurrentEmployment.PersonEmploymentId;aintemploymentdetailid=objCurrentEmployment.objLatestEmploymentDetail.PersonEmploymentDtlId" sfwRelatedControl="dgrResult" Text="Open" Visible="False" />
+        <sfwButton ID="btnNewTerminateEmployment" sfwActiveForm="wfmTerminateEmploymentWizard" sfwMethodName="btnNew_Click" sfwNavigationParameter="aintemploymentId=lblPersonEmploymentID;aintemploymentdetailid=lblPersonEmploymentDtlID;aintplanid=#0;astrchangetypevalue=#TEEM" Text="Terminate Employment" />
+        <sfwButton ID="btnOpenTerminateEmployment" sfwMethodName="btnOpen_Click" Text="Update - Terminate Employment" sfwActiveForm="wfmTerminateEmploymentWizard" sfwNavigationParameter="aintEmploymentChangeRequestID=lintTermEmploymentChangeRequestID;aintemploymentId=objCurrentEmployment.PersonEmploymentId;aintemploymentdetailid=objCurrentEmployment.objLatestEmploymentDetail.PersonEmploymentDtlId" sfwRelatedControl="dgrResult" />
+        <sfwLabel ID="lblEmploymentRequestID" />
+        <sfwLabel ID="lblPersonEmploymentDtlID" />
+        <sfwLabel ID="lblPersonEmploymentID" />
+        <sfwGridView AllowPaging="True" AllowSorting="True" ID="dgrResult" sfwSelection="Many" PageSize="250">
+          <Columns>
+            <TemplateField HeaderText="PERSLink ID">
+              <ItemTemplate>
+                <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpen" sfwEntityField="PersonId" CssClass="Alignleft fakelink" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="PERSLink ID">
+              <ItemTemplate>
+                <sfwLabel sfwLinkable="True" sfwRelatedControl="btnUpdateTerminateButton" ID="lbl2" sfwEntityField="PersonId" CssClass="Alignleft fakelink" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="PERSLink ID">
+              <ItemTemplate>
+                <sfwLabel sfwLinkable="True" sfwRelatedControl="btnTerminateButton" ID="lbl3" sfwEntityField="PersonId" CssClass="Alignleft fakelink" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="PERSLinkID">
+              <ItemTemplate>
+                <sfwLabel ID="lbl4" sfwRelatedControl="btnEnrollOther" Text="Label" sfwLinkable="True" sfwEntityField="PersonId" CssClass="Alignleft fakelink" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Last Name">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="LastName" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="First Name">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="FirstName" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Middle Name">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="MiddleName" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="&lt;div&gt;Last 4 Digits &lt;br/&gt; of SSN &lt;/div&gt;">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="LastFourDigitsOfSSN" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Date Of Birth">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="DateOfBirth" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Gender">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="GenderDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Marital Status">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="MaritalStatusDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Address">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objPersonCurrentAddress.AddrDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Org ID" Visible="False" sfwUseAsSortExpression="True">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objCurrentEmployment.OrgId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="&lt;div&gt;Employment &lt;br/&gt; Start Date &lt;/div&gt;">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="objCurrentEmployment.StartDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="&lt;div&gt; Employment&lt;br/&gt; End Date &lt;/div&gt;">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="objCurrentEmployment.EndDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Job Class">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objCurrentEmployment.objLatestEmploymentDetail.JobClassDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="&lt;div&gt;Employment &lt;br/&gt;Status &lt;/div&gt;" HeaderStyle.HorizontalAlign="Right">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objCurrentEmployment.objLatestEmploymentDetail.TypeDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="&lt;div&gt;Participation &lt;br/&gt;Status&lt;/div&gt;" HeaderStyle.HorizontalAlign="Center">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objCurrentEmployment.objLatestEmploymentDetail.StatusDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Seasonal">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objCurrentEmployment.objLatestEmploymentDetail.SeasonalDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Hourly">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objCurrentEmployment.objLatestEmploymentDetail.HourlyDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Appointed Official">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objCurrentEmployment.objLatestEmploymentDetail.OfficialListDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="&lt;div&gt; Elected Official’s &lt;br/&gt; Begin Term Date &lt;/div&gt;">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="objCurrentEmployment.objLatestEmploymentDetail.TermBeginDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="person_employment_id" Visible="False" sfwUseAsSortExpression="True">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objCurrentEmployment.PersonEmploymentId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="person_employment_dtl_id" Visible="False" sfwUseAsSortExpression="True">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objCurrentEmployment.objLatestEmploymentDetail.PersonEmploymentDtlId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="TermEmpId" Visible="False" sfwUseAsSortExpression="True">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="lintTermEmploymentChangeRequestID" />
+              </ItemTemplate>
+            </TemplateField>
+          </Columns>
+        </sfwGridView>
+      </items>
+    </sfwPanel>
+  </items>
+  <loaddetails />
+  <ExtraFields />
+</form>

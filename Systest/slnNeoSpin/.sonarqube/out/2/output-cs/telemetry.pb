@@ -1,0 +1,1 @@
+aRSC:\Sonarqube Codebase\Systest\Systest\slnNeoSpin\NeoSpinCommon\NeoSpinCommon.csprojò	CSharp7_3

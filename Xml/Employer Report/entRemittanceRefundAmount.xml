@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entRemittanceRefundAmount" sfwActive="True" sfwStatus="Review" sfwType="BusinessRule" sfwObjectID="busRemittanceRefundAmount" sfwParentEntity="entRemittance">
+  <rules>
+    <rule ID="IsApproveButtonVisible" sfwExpression="!(string.IsNullOrEmpty(this.icdoRemittance.refund_pend_by)) &amp;&amp; &#xA;!(this.icdoRemittance.refund_pend_by == RFunc.GetValue&lt;String&gt;(this, &quot;iobjPassInfo.istrUserID&quot;)) &amp;&amp; &#xA;!(this.icdoRemittance.refund_status_value == &quot;APRD&quot;) &amp;&amp; &#xA;!(this.icdoRemittance.refund_status_value == &quot;PRCD&quot;) &amp;&amp; &#xA;!(this.icdoRemittance.refund_status_value == &quot;RIA&quot;) &amp;&amp; &#xA;!(this.icdoRemittance.refund_status_value == &quot;RIAP&quot;)" sfwObjectBased="True" />
+    <rule ID="IsCancelButtonVisible" sfwExpression="!(this.icdoRemittance.refund_status_value == &quot;APRD&quot;) &amp;&amp; &#xA;!(this.icdoRemittance.refund_status_value == &quot;PRCD&quot;) &amp;&amp; &#xA;!(string.IsNullOrEmpty(this.icdoRemittance.refund_pend_by)) &amp;&amp; &#xA;!(this.icdoRemittance.refund_status_value == &quot;RIA&quot;) &amp;&amp; &#xA;!(this.icdoRemittance.refund_status_value == &quot;RIAP&quot;)" sfwObjectBased="True" />
+    <rule ID="IsRefundStatusNotApproved" sfwExpression="!(this.icdoRemittance.refund_status_value == &quot;APRD&quot;) &amp;&amp; &#xA;!(this.icdoRemittance.refund_status_value == &quot;PRCD&quot;) &amp;&amp; &#xA;!(this.icdoRemittance.refund_status_value == &quot;RIA&quot;) &amp;&amp; &#xA;!(this.icdoRemittance.refund_status_value == &quot;RIAP&quot;)" sfwObjectBased="True" />
+    <rule ID="Test" sfwExpression="(this.Test() == False)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForSaveButton" sfwExpression="(this.icdoRemittance.refund_status_value == &quot;RIAP&quot;)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForOverridenAmount" sfwExpression="!(this.icdoRemittance.refund_status_value == &quot;RIA&quot;) &amp;&amp; &#xA;!(this.icdoRemittance.refund_status_value == &quot;RIAP&quot;)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForLBLOverridenAmount" sfwExpression="(this.icdoRemittance.refund_status_value == &quot;RIA&quot;) || &#xA;(this.icdoRemittance.refund_status_value == &quot;RIAP&quot;)" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="IsApproveButtonVisible" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsRefundStatusNotApproved" sfwMode="All" sfwStatus="Active" />
+    <item ID="Test" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsCancelButtonVisible" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForSaveButton" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForOverridenAmount" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForLBLOverridenAmount" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror />
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <expressionfields />
+  <attributes>
+    <attribute sfwDataType="decimal" sfwType="Property" ID="ComputedRefundAmount" sfwValue="icdoRemittance.computed_refund_amount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="OverriddenRefundAmount" sfwValue="icdoRemittance.overridden_refund_amount" />
+    <attribute sfwDataType="string" sfwType="Property" ID="RefundToValue" sfwValue="icdoRemittance.refund_to_value" />
+    <attribute sfwDataType="string" sfwType="Property" ID="RefundStatusDescription" sfwValue="icdoRemittance.refund_status_description" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrDifferentOrgCode" sfwValue="istrDifferentOrgCode" />
+    <attribute sfwDataType="string" sfwType="Property" ID="RefundPendBy" sfwValue="icdoRemittance.refund_pend_by" />
+    <attribute sfwDataType="string" sfwType="Property" ID="RefundApprBy" sfwValue="icdoRemittance.refund_appr_by" />
+    <attribute sfwDataType="string" sfwType="Property" ID="CreatedBy" sfwValue="icdoRemittance.created_by" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="CreatedDate" sfwValue="icdoRemittance.created_date" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ModifiedBy" sfwValue="icdoRemittance.modified_by" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="ModifiedDate" sfwValue="icdoRemittance.modified_date" />
+    <attribute ID="Iintmemberperslinkid" sfwDataType="string" sfwPrivate="False" sfwValue="iintmemberperslinkid" sfwType="Property" />
+  </attributes>
+  <objectmethods>
+    <method ID="ApproveClick" sfwReturnType="ArrayList" />
+    <method ID="PendingClick" sfwReturnType="ArrayList" />
+    <method ID="CancelRefundClick" sfwReturnType="ArrayList" />
+    <method ID="btnReissueApprove_Click" sfwReturnType="ArrayList" />
+    <method ID="btnSaveReissue_Click" sfwReturnType="ArrayList" />
+  </objectmethods>
+</entity>

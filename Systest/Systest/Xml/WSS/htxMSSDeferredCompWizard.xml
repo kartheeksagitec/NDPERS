@@ -1,0 +1,182 @@
+﻿<form ID="wfmMSSDeferredCompWizard" sfwActive="True" sfwDescription="Def Comp" sfwStatus="Valid" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2001" sfwType="FormLinkWizard" sfwTitle="Deferred Compensation Wizard" version="3.5" sfwEntity="entMSSDefCompWeb" sfwTemplate="MSSDeferredCompWizard.html" isBasedOnWfm="true">
+  <initialload>
+    <callmethods sfwMethodName="NewDeferredCompWizard" />
+  </initialload>
+  <items>
+    <sfwWizard ID="wizMain">
+      <items>
+        <sfwTable ID="tblHeaderTemplate" />
+        <sfwWizardStep ID="wzsIntro" Title="Intro" sfwRulesGroup="Inro" sfwShowInHeader="True">
+          <items>
+            <sfwLiteral ID="ltrL1Calculator" Text="Deferred Compensation Plan Enrollment&lt;br/&gt;&lt;br/&gt;" />
+            <sfwlabel ID="lblProviderNote" Text="NOTE: You may only submit two online life insurance applications per day.  If you have already met this maximum, please log in the next day to submit your online application, or you may complete the Life Insurance Enrollment/Change SFN 53803 available on the NDPERS website." />
+            <sfwPanel ID="pnlDefferedCompensionplan" sfwCaption="Steps to complete your Enrollment">
+              <items>
+                <sfwLabel ID="lblLabel7" Text="&lt;br/&gt;&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwPanel ID="pnlOption" sfwCaption="Option" sfwCollapsible="False">
+                  <items>
+                    <sfwTable ID="tblNewPage15" />
+                    <sfwLabel ID="capIstrGHDVPlanOptionSelection" Text="Plan Enrollment Option Selection : " sfwIsCaption="True" />
+                    <sfwCascadingDropDownList ID="ddlPlanEnrollmentOptionValue" DataTextField="description" DataValueField="code_value" sfwLoadType="Method" sfwLoadSource="LoadPlanEnrollmentOption" sfwEntityField="objWSSPersonAccountEnrollmentRequest.PlanEnrollmentOptionValue" />
+                  </items>
+                </sfwPanel>
+              </items>
+            </sfwPanel>
+            <sfwLabel ID="lblLabel6" Text="&lt;br/&gt;&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwButton ID="btnIntro" sfwMethodName="btnWizardNext_Click" Text="Begin Process" />
+            <sfwButton ID="btnBeginClick" sfwMethodName="btnCancel_Click" Text="Begin Process" />
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsStep2" Title="Plan Enrollment" sfwRulesGroup="RegularEnrollment" sfwVisibleRule="IsPlanDefCompSelected" sfwShowInHeader="True">
+          <items>
+            <sfwLiteral ID="ltrLiteral" Text="Deferred Compensation Plan &lt;br/&gt;&lt;br/&gt;" />
+            <sfwLabel ID="lblLabel10" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwPanel ID="pnlRegEnrlPlan" sfwCaption="RegEnrl">
+              <items>
+                <sfwPanel ID="pnlRegEnrollment" sfwCaption="RegEnrl" sfwCollapsible="False">
+                  <items>
+                    <sfwTable ID="tblNewPage" />
+                    <sfwLabel ID="lblLabel11" Text="The following information is required in order to complete your enrollment:" sfwIsCaption="True" />
+                    <sfwLabel ID="lblLabel15" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                    <sfwLabel ID="capProviderOrgId" Text="Select an eligible provider   " sfwIsCaption="True" />
+                    <sfwCascadingDropDownList ID="ddlIstrOrgCodeID1" DataTextField="org_name" DataValueField="org_code" sfwLoadType="Method" sfwLoadSource="LoadDeferredCompProvidersNew" sfwEntityField="objDefCompProvider.IstrProviderOrgCode" />
+                    <sfwLabel ID="lblLabel1" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                    <sfwCascadingDropDownList ID="ddlDefCompCascadingDropDownList" DataTextField="ContactName" DataValueField="contact_id" sfwParameters="astrProviderOrgCode=ddlIstrOrgCodeID1" sfwParentControl="ddlIstrOrgCodeID1" sfwLoadType="Method" sfwLoadSource="LoadActiveContacts" sfwEntityField="objDefCompProvider.IintMSSContactId" />
+                    <sfwLabel ID="lblLiteral" Text="&lt;font style=&quot;padding-left:5px&quot;&gt;In order to participate with this provider, please work with &lt;a href=&quot;https://www.ndpers.nd.gov/sites/www/files/documents/members-additional-information/all-457-deferred-comp/provider-list.pdf &quot; target=&quot;_blank&quot;&gt;your selected agent&lt;/a&gt; to establish account.&lt;/font&gt;" sfwIsCaption="True" />
+                    <sfwLabel ID="capPersonEmploymentId" Text="Select your employer  " sfwIsCaption="True" />
+                    <sfwDropDownList ID="ddlPersonEmploymentId" DataTextField="istrOrgName" DataValueField="person_employment_id" sfwLoadType="Method" sfwLoadSource="LoadDeferredCompEmploymentsNew" sfwEntityField="objDefCompProvider.PersonEmploymentId" />
+                    <sfwLabel ID="capPerPayPeriodContributionAmt" Text="Amount to be deducted from each paycheck  " sfwIsCaption="True" />
+                    <sfwTextBox ID="txtPerPayPeriodContributionAmt2" sfwDataFormat="{0:C}" sfwEntityField="objDefCompProvider.PerPayPeriodContributionAmt" />
+                    <sfwLabel ID="capIsAppyEmployerMathchingContribution" Text="Apply Employer matching contribution : " sfwIsCaption="True" sfwVisibleRule="VRMSSIsEmployerMatchAvailable" />
+                    <sfwCheckBox ID="chkIsAppyEmployerMathchingContribution" sfwEntityField="objDefCompProvider.IsApplyEmployerMatchingContribution" sfwDefaultValue="Y" sfwTwoWayBinding="False" sfwVisibleRule="VRMSSIsEmployerMatchAvailable" />
+                    <sfwLabel ID="capStartDate" Text="Based on today’s date, the soonest your deduction&lt;br/&gt;can be authorized to start is for the pay period beginning  " sfwIsCaption="True" />
+                    <sfwTextBox ID="txtStartDate" sfwDataFormat="{0:d}" sfwEntityField="objDefCompProvider.StartDate" sfwValidationRules="IsStartDateWithinFutureLimit" />
+                    <sfwLabel ID="lblLabel12" Text="If this is not when you want your deduction to start, please change the date." sfwIsCaption="True" />
+                    <sfwLabel ID="lblPersonEmploymentDtlId" Visible="False" sfwEntityField="objDefCompProvider.objPersonAccountDeferredComp.PersonEmploymentDtlId" />
+                    <sfwLabel ID="lblPersonAccountId" Visible="False" sfwEntityField="objDefCompProvider.PersonAccountId" />
+                  </items>
+                </sfwPanel>
+              </items>
+            </sfwPanel>
+            <sfwButton ID="btnPrevious2" sfwMethodName="btnWizardPrevious_Click" Text="Back" />
+            <sfwButton ID="btnNext2" sfwMethodName="btnWizardNext_Click" Text="Next" />
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsStep4" Title="Acknowledgement" sfwRulesGroup="AcknowledgementRules" sfwVisibleRule="IsDefCompOrWaiveSelected" sfwShowInHeader="True">
+          <items>
+            <sfwPanel ID="pnlRegAcknow" sfwVisibleRule="IsPlanDefCompSelected">
+              <items>
+                <sfwLiteral ID="ltrL1Calculator" Text="Deferred Compensation Plan &lt;br/&gt;&lt;br/&gt;" />
+                <sfwLabel ID="lblLabel3" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel13" sfwEntityField="IstrDefCompAmountMessage" />
+                <sfwGridView ID="grvAck" sfwEntityField="lstDefCompAcknowledgement" CssClass="GridColumnHide">
+                  <Columns>
+                    <TemplateField HeaderText="Acknowledgement Text" SortExpression="acknowledgement_text">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="AcknowledgementText" sfwRenderType="RichText" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+                <sfwCheckBox ID="chkAcld" sfwEntityField="IstrAcknowledgement" />
+                <sfwLabel ID="lblCOnfirmText" sfwEntityField="IstrConfirmationText" sfwRenderType="RichText" CssClass="view-inline" />
+                <sfwTextBox ID="txtWssPersonAccountEnrollmentRequestId" Visible="False" sfwEntityField="WssPersonAccountEnrollmentRequestId" />
+                <sfwButton ID="btnPrevious3" sfwMethodName="btnWizardPrevious_Click" Text="Back" />
+                <sfwButton ID="btnNextProvider" sfwMethodName="btnWizardSaveAndNext_Click" />
+                <sfwLabel ID="lblPersonEmploymentDtlId" Visible="False" sfwEntityField="objDefCompProvider.objPersonAccountDeferredComp.PersonEmploymentDtlId" />
+                <sfwLabel ID="lblPersonAccountId1" Visible="False" sfwEntityField="PersonAccountId" />
+              </items>
+            </sfwPanel>
+            <sfwPanel ID="pnlWaiveAcknow" sfwVisibleRule="IsWaiveSelected">
+              <items>
+                <sfwTable ID="tblStep1" />
+                <sfwLiteral ID="ltrL1Calculator" Text="Deferred Compensation Plan &lt;br/&gt;&lt;br/&gt;" />
+                <sfwGridView ID="grvDefCompAcknowledgementGen" sfwEntityField="lstDefCompAcknowledgementGen" CssClass="GridColumnHide">
+                  <Columns>
+                    <TemplateField HeaderText="Acknowledgement Text" SortExpression="acknowledgement_text">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="AcknowledgementText" sfwRenderType="RichText" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+                <sfwGridView ID="grvDefCompAcknowledgementCheck" sfwEntityField="lstDefCompAcknowledgementCheck">
+                  <Columns>
+                    <TemplateField HeaderText="Acknowledgement Text" SortExpression="acknowledgement_text">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="AcknowledgementText" sfwRenderType="RichText" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+                <sfwCheckBox ID="chkConfim" sfwDefaultValue="N" sfwEntityField="IstrIsExpDefCompWaivedChecked" />
+                <sfwLabel ID="lblIstrConfirmationText" sfwEntityField="IstrConfirmationText" sfwRenderType="RichText" />
+                <sfwButton ID="btnPrevious" sfwMethodName="btnWizardPrevious_Click" Text="Back" />
+                <sfwButton ID="btnFinish1" sfwActiveForm="wfmCompletionMaintenance" sfwMethodName="btnWizardFinish_Click" sfwNavigationParameter="aintRequestID=WssPersonAccountEnrollmentRequestId" Text="Finish" />
+                <sfwLabel ID="lblPersonId1" Visible="False" sfwEntityField="objPerson.PersonId" />
+                <sfwTextBox ID="txtWssPersonAccountEnrollmentRequestId1" Visible="False" sfwEntityField="WssPersonAccountEnrollmentRequestId" />
+              </items>
+            </sfwPanel>
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsStep6" Title="Print For Your Records" sfwVisibleRule="IsPlanEnrollmentOptionNotWaive" sfwShowInHeader="True">
+          <items>
+            <sfwLiteral ID="ltrLiteral1" Text="Deferred Compensation Plan &lt;br/&gt;&lt;br/&gt;" />
+            <sfwLabel ID="lblLabel16" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwPanel ID="pnlEnrollmentDetPlan" sfwCaption="Enrollment Details" sfwVisibleRule="IsPlanDefCompSelected">
+              <items>
+                <sfwTable ID="tblNewPage3" />
+                <sfwLabel ID="lblLabel26" Text="Select an eligible provider   " sfwIsCaption="True" />
+                <sfwLabel ID="lblDdlCascadingDropDownList1" sfwEntityField="objDefCompProvider.objProviderOrganization.OrgName" />
+                <sfwLabel ID="lblLabel27" Text="Select the agent you contacted " sfwIsCaption="True" />
+                <sfwLabel ID="lblDdlCascadingDropDownList11" sfwEntityField="objDefCompProvider.objProviderAgentOrgContact.objContact.ContactName" />
+                <sfwLabel ID="lblLabel28" Text="Select your employer  " sfwIsCaption="True" />
+                <sfwLabel ID="lblDropDownList" sfwEntityField="objDefCompProvider.objPersonEmployment.objOrganization.OrgName" />
+                <sfwLabel ID="lblLabel29" Text="Amount to be deducted from each paycheck  " sfwIsCaption="True" />
+                <sfwLabel ID="lblTextBox2" sfwDataFormat="{0:C}" sfwEntityField="objDefCompProvider.PerPayPeriodContributionAmt" />
+                <sfwLabel ID="capIsAppyEmployerMathchingContributionPrnt" Text="Apply Employer matching contribution : " sfwIsCaption="True" />
+                <sfwLabel ID="chkIsAppyEmployerMathchingContributionPrnt" sfwEntityField="objDefCompProvider.IsApplyEmployerMatchingContributionDesc" />
+                <sfwLabel ID="lblLabel30" Text="Based on today’s date, the soonest your deduction&lt;br/&gt;can be authorized to start is for the pay period beginning  " sfwIsCaption="True" />
+                <sfwLabel ID="lblTextBox3" sfwDataFormat="{0:d}" sfwEntityField="objDefCompProvider.StartDate" />
+              </items>
+            </sfwPanel>
+            <sfwPanel ID="pnlRegularPlan" sfwCaption="Regular Enrollment Acknowledgement" sfwVisibleRule="IsPlanDefCompSelected">
+              <items>
+                <sfwLabel ID="lblLabel17" sfwEntityField="IstrDefCompAmountMessage" />
+                <sfwGridView ID="grvGridView" sfwEntityField="lstDefCompAcknowledgement">
+                  <Columns>
+                    <TemplateField HeaderText="Acknowledgement Text" SortExpression="acknowledgement_text">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="AcknowledgementText" sfwRenderType="RichText" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+                <sfwCheckBox ID="chkCheckBox" sfwEntityField="IstrAcknowledgement" />
+                <sfwLabel ID="lblLabel18" sfwEntityField="IstrConfirmationText" sfwRenderType="RichText" />
+                <sfwTextBox ID="txtTextBox" Visible="False" sfwEntityField="WssPersonAccountEnrollmentRequestId" />
+                <sfwButton ID="btnButton" Text="Return To Plans" sfwMethodName="btnOpen_Click" sfwActiveForm="wfmActiveMemberBenefitPlansMaintenance" sfwNavigationParameter="aintPersonID=PersonId" />
+                <sfwButton ID="btnButton1" Text="Print" OnClientClick="PrintCenterMiddle(e)" sfwMethodName="btnOpen_Click" />
+                <sfwLabel ID="lblLabel19" Visible="False" sfwEntityField="PersonEmploymentDtlId" />
+                <sfwLabel ID="lblLabel20" Visible="False" sfwEntityField="PersonAccountId" />
+              </items>
+            </sfwPanel>
+          </items>
+        </sfwWizardStep>
+      </items>
+    </sfwWizard>
+  </items>
+  <loaddetails>
+    <entityfield ID="objWSSPersonAccountEnrollmentRequest" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objDefCompProvider" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objDefCompProvider.objPersonAccountDeferredComp" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstDefCompAcknowledgement" sfwNewAutoLoad="True" sfwUpdateAutoLoad="True" />
+    <entityfield ID="lstDefCompAcknowledgementGen" sfwNewAutoLoad="True" sfwUpdateAutoLoad="True" />
+    <entityfield ID="lstDefCompAcknowledgementCheck" sfwNewAutoLoad="True" sfwUpdateAutoLoad="True" />
+    <entityfield ID="objPerson" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objDefCompProvider.objProviderOrganization" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objDefCompProvider.objProviderAgentOrgContact.objContact" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objDefCompProvider.objPersonEmployment.objOrganization" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+  </loaddetails>
+  <ExtraFields />
+</form>

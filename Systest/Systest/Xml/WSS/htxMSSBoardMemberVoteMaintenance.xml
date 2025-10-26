@@ -1,0 +1,46 @@
+﻿<form ID="wfmMSSBoardMemberVoteMaintenance" sfwType="FormLinkMaintenance" sfwEntity="entBoardMemberVote" sfwTitle="MSS Board Member Vote Maintenance" sfwActive="True" sfwStatus="Review" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmMSSBoardMemberVoteLookup" sfwRemoteObject="srvNeoSpinWSS" sfwTemplate="MSSBoardMemberVoteMaintenance.html" sfwFormObjectType="None" isBasedOnWfm="true">
+  <initialload>
+    <callmethods sfwMode="New" sfwMethodName="NewBoardMemberVote" />
+    <callmethods sfwMode="Update" sfwMethodName="NewBoardMemberVote" />
+  </initialload>
+  <items>
+    <sfwPanel ID="pnlMain" sfwCaption="Cast Your Vote">
+      <items>
+        <sfwTable ID="tblCastYourVote" />
+        <sfwLabel ID="lblIstrBoardMemberStaticText" sfwEntityField="IstrBoardMemberStaticText" sfwRenderType="RichText" />
+        <sfwGridView ID="grvLstBoardMemberElectionCandidates" sfwEntityField="lstBoardMemberElectionCandidates" sfwDataKeyNames="CandidateId" sfwDisplayOnly="True">
+          <Columns>
+            <TemplateField>
+              <ItemTemplate>
+                <sfwImage ID="imgImage" sfwMode="All" sfwEntityField="CandidatePicture" sfwImageUrlEntityField="CandidatePicture" />
+                <sfwLabel sfwEntityField="CandidateName" sfwLinkable="True" sfwRelatedControl="btnOpen" ID="CandidateName" />
+                <br />
+                <br />
+                <sfwLabel sfwEntityField="IstrCandidateBioFormatted" ID="CandidateBio" CssClass="hideControl" sfwRenderType="RichText" />
+              </ItemTemplate>
+            </TemplateField>
+          </Columns>
+        </sfwGridView>
+        <sfwButton sfwMethodName="btnOpen_Click" Text="Open" ID="btnOpen" sfwRelatedControl="grvLstBoardMemberElectionCandidates" sfwActiveForm="wfmMSSRetireeHomeMaintenance" />
+        <sfwButton ID="btnMemberVoteNow" sfwMethodName="btnCancel_Click" Text="Vote Now" sfwVisibleRule="Visible Rule - Has The Person Voted For Current Election" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlMSSBoardBallet" sfwCaption="Ballot">
+      <items>
+        <sfwTable ID="tblBallet" />
+        <sfwLabel ID="lblBalletStaticText" sfwEntityField="IstrBalletStaticText" sfwRenderType="RichText" />
+        <sfwLabel ID="lblElectionId" sfwEntityField="ElectionId" />
+        <sfwLabel ID="lblBoardMemberVoteId" sfwEntityField="BoardMemberVoteId" sfwTwoWayBinding="True" />
+        <sfwCheckBoxList ID="cblLstBoardMemberElectionCandidates" sfwEntityField="lstBoardMemberElectedCandidates" sfwLoadType="Method" RepeatColumns="1" sfwValueChecked="Y" sfwValueUnChecked="N" sfwLoadSource="LoadBoardMemberElectionCandidatesRandomOrder" DataTextField="candidate_name" DataValueField="candidate_id" sfwCheckBoxField="candidate_id" />
+        <sfwCheckBox ID="chkIsWriteInCandidateSelected" sfwEntityField="istrIsWriteInCandidateSelected" />
+        <sfwTextBox ID="txtIstrWriteInCandidateName" sfwEntityField="istrWriteInCandidateName" sfwWatermark="Other (write-in)" />
+        <sfwButton sfwMethodName="btnSave_Click" Text="Submit Vote" ID="btnSubmitVote" sfwNavigationParameter="aintElectionID=ElectionId" sfwResource="2001" sfwExecuteAfterSuccess="btnOpenPopupSuccess" sfwVisibleRule="Visible Rule - Has The Person Voted For Current Election" />
+        <sfwButton ID="btnOpenPopupSuccess" sfwMethodName="btnCancel_Click" Text="Refresh Data" CssClass="hideControl" />
+      </items>
+    </sfwPanel>
+  </items>
+  <loaddetails>
+    <entityfield ID="lstBoardMemberElectionCandidates" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstBoardMemberElectedCandidates" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+  </loaddetails>
+</form>

@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entPaymentBenefitOverpaymentHeader" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoPaymentBenefitOverpaymentHeader" sfwObjectID="busPaymentBenefitOverpaymentHeader" sfwTableName="sgt_payment_benefit_overpayment_header" sfwView="False" sfwParentEntity="entExtendBase">
+  <rules>
+    <rule ID="IsNewMode" sfwExpression="(this.iblnIsNewMode == True)" sfwObjectBased="True" />
+    <rule ID="IsOnline" sfwExpression="!(this.icdoPaymentBenefitOverpaymentHeader.is_online_flag == &quot;Y&quot;)" sfwObjectBased="True" />
+    <rule ID="IsRecoveryAvailable" sfwMessageId="6729" sfwExpression="!(this.IsRecoveryNotAvailble() == True)" sfwObjectBased="True" />
+    <rule ID="IsRecoveryNotAvailable" sfwExpression="(this.IsRecoveryNotAvailble() == True)" sfwObjectBased="True" />
+    <rule ID="IsSystemCreated" sfwExpression="!(this.icdoPaymentBenefitOverpaymentHeader.is_online_flag == &quot;Y&quot;)" sfwObjectBased="True" />
+    <rule ID="IsUpdateMode" sfwExpression="!(this.iblnIsNewMode == True)" sfwObjectBased="True" />
+    <rule ID="IsPAStatusCPorCLD" sfwMessageId="5655" sfwExpression="(this.IsPayeeAccountStatusCancelPendingOrCancelled() == True)" sfwObjectBased="True" />
+    <rule ID="IsRetroPaymentTypePopupBenefits" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.DoesPayeeAccountHasPriorPopup()" sfwMessageId="10407" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="IsRecoveryNotAvailable" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsOnline" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsSystemCreated" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsNewMode" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsUpdateMode" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="IsPAStatusCPorCLD" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsRetroPaymentTypePopupBenefits" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete>
+    <item ID="IsRecoveryAvailable" sfwMode="All" sfwStatus="Active" />
+  </validatedelete>
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <queries>
+    <query ID="rptPayeeReceivableOtherThanSatisfiedAndCancel" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT     'AA' AS INDICATOR,PER.PERSON_ID,PER.LAST_NAME,PER.FIRST_NAME,&#xD;&#xA;      CASE WHEN ADJ.BENEFIT_OVERPAYMENT_ID IS NULL &#xD;&#xA;       THEN SUM(ISNULL(DETL.AMOUNT,0))&#xD;&#xA;       ELSE SUM(ISNULL(ADJ.AMOUNT,0)+ISNULL(ADJ.INTEREST_AMOUNT,0)) END AS RECV_AMOUNT,&#xD;&#xA;      OVERHEAD.BENEFIT_OVERPAYMENT_ID,REC.PAYMENT_RECOVERY_ID&#xD;&#xA;FROM     SGT_PAYEE_ACCOUNT PA WITH(NOLOCK)&#xD;&#xA; INNER JOIN   SGT_PERSON PER WITH(NOLOCK)&#xD;&#xA;     ON PA.PAYEE_PERSLINK_ID = PER.PERSON_ID&#xD;&#xA; INNER JOIN   SGT_PAYMENT_BENEFIT_OVERPAYMENT_HEADER OVERHEAD WITH(NOLOCK)&#xD;&#xA;     ON OVERHEAD.PAYEE_ACCOUNT_ID = PA.PAYEE_ACCOUNT_ID&#xD;&#xA; LEFT OUTER JOIN  SGT_PAYEE_ACCOUNT_MONTHWISE_ADJUSTMENT_DETAIL ADJ WITH(NOLOCK)&#xD;&#xA;     ON ADJ.BENEFIT_OVERPAYMENT_ID = OVERHEAD.BENEFIT_OVERPAYMENT_ID&#xD;&#xA; LEFT OUTER JOIN  SGT_PAYMENT_BENEFIT_OVERPAYMENT_DETAIL DETL WITH(NOLOCK)&#xD;&#xA;     ON DETL.BENEFIT_OVERPAYMENT_ID = OVERHEAD.BENEFIT_OVERPAYMENT_ID&#xD;&#xA; LEFT OUTER JOIN  SGT_PAYMENT_RECOVERY REC WITH(NOLOCK)&#xD;&#xA;     ON REC.BENEFIT_OVERPAYMENT_ID = OVERHEAD.BENEFIT_OVERPAYMENT_ID&#xD;&#xA; LEFT OUTER JOIN  SGS_CODE_VALUE CV1 WITH(NOLOCK)&#xD;&#xA;     ON REC.PAYMENT_OPTION_ID = CV1.CODE_ID AND REC.PAYMENT_OPTION_VALUE = CV1.CODE_VALUE&#xD;&#xA; LEFT OUTER JOIN  SGS_CODE_VALUE CV2 WITH(NOLOCK)&#xD;&#xA;     ON REC.REPAYMENT_TYPE_ID = CV2.CODE_ID AND REC.REPAYMENT_TYPE_VALUE = CV2.CODE_VALUE&#xD;&#xA;WHERE     REC.STATUS_VALUE NOT IN ('CANL','SATD')&#xD;&#xA;     OR REC.STATUS_VALUE IS NULL&#xD;&#xA;GROUP BY    PER.PERSON_ID,PER.LAST_NAME,PER.FIRST_NAME,OVERHEAD.BENEFIT_OVERPAYMENT_ID,REC.PAYMENT_RECOVERY_ID,ADJ.BENEFIT_OVERPAYMENT_ID">
+      <parameters />
+    </query>
+    <query ID="rptPayeeReceivableWriteOff" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT     'ZZ' AS INDICATOR,PER.PERSON_ID,PER.LAST_NAME,PER.FIRST_NAME,&#xD;&#xA;      REC.RECOVERY_AMOUNT AS RECV_AMOUNT,SUM(ISNULL(RECHIST.PRINCIPLE_AMOUNT_PAID,0)) AS PAID_AMOUNT,&#xD;&#xA;      CV1.DESCRIPTION AS PAYMENT_OPTION,CV2.DESCRIPTION AS REPAYMENT_TYPE,&#xD;&#xA;      CV3.DESCRIPTION AS STATUS_DESCR,GETDATE() AS ESTIMATED_END_DATE,REC.PAYMENT_RECOVERY_ID&#xD;&#xA;FROM     SGT_PAYEE_ACCOUNT PA WITH(NOLOCK)&#xD;&#xA; INNER JOIN   SGT_PERSON PER WITH(NOLOCK)&#xD;&#xA;     ON PA.PAYEE_PERSLINK_ID = PER.PERSON_ID&#xD;&#xA; INNER JOIN   SGT_PAYMENT_BENEFIT_OVERPAYMENT_HEADER OVERHEAD WITH(NOLOCK)&#xD;&#xA;     ON OVERHEAD.PAYEE_ACCOUNT_ID = PA.PAYEE_ACCOUNT_ID &#xD;&#xA; INNER JOIN   SGT_PAYMENT_RECOVERY REC WITH(NOLOCK)&#xD;&#xA;     ON REC.BENEFIT_OVERPAYMENT_ID = OVERHEAD.BENEFIT_OVERPAYMENT_ID&#xD;&#xA; INNER JOIN   SGS_CODE_VALUE CV1 WITH(NOLOCK)&#xD;&#xA;     ON REC.PAYMENT_OPTION_ID = CV1.CODE_ID AND REC.PAYMENT_OPTION_VALUE = CV1.CODE_VALUE&#xD;&#xA; INNER JOIN   SGS_CODE_VALUE CV2 WITH(NOLOCK)&#xD;&#xA;     ON REC.REPAYMENT_TYPE_ID = CV2.CODE_ID AND REC.REPAYMENT_TYPE_VALUE = CV2.CODE_VALUE&#xD;&#xA; INNER JOIN   SGS_CODE_VALUE CV3 WITH(NOLOCK)&#xD;&#xA;     ON REC.STATUS_ID = CV3.CODE_ID AND REC.STATUS_VALUE = CV3.CODE_VALUE&#xD;&#xA; LEFT OUTER JOIN  SGT_PAYMENT_RECOVERY_HISTORY RECHIST WITH(NOLOCK)&#xD;&#xA;     ON RECHIST.PAYMENT_RECOVERY_ID = REC.PAYMENT_RECOVERY_ID&#xD;&#xA;WHERE     REC.STATUS_VALUE = 'WROF'&#xD;&#xA;     AND YEAR(REC.WRITE_OFF_DATE) IN (YEAR(GETDATE()),YEAR(GETDATE())-1)&#xD;&#xA;GROUP BY    PER.PERSON_ID,PER.LAST_NAME,PER.FIRST_NAME,REC.RECOVERY_AMOUNT,CV1.DESCRIPTION,CV2.DESCRIPTION,CV3.DESCRIPTION,REC.PAYMENT_RECOVERY_ID">
+      <parameters />
+    </query>
+    <query ID="LoadBenefitOverpaymentDetails" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT YEAR(DATE_OF_1099R) AS YEAR_1099R,HED.PAYEE_ACCOUNT_ID,&#xD;&#xA;  SUM(CASE WHEN &#xD;&#xA;    PIT.ITEM_TYPE_DIRECTION = 1 &#xD;&#xA;    AND PAYMENT_1099R_FLAG = 'Y' &#xD;&#xA;    AND VENDOR_FLAG= 'N'  &#xD;&#xA;    AND ALLOW_ROLLOVER_CODE_VALUE &lt;&gt; 'CRET'&#xD;&#xA;    AND REISSUE_ITEMS_FLAG = 'N'&#xD;&#xA;   THEN &#xD;&#xA;    DET.AMOUNT &#xD;&#xA;   ELSE 0 END&#xD;&#xA;   )  AS GROSS_AMOUNT,&#xD;&#xA; SUM(CASE WHEN CHECK_GROUP_CODE_VALUE = 'DEDT'  &#xD;&#xA; AND ALLOW_ROLLOVER_CODE_VALUE &lt;&gt; 'RRED'  &#xD;&#xA;   THEN ITEM_TYPE_DIRECTION * DET.AMOUNT ELSE 0 END) AS DEDUCTION_AMOUNT, --SINCE ITS POSTED AS NEGATIVE IN TABLE&#xD;&#xA; SUM(CASE WHEN &#xD;&#xA;     PIT.ITEM_TYPE_DIRECTION = 1 &#xD;&#xA;     AND PAYMENT_1099R_FLAG = 'Y' &#xD;&#xA;     AND VENDOR_FLAG= 'N'  &#xD;&#xA;     AND TAXABLE_ITEM_FLAG = 'Y'&#xD;&#xA;     AND ALLOW_ROLLOVER_CODE_VALUE &lt;&gt; 'CRET'&#xD;&#xA;     AND REISSUE_ITEMS_FLAG = 'N'&#xD;&#xA;    THEN &#xD;&#xA;     DET.AMOUNT &#xD;&#xA;    ELSE 0 END&#xD;&#xA;    )  AS TAXABLE_AMOUNT,&#xD;&#xA;    SUM(CASE WHEN (ITEM_TYPE_DIRECTION = 1 &#xD;&#xA;    AND PAYMENT_1099R_FLAG = 'Y' &#xD;&#xA;    AND VENDOR_FLAG= 'N'  &#xD;&#xA;     AND TAXABLE_ITEM_FLAG &lt;&gt; 'Y' &#xD;&#xA;    AND ALLOW_ROLLOVER_CODE_VALUE &lt;&gt; 'CRET'&#xD;&#xA;    AND REISSUE_ITEMS_FLAG = 'N')&#xD;&#xA;   THEN DET.AMOUNT ELSE 0 END) AS NONTAXABLE_AMOUNT,&#xD;&#xA; SUM(DET.AMOUNT ) AS NET_AMOUNT&#xD;&#xA;FROM SGT_PAYMENT_BENEFIT_OVERPAYMENT_HEADER HED WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_PAYMENT_BENEFIT_OVERPAYMENT_DETAIL DET WITH(NOLOCK)&#xD;&#xA; ON DET.BENEFIT_OVERPAYMENT_ID = HED.BENEFIT_OVERPAYMENT_ID&#xD;&#xA;INNER JOIN SGT_PAYMENT_ITEM_TYPE PIT WITH(NOLOCK)&#xD;&#xA; ON DET.PAYMENT_ITEM_TYPE_ID = PIT.PAYMENT_ITEM_TYPE_ID&#xD;&#xA;INNER JOIN SGT_PAYMENT_RECOVERY RECV WITH(NOLOCK)&#xD;&#xA; ON RECV.BENEFIT_OVERPAYMENT_ID = HED.BENEFIT_OVERPAYMENT_ID&#xD;&#xA; AND RECV.REPAYMENT_TYPE_VALUE IN ('LUSM','RPOT')&#xD;&#xA; AND RECV.STATUS_VALUE NOT IN ('CANL','PEAP','WROF')&#xD;&#xA;WHERE HED.PAYEE_ACCOUNT_ID = @PAYEEACCOUNTID&#xD;&#xA;GROUP BY HED.PAYEE_ACCOUNT_ID,YEAR(DATE_OF_1099R)&#xD;&#xA;ORDER BY YEAR(DATE_OF_1099R) DESC">
+      <parameters>
+        <parameter ID="@PAYEEACCOUNTID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="rptOverPaymentReport" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT DISTINCT C.PAYEE_PERSLINK_ID AS PERSON_ID,&#xD;&#xA;  A.PAYEE_ACCOUNT_ID,&#xD;&#xA;  P.LAST_NAME,P.MIDDLE_NAME,P.FIRST_NAME, &#xD;&#xA;  B.BENEFIT_OVERPAYMENT_ID as OVERPAYMENT_ID,&#xD;&#xA;  PAYMENT_RECOVERY_ID as RECOVERY_ID,&#xD;&#xA;  CV1.DESCRIPTION AS REPAYMENT_TYPE,&#xD;&#xA;  CV2.DESCRIPTION AS PAYMENT_OPTION,&#xD;&#xA;  CV3.DESCRIPTION AS REPAYMENT_STATUS,&#xD;&#xA;  RECOVERY_AMOUNT,GROSS_REDUCTION_AMOUNT,&#xD;&#xA;  DATE_OF_1099R,APPROVED_DATE&#xD;&#xA; FROM SGT_PAYMENT_BENEFIT_OVERPAYMENT_HEADER A&#xD;&#xA;  INNER JOIN SGT_PAYMENT_RECOVERY B &#xD;&#xA;  ON A.BENEFIT_OVERPAYMENT_ID = B.BENEFIT_OVERPAYMENT_ID&#xD;&#xA; INNER JOIN SGT_PAYEE_ACCOUNT C &#xD;&#xA;  ON A.PAYEE_ACCOUNT_ID = C.PAYEE_ACCOUNT_ID &#xD;&#xA;    INNER JOIN SGT_PERSON P&#xD;&#xA;  ON C.PAYEE_PERSLINK_ID = P.PERSON_ID&#xD;&#xA; INNER JOIN SGS_CODE_VALUE CV1 &#xD;&#xA;  ON B.REPAYMENT_TYPE_ID = CV1.CODE_ID &#xD;&#xA;   AND B.REPAYMENT_TYPE_VALUE = CV1.CODE_VALUE&#xD;&#xA; INNER JOIN SGS_CODE_VALUE CV2 &#xD;&#xA;  ON B.PAYMENT_OPTION_ID = CV2.CODE_ID &#xD;&#xA;   AND B.PAYMENT_OPTION_VALUE = CV2.CODE_VALUE&#xD;&#xA; INNER JOIN SGS_CODE_VALUE CV3 &#xD;&#xA;  ON B.STATUS_ID = CV3.CODE_ID &#xD;&#xA;   AND B.STATUS_VALUE = CV3.CODE_VALUE&#xD;&#xA; INNER JOIN SGT_PAYMENT_BENEFIT_OVERPAYMENT_DETAIL DET &#xD;&#xA;         ON A.BENEFIT_OVERPAYMENT_ID = DET.BENEFIT_OVERPAYMENT_ID&#xD;&#xA;         AND YEAR(DATE_OF_1099R) &lt; @APPROVAL_YEAR&#xD;&#xA;         AND APPROVED_DATE IS NOT NULL&#xD;&#xA;    ORDER BY PERSON_ID">
+      <parameters>
+        <parameter ID="@APPROVAL_YEAR" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="BenefitOverpaymentId" sfwType="Column" sfwValue="benefit_overpayment_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PayeeAccountId" sfwType="Column" sfwValue="payee_account_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AdjustmentReasonDescription" sfwType="Description" sfwValue="adjustment_reason_description" />
+    <attribute ID="AdjustmentReasonId" sfwType="Column" sfwValue="adjustment_reason_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="2901" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AdjustmentReasonValue" sfwType="Column" sfwValue="adjustment_reason_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="CalculateInterestFlag" sfwType="Column" sfwValue="calculate_interest_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="AmortizedInterestFlag" sfwType="Column" sfwValue="amortized_interest_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="IsOnlineFlag" sfwType="Column" sfwValue="is_online_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecTotalAmountDueFromPayee" sfwValue="idecTotalAmountDueFromPayee" />
+    <attribute sfwType="Collection" sfwEntity="entPaymentBenefitOverpaymentDetail" ID="lstPaymentBenefitOverpaymentDetail" sfwValue="iclbPaymentBenefitOverpaymentDetail" />
+    <attribute sfwType="Collection" sfwEntity="entPaymentRecovery" ID="lstPaymentRecovery" sfwValue="iclbPaymentRecovery" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="IdtDateafter60daysfromToday" sfwValue="idtDateafter60daysfromToday" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecGrossReductionAmount" sfwValue="idecGrossReductionAmount" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="IdtNextPaymentDateafter60daysfromToday" sfwValue="idtNextPaymentDateafter60daysfromToday" />
+    <attribute ID="objPayeeAccount" sfwType="Object" sfwEntity="entPayeeAccount" sfwValue="ibusPayeeAccount" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IintCurrenYear" sfwValue="iintCurrenYear" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecRecoveryAmount" sfwValue="idecRecoveryAmount" />
+    <attribute sfwDataType="string" sfwType="Property" ID="SuppressWarningsFlag" sfwValue="icdoPaymentBenefitOverpaymentHeader.suppress_warnings_flag" />
+  </attributes>
+</entity>

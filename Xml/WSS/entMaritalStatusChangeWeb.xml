@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entMaritalStatusChangeWeb" sfwActive="True" sfwStatus="Review" sfwType="BusinessRule" sfwObjectID="busMaritalStatusChangeWeb">
+  <rules>
+    <rule ID="IsChangeNameAndMaritalStatus" sfwExpression="(this.IsChangeNameOnly() == False)" sfwObjectBased="True" />
+    <rule ID="IsMaritalStatusChangedFromMarriedToSingle" sfwMessageId="10004" sfwExpression="(this.IsMaritalStatusChangedFromMarriedToSingle() == True)" sfwObjectBased="True" />
+    <rule ID="IsMaritalStatusChangeValid" sfwMessageId="10035" sfwExpression="!(this.IsMaritalStatusNotChanged() == True) &amp;&amp; &#xA;(this.IsMaritalStatusChangeValid() == False)" sfwObjectBased="True" />
+    <rule ID="IsMaritalStatusNotChanged" sfwMessageId="10036" sfwExpression="(this.IsMaritalStatusNotChanged() == True) &amp;&amp; &#xA;(this.IsChangeNameOnly() == False)" sfwObjectBased="True" />
+    <rule ID="IsMaritalStatusUnknown" sfwMessageId="10003" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPerson.icdoPerson.marital_status_value&quot;) == &quot;UNKN&quot;)" sfwObjectBased="True" />
+    <rule ID="IsMaritalStatusWidowed" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPerson.icdoPerson.marital_status_value&quot;) == &quot;WDOW&quot;) &amp;&amp; &#xA;(this.IsChangeNameOnly() == False)" sfwObjectBased="True" />
+    <rule ID="IsMultipleSpouseExists" sfwMessageId="10039" sfwExpression="(this.IsMultipleSpouseExists() == True)" sfwObjectBased="True" />
+    <rule ID="IsSpouseNotExists" sfwMessageId="10037" sfwExpression="(this.IsSpouseExists() == True)" sfwObjectBased="True" />
+    <rule ID="IsMaritalStatusChangeDateNull" sfwMessageId="1174" sfwExpression="(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusPerson.icdoPerson.ms_change_date&quot;) == DateTime.MinValue) &amp;&amp; &#xA;(this.IsChangeNameOnly() == False)" sfwObjectBased="True" />
+    <rule ID="IsMaritalStatusChangeDateValid" sfwMessageId="10245" sfwExpression="(this.IsChangeNameOnly() == False) &amp;&amp; &#xA;!(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusPerson.icdoPerson.ms_change_date&quot;) == DateTime.MinValue) &amp;&amp; &#xA;(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusPerson.icdoPerson.ms_change_date&quot;) &gt; RFunc.CurrentDate())" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="IsMaritalStatusWidowed" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsChangeNameAndMaritalStatus" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="IsMaritalStatusUnknown" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMaritalStatusChangedFromMarriedToSingle" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMaritalStatusChangeValid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMaritalStatusNotChanged" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsSpouseNotExists" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMultipleSpouseExists" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMaritalStatusChangeDateNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMaritalStatusChangeDateValid" sfwStatus="Active" sfwMode="All" />
+  </harderror>
+  <validatedelete />
+  <groupslist>
+    <group ID="Intro">
+      <item ID="IsChangeNameAndMaritalStatus" sfwMode="All" sfwStatus="Active" />
+    </group>
+    <group ID="Step1">
+      <item ID="IsMaritalStatusUnknown" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsMaritalStatusChangedFromMarriedToSingle" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsMaritalStatusChangeValid" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsMaritalStatusNotChanged" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsMaritalStatusChangeDateNull" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsMaritalStatusChangeDateValid" sfwStatus="Active" sfwMode="All" />
+    </group>
+    <group ID="Step2" />
+    <group ID="Step3">
+      <item ID="IsSpouseNotExists" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsMultipleSpouseExists" sfwMode="All" sfwStatus="Active" />
+    </group>
+  </groupslist>
+  <updateablecdo />
+  <commonproperties />
+  <expressionfields />
+  <attributes>
+    <attribute ID="objPerson" sfwType="Object" sfwEntity="entPerson" sfwValue="ibusPerson" />
+    <attribute ID="objDeathNoticeContactTicket" sfwType="Object" sfwEntity="entContactTicket" sfwValue="ibusDeathNoticeContactTicket" />
+    <attribute sfwType="Collection" sfwEntity="entMSSPersonContact" ID="lstMSSPersonContact" sfwValue="iclbMSSPersonContact" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrConfirmationText" sfwValue="istrConfirmationText" />
+    <attribute ID="IblnChangeNameOnly" sfwDataType="bool" sfwPrivate="False" sfwValue="iblnChangeNameOnly" sfwType="Property" />
+    <attribute ID="lintEligibleInsurancePlans" sfwDataType="int" sfwPrivate="False" sfwValue="intEligibleInsurancePlans" sfwType="Property" />
+    <attribute ID="lintEnrolledInsurancePlans" sfwDataType="int" sfwPrivate="False" sfwValue="intEnrolledInsurancePlans" sfwType="Property" />
+  </attributes>
+</entity>

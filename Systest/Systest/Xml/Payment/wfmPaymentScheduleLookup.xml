@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<form ID="wfmPaymentScheduleLookup" sfwActive="True" sfwStatus="Valid" sfwRemoteObject="srvPayment" sfwResource="1212 " sfwType="Lookup" sfwTitle="Payment Schedule Lookup" version="3.5" sfwEntity="entPaymentSchedule" sfwGridCollection="busPaymentScheduleLookup.iclbPaymentSchedule">
+  <initialload>
+    <query ID="cdoPaymentSchedule" sfwQueryRef="entPaymentSchedule.Lookup" sfwMethodName="LoadPaymentSchedules" />
+  </initialload>
+  <sfwTable ID="Main">
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlCriteria" sfwCaption="Criteria">
+          <sfwTable CssClass="Table" ID="tblCriteria">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capPaymentDate" Text="Benefit Payment Date : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtPaymentDate" sfwDataField="payment_date" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="=" sfwQueryID="cdoPaymentSchedule" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capEffectiveDate" Text="Check/ACH Effective Date : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtEffectiveDate" sfwDataField="effective_date" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="=" sfwQueryID="cdoPaymentSchedule" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capScheduleTypeValue" Text="Schedule Type : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlScheduleTypeValue" sfwDataField="schedule_type_value" sfwOperator="like" sfwQueryID="cdoPaymentSchedule" sfwLoadType="Query" sfwLoadSource="entPaymentSchedule.LoadSheduleTypes" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capStatusValue" Text="Status : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlStatusValue" sfwDataField="status_value" sfwOperator="like" sfwQueryID="cdoPaymentSchedule" sfwLoadType="CodeGroup" sfwLoadSource="2502" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capActionStatusValue" Text="Action Status : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlActionStatusValue" sfwDataField="action_status_value" sfwOperator="like" sfwQueryID="cdoPaymentSchedule" sfwLoadType="CodeGroup" sfwLoadSource="2503" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capProcessDate" Text="Processed Date : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtProcessDate" sfwDataField="process_date" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="=" sfwQueryID="cdoPaymentSchedule" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnSearch" sfwMethodName="btnSearch_Click" Text="Search" />
+                <sfwButton ID="btnReset" sfwMethodName="btnReset_Click" Text="Reset" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwButton ID="btnStoreSearch" sfwMethodName="btnStoreUserDefaults_Click" Text="StoreSearch" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlResult" sfwCaption="Search Results">
+          <sfwTable CssClass="Table" ID="tblResult">
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnNew" sfwActiveForm="wfmPaymentScheduleMaintenance" sfwMethodName="btnNew_Click" Text="New" />
+                <sfwButton ID="btnOpen" sfwActiveForm="wfmPaymentScheduleMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintpaymentscheduleid=PaymentScheduleId" sfwRelatedControl="dgrResult" Text="Open" sfwDisableViewOnly="True" />
+                <sfwButton ID="btnExportExcel" sfwMethodName="btnColumnsToExport_Click" sfwRelatedControl="dgrResult" Text="Export To Excel" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwGridView AllowPaging="True" AllowSorting="True" ID="dgrResult" sfwSelection="Many">
+                  <Columns>
+                    <TemplateField HeaderText="Payment Schedule ID">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpen" sfwEntityField="PaymentScheduleId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Benefit Payment Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="PaymentDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Check/ACH Effective Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EffectiveDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Schedule Type">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="ScheduleTypeDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Status">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="StatusDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Action Status">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="ActionStatusDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Check Message">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="CheckMessage" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Processed Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="ProcessDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+  </sfwTable>
+  <loaddetails />
+</form>

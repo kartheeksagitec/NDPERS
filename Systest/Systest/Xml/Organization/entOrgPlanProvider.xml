@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entOrgPlanProvider" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvOrganization" sfwType="BusinessRule" sfwMainCDO="icdoOrgPlanProvider" sfwObjectID="busOrgPlanProvider" sfwTableName="sgt_org_plan_provider">
+  <rules>
+    <rule ID="IF PLAN IS RETR" sfwMessageId="4023" sfwExpression="!(this.icdoOrgPlanProvider.provider_org_id == 0) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entOrgPlanProvider.PROVIDER CANNOT BE ADDED FOR RETR PLANS&quot;, this.ibusOrgPlan.ibusPlan.icdoPlan.plan_id) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK FOR SAME PROVIDER EXISTS" sfwMessageId="4096" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entOrgPlanProvider.CHECK_FOR_SAME_PROVIDER_EXISTS&quot;, this.icdoOrgPlanProvider.provider_org_id, this.icdoOrgPlanProvider.org_plan_id, this.icdoOrgPlanProvider.org_plan_provider_id) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK ORG IS NOT PROVIDER" sfwMessageId="4097" sfwExpression="!(this.icdoOrgPlanProvider.provider_org_id == 0) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusProviderOrg.icdoOrganization.org_type_value&quot;) != &quot;PRVD&quot;) &amp;&amp; &#xA;!(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entOrgPlanProvider.CHECK_ORG_EXISTS&quot;, this.icdoOrgPlanProvider.provider_org_id) == 0)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK ORG IS VALID" sfwMessageId="4098" sfwExpression="!(this.icdoOrgPlanProvider.provider_org_id == 0) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entOrgPlanProvider.CHECK_ORG_EXISTS&quot;, this.icdoOrgPlanProvider.provider_org_id) == 0)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK PROVIDER ORG IS NULL" sfwMessageId="4099" sfwExpression="(this.icdoOrgPlanProvider.provider_org_id == 0)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK STATUS IS NULL" sfwMessageId="4100" sfwExpression="(string.IsNullOrEmpty(this.icdoOrgPlanProvider.status_value))" sfwObjectBased="True" />
+    <rule ID="VALIDATE PROVIDER ORG" sfwMessageId="4024" sfwExpression="!(this.icdoOrgPlanProvider.provider_org_id == 0) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusProviderOrg.icdoOrganization.org_type_value&quot;) == &quot;PRVD&quot;) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entOrgPlanProvider.PROVIDER ORG SHOULD BE IN SAME PLAN&quot;, this.icdoOrgPlanProvider.provider_org_id, this.ibusOrgPlan.ibusPlan.icdoPlan.plan_id) &lt; 1)" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror>
+    <item ID="IF PLAN IS RETR" sfwMode="All" sfwStatus="Active" />
+    <item ID="VALIDATE PROVIDER ORG" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK FOR SAME PROVIDER EXISTS" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK PROVIDER ORG IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK ORG IS NOT PROVIDER" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK STATUS IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK ORG IS VALID" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <updateablecdo />
+  <queries>
+    <query ID="LOAD_OTHER_PLAN_PROVIDERS" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT ORG.ORG_NAME AS ProviderOrgName,OPP.STATUS_ID,OPP.STATUS_VALUE,OPP.ORG_PLAN_PROVIDER_ID FROM SGT_ORG_PLAN_PROVIDER OPP &#xD;&#xA;LEFT JOIN SGT_ORGANIZATION ORG ON ORG.ORG_ID = OPP.PROVIDER_ORG_ID&#xD;&#xA;LEFT JOIN SGT_ORG_PLAN OP ON OP.ORG_PLAN_ID=OPP.ORG_PLAN_ID&#xD;&#xA;LEFT JOIN SGT_PLAN SP ON SP.PLAN_ID=OP.PLAN_ID&#xD;&#xA;WHERE OPP.ORG_PLAN_ID=@ORG_PLAN_ID AND OPP.ORG_PLAN_PROVIDER_ID &lt;&gt; @ORG_PLAN_PROVIDER_ID">
+      <parameters>
+        <parameter ID="@ORG_PLAN_ID" sfwDataType="int" />
+        <parameter ID="@ORG_PLAN_PROVIDER_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="PROVIDER CANNOT BE ADDED FOR RETR PLANS" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_PLAN &#xD;&#xA;WHERE PLAN_ID=@PLANID AND RETIREMENT_TYPE_VALUE ='DB'&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@PLANID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="PROVIDER ORG SHOULD BE IN SAME PLAN" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_ORG_PLAN &#xD;&#xA;WHERE ORG_ID=@ORG_ID AND PLAN_ID=@PLAN_ID">
+      <parameters>
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+        <parameter ID="@PLAN_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="CHECK_FOR_SAME_PROVIDER_EXISTS" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) &#xD;&#xA;&#xD;&#xA;from dbo.SGT_ORG_PLAN_PROVIDER&#xD;&#xA;&#xD;&#xA;where PROVIDER_ORG_ID =@PROVIDER_ORG_ID and ORG_PLAN_ID =@ORG_PLAN_ID AND ORG_PLAN_PROVIDER_ID &lt;&gt; @ORG_PLAN_PROVIDER_ID">
+      <parameters>
+        <parameter ID="@PROVIDER_ORG_ID" sfwDataType="int" />
+        <parameter ID="@ORG_PLAN_ID" sfwDataType="int" />
+        <parameter ID="@ORG_PLAN_PROVIDER_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="CHECK_ORG_EXISTS" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_ORGANIZATION WHERE ORG_ID=@ORG_ID AND STATUS_VALUE='ACTV'">
+      <parameters>
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="OrgPlanProviderId" sfwType="Column" sfwValue="org_plan_provider_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="OrgPlanId" sfwType="Column" sfwValue="org_plan_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ProviderOrgId" sfwType="Column" sfwValue="provider_org_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusDescription" sfwType="Description" sfwValue="status_description" />
+    <attribute ID="StatusId" sfwType="Column" sfwValue="status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="407" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusValue" sfwType="Column" sfwValue="status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ProviderOrgName" sfwValue="icdoOrgPlanProvider.ProviderOrgName" />
+    <attribute ID="objOrganization" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusOrganization" />
+    <attribute ID="objOrgPlan" sfwType="Object" sfwEntity="entOrgPlan" sfwValue="ibusOrgPlan" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrOrgCodeID" sfwValue="icdoOrgPlanProvider.istrOrgCodeID" />
+    <attribute ID="objProviderOrg" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusProviderOrg" />
+    <attribute sfwType="Collection" sfwEntity="entOrgPlanProvider" ID="lstOtherOrgPlanProvider" sfwValue="iclbOtherOrgPlanProvider" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPlanRateLink" sfwValue="icdoOrgPlanProvider.istrPlanRateLink" />
+  </attributes>
+</entity>

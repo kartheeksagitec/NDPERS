@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entOrgBank" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvOrganization" sfwType="BusinessRule" sfwMainCDO="icdoOrgBank" sfwObjectID="busOrgBank" sfwTableName="sgt_org_bank">
+  <rules>
+    <rule ID="RULE CHECK ACCOUNT NO IS NULL" sfwMessageId="4012" sfwExpression="(string.IsNullOrEmpty(this.icdoOrgBank.account_no))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK ACCOUNT TYPE IS NULL" sfwMessageId="4014" sfwExpression="(string.IsNullOrEmpty(this.icdoOrgBank.account_type_value))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK BANK ORG ID IS NULL" sfwMessageId="4016" sfwExpression="(this.icdoOrgBank.bank_org_id == 0)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK BANK ORGID IS TYPE OF BANK" sfwMessageId="4017" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusBankOrg.icdoOrganization.org_type_value&quot;) != &quot;BANK&quot;) &amp;&amp; &#xA;!(this.icdoOrgBank.bank_org_id == 0)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK COUNT MORE THAN ONE BANK FOR USAGE NEW" sfwMessageId="4019" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entOrgBank.CountForOrgBankNew&quot;, this.icdoOrgBank.usage_value, this.icdoOrgBank.org_id) &gt; 0) &amp;&amp; &#xA;(this.icdoOrgBank.status_value == &quot;ACTV&quot;)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK COUNT MORE THAN ONE BANK FOR USAGE UPDATE" sfwMessageId="4019" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entOrgBank.CountForOrgBankUpdate&quot;, this.icdoOrgBank.usage_value, this.icdoOrgBank.org_id, this.icdoOrgBank.org_bank_id) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK ORG BANK STATUS IS NULL" sfwMessageId="4018" sfwExpression="(string.IsNullOrEmpty(this.icdoOrgBank.status_value))" sfwObjectBased="True" />
+    <rule ID="RULE USAGE IS NULL" sfwMessageId="4015" sfwExpression="(string.IsNullOrEmpty(this.icdoOrgBank.usage_value))" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror>
+    <item ID="RULE CHECK ACCOUNT NO IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK ACCOUNT TYPE IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE USAGE IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK BANK ORG ID IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK BANK ORGID IS TYPE OF BANK" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK COUNT MORE THAN ONE BANK FOR USAGE NEW" sfwMode="New" sfwStatus="Active" />
+    <item ID="RULE CHECK ORG BANK STATUS IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK COUNT MORE THAN ONE BANK FOR USAGE UPDATE" sfwMode="Update" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <queries>
+    <query ID="LoadOtherOrgBank" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_ORG_BANK WHERE ORG_ID=@ORG_ID AND ORG_BANK_ID &lt;&gt; @ORG_BANK_ID">
+      <parameters>
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+        <parameter ID="@ORG_BANK_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="CountForOrgBankNew" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) from sgt_org_bank&#xD;&#xA;where usage_value = @usage_value&#xD;&#xA;and status_value = 'ACTV'&#xD;&#xA;and org_id=@org_id&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@usage_value" sfwDataType="string" />
+        <parameter ID="@org_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="CountForOrgBankUpdate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) from sgt_org_bank&#xD;&#xA;where usage_value = @usage_value&#xD;&#xA;and status_value = 'ACTV'&#xD;&#xA;and org_id=@org_id&#xD;&#xA;and org_bank_id&lt;&gt; @org_bank_id">
+      <parameters>
+        <parameter ID="@usage_value" sfwDataType="string" />
+        <parameter ID="@org_id" sfwDataType="int" />
+        <parameter ID="@org_bank_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetDepositAccountNo" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT TOP 1 SOB.ACCOUNT_NO,ORG.ROUTING_NO FROM SGT_ORG_BANK SOB&#xD;&#xA;INNER JOIN SGT_ORGANIZATION ORG ON ORG.ORG_ID=SOB.BANK_ORG_ID&#xD;&#xA;WHERE SOB.ORG_ID=@ORG_ID AND SOB.USAGE_VALUE='DEP'&#xD;&#xA;ORDER BY SOB.ORG_BANK_ID DESC">
+      <parameters>
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="OrgBankId" sfwType="Column" sfwValue="org_bank_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="OrgId" sfwType="Column" sfwValue="org_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="BankOrgId" sfwType="Column" sfwValue="bank_org_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AccountNo" sfwType="Column" sfwValue="account_no" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="20" sfwRequired="False" />
+    <attribute ID="UsageDescription" sfwType="Description" sfwValue="usage_description" />
+    <attribute ID="UsageId" sfwType="Column" sfwValue="usage_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="213" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="UsageValue" sfwType="Column" sfwValue="usage_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="AccountTypeDescription" sfwType="Description" sfwValue="account_type_description" />
+    <attribute ID="AccountTypeId" sfwType="Column" sfwValue="account_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="211" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AccountTypeValue" sfwType="Column" sfwValue="account_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="StatusDescription" sfwType="Description" sfwValue="status_description" />
+    <attribute ID="StatusId" sfwType="Column" sfwValue="status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="400" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusValue" sfwType="Column" sfwValue="status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrOrgCodeID" sfwValue="icdoOrgBank.istrOrgCodeID" />
+    <attribute ID="objBankOrg" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusBankOrg" />
+    <attribute ID="objOrganization" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusOrganization" />
+    <attribute sfwType="Collection" sfwEntity="entOrgBank" ID="lstOtherOrgBank" sfwValue="iclbOtherOrgBank" />
+  </attributes>
+</entity>

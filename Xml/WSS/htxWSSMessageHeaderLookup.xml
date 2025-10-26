@@ -1,0 +1,130 @@
+﻿<form ID="wfmWSSMessageHeaderLookup" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2025" sfwType="FormLinkLookup" sfwTitle="WSSMessage Header Lookup" version="3.5" sfwEntity="entWssMessageHeader" sfwGridCollection="busWSSMessageHeaderLookup.iclbWssMessageHeader" sfwTemplate="WSSMessageHeaderLookup.html" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmWSSMessageHeaderLookup" isBasedOnWfm="true">
+  <initialload>
+    <query ID="cdoWssMessageHeader" sfwQueryRef="entWssMessageHeader.LookUp" sfwMethodName="LoadWSSMessageHeaders" />
+    <query ID="cdoWssMessageHeader" sfwQueryRef="entWssMessageHeader.LookUpSubquery" />
+  </initialload>
+  <items>
+    <sfwTable ID="Main" />
+    <sfwPanel ID="pnlCriteria" sfwCaption="Criteria">
+      <items>
+        <sfwTable ID="tblCriteria" />
+        <sfwLabel ID="capWssMessageId" Text="Wss Message ID : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtWssMessageId" sfwDataField="hed.wss_message_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="cdoWssMessageHeader" />
+        <sfwLabel ID="capMessageId" Text="System Message ID : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtMessageId" sfwDataField="message_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="cdoWssMessageHeader" />
+        <sfwLabel ID="capMessageText" Text="Message Text : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtMessageText" sfwDataField="message_text" sfwOperator="like" sfwQueryID="cdoWssMessageHeader" />
+        <sfwLabel ID="capPriorityValue" Text="Priority : " sfwIsCaption="True" />
+        <sfwDropDownList ID="ddlPriorityValue" sfwDataField="priority_value" sfwOperator="like" sfwQueryID="cdoWssMessageHeader" sfwLoadType="CodeGroup" sfwLoadSource="3501" />
+        <sfwLabel ID="capAudienceValue" Text="Audience : " sfwIsCaption="True" />
+        <sfwDropDownList ID="ddlAudienceValue" sfwDataField="audience_value" sfwOperator="like" sfwQueryID="cdoWssMessageHeader" sfwLoadType="CodeGroup" sfwLoadSource="3502" />
+        <sfwLabel ID="capPersonId" Text="Person ID : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtPersonId" sfwDataField="detl.person_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="cdoWssMessageHeader" />
+        <sfwLabel ID="capPlanId" Text="Plan ID : " sfwIsCaption="True" />
+        <sfwDropDownList DataTextField="plan_name" DataValueField="plan_id" ID="ddlPlanId" sfwDataField="hed.plan_id" sfwOperator="=" sfwQueryID="cdoWssMessageHeader" sfwLoadType="Query" sfwLoadSource="entPlan.Lookup" />
+        <sfwLabel ID="capPersonTypeValue" Text="Person Type : " sfwIsCaption="True" />
+        <sfwDropDownList ID="ddlPersonTypeValue" sfwDataField="hed.person_type_value" sfwOperator="like" sfwQueryID="cdoWssMessageHeader" sfwLoadType="CodeGroup" sfwLoadSource="3503" />
+        <sfwLabel ID="capOrgId" Text="Org ID : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtOrgId" sfwDataField="detl.org_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="cdoWssMessageHeader" />
+        <sfwLabel ID="capContactRoleValue" Text="Contact Role : " sfwIsCaption="True" />
+        <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlContactRoleValue" sfwDataField="hed.contact_role_value" sfwOperator="like" sfwQueryID="cdoWssMessageHeader" sfwLoadType="CodeGroup" sfwLoadSource="515" />
+        <sfwLabel ID="capContactId" Text="Contact ID : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtContactId" sfwDataField="detl.contact_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="cdoWssMessageHeader" />
+        <sfwLabel ID="capEmpCategoryValue" Text="Emp Category : " sfwIsCaption="True" />
+        <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlEmpCategoryValue" sfwDataField="hed.emp_category_value" sfwOperator="like" sfwQueryID="cdoWssMessageHeader" sfwLoadType="CodeGroup" sfwLoadSource="203" />
+        <sfwButton ID="btnSearch" sfwMethodName="btnSearch_Click" Text="Search" />
+        <sfwButton ID="btnReset" sfwMethodName="btnReset_Click" Text="Reset" />
+        <sfwButton ID="btnStoreSearch" sfwMethodName="btnStoreUserDefaults_Click" Text="Store Search" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlResult" sfwCaption="Search Results">
+      <items>
+        <sfwTable ID="tblResult" />
+        <sfwButton ID="btnNew" sfwActiveForm="wfmWSSMessageHeaderMaintenance" sfwMethodName="btnNew_Click" Text="New" />
+        <sfwButton ID="btnOpen" sfwActiveForm="wfmWSSMessageHeaderMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="aintwssmessageid=WssMessageId" sfwRelatedControl="dgrResult" Text="Open" />
+        <sfwButton ID="btnDelete" sfwMethodName="btnDelete_Click" sfwRelatedControl="dgrResult" Text="Delete" />
+        <sfwButton ID="btnExportExcel" sfwMethodName="btnColumnsToExport_Click" sfwRelatedControl="dgrResult" Text="Export To Excel" />
+        <sfwGridView AllowPaging="True" AllowSorting="True" ID="dgrResult" sfwSelection="Many" sfwSortExpression="WssMessageId desc">
+          <Columns>
+            <TemplateField HeaderText="Wss Message ID">
+              <ItemTemplate>
+                <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpen" sfwEntityField="WssMessageId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="System Message ID">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:#,##0;(#,##0);''}" sfwEntityField="MessageId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Message Text">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="MessageText" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Priority">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="PriorityDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Audience">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="AudienceDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="PERSLink ID">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="PersonId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Person Name">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objPerson.FullName" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Plan">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="PlanId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Person Type">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="PersonTypeDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Org ID" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="OrgId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Org Code">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objOrganization.OrgCode" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Org Name">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objOrganization.OrgName" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Contact Role">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="ContactRoleDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Contact ID">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="ContactId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Employer Type">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="EmpCategoryDescription" />
+              </ItemTemplate>
+            </TemplateField>
+          </Columns>
+        </sfwGridView>
+      </items>
+    </sfwPanel>
+  </items>
+  <loaddetails />
+</form>

@@ -1,0 +1,72 @@
+﻿<div ng-controller="CustomAttributesController" id="RetrievalControls" class="full-height">
+    <div class="portlet-body series-details-popup" id="ScopeId_{{$id}}">
+        <div class="client-visi-layout">
+            <div class="client-visi-tree-list">
+                <div class="client-visi-layout-inner">
+                    <div class="client-visi-header">
+                        <span>Available Fields</span>
+                        <div class="fright" ng-hide="isFormLink || IsReport || IsCorrespondence">
+                            <input type="checkbox" ng-model="IsShowAllControl" ng-change="showAllControlChange()" />
+                            <span class="heading-span">Show All Controls</span>
+                        </div>
+                    </div>
+                    <div class="client-visi-content">
+                        <ul>
+                            <li ng-repeat="field in FieldCollection" class="common-tree-list">
+                                <div customattributechildtree></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="client-visi-layout-inner-button">
+
+                <input type="button" class="button-add-to-right"  ng-click="AddToGridClick()" />
+            </div>
+
+            <div class="custom-attr-value-table">
+                <div class="client-visi-layout-inner">
+                    <div class="client-visi-header">
+                        <span ng-if="propertyName=='sfwUserLogParameters'">Parameters</span>
+                        <span ng-if="propertyName=='sfwCustomAttributes'">Attributes</span>
+                        <ul class="list-inline pull-right">
+                            <li><img typeof="button" src="images/Common/icon_add_dark.svg" ng-click="onAddParameter()" /></li>
+                            <li><img type="button" src="images/Common/icon_delete_dark.svg" ng-click="onDeleteParameter()" ng-disabled="SelectedParameter == undefined" /></li>
+                        </ul>
+                    </div>
+                    <div class="client-visi-content">
+                        <table class="table table-condensed table-fixedheader">
+                            <thead>
+                                <tr ng-if="propertyName=='sfwUserLogParameters'">
+                                    <th width="39%">Parameter Name</th>
+                                    <th width="39%">Parameter Value</th>
+                                    <th width="22%">Is Constant</th>
+                                </tr>
+                                <tr ng-if="propertyName=='sfwCustomAttributes'">
+                                    <th width="39%">Attribute Name</th>
+                                    <th width="39%">Attribute Value</th>
+                                    <th width="22%">Is Constant</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="param in ParameterCollection" ng-click="SelectParameter(param)" ng-class="SelectedParameter == param?'selected':''">
+                                    <td width="39%"><input class="form-control input-sm" type="text" title="{{param.ParameterField}}" ng-model="param.ParameterField" /></td>
+                                    <td width="39%"><input class="form-control input-sm" type="text" title="{{param.ParameterValue}}" ng-model="param.ParameterValue" /></td>
+                                    <td width="22%"><input class="checkbox" type="checkbox" ng-model="param.Constants" /></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-actions">
+        <input type="button" class="btn dialog-btn-default" value="OK" ng-click="onOkClick()" />
+        <input type="button" class="btn dialog-btn" value="Cancel" ng-click="onCancelClick()" />
+    </div>
+</div>
+
+

@@ -1,0 +1,1 @@
+gRYC:\Sonarqube Codebase\Systest\Systest\slnNeoSpin\NeoSpinInterface\NeoSpinInterface.csprojò	CSharp7_3

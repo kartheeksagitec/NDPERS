@@ -1,0 +1,308 @@
+﻿<form ID="wfmMSSDeferredCompEnrolledMaintenance" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2001" sfwType="FormLinkMaintenance" sfwTitle="Deferred Compensation Enrolled Maintenance" version="3.5" sfwEntity="entMSSDefCompWeb" sfwTemplate="MSSDeferredCompEnrolledMaintenance.html" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmMSSDeferredCompEnrolledLookup" sfwFormObjectType="None" isBasedOnWfm="true">
+  <initialload>
+    <callmethods sfwMode="New" sfwMethodName="FindDeferredCompEnrolled" />
+    <callmethods sfwMode="Update" sfwMethodName="FindDeferredCompEnrolled" />
+  </initialload>
+  <items>
+    <sfwTable ID="Main" />
+    <sfwPanel ID="pnltoolbar" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblNewPage2" />
+        <sfwImageButton ID="btnBack" ImageAlign="AbsMiddle" ImageUrl="~/Images/back.gif" sfwMethodName="btnBack_Click" />
+        <sfwImageButton ID="btnPrint" ImageUrl="~/Images/print.png" ImageAlign="AbsMiddle" OnClientClick="PrintCenterMiddle(e)" sfwMethodName="btnOpen_Click" />
+        <sfwButton ID="btnAnnualEnrollmentBack" sfwMethodName="btnOpen_Click" Text="Go Back to Annual Enrollment" sfwVisibleRule="IsAnnualEnrollment" sfwActiveForm="wfmAnnualEnrollmentBenefitPlansMaintenance" sfwNavigationParameter="aintPersonID=PersonId" OnClientClick="BeforeAnnualEnrollmentBackButton();" />
+        <sfwButton ID="btnRefresh" sfwMethodName="btnCancel_Click" CssClass="hideControl" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlNHeader" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblNewPage1" />
+        <sfwLiteral ID="ltrlMessage" sfwVisibleRule="IsPlanDefComp" Text="Deferred Compensation Plan Info" />
+        <sfwLiteral ID="ltrLiteral" sfwVisibleRule="IsPlanOther457" Text="Other 457 / 403(b) Plan Info" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlMain" sfwCaption="Plan Details">
+      <items>
+        <sfwTable ID="tblMain" />
+        <sfwLabel ID="capPlanName" Text="Plan Name : " sfwIsCaption="True" />
+        <sfwLabel ID="lblPlanName" Visible="False" sfwEntityField="objPlan.PlanName" />
+        <sfwLabel ID="lblMssPlanName" sfwEntityField="objPlan.MssPlanName" />
+        <sfwLabel ID="capPlanParticipationStatusDescription" Text="Plan Participation Status : " sfwIsCaption="True" />
+        <sfwLabel ID="lblPlanParticipationStatusDescription" sfwEntityField="PlanParticipationStatusDescription" />
+        <sfwLabel ID="capLimit457Description" Text="Annual 457 Limit : " sfwIsCaption="True" />
+        <sfwLabel ID="lblLimit457Description" sfwDataFormat="{0:C}" sfwEntityField="Idec457Limit" />
+        <sfwLabel ID="lblPersonEmploymentDtlId" sfwEntityField="PersonEmploymentDtlId" CssClass="hideControl" />
+        <sfwLabel ID="lblPersonAccountId" sfwEntityField="PersonAccountId" CssClass="hideControl" />
+        <sfwLabel ID="lblPersonId" Visible="False" sfwEntityField="PersonId" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlNewPage" sfwCaption="Current Enrollment Info" sfwVisibleRule="IsPlanDefComp">
+      <sfwLabel ID="lblProvider" Text="NOTE: You may only submit one online deferred compensation election per provider, per day.     If you have already made an election today, please log in the next day to submit our online application, or you may complete the 457 Deferred Compensation Plan Enrollment/Change SFN 3803 available on the NDPERS website." />
+      <items>
+        <sfwTable ID="tblNewPage" />
+        <sfwPanel ID="pnlOpenProviders" sfwCollapsible="False">
+          <items>
+            <sfwTable ID="tblN" />
+            <sfwButton ID="btnOpen" sfwActiveForm="wfmMSSUpdateDefCompProviderMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="aintPersonAccountDeferredCompProviderId=PersonAccountProviderId;aintPersonEmplDtlId=PersonEmploymentDtlId" sfwRelatedControl="grvPersonAccountDeferredCompProvider" Text="Open Existing Provider" Visible="False" />
+            <sfwButton ID="btnNew" sfwActiveForm="wfmMSSDefCompProviderMaintenance" sfwMethodName="btnNew_Click" sfwNavigationParameter="aintPersonAccount=lblPersonAccountId;aintPersonEmpDtlId=lblPersonEmploymentDtlId" sfwVisibleRule="VisibleRuleForNewProvider" Text="Add New Provider" />
+            <sfwGridView AllowPaging="True" ID="grvPersonAccountDeferredCompProvider" sfwEntityField="lstDefCompOpenProviders" sfwGridEntity="entPersonAccountDeferredCompProvider">
+              <Columns>
+                <TemplateField>
+                  <ItemTemplate>
+                    <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpen" sfwEntityField="ChangeAmountText" sfwVisibleRule="IsEndDateNull" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Provider Name">
+                  <ItemTemplate>
+                    <sfwLabel sfwRelatedControl="btnOpen" sfwEntityField="objProviderOrgPlan.objOrganization.OrgName" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Employer Name">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="objPersonEmployment.objOrganization.OrgName" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Start Date">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="StartDate" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="End Date">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EndDate" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Amount Per Pay Period " ItemStyle.HorizontalAlign="Right">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="PerPayPeriodContributionAmt" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Person Account Provider ID" Visible="False">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="PersonAccountProviderId" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Mutual Fund Window" Visible="False">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="MutualFundWindowFlag" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Payroll Frequency">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="objPersonAccountDeferredComp.objOrgPlan.ReportFrequencyDescription" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Employer Match">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="IsApplyEmployerMatchingContributionDesc" />
+                  </ItemTemplate>
+                </TemplateField>
+              </Columns>
+            </sfwGridView>
+            <sfwDialogPanel ID="pnlDefCompPro" sfwCaption="Deferred Comp Provider">
+              <items>
+                <sfwTable ID="tblNewPage4" />
+                <sfwLabel ID="capProviderOrgId" Text="Provider Name : " sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel" sfwEntityField="objDefCompProvider.CompanyName" />
+                <sfwLabel ID="capFullName" Text="Agent Contact : " sfwIsCaption="True" />
+                <sfwLabel ID="lblel2" sfwEntityField="Full_name" />
+                <sfwLabel ID="capPersonEmploymentId" Text="Employer Name : " sfwIsCaption="True" />
+                <sfwLabel ID="lblLab3" sfwEntityField="objDefCompProvider.org_name" sfwObjectID="busPersonAccountDeferredCompProvider" />
+                <sfwLabel ID="capPerPayPeriodContributionAmt" Text="New Amount Per Pay Period : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtPayPeriodAmount" sfwDataFormat="{0:C}" sfwDefaultValue="0" sfwEntityField="objDefCompProvider.per_pay_period_contribution_amt" sfwObjectID="busPersonAccountDeferredCompProvider" />
+                <sfwLabel ID="capdiaStartDate" Text="Start Date : " sfwIsCaption="True" />
+                <sfwDropDownList ID="ddlRetirementMonth" sfwEntityField="objDefCompProvider.StartMonth" sfwObjectID="busPersonAccountDeferredCompProvider">
+                  <ListItem />
+                  <ListItem Text="January" Value="1" />
+                  <ListItem Text="February" Value="2" />
+                  <ListItem Text="March" Value="3" />
+                  <ListItem Text="April" Value="4" />
+                  <ListItem Text="May" Value="5" />
+                  <ListItem Text="June" Value="6" />
+                  <ListItem Text="July" Value="7" />
+                  <ListItem Text="August" Value="8" />
+                  <ListItem Text="September" Value="9" />
+                  <ListItem Text="October" Value="10" />
+                  <ListItem Text="November" Value="11" />
+                  <ListItem Text="December" Value="12" />
+                </sfwDropDownList>
+                <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlRetirementYear" sfwEntityField="objDefCompProvider.StartYear" sfwObjectID="busPersonAccountDeferredCompProvider" sfwLoadType="Method" sfwLoadSource="LoadStartYear" />
+                <sfwLabel ID="lblStartDate" sfwEntityField="objDefCompProvider.start_date" sfwObjectID="busPersonAccountDeferredCompProvider" Visible="False" />
+                <sfwLabel ID="lblcPersonEmploymentDtlId" sfwEntityField="objDefCompProvider.person_employment_dtl_id" sfwObjectID="busPersonAccountDeferredCompProvider" Visible="False" />
+                <sfwLabel ID="lblPersonAccountProviderId" sfwEntityField="objDefCompProvider.person_account_provider_id" sfwObjectID="busPersonAccountDeferredCompProvider" Visible="False" />
+                <sfwCheckBox ID="chkIsPopUp" sfwDefaultValue="Y" sfwEntityField="objDefCompProvider.IsPopupValidation" sfwObjectID="busPersonAccountDeferredCompProvider" sfwTwoWayBinding="False" Visible="False" />
+                <sfwButton ID="btnSaveDefCompProvider" sfwMethodName="btnExecuteServerMethod_Click" sfwNavigationParameter="aintProviderID=ibusPersonEmployment.ibusOrganization.icdoOrganization.org_id;adteStartDate=icdoPersonAccountDeferredCompProvider.start_date;adecPayPeriodAmount=icdoPersonAccountDeferredCompProvider.per_pay_period_contribution_amt" sfwObjectID="busMSSDefCompWeb" sfwObjectMethod="UpdateDefCompProvider" Text="Save" />
+                <sfwLabel ID="lblOrgId" sfwEntityField="objPersonEmploymentDetail.objPersonEmployment.OrgId" sfwObjectID="busMSSDefCompWeb" Visible="false" />
+              </items>
+            </sfwDialogPanel>
+          </items>
+        </sfwPanel>
+        <sfwPanel GroupingText="&lt;b&gt;Enrollment History&lt;/b&gt;" ID="pnlClosedProviders" sfwCaption="Enrollment History" sfwCollapsible="False">
+          <items>
+            <sfwTable ID="tbl457" />
+            <sfwGridView AllowPaging="True" ID="grvGridView" sfwEntityField="lstDefCompClosedProviders" sfwGridEntity="entPersonAccountDeferredCompProvider">
+              <Columns>
+                <TemplateField HeaderText="Provider Name">
+                  <ItemTemplate>
+                    <sfwLabel sfwRelatedControl="btnOpen" sfwEntityField="objProviderOrgPlan.objOrganization.OrgName" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Employer Name">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="objPersonEmployment.objOrganization.OrgName" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Start Date">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="StartDate" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="End Date">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EndDate" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Amount Per Pay Period " ItemStyle.HorizontalAlign="Right">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="PerPayPeriodContributionAmt" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Person Account Provider ID" Visible="False">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="PersonAccountProviderId" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Mutual Fund Window" Visible="False">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="MutualFundWindowFlag" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Payroll Frequency">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="objPersonAccountDeferredComp.objOrgPlan.ReportFrequencyDescription" />
+                  </ItemTemplate>
+                </TemplateField>
+              </Columns>
+            </sfwGridView>
+            <sfwLabel ID="lbl457" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="lbl4" Text="Plan participation details prior to 12/01/1999 are not available on-line.  Contact NDPERS if you have questions on participation prior to this." sfwIsCaption="True" />
+          </items>
+        </sfwPanel>
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnl457EnrollmentInfo" sfwCaption="Current Enrollment Info" sfwVisibleRule="IsPlanOther457">
+      <sfwLabel ID="lblProviderTwo" Text="NOTE: You may only submit one online deferred compensation election per provider, per day. If you have already made an election today, please log in the next day to submit our online application, or you may complete the 457 Deferred Compensation Plan Enrollment/Change SFN 3803 available on the NDPERS website." />
+      <items>
+        <sfwTable ID="tblNewPage6" />
+        <sfwPanel ID="pnl457OpenProviders" sfwCollapsible="False">
+          <items>
+            <sfwTable ID="tblNewPage5" />
+            <sfwGridView AllowPaging="True" ID="grv457OpenProviders" sfwEntityField="lstDefCompOpenProviders" sfwGridEntity="entPersonAccountDeferredCompProvider">
+              <Columns>
+                <TemplateField HeaderText="Provider Name">
+                  <ItemTemplate>
+                    <sfwLabel sfwRelatedControl="btnOpen" sfwEntityField="objProviderOrgPlan.objOrganization.OrgName" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Employer Name">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="objPersonEmployment.objOrganization.OrgName" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Start Date">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="StartDate" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="End Date">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EndDate" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Amount Per Pay Period " ItemStyle.HorizontalAlign="Right">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="PerPayPeriodContributionAmt" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Person Account Provider ID" Visible="False">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="PersonAccountProviderId" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Mutual Fund Window" Visible="False">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="MutualFundWindowFlag" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Payroll Frequency">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="objPersonAccountDeferredComp.objOrgPlan.ReportFrequencyDescription" />
+                  </ItemTemplate>
+                </TemplateField>
+              </Columns>
+            </sfwGridView>
+          </items>
+        </sfwPanel>
+        <sfwPanel GroupingText="&lt;b&gt;Enrollment History&lt;/b&gt;" ID="pnl457ClosedProviders" sfwCaption="Enrollment History" sfwCollapsible="False">
+          <items>
+            <sfwTable ID="tblNewP" />
+            <sfwGridView AllowPaging="True" ID="grv457ClosedProviders" sfwEntityField="lstDefCompClosedProviders" sfwGridEntity="entPersonAccountDeferredCompProvider">
+              <Columns>
+                <TemplateField HeaderText="Provider Name">
+                  <ItemTemplate>
+                    <sfwLabel sfwRelatedControl="btnOpen" sfwEntityField="objProviderOrgPlan.objOrganization.OrgName" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Employer Name">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="objPersonEmployment.objOrganization.OrgName" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Start Date">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="StartDate" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="End Date">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EndDate" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Amount Per Pay Period " ItemStyle.HorizontalAlign="Right">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="PerPayPeriodContributionAmt" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Person Account Provider ID" Visible="False">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="PersonAccountProviderId" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Mutual Fund Window" Visible="False">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="MutualFundWindowFlag" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Payroll Frequency">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="objPersonAccountDeferredComp.objOrgPlan.ReportFrequencyDescription" />
+                  </ItemTemplate>
+                </TemplateField>
+              </Columns>
+            </sfwGridView>
+            <sfwLabel ID="lblLabel5" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="lblLabel4" Text="Plan participation details prior to 12/01/1999 are not available on-line.  Contact NDPERS if you have questions on participation prior to this." sfwIsCaption="True" />
+          </items>
+        </sfwPanel>
+      </items>
+    </sfwPanel>
+  </items>
+  <loaddetails>
+    <entityfield ID="objPlan" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstDefCompOpenProviders" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objDefCompProvider" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objPersonEmploymentDetail.objPersonEmployment" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstDefCompClosedProviders" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+  </loaddetails>
+  <ExtraFields />
+</form>

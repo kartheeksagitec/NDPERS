@@ -1,0 +1,91 @@
+/********************Purpose: PIR 24735******************************
+*********************Created By: Nikhil********************************
+*********************Comments: *****************/
+
+IF NOT EXISTS (SELECT 1 FROM SGS_MESSAGES WHERE MESSAGE_ID = 10449)
+BEGIN
+INSERT INTO SGS_MESSAGES ([MESSAGE_ID], [DISPLAY_MESSAGE], [SEVERITY_ID], [SEVERITY_VALUE], [INTERNAL_INSTRUCTIONS], [EMPLOYER_INSTRUCTIONS], [CREATED_BY], [CREATED_DATE], [MODIFIED_BY], [MODIFIED_DATE], [UPDATE_SEQ])
+VALUES(10449, 'Employment is not active. Please enroll as COBRA.', 16, 'E', NULL, NULL, 'PIR 24735', GETDATE(), 'PIR 24735', GETDATE(), 0)
+END
+GO
+
+/********************Purpose: PIR 18493******************************
+*********************Created By: Abhijeet********************************
+*********************Comments: *****************/
+IF NOT EXISTS (SELECT 1 FROM SGS_MESSAGES WHERE MESSAGE_ID = 10450)
+BEGIN
+INSERT INTO SGS_MESSAGES ([MESSAGE_ID], [DISPLAY_MESSAGE], [SEVERITY_ID], [SEVERITY_VALUE], [INTERNAL_INSTRUCTIONS], [EMPLOYER_INSTRUCTIONS], [CREATED_BY], [CREATED_DATE], [MODIFIED_BY], [MODIFIED_DATE], [UPDATE_SEQ])
+VALUES(10450, 'Please select a Sick Leave Conversion option.', 16, 'E', NULL, NULL, 'PIR 18493', GETDATE(), 'PIR 18493', GETDATE(), 0)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM SGS_MESSAGES WHERE MESSAGE_ID = 10451)
+BEGIN
+INSERT INTO SGS_MESSAGES ([MESSAGE_ID], [DISPLAY_MESSAGE], [SEVERITY_ID], [SEVERITY_VALUE], [INTERNAL_INSTRUCTIONS], [EMPLOYER_INSTRUCTIONS], [CREATED_BY], [CREATED_DATE], [MODIFIED_BY], [MODIFIED_DATE], [UPDATE_SEQ])
+VALUES(10451, 'Please add appropriate dependents or change the level of coverage selected on the {0} plan enrollment.', 16, 'E', NULL, NULL, 'PIR 18493', GETDATE(), 'PIR 18493', GETDATE(), 0)
+END
+GO
+
+IF EXISTS (SELECT * FROM SGS_CODE_VALUE WHERE CODE_ID =  2214 AND CODE_VALUE = 'ALOG' AND DESCRIPTION ='ALL OF GROSS AMOUNT' )
+BEGIN
+	UPDATE SGS_CODE_VALUE SET DESCRIPTION = 'All of Taxable & Non Taxable' WHERE CODE_ID =  2214 AND CODE_VALUE = 'ALOG' AND DESCRIPTION ='ALL OF GROSS AMOUNT' 
+END
+GO
+
+
+/*App wizard Deferred Retirement Plans selected acknoledgement*/
+IF NOT EXISTS (SELECT 1 FROM [SGS_CODE_VALUE] WHERE CODE_ID = 6000 AND CODE_VALUE='APRD')
+INSERT INTO [SGS_CODE_VALUE]([CODE_ID],[CODE_VALUE],[DESCRIPTION],[DATA1],[DATA2],[DATA3]
+           ,[COMMENTS],[START_DATE],[END_DATE],[CODE_VALUE_ORDER],[LEGACY_CODE_ID],[CREATED_BY]
+           ,[CREATED_DATE],[MODIFIED_BY],[MODIFIED_DATE],[UPDATE_SEQ])
+     VALUES(6000,'APRD','App wizard Deferred Retirement Plans selected acknowledgement',NULL,NULL,NULL,NULL,NULL,NULL,NULL
+           ,NULL,'PIR 18493',GETDATE(),'PIR 18493',GETDATE(),0)
+GO
+IF NOT EXISTS (SELECT 1 FROM SGT_WSS_ACKNOWLEDGEMENT WHERE SCREEN_STEP_VALUE = 'APRD' )
+BEGIN
+	INSERT INTO SGT_WSS_ACKNOWLEDGEMENT (EFFECTIVE_DATE,SCREEN_STEP_ID,SCREEN_STEP_VALUE,DISPLAY_SEQUENCE,ACKNOWLEDGEMENT_TEXT,SHOW_CHECK_BOX_FLAG,CREATED_BY,CREATED_DATE,MODIFIED_BY,MODIFIED_DATE,UPDATE_SEQ)
+	VALUES('01/01/2018',6000,'APRD',1,'APRD', 'N', 'PIR 18493',GETDATE(),'PIR 18493',GETDATE(),0)
+END
+IF EXISTS(SELECT 1 FROM SGT_WSS_ACKNOWLEDGEMENT WHERE SCREEN_STEP_VALUE='APRD' AND ACKNOWLEDGEMENT_TEXT ='APRD' )
+BEGIN
+	UPDATE SGT_WSS_ACKNOWLEDGEMENT SET ACKNOWLEDGEMENT_TEXT = 'I elect to defer my retirement benefits and, if applicable, my retiree health insurance credits. I understand that in the future I must submit an application to commence retirement benefits to NDPERS at least 30 days before distribution of my first retirement check.' 
+WHERE SCREEN_STEP_VALUE='APRD'
+END
+
+/********************Purpose: PIR 24716******************************
+*********************Created By: Nurul********************************
+*********************Comments: *****************/
+BEGIN
+DECLARE @cnt INT
+BEGIN TRANSACTION Trans
+SELECT @cnt = count(*) FROM SGS_RESOURCES WHERE RESOURCE_ID=2062 AND RESOURCE_DESCRIPTION='Mainframe Report';
+if @cnt = 0
+Begin
+INSERT INTO SGS_RESOURCES ([RESOURCE_ID],[RESOURCE_TYPE_ID],[RESOURCE_TYPE_VALUE],[RESOURCE_DESCRIPTION],[CREATED_BY],[CREATED_DATE]
+,[MODIFIED_BY],[MODIFIED_DATE],[UPDATE_SEQ])
+VALUES
+(2062,12,'A','Mainframe Report','PIR 24716',GETDATE(),'PIR 24716',GETDATE(),0)
+END
+ELSE
+PRINT 'RESOURCE_ID 2062 and RESOURCE_DESCRIPTION Show System Preferences is alredy exist in SGS_RESOURCES table';
+COMMIT TRANSACTION Trans
+END
+
+
+
+--------------------------------------------------------------------------------------------------------------
+/* Insert query to assign New Resources to all ROLES */
+---------------------------------------------------------------------------------------------------------------
+
+BEGIN TRANSACTION Trans2
+IF NOT EXISTS(SELECT 1 FROM SGS_SECURITY WHERE RESOURCE_ID = 2062)
+BEGIN
+INSERT INTO SGS_SECURITY
+SELECT ROL.ROLE_ID, RES.RESOURCE_ID, 11, 0, 'PIR 24716', GETDATE(), 'PIR 24716', GETDATE(), 0
+FROM SGS_ROLES ROL, SGS_RESOURCES RES
+WHERE NOT EXISTS (SELECT ROLE_ID
+FROM SGS_SECURITY SEC
+WHERE ROL.ROLE_ID = SEC.ROLE_ID
+AND RES.RESOURCE_ID = SEC.RESOURCE_ID) AND RES.RESOURCE_ID = 2062
+END
+COMMIT TRANSACTION Trans2

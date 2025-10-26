@@ -1,0 +1,111 @@
+﻿<div class="portlet-body scroll-hide">
+    <div class="form-body">
+        <div class="form-group">
+            <div class="col-xs-4">
+                <label class="col-xs-5">Return Type :</label>
+                <div class="col-xs-7">
+                    <select class="form-control" ng-options="type for type in DataTypes" title="{{QueryDataType}}" ng-change="onDecisionTableDataTypeChanged()" ng-model="setValues.ReturnType" ng-disabled="ObjSelectedlstValuesData.isExistingRule" />
+                </div>
+            </div>
+            <div class="col-xs-3" >
+                <label class="col-xs-5">Static :</label>
+                <div class="col-xs-3">
+                    <input type="checkbox" ng-disabled="setValues.isExistingRule" ng-model="setValues.IsStatic" />
+                </div>
+            </div>
+            <div class="col-xs-5">
+                <label class="col-xs-9">Description same as Expression :</label>
+                <div class="col-xs-3">
+                    <input type="checkbox"  ng-model="setValues.IsDescriptionSameAsExpression" />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-xs-4" dropvalue dropdata="'input'" scopeid="scopeId">
+                <div class="input-output-column">
+                    <div class="col-md-12 input-output-border">
+                        <label class="col-xs-5">Input Columns</label>
+                        <div class="col-xs-7 input-outout-right" ng-if="!ObjSelectedlstValuesData.isExistingRule">
+                            <i class="fa fa-minus" title="Delete" ng-disabled="InputDeleteDisable()" ng-click="DeleteInputParameter()"></i>
+                            <i class="fa fa-arrow-up" title="Move Up" ng-click="InputmoveErrorUp()" ng-disabled="InputCanMoveErrorUp()"></i>
+                            <i class="fa fa-arrow-down" title="Move Down" ng-click="InputmoveErrorDown()" ng-disabled="InputCanMoveErrorDown()"></i>
+                        </div>
+                    </div>
+                    <ul>
+                        <li ng-repeat="objvalue in lstInputColumns">
+                            <label ng-dblclick="OnAddOrEditParameterForImportExcel(objvalue,'Input')" ng-click="SelectInputParameter(objvalue)" ng-if="!ObjSelectedlstValuesData.isExistingRule" ng-class="objvalue==objselectedInputValue?'selected':''">{{objvalue.ColumnName}}</label>
+                            <label ng-dblclick="OnAddOrEditParameterForImportExcel(objvalue,'Input')" dropvalue dropdata="objvalue" parameter="'Input'" scopeid="scopeId" ng-click="SelectInputParameter(objvalue)" ng-if="ObjSelectedlstValuesData.isExistingRule" ng-class="objvalue==objselectedInputValue?'selected':''">{{objvalue.Name}}{{objvalue.key}}</label>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+            <div class="col-xs-4" dropvalue dropdata="'output'" scopeid="scopeId">
+                <div class="input-output-column">
+                    <div class="col-md-12 input-output-border">
+                        <label class="col-xs-5"> Output Columns</label>
+                        <div class="col-xs-7 input-outout-right" ng-if="!ObjSelectedlstValuesData.isExistingRule">
+                            <i class="fa fa-minus" title="Delete" ng-disabled="OutputDeleteDisable()" ng-click="DeleteOutputParameter()"></i>
+                            <i class="fa fa-arrow-up" title="Move Up" ng-click="OutputmoveErrorUp()" ng-disabled="OutputCanMoveErrorUp()"></i>
+                            <i class="fa fa-arrow-down" title="Move Down" ng-click="OutputmoveErrorDown()" ng-disabled="OutputCanMoveErrorDown()"></i>
+                        </div>
+                    </div>
+                    <ul>
+                        <li ng-repeat="objvalue in lstOutputColumns">
+                            <label ng-dblclick="OnAddOrEditParameterForImportExcel(objvalue,'Output')" ng-click="SelectOutputParameter(objvalue)" ng-if="!ObjSelectedlstValuesData.isExistingRule" ng-class="objvalue==objselectedOutputValue?'selected':''" ng-bind="objvalue.ColumnName"></label>
+                            <label ng-dblclick="OnAddOrEditParameterForImportExcel(objvalue,'Output')" dropvalue parameter="'Output'" dropdata="objvalue" scopeid="scopeId" ng-click="SelectOutputParameter(objvalue)" ng-if="ObjSelectedlstValuesData.isExistingRule" ng-class="objvalue==objselectedOutputValue?'selected':''">{{objvalue.Name}}{{objvalue.key}}</label>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+            <div class="col-xs-4" dropvalue dropdata="'return'" scopeid="scopeId">
+                <div class="input-output-column">
+                    <div class="col-md-12 input-output-border">
+                        <label class="col-xs-8">Return Parameters</label>
+                        <div class="col-xs-4 input-outout-right" ng-if="!ObjSelectedlstValuesData.isExistingRule">
+                            <i class="fa fa-minus" title="Delete" ng-disabled="lstReturnParameters.length == 0 || !objselectedreturnparameter" ng-click="DeleteReturnParameter()"></i>
+                        </div>
+                    </div>
+                    <ul>
+                        <li ng-repeat="objvalue in lstReturnParameters">
+                            <label ng-dblclick="OnAddOrEditParameterForImportExcel(objvalue,'Return')" ng-if="!ObjSelectedlstValuesData.isExistingRule" ng-click="SelectReturnParameter(objvalue)" ng-class="objvalue==objselectedreturnparameter?'selected':''" ng-bind="objvalue.ColumnName"></label>
+                            <label ng-dblclick="OnAddOrEditParameterForImportExcel(objvalue,'Return')" dropvalue parameter="'Return'" dropdata="objvalue" scopeid="scopeId" ng-if="ObjSelectedlstValuesData.isExistingRule" ng-click="SelectReturnParameter(objvalue)" ng-class="objvalue==objselectedreturnparameter?'selected':''">{{objvalue.Name}}{{objvalue.key}}</label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="portlet-body">
+                <div class="table-scrollable" style="height:300px;overflow:auto">
+                    <table id="sample_editable_1" class="table table-striped table-hover table-bordered dataTable no-footer" role="grid" aria-describedby="sample_editable_1_info">
+                        <thead>
+                            <tr role="row">
+                                <th aria-controls="sample_editable_1" rowspan="1" colspan="1" ng-repeat="(key, value) in lstSetValuesData[0]" ondragstart="return false;"><span style="color:black;margin-left:15px" ng-bind="key"></span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr role="row" ng-repeat="rowdata in lstSetValuesData" ng-click="setRowIndex($index)">
+                                <td ng-repeat="coldata in rowdata" customvaluedraggable dragdata="$index+1"><span style="color:black;margin-left:15px" ng-bind="coldata"></span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="form-actions">
+    <div class="col-xs-8 text-left">
+        <span class="alert-error-msg" ng-bind="ErrorMessage"></span>
+    </div>
+    <div class="col-xs-4">
+        <input type="button" class="dialog-btn-default" value="OK" ng-click="onSetValuesOkClick()"/>
+        <input type="button" class="dialog-btn-default"  value="Cancel" ng-click="onSetValuescloseClick()" />
+    </div>
+</div>
+

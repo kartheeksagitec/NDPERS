@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entProviderReportDataDC" sfwMainCDO="icdoProviderReportDataDc" sfwType="BusinessRule" sfwActive="True" sfwStatus="Review" sfwObjectID="busProviderReportDataDC" sfwTableName="sgt_provider_report_data_dc" sfwView="False">
+  <queries>
+    <query ID="LoadReportDataByProvider" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT SSN,&#xD;&#xA;SUM(ISNULL(EE_PRE_TAX,0)+ISNULL(EE_EMPLOYER_PICKUP,0)+ISNULL(MEMBER_INTEREST,0))AS SUMOFPRETAXEMPPICKUPMMBRINT,&#xD;&#xA;SUM(ISNULL(EE_CONTRIBUTION,0)) AS SUMOFPOSTTAX,&#xD;&#xA;SUM(ISNULL(ER_CONTRIBUTION,0)+ISNULL(EMPLOYER_INTEREST,0))AS SUMOFEREMPINT,&#xD;&#xA;PLAN_ID,PERSON_ID&#xD;&#xA;FROM DBO.SGT_PROVIDER_REPORT_DATA_DC &#xD;&#xA;WHERE BATCH_REQUEST_ID IS NULL &#xD;&#xA;AND PROVIDER_ORG_ID=@PROVIDER_ORG_ID &#xD;&#xA;AND EFFECTIVE_DATE &lt;= @PAYMENTDATE&#xD;&#xA;GROUP BY SSN,PLAN_ID,PERSON_ID">
+      <parameters>
+        <parameter ID="@PROVIDER_ORG_ID" sfwDataType="int" />
+        <parameter ID="@PAYMENTDATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="LoadDistinctProviderOrgCodeID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT ISNULL(PRDC.PROVIDER_ORG_ID,0) AS PROVIDER_ORG_ID,&#xD;&#xA;    ISNULL(ORG.ORG_CODE,'') AS ORG_CODE&#xD;&#xA;FROM SGT_PROVIDER_REPORT_DATA_DC PRDC&#xD;&#xA; INNER JOIN SGT_ORGANIZATION ORG ON PRDC.PROVIDER_ORG_ID=ORG.ORG_ID&#xD;&#xA;WHERE BATCH_REQUEST_ID IS NULL&#xD;&#xA;GROUP BY PRDC.PROVIDER_ORG_ID,ORG.ORG_CODE&#xD;&#xA;HAVING SUM(ISNULL(EE_CONTRIBUTION,0.0)+ISNULL(EE_PRE_TAX,0.0)+ISNULL(EE_EMPLOYER_PICKUP,0.0)+ISNULL(ER_CONTRIBUTION,0.0)+ &#xD;&#xA;ISNULL(MEMBER_INTEREST,0.0)+ISNULL(EMPLOYER_INTEREST,0.0)+ISNULL(EMPLOYER_RHIC_INTEREST,0.0)) &gt; 0.0&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;">
+      <parameters />
+    </query>
+    <query ID="LoadByBatchRequestID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_PROVIDER_REPORT_DATA_DC&#xD;&#xA;WHERE BATCH_REQUEST_ID IS NULL&#xD;&#xA;AND EFFECTIVE_DATE &lt;= @PAYMENTDATE">
+      <parameters>
+        <parameter ID="@PAYMENTDATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="LoadDCDataGroupByOrgIDPlanID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT &#xD;&#xA;ISNULL(DC.PROVIDER_ORG_ID,0) PROVIDER_ORG_ID,&#xD;&#xA;ISNULL(DC.PLAN_ID,0) PLAN_ID,&#xD;&#xA;CASE WHEN ORG.ACH_ACCOUNT_NUMBER IS NOT NULL THEN ORG.ACH_ACCOUNT_NUMBER ELSE ISNULL(ORG.ORG_CODE,'') END AS ORG_CODE,&#xD;&#xA;ISNULL(ORG.ORG_NAME,'') ORG_NAME,&#xD;&#xA;ISNULL(SUM(DC.EE_CONTRIBUTION),0) CONTRIBUTION_AMOUNT,&#xD;&#xA;payment_option_value&#xD;&#xA;FROM SGT_PROVIDER_REPORT_DATA_DC DC&#xD;&#xA;INNER JOIN SGT_ORGANIZATION ORG ON ORG.ORG_ID=DC.PROVIDER_ORG_ID&#xD;&#xA;WHERE DC.BATCH_REQUEST_ID IS NULL&#xD;&#xA;and dc.effective_date &lt;= @paymentdate&#xD;&#xA;GROUP BY DC.PROVIDER_ORG_ID,DC.PLAN_ID,CASE WHEN ORG.ACH_ACCOUNT_NUMBER IS NOT NULL THEN ORG.ACH_ACCOUNT_NUMBER ELSE ISNULL(ORG.ORG_CODE,'') END,&#xD;&#xA;ORG.ORG_NAME,payment_option_value">
+      <parameters>
+        <parameter ID="@paymentdate" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="LoadProviderDCData" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT *&#xD;&#xA;FROM SGT_PROVIDER_REPORT_DATA_DC PRDC WITH(NOLOCK)&#xD;&#xA;WHERE BATCH_REQUEST_ID IS NULL&#xD;&#xA;AND EFFECTIVE_DATE &lt;= @PAYMENTDATE">
+      <parameters>
+        <parameter ID="@PAYMENTDATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="LoadReportDataByProviderOrgCode" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT ssn,PERSON_ID,EFFECTIVE_DATE, &#xD;&#xA;SUM(isnull(EE_CONTRIBUTION,0))+SUM(isnull(EE_PRE_TAX,0))+SUM(isnull(ee_employer_pickup,0)) as Total_Contribution &#xD;&#xA;FROM SGT_PROVIDER_REPORT_DATA_DC &#xD;&#xA;WHERE PROVIDER_ORG_ID=@PROVIDER_ORG_ID&#xD;&#xA;AND EFFECTIVE_DATE &lt;= @PAYMENTDATE&#xD;&#xA;GROUP BY SSN,PERSON_ID,EFFECTIVE_DATE ">
+      <parameters>
+        <parameter ID="@PROVIDER_ORG_ID" sfwDataType="int" />
+        <parameter ID="@PAYMENTDATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="LoadReportDataByProviderEmpower" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT SSN,&#xD;&#xA;SUM(ISNULL(EE_CONTRIBUTION,0)) AS SUMEEPOSTAMOUNT,&#xD;&#xA;SUM(ISNULL(EE_EMPLOYER_PICKUP,0)) + SUM(ISNULL(EE_PRE_TAX,0)) AS SUMEEPREAMOUNT,&#xD;&#xA;SUM(ISNULL(ER_CONTRIBUTION,0)) AS SUMERPREAMOUNT,&#xD;&#xA;SUM(ISNULL(EE_CONTRIBUTION,0)) + SUM(ISNULL(EE_PRE_TAX,0)) + SUM(ISNULL(EE_EMPLOYER_PICKUP,0)) + SUM(ISNULL(ER_CONTRIBUTION,0)) AS TOTALSUM,&#xD;&#xA;PLAN_ID,PERSON_ID&#xD;&#xA;FROM DBO.SGT_PROVIDER_REPORT_DATA_DC &#xD;&#xA;WHERE BATCH_REQUEST_ID IS NULL &#xD;&#xA;AND PROVIDER_ORG_ID=@PROVIDER_ORG_ID &#xD;&#xA;AND EFFECTIVE_DATE &lt;= @PAYMENTDATE&#xD;&#xA;GROUP BY SSN,PLAN_ID,PERSON_ID">
+      <parameters>
+        <parameter ID="@PROVIDER_ORG_ID" sfwDataType="int" />
+        <parameter ID="@PAYMENTDATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="ProviderReportDataDcId" sfwType="Column" sfwValue="provider_report_data_dc_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="SubsystemDescription" sfwType="Description" sfwValue="subsystem_description" />
+    <attribute ID="SubsystemId" sfwType="Column" sfwValue="subsystem_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="349" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="SubsystemValue" sfwType="Column" sfwValue="subsystem_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="SubsystemRefId" sfwType="Column" sfwValue="subsystem_ref_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PersonId" sfwType="Column" sfwValue="person_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="Ssn" sfwType="Column" sfwValue="ssn" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="9" />
+    <attribute ID="FirstName" sfwType="Column" sfwValue="first_name" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="LastName" sfwType="Column" sfwValue="last_name" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ProviderOrgId" sfwType="Column" sfwValue="provider_org_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PlanId" sfwType="Column" sfwValue="plan_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="EffectiveDate" sfwType="Column" sfwValue="effective_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="EeContribution" sfwType="Column" sfwValue="ee_contribution" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="11,2" />
+    <attribute ID="EePreTax" sfwType="Column" sfwValue="ee_pre_tax" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="11,2" />
+    <attribute ID="EeEmployerPickup" sfwType="Column" sfwValue="ee_employer_pickup" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="11,2" />
+    <attribute ID="ErContribution" sfwType="Column" sfwValue="er_contribution" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="11,2" />
+    <attribute ID="MemberInterest" sfwType="Column" sfwValue="member_interest" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="11,2" />
+    <attribute ID="EmployerInterest" sfwType="Column" sfwValue="employer_interest" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="11,2" />
+    <attribute ID="EmployerRhicInterest" sfwType="Column" sfwValue="employer_rhic_interest" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="11,2" />
+    <attribute ID="BatchRequestId" sfwType="Column" sfwValue="batch_request_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="LastFourDigitsOfSSN" sfwDataType="string" sfwValue="lstrLastFourDigitsOfSSN" sfwType="Property" />
+    <attribute ID="ProviderName" sfwDataType="string" sfwValue="lstrProviderName" sfwType="Property" />
+    <attribute ID="PersonName" sfwDataType="string" sfwValue="lstrPersonName" sfwType="Property" />
+    <attribute ID="ProviderNamebyOrgid" sfwDataType="string" sfwValue="lstrProviderNamebyOrgid" sfwType="Property" />
+    <attribute ID="PreTaxAmount" sfwDataType="decimal" sfwPrivate="False" sfwValue="idecPre_tax_amount" sfwType="Property" />
+  </attributes>
+</entity>

@@ -1,0 +1,106 @@
+﻿<div ng-controller="ClientVisibilityController" class="full-height">
+    <div class="portlet-body series-details-popup" id="ScopeId_{{$id}}">
+        <div class="client-visi-layout">
+            <div class="client-visi-tree-list">
+                <div class="client-visi-layout-inner">
+                    <div class="client-visi-header">
+                        Control List
+                    </div>
+                    <div class="client-visi-content">
+                        <ul>
+                            <li ng-repeat="field in FieldCollection" ng-click="SelectFieldClick(field, $event)" class="common-tree-list marg-left-15">
+                                <i ng-class="field.IsExpanded?'fa fa-minus':'fa fa-plus'" ng-click="ExpandCollapsedControl(field,$event)" ng-show="field.Items.length>0"></i>
+                                <input type="checkbox" ng-model="field.IsSelected" ng-show="field.IsCheckBoxVisible" />
+                                <span ng-bind="field.Text"></span>
+                                <div clientvisibilitychildtree ng-if="field.Items.length > 0"></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="client-visi-layout-inner-button">
+
+                <input type="button" ng-click="AddToListboxClick()" class="button-add-to-right" />
+
+            </div>
+            <div class="client-visi-control-list">
+                <div class="client-visi-layout-inner">
+                    <div class="client-visi-header">
+                        Selected Controls <span class="fright"><img src="images/Common/icon_delete_dark.svg" ng-click="DeleteToListboxClick()" ng-disabled="!SelectedControl"/></span>
+                    </div>
+                    <div class="client-visi-content">
+                        <ul class="ul-control-list">
+                            <li ng-repeat="control in ControlCollection" ng-click="SelectControlFromList(control)" ng-class="SelectedControl==control?'selected':''"
+                                clientvisibilitydraggable dragdata="control">
+                                <span ng-bind="control.Content"></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="client-visi-value-table">
+                <div class="client-visi-layout-inner">
+                    <div class="client-visi-header">
+                        <ul class="list-inline pull-right">
+                            <li> <img src="images/Common/icon_delete_dark.svg" ng-click="DeleteToGridClick()" ng-disabled="!SelectedVisibility"/></li>
+                            <li> <img src="images/Common/icon_add_dark.svg" ng-click="AddToGridClick()" /></li>
+                        </ul>
+                    </div>
+                    <div class="client-visi-content">
+                        <table class="table table-condensed table-fixedheader">
+                            <thead>
+                                <tr>
+                                    <th width="50%">Value</th>
+                                    <th width="50%">{{StrControlHeader}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="saveCtrl in SavedControlList" ng-click="SelectSaveControlClick(saveCtrl)" ng-class="SelectedVisibility==saveCtrl?'selected':''">
+                                    <td width="50%" ng-show="model.dictAttributes.sfwLoadType || model.Name === 'sfwCheckBox'">
+                                        <div class="select-editable" ng-if="model.dictAttributes.sfwLoadType == 'CodeGroup'">
+                                            <select ng-options="code.CodeValue as code.CodeValueDescription for code in CodeValues" title="{{saveCtrl.Value}}" ng-model="saveCtrl.Value" />
+                                            <input type="text" name="format" title="{{saveCtrl.Value}}" ng-model="saveCtrl.Value" ondrop="return false;" />
+                                        </div>
+                                        <div class="select-editable" ng-if="model.dictAttributes.sfwLoadType == 'Query'">
+                                            <select ng-options="query.CodeID as query.CodeID for query in lstQryField" title="{{saveCtrl.Value}}" ng-model="saveCtrl.Value" />
+                                            <input type="text" name="format" title="{{saveCtrl.Value}}" ng-model="saveCtrl.Value" ondrop="return false;" />
+                                        </div>
+                                        <div class="select-editable" ng-if="model.dictAttributes.sfwLoadType == 'Items'">
+                                            <select ng-options="items.dictAttributes.Text as items.dictAttributes.Text for items in lstItems" title="{{saveCtrl.Value}}" ng-model="saveCtrl.Value" />
+                                            <input type="text" name="format" title="{{saveCtrl.Value}}" ng-model="saveCtrl.Value" ondrop="return false;" />
+                                        </div>
+                                        <div class="select-editable" ng-if="model.dictAttributes.sfwLoadType=='ServerMethod' || model.dictAttributes.sfwLoadType=='ChildMethod' ||  model.dictAttributes.sfwLoadType=='Method'">
+                                            <input type="text" name="format" title="{{saveCtrl.Value}}" ng-model="saveCtrl.Value" ondrop="return false;" />
+                                        </div>
+                                        <div class="select-editable" ng-if="model.Name==='sfwCheckBox'">
+                                            <select title="{{saveCtrl.Value}}" ng-model="saveCtrl.Value">
+                                                <option value="true">True</option>
+                                                <option value="false">False</option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td width="50%" ng-show="!(model.dictAttributes.sfwLoadType || model.Name === 'sfwCheckBox')">
+                                        <input type="text" name="format" title="{{saveCtrl.Value}}" ng-model="saveCtrl.Value" class="form-control input-sm" ondrop="return false;"/>
+                                    </td>
+                                    <td width="50%" clientvisibilitydroppable dropdata="saveCtrl.arrVisibleControl">
+                                        <ul class="ul-control-list-table">
+                                            <li ng-repeat="ctrl in saveCtrl.arrVisibleControl" ng-click="SelectVisibleControlClick(ctrl)" ng-class="SelectedItem == ctrl?'selected':''"
+                                                context-menu="SaveControlListMenu">
+                                                <span ng-bind="ctrl.Content"></span>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-actions">
+        <input type="button" class="btn dialog-btn-default" ng-click="onRemoveClientVisibilityClick()" value="{{StrRemoveButtonText}}" />
+        <input type="button" class="btn dialog-btn-default" value="OK" ng-click="onSaveClick()" />
+        <input type="button" class="btn dialog-btn-default" value="Cancel" ng-click="onCancelClick()" />
+    </div>
+</div>

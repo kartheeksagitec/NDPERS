@@ -1,0 +1,340 @@
+﻿<entity ID="entOrganization" sfwActive="True" sfwStatus="Valid" sfwRemoteObject="srvOrganization" sfwType="BusinessRule" sfwMainCDO="icdoOrganization" sfwObjectID="busOrganization" sfwTableName="sgt_organization" sfwView="False" sfwParentEntity="entExtendBase">
+  <rules>
+    <rule ID="IsOrgStatusPending" sfwMessageId="4176" sfwExpression="!(this.icdoOrganization.status_value == &quot;PEND&quot;)" sfwObjectBased="True" />
+    <rule ID="IsOrgTypeEmployer" sfwExpression="(this.icdoOrganization.org_type_value == &quot;EMPL&quot;)" sfwObjectBased="True" />
+    <rule ID="IsOrgTypeProviderOrVendor" sfwExpression="(this.icdoOrganization.org_type_value == &quot;PRVD&quot;) || &#xA;(this.icdoOrganization.org_type_value == &quot;VEND&quot;)" sfwObjectBased="True" />
+    <rule ID="IsPaymentOptionACHAndOrgDoesNotExistforUsageDirectDeposit" sfwMessageId="6655" sfwExpression="(this.icdoOrganization.payment_option_value == &quot;A&quot;) &amp;&amp; &#xA;(this.ValidateIfPaymentOptionACHSelected() == True)" sfwObjectBased="True" />
+    <rule ID="IsPaymentOptionNOTWireTransferAndRepeatcodeentered" sfwMessageId="4163" sfwExpression="!(this.icdoOrganization.payment_option_value == &quot;W&quot;) &amp;&amp; &#xA;!(string.IsNullOrEmpty(this.icdoOrganization.wire_transfer_repeat_code))" sfwObjectBased="True" />
+    <rule ID="IsPaymentOptionWireTransferAndRepeatCodeNOTentered" sfwMessageId="4162" sfwExpression="(this.icdoOrganization.payment_option_value == &quot;W&quot;) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoOrganization.wire_transfer_repeat_code))" sfwObjectBased="True" />
+    <rule ID="IsPrimaryAuthorizedAgent" sfwExpression="(this.iblnIsPAA == True)" sfwObjectBased="True" />
+    <rule ID="IsRoutingNoChanged" sfwMessageId="4231" sfwExpression="(this.icdoOrganization.org_type_value == &quot;BANK&quot;) &amp;&amp; &#xA;(this.IsRoutingNoChanged() == True) &amp;&amp; &#xA;!(this.icdoOrganization.suppress_warnings_flag == &quot;Y&quot;)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK EMPLOYER AND CATEGORY" sfwMessageId="4006" sfwExpression="((this.icdoOrganization.org_type_value == &quot;EMPL&quot;) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoOrganization.emp_category_value)))" sfwObjectBased="True" />
+    <rule ID="Rule Check EmployerType State and CentralPayroll or InterOffice checked" sfwMessageId="4156" sfwExpression="(!string.IsNullOrEmpty(this.icdoOrganization.emp_category_value)) &amp;&amp; &#xA;(this.icdoOrganization.emp_category_value != &quot;STAT&quot;) &amp;&amp; &#xA;((this.icdoOrganization.central_payroll_flag == &quot;Y&quot;) || &#xA;(this.icdoOrganization.interoffice_mail_flag == &quot;Y&quot;))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK FEDERAL ID IS NUMERIC" sfwMessageId="4055" sfwExpression="(!string.IsNullOrEmpty(this.icdoOrganization.federal_id)) &amp;&amp; &#xA;(!RFunc.IsNumeric(this.icdoOrganization.federal_id))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK FEDERAL ID LENGTH 9 DIGIT" sfwMessageId="4056" sfwExpression="(RFunc.Length(this.icdoOrganization.federal_id) != 9) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.icdoOrganization.federal_id))" sfwObjectBased="True" />
+    <rule ID="Rule Check if org got address,contact,bank or plan" sfwMessageId="4126" sfwExpression="((RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entOrganization.GetAddressCount&quot;, this.icdoOrganization.org_id) &gt; 0) || &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entOrganization.GetAssociatedBankCount&quot;, this.icdoOrganization.org_id) &gt; 0) || &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entOrganization.GetContactCount&quot;, this.icdoOrganization.org_id) &gt; 0) || &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entOrganization.GetPlanCount&quot;, this.icdoOrganization.org_id) &gt; 0) || &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entOrganization.GetContactTicketCount&quot;, this.icdoOrganization.org_id) &gt; 0)) &amp;&amp; &#xA;(this.icdoOrganization.status_value == &quot;PEND&quot;)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF ORG TYPE IS NOT EMPLOYER AND FLAG IS UNCHECKED" sfwMessageId="4009" sfwExpression="(this.icdoOrganization.org_type_value != &quot;EMPL&quot;) &amp;&amp; &#xA;((this.icdoOrganization.central_payroll_flag == &quot;Y&quot;) || &#xA;(this.icdoOrganization.interoffice_mail_flag == &quot;Y&quot;))" sfwObjectBased="True" />
+    <rule ID="Rule Check if Status is Pending" sfwMessageId="4125" sfwExpression="(this.icdoOrganization.status_value != &quot;PEND&quot;)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK NOT EQUAL EMPLOYER AND CATEGORY" sfwMessageId="4007" sfwExpression="((this.icdoOrganization.org_type_value != &quot;EMPL&quot;) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.icdoOrganization.emp_category_value)))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK NOT EQUAL ORG TYPE TRUSTEE/ESTATE" sfwMessageId="4003" sfwExpression="((this.icdoOrganization.org_type_value != &quot;TRST&quot;) &amp;&amp; &#xA;(this.icdoOrganization.org_type_value != &quot;EST&quot;)) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.icdoOrganization.federal_id))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK NOT EQUAL TO BANK" sfwMessageId="4005" sfwExpression="((this.icdoOrganization.org_type_value != &quot;BANK&quot;) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.icdoOrganization.routing_no)))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK ORG CODE DUPLICATE NEW" sfwMessageId="4001" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entOrganization.GetOrgCountByOrgCode&quot;, this.icdoOrganization.org_code) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="Rule Check Org Code is not Entered" sfwMessageId="4191" sfwExpression="(string.IsNullOrEmpty(this.icdoOrganization.org_code))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK ORG NAME IS NULL" sfwMessageId="4010" sfwExpression="(string.IsNullOrEmpty(this.icdoOrganization.org_name))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK ORG PLAN COUNT WITH OPEN END DATE AND ORG STATUS" sfwMessageId="4054" sfwExpression="(this.CheckOrgPlanWithOpenEndDate() == True)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK ORG STATUS IN UPDATE MODE" sfwMessageId="4008" sfwExpression="(this.ChangeOrganizationStatusUpdateMode() == True)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK ORG STATUS IS PENDING" sfwMessageId="4053" sfwExpression="(this.icdoOrganization.status_value != &quot;PEND&quot;)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK ORG TYPE IS BANK AND ROUTING NO" sfwMessageId="4004" sfwExpression="((this.icdoOrganization.org_type_value == &quot;BANK&quot;) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoOrganization.routing_no)))" sfwObjectBased="True" />
+    <rule ID="Rule check Org Type is not bank, Trustee, Estate, Consutant" sfwExpression="(this.icdoOrganization.org_type_value == &quot;EMPL&quot;) || &#xA;(this.icdoOrganization.org_type_value == &quot;PRVD&quot;) || &#xA;(this.icdoOrganization.org_type_value == &quot;RLIT&quot;) || &#xA;(this.icdoOrganization.org_type_value == &quot;VEND&quot;)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK ORG TYPE IS NULL" sfwMessageId="4011" sfwExpression="(string.IsNullOrEmpty(this.icdoOrganization.org_type_value))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK ORG TYPE TRUSTEE/ESTATE AND FEDERAL ID" sfwMessageId="4002" sfwExpression="((this.icdoOrganization.org_type_value == &quot;TRST&quot;) || &#xA;(this.icdoOrganization.org_type_value == &quot;EST&quot;)) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoOrganization.federal_id))" sfwObjectBased="True" />
+    <rule ID="Rule Check Range of OrgCode" sfwMessageId="4193" sfwExpression="!(string.IsNullOrEmpty(this.icdoOrganization.org_type_value)) &amp;&amp; &#xA;!(!RFunc.IsNumeric(this.icdoOrganization.org_code)) &amp;&amp; &#xA;!(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entOrganization.GetOrgCountByOrgCode&quot;, this.icdoOrganization.org_code) &gt; 0) &amp;&amp; &#xA;(this.CheckOrgCodeRange() == False)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK ROUTING NO IS NUMERIC" sfwMessageId="4057" sfwExpression="(!string.IsNullOrEmpty(this.icdoOrganization.routing_no)) &amp;&amp; &#xA;(!RFunc.IsNumeric(this.icdoOrganization.routing_no))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK ROUTING NO LENGTH 9 DIGIT" sfwMessageId="4058" sfwExpression="(RFunc.Length(this.icdoOrganization.routing_no) != 9) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.icdoOrganization.routing_no))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK STATUS IS NULL" sfwMessageId="4013" sfwExpression="(string.IsNullOrEmpty(this.icdoOrganization.status_value))" sfwObjectBased="True" />
+    <rule ID="Rule Org Code is not alpha numeric" sfwMessageId="4194" sfwExpression="(!string.IsNullOrEmpty(this.icdoOrganization.org_code)) &amp;&amp; &#xA;(!RFunc.IsNumeric(this.icdoOrganization.org_code))" sfwObjectBased="True" />
+    <rule ID="RULE VISIBILE STATUS FOR DECLINED/MERGED" sfwExpression="(this.CheckVisibleRuleForStatus() == True)" sfwObjectBased="True" />
+    <rule ID="RULE VISIBILE STATUS IS NOT DCLINED/MERGED" sfwExpression="(this.CheckVisibleRuleForStatus() == False)" sfwObjectBased="True" />
+    <rule ID="RULE VISIBLE ORG TYPE VENDOR" sfwExpression="(this.icdoOrganization.org_type_value == &quot;VEND&quot;)" sfwObjectBased="True" />
+    <rule ID="VisbileIsEmployerTypeNOTState" sfwExpression="(this.icdoOrganization.emp_category_value != &quot;STAT&quot;)" sfwObjectBased="True" />
+    <rule ID="VisibleIsEmployerTypeState" sfwExpression="!(this.icdoOrganization.emp_category_value != &quot;STAT&quot;)" sfwObjectBased="True" />
+    <rule ID="Enable Control for PAA only" sfwExpression="!(this.iblnIsUpdateAddressClicked == True)" sfwObjectBased="True" />
+    <rule ID="Enable Save" sfwExpression="(this.iblnIsUpdateAddressClicked == True)" sfwObjectBased="True" />
+    <rule ID="Visible Update to PAA" sfwExpression="(this.iblnIsPAA == True) &amp;&amp; &#xA;!(this.iblnIsUpdateAddressClicked == True)" sfwObjectBased="True" />
+    <rule ID="Rule Check Address Valid" sfwMessageId="127" sfwExpression="(this.istrSuppressWarning == &quot;N&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrgContactAddress.icdoOrgContactAddress.country_value&quot;) != &quot;0001&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrgPrimaryAddress.icdoOrgContactAddress.address_validate_flag&quot;) == &quot;N&quot;)" sfwObjectBased="True" />
+    <rule ID="IsNotPrimaryAuthorizedAgent" sfwExpression="!(this.iblnIsPAA == True)" sfwObjectBased="True" />
+    <rule ID="Rule Check Update Address Clicked" sfwExpression="(this.iblnIsUpdateAddressClicked == True)" sfwObjectBased="True" />
+    <rule ID="RuleCheckIfRoutingNumberAlreadyExists" sfwExpression="(this.IsRoutingNumberAlreadyExists() == True)" sfwMessageId="10320" />
+    <rule ID="RULE CHECK ORG STATUS IS INACTIVE" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.icdoOrganization.status_value == &quot;IATV&quot;)" sfwMessage="Organization is InActive" />
+  </rules>
+  <delete>
+    <property ID="lstOrgContact" sfwMethodName="LoadOrgContact" />
+    <property ID="lstOrgBank" sfwMethodName="LoadOrgBank" />
+    <property ID="lstOrgAddress" sfwMethodName="LoadOrgAddresses" />
+    <property ID="lstOrgPlan" sfwMethodName="LoadOrgPlan" />
+    <property ID="lstOrgDeductionType" sfwMethodName="LoadOrgDeductionTypeByOrgID" />
+  </delete>
+  <checklist />
+  <initialload>
+    <item ID="RULE VISIBILE STATUS FOR DECLINED/MERGED" sfwMode="Update" sfwStatus="Active" />
+    <item ID="RULE VISIBILE STATUS IS NOT DCLINED/MERGED" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule check Org Type is not bank, Trustee, Estate, Consutant" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsOrgTypeProviderOrVendor" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsOrgTypeEmployer" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPrimaryAuthorizedAgent" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE VISIBLE ORG TYPE VENDOR" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisbileIsEmployerTypeNOTState" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleIsEmployerTypeState" sfwMode="All" sfwStatus="Active" />
+    <item ID="Enable Control for PAA only" sfwStatus="Active" sfwMode="All" />
+    <item ID="Enable Save" sfwStatus="Active" sfwMode="All" />
+    <item ID="Visible Update to PAA" sfwStatus="Active" sfwMode="All" />
+    <item ID="Rule Check Address Valid" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsNotPrimaryAuthorizedAgent" sfwStatus="Active" sfwMode="All" />
+    <item ID="Rule Check Update Address Clicked" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="Rule Org Code is not alpha numeric" sfwMode="New" sfwStatus="Active" />
+    <item ID="RULE CHECK ORG CODE DUPLICATE NEW" sfwMode="New" sfwStatus="Active" />
+    <item ID="RULE CHECK ORG TYPE TRUSTEE/ESTATE AND FEDERAL ID " sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK NOT EQUAL ORG TYPE TRUSTEE/ESTATE" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK ORG TYPE IS BANK AND ROUTING NO" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK NOT EQUAL TO BANK " sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK EMPLOYER AND CATEGORY" sfwMode="All" sfwStatus="Inactive" />
+    <item ID="RULE CHECK NOT EQUAL EMPLOYER AND CATEGORY" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK ORG NAME IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK ORG TYPE IS NULL" sfwMode="All" sfwStatus="Inactive" />
+    <item ID="RULE CHECK STATUS IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK IF ORG TYPE IS NOT EMPLOYER AND FLAG IS UNCHECKED" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK ORG STATUS IN UPDATE MODE" sfwMode="Update" sfwStatus="Active" />
+    <item ID="RULE CHECK ORG PLAN COUNT WITH OPEN END DATE AND ORG STATUS" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK ORG STATUS IS PENDING" sfwMode="New" sfwStatus="Active" />
+    <item ID="RULE CHECK FEDERAL ID IS NUMERIC" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK FEDERAL ID LENGTH 9 DIGIT" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK ROUTING NO IS NUMERIC" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK ROUTING NO LENGTH 9 DIGIT" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check EmployerType State and CentralPayroll or InterOffice checked" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check Org Code is not Entered" sfwMode="New" sfwStatus="Inactive" />
+    <item ID="Rule Check Range of OrgCode" sfwMode="New" sfwStatus="Inactive" />
+    <item ID="IsPaymentOptionWireTransferAndRepeatCodeNOTentered" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPaymentOptionNOTWireTransferAndRepeatcodeentered" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPaymentOptionACHAndOrgDoesNotExistforUsageDirectDeposit" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsRoutingNoChanged" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check Address Valid" sfwStatus="Active" sfwMode="All" />
+    <item ID="RuleCheckIfRoutingNumberAlreadyExists" sfwStatus="Active" sfwMode="New" />
+    <item ID="RULE CHECK ORG STATUS IS INACTIVE" sfwMode="All" sfwStatus="InActive" />
+  </harderror>
+  <validatedelete>
+    <item ID="Rule Check if Status is Pending" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check if org got address,contact,bank or plan" sfwMode="All" sfwStatus="Active" />
+  </validatedelete>
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <constraint />
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from sgt_organization a WITH(NOLOCK) &#xD;&#xA; left outer join SGT_ORG_CONTACT_ADDRESS OCA WITH(NOLOCK) on oca.CONTACT_ORG_ADDRESS_ID = a.PRIMARY_ADDRESS_ID">
+      <parameters />
+    </query>
+    <query ID="GetOrgCountByOrgCode" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM dbo.SGT_ORGANIZATION&#xD;&#xA;WHERE ORG_CODE = @ORG_CODE&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@ORG_CODE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="GET ORGPLAN WITH OPENENDDATE" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) from sgt_org_plan &#xD;&#xA;where ((PARTICIPATION_END_DATE is null) or (PARTICIPATION_END_DATE &gt;= getdate()))&#xD;&#xA;and org_id = @org_id">
+      <parameters>
+        <parameter ID="@org_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LOAD_CONTACT_TICKET" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT SCT.*, sas.* FROM SGT_CONTACT_TICKET SCT&#xD;&#xA;left outer join sgt_appointment_schedule SAS on SAS.contact_ticket_id =SCT.contact_ticket_id and sct.contact_type_value = 'APP' &#xD;&#xA;left outer join sgt_seminar_schedule SSS on SSS.contact_ticket_id =SCT.contact_ticket_id and sct.contact_type_value = 'SEM' &#xD;&#xA;WHERE SCT.ORG_ID=@ORG_ID and (SAS.Appointment_Cancel_Flag &lt;&gt; 'Y' OR SAS.Appointment_Cancel_Flag IS NULL)&#xD;&#xA;and (SSS.Seminar_Cancel_Flag &lt;&gt; 'Y' OR SSS.Seminar_Cancel_Flag IS NULL)&#xD;&#xA;order by SCT.created_date desc">
+      <parameters>
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LookupSubQuery" sfwQueryType="SubSelectQuery" sfwSql="select b.org_plan_id &#xD;&#xA;  from sgt_org_plan b&#xD;&#xA; where a.org_id = b.org_id&#xD;&#xA;">
+      <parameters />
+    </query>
+    <query ID="LOAD_SEMINAR_ATTENDANCE" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_SEMINAR_SCHEDULE B &#xD;&#xA;inner join sgt_contact_ticket c on c.contact_ticket_id = b.contact_ticket_id&#xD;&#xA;INNER JOIN SGS_USER U ON B.facilitator = U.USER_SERIAL_ID&#xD;&#xA;where (b.Seminar_Cancel_Flag &lt;&gt; 'Y' OR b.Seminar_Cancel_Flag IS NULL)&#xD;&#xA;AND c.ORG_ID= @ORG_ID">
+      <parameters>
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetAddressCount" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) from sgt_org_contact_address where org_id =@org_id">
+      <parameters>
+        <parameter ID="@org_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetAssociatedBankCount" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) from sgt_org_bank where org_id =@org_id">
+      <parameters>
+        <parameter ID="@org_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetContactCount" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) from sgt_org_contact where org_id =@org_id">
+      <parameters>
+        <parameter ID="@org_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetPlanCount" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) from sgt_org_plan where org_id =@org_id">
+      <parameters>
+        <parameter ID="@org_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetSeminarCount" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) from sgt_seminar_attendee_detail sem left outer join &#xD;&#xA;sgt_org_contact oc on oc.org_contact_id = sem.org_contact_id&#xD;&#xA;where oc.org_id = @org_id&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@org_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetContactTicketCount" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) from sgt_contact_ticket where org_id =@org_id">
+      <parameters>
+        <parameter ID="@org_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetOrgPlanParticipationDate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql=" select * from sgt_org_plan where org_id=@org_id and plan_id=@plan_id">
+      <parameters>
+        <parameter ID="@org_id" sfwDataType="int" />
+        <parameter ID="@plan_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadEmployer" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_ORGANIZATION&#xD;&#xA;WHERE ORG_TYPE_VALUE = 'EMPL'&#xD;&#xA; AND STATUS_VALUE = 'ACTV'&#xD;&#xA;ORDER BY ORG_NAME">
+      <parameters />
+    </query>
+    <query ID="rptEmployersEnrldPlans" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="--(4) Schedule of Participating Employers:&#xD;&#xA;-- a. List: List all organizations with ‘Org Type’ of ‘Employer’ and list all the Plans the employer is enrolled in. Do not Include ‘Restricted’ Plans&#xD;&#xA;SELECT      ORG.ORG_NAME,PL.PLAN_NAME&#xD;&#xA;FROM      SGT_ORGANIZATION ORG WITH(NOLOCK)&#xD;&#xA; LEFT OUTER JOIN   SGT_ORG_PLAN ORGPL WITH(NOLOCK)&#xD;&#xA;     ON  ORGPL.ORG_ID = ORG.ORG_ID&#xD;&#xA; LEFT OUTER JOIN   SGT_PLAN PL WITH(NOLOCK)&#xD;&#xA;     ON  ORGPL.PLAN_ID = PL.PLAN_ID&#xD;&#xA;WHERE      ORG.ORG_TYPE_VALUE = 'EMPL'&#xD;&#xA;      AND PL.PLAN_ID IS NOT NULL&#xD;&#xA;      AND ISNULL(ORGPL.RESTRICTION,'N') = 'N'&#xD;&#xA;      AND ORGPL.PARTICIPATION_START_DATE &lt;= @EFFECTIVEDATE&#xD;&#xA;      AND (ORGPL.PARTICIPATION_END_DATE IS NULL OR ORGPL.PARTICIPATION_END_DATE &gt;= @EFFECTIVEDATE)&#xD;&#xA;ORDER BY     ORG.ORG_NAME,PL.PLAN_NAME">
+      <parameters>
+        <parameter ID="@EFFECTIVEDATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="rptPrincipalEmployerDetails" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="--(5) Principal Participating Employer:  Only include Employers enrolled in ‘MAIN’ Plan.&#xD;&#xA;-- a. List of Top 10:&#xD;&#xA;--  i. Org Code ID: Org Code ID of Employer&#xD;&#xA;--  ii. Employer Name: Name of the Employer&#xD;&#xA;--  iii.Number of Covered Employees: Count of person with ‘Plan Participation Status’ of ‘Enrolled’ in ‘Main Plan’ and &#xD;&#xA;--   ‘Employment History’ with ‘Status’ not equal to ‘Non-Contributing’ for that employer&#xD;&#xA;--  iv. Rank: 1-10 where 1 will be assigned to the employer with maximum ‘Number of Covered Employees’ sorted by ascending.&#xD;&#xA;--  v.  % of Total Employees: ‘Number of Covered Employees’ for that Employer (a.iii.) DIVIDED by total sum of &#xD;&#xA;--   ‘Number of Covered Employees’ for all employers&#xD;&#xA;&#xD;&#xA;--b. List Summary of remaining Employer:&#xD;&#xA;-- i. Number of Covered Employees: Count of person with ‘Plan Participation Status’ of ‘Enrolled’ and ‘Employment History’ &#xD;&#xA;--  with ‘Status’ not equal to ‘Non-Contributing’ for remaining employers&#xD;&#xA;-- ii. % of Total Employees: ‘Number of Covered Employees’ (b.i.) for remaining employers &#xD;&#xA;--  DIVIDED by total sum of ‘Number of Covered Employees’ for all employers&#xD;&#xA;&#xD;&#xA;--TODO NUMBERING (1-10)&#xD;&#xA;DECLARE @TOP10TOTALCOUNT INT&#xD;&#xA;SELECT      TOP 10 @TOP10TOTALCOUNT = SUM(COUNT_PER)&#xD;&#xA;FROM&#xD;&#xA;       (SELECT      TOP 10 ORG.ORG_CODE,ORG.ORG_NAME,COUNT(ACCT.PERSON_ACCOUNT_ID) AS COUNT_PER       &#xD;&#xA;       FROM      SGT_ORGANIZATION ORG WITH(NOLOCK)&#xD;&#xA;        LEFT OUTER JOIN   SGT_ORG_PLAN ORGPL WITH(NOLOCK)&#xD;&#xA;            ON  ORGPL.ORG_ID = ORG.ORG_ID&#xD;&#xA;        LEFT OUTER JOIN   SGT_PLAN PL WITH(NOLOCK)&#xD;&#xA;            ON  ORGPL.PLAN_ID = PL.PLAN_ID &#xD;&#xA;        LEFT OUTER JOIN   SGT_PERSON_EMPLOYMENT EMP WITH(NOLOCK)&#xD;&#xA;            ON  EMP.ORG_ID = ORG.ORG_ID&#xD;&#xA;        LEFT OUTER JOIN   SGT_PERSON_ACCOUNT ACCT WITH(NOLOCK)&#xD;&#xA;            ON  ACCT.PLAN_ID = PL.PLAN_ID &#xD;&#xA;             AND ACCT.PERSON_ID = EMP.PERSON_ID&#xD;&#xA;        LEFT OUTER JOIN   SGT_PERSON_EMPLOYMENT_DETAIL EMPDET WITH(NOLOCK)&#xD;&#xA;            ON  EMPDET.PERSON_EMPLOYMENT_ID = EMP.PERSON_EMPLOYMENT_ID        &#xD;&#xA;       WHERE      ORG.ORG_TYPE_VALUE = 'EMPL'&#xD;&#xA;             AND ISNULL(PL.PLAN_ID,0) = 1&#xD;&#xA;             AND ISNULL(EMPDET.STATUS_VALUE,'') &lt;&gt; 'NCON'&#xD;&#xA;             AND ISNULL(ACCT.PLAN_PARTICIPATION_STATUS_VALUE,'') = 'ENL1'&#xD;&#xA;             AND EMPDET.START_DATE &lt;= @EFFECTIVEDATE&#xD;&#xA;             AND (EMPDET.END_DATE IS NULL or EMPDET.END_DATE  &gt;= @EFFECTIVEDATE)&#xD;&#xA;       GROUP BY     ORG.ORG_CODE,ORG.ORG_NAME&#xD;&#xA;       ORDER BY     COUNT(ACCT.PERSON_ACCOUNT_ID) DESC&#xD;&#xA;       ) AS TEMP&#xD;&#xA;&#xD;&#xA;DECLARE @TOTALCOUNT INT&#xD;&#xA;SELECT      @TOTALCOUNT = SUM(COUNT_PER)&#xD;&#xA;FROM&#xD;&#xA;       (SELECT      ORG.ORG_CODE,ORG.ORG_NAME,COUNT(ACCT.PERSON_ACCOUNT_ID) AS COUNT_PER       &#xD;&#xA;       FROM      SGT_ORGANIZATION ORG WITH(NOLOCK)&#xD;&#xA;        LEFT OUTER JOIN   SGT_ORG_PLAN ORGPL WITH(NOLOCK)&#xD;&#xA;            ON  ORGPL.ORG_ID = ORG.ORG_ID&#xD;&#xA;        LEFT OUTER JOIN   SGT_PLAN PL WITH(NOLOCK)&#xD;&#xA;            ON  ORGPL.PLAN_ID = PL.PLAN_ID &#xD;&#xA;        LEFT OUTER JOIN   SGT_PERSON_EMPLOYMENT EMP WITH(NOLOCK)&#xD;&#xA;            ON  EMP.ORG_ID = ORG.ORG_ID&#xD;&#xA;        LEFT OUTER JOIN   SGT_PERSON_ACCOUNT ACCT WITH(NOLOCK)&#xD;&#xA;            ON  ACCT.PLAN_ID = PL.PLAN_ID &#xD;&#xA;             AND ACCT.PERSON_ID = EMP.PERSON_ID&#xD;&#xA;        LEFT OUTER JOIN   SGT_PERSON_EMPLOYMENT_DETAIL EMPDET WITH(NOLOCK)&#xD;&#xA;            ON  EMPDET.PERSON_EMPLOYMENT_ID = EMP.PERSON_EMPLOYMENT_ID        &#xD;&#xA;       WHERE      ORG.ORG_TYPE_VALUE = 'EMPL'&#xD;&#xA;             AND ISNULL(PL.PLAN_ID,0) = 1&#xD;&#xA;             AND ISNULL(EMPDET.STATUS_VALUE,'') &lt;&gt; 'NCON'&#xD;&#xA;             AND ISNULL(ACCT.PLAN_PARTICIPATION_STATUS_VALUE,'') = 'ENL1'&#xD;&#xA;             AND EMPDET.START_DATE &lt;= @EFFECTIVEDATE&#xD;&#xA;             AND (EMPDET.END_DATE IS NULL or EMPDET.END_DATE  &gt;= @EFFECTIVEDATE)&#xD;&#xA;       GROUP BY     ORG.ORG_CODE,ORG.ORG_NAME       &#xD;&#xA;       ) AS TEMP&#xD;&#xA;&#xD;&#xA;SELECT      ORG_CODE,ORG_NAME,COUNT_PER ,&#xD;&#xA;       CAST(ROW_NUMBER() OVER(ORDER BY COUNT_PER DESC) AS INT) AS RANK_NUM ,&#xD;&#xA;       PERCENT_EMP,'Y' AS INDICATOR&#xD;&#xA;    INTO #TEMP&#xD;&#xA;FROM      (&#xD;&#xA;        SELECT      TOP 10 ORG.ORG_CODE,ORG.ORG_NAME,COUNT(ACCT.PERSON_ACCOUNT_ID) AS COUNT_PER,       &#xD;&#xA;               CAST((COUNT(ACCT.PERSON_ACCOUNT_ID)/CAST(@TOTALCOUNT AS DECIMAL(13,2)))*100 AS DECIMAL(5,2)) AS PERCENT_EMP&#xD;&#xA;        FROM      SGT_ORGANIZATION ORG WITH(NOLOCK)&#xD;&#xA;         LEFT OUTER JOIN   SGT_ORG_PLAN ORGPL WITH(NOLOCK)&#xD;&#xA;             ON  ORGPL.ORG_ID = ORG.ORG_ID&#xD;&#xA;         LEFT OUTER JOIN   SGT_PLAN PL WITH(NOLOCK)&#xD;&#xA;             ON  ORGPL.PLAN_ID = PL.PLAN_ID &#xD;&#xA;         LEFT OUTER JOIN   SGT_PERSON_EMPLOYMENT EMP WITH(NOLOCK)&#xD;&#xA;             ON  EMP.ORG_ID = ORG.ORG_ID&#xD;&#xA;         LEFT OUTER JOIN   SGT_PERSON_ACCOUNT ACCT WITH(NOLOCK)&#xD;&#xA;             ON  ACCT.PLAN_ID = PL.PLAN_ID &#xD;&#xA;              AND ACCT.PERSON_ID = EMP.PERSON_ID&#xD;&#xA;         LEFT OUTER JOIN   SGT_PERSON_EMPLOYMENT_DETAIL EMPDET WITH(NOLOCK)&#xD;&#xA;             ON  EMPDET.PERSON_EMPLOYMENT_ID = EMP.PERSON_EMPLOYMENT_ID         &#xD;&#xA;        WHERE      ORG.ORG_TYPE_VALUE = 'EMPL'&#xD;&#xA;              AND ISNULL(PL.PLAN_ID,0) = 1&#xD;&#xA;              AND ISNULL(EMPDET.STATUS_VALUE,'') &lt;&gt; 'NCON'&#xD;&#xA;              AND ISNULL(ACCT.PLAN_PARTICIPATION_STATUS_VALUE,'') = 'ENL1'&#xD;&#xA;              AND EMPDET.START_DATE &lt;= @EFFECTIVEDATE&#xD;&#xA;              AND (EMPDET.END_DATE IS NULL or EMPDET.END_DATE  &gt;= @EFFECTIVEDATE)&#xD;&#xA;        GROUP BY     ORG.ORG_CODE,ORG.ORG_NAME&#xD;&#xA;        ORDER BY     COUNT(ACCT.PERSON_ACCOUNT_ID) DESC&#xD;&#xA;       ) AS FINAL&#xD;&#xA;&#xD;&#xA;INSERT INTO #TEMP&#xD;&#xA;SELECT      NULL AS ORG_COD,'REM' AS ORG_NAME,(@TOTALCOUNT - @TOP10TOTALCOUNT) AS REM_EMP,0 AS RANK_NUM,&#xD;&#xA;       (100.00 - (SELECT SUM(PERCENT_EMP) FROM #TEMP)) AS REM_PERCENT,'N' AS INDICATOR&#xD;&#xA;&#xD;&#xA;SELECT * FROM #TEMP WITH(NOLOCK)&#xD;&#xA;DROP TABLE #TEMP">
+      <parameters>
+        <parameter ID="@EFFECTIVEDATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="LoadJudgesPlanOrg" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select a.* from sgt_organization a inner join sgt_org_plan b on a.org_id=b.org_id&#xD;&#xA;where plan_id=24">
+      <parameters />
+    </query>
+    <query ID="LoadOrgContact" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT *,C.PRIMARY_ADDRESS_ID AS CNT_PRIMARY_ADDRESS_ID FROM SGT_ORG_CONTACT A &#xD;&#xA; INNER JOIN SGT_ORGANIZATION B &#xD;&#xA;  ON A.ORG_ID=B.ORG_ID&#xD;&#xA; INNER JOIN SGT_CONTACT C&#xD;&#xA;  ON A.CONTACT_ID=C.CONTACT_ID&#xD;&#xA; LEFT JOIN SGT_ORG_CONTACT_ROLE F&#xD;&#xA;  ON A.ORG_CONTACT_ID=F.ORG_CONTACT_ID&#xD;&#xA; LEFT JOIN DBO.SGT_ORG_CONTACT_ADDRESS D&#xD;&#xA;  ON A.PRIMARY_ADDRESS_ID=CONTACT_ORG_ADDRESS_ID&#xD;&#xA; LEFT JOIN SGT_PLAN E&#xD;&#xA;  ON A.PLAN_ID=E.PLAN_ID&#xD;&#xA;WHERE A.ORG_ID=@ORGID&#xD;&#xA;ORDER BY CASE WHEN F.CONTACT_ROLE_VALUE = 'PAAG' THEN '1'              &#xD;&#xA;              ELSE F.CONTACT_ROLE_VALUE  END ASC">
+      <parameters>
+        <parameter ID="@ORGID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetPlanOfProvider" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT TOP 1 B.PLAN_ID AS PROVIDER_PLAN_ID_CHECK FROM SGT_ORG_PLAN_PROVIDER A WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_ORG_PLAN B WITH(NOLOCK)&#xD;&#xA;ON A.ORG_PLAN_ID=B.ORG_PLAN_ID&#xD;&#xA;WHERE A.PROVIDER_ORG_ID=@PROVIDER_ORG_ID AND B.PLAN_ID=@PLAN_ID">
+      <parameters>
+        <parameter ID="@PROVIDER_ORG_ID" sfwDataType="int" />
+        <parameter ID="@PLAN_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetOrganizationFromOrgCode" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM sgt_organization where ORG_CODE LIKE '%'+ @OrgCode + '%'">
+      <parameters>
+        <parameter ID="@OrgCode" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="GetBankWithActiveOrPendingStatus" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM sgt_organization&#xD;&#xA;WHERE ROUTING_NO = @ROUTING_NO&#xD;&#xA;AND ORG_TYPE_VALUE = 'BANK'&#xD;&#xA;AND STATUS_VALUE IN ('ACTV', 'PEND')">
+      <parameters>
+        <parameter ID="@ROUTING_NO" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="GetOrgnizationNamebyOrgId" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM sgt_organization SO WITH(NOLOCK)  where SO.ORG_ID=@OrgId">
+      <parameters>
+        <parameter ID="@OrgId" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetOrgFromOrgCode" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM sgt_organization where ORG_CODE = @OrgCode">
+      <parameters>
+        <parameter ID="@OrgCode" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="LoadHumanaProviderDataMedicarePartD" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT MED.FIRST_NAME ,MED.LAST_NAME ,MED.EFFECTIVE_DATE AS BILLING_PERIOD ,&#xA;HIST.MEDICARE_CLAIM_NO AS medicare_id_number,&#xA;MED.SSN,&#xA;MED.PREMIUM_AMOUNT AS AMOUNT&#xA;FROM SGT_PROVIDER_REPORT_DATA_MEDICARE_PART_D MED WITH(NOLOCK)&#xA;INNER JOIN SGT_PROVIDER_REPORT_DATA_BATCH_REQUEST PRDBR WITH(NOLOCK) ON MED.PROVIDER_ORG_ID=PRDBR.ORG_ID&#xA;INNER JOIN SGT_PERSON_ACCOUNT_MEDICARE_PART_D_HISTORY HIST ON MED.PERSON_ID = HIST.PERSON_ID AND HIST.PROVIDER_ORG_ID = 6679&#xA;AND HIST.END_DATE IS NULL&#xA;WHERE MED.BATCH_REQUEST_ID IS NULL &#xA;AND &#xA;MED.SUBSYSTEM_VALUE = 'IBSD'&#xA;AND PRDBR.STATUS_VALUE='NTPR'&#xA;AND MED.EFFECTIVE_DATE &lt;= PRDBR.EFFECTIVE_START_DATE&#xA;AND PRDBR.EFFECTIVE_START_DATE &lt;= @EFFECTIVEDATE&#xA;AND PRDBR.EFFECTIVE_END_DATE IS NULL&#xA;AND ISNULL(PRDBR.VISIBILITY_FLAG,'') = 'Y'&#xA;AND MED.PROVIDER_ORG_ID = 6679&#xA;&#xA;UNION ALL&#xA;&#xA;SELECT PER.FIRST_NAME,PER.LAST_NAME,MED.EFFECTIVE_DATE AS BILLING_PERIOD ,&#xA;HIST.MEDICARE_CLAIM_NO AS medicare_id_number,&#xA;PER.SSN,&#xA;MED.PREMIUM_AMOUNT AS AMOUNT&#xA;FROM SGT_PROVIDER_REPORT_DATA_MEDICARE_PART_D MED WITH(NOLOCK)&#xA;INNER JOIN SGT_PROVIDER_REPORT_DATA_BATCH_REQUEST PRDBR WITH(NOLOCK) ON MED.PROVIDER_ORG_ID=PRDBR.ORG_ID&#xA;INNER JOIN SGT_EMPLOYER_PAYROLL_DETAIL SEPD ON SEPD.EMPLOYER_PAYROLL_DETAIL_ID = MED.SUBSYSTEM_REF_ID&#xA;INNER JOIN SGT_PERSON_ACCOUNT SPA ON SPA.PERSON_ACCOUNT_ID = SEPD.PERSON_ACCOUNT_ID&#xA;INNER JOIN SGT_PERSON_ACCOUNT_MEDICARE_PART_D_HISTORY HIST ON HIST.PERSON_ACCOUNT_ID = SPA.PERSON_ACCOUNT_ID&#xA;INNER JOIN SGT_PERSON_BASE PER ON PER.PERSON_ID = SPA.PERSON_ID&#xA;AND HIST.END_DATE IS NULL&#xA;WHERE MED.BATCH_REQUEST_ID IS NULL &#xA;AND &#xA;MED.SUBSYSTEM_VALUE = 'PAYR'&#xA;AND PRDBR.STATUS_VALUE='NTPR'&#xA;AND MED.EFFECTIVE_DATE &lt;= PRDBR.EFFECTIVE_START_DATE&#xA;AND PRDBR.EFFECTIVE_START_DATE &lt;= @EFFECTIVEDATE&#xA;AND PRDBR.EFFECTIVE_END_DATE IS NULL&#xA;AND ISNULL(PRDBR.VISIBILITY_FLAG,'') = 'Y'&#xA;AND MED.PROVIDER_ORG_ID = 6679">
+      <parameters>
+        <parameter ID="@EFFECTIVEDATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="GetOrgIdFromId" sfwQueryType="ScalarQuery" sfwDataType="int" sfwSql="select org_id from sgt_organization where org_id = @org_id">
+      <parameters>
+        <parameter ID="@org_id" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="OrgId" sfwType="Column" sfwValue="org_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="OrgName" sfwType="Column" sfwValue="org_name" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="OrgTypeDescription" sfwType="Description" sfwValue="org_type_description" />
+    <attribute ID="OrgTypeId" sfwType="Column" sfwValue="org_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="201" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="OrgTypeValue" sfwType="Column" sfwValue="org_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="ReportingMethodDescription" sfwType="Description" sfwValue="reporting_method_description" />
+    <attribute ID="ReportingMethodId" sfwType="Column" sfwValue="reporting_method_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="206" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ReportingMethodValue" sfwType="Column" sfwValue="reporting_method_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="RemittanceMethodDescription" sfwType="Description" sfwValue="remittance_method_description" />
+    <attribute ID="RemittanceMethodId" sfwType="Column" sfwValue="remittance_method_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="207" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="RemittanceMethodValue" sfwType="Column" sfwValue="remittance_method_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="FederalId" sfwType="Column" sfwValue="federal_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="9" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="OrgCode" sfwType="Column" sfwValue="org_code" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="6" />
+    <attribute ID="LegacyDeptNo" sfwType="Column" sfwValue="legacy_dept_no" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="Telephone" sfwType="Column" sfwValue="telephone" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="Email" sfwType="Column" sfwValue="email" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="Fax" sfwType="Column" sfwValue="fax" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="StatusDescription" sfwType="Description" sfwValue="status_description" />
+    <attribute ID="StatusId" sfwType="Column" sfwValue="status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="214" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusValue" sfwType="Column" sfwValue="status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="PrimaryAddressId" sfwType="Column" sfwValue="primary_address_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PrimaryContactId" sfwType="Column" sfwValue="primary_contact_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="EmpCategoryDescription" sfwType="Description" sfwValue="emp_category_description" />
+    <attribute ID="EmpCategoryId" sfwType="Column" sfwValue="emp_category_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="203" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="EmpCategoryValue" sfwType="Column" sfwValue="emp_category_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="RoutingNo" sfwType="Column" sfwValue="routing_no" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="9" />
+    <attribute ID="CentralPayrollFlag" sfwType="Column" sfwValue="central_payroll_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="InterofficeMailFlag" sfwType="Column" sfwValue="interoffice_mail_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="EmpTransReportFlag" sfwType="Column" sfwValue="emp_trans_report_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="ProviderTypeDescription" sfwType="Description" sfwValue="provider_type_description" />
+    <attribute ID="ProviderTypeId" sfwType="Column" sfwValue="provider_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="412" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ProviderTypeValue" sfwType="Column" sfwValue="provider_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="EarlyRetirementIncentivePurchaseAgreement" sfwType="Column" sfwValue="early_retirement_incentive_purchase_agreement" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="PeoplesoftOrgGroupDescription" sfwType="Description" sfwValue="peoplesoft_org_group_description" />
+    <attribute ID="PeoplesoftOrgGroupId" sfwType="Column" sfwValue="peoplesoft_org_group_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="364" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PeoplesoftOrgGroupValue" sfwType="Column" sfwValue="peoplesoft_org_group_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="HipaaReferenceId" sfwType="Column" sfwValue="hipaa_reference_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="5" />
+    <attribute ID="HipaaBranchId" sfwType="Column" sfwValue="hipaa_branch_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="3" />
+    <attribute ID="WireTransferRepeatCode" sfwType="Column" sfwValue="wire_transfer_repeat_code" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="PaymentOptionDescription" sfwType="Description" sfwValue="payment_option_description" />
+    <attribute ID="PaymentOptionId" sfwType="Column" sfwValue="payment_option_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="207" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PaymentOptionValue" sfwType="Column" sfwValue="payment_option_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="CompanyForPeopleSoftFile" sfwType="Column" sfwValue="company_for_people_soft_file" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="3" />
+    <attribute ID="BusinessUnit" sfwType="Column" sfwValue="business_unit" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="5" />
+    <attribute ID="AchAccountNumber" sfwType="Column" sfwValue="ach_account_number" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="PreTaxPurchase" sfwType="Column" sfwValue="pre_tax_purchase" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="MssAccessDescription" sfwType="Description" sfwValue="mss_access_description" />
+    <attribute ID="MssAccessId" sfwType="Column" sfwValue="mss_access_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="MssAccessValue" sfwType="Column" sfwValue="mss_access_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="TelephoneNoExtn" sfwType="Column" sfwValue="telephone_no_extn" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="objOrgPrimaryAddress" sfwType="Object" sfwEntity="entOrgContactAddress" sfwValue="ibusOrgPrimaryAddress" />
+    <attribute sfwDataType="string" sfwType="Property" ID="SuppressWarningsFlag" sfwValue="icdoOrganization.suppress_warnings_flag" />
+    <attribute sfwType="Collection" sfwEntity="entOrgContactAddress" ID="lstOrgAddress" sfwValue="iclbOrgAddress" />
+    <attribute sfwType="Collection" sfwEntity="entOrgBank" ID="lstOrgBank" sfwValue="iclbOrgBank" />
+    <attribute sfwType="Collection" sfwEntity="entOrgPlan" ID="lstOrgPlan" sfwValue="iclbOrgPlan" />
+    <attribute sfwType="Collection" sfwEntity="entOrgContact" ID="lstOrgContact" sfwValue="iclbOrgContact" />
+    <attribute sfwType="Collection" sfwEntity="entContactTicket" ID="lstOrganizationContactTicket" sfwValue="icolOrganizationContactTicket" />
+    <attribute sfwType="Collection" sfwEntity="entSeminarSchedule" ID="lstSeminarSchedule" sfwValue="icolSeminarSchedule" />
+    <attribute sfwType="Collection" sfwEntity="entNotes" ID="lstNotes" sfwValue="iclbNotes" />
+    <attribute sfwType="Collection" sfwEntity="entBpmActivityInstanceHistory" ID="lstWorkflowProcessHistory" sfwValue="iclbWorkflowProcessHistory" />
+    <attribute sfwType="Collection" sfwEntity="entOrgDeductionType" ID="lstOrgDeductionType" sfwValue="iclbOrgDeductionType" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecGrossAmountPaid" sfwValue="idecGrossAmountPaid" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecNonTaxableAmountPaid" sfwValue="idecNonTaxableAmountPaid" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecTaxableAmountPaid" sfwValue="idecTaxableAmountPaid" />
+    <attribute sfwType="Collection" sfwEntity="entPaymentHistoryHeader" ID="lstPaymentDetails" sfwValue="iclbPaymentDetails" />
+    <attribute sfwDataType="string" sfwType="Property" ID="RecipientOrg" sfwValue="icdoOrganization.RecipientOrg" />
+    <attribute sfwType="Collection" sfwEntity="entOrgContact" ID="lstESSOrgContact" sfwValue="iclbESSOrgContact" />
+    <attribute ID="objESSPrimaryOrgContact" sfwType="Object" sfwEntity="entOrgContact" sfwValue="ibusESSPrimaryOrgContact" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrSuppressWarning" sfwValue="istrSuppressWarning" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IintContactID" sfwValue="iintContactID" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IProviderName" sfwValue="iProviderName" />
+    <attribute ID="objOrgPlan" sfwType="Object" sfwEntity="entOrgPlan" sfwValue="ibusOrgPlan" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPaymentDate" sfwValue="istrPaymentDate" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecJudgesTotal" sfwValue="idecJudgesTotal" />
+    <attribute sfwType="Collection" sfwEntity="entPaymentHistoryHeader" ID="lstPaymentHistoryHeader" sfwValue="iclbPaymentHistoryHeader" />
+    <attribute sfwDataType="string" sfwType="Property" ID="OrgNameCaps" sfwValue="icdoOrganization.org_name_caps" />
+    <attribute ID="lstSolBpmProcessInstanceAttachments" sfwType="Collection" sfwValue="iclbProcessInstanceImageData" sfwEntity="entSolBpmProcessInstanceAttachments" sfwPrivate="False" />
+    <attribute ID="lstActiveOrgContactLOB" sfwType="Collection" sfwValue="iclbActiveOrgContactLOB" sfwEntity="entOrgContact" sfwPrivate="False" />
+    <attribute ID="lstOrgContactGroupByRole" sfwType="Collection" sfwValue="iclbOrgContactGroupByRole" sfwEntity="entOrgContactRole" sfwPrivate="False" />
+    <attribute ID="lstInactiveOrgContactLOB" sfwType="Collection" sfwValue="iclbInactiveOrgContactLOB" sfwEntity="entOrgContact" sfwPrivate="False" />
+    <attribute ID="lstrOrgContactStatus" sfwDataType="string" sfwPrivate="False" sfwValue="istrOrgContactStatus" sfwType="Property" />
+  </attributes>
+  <objectmethods>
+    <method ID="SetOrgPrimaryAddress" sfwReturnType="ArrayList">
+      <parameters>
+        <parameter ID="aintOrgAddressId" sfwDataType="int" />
+      </parameters>
+    </method>
+    <method ID="UpdateAddressClick" sfwReturnType="ArrayList" />
+    <method ID="LoadOrgContact" sfwReturnType="Void" />
+    <method ID="LoadOrgBank" sfwReturnType="Void" />
+    <method ID="LoadOrgAddresses" sfwReturnType="Void" />
+    <method ID="LoadOrgPlan" sfwReturnType="Void" />
+    <method ID="LoadOrgDeductionTypeByOrgID" sfwReturnType="Void" />
+  </objectmethods>
+  <methods />
+  <lifecycle />
+  <ExtraFields />
+</entity>

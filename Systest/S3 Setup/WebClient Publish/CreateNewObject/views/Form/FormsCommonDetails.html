@@ -1,0 +1,59 @@
+﻿<div class="portlet-body">
+    <div class="form-body">
+        <div class="col-xs-6">
+
+            <div class="form-group">
+                <label class="control-label"> Entity</label>
+                <fileintellisensetemplate model="objFormsDetails" onfileblur="objFormsDetails.PopulateFormName();objFormsDetails.isNextDisable()" onfilechange="objFormsDetails.isNextDisable()" propertyname="'sfwEntity'" filename="objFormsDetails.sfwEntity" filetype="'Entity'"
+                                          isdisabled="IsEntityDisabled" isinsidedialog="true"/>
+
+            </div>
+
+            <div class="form-group ">
+                <label class="control-label"> Form Type</label>
+                <div class="form-control radio-btn-form-control">
+                    <input type="checkbox" name="Lookup Form" ng-model="objFormsDetails.IsLookup" ng-change="objFormsDetails.isNextDisable()" ng-true-value="'True'" ng-false-value="'False'" /> LookUp Form
+                    <input class="marg-left-20" type="checkbox" name="Maintance Form" ng-change="objFormsDetails.isNextDisable()" ng-model="objFormsDetails.IsMaintenence" ng-true-value="'True'" ng-false-value="'False'" /> Maintenance Form
+                </div>
+
+
+            </div>
+
+
+
+        </div>
+        <div class="col-xs-6">
+            <div class="form-group relative-parent">
+                <label class="control-label  blocked-element"> Form Name(ID)</label>
+                <span class="file-prefix">wfm</span>
+                <input type="text" class="form-control input-sm ng-pristine ng-untouched ng-valid ng-empty file-suffix" title="{{objFormsDetails.ID}}" ng-change="objFormsDetails.isNextDisable()" ng-model="objFormsDetails.ID">
+
+            </div>
+
+            <div class="form-group">
+                <label class="control-label"> Path</label>
+                <locationintellisensetemplate validate-location-callback="objLocationCallback.locationCallback" locationchanged="objFormsDetails.isNextDisable()" locationname="objFormsDetails.Path" model="objFormsDetails" validate="true" errorprop="objFormsDetails.errors.invalid_path"></locationintellisensetemplate>
+
+            </div>
+
+        </div>
+
+        <div class="form-group search-btn-manage" ng-show="objFormsDetails.IsShowMainQuery && objFormsDetails.IsLookup == 'True'">
+            <label class="control-label col-xs-4">Main Query:</label>
+            <div class="col-xs-8">
+                <entityqueryintellisense selecteditem="objFormsDetails.MainQueryID" propertyname="'MainQueryID'" model="objLookupDetails" onchangecallback="objFormsDetails.isNextDisable(QueryID)" showsearchbutton="true" isinsidedialog="true"></entityqueryintellisense>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-actions">
+    <div class="col-xs-6 text-left">
+        <span class="alert-error-msg" ng-if="objFormsDetails.ErrorMessageForDisplay.length>0">{{objFormsDetails.ErrorMessageForDisplay}}</span>
+    </div>
+    <div class="col-xs-6">
+        <input class="dialog-btn" type="button" value="Cancel" ng-click="CloseWizardClick()" />
+        <input class="dialog-btn" type="button" value="Back" wz-previous="onPrevious()" disabled="disabled" />
+        <input class="dialog-btn" type="button" value="Next" wz-next="objFormsDetails.UpdateOnFormDetailsNext();onNext()" ng-disabled="!objFormsDetails.isFormDetailsNextDisable || (objFormsDetails.IsLookup != 'True' && !showExtraFieldsTab)" />
+        <input class="dialog-btn" type="button" wz-finish value="Finish" ng-disabled="objFormsDetails.IsLookup == 'True' || objFormsDetails.IsMaintenence!='True' || !objFormsDetails.isFormDetailsNextDisable || showExtraFieldsTab" />
+    </div>
+</div>

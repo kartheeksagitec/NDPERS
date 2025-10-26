@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entPostRetirementDeathApplication" sfwActive="True" sfwStatus="Review" sfwType="BusinessRule" sfwErrorTable="sgt_benefit_application_error" sfwParentKey="benefit_application_id" sfwParentKeyValue="icdoBenefitApplication.benefit_application_id" sfwMainCDO="icdoBenefitApplication" sfwStatusColumn="status_value" sfwReadOnlyRule="IsApplicationStatusProcessed" sfwObjectID="busPostRetirementDeathApplication" sfwParentEntity="entBenefitApplication">
+  <rules>
+    <rule ID="IsActiveApplicationExists" sfwMessageId="7732" sfwExpression="(this.IsActiveApplicationExists() == True)" sfwObjectBased="True" />
+    <rule ID="IsApplicationStatusProcessed" sfwExpression="(this.icdoBenefitApplication.status_value == &quot;PROC&quot;)" sfwObjectBased="True" />
+    <rule ID="IsMemberHavingMemberBalanceAmountisValid" sfwMessageId="7723" sfwExpression="(this.IsMemberHavingMemberBalanceAmountisValid() == False)" sfwObjectBased="True" />
+    <rule ID="IsPlanDCAndDeathReasonAccountOwner" sfwExpression="(((this.ibusPersonAccount.ibusPlan.IsDCRetirementPlan() == True) ||&#xA;(this.ibusPersonAccount.ibusPlan.IsHBRetirementPlan() == True)) &amp;&amp; &#xA;(this.icdoBenefitApplication.post_retirement_death_reason_type_value == &quot;ACOD&quot;))" sfwObjectBased="True" />
+    <rule ID="IsRefundIsApplicableForPlanDC" sfwMessageId="7725" sfwExpression="(this.IsRefundIsApplicableForPlanDC() == False)" sfwObjectBased="True" />
+    <rule ID="VisibleBenefitOptionNotEditable" sfwExpression="!(((this.ibusPersonAccount.ibusPlan.IsDCRetirementPlan() == True) ||&#xA;(this.ibusPersonAccount.ibusPlan.IsHBRetirementPlan() == True)) &amp;&amp; &#xA;(this.icdoBenefitApplication.post_retirement_death_reason_type_value == &quot;ACOD&quot;))" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForCancelled" sfwExpression="(this.icdoBenefitApplication.action_status_value != &quot;CANC&quot;)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForDeferred" sfwExpression="!(this.icdoBenefitApplication.action_status_value == &quot;DEFE&quot;)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForDenied" sfwExpression="(this.icdoBenefitApplication.action_status_value != &quot;DENI&quot;) &amp;&amp; &#xA;(this.icdoBenefitApplication.status_value != &quot;PROC&quot;)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForPending" sfwExpression="!(this.icdoBenefitApplication.action_status_value == &quot;PEND&quot;) &amp;&amp; &#xA;!(this.icdoBenefitApplication.status_value == &quot;PROC&quot;) &amp;&amp; &#xA;((this.icdoBenefitApplication.action_status_value == &quot;VERF&quot;) &amp;&amp; &#xA;(this.icdoBenefitApplication.status_value != &quot;PROC&quot;))" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForVerified" sfwExpression="(this.icdoBenefitApplication.action_status_value != &quot;VERF&quot;) &amp;&amp; &#xA;(this.icdoBenefitApplication.status_value != &quot;PROC&quot;) &amp;&amp; &#xA;((this.icdoBenefitApplication.action_status_value == &quot;PEND&quot;) || &#xA;(this.icdoBenefitApplication.action_status_value == &quot;DEFE&quot;))" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="IsApplicationStatusProcessed" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForDeferred" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForPending" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForVerified" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForDenied" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForCancelled" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForOpenCalculation" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForNewCalculation" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPlanDCAndDeathReasonAccountOwner" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleBenefitOptionNotEditable" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror>
+    <item ID="IsBenefitOverPayment" sfwMode="All" sfwStatus="Active" />
+  </softerror>
+  <harderror>
+    <item ID="IsMemberHavingMemberBalanceAmountisValid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsRefundIsApplicableForPlanDC" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsActiveApplicationExists" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <attributes>
+    <attribute sfwDataType="int" sfwType="Property" ID="BenefitApplicationId" sfwValue="icdoBenefitApplication.benefit_application_id" />
+    <attribute sfwDataType="string" sfwType="Property" ID="BenefitAccountTypeValue" sfwValue="icdoBenefitApplication.benefit_account_type_value" />
+    <attribute sfwDataType="int" sfwType="Property" ID="BenefitCalculationId" sfwValue="icdoBenefitApplication.benefit_calculation_id" />
+    <attribute sfwDataType="string" sfwType="Property" ID="SuppressWarningsFlag" sfwValue="icdoBenefitApplication.suppress_warnings_flag" />
+    <attribute sfwDataType="int" sfwType="Property" ID="RecipientPersonId" sfwValue="icdoBenefitApplication.recipient_person_id" />
+    <attribute ID="objRecipient" sfwType="Object" sfwEntity="entPerson" sfwValue="ibusRecipient" />
+    <attribute sfwDataType="string" sfwType="Property" ID="StatusDescription" sfwValue="icdoBenefitApplication.status_description" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ActionStatusDescription" sfwValue="icdoBenefitApplication.action_status_description" />
+    <attribute ID="objApplicantOrganization" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusApplicantOrganization" />
+    <attribute sfwDataType="int" sfwType="Property" ID="MemberPersonId" sfwValue="icdoBenefitApplication.member_person_id" />
+    <attribute ID="objPersonAccount" sfwType="Object" sfwEntity="entPersonAccount" sfwValue="ibusPersonAccount" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IintAccountPayeeId" sfwValue="iintAccountPayeeId" />
+    <attribute ID="objBeneficiaryPerson" sfwType="Object" sfwEntity="entPerson" sfwValue="ibusBeneficiaryPerson" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AccountRelationshipDescription" sfwValue="icdoBenefitApplication.account_relationship_description" />
+    <attribute sfwDataType="string" sfwType="Property" ID="FamilyRelationshipDescription" sfwValue="icdoBenefitApplication.family_relationship_description" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="IdtAccountPayeeDateofDeath" sfwValue="idtAccountPayeeDateofDeath" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecMemberAgeBasedOnDateOfDeath" sfwValue="idecMemberAgeBasedOnDateOfDeath" />
+    <attribute sfwDataType="int" sfwType="Property" ID="OriginatingPayeeAccountId" sfwValue="icdoBenefitApplication.originating_payee_account_id" />
+    <attribute sfwDataType="string" sfwType="Property" ID="BenefitAccountTypeDescription" sfwValue="icdoBenefitApplication.benefit_account_type_description" />
+    <attribute sfwDataType="string" sfwType="Property" ID="BenefitOptionValue" sfwValue="icdoBenefitApplication.benefit_option_value" />
+    <attribute sfwDataType="string" sfwType="Property" ID="BenefitOptionDescription" sfwValue="icdoBenefitApplication.benefit_option_description" />
+    <attribute sfwDataType="string" sfwType="Property" ID="SuppressWarningsBy" sfwValue="icdoBenefitApplication.suppress_warnings_by" />
+    <attribute ID="objOriginatingPayeeAccount" sfwType="Object" sfwEntity="entPayeeAccount" sfwValue="ibusOriginatingPayeeAccount" />
+    <attribute sfwType="Collection" sfwEntity="entBenefitApplication" ID="lstOtherApplications" sfwValue="iclbOtherApplications" />
+    <attribute sfwDataType="string" sfwType="Property" ID="CreatedBy" sfwValue="icdoBenefitApplication.created_by" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="CreatedDate" sfwValue="icdoBenefitApplication.created_date" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ModifiedBy" sfwValue="icdoBenefitApplication.modified_by" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="ModifiedDate" sfwValue="icdoBenefitApplication.modified_date" />
+    <attribute sfwType="Object" sfwEntity="entBenefitApplication" sfwValue="ibusBenefitApplication" ID="objBenefitApplication" />
+  </attributes>
+  <objectmethods>
+    <method ID="btnVerfiyClicked" sfwReturnType="ArrayList" />
+    <method ID="btnPendingVerificationClicked" sfwReturnType="ArrayList" />
+    <method ID="btnDenyClicked" sfwReturnType="ArrayList" />
+  </objectmethods>
+</entity>

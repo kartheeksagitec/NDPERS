@@ -1,0 +1,108 @@
+﻿<div class="portlet-body">
+    <div class="form-body">
+        <div class="form-group">
+            <div class="col-xs-6" style="margin-bottom:15px;">
+                <label class="control-label">Attribute</label>
+                <div class="col-xs-12" style="padding-left:0px;padding-right:0px">
+                    <span class="info-tooltip dtc-span" ng-if="model.errors.empty_id || model.errors.inValid_id || model.errors.duplicate_id" ng-attr-title="{{model.errors.empty_id || model.errors.inValid_id || model.errors.duplicate_id}}" style="left:0px;color:red !important"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                    <input type="text" ng-disabled="IsBaseAppFile && model.dictAttributes.sfwType === 'Column' && (model.IsBaseAppModel || model.BaseAppModel)" title="{{model.dictAttributes.ID}}" ng-model="model.dictAttributes.ID" ng-change="validateId(model,model.dictAttributes.ID)" ng-blur="checkDuplicateObj(model, oldModel, IsUpdate)" class="form-control form-filter input-sm" />
+                </div>
+            </div>
+            <div class="col-xs-6" style="margin-bottom:15px;">
+                <label class="control-label">Data Type</label>
+                <div class="col-xs-12 no-left-padding">
+                    <select ng-disabled="IsBaseAppFile && model.dictAttributes.sfwType === 'Column' && (model.IsBaseAppModel || model.BaseAppModel)" ng-options="x for x in datatypes" title="{{model.dictAttributes.sfwDataType}}" ng-model="model.dictAttributes.sfwDataType" class="form-control form-filter input-sm" ng-change="onColumnDataTypeChanged(model)" />
+                </div>
+            </div>
+            <div class="col-xs-6" style="margin-bottom:15px;">
+                <label class="control-label" ng-show="model.dictAttributes.sfwType === 'Column'">Column Name</label>
+                <label class="control-label" ng-show="model.dictAttributes.sfwType !== 'Column'">Object Field</label>
+                <input type="text" title="{{model.dictAttributes.sfwValue}}" ng-model="model.dictAttributes.sfwValue" disabled class="form-control form-filter input-sm" />
+            </div>
+            <div class="col-xs-6" style="margin-bottom:15px;">
+                <label class="control-label">Caption</label>
+                <input type="text" title="{{model.dictAttributes.sfwCaption}}" ng-model="model.dictAttributes.sfwCaption" class="form-control form-filter input-sm" />
+            </div>
+            <div class="col-xs-6" style="margin-bottom:15px;" ng-show="model.dictAttributes.sfwType === 'Column'">
+                <label class="control-label" ng-show="IsBaseAppFile && (model.IsBaseAppModel || model.BaseAppModel)">Code Id</label>
+                <span class="info-tooltip dtc-span ng-scope" ng-if="model.errors.invalid_code_group" ng-attr-title="{{model.errors.invalid_code_group}}" style="color:red !important"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                <input type="text" ng-show="IsBaseAppFile && (model.IsBaseAppModel || model.BaseAppModel)" disabled class="form-control form-filter input-sm" ng-model="model.dictAttributes.sfwCodeID" />
+                <div ng-hide="IsBaseAppFile && (model.IsBaseAppModel || model.BaseAppModel)">
+                    <codegroupintellisensetemplate codegrouplabelclass="control-label" codegrouptextboxclass="" codegroupid="model.dictAttributes.sfwCodeID" propertyname="'dictAttributes.sfwCodeID'" model="model" codegrouptext="'Code Id'" showcodegrouptext="true"></codegroupintellisensetemplate>
+                </div>
+            </div>
+            <div class="col-xs-6" style="margin-bottom:15px;">
+                <label class="control-label">Data Format</label>
+                <common-intellisense collection="dataformats" selected-item="model.dictAttributes.sfwDataFormat" model="model" propertyname="'dictAttributes.sfwDataFormat'"></common-intellisense>
+            </div>
+            <div class="col-xs-6" style="margin-bottom:15px;">
+                <label class="control-label">Default Value</label>
+                <input type="text" title="{{model.dictAttributes.sfwDefaultValue}}" ng-model="model.dictAttributes.sfwDefaultValue" class="form-control form-filter input-sm" />
+            </div>
+            <div class="col-xs-6" style="margin-bottom:15px;">
+                <label class="control-label">Length</label>
+                <input type="text" title="{{model.dictAttributes.sfwLength}}" ng-model="model.dictAttributes.sfwLength" class="form-control form-filter input-sm" ng-keypress="validateLength($event)" />
+            </div>
+            <div class="col-xs-6" style="margin-bottom:15px;">
+                <label class="control-label">Change Case</label>
+                <input type="text" title="{{model.dictAttributes.sfwChangeCase}}" ng-model="model.dictAttributes.sfwChangeCase" class="form-control form-filter input-sm" />
+            </div>
+            <div class="col-xs-6" style="margin-bottom:15px;">
+                <label class="control-label">Description</label>
+                <input type="text" title="{{model.dictAttributes.Text}}" ng-model="model.dictAttributes.Text" class="form-control form-filter input-sm" ng-trim="false" />
+            </div>
+            <div class="col-xs-6" style="margin-bottom:15px;" ng-show="model.dictAttributes.sfwType === 'Column'">
+                <label class="checkbox-inline" style="display:inline-block">
+                    <input type="checkbox" ng-true-value="'True' || 'true'" ng-false-value="'False' || 'false' || ''" ng-model="model.dictAttributes.sfwEncrypt" ng-disabled="model.dictAttributes.sfwDataType && model.dictAttributes.sfwDataType.toLowerCase() !== 'string'" />
+                    <label class="control-label">Encrypt</label>
+                </label>
+            </div>
+            <div class="col-xs-6" style="margin-bottom:15px;" ng-show="model.dictAttributes.sfwType === 'Column'">
+                <label class="checkbox-inline" style="display:inline-block">
+                    <input type="checkbox" ng-true-value="'True' || 'true'" ng-false-value="'False' || 'false' || ''" ng-model="model.dictAttributes.sfwSaveDateAsUtc" ng-disabled="model.dictAttributes.sfwDataType && model.dictAttributes.sfwDataType.toLowerCase() !== 'datetime'" />
+                    <label class="control-label">Save Date As Utc</label>
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-6">
+                <label class="checkbox-inline" style="display:inline-block">
+                    <input type="checkbox" ng-disabled="IsBaseAppFile && model.dictAttributes.sfwType === 'Column' && (model.IsBaseAppModel || model.BaseAppModel)" title="{{model.dictAttributes.sfwPrivate}}" ng-model="model.dictAttributes.sfwPrivate" ng-true-value="'True' || 'true'" ng-false-value="'False' || 'false' || ''" />
+                    <label class="control-label">Private</label>
+                </label>
+                <label class="checkbox-inline" style="display:inline-block">
+                    <input type="checkbox" title="{{model.dictAttributes.sfwImportant}}" ng-model="model.dictAttributes.sfwImportant" ng-true-value="'True' || 'true'" ng-false-value="'False' || 'false' || ''" />
+                    <label class="control-label">Important</label>
+                </label>
+            </div>
+            <div class="col-xs-6">
+                <label class="checkbox-inline" style="display:inline-block">
+                    <input type="checkbox" ng-true-value="'True' || 'true'" ng-false-value="'False' || 'false' || ''" ng-model="model.dictAttributes.sfwIsNull" ng-disabled="model.dictAttributes.sfwIsIdentity === 'True' || (model.dictAttributes.sfwKeyNo && model.dictAttributes.sfwKeyNo !== '0')" />
+                    <label class="control-label">Is Null</label>
+                </label>
+                <label ng-show="model.dictAttributes.sfwType === 'Column'" class="checkbox-inline" style="display:inline-block">
+                    <label class="control-label">Key Number : </label>
+                    <span ng-bind="model.dictAttributes.sfwKeyNo"></span>
+                </label>
+            </div>
+        </div>
+        <div class="form-group" ng-show="model.dictAttributes.sfwType === 'Column'">
+            <div class="col-xs-6">
+                <label class="checkbox-inline" style="display:inline-block" ng-if="!$root.IsOracleDB">
+                    <input type="checkbox" ng-true-value="'True' || 'true'" ng-false-value="'False' || 'false' || ''" ng-model="model.dictAttributes.sfwIsIdentity" disabled />
+                    <label class="control-label">Is Identity</label>
+                </label>
+                <label class="checkbox-inline" style="display:inline-block" ng-if="$root.IsOracleDB">
+                    <input type="text" ng-disabled="IsBaseAppFile && (model.IsBaseAppModel || model.BaseAppModel)" title="{{model.dictAttributes.sfwSequenceName}}" ng-model="model.dictAttributes.sfwSequenceName" class="form-control form-filter input-sm" />
+                    <label class="control-label">Sequence Name</label>
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-actions right">
+    <div class="col-xs-12">
+        <input type="button" value="OK" class="btn dialog-btn-default" ng-click="OkClick()" ng-disabled="model.errors.empty_id  || model.errors.inValid_id || model.errors.duplicate_id || model.errors.invalid_code_group" />
+        <input type="button" value="Cancel" class="btn dialog-btn" ng-click="onCancelClick()" />
+    </div>
+</div>

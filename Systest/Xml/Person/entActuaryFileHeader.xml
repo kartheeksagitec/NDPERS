@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entActuaryFileHeader" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoActuaryFileHeader" sfwReadOnlyRule="IsStatusProcessed" sfwObjectID="busActuaryFileHeader" sfwTableName="sgt_actuary_file_header" sfwView="False">
+  <rules>
+    <rule ID="IsEffectiveDateNull" sfwMessageId="4140" sfwExpression="(this.icdoActuaryFileHeader.effective_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsFileTypeNull" sfwMessageId="5701" sfwExpression="(string.IsNullOrEmpty(this.icdoActuaryFileHeader.file_type_value))" sfwObjectBased="True" />
+    <rule ID="IsRecordAlreadyExist" sfwMessageId="5702" sfwExpression="(this.IsActuaryFileHeaderExists() == True)" sfwObjectBased="True" />
+    <rule ID="IsStatusProcessed" sfwExpression="(this.icdoActuaryFileHeader.status_value == &quot;PRSD&quot;)" sfwObjectBased="True" />
+    <rule ID="IsPlanSelectedForRHIC" sfwMessageId="5703" sfwExpression="(this.icdoActuaryFileHeader.file_type_value == &quot;ARHF&quot;) &amp;&amp; &#xA;(this.icdoActuaryFileHeader.plan_id &gt; 0)" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror>
+    <item ID="IsEffectiveDateNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsFileTypeNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsRecordAlreadyExist" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPlanSelectedForRHIC" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <queries>
+    <query ID="rptActuaryNonRetiredRecap" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT PL.PLAN_NAME,CV2.DESCRIPTION AS EMP_STATUS,CV1.DESCRIPTION AS PLAN_PATICIPATION_STATUS,COUNT(0) AS PER_COUNT&#xD;&#xA;FROM SGT_ACTUARY_FILE_PENSION_DETAIL AD&#xD;&#xA; INNER JOIN SGS_CODE_VALUE CV2 &#xD;&#xA;  ON CV2.CODE_ID=AD.EMPLOYMENT_STATUS_ID AND CV2.CODE_VALUE=AD.EMPLOYMENT_STATUS_VALUE&#xD;&#xA; INNER JOIN SGS_CODE_VALUE CV1&#xD;&#xA;  ON CV1.CODE_ID=AD.PLAN_PARTICIPATION_STATUS_ID AND CV1.CODE_VALUE=AD.PLAN_PARTICIPATION_STATUS_VALUE&#xD;&#xA; INNER JOIN SGT_PERSON_ACCOUNT PA&#xD;&#xA;  ON PA.PERSON_ACCOUNT_ID=AD.PERSON_ACCOUNT_ID&#xD;&#xA; INNER JOIN SGT_PLAN PL&#xD;&#xA;  ON PA.PLAN_ID=PL.PLAN_ID&#xD;&#xA;WHERE ACTUARY_FILE_HEADER_ID=@ACTURIALHEADERID AND AD.PAYEE_STATUS_VALUE IS NULL&#xD;&#xA;GROUP BY    PL.PLAN_NAME,CV1.DESCRIPTION,CV2.DESCRIPTION&#xD;&#xA;ORDER BY    PL.PLAN_NAME,CV2.DESCRIPTION,CV1.DESCRIPTION&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@ACTURIALHEADERID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="rptActuaryPayeeRecapReport" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select * from(&#xD;&#xA;SELECT     PL.PLAN_NAME,CV1.DESCRIPTION AS ACCT_RELATION,CV2.DESCRIPTION AS PAYEE_STATUS,&#xD;&#xA;      COUNT(0) AS PAY_COUNT&#xD;&#xA;FROM     SGT_ACTUARY_FILE_PENSION_DETAIL AD(NOLOCK)   &#xD;&#xA; LEFT OUTER JOIN  SGS_CODE_VALUE CV1(NOLOCK)&#xD;&#xA;  ON    AD.ACCOUNT_RELATION_ID = CV1.CODE_ID AND AD.ACCOUNT_RELATION_VALUE = CV1.CODE_VALUE&#xD;&#xA; LEFT OUTER JOIN  SGS_CODE_VALUE CV2(NOLOCK)&#xD;&#xA;  ON    AD.PAYEE_STATUS_ID = CV2.CODE_ID AND AD.PAYEE_STATUS_VALUE = CV2.CODE_VALUE&#xD;&#xA; INNER JOIN SGT_PAYEE_ACCOUNT PA&#xD;&#xA;   ON AD.PAYEE_ACCOUNT_ID=PA.PAYEE_ACCOUNT_ID&#xD;&#xA; LEFT JOIN SGT_BENEFIT_APPLICATION AP  (NOLOCK)&#xD;&#xA;   ON PA.APPLICATION_ID = AP.BENEFIT_APPLICATION_ID &#xD;&#xA; LEFT OUTER JOIN SGT_BENEFIT_APPLICATION_PERSON_ACCOUNT BAPA  (NOLOCK)&#xD;&#xA;   ON BAPA.BENEFIT_APPLICATION_ID  =  AP.BENEFIT_APPLICATION_ID&#xD;&#xA;   AND ISNULL(IS_APPLICATION_PERSON_ACCOUNT_FLAG,'N') = 'Y'&#xD;&#xA; LEFT OUTER JOIN SGT_BENEFIT_DRO_CALCULATION DROC  (NOLOCK)&#xD;&#xA;   ON PA.DRO_CALCULATION_ID = DROC.DRO_CALCULATION_ID&#xD;&#xA; LEFT OUTER JOIN SGT_BENEFIT_DRO_APPLICATION DROAP  (NOLOCK)&#xD;&#xA;   ON PA.DRO_APPLICATION_ID = DROAP.DRO_APPLICATION_ID &#xD;&#xA; LEFT OUTER JOIN  SGT_PLAN PL(NOLOCK)&#xD;&#xA;  ON    PL.PLAN_ID=CASE WHEN PA.APPLICATION_ID IS NOT NULL THEN AP.PLAN_ID ELSE DROAP.PLAN_ID END&#xD;&#xA;WHERE AD.ACTUARY_FILE_HEADER_ID=@actuaryheaderid --AND AD.PAYEE_STATUS_VALUE IS NOT NULL --PIR 16078&#xD;&#xA;GROUP BY    PL.PLAN_NAME,CV1.DESCRIPTION,CV2.DESCRIPTION&#xD;&#xA;&#xD;&#xA;union all&#xD;&#xA;&#xD;&#xA;SELECT     'RHIC' as PLAN_NAME,CV1.DESCRIPTION AS ACCT_RELATION,CV2.DESCRIPTION AS PAYEE_STATUS,&#xD;&#xA;      COUNT(0) AS PAY_COUNT&#xD;&#xA;FROM     SGT_ACTUARY_FILE_RHIC_DETAIL AD(NOLOCK)   &#xD;&#xA; LEFT OUTER JOIN  SGS_CODE_VALUE CV1(NOLOCK)&#xD;&#xA;  ON    AD.ACCOUNT_RELATION_ID = CV1.CODE_ID AND AD.ACCOUNT_RELATION_VALUE = CV1.CODE_VALUE&#xD;&#xA; LEFT OUTER JOIN  SGS_CODE_VALUE CV2(NOLOCK)&#xD;&#xA;  ON    AD.PAYEE_STATUS_ID = CV2.CODE_ID AND AD.PAYEE_STATUS_VALUE = CV2.CODE_VALUE &#xD;&#xA; WHERE AD.ACTUARY_FILE_HEADER_ID=@actuaryheaderid --AND AD.PAYEE_STATUS_VALUE IS NOT NULL --PIR 16078&#xD;&#xA;GROUP BY    CV1.DESCRIPTION,CV2.DESCRIPTION&#xD;&#xA;)TEMP&#xD;&#xA;ORDER BY    PLAN_NAME,ACCT_RELATION,PAYEE_STATUS">
+      <parameters>
+        <parameter ID="@actuaryheaderid" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from SGT_ACTUARY_FILE_HEADER order by ACTUARY_FILE_HEADER_ID">
+      <parameters />
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="ActuaryFileHeaderId" sfwType="Column" sfwValue="actuary_file_header_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="FileTypeDescription" sfwType="Description" sfwValue="file_type_description" />
+    <attribute ID="FileTypeId" sfwType="Column" sfwValue="file_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="2601" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="FileTypeValue" sfwType="Column" sfwValue="file_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="PensionFileTypeDescription" sfwType="Description" sfwValue="pension_file_type_description" />
+    <attribute ID="PensionFileTypeId" sfwType="Column" sfwValue="pension_file_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="2604" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PensionFileTypeValue" sfwType="Column" sfwValue="pension_file_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="EffectiveDate" sfwType="Column" sfwValue="effective_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="StatusDescription" sfwType="Description" sfwValue="status_description" />
+    <attribute ID="StatusId" sfwType="Column" sfwValue="status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="2602" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusValue" sfwType="Column" sfwValue="status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="PlanId" sfwType="Column" sfwValue="plan_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+  </attributes>
+</entity>

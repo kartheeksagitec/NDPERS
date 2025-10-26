@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entPersonAccountDeferredCompContribution" sfwMainCDO="icdoPersonAccountDeferredCompContribution" sfwType="BusinessRule" sfwActive="True" sfwStatus="Review" sfwObjectID="busPersonAccountDeferredCompContribution" sfwTableName="sgt_person_account_deferred_comp_contribution">
+  <queries>
+    <query ID="LoadCYTDDetail" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT PADCC.*,O.ORG_CODE,PO.ORG_NAME AS PROVIDER_ORG_NAME,PO.ORG_CODE AS PROVIDER_ORG_CODE&#xD;&#xA;FROM SGT_PERSON_ACCOUNT_DEFERRED_COMP_CONTRIBUTION PADCC WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_PERSON_EMPLOYMENT_DETAIL PED WITH(NOLOCK) ON PADCC.PERSON_EMPLOYMENT_DTL_ID = PED.PERSON_EMPLOYMENT_DTL_ID&#xD;&#xA;INNER JOIN SGT_PERSON_EMPLOYMENT PE WITH(NOLOCK) ON PED.PERSON_EMPLOYMENT_ID = PE.PERSON_EMPLOYMENT_ID&#xD;&#xA;INNER JOIN SGT_ORGANIZATION O WITH(NOLOCK) ON PE.ORG_ID = O.ORG_ID&#xD;&#xA;LEFT JOIN SGT_ORGANIZATION PO WITH(NOLOCK) ON PADCC.PROVIDER_ORG_ID = PO.ORG_ID&#xD;&#xA;WHERE PAY_PERIOD_START_DATE &gt;= @StartDate and PAY_PERIOD_END_DATE &lt;= @EndDate and &#xD;&#xA;PERSON_ACCOUNT_ID=@PersonAccountID">
+      <parameters>
+        <parameter ID="@StartDate" sfwDataType="DateTime" />
+        <parameter ID="@EndDate" sfwDataType="DateTime" />
+        <parameter ID="@PersonAccountID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadLTDDetail" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT PADCC.*,O.ORG_CODE,PO.ORG_NAME AS PROVIDER_ORG_NAME,PO.ORG_CODE AS PROVIDER_ORG_CODE&#xD;&#xA;FROM SGT_PERSON_ACCOUNT_DEFERRED_COMP_CONTRIBUTION PADCC WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_PERSON_EMPLOYMENT_DETAIL PED WITH(NOLOCK) ON PADCC.PERSON_EMPLOYMENT_DTL_ID = PED.PERSON_EMPLOYMENT_DTL_ID&#xD;&#xA;INNER JOIN SGT_PERSON_EMPLOYMENT PE WITH(NOLOCK) ON PED.PERSON_EMPLOYMENT_ID = PE.PERSON_EMPLOYMENT_ID&#xD;&#xA;INNER JOIN SGT_ORGANIZATION O WITH(NOLOCK) ON PE.ORG_ID = O.ORG_ID&#xD;&#xA;LEFT JOIN SGT_ORGANIZATION PO WITH(NOLOCK) ON PADCC.PROVIDER_ORG_ID = PO.ORG_ID&#xD;&#xA;WHERE PERSON_ACCOUNT_ID=@PersonAccountID">
+      <parameters>
+        <parameter ID="@PersonAccountID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetContributionAmtForDefComp" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select cont.person_account_id, sum(pay_period_contribution_amount) as Contribution_Amount  from sgt_person_account_deferred_comp_contribution cont &#xD;&#xA;inner join sgt_person_account acct on acct.person_account_id = cont.person_account_id&#xD;&#xA;where acct.plan_id in (8,19) and acct.person_id = @PersonID&#xD;&#xA;and pay_period_end_date &gt;=  DATEADD(mm, DATEDIFF(mm,0, @PayPeriodDate), 0)&#xD;&#xA;and pay_period_end_date &lt;= DateAdd(day, -1, DateAdd(month, DateDiff(month, 0, @PayPeriodDate)+1, 0))&#xD;&#xA;group by &#xD;&#xA;cont.person_account_id">
+      <parameters>
+        <parameter ID="@PersonID" sfwDataType="int" />
+        <parameter ID="@PayPeriodDate" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="LoadContributionDetails" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT DISTINCT CONT.DEFERRED_COMP_CONTRIBUTION_ID, CONT.*&#xD;&#xA;,ORG.ORG_NAME AS EMPLOYER_NAME, ORG3.ORG_NAME AS PROVIDER_NAME&#xD;&#xA; FROM DBO.SGT_PERSON_ACCOUNT_DEFERRED_COMP_CONTRIBUTION   CONT WITH(NOLOCK)&#xD;&#xA;LEFT OUTER JOIN SGT_PERSON_EMPLOYMENT_DETAIL DET WITH(NOLOCK) ON DET.PERSON_EMPLOYMENT_DTL_ID = CONT.PERSON_EMPLOYMENT_DTL_ID&#xD;&#xA;LEFT OUTER JOIN SGT_PERSON_EMPLOYMENT EMP WITH(NOLOCK) ON EMP.PERSON_EMPLOYMENT_ID = DET.PERSON_EMPLOYMENT_ID&#xD;&#xA;LEFT OUTER JOIN SGT_ORGANIZATION ORG WITH(NOLOCK) ON ORG.ORG_ID = EMP.ORG_ID&#xD;&#xA;LEFT OUTER JOIN SGT_PERSON_ACCOUNT_DEFERRED_COMP_PROVIDER DEFPRO WITH(NOLOCK) ON DEFPRO.PERSON_EMPLOYMENT_ID = DET.PERSON_EMPLOYMENT_ID  &#xD;&#xA;LEFT OUTER JOIN SGT_ORG_PLAN OP WITH(NOLOCK) ON OP.ORG_PLAN_ID = DEFPRO.PROVIDER_ORG_PLAN_ID &#xD;&#xA;LEFT OUTER  JOIN SGT_ORGANIZATION ORG3 WITH(NOLOCK) ON ORG3.ORG_ID = OP.ORG_ID&#xD;&#xA;WHERE CONT.PERSON_ACCOUNT_ID = @personAccountID&#xD;&#xA;AND DEFPRO.START_DATE &lt;&gt; ISNULL(DEFPRO.END_DATE,'99991231')">
+      <parameters>
+        <parameter ID="@personAccountID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadDefCompContrForMissedContrBatch" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="DECLARE @GOLIVEDATE DATETIME&#xD;&#xA;SELECT @GOLIVEDATE = CAST(DATA1 AS DATETIME)&#xD;&#xA;FROM SGS_CODE_VALUE WHERE CODE_ID = 52 AND CODE_VALUE = 'PGLD'&#xD;&#xA;&#xD;&#xA;SELECT DISTINCT DEFPROV.* FROM SGT_PERSON_ACCOUNT_EMPLOYMENT_DETAIL PAED(NOLOCK)&#xD;&#xA;INNER JOIN SGT_PERSON_EMPLOYMENT_DETAIL PED(NOLOCK) ON PAED.PERSON_EMPLOYMENT_DTL_ID = PED.PERSON_EMPLOYMENT_DTL_ID&#xD;&#xA;AND PED.STATUS_VALUE = 'CONT'&#xD;&#xA;INNER JOIN SGT_PERSON_EMPLOYMENT PE(NOLOCK) ON PE.PERSON_EMPLOYMENT_ID = PED.PERSON_EMPLOYMENT_ID&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT PA(NOLOCK) ON PA.PERSON_ACCOUNT_ID = PAED.PERSON_ACCOUNT_ID&#xD;&#xA;INNER JOIN SGT_PLAN P(NOLOCK) ON P.PLAN_ID = PA.PLAN_ID&#xD;&#xA;INNER JOIN SGT_PERSON PER(NOLOCK) ON PER.PERSON_ID = PA.PERSON_ID&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT_DEFERRED_COMP_CONTRIBUTION DEFPROV ON DEFPROV.PERSON_ACCOUNT_ID = PA.PERSON_ACCOUNT_ID&#xD;&#xA;WHERE PAED.ELECTION_VALUE = 'ENLD' AND P.BENEFIT_TYPE_VALUE = 'DEFF' AND&#xD;&#xA;PA.PLAN_PARTICIPATION_STATUS_VALUE = 'ENL3' AND&#xD;&#xA;PE.ORG_ID = @ORG_ID&#xD;&#xA;AND (@GOLIVEDATE BETWEEN DEFPROV.PAY_PERIOD_START_DATE AND DEFPROV.PAY_PERIOD_END_DATE&#xD;&#xA; OR @GOLIVEDATE &lt; DEFPROV.PAY_PERIOD_START_DATE)&#xD;&#xA;ORDER BY DEFPROV.PERSON_ACCOUNT_ID,DEFPROV.PAY_PERIOD_START_DATE">
+      <parameters>
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="DeferredCompContributionId" sfwType="Column" sfwValue="deferred_comp_contribution_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PersonAccountId" sfwType="Column" sfwValue="person_account_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="SubsystemDescription" sfwType="Description" sfwValue="subsystem_description" />
+    <attribute ID="SubsystemId" sfwType="Column" sfwValue="subsystem_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="349" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="SubsystemValue" sfwType="Column" sfwValue="subsystem_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="SubsystemRefId" sfwType="Column" sfwValue="subsystem_ref_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="TransactionDate" sfwType="Column" sfwValue="transaction_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="EffectiveDate" sfwType="Column" sfwValue="effective_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="PayPeriodStartDate" sfwType="Column" sfwValue="pay_period_start_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="PayPeriodEndDate" sfwType="Column" sfwValue="pay_period_end_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="PersonEmploymentDtlId" sfwType="Column" sfwValue="person_employment_dtl_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PaidDate" sfwType="Column" sfwValue="paid_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="TransactionTypeDescription" sfwType="Description" sfwValue="transaction_type_description" />
+    <attribute ID="TransactionTypeId" sfwType="Column" sfwValue="transaction_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="350" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="TransactionTypeValue" sfwType="Column" sfwValue="transaction_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="ProviderOrgId" sfwType="Column" sfwValue="provider_org_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PayPeriodContributionAmount" sfwType="Column" sfwValue="pay_period_contribution_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrIsRecordSelected" sfwValue="icdoPersonAccountDeferredCompContribution.istrIsRecordSelected" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrEmployerName" sfwValue="istrEmployerName" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrProviderName" sfwValue="istrProviderName" />
+    <attribute ID="objPADeferredComp" sfwType="Object" sfwEntity="entPersonAccountDeferredComp" sfwValue="ibusPADeferredComp" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="IdtPayPeriodDateFrom" sfwValue="idtPayPeriodDateFrom" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="IdtPayPeriodDateTo" sfwValue="idtPayPeriodDateTo" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="IdtPayCheckDateFrom" sfwValue="idtPayCheckDateFrom" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="IdtPayCheckDateTo" sfwValue="idtPayCheckDateTo" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrEmpOrgCodeID" sfwValue="istrEmpOrgCodeID" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPrvOrgCodeID" sfwValue="istrPrvOrgCodeID" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="IdtTransactionDateFrom" sfwValue="idtTransactionDateFrom" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="IdtTransactionDateTo" sfwValue="idtTransactionDateTo" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="IdtEffectiveDateFrom" sfwValue="idtEffectiveDateFrom" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="IdtEffectiveDateTo" sfwValue="idtEffectiveDateTo" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrTransactionType" sfwValue="istrTransactionType" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrSource" sfwValue="istrSource" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrGroupBy" sfwValue="istrGroupBy" />
+    <attribute ID="objPersonEmploymentDetail" sfwType="Object" sfwEntity="entPersonEmploymentDetail" sfwValue="ibusPersonEmploymentDetail" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPayPeriodStartDateFormatted" sfwValue="icdoPersonAccountDeferredCompContribution.istrPayPeriodStartDateFormatted" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPayPeriodEndDateFormatted" sfwValue="icdoPersonAccountDeferredCompContribution.istrPayPeriodEndDateFormatted" />
+    <attribute ID="objProvider" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusProvider" />
+    <attribute sfwDataType="string" sfwType="Property" ID="PayrollDetailID" sfwValue="icdoPersonAccountDeferredCompContribution.Payroll_Detail_ID" />
+    <attribute ID="EmployerMatchAmount" sfwType="Column" sfwValue="employer_match_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+  </attributes>
+  <objectmethods>
+    <method ID="FilterDeferredCompContribution" sfwReturnType="ArrayList" />
+    <method ID="ResetSearchFilter" sfwReturnType="ArrayList" />
+  </objectmethods>
+</entity>

@@ -1,0 +1,115 @@
+﻿<form ID="wfmESSHomeMaintenance" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2003" sfwType="FormLinkMaintenance" sfwTitle="ESS Home Maintenance" version="3.5" sfwDefaultButtonID="btnExecuteRefreshFromObject" sfwEntity="entESSHome" sfwTemplate="ESSHomeMaintenance.html" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmESSHomeLookup" sfwFormObjectType="None" isBasedOnWfm="true">
+  <initialload>
+    <callmethods sfwMode="New" sfwMethodName="FindESSHome" />
+    <callmethods sfwMode="Update" sfwMethodName="FindESSHome" />
+  </initialload>
+  <items>
+    <sfwTable ID="Main" />
+    <sfwPanel ID="pnlHeader" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblN" />
+        <sfwLiteral ID="ltrlDashboard" Text="Your Dashboard" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlInfo" sfwCaption="Information" Visible="False">
+      <items>
+        <sfwTable ID="tblNewPage1" />
+        <sfwLiteral ID="ltrMessage" Text="Your e-mail account registered with NDPERS does not match the e-mail account in your North Dakota Login profile. " />
+        <sfwHyperLink ID="btnUpdateYourAccount1" sfwUrlField="lstrUpdateAccountURL" />
+        <sfwLabel ID="lblLabel" sfwEntityField="lstrUpdateAccountURL" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlMain" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblOverview" />
+        <sfwPanel ID="pnlLeftPanel" sfwCollapsible="False">
+          <items>
+            <sfwTable ID="tblNewPage3" />
+            <sfwPanel ID="pnlMessageBoard" sfwCaption="Message Board">
+              <items>
+                <sfwTable ID="tblMessageBoard" />
+                <sfwLabel ID="capIstrMessageText" SkinID="BlackText" Text="Search by Message Text : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtIstrMessageText" sfwEntityField="IstrMessageText" />
+                <sfwButton ID="btnExecuteRefreshFromObject" sfwMethodName="btnValidateExecuteBusinessMethod_Click" sfwObjectMethod="btnSearchbyUnReadMessageText" Text="Search" />
+                <sfwButton ID="btnButton" sfwMethodName="btnCancel_Click" Text="Refresh" />
+                <sfwButton ID="btnOpenContactTicket" sfwMethodName="btnOpen_Click" Text="Open" sfwRelatedControl="grvWSSMessageDetails" sfwActiveForm="wfmESSUpdateReportAProblemMaintenance" sfwNavigationParameter="aintContactTicketId=objWSSMessageHeader.lstrContactTicketId" Visible="False" />
+                <sfwButton ID="btnOpen" sfwMethodName="btnOpen_Click" Text="Open1" sfwRelatedControl="grvWSSMessageDetails" Visible="False" sfwActiveForm="TEEM=wfmTerminateEmploymentWizard;LOAM=wfmUpdateTermEmploymentLOAMilitaryWizard;CLSC=wfmUpdateTermEmploymentWizard;LOAL=wfmUpdateTermEmploymentLOAWithoutPayWizard;ETCG=wfmUpdateTermEmploymentWizard;LOAR=wfmUpdateTermEmploymentLOARecertificationWizard" sfwNavigationParameter="aintEmploymentChangeRequestID=objWSSMessageHeader.lintRequestId;aintemploymentId=objWSSMessageHeader.lintPersonEmploymentId;aintemploymentdetailid=objWSSMessageHeader.lintPersonEmploymentDetailId;objWSSMessageHeader.lstrRequestType" sfwEntityField="objWSSMessageHeader.lstrRequestType" />
+                <sfwButton ID="btnOpen2" sfwMethodName="btnOpen_Click" Text="Open2" sfwRelatedControl="grvWSSMessageDetails" Visible="False" sfwActiveForm="MRRW=wfmESSMemberRecordDataWizard" sfwEntityField="objWSSMessageHeader.lstrRequestType" sfwNavigationParameter="aintMemberRecordRequestID=objWSSMessageHeader.lintRequestId;objWSSMessageHeader.lstrRequestType" />
+                <sfwButton ID="btnClearMessage" sfwMethodName="btnExecuteBusinessMethodSelectRows_Click" sfwNavigationParameter="WssMessageDetailId" sfwObjectMethod="btnClearMessage_Click" sfwRelatedControl="grvWSSMessageDetails" Text="Clear" sfwMessageNoRowSelected="44" sfwExecuteAfterSuccess="btnButton" />
+                <sfwButton ID="btnNew" sfwActiveForm="wfmESSLastThreeMonthsMessageMaintenance" sfwMethodName="btnNew_Click" sfwNavigationParameter="aintOrgID=txtIbusContactIcdoContactContactId;aintContactID=txtIbusOrganizationIcdoOrganizationOrgId" Text="Show all messages in last 3 months" Visible="False" />
+                <sfwTextBox ID="txtIbusContactIcdoContactContactId" sfwEntityField="contact_id" Visible="False" />
+                <sfwTextBox ID="txtIbusOrganizationIcdoOrganizationOrgId" sfwEntityField="Org_id" Visible="False" />
+                <sfwButton ID="btnDownload" sfwMethodName="btnDownload_Click" Text="Generate Download" sfwRelatedControl="grvWSSMessageDetails" sfwNavigationParameter="astrFileName=CorrespondenceLink" sfwObjectMethod="DownloadBenefitEnrollmentReport" sfwExecuteMethodType="ObjectMethod" sfwTriggerPostBack="True" CssClass="hideControl" />
+                <sfwGridView AllowPaging="True" AllowSorting="True" ID="grvWSSMessageDetails" sfwSelection="Many" sfwEntityField="lstWSSMessageDetails" sfwGridEntity="entWssMessageDetail">
+                  <Columns>
+                    <TemplateField HeaderText="Message">
+                      <ItemTemplate>
+                        <sfwLabel sfwWrap="True" sfwEntityField="objWSSMessageHeader.MessageText" />
+                        <sfwLabel sfwLinkable="True" sfwEntityField="objWSSMessageHeader.lstrContactTicketId" sfwRelatedControl="btnOpenContactTicket" />
+                        <sfwLabel sfwLinkable="True" sfwEntityField="objWSSMessageHeader.lintRequestId" sfwRelatedControl="btnOpen" sfwVisibleRule="IsRequestForChangeEmployee" />
+                        <sfwLabel sfwLinkable="True" sfwEntityField="objWSSMessageHeader.lintRequestId" sfwRelatedControl="btnOpen2" sfwVisibleRule="IsRquestForNewEmployee" />
+                        <sfwLabel sfwEntityField="objWSSMessageHeader.lstrEndText" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Priority">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objWSSMessageHeader.PriorityDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Created Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="CreatedDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Link">
+                      <ItemTemplate>
+                        <sfwLabel sfwBalloonTooltip="icdoWssMessageDetail.web_link" sfwBalloonTooltipHyperLinks="icdoWssMessageDetail.web_link" sfwEntityField="WebLink" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Correspondence / Report" SortExpression="IstrCorrespondenceLink">
+                      <ItemTemplate>
+                        <sfwLabel sfwRelatedControl="btnDownload" sfwLinkable="True" sfwEntityField="IstrCorrespondenceLink" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Wss Message Detail ID" Visible="False" sfwUseAsSortExpression="True">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="WssMessageDetailId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Correspondence Link" Visible="False" sfwUseAsSortExpression="True">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="CorrespondenceLink" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="EploymentId" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objWSSMessageHeader.lintPersonEmploymentId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="EploymentDetailId" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objWSSMessageHeader.lintPersonEmploymentDetailId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="RequestType" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objWSSMessageHeader.lstrRequestType" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </items>
+            </sfwPanel>
+          </items>
+        </sfwPanel>
+      </items>
+    </sfwPanel>
+  </items>
+  <loaddetails>
+    <entityfield ID="lstWSSMessageDetails" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstEmployerPayrollHeader" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstWssEmploymentChangeRequest" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstWssMemberRecordRequest" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+  </loaddetails>
+  <ExtraFields />
+</form>

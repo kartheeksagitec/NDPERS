@@ -1,0 +1,173 @@
+﻿<div class="portlet-body" ng-if="addType == 'Variable'">
+
+    <div class="form-body">
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label class="control-label">Data Type </label>
+
+                <select ng-model="variable.strDataType" class="form-control input-sm" ng-change="UpdateLocalVarDatatype(variable.strDataType)">
+                    <option value="bool">bool</option>
+                    <option value="Collection">Collection</option>
+                    <option value="decimal">decimal</option>
+                    <option value="datetime">datetime</option>
+                    <option value="double">double</option>
+                    <option value="float">float</option>
+                    <option value="int">int</option>
+                    <option value="List">List</option>
+                    <option value="long">long</option>
+                    <option value="Object">Object</option>
+                    <option value="short">short</option>
+                    <option value="string">string</option>
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+                <label class="control-label">Value </label>
+
+                <input type="text" title="{{variable.strValue}}" ng-model="variable.strValue" class="form-control input-sm">
+
+            </div>
+
+            <div class="form-group">
+
+                <label class="control-label" ng-if='!variable.strEntity || variable.ErrorMessage!=""'>Entity</label>
+                <label class="control-label" ng-if='variable.strEntity && variable.ErrorMessage.length==""'><a style="color: #5b9bd1!important;" ng-click='openEntityClick(variable.strEntity)'>Entity</a></label>
+
+                <fileintellisensetemplate model='variable' filename="variable.strEntity" propertyname="'strEntity'" filetype="'Entity'" isdisabled="variable.strDataType != 'Collection' && variable.strDataType != 'List' && variable.strDataType != 'Object'"></fileintellisensetemplate>
+
+            </div>
+        </div>
+        <div class="col-xs-6">
+
+            <div class="form-group relative-parent">
+                <label class="control-label blocked-element">ID</label>
+                <span class="edit-var-prefix" ng-show="variable.IsPrefixVisible" ng-bind="variable.StrDataTypePrefix"></span>
+                <input type="text" title="{{variable.strID}}" ng-model="variable.strID" class="form-control input-sm edit-var-prefix-textbox" ng-change="isInvalidVariable(variable)">
+
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Data Format</label>
+                <common-intellisense collection="lstDataFormat" selected-item="variable.strDataFormat"></common-intellisense>
+                <!--<select title="{{variable.strDataFormat}}" ng-model="variable.strDataFormat" class="form-control input-sm">
+                    <option value=""></option>
+                    <option value="{0:(###) ###-####}">{0:(###) ###-####}   </option>
+                    <option value="{0:d}">{0:d}</option>
+                    <option value="{0:###-##-####}">{0:###-##-####}</option>
+                    <option value="{0:$#,###,##0.00;($#,###,##0.00)}">{0:$#,###,##0.00;($#,###,##0.00)}</option>
+                </select>-->
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Description</label>
+                <input type="text" title="{{variable.strText}}" ng-model="variable.strText" class="form-control input-sm">
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="form-actions" ng-if="addType == 'Variable'">
+    <div class="col-xs-8 text-left">
+        <span class="alert-error-msg" ng-show="variable.ErrorMessage.length>0" ng-bind="variable.ErrorMessage"></span>
+    </div>
+    <div class="col-xs-4">
+        <input type="button" value="OK" class="btn dialog-btn" ng-click="OnLocalVarOkClick()" ng-disabled="isInvalidVariable(variable)" />
+        <input type="button" value="Cancel" class="btn dialog-btn" ng-click="closeDialog()" />
+    </div>
+</div>
+
+
+<div class="portlet-body" ng-if="addType == 'Parameter'">
+
+    <div class="form-body">
+
+        <div class="col-xs-6">
+
+            <div class="form-group">
+                <label class="control-label">Data Type</label>
+                <select title="{{parameter.strDataType}}" ng-model="parameter.strDataType" class="form-control input-sm" ng-change="UpdateParameterDataType(parameter.strDataType)">
+                    <option value="bool">bool</option>
+                    <option ng-if="parameter.strDirection=='In'" value="Collection">Collection</option>
+                    <option value="decimal">decimal</option>
+                    <option value="datetime">datetime</option>
+                    <option value="double">double</option>
+                    <option value="float">float</option>
+                    <option value="int">int</option>
+                    <option value="List" ng-if="parameter.strDirection=='In'">List</option>
+                    <option value="long">long</option>
+                    <option ng-if="parameter.strDirection=='In'" value="Object">Object</option>
+                    <option value="short">short</option>
+                    <option value="string">string</option>
+                </select>
+
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">
+                    Direction
+                </label>
+
+                <select title="{{parameter.strDirection}}" ng-model="parameter.strDirection" class="form-control input-sm" ng-change="UpdateDirection(parameter.strDirection)">
+                    <option value="In">In</option>
+                    <option value="Out">Out</option>
+                </select>
+
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">
+                    Data Format
+                </label>
+                <common-intellisense collection="lstDataFormat" selected-item="parameter.strDataFormat"></common-intellisense>
+                <!--<select title="{{parameter.strDataFormat}}" ng-model="parameter.strDataFormat" class="form-control input-sm">
+                    <option value=""></option>
+                    <option value="{0:(###) ###-####}">{0:(###) ###-####}   </option>
+                    <option value="{0:d}">{0:d}</option>
+                    <option value="{0:###-##-####}">{0:###-##-####}</option>
+                    <option value="{0:$#,###,##0.00;($#,###,##0.00)}">{0:$#,###,##0.00;($#,###,##0.00)}</option>
+                </select>-->
+
+            </div>
+        </div>
+
+
+        <div class="col-xs-6">
+            <div class="form-group relative-parent">
+                <label class="control-label blocked-element">ID </label>
+                <span ng-show="parameter.IsPrefixVisible" ng-bind="parameter.StrDataTypePrefix" class="edit-var-prefix"></span>
+
+                <input type="text" title="{{parameter.strID}}" ng-model="parameter.strID" class="form-control input-sm edit-var-prefix-textbox" ng-change="isInvalidVariable(parameter)"/>
+
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">
+                    Description
+                </label>
+
+                <input type="text" title="{{parameter.strText}}" ng-model="parameter.strText" class="form-control input-sm ">
+
+            </div>
+
+            <div class="form-group" ng-show="parameter.strDirection=='In'">
+                <label class="control-label" ng-if='!parameter.strEntity || parameter.ErrorMessage!=""'>Entity</label>
+                <label class="control-label" ng-if='parameter.strEntity && parameter.ErrorMessage==""'><a style="color: #5b9bd1!important;" ng-click='openEntityClick(parameter.strEntity)'>Entity</a></label>
+
+                <fileintellisensetemplate model='parameter' onfilechange="isInvalidVariable(parameter)" filename="parameter.strEntity" propertyname="'strEntity'" filetype="'Entity'" isdisabled="parameter.strDataType != 'Collection' && parameter.strDataType != 'List' && parameter.strDataType != 'Object'"></fileintellisensetemplate>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-actions" ng-if="addType == 'Parameter'">
+    <div class="col-xs-8 text-left">
+        <span class="alert-error-msg" ng-show="parameter.ErrorMessage.length>0" ng-bind="parameter.ErrorMessage"></span>
+    </div>
+    <div class="col-xs-4">
+        <input type="button" value="OK" class="btn dialog-btn" ng-click="OnParameterOkClick()" ng-disabled="isInvalidVariable(parameter)" />
+        <input type="button" value="Cancel" class="btn dialog-btn" ng-click="closeDialog()" />
+    </div>
+</div>

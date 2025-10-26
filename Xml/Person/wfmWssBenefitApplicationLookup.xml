@@ -1,0 +1,137 @@
+﻿<form ID="wfmWssBenefitApplicationLookup" WebSite="NeoSpinWebClient" sfwResource="2001" sfwRemoteObject="srvNeoSpinWSS" sfwType="Lookup" sfwTitle="Wss Benefit Application Lookup" sfwActive="True" sfwStatus="Review" sfwAspNetCaching="False" sfwEntity="entWssBenApp" sfwGridCollection="busWssBenefitApplicationLookup.iclbWssBenApp">
+  <initialload>
+    <query ID="cdoWssBenApp" sfwQueryRef="entWssBenApp.LookUp" sfwMethodName="LoadWSSBenefitApplicationRequests" />
+  </initialload>
+  <sfwTable>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlCriteria" sfwCaption="Criteria">
+          <sfwTable ID="tblCriteria">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capPersonId" Text="Person ID : " AssociatedControlID="txtPersonId" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtPersonId" sfwQueryID="cdoWssBenApp" sfwDataField="person_id" sfwOperator="=" sfwDataType="Numeric" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capPlanId" Text="Plan : " AssociatedControlID="ddlPlanId" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlPlanId" sfwDataField="plan_id" sfwOperator="=" sfwQueryID="cdoWssBenApp" DataTextField="pln" DataValueField="plan_id" sfwLoadType="Query" sfwLoadSource="cdoPlan.RetirementPlansExceptOasis" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capBenTypeValue" Text="Benefit Type : " AssociatedControlID="txtBenTypeValue" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="txtBenTypeValue" sfwQueryID="cdoWssBenApp" sfwDataField="ben_type_value" sfwOperator="like" sfwLoadType="CodeGroup" sfwLoadSource="1904" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capBenOptValue" Text="Benefit Option : " AssociatedControlID="txtBenOptValue" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="txtBenOptValue" sfwQueryID="cdoWssBenApp" sfwDataField="ben_opt_value" sfwOperator="like" sfwLoadType="CodeGroup" sfwLoadSource="2216" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capBenActionStatusValue" Text="Benefit Status : " AssociatedControlID="txtBenActionStatusValue" sfwIsCaption="True" Visible="False" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="txtBenActionStatusValue" sfwQueryID="cdoWssBenApp" sfwLoadType="CodeGroup" sfwLoadSource="7016" sfwDataField="ben_action_status_value" sfwDefaultValue="CMPT" sfwOperator="like" Visible="False" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnSearch" sfwMethodName="btnSearch_Click" sfwOperateOn="tblCriteria" Text="Search" />
+                <sfwButton ID="btnReset" sfwMethodName="btnReset_Click" sfwOperateOn="tblCriteria" Text="Reset" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwButton ID="btnStoreSearch" sfwMethodName="btnStoreUserDefaults_Click" sfwOperateOn="tblCriteria" Text="Store Search" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlResult" sfwCaption="Search Results">
+          <sfwTable ID="tblResult" CssClass="Table">
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnOpen" ImageUrl="~/Image/gOpen.gif" sfwMethodName="btnOpen_Click" sfwRelatedControl="dgrResult" sfwActiveForm="wfmWssBenefitApplicationMaintenance" Text="Open" sfwNavigationParameter="aintWssBenAppId=WssBenAppId" />
+                <sfwButton ID="btnExportExcel" ImageUrl="~/Image/gExport.gif" sfwMethodName="btnColumnsToExport_Click" sfwRelatedControl="dgrResult" Text="Export To Excel" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwGridView ID="dgrResult" AllowPaging="True" AllowSorting="True" sfwSelection="Many">
+                  <Columns>
+                    <TemplateField HeaderText="Wss Ben App ID">
+                      <ItemTemplate>
+                        <sfwLabel sfwRelatedControl="btnOpen" sfwLinkable="True" sfwEntityField="WssBenAppId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Person ID">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="PersonId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Plan ID">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="PlanId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Benefit Type">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="BenTypeDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Benefit Option">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="BenOptDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Rhic Option">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="RhicOptionValue" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Payment Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="PaymentDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Retirement Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="RetirementDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Plso Requested">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="PlsoRequestedFlagDesc" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Benefit Application ID">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="BeneApplId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+  </sfwTable>
+  <loaddetails />
+</form>

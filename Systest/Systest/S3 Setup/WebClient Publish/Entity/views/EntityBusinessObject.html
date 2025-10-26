@@ -1,0 +1,289 @@
+﻿
+<div class="full-height entity-business-object-tab">
+    <div class="entity-business-object-top">
+        <div class="form-group entity-business-object-top-wrapper">
+            <div class="col-xs-6 full-height no-left-padding" id="entity-xml-method-section">
+                <div class="entity-business-object-box">
+                    <div class="entity-business-object-box-heading" knowtion-id="2.6.1">
+                        XML Methods
+                        <div class="panel-icons">
+                            <img class="fright" src="images/Common/icon_delete_dark.svg" ng-click="DeleteMethod('SelectXmlMethod')" title="Remove Selected Load Group" ng-disabled="!canDeleteMethod()" />
+                            <img class="fright" src="images/Common/icon_add_dark.svg" ng-click="AddMethod(undefined,'Add')" title="Add New Load Group" />
+                        </div>
+                    </div>
+                    <div class="entity-business-object-box-content">
+
+
+                        <table id="tblBusinessObjectMethod" class="sws-table" col-resizeable-jquery>
+                            <thead>
+                                <tr role="columnheader">
+                                    <th>
+                                        <div class="div-grid-td ">
+                                            Name
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div class="div-grid-td desc-td">
+                                            Description
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div class="div-grid-td ">
+                                            Load Method
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div class="div-grid-td ">
+                                            Mode
+                                        </div>
+                                    </th>
+                                </tr>
+
+                            </thead>
+
+
+                            <tr ng-dblclick="AddMethod(obj,'Update')" ng-class="{'selected': obj==SelectedXMLMethod, 'bckgGrey': obj.isAdvanceSearched, 'bckgGreen': (obj==SelectedXMLMethod && obj.isAdvanceSearched)}"
+                                ng-repeat="obj in objMethods.Elements" ng-click="SelectXmlMethod(obj)" tabindex="{{$index}}" key-up-down-with-element callbackfn="SelectXmlMethod" objproperty="'obj'">
+                                <td>
+                                    <div class="div-grid-td">
+                                        <span class="info-tooltip" ng-if="obj.errors.empty_id || obj.errors.inValid_id || obj.errors.duplicate_id" ng-attr-title="{{obj.errors.empty_id || obj.errors.inValid_id || obj.errors.duplicate_id}}" style="position:relative;color:red !important"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                                        <!--<span style="position: relative;" duplicate-id-obj curr-obj="obj" callback-fn="findParentAndChildObject(paramObj)"> </span>-->
+                                        <span id="name" contenteditable="false" class="placeholder" data-placeholder="Name" ng-bind="obj.dictAttributes.ID"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="div-grid-td desc-td">
+                                        <span id="description" contenteditable="false" class="placeholder" data-placeholder="Description" ng-bind="obj.dictAttributes.sfwDescription"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="div-grid-td ">
+                                        <span id="loadmethod" contenteditable="false" class="placeholder" data-placeholder="Load Method" ng-bind="obj.dictAttributes.sfwMethodType"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="div-grid-td ">
+                                        <span id="mode" contenteditable="false" class="placeholder" data-placeholder="Mode" ng-bind="obj.dictAttributes.sfwMode"></span>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-xs-6 full-height no-right-padding">
+                <div class="entity-business-object-box">
+                    <div class="entity-business-object-box-heading" knowtion-id="2.6.2">
+                        Life Cycle
+                    </div>
+
+                    <div class="entity-business-object-box-content" id="entity-businessobject-LifeCycle-section">
+
+
+                        <!-- Removed table-scrollable class from this div -->
+
+                        <table class="sws-table">
+                            <thead>
+                                <tr>
+                                    <th width="30%">ID</th>
+                                    <th width="35%">Method</th>
+                                    <th width="35%">Navigation Parameter</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="obj in lstlifecycle" ng-click="selectLifeCycleMethod(obj)" ng-class="{'selected':obj==selectedLifeCycle,'bckgGrey':obj.isAdvanceSearched, 'bckgGreen': (obj==selectedLifeCycle && obj.isAdvanceSearched)}">
+                                    <td width="30%"><span ng-bind="obj.DispalyName"></span></td>
+                                    <td width="35%">
+                                        <div class='input-group'>
+                                            <input type="text" class="form-control input-sm" title="{{obj.XmlMethod}}" ng-model="obj.XmlMethod" undoredodirective model="obj" ng-keydown="onLifeCycleMethodKeyDown($event)" ng-change="onLifeCycleMethodChange(obj)" />
+                                            <span class='input-group-addon button-intellisense' ng-click="showLifeCycleMethodsList($event);"></span>
+                                        </div>
+                                    </td>
+                                    <td width="35%">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control input-sm" readonly="readonly" title="{{obj.Parameters}}" ng-model="obj.Parameters" undoredodirective model="obj" /><!--<img src="images/icon-search.jpg" style="cursor:pointer" ng-click="onLifeCycleSetNavParamClick(obj)" ng-disabled="!isValidLifeCycleMethod(obj.XmlMethod)" />-->
+                                            <span class='input-group-addon btn-search-popup' ng-click='onLifeCycleSetNavParamClick(obj)' ng-disabled="!isValidLifeCycleMethod(obj.XmlMethod)"></span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="entity-business-object-bottom">
+        <div class="form-group full-height">
+            <div class="no-left-padding full-height" ng-class="blnShowCreateWithClass && blnShowBusinessObjectSection?'col-xs-4':'col-xs-12'">
+                <div class="entity-business-object-box">
+                    <div class="entity-business-object-box-heading" knowtion-id="2.6.3">
+                        Delete
+                        <div class="panel-icons">
+                            <i class="fa fa-arrow-down fright" title="Move Down" ng-click="moveDeletePropertyDown()" style="cursor:pointer" ng-disabled="!canMoveDeletePropertyDown()" />
+                            <i class="fa fa-arrow-up fright" title="Move Up" ng-click="moveDeletePropertyUp()" style="cursor:pointer" ng-disabled="!canMoveDeletePropertyUp()" />
+                            <img class="fright" src="images/Common/icon_delete_dark.svg" title="Delete" ng-click="removeDeleteProperty()" style="cursor:pointer" ng-disabled="!canRemoveDeleteProperty()" />
+                            <img class="fright" src="images/Common/icon_add_dark.svg" title="Add" ng-click="addToDeleteProperties()" style="cursor:pointer" />
+                        </div>
+                    </div>
+                    <div class="entity-business-object-box-content">
+
+
+                        <div class="enity-delete-table" id="entity-businessobject-delete-section">
+
+                            <table class="sws-table" id="tblBusinessObjectDelete" col-resizeable-jquery>
+                                <thead>
+                                    <tr>
+                                        <!--<th></th>-->
+                                        <th> ID</th>
+                                        <th>Load Methods</th>
+                                        <th>Foreign Key</th>
+                                    </tr>
+                                </thead>
+                                <tr ng-repeat="obj in objDelete.Elements" ng-click="setSelectedDeleteProperty(obj)" ng-class="{'selected':obj.isSelected,'bckgGrey':obj.isAdvanceSearched, 'bckgGreen': (obj.isSelected && obj.isAdvanceSearched)}" tabindex="{{$index}}" key-up-down-with-element callbackfn="setSelectedDeleteProperty" objproperty="'obj'">
+                                    <!--<td ng-style="blnShowCreateWithClass && blnShowBusinessObjectSection?'width:10px':''">
+                                        <img src="images/Common/icon-detail.png" />
+                                    </td>-->
+                                    <td>
+
+                                        <entityfieldelementintellisense modebinding="obj.dictAttributes.ID" model="obj" entityid="objEntity.dictAttributes.ID" propertyname="'dictAttributes.ID'" isshowonetoone="true" isshowonetomany="true" isshowcolumns="false" isshowcdocollection="false" isshowexpression="false" errorprop="obj.errors.ID" validate="true" onblurcallback="onChangeDeletePropertyId(obj)" />
+                                    </td>
+                                    <td>
+
+                                        <xmlmethodintellisensetemplate type="'Object'" model="obj" objectfield="obj.dictAttributes.sfwMethodName" propertyname="'dictAttributes.sfwMethodName'"
+                                                                       isdelete="true" entityid="objEntity.dictAttributes.ID"></xmlmethodintellisensetemplate>
+                                    </td>
+                                    <td>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control input-sm" style="width:100% !important" title="{{obj.dictAttributes.sfwForeignKey}}" ng-model="obj.dictAttributes.sfwForeignKey" undoredodirective model="obj" ng-keydown="onForeignKeyChange(obj,$event)" />
+                                            <span class='input-group-addon button-intellisense' ng-click="onForeignKeyChange(obj,$event)"></span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-4 full-height" ng-if="blnShowCreateWithClass && blnShowBusinessObjectSection">
+                <div class="entity-business-object-box">
+                    <div class="entity-business-object-box-heading" knowtion-id="2.6.4">
+                        Properties.cs
+                        <div class="panel-icons">
+                            <img class="fright" src="images/Common/icon_delete_dark.svg" title="Remove Selected Property" ng-click="deleteCSProperty()" ng-disabled="!canDeleteCSProperty()" />
+                            <img class="fright" src="images/Common/icon_add_dark.svg" title="Add Property" ng-click="addCSProperty()" ng-disabled="!BusObjPartialFileName" />
+                        </div>
+                    </div>
+                    <div class="entity-business-object-box-content">
+                        <div class="form-group">
+                            <label class="control-label">Partial File Name</label>
+
+
+                            <input readonly="readonly" type="text" class="input-sm form-control partial-file-box" title="{{BusObjPartialFileName}}" ng-model="BusObjPartialFileName" />
+                            <span class="boldfont partial-file-header" ng-show="IsDirtyPartialFile"> * </span>
+                        </div>
+                        <div class="entity-business-object-properties">
+                            <table class="sws-table" id="tblBusinessObjectProperties" col-resizeable-jquery>
+                                <thead>
+                                    <tr>
+                                        <th>Data Type</th>
+                                        <th>Class</th>
+                                        <th></th>
+                                        <th>Property Name</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr ng-repeat="csProp in PartialFileData" tabindex="{{$index}}" key-up-down-with-element callbackfn="setSelectedCSPropertyUsingKeyUpDown" objproperty="'csProp'" ng-click="setSelectedCSProperty($index)" ng-class="csProp.isSelected?'selected':'none'">
+                                        <td>
+                                            <span class="info-tooltip" ng-if="csProp.DataTypeError" ng-attr-title="{{csProp.DataTypeError}}" style="position:relative;color:red !important"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                                            <select class="form-control input-sm inline-block width-90" ng-options="type for type in PartialFileDataTypes" ng-change="onDataTypeChanged(csProp)" title="{{csProp.DataType}}" ng-model="csProp.DataType">{{type}}</select>
+                                        </td>
+                                        <td>
+                                            <div class="inline-block width-120 top-4">
+                                                <div class='input-group'>
+                                                    <span class="info-tooltip fleft marg-right-5" ng-if="csProp.ClassNameError" ng-attr-title="{{csProp.ClassNameError}}" style="color:red !important"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                                                    <input type="text" class="form-control input-sm" style="width:100%" title="{{csProp.Class}}" ng-model="csProp.Class" ng-change="onClassNameChanged(csProp)" ng-keydown="onClassNameKeyDown($event)" ng-disabled="csProp.DataType.toLowerCase()!='object' && csProp.DataType.toLowerCase()!='collection' && csProp.DataType.toLowerCase()!='list'" />
+
+                                                    <span class="input-group-addon button-intellisense" ng-click="showClassNameList($event)" ng-disabled="csProp.DataType.toLowerCase()!='object' && csProp.DataType.toLowerCase()!='collection' && csProp.DataType.toLowerCase()!='list'"></span>
+
+
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td width="auto" class="align-right">
+                                            <span class="info-tooltip marg-left-20" ng-if="csProp.PropertyNameError" ng-attr-title="{{csProp.PropertyNameError}}" style="position:relative;color:red !important"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                                            <span ng-bind="csProp.PropertyPrefix"></span>
+                                        </td>
+                                        <td>
+                                            <input type="text" title="{{csProp.PropertyName}}" ng-model="csProp.PropertyName" class="form-control input-sm" undoredodirective model="csProp" ng-change="onPropertyNameChanged(csProp)" />
+                                        </td>
+                                        <td>
+                                            <span ng-bind="csProp.Description"></span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-xs-4 no-right-padding full-height" ng-if="blnShowCreateWithClass && blnShowBusinessObjectSection">
+                <div class="entity-business-object-box">
+                    <div class="entity-business-object-box-heading" knowtion-id="2.6.5">
+                        Object Methods
+                        <div class="panel-icons">
+                            <img class="fright" src="images/Common/icon_delete_dark.svg" ng-click="DeleteObjectMethod()" title="Remove Selected Object Method" ng-disabled="SelectedObjectMethod==undefined" />
+                            <!--<img class="fright" src="images/Common/icon_add_dark.svg" ng-click="onAddObjectMethods()" title="Add Object Method" />-->
+                            <img class="fright" src="images/Common/icon_add_dark.svg" ng-click="AddObjectMethod(undefined,'Add')" title="Add Object Method" />
+
+                        </div>
+
+                    </div>
+                    <div class="entity-business-object-box-content object-methods-box-content" id="entity-businessobject-objectmethod-section">
+                        <table class="sws-table" role="grid">
+                            <thead role="heading">
+                                <tr role="columnheader">
+                                    <th>ID</th>
+                                    <th>Return Type</th>
+                                    <th>Entity ID</th>
+                                </tr>
+                            </thead>
+                            <tbody ng-repeat="method in objObjectMethods.Elements" ng-class="method==SelectedObjectMethod?'tbody-selected':''" tabindex="{{$index}}" key-up-down-with-element callbackfn="SelectObjectMethod" objproperty="'method'" isscroll="true">
+                                <tr ng-mouseup="SelectObjectMethod(method)" ng-dblclick="AddObjectMethod(method,'Update')" ng-click="SelectObjectMethod(method)" ng-class="{'selected':method==SelectedObjectMethod,'bckgGrey':method.isAdvanceSearched, 'bckgGreen': (method==SelectedObjectMethod && method.isAdvanceSearched)}" role="row">
+
+                                    <td>
+                                        <span class="info-tooltip dtc-span ng-scope" style="position:relative;color:red!important;" ng-if="method.errors.empty_id || method.errors.inValid_id || method.errors.duplicate_id" ng-attr-title="{{method.errors.empty_id || method.errors.inValid_id || method.errors.duplicate_id}}"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                                        <span ng-bind="method.dictAttributes.ID"></span>
+
+                                        <!--<objecttreeintellisensetemplate insidegrid="true" model="method" objtree="objBusinessObject.ObjTree" objectfield="method.dictAttributes.ID" propertyname="'dictAttributes.ID'" isloadonlymethod="true" isxmlmethod="true" allowdrop="false"
+                                        busobject="objEntity.dictAttributes.sfwObjectID"
+                                        onselectioncallback="onObjectMethodIdChanged(id)" errorprop="method.errors.empty_id || method.errors.inValid_id || method.errors.duplicate_id"></objecttreeintellisensetemplate>-->
+
+                                    </td>
+                                    <td><span ng-bind="method.dictAttributes.sfwReturnType"></span></td>
+                                    <td><span ng-bind="method.dictAttributes.sfwEntity"></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

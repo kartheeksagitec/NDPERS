@@ -1,0 +1,22 @@
+/********************Purpose: PIR 23571, 24269******************************
+*********************Created By: Saylee P********************************
+*********************Comments: FAS logic change*****************/
+
+ALTER TABLE SGT_BENEFIT_CALCULATION_FAS_MONTHS 
+ALTER COLUMN PERSON_ACCOUNT_ID INT NULL
+
+/********************Purpose: PIR 24506******************************
+*********************Created By: Surendra********************************
+*********************Comments: PIR 24506 DATAFIX*****************/
+
+UPDATE ACH SET ACH.ACH_START_DATE = PA.BENEFIT_BEGIN_DATE, ACH.MODIFIED_BY = 'PIR_24506', ACH.MODIFIED_DATE = GETDATE() FROM SGT_PAYEE_ACCOUNT PA
+JOIN SGT_PAYEE_ACCOUNT_ACH_DETAIL ACH ON PA.PAYEE_ACCOUNT_ID = ACH.PAYEE_ACCOUNT_ID 
+										AND ACH.ACH_END_DATE IS NULL 
+										AND ACH.ACH_START_DATE < PA.BENEFIT_BEGIN_DATE 
+										AND PA.BENEFIT_ACCOUNT_SUB_TYPE_VALUE = 'DISN'
+
+UPDATE WIT SET WIT.[START_DATE] = PA.BENEFIT_BEGIN_DATE, WIT.MODIFIED_BY = 'PIR_24506', WIT.MODIFIED_DATE = GETDATE() FROM SGT_PAYEE_ACCOUNT PA
+JOIN SGT_PAYEE_ACCOUNT_TAX_WITHHOLDING WIT ON PA.PAYEE_ACCOUNT_ID = WIT.PAYEE_ACCOUNT_ID 
+										AND WIT.END_DATE IS NULL
+										AND WIT.[START_DATE] < PA.BENEFIT_BEGIN_DATE 
+										AND PA.BENEFIT_ACCOUNT_SUB_TYPE_VALUE = 'DISN'

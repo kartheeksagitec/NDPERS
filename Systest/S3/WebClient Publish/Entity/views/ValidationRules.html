@@ -1,0 +1,596 @@
+﻿
+<ul class="nav nav-tabs">
+    <li ng-class="SelectedRuleView =='ValidationRules'?'active':''" ng-click="SelectChildRuleView('ValidationRules')" knowtion-id="2.3.1">
+        <a aria-expanded="true" data-toggle="tab">
+            Validation Rules
+        </a>
+    </li>
+
+
+    <li ng-class="SelectedRuleView =='Checklist'?'active':''" ng-click="SelectChildRuleView('Checklist')" knowtion-id="2.3.2">
+        <a aria-expanded="true" data-toggle="tab">
+            Check List
+        </a>
+    </li>
+</ul>
+
+<div class="entity-tab-content  manage-entity-validation form-details-label">
+    <div class="entity-dashboard-editable-content no-box-shaddow">
+
+        <div class="col-xs-12 page-container full-height padding-0">
+
+            <div id="validationrule" class="normal-left-content-panel validation-entity-sidebar">
+
+                <div class="page-sidebar-header validation-header">
+
+                    <div ng-if="selectedIneritedTab=='Rule'">
+                        <div class="col-xs-7">
+                            <input type="text" class="form-control input-sm" ng-model="objRuleID.searchRuleByID" ng-change="clearSelection()" />
+                        </div>
+                    </div>
+                    <div ng-if="selectedIneritedTab=='InheritedRule'">
+                        <div class="col-xs-7">
+                            <input type="text" class="form-control input-sm" ng-model="objRuleID.searchRuleByID" ng-change="clearSelection()" />
+                        </div>
+                    </div>
+                    <div class="col-xs-4" ng-init="objRuleID.selectedTypeID = objRuleID.lstTypeIds[0]">
+                        <select class="form-control" title="{{objRuleID.selectedTypeID.ID}}" ng-model="objRuleID.selectedTypeID" ng-options="id as id.ID for id in objRuleID.lstTypeIds" ng-change="clearSelection()"></select>
+                    </div>
+                    <div class="panel-icons">
+                        <a title="Add Rule" ng-disabled="SelectedRule.Name != 'rules'&& selectedIneritedTab!='Rule'"><img ng-disabled="SelectedRule.Name != 'rules'&& selectedIneritedTab!='Rule'" src="images/Entity/add_rule.svg" ng-click="OpenRuleDialog()"></a>
+                    </div>
+
+                </div>
+
+                <div class="page-sidebar-content">
+                    <div class="primary-tab-header " ng-show="objInheritedRules">
+                        <ul class="nav nav-tabs inherited-rules" style="height:0%!important" role="tablist">
+                            <li role="presentation" ng-class="selectedIneritedTab=='Rule'?'active':''" ng-click="selectIneritedTab('Rule');selectValidationRuleInAllTypes(objRules)">
+                                <a aria-controls="Rule" role="tab" data-toggle="tab">Rules</a>
+                            </li>
+                            <li ng-class="selectedIneritedTab=='InheritedRule'?'active':''" ng-click="selectIneritedTab('InheritedRule');selectValidationRuleInAllTypes(objInheritedRules)">
+                                <a aria-controls="InheritedRule" role="tab" data-toggle="tab">Inherited Rules</a>
+                            </li>
+                        </ul>
+                        <i ng-disabled="selectedIneritedTab=='Rule'" class="refresh-inherited-rules fa fa-refresh" ng-click="refreshInheritedRules()" title="Refresh Inherited Rules" />
+                    </div>
+                    <div class="tab-content list-items list-items-queries full-height" ng-class="objInheritedRules?'inherited-rules-list':''" id="entity-validation-main-rules-section">
+                        <div ng-class="selectedIneritedTab=='Rule'?'tab-pane fade active in':'tab-pane fade'">
+                            <validationrulestreeview lstrules="objRules" selecteditem="SelectedRule" filterproperty="objRuleID.selectedTypeID.value" filtertext="objRuleID.searchRuleByID" onitemclickcallback="selectValidationRuleInAllTypes(SelectedRule,false)" find-parent-and-child-object="findParentAndChildObject" menuoptionforrules="RulesMenuOptions"></validationrulestreeview>
+                        </div>
+                        <div ng-class="selectedIneritedTab=='InheritedRule'?'tab-pane fade active in':'tab-pane fade'">
+                            <validationrulestreeview lstrules="objInheritedRules" selecteditem="SelectedRule" filterproperty="objRuleID.selectedTypeID.value" filtertext="objRuleID.searchRuleByID" onitemclickcallback="selectValidationRuleInAllTypes(SelectedRule,false)" menuoptionforrules="InheritedRulesMenuOptions"></validationrulestreeview>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+
+            <div ng-class="SelectedRuleView =='ValidationRules'?'tab-pane fade active in full-height':'tab-pane fade full-height'" class="normal-content-panel  validation-entity-rightsection " id="validation-rules-entity">
+
+                <div class="entity-content-wrapper validation-container full-height full-width">
+
+                    <div class="entity-inner-container validation-rules-entity-inner-container  full-height">
+
+
+                        <div class="col-xs-12 validation-rules-input-section no-right-padding" ng-style="selectedIneritedTab=='InheritedRule' || !SelectedRule?{'pointer-events':'none'}:''" ng-disabled="selectedIneritedTab=='InheritedRule' || !SelectedRule?true:false">
+                            <div class="col-xs-6 no-left-padding full-height">
+                                <div class="form-group expression-textarea-section">
+
+                                    <label class="col-xs-2 control-label align-left no-left-padding ">Expression</label>
+                                    <!--<input class="expression-validate-icon" type="button" value="Validate"   />-->
+                                    <div class="panel-icons">
+                                        <img src="images/Entity/expression-textbox-validate.svg" ng-click="onValidateExpression()" title="Validate Expression" class="marg-left-10" />
+                                        <img src="images/Entity/BusinessObjectPropertyMethod.svg" ng-click="onBusinessMethodCommand()" title="Business Object Property / Method" class="marg-left-10" ng-disabled="SelectedRule.dictAttributes.sfwObjectBased=='False' || !SelectedRule.dictAttributes.sfwObjectBased" />
+                                        <img src="images/Entity/InternalFunctions.svg" title="Internal Functions" class="marg-left-10" ng-click="onInternalFunctionsClick()" />
+                                        <img src="images/Entity/Query.svg" ng-click="onQueryCommand()" title="Query" class="marg-left-10" />
+
+                                    </div>
+                                    <div class="fright">
+                                        <input type="checkbox" ng-model="SelectedRule.dictAttributes.sfwObjectBased" ng-checked="SelectedRule.dictAttributes.sfwObjectBased" undoredodirective model="SelectedRule" ng-true-value="'True'" ng-false-value="'False'"
+                                               ng-if="objEntity.dictAttributes.sfwObjectID" ng-change="updateModelForBaseAppModel()" />
+                                        <label class="control-label" ng-if="objEntity.dictAttributes.sfwObjectID">Is Object Based</label>
+                                    </div>
+
+                                    <div class="expression-height-wrapper no-left-padding">
+                                        <textarea class="form-control input-sm expression-height" rows="6" spellcheck=false title="{{SelectedRule.dictAttributes.sfwExpression}}" ng-model="SelectedRule.dictAttributes.sfwExpression" undoredodirective model="SelectedRule" ng-keydown="onkeydownInExpressions($event)" ng-keyup="onActionKeyDownForExpressions($event,SelectedRule.dictAttributes.sfwObjectBased)" id="textArea{{objEntity.dictAttributes.ID}}" ng-change="updateModelForBaseAppModel()"></textarea>
+                                    </div>
+                                    <span ng-bind="SelectedRule.Error" title="{{SelectedRule.Error}}" class="entity-vlidation-rules-expression-style dtc-span" ng-show="SelectedRule.Error && SelectedRule.Error.length>0"></span>
+
+                                </div>
+
+                                <div class="form-group comments-textarea-section">
+
+                                    <div class="form-group full-height">
+                                        <label class="control-label">Comments</label>
+                                        <textarea class="form-control input-sm validation-rules-comments-box" rows="3" ng-model="SelectedRule.dictAttributes.sfwDescription" undoredodirective model="SelectedRule" ng-change="updateModelForBaseAppModel()"></textarea>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-xs-3 no-bottom-margin validation-rules-parameters-section full-height msg-type">
+
+                                <label class="control-label">Message Type</label>
+                                <div class="form-group marg-bot-10">
+
+                                    <input type="radio" value="MessageID" ng-model="SelectedRule.IsMessageSelected" ng-change="onMessageIdChange()" undoredodirective model="SelectedRule"><span class="value-txt">Message ID</span>
+                                    <input type="radio" value="Description" ng-model="SelectedRule.IsMessageSelected" ng-change="onMessageIdChange()" undoredodirective model="SelectedRule"><span class="value-txt">Description</span>
+
+                                </div>
+
+                                <div class="form-group msg-type-description-section">
+                                    <div class="form-group" ng-show="SelectedRule.IsMessageSelected=='MessageID'">
+                                        <messageintellisensetemplate messageid='SelectedRule.dictAttributes.sfwMessageId' propertyname="'dictAttributes.sfwMessageId'"
+                                                                     model='SelectedRule' messagetext="''" showmessagetext='true'
+                                                                     newDisplayMessage="SelectedRule.displayMessage" newSeverityValue="SelectedRule.severityValue" messagetextboxclass="full-width fleft" onblurcallback="populateMessageByMessageID(SelectedRule.dictAttributes.sfwMessageId, '', true)" errorprop="SelectedRule.errors.sfwMessageId" isvalidate="'true'"></messageintellisensetemplate>
+                                    </div>
+
+                                    <div class="form-group " ng-show="SelectedRule.IsMessageSelected=='Description'">
+
+                                        <div class="input-group">
+                                            <span class="info-tooltip dtc-span" ng-if="SelectedRule.errors.EMPTY_MESSAGE_DESC" ng-attr-title="{{SelectedRule.errors.EMPTY_MESSAGE_DESC}}" style="left:0px;color:red !important"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                                            <input type="text" class="form-control input-sm" title="{{SelectedRule.dictAttributes.sfwMessage}}" ng-model='SelectedRule.dictAttributes.sfwMessage' undoredodirective model='SelectedRule' ng-change="populateMessageByMessageDescription()">
+                                            <span class="input-group-btn">
+                                                <a title="Get Parameter" ng-click='getParameter()'>
+                                                    <img src="images/Entity/get_parameter.svg">
+                                                </a>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group validation-table-manage-wrapper">
+
+                                        <div class="validation-table-manage">
+                                            <div class="validation-table-manage-heading">Parameter</div>
+                                            <div class="validation-table-manage-content">
+                                                <table class="sws-table">
+
+                                                    <tbody>
+                                                        <tr ng-repeat="obj in SelectedRule.lstMessageParams">
+                                                            <td>
+                                                                <entityfieldelementintellisense isshowcolumns="true" isshowproperty="true" isshowexpression="true" isshowonetoone="true" modebinding="obj.Id" model="obj" entityid="objEntity.dictAttributes.ID" propertyname='"Id"' onblurcallback="UpdateRuleParameter()">
+                                                                </entityfieldelementintellisense>
+
+                                                                <!--<objecttreeintellisensetemplate model="obj" propertyname="'Id'" objtree="objBusinessObject.ObjTree" objectfield="obj.Id" isxmlmethod="true" isloadmethod="true" onselectioncallback="UpdateRuleParameter(id, obj)"
+                                                                                                busobject="objEntity.dictAttributes.sfwObjectID"></objecttreeintellisensetemplate>-->
+                                                            </td>
+                                                            <td>
+                                                                <input type="button" value="X" ng-click="CloseRule(obj)" />
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
+
+                            </div>
+                            <div class="col-xs-3 expression-last-section full-height">
+
+                                <div class="form-group section-wrapper">
+                                    <label class="control-label">Before Method</label>
+                                    <!--<select ng-if="selectedIneritedTab=='Rule'" class="form-control input-sm" ng-options="item.ShortName as item.Description for item in lstMethods" title="{{SelectedRule.dictAttributes.sfwBeforeMethodName}}" ng-model="SelectedRule.dictAttributes.sfwBeforeMethodName" undoredodirective model="SelectedRule"></select>-->
+                                    <objecttreeintellisensetemplate ng-show="selectedIneritedTab=='Rule'" insidegrid="false" model="SelectedRule" objtree="objBusinessObject.ObjTree" objectfield="SelectedRule.dictAttributes.sfwBeforeMethodName" propertyname="'dictAttributes.sfwBeforeMethodName'" isloadonlymethod="true" isxmlmethod="true" allowdrop="false"
+                                                                    busobject="objEntity.dictAttributes.sfwObjectID" onselectioncallback="updateModelForBaseAppModel()"></objecttreeintellisensetemplate>
+                                    <input ng-if="selectedIneritedTab=='InheritedRule'" type="text" class="form-control input-sm" title="{{SelectedRule.dictAttributes.sfwBeforeMethodName}}" ng-model="SelectedRule.dictAttributes.sfwBeforeMethodName" readonly />
+                                </div>
+
+
+                                <div class="form-group section-wrapper ">
+                                    <div class="business-rule-id-wrap">
+                                        <label class="control-label">Business Rule ID</label>
+                                        <input type="text" class="form-control input-sm" title="{{SelectedRule.dictAttributes.sfwBRID}}" ng-model="SelectedRule.dictAttributes.sfwBRID" undoredodirective model="SelectedRule" ng-blur="DeletePropertyFromObject('sfwBRID')" ng-change="updateModelForBaseAppModel()" />
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group no-bottom-margin section-wrapper">
+                                    <div class="use-case-id-wrap">
+                                        <label class="control-label">Use Case ID</label>
+                                        <input type="text" class="form-control input-sm" title="{{SelectedRule.dictAttributes.sfwUseCaseID}}" ng-model="SelectedRule.dictAttributes.sfwUseCaseID" undoredodirective model="SelectedRule" ng-blur="DeletePropertyFromObject('sfwUseCaseID')" ng-change="updateModelForBaseAppModel()" />
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                        <div class="valdataion-rules-list-section">
+
+
+                            <!--<div class="form-group no-bottom-margin">
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <input type="checkbox" ng-model="SelectedRule.dictAttributes.sfwObjectBased" ng-checked="SelectedRule.dictAttributes.sfwObjectBased" undoredodirective model="SelectedRule" ng-true-value="'True'" ng-false-value="'False'"
+                                           ng-if="objEntity.dictAttributes.sfwObjectID" />
+                                    <label class="control-label" ng-if="objEntity.dictAttributes.sfwObjectID">Is Object Based</label>
+
+                                    <input type="checkbox" ng-model="SelectedRule.IsInitialLoad" undoredodirective model="SelectedRule" ng-change="OnCheckInitialLoad(SelectedRule.IsInitialLoad)">
+                                    <span class="control-label">Initial Load</span>
+                                    <input type="checkbox" ng-model="SelectedRule.IsHardError" undoredodirective model="SelectedRule" ng-change="OnCheckHardError(SelectedRule.IsHardError)">
+                                    <span class="control-label">Hard Error</span>
+                                    <input type="checkbox" ng-model="SelectedRule.IsSoftError" undoredodirective model="SelectedRule" ng-change="OnCheckSoftError(SelectedRule.IsSoftError)">
+                                    <span class="control-label">Soft Error</span>
+                                    <input type="checkbox" ng-model="SelectedRule.IsValidateDelete" undoredodirective model="SelectedRule" ng-change="OnCheckValidateDelete(SelectedRule.IsValidateDelete)">
+                                    <span class="control-label">Validate Delete</span>
+                                    <input type="checkbox" ng-model="SelectedRule.IsHardErrorAsChild" disabled>
+                                    <span class="control-label">Hard Error As Child Item</span>
+                                    <input type="checkbox" ng-model="SelectedRule.IsSoftErrorAsChild" disabled>
+                                    <span class="control-label">Soft Error As Child Item</span>
+
+                                </div>
+                            </div>
+                            </div>-->
+
+
+
+                            <div class="form-group full-height no-bottom-margin">
+
+                                <div class="col-xs-3 five-column-parent pad-left-10 full-height">
+                                    <div class="entity-validation-rules-list-box initial-load-box" id="entity-validation-initialload-section">
+
+                                        <div class="entity-validation-rules-list-box-header">
+                                            <span ng-class="isInitialLoadFilterVisible?'hidden-text':'visible-text'">Initial Load</span>
+                                            <filter-list collection="objInitialLoad.Elements" change-callback="selectRuleType(obj)" propertyname="'dictAttributes.ID'" slide-left="isInitialLoadFilterVisible" css-class="col-xs-8"></filter-list>
+                                            <div class="panel-icons">
+                                                <span ng-show="isInitialLoadFilterVisible" class="validation-rules-textbox-close fa fa-close" ng-click="isInitialLoadFilterVisible=false;searchInitialLoadRuleByID=''"></span>
+                                                <i class="query-search fa fa-search" ng-show="!isInitialLoadFilterVisible" title="Search Initial Load" ng-click="isInitialLoadFilterVisible=true"></i>
+                                                <i class="fa fa-arrow-up" ng-click="MoveUpInitialLoad()" ng-disabled="(SelectedInitialLoad && (objInitialLoad.Elements.indexOf(SelectedInitialLoad) < 1||SelectedInitialLoad.IsBaseAppModel||SelectedInitialLoad.BaseAppModel))"></i>
+                                                <i class="fa fa-arrow-down" ng-click="MoveDownInitialLoad()" ng-disabled="(SelectedInitialLoad && (objInitialLoad.Elements.indexOf(SelectedInitialLoad) == objInitialLoad.Elements.length - 1||SelectedInitialLoad.IsBaseAppModel||SelectedInitialLoad.BaseAppModel))"></i>
+                                            </div>
+                                        </div>
+
+                                        <div class="page-sidebar-content list-items list-items-queries" dropruleinchecklist dropruledata="objInitialLoad" ondragenter="return false;">
+
+                                            <span ng-if="objInitialLoad.Elements.length == 0">Drop rule here to add to Initial Load section</span>
+                                            <ul class="padding-5">
+                                                <li ng-repeat="element in objInitialLoad.Elements track by $index" tabindex="{{$index}}" context-menu="GroupMenuOptionsForInitialLoad"
+                                                    ng-click="SelectedInitialLoadClick(element,$event)" ng-class="SetClass(element,SelectedInitialLoad)" key-up-down-with-element callbackfn="SelectedInitialLoadClick" objproperty="'element'">
+                                                    <span class="info-tooltip dtc-span" style="position:relative;color:red!important;" ng-if="element.errors.invalid_rule" ng-attr-title="{{element.errors.invalid_rule}}"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                                                    <span ng-bind="element.dictAttributes.ID" title="{{element.dictAttributes.ID}}"></span>
+                                                </li>
+                                            </ul>
+
+                                        </div>
+                                        <div class="entity-validation-rules-options">
+                                            <div class="top-border">
+                                                <div class="mode-section fleft ">
+                                                    <label class="control-label no-left-padding fleft no-top-margin">
+                                                        Mode
+                                                    </label>
+                                                    <select class="form-control input-sm validations-mode-select" title="{{SelectedInitialLoad.dictAttributes.sfwMode}}" ng-model="SelectedInitialLoad.dictAttributes.sfwMode" undoredodirective model="SelectedInitialLoad" ng-disabled="!SelectedInitialLoad" ng-change="updateModelForBaseAppModel()">
+                                                        <option value="All">All</option>
+                                                        <option value="New">New</option>
+                                                        <option value="Update">Update</option>
+                                                    </select>
+                                                </div>
+                                                <div class="mode-section-checkboxes no-padding">
+
+                                                    <div class="radio-btn-row">
+                                                        <div class="form-group">
+                                                            <input type="checkbox" value="Active" ng-model="SelectedInitialLoad.dictAttributes.sfwStatus" undoredodirective model="SelectedInitialLoad" ng-true-value="'Active'" ng-false-value="'InActive'" ng-disabled="!SelectedInitialLoad" ng-change="updateModelForBaseAppModel()" />
+                                                            <span class="value-txt">Active</span>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <input type="checkbox" ng-model="SelectedInitialLoad.dictAttributes.sfwPublic" undoredodirective model="SelectedInitialLoad" ng-true-value="'True'" ng-false-value="'False'" ng-disabled="!SelectedInitialLoad || SelectedInitialLoad.IsBaseAppModel || SelectedInitialLoad.BaseAppModel" />
+                                                            <span class="value-txt">Public</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-3 five-column-parent full-height ">
+                                    <div class="entity-validation-rules-list-box hard-errors-box" id="entity-validation-harderror-section">
+
+                                        <div class="entity-validation-rules-list-box-header">
+                                            <span ng-class="isHardErrorFilterVisible?'hidden-text':'visible-text'">Hard Errors</span>
+                                            <filter-list collection="objHardError.Elements" change-callback="selectRuleType(obj,true)" propertyname="'dictAttributes.ID'" slide-left="isHardErrorFilterVisible" css-class="col-xs-8"></filter-list>
+                                            <div class="panel-icons">
+                                                <span ng-show="isHardErrorFilterVisible" class="validation-rules-textbox-close fa fa-close" ng-click="isHardErrorFilterVisible=false;searchHardErrorsRuleByID=''"></span>
+                                                <i class="query-search fa fa-search" ng-show="!isHardErrorFilterVisible" title="Search HardError" ng-click="isHardErrorFilterVisible=true"></i>
+                                                <i class="fa fa-arrow-up" ng-click="MoveUpHardError()" ng-disabled="isMoveUpHardError() || SelectedHardError.IsBaseAppModel || SelectedHardError.BaseAppModel"></i>
+                                                <i class="fa fa-arrow-down" ng-click="MoveDownHardError()" ng-disabled="isMoveDownHardError() || SelectedHardError.IsBaseAppModel || SelectedHardError.BaseAppModel"></i>
+                                            </div>
+                                        </div>
+                                        <!--<div class="page-sidebar-header validation-inner-sidebar">
+                                            <input class="form-control" type="text" placeholder="Search" title="{{searchHardErrorsRuleByID}}" ng-model="searchHardErrorsRuleByID">
+
+                                        </div>-->
+
+                                        <div class="page-sidebar-content list-items list-items-queries" droprule selectedsection="'HardError'" dropdata="objHardError" ondragenter="return false;">
+
+
+                                            <span class="padding-5 nowrap" ng-if="objHardError.Elements.length == 0">Drop rule here to add to Hard Error section</span>
+                                            <div class="Padding-all-5">
+                                                <common-entity-tree-directive collection="objHardError.Elements" validationerrorobject="objHardError" child-collection-property="'Children'" text-property="'dictAttributes.ID'"
+                                                                              expanded-property="'IsExpanded'" show-checkbox="false" checked-property="'IsChecked'"
+                                                                              onitemdblclick-callback="" onitemclick-callback="SelectedErrorClick" selectedsection="'HardError'"
+                                                                              isentity="true" parent-text-property="'dictAttributes.ID'" contextmenuproperty="ErrorMenuOptionsForHardError"
+                                                                              filtertext="searchHardErrorsRuleByID" selecteditem="SelectedHardError" validationruletype="'HardError'" />
+                                            </div>
+
+                                        </div>
+                                        <div class="entity-validation-rules-options">
+                                            <div class="top-border">
+                                                <div class="mode-section fleft ">
+                                                    <label class="control-label no-left-padding fleft no-top-margin">
+                                                        Mode
+                                                    </label>
+                                                    <select class="form-control input-sm validations-mode-select" ng-change="updateModelForBaseAppModel()" title="{{SelectedHardError.dictAttributes.sfwMode}}" ng-model="SelectedHardError.dictAttributes.sfwMode" undoredodirective model="SelectedHardError" ng-disabled="!SelectedHardError">
+                                                        <option value="All">All</option>
+                                                        <option value="New">New</option>
+                                                        <option value="Update">Update</option>
+                                                    </select>
+                                                </div>
+                                                <div class="mode-section-checkboxes no-padding">
+
+                                                    <div class="radio-btn-row">
+                                                        <div class="form-group">
+                                                            <input type="checkbox" value="Active" ng-change="updateModelForBaseAppModel()" ng-model="SelectedHardError.dictAttributes.sfwStatus" undoredodirective model="SelectedHardError" ng-true-value="'Active'" ng-false-value="'InActive'" ng-disabled="!SelectedHardError" />
+                                                            <span class="value-txt">Active</span>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <input type="checkbox" ng-model="SelectedHardError.dictAttributes.sfwPublic" undoredodirective model="SelectedHardError" ng-true-value="'True'" ng-false-value="'False'" ng-disabled="!SelectedHardError || SelectedHardError.IsBaseAppModel || SelectedHardError.BaseAppModel" />
+                                                            <span class="value-txt">Public</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-xs-3 five-column-parent full-height">
+                                    <div class="entity-validation-rules-list-box soft-errors-box" id="entity-validation-softerror-section">
+
+                                        <div class="entity-validation-rules-list-box-header">
+                                            <span ng-class="isSoftErrorFilterVisible?'hidden-text':'visible-text'">Soft Errors </span>
+                                            <filter-list collection="objSoftError.Elements" change-callback="selectRuleType(obj,true)" propertyname="'dictAttributes.ID'" slide-left="isSoftErrorFilterVisible" css-class="col-xs-8"></filter-list>
+                                            <div class="panel-icons">
+                                                <span ng-show="isSoftErrorFilterVisible" class="validation-rules-textbox-close fa fa-close" ng-click="isSoftErrorFilterVisible=false;searchSoftErrorsRuleByID=''"></span>
+                                                <i class="query-search fa fa-search" ng-show="!isSoftErrorFilterVisible" title="Search SoftError" ng-click="isSoftErrorFilterVisible=true"></i>
+                                                <i class="fa fa-arrow-up" ng-click="MoveUpSoftError()" ng-disabled="isMoveUpSoftError()||SelectedSoftError.IsBaseAppModel || SelectedHardError.BaseAppModel"></i>
+                                                <i class="fa fa-arrow-down" ng-click="MoveDownSoftError()" ng-disabled="isMoveDownSoftError()||SelectedSoftError.IsBaseAppModel || SelectedHardError.BaseAppModel"></i>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="page-sidebar-content list-items list-items-queries" droprule selectedsection="'SoftError'" dropdata="objSoftError" ondragenter="return false;">
+
+
+                                            <span class="padding-5 nowrap" ng-if="objSoftError.Elements.length == 0">Drop rule here to add to Soft Error section</span>
+                                            <div class="Padding-all-5 soft-error-tree-node">
+                                                <common-entity-tree-directive collection="objSoftError.Elements" child-collection-property="'Children'" validationerrorobject="objSoftError" text-property="'dictAttributes.ID'"
+                                                                              expanded-property="'IsExpanded'" show-checkbox="false" checked-property="'IsChecked'"
+                                                                              onitemdblclick-callback="" onitemclick-callback="SelectedErrorClick" selectedsection="'SoftError'"
+                                                                              isentity="true" parent-text-property="'dictAttributes.ID'" contextmenuproperty="ErrorMenuOptionsForSoftError"
+                                                                              filtertext="searchSoftErrorsRuleByID" selecteditem="SelectedSoftError" />
+                                            </div>
+
+                                        </div>
+                                        <div class="entity-validation-rules-options">
+
+                                            <div class="top-border">
+                                                <div class="mode-section fleft ">
+                                                    <label class="control-label no-left-padding fleft no-top-margin">
+                                                        Mode
+                                                    </label>
+                                                    <select class="form-control input-sm validations-mode-select" ng-change="updateModelForBaseAppModel()" title="{{SelectedSoftError.dictAttributes.sfwMode}}" ng-model="SelectedSoftError.dictAttributes.sfwMode" undoredodirective model="SelectedSoftError" ng-disabled="!SelectedSoftError">
+                                                        <option value="All">All</option>
+                                                        <option value="New">New</option>
+                                                        <option value="Update">Update</option>
+                                                    </select>
+                                                </div>
+                                                <div class="mode-section-checkboxes no-padding">
+
+                                                    <div class="radio-btn-row">
+
+                                                        <div class="form-group">
+                                                            <input type="checkbox" value="Active" ng-change="updateModelForBaseAppModel()" ng-model="SelectedSoftError.dictAttributes.sfwStatus" undoredodirective model="SelectedSoftError" ng-true-value="'Active'" ng-false-value="'InActive'" ng-disabled="!SelectedSoftError" />
+                                                            <span class="value-txt">Active</span>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <input type="checkbox" ng-model="SelectedSoftError.dictAttributes.sfwPublic" undoredodirective model="SelectedSoftError" ng-true-value="'True'" ng-false-value="'False'" ng-disabled="!SelectedSoftError||SelectedSoftError.IsBaseAppModel || SelectedSoftError.BaseAppModel" />
+                                                            <span class="value-txt">Public</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-xs-3 five-column-parent full-height">
+                                    <div class="entity-validation-rules-list-box validate-delete-box" id="entity-validation-delete-section">
+
+                                        <div class="entity-validation-rules-list-box-header">
+                                            <span ng-class="isValidateDeleteFilterVisible?'hidden-text':'visible-text'">Validate Delete</span>
+                                            <filter-list collection="objValidateDelete.Elements" change-callback="selectRuleType(obj)" propertyname="'dictAttributes.ID'" slide-left="isValidateDeleteFilterVisible" css-class="col-xs-8"></filter-list>
+                                            <div class="panel-icons">
+                                                <span ng-show="isValidateDeleteFilterVisible" class="validation-rules-textbox-close fa fa-close" ng-click="isValidateDeleteFilterVisible=false;searchValidateDeleteRuleByID=''"></span>
+                                                <i class="query-search fa fa-search" ng-show="!isValidateDeleteFilterVisible" title="Search Validate Delete" ng-click="isValidateDeleteFilterVisible=true"></i>
+                                                <i class="fa fa-arrow-up" ng-click="MoveUpValidateDelete()" ng-disabled="(SelectedValidateDelete && (objValidateDelete.Elements.indexOf(SelectedValidateDelete) < 1||SelectedValidateDelete.IsBaseAppModel||SelectedValidateDelete.BaseAppModel))"></i>
+                                                <i class="fa fa-arrow-down" ng-click="MoveDownValidateDelete()" ng-disabled="(SelectedValidateDelete && (objValidateDelete.Elements.indexOf(SelectedValidateDelete) == objValidateDelete.Elements.length - 1||SelectedValidateDelete.IsBaseAppModel||SelectedValidateDelete.BaseAppModel))"></i>
+                                            </div>
+                                        </div>
+
+                                        <div class="page-sidebar-content list-items list-items-queries" dropruleinchecklist dropruledata="objValidateDelete" ondragenter="return false;">
+
+
+                                            <span class="padding-5 nowrap" ng-if="objValidateDelete.Elements.length == 0">Drop rule here to add to Validate Delete section</span>
+                                            <ul class="Padding-all-5">
+                                                <li ng-repeat="element in objValidateDelete.Elements track by $index" context-menu="GroupMenuOptionsForValidateDelete"
+                                                    ng-click="SelectedValidateDeleteClick(element,$event)" ng-class="SetClass(element,SelectedValidateDelete)" tabindex="{{$index}}" key-up-down-with-element callbackfn="SelectedValidateDeleteClick" objproperty="'element'">
+                                                    <span ng-bind="element.dictAttributes.ID" title="{{element.dictAttributes.ID}}"></span>
+                                                </li>
+                                            </ul>
+
+                                        </div>
+                                        <div class="entity-validation-rules-options">
+
+                                            <div class="top-border">
+                                                <div class="mode-section fleft ">
+                                                    <label class="control-label no-left-padding fleft no-top-margin">
+                                                        Mode
+                                                    </label>
+                                                    <select class="form-control input-sm validations-mode-select" title="{{SelectedValidateDelete.dictAttributes.sfwMode}}" ng-model="SelectedValidateDelete.dictAttributes.sfwMode" undoredodirective model="SelectedValidateDelete" ng-disabled="!SelectedValidateDelete" ng-change="updateModelForBaseAppModel()">
+                                                        <option value="All">All</option>
+                                                        <option value="New">New</option>
+                                                        <option value="Update">Update</option>
+                                                    </select>
+                                                </div>
+                                                <div class="mode-section-checkboxes no-padding">
+
+                                                    <div class="radio-btn-row">
+
+                                                        <div class="form-group">
+                                                            <input type="checkbox" value="Active" ng-model="SelectedValidateDelete.dictAttributes.sfwStatus" undoredodirective model="SelectedValidateDelete" ng-true-value="'Active'" ng-false-value="'InActive'" ng-disabled="!SelectedValidateDelete" ng-change="updateModelForBaseAppModel()" />
+                                                            <span class="value-txt">Active</span>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <input type="checkbox" ng-model="SelectedValidateDelete.dictAttributes.sfwPublic" undoredodirective model="SelectedValidateDelete" ng-true-value="'True'" ng-false-value="'False'" ng-disabled="!SelectedValidateDelete||SelectedValidateDelete.IsBaseAppModel || SelectedValidateDelete.BaseAppModel" />
+                                                            <span class="value-txt">Public</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+                                <div class="col-xs-3 five-column-parent full-height">
+                                    <div class="entity-validation-rules-list-box group-rules-box" id="validation-rules-grouplist-section">
+
+                                        <div class="entity-validation-rules-list-box-header">
+                                            <span ng-class="isGroupsFilterVisible?'hidden-text':'visible-text'"> Group Rules </span>
+                                            <filter-list collection="objGroupList.Elements" change-callback="selectRuleType(obj)" propertyname="'dictAttributes.ID'" slide-left="isGroupsFilterVisible" css-class="col-xs-8"></filter-list>
+                                            <div class="panel-icons">
+                                                <span ng-show="isGroupsFilterVisible" class="validation-rules-textbox-close fa fa-close" ng-click="isGroupsFilterVisible=false;searchGroupRuleByID=''"></span>
+                                                <i class="query-search fa fa-search" ng-show="!isGroupsFilterVisible" title="Search Group" ng-click="isGroupsFilterVisible=true"></i>
+                                                <i class="fa fa-arrow-up" ng-click="MoveUpGroupList()" ng-disabled="isMoveUpGroupList()||SelectedGroup.IsBaseAppModel||SelectedGroup.BaseAppModel"></i>
+                                                <i class="fa fa-arrow-down" ng-click="MoveDownGroupList()" ng-disabled="isMoveDownGroupList()||SelectedGroup.IsBaseAppModel||SelectedGroup.BaseAppModel"></i>
+                                            </div>
+                                        </div>
+
+                                        <div class="page-sidebar-content list-items list-items-queries manage-tree-node" ondragenter="return false;" context-menu="GroupMenuOptionsForGroups">
+
+
+                                            <span class="padding-5 nowrap" ng-if="objGroupList.Elements.length == 0">Right click to add Group</span>
+                                            <div class="Padding-all-5">
+                                                <common-entity-tree-directive collection="objGroupList.Elements" child-collection-property="'Elements'" text-property="'dictAttributes.ID'"
+                                                                              expanded-property="'IsExpanded'" show-checkbox="false" checked-property="'IsChecked'"
+                                                                              onitemdblclick-callback="" onitemclick-callback="SelectGroupClick" selectedsection="'Item'"
+                                                                              isentity="true" parent-text-property="'dictAttributes.ID'" contextmenuproperty="GroupMenuOptionsForGroups"
+                                                                              filtertext="searchGroupRuleByID" selecteditem="SelectedGroup" />
+                                            </div>
+
+                                        </div>
+                                        <div class="entity-validation-rules-options">
+
+                                            <div class="top-border">
+                                                <div class="mode-section fleft ">
+                                                    <label class="control-label no-left-padding fleft no-top-margin">
+                                                        Mode
+                                                    </label>
+                                                    <select class="form-control input-sm validations-mode-select" title="{{SelectedGroup.dictAttributes.sfwMode}}" ng-model="SelectedGroup.dictAttributes.sfwMode" undoredodirective model="SelectedGroup" ng-disabled="!SelectedGroup || (SelectedGroup && SelectedGroup.Name == 'group')" ng-change="updateModelForBaseAppModel()">
+                                                        <option value="All">All</option>
+                                                        <option value="New">New</option>
+                                                        <option value="Update">Update</option>
+                                                    </select>
+                                                </div>
+                                                <div class="mode-section-checkboxes no-padding">
+
+                                                    <div class="radio-btn-row">
+                                                        <div class="form-group">
+
+                                                            <input type="checkbox" value="Active" ng-model="SelectedGroup.dictAttributes.sfwStatus" undoredodirective model="SelectedGroup" ng-true-value="'Active'" ng-false-value="'InActive'" ng-disabled="!SelectedGroup || (SelectedGroup && SelectedGroup.Name == 'group')" ng-change="updateModelForBaseAppModel()" />
+                                                            <span class="value-txt">Active</span>
+                                                        </div>
+
+
+                                                        <div class="form-group">
+                                                            <input type="checkbox" ng-model="SelectedGroup.dictAttributes.sfwPublic" undoredodirective model="SelectedGroup" ng-true-value="'True'" ng-false-value="'False'" ng-disabled="!SelectedGroup || (SelectedGroup && SelectedGroup.Name == 'group')||SelectedGroup.IsBaseAppModel || SelectedGroup.BaseAppModel" />
+                                                            <span class="value-txt">Public</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div ng-if="IsCheckListLoaded" ng-class="SelectedRuleView =='Checklist'?'tab-pane fade active in full-height':'tab-pane fade full-height'" class="normal-content-panel ">
+                <div class="entity-content-wrapper validation-container full-height full-width" id="entity-validation-checklist-section">
+
+                    <div class="col-xs-12 page-container full-height">
+
+                        <div id="rule-checklist" class="normal-left-content-panel validation-entity-sidebar full-height">
+
+                            <div class="page-sidebar-header validation-inner-sidebar">
+                                <filter-list collection="objCheckList.Elements" change-callback="SelectCheckListClick(obj,$event,true)" propertyname="'dictAttributes.ID'" slide-left="true"></filter-list>
+                                <div class="fright">
+                                    <i class="fa fa-arrow-up" ng-click="MoveUpCheckList()" ng-disabled="(SelectedCheckList && (objCheckList.Elements.indexOf(SelectedCheckList) < 1 ||SelectedCheckList.IsBaseAppModel))"></i>
+                                    <i class="fa fa-arrow-down" ng-click="MoveDownCheckList()" ng-disabled="(SelectedCheckList && (objCheckList.Elements.indexOf(SelectedCheckList) == objCheckList.Elements.length - 1||SelectedCheckList.IsBaseAppModel))"></i>
+                                </div>
+                            </div>
+
+                            <div class="page-sidebar-content list-items list-items-queries" dropruleinchecklist dropruledata="objCheckList" ondragenter="return false;">
+
+                                <span class="padding-5 nowrap" ng-if="objCheckList.Elements.length == 0">Drop rule here to add to Checklist section</span>
+                                <ul class="Padding-all-5">
+                                    <li ng-repeat="element in objCheckList.Elements track by $index" context-menu="GroupMenuOptionsForCheckList"
+                                        ng-click="SelectCheckListClick(element,$event)" ng-class="SetClass(element,SelectedCheckList)" tabindex="{{$index}}" key-up-down-with-element callbackfn="SelectCheckListClick" objproperty="'element'">
+                                        <span class="info-tooltip dtc-span" style="position:relative;color:red!important;" ng-if="element.errors.invalid_rule" ng-attr-title="{{element.errors.invalid_rule}}"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                                        <span ng-bind="element.dictAttributes.ID" title="{{element.dictAttributes.ID}}"></span>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+
+                        <div class="normal-content-panel entity-content-wrapper validation-container full-height">
+
+                            <div class="form-body form-manage full-height padding-5" ng-show="objCheckList.Elements.length > 0 && SelectedCheckList && SelectedCheckList.Name=='item'">
+                                <checklistitemcommontemplate model="SelectedCheckList" entitymodel="objEntity"></checklistitemcommontemplate>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

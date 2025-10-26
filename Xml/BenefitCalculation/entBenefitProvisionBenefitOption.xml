@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entBenefitProvisionBenefitOption" sfwMainCDO="icdoBenefitProvisionBenefitOption" sfwType="BusinessRule" sfwActive="True" sfwStatus="Review" sfwObjectID="busBenefitProvisionBenefitOption" sfwTableName="sgt_benefit_provision_benefit_option">
+  <queries>
+    <query ID="GetBenefitProvisionOptionDetails" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_BENEFIT_PROVISION_BENEFIT_OPTION&#xD;&#xA;INNER JOIN SGS_CODE_VALUE SG ON BENEFIT_OPTION_ID=SG.CODE_ID AND BENEFIT_OPTION_VALUE=SG.CODE_VALUE&#xD;&#xA;WHERE EFFECTIVE_DATE = (&#xD;&#xA;SELECT TOP 1 EFFECTIVE_DATE FROM SGT_BENEFIT_PROVISION_BENEFIT_OPTION&#xD;&#xA;WHERE EFFECTIVE_DATE &lt;= @CALCULATION_DATE AND&#xD;&#xA;BENEFIT_PROVISION_ID = @BENEFIT_PROVISION_ID AND&#xD;&#xA;BENEFIT_ACCOUNT_TYPE_VALUE = @BENEFIT_ACCOUNT_TYPE and&#xD;&#xA;BENEFIT_OPTION_VALUE = Case When @BENFIT_OPTION ='' then BENEFIT_OPTION_VALUE else @BENFIT_OPTION end&#xD;&#xA;and ISNULL(SSLI_FLAG,'N')=Case When @SSLI_FLAG='Y' then @SSLI_FLAG else ISNULL(SSLI_FLAG,'N') END&#xD;&#xA;ORDER  BY EFFECTIVE_DATE DESC) and &#xD;&#xA;BENEFIT_PROVISION_ID = @BENEFIT_PROVISION_ID AND&#xD;&#xA;BENEFIT_ACCOUNT_TYPE_VALUE = @BENEFIT_ACCOUNT_TYPE and&#xD;&#xA;BENEFIT_OPTION_VALUE = Case When @BENFIT_OPTION ='' then BENEFIT_OPTION_VALUE else @BENFIT_OPTION end&#xD;&#xA;and ISNULL(SSLI_FLAG,'N')=Case When @SSLI_FLAG='Y' then @SSLI_FLAG else ISNULL(SSLI_FLAG,'N') END&#xD;&#xA;ORDER  BY EFFECTIVE_DATE DESC,CODE_VALUE_ORDER ASC">
+      <parameters>
+        <parameter ID="@CALCULATION_DATE" sfwDataType="DateTime" />
+        <parameter ID="@BENEFIT_ACCOUNT_TYPE" sfwDataType="string" />
+        <parameter ID="@BENFIT_OPTION" sfwDataType="string" />
+        <parameter ID="@BENEFIT_PROVISION_ID" sfwDataType="int" />
+        <parameter ID="@SSLI_FLAG" sfwDataType="string" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="BenefitProvisionBenefitOptionId" sfwType="Column" sfwValue="benefit_provision_benefit_option_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="BenefitProvisionId" sfwType="Column" sfwValue="benefit_provision_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="EffectiveDate" sfwType="Column" sfwValue="effective_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="BenefitAccountTypeDescription" sfwType="Description" sfwValue="benefit_account_type_description" />
+    <attribute ID="BenefitAccountTypeId" sfwType="Column" sfwValue="benefit_account_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="1904" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="BenefitAccountTypeValue" sfwType="Column" sfwValue="benefit_account_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="BenefitOptionDescription" sfwType="Description" sfwValue="benefit_option_description" />
+    <attribute ID="BenefitOptionId" sfwType="Column" sfwValue="benefit_option_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="2216" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="BenefitOptionValue" sfwType="Column" sfwValue="benefit_option_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="FactorMethodDescription" sfwType="Description" sfwValue="factor_method_description" />
+    <attribute ID="FactorMethodId" sfwType="Column" sfwValue="factor_method_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="2313" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="FactorMethodValue" sfwType="Column" sfwValue="factor_method_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="OptionFactor" sfwType="Column" sfwValue="option_factor" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,6" sfwRequired="False" />
+    <attribute ID="SpouseFactor" sfwType="Column" sfwValue="spouse_factor" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,6" sfwRequired="False" />
+    <attribute ID="SsliFlag" sfwType="Column" sfwValue="ssli_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="1" sfwRequired="False" />
+    <attribute ID="SsliFactorMethodDescription" sfwType="Description" sfwValue="ssli_factor_method_description" />
+    <attribute ID="SsliFactorMethodId" sfwType="Column" sfwValue="ssli_factor_method_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="2314" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="SsliFactorMethodValue" sfwType="Column" sfwValue="ssli_factor_method_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="SsliFactor" sfwType="Column" sfwValue="ssli_factor" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,6" sfwRequired="False" />
+    <attribute ID="ExclusiveCalcPaymentTypeDescription" sfwType="Description" sfwValue="exclusive_calc_payment_type_description" />
+    <attribute ID="ExclusiveCalcPaymentTypeId" sfwType="Column" sfwValue="exclusive_calc_payment_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ExclusiveCalcPaymentTypeValue" sfwType="Column" sfwValue="exclusive_calc_payment_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+  </attributes>
+</entity>

@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entPersonAccountInsuranceTransfer" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwErrorTable="sgt_person_account_insurance_transfer_error" sfwParentKey="person_account_insurance_transfer_id" sfwParentKeyValue="icdoPersonAccountInsuranceTransfer.person_account_insurance_transfer_id" sfwMainCDO="icdoPersonAccountInsuranceTransfer" sfwStatusColumn="status_value" sfwReadOnlyRule="IsStatusPosted" sfwObjectID="busPersonAccountInsuranceTransfer" sfwTableName="sgt_person_account_insurance_transfer">
+  <rules>
+    <rule ID="IsStatusNotPosted" sfwExpression="(this.IsLoggedinUserNotSameasCreatedUser() == True) &amp;&amp; &#xA;!(this.icdoPersonAccountInsuranceTransfer.status_value == &quot;POST&quot;)" sfwObjectBased="True" />
+    <rule ID="IsStatusPosted" sfwMessageId="6634" sfwExpression="(this.icdoPersonAccountInsuranceTransfer.status_value == &quot;POST&quot;)" sfwObjectBased="True" />
+    <rule ID="IsToMemberPersonSameAsFromMember" sfwMessageId="7657" sfwExpression="(this.icdoPersonAccountInsuranceTransfer.from_person_account_id == this.icdoPersonAccountInsuranceTransfer.to_person_account_id)" sfwObjectBased="True" />
+    <rule ID="IsToTransferMemberPerslinkIDEntered" sfwMessageId="7652" sfwExpression="(this.icdoPersonAccountInsuranceTransfer.iintTransferToPersonID == 0)" sfwObjectBased="True" />
+    <rule ID="IsTransferMemberEnrolledInFromMemberPlan" sfwMessageId="7653" sfwExpression="!(this.icdoPersonAccountInsuranceTransfer.iintTransferToPersonID == 0) &amp;&amp; &#xA;(this.IsTransferMemberEnrolledInFromMemberPlan() == False)" sfwObjectBased="True" />
+  </rules>
+  <delete>
+    <property ID="lstPersonAccountInsuranceTransferDestinationContribution" />
+    <property ID="SoftErrors" sfwMethodName="LoadErrors" />
+  </delete>
+  <checklist />
+  <initialload>
+    <item ID="IsStatusPosted" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsStatusNotPosted" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="IsToTransferMemberPerslinkIDEntered" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsTransferMemberEnrolledInFromMemberPlan" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsToMemberPersonSameAsFromMember" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete>
+    <item ID="IsStatusPosted" sfwMode="All" sfwStatus="Active" />
+  </validatedelete>
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <queries>
+    <query ID="GetTransferredRecords" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select b.* from dbo.SGT_PERSON_ACCOUNT_INSURANCE_TRANSFER a WITH(NOLOCK)&#xD;&#xA;inner join dbo.SGT_PERSON_ACCOUNT_INSURANCE_TRANSFER_CONTRIBUTION b WITH(NOLOCK) &#xD;&#xA;on a.PERSON_ACCOUNT_INSURANCE_TRANSFER_ID = b.PERSON_ACCOUNT_INSURANCE_TRANSFER_ID&#xD;&#xA;where &#xD;&#xA;b.HEALTH_INSURANCE_CONTRIBUTION_ID = @ContributionID&#xD;&#xA;and &#xD;&#xA;( a.from_person_account_id = @PersonAccountId&#xD;&#xA;or a.to_person_account_id = @PersonAccountId)">
+      <parameters>
+        <parameter ID="@ContributionID" sfwDataType="int" />
+        <parameter ID="@PersonAccountId" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="PersonAccountInsuranceTransferId" sfwType="Column" sfwValue="person_account_insurance_transfer_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="TransferDate" sfwType="Column" sfwValue="transfer_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="FromPersonAccountId" sfwType="Column" sfwValue="from_person_account_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ToPersonAccountId" sfwType="Column" sfwValue="to_person_account_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="Comment" sfwType="Column" sfwValue="comment" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="2000" sfwRequired="False" />
+    <attribute ID="TransferTypeDescription" sfwType="Description" sfwValue="transfer_type_description" />
+    <attribute ID="TransferTypeId" sfwType="Column" sfwValue="transfer_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="2516" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="TransferTypeValue" sfwType="Column" sfwValue="transfer_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="StatusDescription" sfwType="Description" sfwValue="status_description" />
+    <attribute ID="StatusId" sfwType="Column" sfwValue="status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="353" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusValue" sfwType="Column" sfwValue="status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="PostedDate" sfwType="Column" sfwValue="posted_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="PostedBy" sfwType="Column" sfwValue="posted_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrFromPersonName" sfwValue="icdoPersonAccountInsuranceTransfer.istrFromPersonName" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrToPersonName" sfwValue="icdoPersonAccountInsuranceTransfer.istrToPersonName" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecReceivedPremiumAmount" sfwValue="icdoPersonAccountInsuranceTransfer.idecReceivedPremiumAmount" />
+    <attribute ID="objFromPersonAccount" sfwType="Object" sfwEntity="entPersonAccount" sfwValue="ibusFromPersonAccount" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IintTransferToPersonID" sfwValue="icdoPersonAccountInsuranceTransfer.iintTransferToPersonID" />
+    <attribute ID="objToPersonAccount" sfwType="Object" sfwEntity="entPersonAccount" sfwValue="ibusToPersonAccount" />
+    <attribute sfwType="Collection" sfwEntity="entPersonAccountInsuranceContribution" ID="lstPersonAccountInsuranceTransferSourceContribution" sfwValue="iclbPersonAccountInsuranceTransferSourceContribution" />
+    <attribute sfwType="Collection" sfwEntity="entPersonAccountInsuranceTransferContribution" ID="lstPersonAccountInsuranceTransferDestinationContribution" sfwValue="iclbPersonAccountInsuranceTransferDestinationContribution" />
+    <attribute sfwDataType="" sfwType="Property" ID="SoftErrors" sfwValue="ibusSoftErrors" />
+  </attributes>
+  <objectmethods>
+    <method ID="btnPost_Click" sfwReturnType="ArrayList" />
+    <method ID="LoadErrors" sfwReturnType="Void" />
+  </objectmethods>
+</entity>

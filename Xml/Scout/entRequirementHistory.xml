@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entRequirementHistory" sfwMainCDO="icdoRequirementHistory" sfwType="BusinessRule" sfwActive="True" sfwStatus="Review" sfwObjectID="busRequirementHistory" sfwTableName="sgs_requirement_history">
+  <queries>
+    <query ID="rptRequirementHistoryAsOfDate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT R.*,CV.DESCRIPTION as CATEGORY,CV1.DESCRIPTION AS REQUIREMENT_TYPE,CV2.DESCRIPTION AS STATUS&#xD;&#xA;&#xD;&#xA;FROM&#xD;&#xA;&#xD;&#xA;(&#xD;&#xA;&#xD;&#xA;      SELECT REQUIREMENT_ID as REQID ,max(MODIFIED_DATE) AS MODIFIED_DATE&#xD;&#xA;      FROM SGS_REQUIREMENT_HISTORY&#xD;&#xA;      WHERE MODIFIED_DATE &lt;= @asOfDate&#xD;&#xA;     GROUP BY REQUIREMENT_ID&#xD;&#xA;) A&#xD;&#xA;&#xD;&#xA;INNER JOIN SGS_REQUIREMENT_HISTORY R ON R.REQUIREMENT_ID = A.REQID AND R.MODIFIED_DATE = A.MODIFIED_DATE&#xD;&#xA;&#xD;&#xA;LEFT JOIN SGS_CODE_VALUE CV ON R.CATEGORY_ID=CV.CODE_ID AND R.CATEGORY_VALUE=CV.CODE_VALUE&#xD;&#xA;&#xD;&#xA;INNER JOIN SGS_CODE_VALUE CV1 on R.REQUIREMENT_TYPE_ID=CV1.CODE_ID AND R.REQUIREMENT_TYPE_VALUE=CV1.CODE_VALUE&#xD;&#xA;&#xD;&#xA;INNER JOIN SGS_CODE_VALUE CV2 on R.STATUS_ID=CV2.CODE_ID AND R.STATUS_VALUE=CV2.CODE_VALUE&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@asOfDate" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="getRequirementHistoryDetails" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select r.*from sgs_requirement_history r &#xD;&#xA;where r.requirement_id = @requirement_id&#xD;&#xA;order by requirement_history_id desc">
+      <parameters>
+        <parameter ID="@requirement_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="UpdateParentRequirmentId" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="UPDATE SGS_REQUIREMENT_HISTORY SET PARENT_REQUIREMENT_ID = @requirement_id&#xD;&#xA;WHERE requirement_id = @requirement_id">
+      <parameters>
+        <parameter ID="@requirement_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadRequirementKey" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT REQUIREMENT_KEY FROM SGS_REQUIREMENT WHERE REQUIREMENT_ID=@PARENT_REQUIREMENT_ID">
+      <parameters>
+        <parameter ID="@PARENT_REQUIREMENT_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="RequirementHistoryId" sfwType="Column" sfwValue="requirement_history_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="RequirementId" sfwType="Column" sfwValue="requirement_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="RequirementKey" sfwType="Column" sfwValue="requirement_key" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="ParentRequirementId" sfwType="Column" sfwValue="parent_requirement_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="30" sfwRequired="False" />
+    <attribute ID="RequirementShortDesc" sfwType="Column" sfwValue="requirement_short_desc" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="70" sfwRequired="False" />
+    <attribute ID="RequirementDesc" sfwType="Column" sfwValue="requirement_desc" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="2000" sfwRequired="False" />
+    <attribute ID="RequirementTypeDescription" sfwType="Description" sfwValue="requirement_type_description" />
+    <attribute ID="RequirementTypeId" sfwType="Column" sfwValue="requirement_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="55" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="RequirementTypeValue" sfwType="Column" sfwValue="requirement_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="StatusDescription" sfwType="Description" sfwValue="status_description" />
+    <attribute ID="StatusId" sfwType="Column" sfwValue="status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="35" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusValue" sfwType="Column" sfwValue="status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="CategoryDescription" sfwType="Description" sfwValue="category_description" />
+    <attribute ID="CategoryId" sfwType="Column" sfwValue="category_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="56" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="CategoryValue" sfwType="Column" sfwValue="category_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="Owner" sfwType="Column" sfwValue="owner" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="FileLocation" sfwType="Column" sfwValue="file_location" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="200" sfwRequired="False" />
+    <attribute ID="Priority" sfwType="Column" sfwValue="priority" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="Notes" sfwType="Column" sfwValue="notes" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="500" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ParentRequirementKey" sfwValue="icdoRequirementHistory.Parent_Requirement_Key" />
+  </attributes>
+</entity>

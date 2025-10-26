@@ -1,0 +1,8 @@
+
+
+IF EXISTS(SELECT 1 FROM SGW_BPM_SERVICE_TIMER where ACTION_METHOD = 'BpmRequestsHandler')
+BEGIN
+
+	Update SGW_BPM_SERVICE_TIMER set INTERVAL = 60000 where ACTION_METHOD = 'BpmRequestsHandler'
+	
+END 

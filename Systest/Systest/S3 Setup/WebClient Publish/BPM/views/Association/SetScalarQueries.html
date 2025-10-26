@@ -1,0 +1,51 @@
+﻿<div class="portlet-body">
+    <div class="bpm-container">       
+        <div class="bpm-container-body">
+            <div class="table-scrollable">
+                <table class="sws-table table-service-task">
+                    <thead>
+                        <tr role="heading" ng-if="!IsDisabledforVersioning">
+                            <th tabindex="0" class="sorting_asc ui-resizable padding-0" aria-controls="sample_editable_1" aria-label="Attribute activate to sort column ascending" aria-sort="ascending" rowspan="1" colspan="13">
+                                <div class="table-hader-actions">
+                                    <i class="fa fa-plus color-light2" ng-click="addQuery()" />
+                                    <i class="fa fa-minus color-light2" ng-click="deleteQuery()" ng-disabled="!selectedqueryNode" />
+                                </div>
+                                <div class="ui-resizable-handle ui-resizable-e" style="z-index: 90;"></div>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>ID</th>
+                            <th>Query ID</th>
+                            <th>Query Parameters</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr role="row" ng-repeat="item in model.Elements" ng-click="$parent.selectedqueryNode = item" ng-class="{'selected':item==$parent.selectedqueryNode}">
+                            <td>
+                                <select class="form-control form-filter input-sm" ng-disabled="IsDisabledforVersioning" title="{{item.dictAttributes.ID}}" ng-model="item.dictAttributes.ID" ng-options="x for x in queryParametersValues"></select>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <entityqueryintellisense selecteditem="item.dictAttributes.sfwQueryID" disableflag="IsDisabledforVersioning" model="item" parametermodel="item.dictAttributes.sfwQueryParameters" showsearchbutton="true" isbpm="true" parameterallowedvalues="queryParameterallowedValues" isinsidedialog="true"></entityqueryintellisense>
+                                    <img ng-if="item.dictAttributes.sfwQueryID && !IsDisabledforVersioning" src="images/Entity/Entity_navigation.svg" ng-click="NavigateToEntityQuery(item.dictAttributes.sfwQueryID)" class="service-rule-task-navigation" />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group full-width">
+                                    <input class="form-control form-filter input-sm" type="text" ng-model="item.dictAttributes.sfwQueryParameters" title="{{item.dictAttributes.sfwQueryParameters}}" disabled />
+                                    <span class="input-group-addon input-sm" ng-if="!IsDisabledforVersioning" ng-click="getQueryParam_dialog(item)" ng-class="!(item.dictAttributes.sfwQueryParameters) ? 'disabledlink' : ''">
+                                        <i class="fa fa-chevron-right"></i>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-actions">
+    <input type="button" class="dialog-btn-default" value="OK" ng-if="!IsDisabledforVersioning" ng-click="onOKClick()" />
+    <input type="button" class="dialog-btn" value="Cancel" ng-click="closeDialog()" />
+</div>

@@ -1,0 +1,318 @@
+﻿<div ng-controller="ScenarioController" class="innerWrapper file-page">
+    <div ng-hide="selectedDesignSource" class="toolbox-wrapper correspondence-toolbar scenario-sidebar col-xs-3 no-right-padding">
+
+        <div class="toolbox toolbox-form">
+            <ul class="nav nav-tabs fleft">
+                <li class="active">
+                    <a data-toggle="tab" aria-expanded="true">
+                        Tests
+                    </a>
+
+                </li>
+
+
+            </ul>
+            <div class="panel-icons">
+                <div class="btn-group pull-left">
+                    <a class="fore-color-white" title="Test Filter" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="true"
+                       ng-hide="IsExcelBasedScenario">
+                        <img src="images/Scenario/icon_test_filter.svg">
+                    </a>
+                    <ul class="dropdown-menu pull-right tests-menu" role="menu">
+                        <li ng-click="TestFilter('All')" ng-class="selectedTestFilter=='All'?'selected':''">
+                            <a>
+                                All
+                            </a>
+                        </li>
+                        <li ng-click="TestFilter('Pass')" ng-class="selectedTestFilter=='Pass'?'selected':''">
+                            <a>
+                                Pass
+                            </a>
+                        </li>
+                        <li ng-click="TestFilter('Fail')" ng-class="selectedTestFilter=='Fail'?'selected':''">
+                            <a>
+                                Fail
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <a title="Delete Test Step" ng-hide="IsExcelBasedScenario==true" class="pull-left">
+                    <img src="images/Common/icon_delete_dark.svg" ng-click="DeleteTest()" />
+                </a>
+
+                <a title="Add New Test Step" ng-hide="IsExcelBasedScenario==true" class="pull-left">
+                    <img src="images/Common/icon_add_dark.svg" ng-click="OpenAddTest()" />
+                </a>
+            </div>
+
+
+            <div class="tab-content">
+                <div class="page-sidebar  full-height full-width tab-pane fade active in overflowA">
+
+
+                    <ul class="page-sidebar-menu">
+                        <li title="Select Test" ng-class="obj == objEntityBasedScenario.SelectedStep?'active':''" ng-repeat="obj in objEntityBasedScenario.Elements" tabindex="{{$index}}" key-up-down-with-element callbackfn="TestSelectionChange" objproperty="'obj'" ng-show="(obj.TestFilter==true||obj.TestFilter==undefined) && obj.Name != 'ExtraFields'">
+                            <a ng-click="TestSelectionChange(obj)" ng-model="objEntityBasedScenario.SelectedStep" context-menu="menuOptions">
+                                <i class="fa fa-check faCheckScenario" ng-show="obj.Status && obj.IsRunSelected"></i>
+                                <i class="fa fa-times faTimesScenario" ng-show="!obj.Status && obj.IsRunSelected"></i>
+                                <span ng-bind="obj.dictAttributes.ID"></span>
+                                <span ng-class="obj == objEntityBasedScenario.SelectedStep?'active':''">
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <div class="correspondence-content col-xs-9 " ng-hide="selectedDesignSource || objEntityBasedScenario.SelectedStep == undefined || objEntityBasedScenario.SelectedStep.TestFilter == false">
+
+        <div class="file-content">
+            <div class="page-heading">
+                {{objEntityBasedScenario.SelectedStep.dictAttributes.ID}}
+
+                <div class="fright">
+                    <a data-original-title="" title="Run Tests(All Rule Steps)" class="fleft">
+                        <img src="images/Scenario/icon-run-scenario.png" class="image-icon-tools" width="14" height="18" ng-click="RunScenario('AllRuleSteps')">
+                    </a>
+                    <div class="btn-group pull-right fleft" title="Run Tests">
+                        <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="true">
+                            <img src="images/Scenario/icon-down-arrow.png" class="image-icon-tools" width="12" height="12">
+                        </a>
+                        <ul class="dropdown-menu pull-right" role="menu">
+                            <li>
+                                <a ng-click="RunScenario('OnlyResult')">
+                                    Only Result
+                                </a>
+                            </li>
+                            <li>
+                                <a ng-click="RunScenario('CurrentRuleSteps')">
+                                    Current Rule Steps
+                                </a>
+                            </li>
+                            <li>
+                                <a ng-click="RunScenario('AllRuleSteps')">
+                                    All Rule Steps
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <a title="View Diagram" class="fright">
+                        <img src="images/Scenario/icon-view-diagram.png" title="View Diagram" ng-click="ViewDiagram()" id="OpenViewDiagram" ng-show="objEntityBasedScenario.SelectedStep.IsViewdiagramVisible" style="cursor:pointer" />
+                    </a>
+                </div>
+
+            </div>
+
+            <div class="scenario-form-panel">
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label class="control-label">Description</label>
+                        <input class="form-control" type="text" title="{{objEntityBasedScenario.SelectedStep.dictAttributes.Text}}"
+                               ng-model="objEntityBasedScenario.SelectedStep.dictAttributes.Text" undoredodirective model="objEntityBasedScenario"
+                               ng-disabled="IsExcelBasedScenario" ng-trim="false" />
+                    </div>
+                </div>
+
+
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label class="control-label">Effective Date</label>
+                        <input class="form-control input-sm-inline date-picker" size="16" type="text"
+                               ng-model="objEntityBasedScenario.SelectedStep.dictAttributes.sfwEffectiveDate" undoredodirective model="objEntityBasedScenario"
+                               ng-disabled="IsExcelBasedScenario==true">
+                    </div>
+                </div>
+
+                <div class="col-xs-4" ng-show="IsObjectBasedScenario">
+                    <div class="form-group">
+                        <label ng-if='!objEntityBasedScenario.SelectedStep.dictAttributes.sfwXmlMethod' class="control-label ">Method Name</label>
+                        <label class="control-label" ng-if='objEntityBasedScenario.SelectedStep.dictAttributes.sfwXmlMethod'><u><a style="color: #5b9bd1!important;" ng-click='selectXmlMethodClick(objEntityBasedScenario.SelectedStep.dictAttributes.sfwXmlMethod)'>Method Name</a></u></label>
+
+                        <select class="form-control " ng-options="x.ID as x.ID for x in lstXmlMethods" title="{{objEntityBasedScenario.SelectedStep.dictAttributes.sfwXmlMethod}}" ng-model="objEntityBasedScenario.SelectedStep.dictAttributes.sfwXmlMethod" undoredodirective model="objEntityBasedScenario.SelectedStep" ng-change="UpdateMethodParameter()" />
+
+                    </div>
+                </div>
+
+
+                <div class="col-xs-12">
+                    <span class="alert-error-msg" ng-bind="objEntityBasedScenario.SelectedStep.objScenarioRunResult.ErrorMessage"></span>
+                    <span class="alert-error-msg" ng-show="objEntityBasedScenario.SelectedStep.TestResult!=undefined&&objEntityBasedScenario.SelectedStep.TestResult!=null" ng-bind="objEntityBasedScenario.SelectedStep.TestResult"></span>
+                </div>
+
+
+                <div ng-show="IsObjectBasedScenario" class="parameter-data-table">
+
+                    <table id="tblScenarioParameter" class="sws-table" role="grid">
+
+                        <thead>
+                            <tr role="row">
+                                <th> Parameter </th>
+                                <th> Data Type </th>
+                                <th> Field Name </th>
+                                <th> Value </th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr ng-repeat="objMethod in objEntityBasedScenario.SelectedStep.objParameters.Elements" ng-click="setSelectedMethodParameters(objMethod)" ng-class="objMethod == SelectedMethodParameter?'active':''">
+                                <td><span ng-bind="objMethod.dictAttributes.ID"></span></td>
+                                <td><span ng-bind="objMethod.dictAttributes.sfwDataType"></span></td>
+                                <td><span ng-bind="objMethod.dictAttributes.sfwField"></span></td>
+                                <td>
+                                    <input type="text" class="form-control form-filter input-sm" title="{{objMethod.dictAttributes.Value}}" ng-model="objMethod.dictAttributes.Value" undoredodirective model="objMethod">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+            <div ng-class="IsObjectBasedScenario?'row scenario-logical-rule-calc-height':''" class="scenario-table-wrapper">
+
+                <div class="col-xs-6 full-height">
+                    <div class="scenario-table">
+                        <div class="normal-content-wrapper-header">
+                            <div class="page-subheading fleft">
+                                Input
+                            </div>
+                            <div class="fright">
+                                <a ng-hide="IsObjectBasedScenario || IsExcelBasedScenario || ruleFileInfo.Data.IsStatic" title="Add Entity Fields">
+                                    <img ng-click="openWindow()" src="images/Common/icon_add_dark.svg" />
+                                </a>
+                                <!--Object based scenario button-->
+                                <!--<a  ng-show="IsObjectBasedScenario" title="Business Object Property Viewer">
+                                    <img ng-click="onBusinessObjectPropertViewerOpenClick(true)" src="images/Entity/icon_add_field_black.svg" width="15" height="15" />
+                                </a>-->
+                                <a ng-hide="IsExcelBasedScenario" title="Delete Input Values"><img ng-click="DeleteInputValues()" src="images/Common/icon_delete_dark.svg" /></a>
+                            </div>
+                        </div>
+
+                        <div class="panel-body scenario-panel-body">
+
+                            <table id="tblScenarioInput" class="sws-table" role="grid">
+                                <thead>
+                                    <tr role="row">
+                                        <th>Id</th>
+                                        <th ng-hide="IsObjectBasedScenario">Is Constant</th>
+                                        <th>Input Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="objInput in objEntityBasedScenario.SelectedStep.lstInputValues" ng-click="setSelectedParameters(objInput)" ng-disabled="IsExcelBasedScenario" ng-class="objInput == SelectedParameter?'selected':''">
+                                        <td><span ng-bind="objInput.dictAttributes.ID"></span></td>
+                                        <td ng-hide="IsObjectBasedScenario">
+                                            <input type="checkbox" ng-true-value="'True'" ng-false-value="'False'" ng-model="objInput.dictAttributes.sfwIsconstant" undoredodirective model="objInput" ng-change="OnConstantValueChange(objInput)"
+                                                   ng-disabled="IsExcelBasedScenario || objInput.dictAttributes.sfwDataType=='Collection' || objInput.dictAttributes.sfwDataType=='List' || objInput.dictAttributes.sfwDataType=='Object'" />
+                                        </td>
+                                        <td ng-show="objInput.dictAttributes.sfwIsconstant =='True'">
+                                            <constantintellisene constantbinding="objInput.dictAttributes.Value" propertyname="'dictAttributes.Value'" model="objInput"></constantintellisene>
+                                        </td>
+                                        <td ng-hide="objInput.dictAttributes.sfwIsconstant =='True' || (objInput.dictAttributes.sfwDataType =='Collection' || objInput.dictAttributes.sfwDataType =='Object' || objInput.dictAttributes.sfwDataType =='List')">
+                                            <input type="text" class="form-control form-filter input-sm" title="{{objInput.dictAttributes.Value}}" ng-model="objInput.dictAttributes.Value" undoredodirective model="objInput"
+                                                   ng-disabled="IsExcelBasedScenario" />
+                                        </td>
+                                        <td ng-show="objInput.dictAttributes.sfwDataType =='Collection' || objInput.dictAttributes.sfwDataType =='List'">
+                                            <a ng-click="OpenPopupForCollection(objInput, false)"><img src="images/Common/icon_add_dark.svg" /></a>
+                                        </td>
+                                        <td ng-show="objInput.dictAttributes.sfwDataType =='Object'">
+                                            <a ng-click="OpenPopupForObject(objInput)"><img src="images/Common/icon_add_dark.svg" /></a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-xs-6 full-height">
+                    <div class="scenario-table">
+                        <div class="normal-content-wrapper-header">
+
+                            <div class="page-subheading fleft">
+                                Output
+                            </div>
+                            <div class="fright">
+                                <!--Object based Scenari button-->
+                                <!--<a class="icon-bo-property-viewer" ng-show="IsObjectBasedScenario" ng-click="onBusinessObjectPropertViewerOpenClick(false)" title="Business Object Property Viewer">
+                                    <img src="images/Entity/icon_add_field_black.svg" width="15" height="15" />
+                                </a>-->
+                                <a ng-show="IsObjectBasedScenario"><img src="images/Common/icon_delete_dark.svg" ng-click="DeleteOutputValues()" title="Delete Output Values"></a>
+                            </div>
+
+                        </div>
+
+                        <div class="panel-body scenario-panel-body">
+
+                            <table id="tblScenarioOutput" class="sws-table" role="grid">
+                                <thead>
+                                    <tr role="row">
+                                        <th>Id</th>
+                                        <th ng-hide="IsObjectBasedScenario">Is Constant</th>
+                                        <th>Expected Value</th>
+                                        <th ng-show="objEntityBasedScenario.SelectedStep.IsRunSelected">Actual Value</th>
+                                        <th>Ignore</th>
+                                        <th ng-show="objEntityBasedScenario.SelectedStep.IsRunSelected">Result</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="objOutput in objEntityBasedScenario.SelectedStep.lstOutputValues" ng-disabled="IsExcelBasedScenario" ng-click="setSelectedOutputParam(objOutput)" ng-class="objOutput == SelectedOutputParam?'selected':''">
+                                        <td><span ng-bind="objOutput.dictAttributes.ID"></span></td>
+
+                                        <td ng-hide="IsObjectBasedScenario">
+                                            <input type="checkbox" ng-true-value="'True'" ng-false-value="'False'" ng-model="objOutput.dictAttributes.sfwIsconstant" undoredodirective model="objOutput"
+                                                    ng-disabled="IsExcelBasedScenario || objOutput.dictAttributes.sfwDataType=='Collection' || objOutput.dictAttributes.sfwDataType=='List' || objOutput.dictAttributes.sfwDataType=='Object'" 
+                                                   ng-change="OnConstantValueChange(objOutput)"/>
+                                        </td>
+                                        <td ng-show="objOutput.dictAttributes.sfwIsconstant =='True'">
+                                            <constantintellisene constantbinding="objOutput.dictAttributes.Value" propertyname="'dictAttributes.Value'" model="objOutput"></constantintellisene>
+                                        </td>
+                                        <td ng-hide="objOutput.dictAttributes.sfwIsconstant =='True' || objOutput.dictAttributes.sfwDataType =='Collection' || objOutput.dictAttributes.sfwDataType =='Object' || objOutput.dictAttributes.sfwDataType =='List'">
+                                            <input type="text" class="form-control form-filter input-sm" title="{{objOutput.dictAttributes.Value}}" ng-model="objOutput.dictAttributes.Value" undoredodirective model="objOutput"
+                                                   ng-disabled="IsExcelBasedScenario" />
+                                        </td>
+                                        <td ng-show="objOutput.dictAttributes.sfwDataType =='Collection' || objOutput.dictAttributes.sfwDataType =='List'">
+                                            <a ng-click="OpenPopupForCollection(objOutput, true)"><img src="images/Common/icon_add_dark.svg" /> </a>
+                                        </td>
+                                        <td ng-show="objOutput.dictAttributes.sfwDataType =='Object'">
+                                            <a ng-click="OpenPopupForOutputObject(objOutput, objEntityBasedScenario.SelectedStep)"><img src="images/Common/icon_add_dark.svg" /></a>
+
+                                        </td>
+                                        <td ng-show="objEntityBasedScenario.SelectedStep.IsRunSelected">
+                                            <span ng-bind="objOutput.ResultValue"></span>
+                                        </td>
+                                        <td>
+                                            <input type="checkbox" ng-true-value="'true' || 'True'" ng-false-value="'False' || 'false'" ng-model="objOutput.dictAttributes.sfwIgnore" undoredodirective model="objOutput" ng-disabled="IsExcelBasedScenario"/>
+                                        </td>
+                                        <td ng-show="objEntityBasedScenario.SelectedStep.IsRunSelected && (objOutput.dictAttributes.sfwIgnore == 'False' || objOutput.dictAttributes.sfwIgnore==undefined)">
+
+                                            <i class="fa fa-check faCheckScenario" ng-show="objOutput.Status"></i>
+                                            <i class="fa fa-times faTimesScenario" ng-show="!objOutput.Status"></i>
+
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <div ng-show="selectedDesignSource" class="full-height">
+        <div id="editor_{{currentfile.FileName}}" class="ace-editor-div"></div>
+    </div>
+</div>

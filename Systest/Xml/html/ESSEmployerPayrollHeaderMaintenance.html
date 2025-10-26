@@ -1,0 +1,514 @@
+<div class="wrapper" >
+   <fieldset id="pnlHeader" class="s-fieldSetPanelbar">
+      <legend class="s-legendPanelbar"></legend>
+      <div class="col-md-12"><span class="literal panel-header" id="ltrl PayrollHeaderMaintenance"> Payroll Report Maintenance</span></div>
+   </fieldset>
+   <div style="" id="pnltoolbar">
+      <div class="btn-row s-divButtonRow"><input type="button" value="Save" id="btnSave" class="button btnNoChangesSave_Click_button" /><input type="button" value="Export To Text" id="btnExportToText" style="display:none;" class="button btnExecuteBusinessMethod_Click_button" /><input type="button" value="Create Payroll Detail" id="btnCreatePayrollDetail" style="display:none;" class="button btnExecuteBusinessMethod_Click_button" /><input type="button" value="Validate" id="btnValidate" style="display:none;" class="button btnExecuteBusinessMethod_Click_button" /><input type="button" value="Ready To Post" id="btnReadyToPost" style="display:none;" class="button btnExecuteBusinessMethod_Click_button" /><input type="button" value="ReLoad" id="btnReloadInsuranceDetails" style="display:none;" class="button btnExecuteBusinessMethod_Click_button" /><input type="button" value="New Detail" id="btnNewDetail" class="button btnNew_Click_button" /><input type="button" value="Submit Report" id="btnAccpt" onclientclick="return ReportTypeAdjustment();" class="button btn_AcceptReadyToPost_button" /><input type="button" value="Submit Report" id="btnExecuteRefreshFromObject" class="button btnValidateExecuteBusinessMethod_Click_button" /> <input type="button" value="Export to Excel" id="btnDownload" class="button btnDownload_Click_button" /><input type="button" value="Export To Excel" id="btnExportExcelBusEmployerPayrollDetail" class="button btnColumnsToExport_Click_button" /><input type="button" value="Refresh" id="btnCancel" class="button btnCancel_Click_button" /><input type="button" value="Ignore" id="btnIgnore" onclientclick="return confirmIgnore('Are you sure you want to ignore this Payroll Report? <br/><br/>PLEASE NOTE:  Ignoring this detail will omit these wages and contribution amounts from the Total amounts.  It does NOT suppress the error message.','Ignore Report Header');" class="button btnExecuteBusinessMethod_Click_button" /><input type="button" value="Back" id="btnBack" title="To avoid log-out please use this back button NOT the browser back button!" style="display:none;" class="button btnBack_Click_button" /><input type="button" value="Refresh Data" id="btnRefreshData" class="button btnCancel_Click_button" /><input type="button" value="Save Comments" id="btnSaveComments" class="button btnNoChangesSave_Click_button" /></div>
+   </div>
+   <ul id="pnlMain" class="s-ulControlPanelbar ">
+      <li class="s-liControlPanelbar">
+         <span class="s-spnControlPanelbar">Employer Payroll Report Details</span>
+         <div class="s-divControlPanelContainer">
+            <div id="tblMain" class="form-body">
+               <div class="form-group">
+                  <div class="col-md-12">
+                     <ul id="pnlEmplrPayrollDetail" class="s-ulControlPanelbar ContainerPanel no-panel-view">
+                        <li class="s-liControlPanelbar">
+                           <span class="s-spnControlPanelbar"></span>
+                           <div class="s-divControlPanelContainer">
+                              <div id="tblNewPage" class="form-body">
+                                 <div class="form-group">
+                                    <div class="col-md-2 CaptionDiv"><label id="capEmployerPayrollHeaderId" class="fullWidth">Report ID :</label></div>
+                                    <div class="col-md-2"><label id="lblEmployerPayrollHeaderId"></label></div>
+                                    <div class="col-md-2 CaptionDiv"><label id="capRegAdj" class="fullWidth">Report Type :</label></div>
+                                    <div class="col-md-2"><label id="lblReportTypeDescription"></label><label id="lblReportTypeValue"></label></div>
+                                    <div class="col-md-2 CaptionDiv"><label id="capSubmittedDate" class="fullWidth">Submitted Date : </label></div>
+                                    <div class="col-md-2"><label id="lblSubmittedDate"></label></div>
+                                 </div>
+                                 <div class="form-group">
+                                    <div class="col-md-2 CaptionDiv"><label id="capType">Benefit :</label></div>
+                                    <div class="col-md-2"><label id="lblHeaderTypeDescription"></label></div>
+                                    <div class="col-md-2 CaptionDiv"><label id="lblHeaderTypeValue" ></label></div>	
+									<div class="col-md-2"></div>										
+                                    <div class="col-md-2 CaptionDiv"><label id="capPostedDate">Posted Date : </label></div>
+                                    <div class="col-md-2"><label id="lblPostedDate"></label></div>
+                                 </div>
+                                 <div class="form-group">
+                                    <div class="col-md-2 CaptionDiv"><label id="capStatusDescription">Status : </label></div>
+                                    <div class="col-md-2"><label id="lblStatusDescription"></label><label id="lblStatusDescriptionReviewStatus" style="font-weight:bold !important"></label> <a id="btnErrorHyperLink" class="tdPadding ErrorLink" onclientclick="ErrorPanelScrollIntoView();" linkbutton="true">Errors</a></div>
+                                    <div class="col-md-2 CaptionDiv capRegAdj width-none"><label id="capBalancingStatus">Balancing Status :</label></div>
+                                    <div class="col-md-2"><label id="lblBalancingStatusDescription"></label></div>
+									<div class="col-md-2"><input type="text" id="txtContactNDPERSFlag" class="s-textbox" /></div>
+                                 </div>
+                                 <div class="form-group">
+                                    <div class="col-md-2 CaptionDiv"><label id="capPayrollPaidDate">Reporting Month : </label></div>
+                                    <div class="col-md-2"><label id="lblIstrPayrollPaidDateAsMonthYear"></label></div>
+                                    <div class="col-md-2 CaptionDiv"><label id="capTotalDetailRecordCount" class="fullWidth">Detail Record Count : </label></div>
+                                    <div class="col-md-2"><label id="txtTotalDetailRecordCount"></label></div>
+                                 </div>
+                                 <div class="form-group">
+                                    <div class="col-md-2 CaptionDiv"><label id="capPayPeriodStartDate">Pay Period Start Date : </label></div>
+                                    <div class="col-md-2"><label id="cap4" style="color:red;" skinid="ReqInformation">*</label><label id="lblPayPeriodStartDate"></label></div>
+                                    <div class="col-md-2 CaptionDiv style-none"><label id="capPayPeriodEndDate">Pay Period End Date : </label></div>
+                                    <div class="col-md-2"><label id="cap5" style="color:red;" skinid="ReqInformation">*</label><label id="lblPayPeriodEndDate"></label></div>
+                                 </div>
+                                 <div class="form-group">
+                                    <div class="col-md-2 CaptionDiv"><label id="capTotalWagesReported">Total Wages Uploaded : </label></div>
+                                    <div class="col-md-2"><label id="lblLabel"></label></div>
+                                    <div class="col-md-2 CaptionDiv zero-padding-right-left"><label id="capTotalContributionReported"> Total Contributions Uploaded :</label></div>
+                                    <div class="col-md-2"><label id="lblLabel1"></label></div>
+                                 </div>
+                                 <div class="form-group">
+                                    <div class="col-md-2 CaptionDiv"><label id="lblTotalWagesReportedRetirement">Total Wages Reported :</label><label id="capPayCheckDate">Pay Check Date : </label></div>
+                                    <div class="col-md-2"><input type="text" id="txtLabel" class="s-textbox" /><label id="lblPayCheckDate"></label></div>
+                                    <div class="col-md-2 CaptionDiv"><label id="capTotalContributionsReported">Total Contributions Reported :</label></div>
+                                    <div class="col-md-2"><input type="text" id="txtTotalContributionsReported1" class="s-textbox" /></div>
+                                 </div>
+                                 <div class="form-group">
+                                    <div class="col-md-2 CaptionDiv"><label id="capTotalWagesFromDetails">NDPERS Calculated Wages :</label></div>
+                                    <div class="col-md-2"><label id="capTotalWagesFromDetailsValue"></label></div>
+                                    <div class="col-md-2 CaptionDiv"><label id="lblTotalContributionsFromDetails">NDPERS Calculated Contributions :</label></div>
+                                    <div class="col-md-2"><label id="lblTotalContributionsFromDetailss"></label></div>
+								</div>
+                                 <div class="form-group">
+                                    <div class="col-md-2 CaptionDiv"><label id="capTotalPremiumAmountReported">Total Premium Amount Reported : </label></div>
+                                    <div class="col-md-2"><input type="text" id="txtTotalPremiumAmountReported" class="s-textbox" /></div>
+                                    <div class="col-md-2 CaptionDiv"><label id="capIdecTotalPremiumReportedForIns">Total Premium Amount Calculated : </label></div>
+                                    <div class="col-md-2"><label id="lblIdecTotalPremiumReportedForIns"></label><label id="lblIdecTotalPremiumReportedForInsPenalty"></label></div>
+                                 </div>
+                                 <div class="form-group">
+                                    <div class="col-md-2 CaptionDiv"><label id="capTotalPurchaseAmount1">Total Purchase Amount Reported : </label></div>
+                                    <div class="col-md-2"><input type="text" id="txtTotalPurchaseAmountReported" class="s-textbox" /></div>
+                                    <div class="col-md-2 CaptionDiv"><label id="capIdecTotalPurchaseAmount">Total Purchase Amount From Details : </label></div>
+                                    <div class="col-md-2"><label id="lblTotalPurchaseAmount"></label></div>
+                                 </div>
+                                 <div class="form-group">
+                                 
+                                 
+                                    <div class="col-md-6 CaptionDiv"><label id="capTotalInterest" class="fullWidth">Total Interest : </label></div>
+                                    <div class="col-md-2"><label id="lblTotalInterest"></label></div>
+                                 </div>
+                                 <div class="form-group">
+                                 
+                                 
+                                    <div class="col-md-6 CaptionDiv"><label id="capIdecTotalContributionCalculatedForOther457">Total Contributions From Details for Other457 : </label></div>
+                                    <div class="col-md-2"><label id="lblIdecTotalContributionCalculatedForOther457"></label></div>
+                                 </div>
+                                 <div class="form-group">
+                                 
+                                 
+                                    <div class="col-md-6 CaptionDiv"><label id="capTotConAndIntDue"><b>Total Contributions and Interest Due :</label></div>
+                                    <div class="col-md-2"><label id="lblIdecTotalContributionsAndInterestDue1"></label></div>
+                                 </div>
+                                 <div class="form-group">
+                                 
+                                 
+                                    <div class="col-md-6 CaptionDiv"><label id="capRoundingDifference" for="lblRoundingDifference">Rounding Difference : </label></div>
+                                    <div class="col-md-2"><label id="lblRoundingDifference"></label></div>
+                                 </div>
+                                 <div class="form-group">
+                                    <div class="col-md-2 CaptionDiv"><label id="capValidatedDate">Validated Date : </label></div>
+                                    <div class="col-md-2"><label id="lblValidatedDate"></label></div>
+                                    <div class="col-md-2"><input type="button" value="Execute Refresh From Object" id="btnServerSideRefresh" skinid="ServerSideRefresh" class="button btnValidateExecuteBusinessMethod_Click_button" /></div>
+                                 
+                                 </div>
+                                 <div class="form-group">
+                                    <div class="col-md-2 CaptionDiv"><label id="capReceivedDate">Received Date : </label></div>
+                                    <div class="col-md-2"><label id="lblReceivedDate"></label></div>
+                                 </div>
+                                 <div class="form-group">
+                                 
+                                    <div class="col-md-2"><label id="lblOrgId"></label></div>
+                                 </div>
+                                 <div class="form-group">
+                                    <div class="col-md-2 CaptionDiv"><label id="capComments">Comments : </label></div>
+                                    <div class="col-md-6"><textarea id="txtComments" style="height:75px;width:400px;" textmode="MultiLine"></textarea></div>
+                                 </div>
+                                 <div class="form-group">
+									<div class="col-md-2"></div>
+                                    <div class="col-md-10">
+                                       <table id="grvBusComments" class="Cmtshowmultiline">
+                                          <thead>
+                                             <tr>
+                                                <th>Comments</th>
+                                                <th>Created By</th>
+                                                <th>Created Date</th>
+                                             </tr>
+                                          </thead>
+                                          <tbody>
+                                             <tr>
+                                                <td role="gridcell"><label></label></td>
+                                                <td role="gridcell"><label></label></td>
+                                                <td role="gridcell"><label></label></td>
+                                             </tr>
+                                          </tbody>
+                                       </table>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </li>
+   </ul>
+   <ul id="pnlReportSummary" class="s-ulControlPanelbar ">
+      <li class="s-liControlPanelbar">
+         <span class="s-spnControlPanelbar">Report Summary</span>
+         <div class="s-divControlPanelContainer">
+            <div id="tblAllocationInfo" class="form-body">
+               <div class="form-group">
+                  <div class="col-md-6"><input type="button" value="Remittance Report" id="btnExecuteServerMethod" class="button btn_OpenPDFFromNavigationParam_button" /><input type="button" value="Remittance Report" id="btnOpenRemittanceReport" class="button btnOpen_Click_button" /><input type="button" value="Debit ACH Request" id="btnExecuteServerMethod1" class="button btnExecuteBusinessMethod_Click_button" /><input type="button" value="Cancel ACH Debit Request" id="btnDeleteACH" class="button btnExecuteBusinessMethod_Click_button" /></div>
+                  <div class="col-md-6"><label id="lblIdecTotalAppliedAmountByHeaderID" class="GridEven"></label><label id="capIdecTotalAppliedAmountByHeaderID">Total Applied Amount to this report : </label></div>
+                  
+               </div>
+               <div class="form-group" id="pnlVisibleRule1">
+                  <div class="col-md-12">
+                     <table id="grvRetirementContributionByPlan">
+                        <thead>
+                           <tr>
+                              <th>Plan Name</th>
+                              <th>Reported Contribution</th>
+                              <th>Applied Contribution</th>
+                              <th>Credit from <br/> Adjustments</th>
+                              <th>Contribution Amount Due</th>
+							  <th>Reported RHIC </th>
+                              <th>Applied RHIC</th>
+                              <th>Credit from <br/> Adjustments</th>
+                              <th>RHIC Amount Due</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <tr>
+                              <td role="gridcell"><label></label></td>
+                              <td role="gridcell"><label></label></td>
+                              <td role="gridcell"><label></label></td>
+                              <td role="gridcell"><label></label></td>
+                              <td role="gridcell"><label></label></td>
+							  <td role="gridcell"><label></label></td>
+                              <td role="gridcell"><label></label></td>
+                              <td role="gridcell"><label></label></td>
+                              <td role="gridcell"><label></label></td>
+							  
+                           </tr>
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+               <div class="form-group" id="pnlVisibleRule2">
+                  <div class="col-md-12">
+                     <table id="grvInsuranceContributionByPlan">
+                        <thead>
+                           <tr>
+                              <th>Plan Name</th>
+                              <th>Premium Reported </th>
+                              <th>Premium Applied</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <tr>
+                              <td role="gridcell"><label></label></td>
+                              <td role="gridcell"><label></label></td>
+                              <td role="gridcell"><label></label></td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+               <div class="form-group" id="pnlVisibleRule3">
+                  <div class="col-md-12">
+                     <table id="grvDeferredCompContributionByPlan">
+                        <thead>
+                           <tr>
+                              <th>Plan Name</th>
+                              <th>Contribution Reported</th>
+                              <th>Contribution Applied</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <tr>
+                              <td role="gridcell"><label></label></td>
+                              <td role="gridcell"><label></label></td>
+                              <td role="gridcell"><label></label></td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+               <div class="form-group" ID="pnlVisibleRule4">
+                  <div class="col-md-12">
+                     <table id="grvPurchaseContributionByPlan">
+                        <thead>
+                           <tr>
+                              <th>Plan Name</th>
+                              <th>Employer Payroll Header ID</th>
+                              <th>Reported Purchase</th>
+                              <th>Applied Purchase</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <tr>
+                              <td role="gridcell"><label></label></td>
+                              <td role="gridcell"><label></label></td>
+                              <td role="gridcell"><label></label></td>
+                              <td role="gridcell"><label></label></td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </li>
+   </ul>
+   <ul id="pnlLifeInsuranceDetails" class="s-ulControlPanelbar ">
+      <li class="s-liControlPanelbar">
+         <span class="s-spnControlPanelbar">Life Insurance Details</span>
+         <div class="s-divControlPanelContainer">
+            <div id="tblLifeInsuranceDetails" class="form-body">
+               <div class="form-group">
+                  <div class="col-md-3 CaptionDiv"><label for="lblIdecTotalBasicPremium" id="capIdecTotalBasicPremium">Basic : </label></div>
+                  <div class="col-md-2"><label id="lblIdecTotalBasicPremium"></label></div>
+               </div>
+               <div class="form-group">
+                  <div class="col-md-3 CaptionDiv"><label for="lblIdecTotalSupplementPremium" id="capIdecTotalSupplementPremium">Supplemental : </label></div>
+                  <div class="col-md-2"><label id="lblIdecTotalSupplementPremium"></label></div>
+               </div>
+               <div class="form-group">
+                  <div class="col-md-3 CaptionDiv"><label for="lblIdecTotalDependentPremium" id="capIdecTotalDependentPremium">Dependent Supplemental :</label></div>
+                  <div class="col-md-2"><label id="lblIdecTotalDependentPremium"></label></div>
+               </div>
+               <div class="form-group">
+                  <div class="col-md-3 CaptionDiv"><label for="lblIdecTotalSpousePremium" id="capIdecTotalSpousePremium">Spouse Supplemental : </label></div>
+                  <div class="col-md-2"><label id="lblIdecTotalSpousePremium"></label></div>
+               </div>
+            </div>
+         </div>
+      </li>
+   </ul>
+   <ul id="pnlNewPanel" class="s-ulControlPanelbar ">
+      <li class="s-liControlPanelbar">
+         <span class="s-spnControlPanelbar">Report Details</span>
+         <div class="s-divControlPanelContainer">
+            <div class="col-md-12"><input type="text" id="txbContactId" class="s-textbox" /></div>
+            <div class="col-md-12">
+               <table id="grvStatusSummaryRetr" class="report-detail-table">
+                  <thead>
+                     <tr>
+                        <th>Status</th>
+                        <th>Status Count</th>
+                        <th>Status</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <td role="gridcell">
+                           <a base_click="true" sfwrelatedcontrol="btnOpenLookup">
+                              <div class="GridLinks"></div>
+                           </a>
+                        </td>
+                        <td role="gridcell" class="Alignleft"><label></label></td>
+                        <td role="gridcell"><label></label></td>
+                     </tr>
+                  </tbody>
+               </table>
+			   <table id="grvStatusSummaryInsr" class="report-detail-table">
+                  <thead>
+                     <tr>
+                        <th>Status</th>
+                        <th>Status Count</th>
+                        <th>Status</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <td role="gridcell">
+                           <a base_click="true" sfwrelatedcontrol="btnOpenLookup1">
+                              <div class="GridLinks"></div>
+                           </a>
+                        </td>
+                        <td role="gridcell" class="Alignleft"><label></label></td>
+                        <td role="gridcell"><label></label></td>
+                     </tr>
+                  </tbody>
+               </table>
+			   <table id="grvStatusSummaryDeff" class="report-detail-table">
+                  <thead>
+                     <tr>
+                        <th>Status</th>
+                        <th>Status Count</th>
+                        <th>Status</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <td role="gridcell">
+                           <a base_click="true" sfwrelatedcontrol="btnOpenLookup2">
+                              <div class="GridLinks"></div>
+                           </a>
+                        </td>
+                        <td role="gridcell" class="Alignleft"><label></label></td>
+                        <td role="gridcell"><label></label></td>
+                     </tr>
+                  </tbody>
+               </table>
+			   <table id="grvStatusSummarySer" class="report-detail-table">
+                  <thead>
+                     <tr>
+                        <th>Status</th>
+                        <th>Status Count</th>
+                        <th>Status</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <td role="gridcell">
+                           <a base_click="true" sfwrelatedcontrol="btnOpenLookup3">
+                              <div class="GridLinks"></div>
+                           </a>
+                        </td>
+                        <td role="gridcell" class="Alignleft"><label></label></td>
+                        <td role="gridcell"><label></label></td>
+                     </tr>
+                  </tbody>
+               </table>
+               <input type="button" value="Open Lookup" id="btnOpenLookup" class="button btnOpenLookup_Click_button" />
+			   <input type="button" value="Open Lookup" id="btnOpenLookup1" class="button btnOpenLookup_Click_button" />
+			   <input type="button" value="Open Lookup" id="btnOpenLookup2" class="button btnOpenLookup_Click_button" />
+			   <input type="button" value="Open Lookup" id="btnOpenLookup3" class="button btnOpenLookup_Click_button" />
+            </div>
+         </div>
+      </li>
+   </ul>
+   <ul id="pnlNewPanel1" class="s-ulControlPanelbar ">
+      <li class="s-liControlPanelbar">
+         <span class="s-spnControlPanelbar">Error Summary</span>
+         <div class="s-divControlPanelContainer">
+            <div class="btn-row s-divButtonRow"><input type="button" value="OpenDetail" id="btnOpenDetail" class="button btnOpenLookup_Click_button" /></div>
+			<div class="btn-row s-divButtonRow"><input type="button" value="OpenDetail" id="btnOpenDetail1" class="button btnOpenLookup_Click_button" /></div>
+			<div class="btn-row s-divButtonRow"><input type="button" value="OpenDetail" id="btnOpenDetail2" class="button btnOpenLookup_Click_button" /></div>
+			<div class="btn-row s-divButtonRow"><input type="button" value="OpenDetail" id="btnOpenDetail3" class="button btnOpenLookup_Click_button" /></div>
+            <div class="col-md-12">
+               <table id="grvErrorRetr" class="Cmtshowmultiline">
+                  <thead>
+                     <tr>
+                        <th>Count</th>
+                        <th>Message ID</th>
+                        <th>Message</th>
+                        <th>Severity</th>
+						<th>Direction to Employer</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <td role="gridcell">
+                           <a base_click="true" sfwrelatedcontrol="btnOpenDetail" id="lblidzzz">
+                              <div class="GridLinks"></div>
+                           </a>
+                           <label id="lblid1"></label>
+                        </td>
+                        <td role="gridcell"><label></label></td>
+                        <td role="gridcell"><label></label></td>
+                        <td role="gridcell"><label></label></td>
+						<td role="gridcell"><label></label></td>
+                     </tr>
+                  </tbody>
+               </table>
+			   <table id="grvErrorInsr" class="Cmtshowmultiline">
+                  <thead>
+                     <tr>
+                        <th>Count</th>
+                        <th>Message ID</th>
+                        <th>Message</th>
+                        <th>Severity</th>
+						<th>Direction to Employer</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <td role="gridcell">
+                           <a base_click="true" sfwrelatedcontrol="btnOpenDetail1" id="lblidzzz">
+                              <div class="GridLinks"></div>
+                           </a>
+                           <label id="lblid1"></label>
+                        </td>
+                        <td role="gridcell"><label></label></td>
+                        <td role="gridcell"><label></label></td>
+                        <td role="gridcell"><label></label></td>
+						<td role="gridcell"><label></label></td>
+                     </tr>
+                  </tbody>
+               </table>
+			   <table id="grvErrorDeff" class="Cmtshowmultiline">
+                  <thead>
+                     <tr>
+                        <th>Count</th>
+                        <th>Message ID</th>
+                        <th>Message</th>
+                        <th>Severity</th>
+						<th>Direction to Employer</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <td role="gridcell">
+                           <a base_click="true" sfwrelatedcontrol="btnOpenDetail2" id="lblidzzz">
+                              <div class="GridLinks"></div>
+                           </a>
+                           <label id="lblid1"></label>
+                        </td>
+                        <td role="gridcell"><label></label></td>
+                        <td role="gridcell"><label></label></td>
+                        <td role="gridcell"><label></label></td>
+						<td role="gridcell"><label></label></td>
+                     </tr>
+                  </tbody>
+               </table>
+			   <table id="grvErrorServ" class="Cmtshowmultiline">
+                  <thead>
+                     <tr>
+                        <th>Count</th>
+                        <th>Message ID</th>
+                        <th>Message</th>
+                        <th>Severity</th>
+						<th>Direction to Employer</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <td role="gridcell">
+                           <a base_click="true" sfwrelatedcontrol="btnOpenDetail3" id="lblidzzz">
+                              <div class="GridLinks"></div>
+                           </a>
+                           <label id="lblid1"></label>
+                        </td>
+                        <td role="gridcell"><label></label></td>
+                        <td role="gridcell"><label></label></td>
+                        <td role="gridcell"><label></label></td>
+						<td role="gridcell"><label></label></td>
+                     </tr>
+                  </tbody>
+               </table>
+            </div>
+			<div class="col-md-12" id="ScrollToThisDiv" tabindex="-1"></div>
+         </div>
+      </li>
+   </ul>
+   <fieldset id="pnlAuditInfo" class="s-fieldSetPanelbar">
+      <legend class="s-legendPanelbar">Audit Information</legend>
+      <div id="tblAuditInfo" class="form-body">
+         <div class="form-group">
+            <div class="col-md-2 CaptionDiv"><label id="capCreate">Create : </label></div>
+            <div class="col-md-2"><label id="lblCreatedBy"></label><label id="lblUpdateSeq"></label></div>
+            <div class="col-md-2"><label id="lblCreatedDate"></label></div>
+            <div class="col-md-2 CaptionDiv"><label id="capModify">Modify : </label></div>
+            <div class="col-md-2"><label id="lblModifiedBy"></label></div>
+            <div class="col-md-2"><label id="lblModifiedDate"></label></div>
+         </div>
+      </div>
+   </fieldset>
+</div>

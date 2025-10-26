@@ -1,0 +1,27 @@
+﻿<div class="full-height" ng-controller="FindAdvanceFilesController">
+    <form class="col-xs-12 form-inline full-height">
+        <div class="col-xs-12 form-group font-sm no-padding">
+            <label class="margin-right-10">Find With</label>
+            <input class="form-control input-sm margin-right-10" type="text" ng-model="AdvanceSearch.searchText" ng-change="resetFind()" autocomplete="off" autofocus />
+            <label class="margin-right-10">search in</label>
+            <select class="form-control input-sm" ng-options="type.value as type.name for type in AdvanceSearch.filetypes" ng-model="AdvanceSearch.searchFileType" ng-change="resetFind()"></select>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="AdvanceSearch.matchCase" ng-change="resetFind()" value="true">Match Case</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="AdvanceSearch.matchWholeWord" ng-change="resetFind()" value="true">Match Whole Word</label>
+            <button class="marg-left-10" ng-disabled="!AdvanceSearch.searchText" ng-click="searchTrigger()">Find All</button>
+        </div>
+        <div id="findFilesDiv" class="col-xs-12 overflowA marg-top-5" style="height: calc(80%); border: 2px solid #e5e5e5;" ng-show="AdvanceSearch.findSearchList.length > 0">
+            <ul class="col-xs-12" style="list-style: none;margin-top: 15px;">
+                <li class="col-xs-12" ng-repeat="file in AdvanceSearch.findSearchList | limitTo:totalDisplayed track by $index">
+                    <label style="font-size:11px;" ng-click="searchFileSelect(file);" class="col-xs-5 cursorP overflowH" title="{{::file.FileInfo.FilePath}} at line no {{::file.LineNumber}}">{{file.FileInfo.FilePath | cut:true:50:'...' }} ({{::file.LineNumber}})</label>
+                    <label style="font-size:11px;" title="{{::file.LineData}}" class="col-xs-7">{{::file.LineData | cut:true:150:'...'  }}</label>
+                </li>
+            </ul>
+        </div>
+        <div class="col-xs-12 margin-top-20">
+            <span class="Padding-all-5" ng-if="AdvanceSearch.CountFilesParsed > 0">Files checked : {{AdvanceSearch.CountFilesParsed}}</span>
+            <span class="Padding-all-5" ng-if="AdvanceSearch.CountFilesParsed > 0 > 0">Total matches found : {{AdvanceSearch.findSearchList.length}}</span>
+        </div>
+    </form>
+</div>
+
+

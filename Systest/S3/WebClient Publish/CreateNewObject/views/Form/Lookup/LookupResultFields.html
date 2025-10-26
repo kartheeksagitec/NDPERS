@@ -1,0 +1,95 @@
+﻿<div class="portlet-body">
+    <div class="create-object-container full-height">
+        <div class="lookup-result-field-list-wrapper">
+            <div class="col-xs-4 pop-up-box">
+                <div class="popup-box-header">
+                    Entity Attributes
+                </div>
+                <div class="popup-box-content no-padding">
+                    <newentityobjecttreetemplate ischeckboxvisible="true" lstselectedmultiplelevelfield="objLookupResultFields.lstselectedmultiplelevelfield" iscollectionnextlevelload="false" lstdisplayentity="objFormsDetails.LstDisplayedEntities"
+                                                 selectedentityobjecttreefields="objLookupResultFields.lstselectedobjecttreefields" selectedfield="objLookupResultFields.SelecetdField" entityname="objFormsDetails.sfwEntity"
+                                                 lstpreselectedfields="objLookupResultFields.preselectedfields" showcolumndescription="!objFormsDetails.MainQueryID" isallownavigation="false"></newentityobjecttreetemplate>
+
+                </div>
+            </div>
+            <div class="col-xs-1 add-btn-adjust">
+                <div class="form-group">
+                    <input type="button" class="dialog-btn" value="Add" ng-click="objLookupResultFields.addResultFields()" />
+                </div>
+            </div>
+            <div class="col-xs-7 pop-up-box">
+
+                <div class="popup-box-header">
+                    Result Fields
+                    <div class="fright">
+                        <i class="fa fa-arrow-down" ng-click="objLookupResultFields.moveSelectedRowDown()" ng-disabled="objLookupResultFields.canmoveSelectedRowDown()"></i>
+                        <i class="fa fa-arrow-up" ng-click="objLookupResultFields.moveSelectedRowUp()" ng-disabled="objLookupResultFields.canmoveSelectedRowUp()"></i>
+                        <i class="fa fa-minus" ng-click="objLookupResultFields.deleteSelectedRow()" ng-disabled="!objLookupResultFields.SelectedCurrentResultGridRow"></i>
+                    </div>
+                </div>
+                <div id="lookup-result-grid" class="popup-box-content">
+                    <table class="pop-up-box-table lookup-result-field-table">
+                        <thead>
+                            <tr>
+                                <th>Field Name</th>
+                                <th>Data Type</th>
+                                <th>Header</th>
+                                <th>Control Type</th>
+                                <th>Sort Expression</th>
+                                <th>Default Order</th>
+                                <th>Visible</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="obj in objLookupResultFields.lstResultFieldsForGrid" ng-click="objLookupResultFields.SelectedResultGridRow(obj)" ng-class="{'selected':obj==objLookupResultFields.SelectedCurrentResultGridRow}">
+                                <td><span ng-bind="obj.strFieldName"></span></td>
+                                <td><span ng-bind="obj.strDataType"></span></td>
+
+                                <td><input type="text" name="header" title="{{obj.strHeaderText}}" ng-model="obj.strHeaderText" class="form-control form-filter input-sm" /></td>
+                                <td>
+                                    <select ng-options="x for x in lstControlTypes" title="{{obj.strControlType}}" ng-model="obj.strControlType" class="form-control form-filter input-sm"></select>
+                                </td>
+
+                                <td>
+                                    <select ng-options="x for x in ArrSort" title="{{obj.strSort}}" ng-model="obj.strSort" class="form-control form-filter input-sm" ng-change="objLookupResultFields.ChangeSortExpression(obj)"></select>
+                                </td>
+                                <td>
+                                    <select ng-disabled="!obj.strSort" ng-options="x for x in ArrOrder" title="{{obj.strOrder}}" ng-model="obj.strOrder" class="form-control form-filter input-sm"></select>
+                                </td>
+                                <td>
+                                    <input type="checkbox" ng-model="obj.IsVisible" ng-true-value="'True'" ng-false-value="'False'" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+        <div class="lookup-result-field-bottom-row">
+
+            <input type="checkbox" name="New button" ng-true-value="'True'" ng-false-value="'False'" ng-model="objLookupResultFields.IsNewButton" />
+            <label>New Button</label>
+
+
+            <input type="checkbox" name="Open button" ng-true-value="'True'" ng-false-value="'False'" ng-model="objLookupResultFields.IsOpenButton" />
+            <label>Open Button</label>
+
+
+            <input type="checkbox" name="Delete button" ng-true-value="'True'" ng-false-value="'False'" ng-model="objLookupResultFields.IsDeleteButton" />
+            <label>Delete Button</label>
+
+
+            <input type="checkbox" name="Export To Excel button" ng-true-value="'True'" ng-false-value="'False'" ng-model="objLookupResultFields.IsExportExcelButton" />
+            <label>Export To Excel Button</label>
+
+        </div>
+    </div>
+</div>
+
+<div class="form-actions">
+    <input class="dialog-btn" type="button" value="Cancel" ng-click="CloseWizardClick()" />
+    <input class="dialog-btn" type="button" value="Back" wz-previous="onPrevious()" />
+    <input class="dialog-btn" type="button" value="Next" wz-next="objLookupResultFields.UpdateOnFormDetailsNext();onNext()" ng-disabled="!showExtraFieldsTab" />
+    <input class="dialog-btn" type="button" value="Finish" wz-finish ng-disabled="showExtraFieldsTab" />
+</div>

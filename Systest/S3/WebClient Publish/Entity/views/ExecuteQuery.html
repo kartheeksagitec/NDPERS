@@ -1,0 +1,40 @@
+﻿<div class="portlet-body">
+    <table class="table table-striped table-hover table-bordered dataTable no-footer" ng-if="isExecuted==false">
+        <thead>
+            <tr role="columnheader">
+                <th>Parameter</th>
+                <th>DataType</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr role="row" ng-repeat="x in ExecutionParameters">
+                <td><span ng-bind="x.Parameter"></span> </td>
+                <td><span ng-bind="x.Type"></span> </td>
+                <td><input type="text" title="{{x.Value}}" ng-model="x.Value" /></td>
+            </tr>
+        </tbody>
+    </table>
+    <div ng-if="isExecuted" class="popup-content execute-query-log">
+        <span ng-show="EntityExecuteQueryData == null || EntityExecuteQueryData.length==0">No Results Found!</span>
+        <table class="table table-striped table-hover table-bordered dataTable no-footer">
+            <thead>
+                <tr role="columnheader">
+                    <th ng-repeat="(key, value) in EntityExecuteQueryData[0]"><span style="color:black;margin-left:15px" ng-bind="key"></span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr role="row" ng-repeat="rowdata in EntityExecuteQueryData">
+                    <td ng-repeat="coldata in rowdata"><span style="color:black;margin-left:15px" ng-bind="coldata"></span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="form-actions">
+    <span ng-if="isShowingTopRecords && !isExecuted" class="fleft">It will show first 50 records only.</span>
+    <span ng-if="isShowingTopRecords && isExecuted" class="fleft">Showing first 50 records only.</span>
+    <input type="button" value="OK" class="dialog-btn" ng-click="onOKClick()" ng-disabled="!canExecuteQuery()" ng-if="isExecuted == false" />
+    <input type="button" value="Cancel" class="dialog-btn" ng-click="onCancelClick()" ng-if="isExecuted == false" />
+    <input type="button" value="Close" class="dialog-btn" ng-click="dialog.close()" ng-if="isExecuted" />
+</div>

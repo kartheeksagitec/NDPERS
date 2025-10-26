@@ -1,0 +1,451 @@
+﻿<entity ID="entServicePurchaseHeader" sfwActive="True" sfwStatus="Review" sfwType="BusinessRule" sfwErrorTable="sgt_service_purchase_header_error" sfwParentKey="service_purchase_header_id" sfwParentKeyValue="icdoServicePurchaseHeader.service_purchase_header_id" sfwMainCDO="icdoServicePurchaseHeader" sfwStatusColumn="service_purchase_status_value" sfwReadOnlyRule="Rule - Read Only Rule For Status Void" sfwObjectID="busServicePurchaseHeader" sfwTableName="sgt_service_purchase_header" sfwView="False" sfwParentEntity="entExtendBase">
+  <rules>
+    <rule ID="IsInValidBenefitCalculationSelected" sfwMessageId="4732" sfwExpression="(this.IsValidCalculationIdSelected() == False)" sfwObjectBased="True" />
+    <rule ID="IsPaymentAmountExceedsRetPortionForRollover" sfwMessageId="1171" sfwExpression="(this.IsPaymentAmountExceedsRetPortionForRollover() == True)" sfwObjectBased="True" />
+    <rule ID="IsPayorEmployerOrEmployerEmployeeForDCPlan" sfwMessageId="1165" sfwExpression="(this.icdoServicePurchaseHeader.plan_id != 0) &amp;&amp; &#xA;!(this.CheckPayorIsEmployerOrEmployerEmployeeForDCPlan() == True)" sfwObjectBased="True" />
+    <rule ID="IsValidGrantFreeChecked" sfwMessageId="1151" sfwExpression="(this.icdoServicePurchaseHeader.service_purchase_type_value == &quot;USRA&quot;) &amp;&amp; &#xA;(this.icdoServicePurchaseHeader.grant_free_flag == &quot;Y&quot;) &amp;&amp; &#xA;(this.IsUSERRAMilitaryServiceEntered() == True)" sfwObjectBased="True" />
+    <rule ID="Rule - Action Status Closed" sfwExpression="(this.icdoServicePurchaseHeader.action_status_value == &quot;CLOS&quot;) &amp;&amp;&#xA;!(this.IsUserCheckingOwnOrSpouseServicePurchase() == True)" sfwObjectBased="True" />
+    <rule ID="Rule - Action Status is Closed" sfwExpression="!(this.icdoServicePurchaseHeader.action_status_value == &quot;CLOS&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule - Action Status is Pending" sfwExpression="(this.icdoServicePurchaseHeader.action_status_value == &quot;PEND&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule - Age of Employee should be above threshold value for service credit purchase" sfwMessageId="1105" sfwExpression="(this.icdoServicePurchaseHeader.current_age_year_part &lt; RFunc.SystemConstant&lt;Int32&gt;(&quot;SPAG&quot;))" sfwObjectBased="True" />
+    <rule ID="Rule - Both Number of Payments and Expected Installment Amount Populated" sfwMessageId="1123" sfwExpression="(this.icdoServicePurchaseHeader.number_of_payments &gt; 0) &amp;&amp; &#xA;(this.icdoServicePurchaseHeader.expected_installment_amount &gt; 0)" sfwObjectBased="True" />
+    <rule ID="Rule - Check specific Employment Status" sfwMessageId="1093" sfwExpression="(this.icdoServicePurchaseHeader.service_purchase_type_value == &quot;USRA&quot;) &amp;&amp; &#xA;(this.CheckIfPersonEmploymnetIsNotLOAForUSSERA() == False)" sfwObjectBased="True" />
+    <rule ID="Rule - Check specific Employment Type for Unused Sick Leave" sfwMessageId="1103" sfwExpression="(this.icdoServicePurchaseHeader.service_purchase_type_value == &quot;UUSL&quot;) &amp;&amp; &#xA;(this.IsMemberGotEmploymentStatusOtherThanCONTOrTERM() == False)" sfwObjectBased="True" />
+    <rule ID="Rule - CheckIfInstalllmentPreTaxContionFailed" sfwMessageId="1339" sfwExpression="(this.lblnInstallmentPreTaxConditionFailed == True)" sfwObjectBased="True" />
+    <rule ID="Rule - CheckOrgPlanPreTaxNotChecked" sfwMessageId="1150" sfwExpression="(this.CheckOrgPlanPreTaxChecked() == False) &amp;&amp; &#xA;(this.icdoServicePurchaseHeader.pre_tax == &quot;Y&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule - Consolidated tab Visibility" sfwExpression="((this.icdoServicePurchaseHeader.service_purchase_type_value == &quot;CONS&quot;) &amp;&amp; &#xD;&#xA;((this.IsNewCalcPanelVisible() == False) || (this.icdoServicePurchaseHeader.plan_id == 6)))" sfwObjectBased="True" />
+    <rule ID="Rule - Date of Purchase is not entered" sfwMessageId="1109" sfwExpression="(this.icdoServicePurchaseHeader.date_of_purchase == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="Rule - Expected Installment Amount Modified" sfwMessageId="1129" sfwExpression="(this.IsInstallmentAmtModified() == True)" sfwObjectBased="True" />
+    <rule ID="Rule - If PreTax is checked payroll deduction must not be checked" sfwMessageId="1122" sfwExpression="(this.icdoServicePurchaseHeader.pre_tax == &quot;Y&quot;) &amp;&amp; &#xA;!(this.icdoServicePurchaseHeader.payroll_deduction == &quot;Y&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule - IfPayorIsEmployerPaymentFrequencyNotOneTimeLumpSum" sfwMessageId="1340" sfwExpression="(this.icdoServicePurchaseHeader.payor_value == &quot;EMPR&quot;) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.icdoServicePurchaseHeader.payment_frequency_value)) &amp;&amp; &#xA;(this.icdoServicePurchaseHeader.payment_frequency_value != &quot;OTP&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule - IsExpectedPaymentAmountTooSmall" sfwMessageId="1338" sfwExpression="(this.iblnIsExpectedPaymentAmountTooSmall == True)" sfwObjectBased="True" />
+    <rule ID="Rule - Judges Conversion not tied with appropriate Plan" sfwMessageId="1107" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPrimaryServicePurchaseDetail.icdoServicePurchaseDetail.judges_conversion_flag&quot;) == &quot;Y&quot;) &amp;&amp; &#xA;(this.CheckIsPlanNameValidforJudgesConversion() == False)" sfwObjectBased="True" />
+    <rule ID="Rule - Judges Conversion Threshold value for Service Credit Purchase" sfwMessageId="1106" sfwExpression="(RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusPrimaryServicePurchaseDetail.iintTotalTimeToPurchaseInYears&quot;) &gt; RFunc.SystemConstant&lt;Int32&gt;(&quot;JCSC&quot;))" sfwObjectBased="True" />
+    <rule ID="Rule - Max Term Exceeded for Payment Frequency" sfwMessageId="1124" sfwExpression="((this.icdoServicePurchaseHeader.number_of_payments &gt; 0) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.icdoServicePurchaseHeader.payment_frequency_value))) &amp;&amp; &#xA;(this.MaxTermForPaymentFrequency() == True)" sfwObjectBased="True" />
+    <rule ID="Rule - Member is not Selected" sfwMessageId="1112" sfwExpression="(this.MemberIdIsNotValid() == True)" sfwObjectBased="True" />
+    <rule ID="Rule - Member Type not selected" sfwMessageId="1132" sfwExpression="(string.IsNullOrEmpty(this.icdoServicePurchaseHeader.member_type_value))" sfwObjectBased="True" />
+    <rule ID="Rule - PaymentFrequencyNotSelected" sfwMessageId="1130" sfwExpression="((this.icdoServicePurchaseHeader.expected_installment_amount &gt; 0) || &#xA;(this.icdoServicePurchaseHeader.number_of_payments &gt; 0)) &amp;&amp; &#xA;!(!string.IsNullOrEmpty(this.icdoServicePurchaseHeader.payment_frequency_value))" sfwObjectBased="True" />
+    <rule ID="Rule - Payor is not Selected" sfwMessageId="1111" sfwExpression="(string.IsNullOrEmpty(this.icdoServicePurchaseHeader.payor_value))" sfwObjectBased="True" />
+    <rule ID="Rule - Plan is not Selected" sfwMessageId="1110" sfwExpression="(this.icdoServicePurchaseHeader.plan_id == 0)" sfwObjectBased="True" />
+    <rule ID="Rule - PSC Threshold value for Unused Sick Leave for Member in DC Plan" sfwMessageId="1116" sfwExpression="(this.icdoServicePurchaseHeader.service_purchase_type_value == &quot;UUSL&quot;) &amp;&amp; &#xA;((this.icdoServicePurchaseHeader.service_purchase_type_value == &quot;UUSL&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.retirement_type_value&quot;) == &quot;DC&quot;) &amp;&amp; &#xA;(this.icdoServicePurchaseHeader.total_psc &lt; RFunc.SystemConstant&lt;Decimal&gt;(&quot;EPSC&quot;)))" sfwObjectBased="True" />
+    <rule ID="Rule - Read Only Rule For Status Void" sfwExpression="(this.icdoServicePurchaseHeader.action_status_value == &quot;VOID&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule - RetirementPortionExceedsIRSLimit" sfwMessageId="1141" sfwExpression="(this.CheckLimitExceeds415Limit() == False)" sfwObjectBased="True" />
+    <rule ID="Rule - Unused Sick Leave tab Visibility" sfwExpression="(this.icdoServicePurchaseHeader.service_purchase_type_value == &quot;UUSL&quot;) &amp;&amp;&#xA;!(this.IsUserCheckingOwnOrSpouseServicePurchase() == true)" sfwObjectBased="True" />
+    <rule ID="Rule - Userra tab visibility" sfwExpression="(this.icdoServicePurchaseHeader.service_purchase_type_value == &quot;USRA&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule - Validate Payor/Plan for Service Type in Truth Table" sfwMessageId="1102" sfwExpression="((this.icdoServicePurchaseHeader.service_purchase_type_value == &quot;USRA&quot;) || &#xA;(this.icdoServicePurchaseHeader.service_purchase_type_value == &quot;UUSL&quot;)) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entServicePurchaseHeader.ValidateTruthTableforServiceCreditPurchase&quot;, this.icdoServicePurchaseHeader.service_purchase_type_value, this.icdoServicePurchaseHeader.plan_id, this.icdoServicePurchaseHeader.payor_value) &lt;= 0)" sfwObjectBased="True" />
+    <rule ID="Rule - Visible status Inpayment" sfwExpression="(this.icdoServicePurchaseHeader.action_status_value == &quot;INPY&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule - Visible when Status not Inpayment" sfwExpression="!(this.icdoServicePurchaseHeader.action_status_value == &quot;INPY&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule Tree - Date of Purchase, Member,Plan and Payor selected" sfwExpression="!(this.icdoServicePurchaseHeader.date_of_purchase == DateTime.MinValue) &amp;&amp; &#xA;!(string.IsNullOrEmpty(this.icdoServicePurchaseHeader.payor_value)) &amp;&amp; &#xA;!(this.icdoServicePurchaseHeader.plan_id == 0) &amp;&amp; &#xA;(this.MemberIdIsNotValid() == False)" sfwObjectBased="True" />
+    <rule ID="Rule Tree - Judges Conversion Flag is Checked" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPrimaryServicePurchaseDetail.icdoServicePurchaseDetail.judges_conversion_flag&quot;) == &quot;Y&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule Tree - Payor Type is Employer" sfwExpression="(this.icdoServicePurchaseHeader.payor_value == &quot;EMPR&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule Tree - Service Type Userra Validations" sfwExpression="(this.icdoServicePurchaseHeader.service_purchase_type_value == &quot;USRA&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule Tree - Unused Sick Leave Validations" sfwExpression="(this.icdoServicePurchaseHeader.service_purchase_type_value == &quot;UUSL&quot;)" sfwObjectBased="True" />
+    <rule ID="RuleCheckEmploymentStatusForUUSL" sfwMessageId="1103" sfwExpression="(this.icdoServicePurchaseHeader.service_purchase_type_value == &quot;UUSL&quot;) &amp;&amp; &#xA;((RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entServicePurchaseHeader.GetEmploymentDetailWithStatusContributing&quot;, this.icdoServicePurchaseHeader.person_id) &gt; 0) || &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entServicePurchaseHeader.GetEmploymentWithEndDateNotNull&quot;, this.icdoServicePurchaseHeader.person_id) &gt; 0))" sfwObjectBased="True" />
+    <rule ID="RuleCheckIfEarlyRetirementIncentiveNotCheckedForUSSRAEmployer" sfwMessageId="1149" sfwExpression="!(this.icdoServicePurchaseHeader.service_purchase_type_value == &quot;USRA&quot;) &amp;&amp; &#xA;(this.icdoServicePurchaseHeader.payor_value == &quot;EMPR&quot;) &amp;&amp; &#xA;(this.CheckOrgPlanEarlyRetirementIncentiveChecked() == False)" sfwObjectBased="True" />
+    <rule ID="RuleCheckIfGrantFreeFlagIsUncheckedForUSERRA" sfwMessageId="1136" sfwExpression="(this.icdoServicePurchaseHeader.service_purchase_type_value == &quot;USRA&quot;) &amp;&amp; &#xA;(this.CheckifUSSERAContributiingInJobServicePlan() == True) &amp;&amp; &#xA;(this.icdoServicePurchaseHeader.grant_free_flag == &quot;N&quot;)" sfwObjectBased="True" />
+    <rule ID="RuleCheckIfUSSERAGrantedFreeForJobService" sfwMessageId="1135" sfwExpression="(this.icdoServicePurchaseHeader.service_purchase_type_value == &quot;USRA&quot;) &amp;&amp; &#xA;(this.icdoServicePurchaseHeader.grant_free_flag == &quot;Y&quot;) &amp;&amp; &#xA;(this.CheckifUSSERAContributiingInJobServicePlan() == False)" sfwObjectBased="True" />
+    <rule ID="RuleCheckPreTaxChanged" sfwMessageId="1144" sfwExpression="(this.CheckCheckedPreTaxIsUnchecked() == False)" sfwObjectBased="True" />
+    <rule ID="RuleCheckTerminatedDateLessThanPurchaseDate" sfwMessageId="1134" sfwExpression="(this.icdoServicePurchaseHeader.service_purchase_type_value == &quot;UUSL&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusPrimaryServicePurchaseDetail.icdoServicePurchaseDetail.termination_date&quot;) != DateTime.MinValue) &amp;&amp; &#xA;(this.CheckMemberTerminatedDateLessThanPurchaseDate() == False)" sfwObjectBased="True" />
+    <rule ID="RuleIfFirstPaymentIsNotRHICLumpsumWhenPreTaxPayrollDedChecked" sfwMessageId="1344" sfwExpression="(this.lblnIsFirstPaymentIsRHICLumpSum == True)" sfwObjectBased="True" />
+    <rule ID="RuleMemberNotEnrolledInDBOrDCPlan" sfwMessageId="1133" sfwExpression="(this.icdoServicePurchaseHeader.plan_id != 0) &amp;&amp; &#xA;!(this.CheckMemberEnrolledInDBOrDC() == True)" sfwObjectBased="True" />
+    <rule ID="RuleNoOfPaymentsExceedForAnnual" sfwMessageId="4731" sfwExpression="(!string.IsNullOrEmpty(this.icdoServicePurchaseHeader.payment_frequency_value)) &amp;&amp; &#xA;(this.icdoServicePurchaseHeader.payment_frequency_value == &quot;ANN&quot;) &amp;&amp; &#xA;(this.icdoServicePurchaseHeader.number_of_payments &gt; 15)" sfwObjectBased="True" />
+    <rule ID="RuleNoOfPaymentsExceedForLumpSum" sfwMessageId="4731" sfwExpression="(!string.IsNullOrEmpty(this.icdoServicePurchaseHeader.payment_frequency_value)) &amp;&amp; &#xA;(this.icdoServicePurchaseHeader.number_of_payments &gt; 1) &amp;&amp; &#xA;(this.icdoServicePurchaseHeader.payment_frequency_value == &quot;OTP&quot;)" sfwObjectBased="True" />
+    <rule ID="RuleNoOfPaymentsExceedForQuaterly" sfwMessageId="4731" sfwExpression="(!string.IsNullOrEmpty(this.icdoServicePurchaseHeader.payment_frequency_value)) &amp;&amp; &#xA;(this.icdoServicePurchaseHeader.payment_frequency_value == &quot;QTR&quot;) &amp;&amp; &#xA;(this.icdoServicePurchaseHeader.number_of_payments &gt; 60)" sfwObjectBased="True" />
+    <rule ID="RuleNoOfPaymentsExceedForSemi" sfwMessageId="4731" sfwExpression="(!string.IsNullOrEmpty(this.icdoServicePurchaseHeader.payment_frequency_value)) &amp;&amp; &#xA;(this.icdoServicePurchaseHeader.payment_frequency_value == &quot;SEMI&quot;) &amp;&amp; &#xA;(this.icdoServicePurchaseHeader.number_of_payments &gt; 30)" sfwObjectBased="True" />
+    <rule ID="RuleNoOfPaymentsExceedsForMonthly" sfwMessageId="4731" sfwExpression="(!string.IsNullOrEmpty(this.icdoServicePurchaseHeader.payment_frequency_value)) &amp;&amp; &#xA;(this.icdoServicePurchaseHeader.payment_frequency_value == &quot;MON&quot;) &amp;&amp; &#xA;(this.icdoServicePurchaseHeader.number_of_payments &gt; 180)" sfwObjectBased="True" />
+    <rule ID="RuleVisibiltyClosedButton" sfwExpression="!(this.icdoServicePurchaseHeader.action_status_value == &quot;VOID&quot;) &amp;&amp; &#xA;!(this.icdoServicePurchaseHeader.action_status_value == &quot;CLOS&quot;) &amp;&amp;&#xA;!(this.icdoServicePurchaseHeader.action_status_value == &quot;PIF&quot;) &amp;&amp;&#xA;!(this.IsUserCheckingOwnOrSpouseServicePurchase() == true)" sfwObjectBased="True" />
+    <rule ID="ValidateIsStatusNotPendingForDelete" sfwMessageId="1142" sfwExpression="(this.icdoServicePurchaseHeader.action_status_value != &quot;PEND&quot;)" sfwObjectBased="True" />
+    <rule ID="VisbilityApplyRemittanceButton" sfwExpression="((this.icdoServicePurchaseHeader.action_status_value == &quot;APPR&quot;) || &#xA;(this.icdoServicePurchaseHeader.action_status_value == &quot;INPY&quot;)) &amp;&amp;&#xA;!(this.IsUserCheckingOwnOrSpouseServicePurchase() == true)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForApproveButton" sfwExpression="(this.icdoServicePurchaseHeader.action_status_value == &quot;PEND&quot;) &amp;&amp; &#xA;(this.icdoServicePurchaseHeader.service_purchase_status_value == &quot;VALD&quot;) &amp;&amp; &#xA;!(this.IsCurrentUserSameAsCreatedBy() == True) &amp;&amp;&#xA;!(this.IsUserCheckingOwnOrSpouseServicePurchase() == true)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForDateOfPurchaseLabel" sfwExpression="!(this.VisibleRuleForDateOfPurchase() == True)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForDateOfPurchaseText" sfwExpression="(this.VisibleRuleForDateOfPurchase() == True)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForNewAndDeleteButton" sfwExpression="!(this.icdoServicePurchaseHeader.action_status_value == &quot;INPY&quot;) &amp;&amp; &#xA;!(this.icdoServicePurchaseHeader.action_status_value == &quot;CLOS&quot;) &amp;&amp; &#xA;!(this.icdoServicePurchaseHeader.action_status_value == &quot;PIF&quot;) &amp;&amp; &#xA;(this.icdoServicePurchaseHeader.grant_free_flag == &quot;N&quot;)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForSaveButton" sfwExpression="(this.icdoServicePurchaseHeader.action_status_value == &quot;PEND&quot;) &amp;&amp;&#xA;!(this.IsUserCheckingOwnOrSpouseServicePurchase())" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForValidateButton" sfwExpression="!(this.icdoServicePurchaseHeader.action_status_value == &quot;CLOS&quot;) &amp;&amp; &#xA;!(this.icdoServicePurchaseHeader.action_status_value == &quot;VOID&quot;) &amp;&amp;&#xA;!(this.IsUserCheckingOwnOrSpouseServicePurchase())" sfwObjectBased="True" />
+    <rule ID="VisibleRuleOpenUsseraButton" sfwExpression="(this.icdoServicePurchaseHeader.grant_free_flag == &quot;N&quot;)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleRefreshFASButton" sfwExpression="(this.icdoServicePurchaseHeader.service_purchase_type_value == &quot;UUSL&quot;) &amp;&amp; &#xA;(this.IsSuspendedAccountExists() == True)" sfwObjectBased="True" />
+    <rule ID="VisibleRule-ToCopyPurchase" sfwRuleType="Validation" sfwExpression="(this.icdoServicePurchaseHeader.expiration_date != DateTime.MinValue) &amp;&amp;&#xD;&#xA;(this.icdoServicePurchaseHeader.expiration_date &gt;= DateTime.Today)" sfwObjectBased="True" />
+    <rule ID="CheckIfUserraStartDateIsRequired" sfwRuleType="Validation" sfwExpression="(this.CheckIfDateUSERRAStartDateIsEntered() == True)" sfwMessageId="10304" sfwObjectBased="True" />
+    <rule ID="Rule - Consolidated New Tab Visibility" sfwRuleType="Validation" sfwExpression="((this.icdoServicePurchaseHeader.plan_id != 6) &amp;&amp; (this.icdoServicePurchaseHeader.service_purchase_type_value == &quot;CONS&quot;) &amp;&amp; &#xD;&#xA;(this.IsNewCalcPanelVisible() == True))" sfwObjectBased="True" />
+    <rule ID="IsUnusedSickLeaveIsGreaterThanZeroForAnyEmployment" sfwRuleType="Validation" sfwObjectBased="True" sfwMessageId="10403" sfwExpression="(this.IsUUSLGreaterThanZeroWithAnyEmployment())" />
+    <rule ID="IsMemberIsTFFRdual" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.icdoServicePurchaseHeader.overridden_final_average_salary==0)&amp;&amp;&#xA;(this.IsMemberIsTFFRdual())" sfwMessageId="10427" />
+    <rule ID="Rule - IfPersonLimit401aFlagYandOverriddenFASisZero" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.IsPersonReached401aFlag()) &amp;&amp;&#xA;!(this.icdoServicePurchaseHeader.overridden_final_average_salary &gt; 0)" sfwMessageId="10425" />
+    <rule ID="Rule - Is Member Eligible For Purchase" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="!IsPersonEligibleForPurchaseAsTemporary()" sfwMessageId="10428" />
+    <rule ID="IsMemberhasWagesAndServiceCredit" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.IsMemberhasWagesAndServiceCredit()" sfwMessageId="10430" />
+    <rule ID="VRPaymentElectionSave" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="!(this.IsUserCheckingOwnOrSpouseServicePurchase())" />
+    <rule ID="VRNewConsolidatedAndUSERRA" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="!(this.icdoServicePurchaseHeader.action_status_value == &quot;INPY&quot;) &amp;&amp; &#xA;!(this.icdoServicePurchaseHeader.action_status_value == &quot;CLOS&quot;) &amp;&amp; &#xA;!(this.icdoServicePurchaseHeader.action_status_value == &quot;PIF&quot;) &amp;&amp; &#xA;(this.icdoServicePurchaseHeader.grant_free_flag == &quot;N&quot;) &amp;&amp;&#xA;!(this.IsUserCheckingOwnOrSpouseServicePurchase())" />
+    <rule ID="IsFASCalculatedBy3Consecutive12MonthsPeriod" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="(this.icdoServicePurchaseHeader.suppress_warnings_flag != &quot;Y&quot;) &amp;&amp;&#xA;(this.IsFASCalculatedBy3Consecutive12MonthsPeriod())" sfwMessageId="10463" />
+    <rule ID="IsMissingVSCContributionsForGivenMonth" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.icdoServicePurchaseHeader.suppress_warnings_flag != &quot;Y&quot;) &amp;&amp;&#xA;(this.iblnIsMissingVSCContributions == true)" sfwMessageId="10486" />
+  </rules>
+  <delete>
+    <property ID="objPrimaryServicePurchaseDetail" />
+    <property ID="lstAllocatedPaymentPurchaseList" sfwMethodName="LoadAllocatedPurchaseList" />
+  </delete>
+  <checklist />
+  <initialload>
+    <item ID="Rule - Consolidated tab Visibility" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - Userra tab visibility" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - Unused Sick Leave tab Visibility" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - Action Status is Pending" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - Action Status is Closed" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - Read Only Rule For Status Void" sfwMode="All" sfwStatus="Active" />
+    <item ID="RuleVisibiltyClosedButton" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisbilityApplyRemittanceButton" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForNewAndDeleteButton" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - Visible status Inpayment" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - Visible when Status not Inpayment" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForSaveButton" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleOpenUsseraButton" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - Action Status Closed" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForApproveButton" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForValidateButton" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForDateOfPurchaseText" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForDateOfPurchaseLabel" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleRefreshFASButton" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRule-ToCopyPurchase" sfwStatus="Active" sfwMode="All" />
+    <item ID="Rule - Consolidated New Tab Visibility" sfwStatus="Active" sfwMode="All" />
+    <item ID="VRPaymentElectionSave" sfwMode="All" sfwStatus="Active" />
+    <item ID="VRNewConsolidatedAndUSERRA" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror>
+    <item ID="Rule Tree - Service Type Userra Validations" sfwMode="All" sfwStatus="Active">
+      <items>
+        <rule ID="Rule - Check specific Employment Status" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+      </items>
+    </item>
+    <item ID="Rule Tree - Unused Sick Leave Validations" sfwMode="All" sfwStatus="Active">
+      <items>
+        <rule ID="Rule - Check specific Employment Type for Unused Sick Leave" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+      </items>
+    </item>
+    <item ID="Rule - Age of Employee should be above threshold value for service credit purchase" sfwMode="All" sfwStatus="Inactive" />
+    <item ID="Rule Tree - Judges Conversion Flag is Checked" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Tree - Payor Type is Employer" sfwMode="All" sfwStatus="Active">
+      <items>
+        <rule ID="Rule - PSC Threshold value for Unused Sick Leave for Member in DC Plan" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+      </items>
+    </item>
+    <item ID="Rule - Max Term Exceeded for Payment Frequency" sfwMode="All" sfwStatus="Active" />
+    <item ID="RuleMemberNotEnrolledInDBOrDCPlan" sfwMode="All" sfwStatus="Active" />
+    <item ID="RuleCheckEmploymentStatusForUUSL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RuleCheckTerminatedDateLessThanPurchaseDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="RuleCheckIfUSSERAGrantedFreeForJobService" sfwMode="All" sfwStatus="Inactive" />
+    <item ID="RuleCheckIfGrantFreeFlagIsUncheckedForUSERRA" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - CheckIfInstalllmentPreTaxContionFailed" sfwMode="All" sfwStatus="Active" />
+    <item ID="RuleIfFirstPaymentIsNotRHICLumpsumWhenPreTaxPayrollDedChecked" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - RetirementPortionExceedsIRSLimit" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPayorEmployerOrEmployerEmployeeForDCPlan" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPaymentAmountExceedsRetPortionForRollover" sfwMode="All" sfwStatus="Active" />
+  </softerror>
+  <harderror>
+    <item ID="Rule Tree - Date of Purchase, Member,Plan and Payor selected" sfwMode="All" sfwStatus="Active">
+      <items>
+        <rule ID="Rule - Judges Conversion not tied with appropriate Plan" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+        <rule ID="Rule - Validate Payor/Plan for Service Type in Truth Table" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+      </items>
+    </item>
+    <item ID="Rule - Date of Purchase is not entered" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - Plan is not Selected" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - Payor is not Selected" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - Member is not Selected" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - If PreTax is checked payroll deduction must not be checked" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - Both Number of Payments and Expected Installment Amount Populated" sfwMode="All" sfwStatus="Inactive" />
+    <item ID="Rule - PaymentFrequencyNotSelected" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - Member Type not selected" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - IsExpectedPaymentAmountTooSmall" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - IfPayorIsEmployerPaymentFrequencyNotOneTimeLumpSum" sfwMode="All" sfwStatus="Active" />
+    <item ID="RuleCheckPreTaxChanged" sfwMode="All" sfwStatus="Active" />
+    <item ID="RuleCheckIfEarlyRetirementIncentiveNotCheckedForUSSRAEmployer" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - CheckOrgPlanPreTaxNotChecked" sfwMode="All" sfwStatus="Active" />
+    <item ID="RuleNoOfPaymentsExceedForQuaterly" sfwMode="All" sfwStatus="Active" />
+    <item ID="RuleNoOfPaymentsExceedsForMonthly" sfwMode="All" sfwStatus="Active" />
+    <item ID="RuleNoOfPaymentsExceedForAnnual" sfwMode="All" sfwStatus="Active" />
+    <item ID="RuleNoOfPaymentsExceedForSemi" sfwMode="All" sfwStatus="Active" />
+    <item ID="RuleNoOfPaymentsExceedForLumpSum" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsValidGrantFreeChecked" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsInValidBenefitCalculationSelected" sfwMode="All" sfwStatus="Active" />
+    <item ID="CheckIfUserraStartDateIsRequired" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsUnusedSickLeaveIsGreaterThanZeroForAnyEmployment" sfwMode="New" sfwStatus="Active" />
+    <item ID="Rule - IfPersonLimit401aFlagYandOverriddenFASisZero" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMemberIsTFFRdual" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - Is Member Eligible For Purchase" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMemberhasWagesAndServiceCredit" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsFASCalculatedBy3Consecutive12MonthsPeriod" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMissingVSCContributionsForGivenMonth" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete>
+    <item ID="ValidateIsStatusNotPendingForDelete" sfwMode="All" sfwStatus="Active" />
+  </validatedelete>
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <expressionfields />
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM &#xD;&#xA;SGT_SERVICE_PURCHASE_HEADER SGPH (NOLOCK)&#xD;&#xA;JOIN SGT_PERSON SP (NOLOCK) ON (SP.PERSON_ID = SGPH.PERSON_ID)&#xD;&#xA;WHERE ISNULL(SGPH.IS_CREATED_FROM_PORTAL,'N') != 'Y'&#xD;&#xA;">
+      <parameters />
+    </query>
+    <query ID="GetHeaderServiceCreditType" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select *&#xD;&#xA;From&#xD;&#xA;    SGS_Code_Value (nolock)&#xD;&#xA;Where&#xD;&#xA;    Code_Id = 326&#xD;&#xA;    and Data1 = 'Header'">
+      <parameters />
+    </query>
+    <query ID="ValidateTruthTableforServiceCreditPurchase" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select&#xD;&#xA;   Count(*)&#xD;&#xA;From&#xD;&#xA;   SGT_SERVICE_CREDIT_PLAN_FORMULA_REF (nolock)&#xD;&#xA;Where&#xD;&#xA; Service_Credit_Type_Value = @Service_Credit_Type_Value&#xD;&#xA; and Plan_Id = @Plan_Id&#xD;&#xA; and Payor_Value = @Payor_Value">
+      <parameters>
+        <parameter ID="@Service_Credit_Type_Value" sfwDataType="string" />
+        <parameter ID="@Plan_Id" sfwDataType="int" />
+        <parameter ID="@Payor_Value" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="RptYearly415PurchaseLimit" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select (PER.last_name+', '+PER.first_name+', '+PER.middle_name) as Person_name,SPH.person_id as PersonID,&#xD;&#xA;(&#xD;&#xA;select isnull(sum(isnull(POST_TAX_EE_AMOUNT,0)),0)&#xD;&#xA;FROM sgt_person_account_retirement_contribution con&#xD;&#xA;INNER JOIN sgt_person_account pa on pa.person_account_id = con.person_account_id&#xD;&#xA;INNER JOIN sgt_person p on p.person_id = pa.person_id&#xD;&#xA;WHERE TRANSACTION_TYPE_VALUE = 'PURC' AND transaction_date &lt; getDate() and&#xD;&#xA;p.person_id = PER.person_id&#xD;&#xA;) AS PostTaxRetirementPurchasePayment,&#xD;&#xA;(&#xD;&#xA;select isnull(sum(isnull(POST_TAX_EE_AMOUNT,0)),0)&#xD;&#xA;FROM sgt_person_account_retirement_contribution con&#xD;&#xA;INNER JOIN sgt_person_account pa on pa.person_account_id = con.person_account_id&#xD;&#xA;INNER JOIN sgt_person p on p.person_id = pa.person_id&#xD;&#xA;WHERE TRANSACTION_TYPE_VALUE &lt;&gt; 'PURC' AND transaction_date &lt; getDate() and&#xD;&#xA;p.person_id = PER.person_id&#xD;&#xA;) AS PostTaxEmployeeRetirementContribution&#xD;&#xA;from dbo.SGT_SERVICE_PURCHASE_HEADER SPH&#xD;&#xA;inner join sgt_Person PER on PER.person_id = SPH.person_id&#xD;&#xA;where LIMIT_415_FLAG = 'Y' and action_status_value IN('APPR','INPY','PIF') &#xD;&#xA;order by SPH.person_id">
+      <parameters />
+    </query>
+    <query ID="LoadAllInPaymentClosedPaidInFullPurchases" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select distinct SPH.* from dbo.SGT_SERVICE_PURCHASE_HEADER  SPH&#xD;&#xA;where SPH.action_status_value  in ( 'PIF' ,'CLOS', 'INPY')">
+      <parameters />
+    </query>
+    <query ID="GetCountOfEmploymentHistoryForPerson" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) from sgt_person_employment where person_id = @person_id &#xD;&#xA;">
+      <parameters>
+        <parameter ID="@person_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="PostPaymentAndServicePurchaseBatchQuery" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from dbo.SGT_SERVICE_PURCHASE_HEADER SPH&#xD;&#xA;left outer join dbo.SGT_SERVICE_PURCHASE_PAYMENT_ALLOCATION SPPA on SPPA.SERVICE_PURCHASE_HEADER_ID = SPH.SERVICE_PURCHASE_HEADER_ID&#xD;&#xA;where SPH.SERVICE_PURCHASE_TYPE_VALUE = 'CONS' &#xD;&#xA;and SPH.ACTION_STATUS_VALUE='APPR'&#xD;&#xA;and SPH.GRANT_FREE_FLAG = 'Y'">
+      <parameters />
+    </query>
+    <query ID="GetEmploymentWithEndDateNotNull" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) from sgt_person_employment where end_date is not null and person_id = @person_id">
+      <parameters>
+        <parameter ID="@person_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetEmploymentDetailWithStatusContributing" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) from sgt_person_employment_detail dtl&#xD;&#xA;left outer join sgt_person_employment emp on emp.person_employment_id= dtl.person_employment_id&#xD;&#xA;where person_id =@person_id and emp.end_date is null&#xD;&#xA;and&#xD;&#xA;dtl.status_value ='CONT'">
+      <parameters>
+        <parameter ID="@person_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetServicePurchaseForPosting" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from sgt_service_purchase_header sph&#xD;&#xA;where (sph.grant_free_flag = 'Y'&#xD;&#xA;   or  exists (select 'X' from sgt_service_purchase_payment_allocation sppa&#xD;&#xA;               where sppa.service_purchase_header_id = sph.service_purchase_header_id&#xD;&#xA;               and isnull(sppa.posted_flag, 'N') = 'N')&#xD;&#xA;   or exists(&#xD;&#xA;   select 'X' from sgt_service_purchase_detail_consolidated spdc&#xD;&#xA;   inner join sgt_service_purchase_detail spd on spdc.service_purchase_detail_id = spd.service_purchase_detail_id&#xD;&#xA;   where spd.service_purchase_header_id = sph.service_purchase_header_id and&#xD;&#xA;   spdc.service_credit_type_value='FS' and spdc.service_purchase_detail_id not in&#xD;&#xA;   (select service_purchase_detail_id from sgt_service_purchase_detail_consolidated  &#xD;&#xA; where service_credit_type_value &lt;&gt; 'FS'))&#xD;&#xA;or exists(&#xD;&#xA; select 'X' from sgt_service_purchase_detail spd&#xD;&#xA; where sph.service_purchase_type_value = 'UUSL' and sph.service_purchase_header_id = spd.service_purchase_header_id and&#xD;&#xA; isnull(paid_rhic_cost_amount,0) + isnull(paid_retirement_ee_cost_amount,0) + isnull(paid_retirement_er_cost_amount,0) &gt;= isnull(retirement_purchase_cost,0) + isnull(rhic_purchase_cost,0)&#xD;&#xA; and isnull(paid_rhic_cost_amount,0) + isnull(paid_retirement_ee_cost_amount,0) + isnull(paid_retirement_er_cost_amount,0) &gt; 0 &#xD;&#xA;))&#xD;&#xA;and sph.action_status_value in ('APPR', 'INPY')&#xD;&#xA;and sph.service_purchase_status_value = 'VALD'&#xD;&#xA;">
+      <parameters />
+    </query>
+    <query ID="rptPurchasePaymentDetail" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select CV1.description as PayClass, CV2.description as Payor, SPH.person_id as PERSLinkID,&#xD;&#xA;(PER.first_name+', '+PER.middle_name+', '+PER.last_name) as name, SPH.service_purchase_header_id  as PurchaseID,&#xD;&#xA;isnull(sum(AL.applied_amount),0) as SumOfPaymentAmounts&#xD;&#xA;from  dbo.SGT_SERVICE_PURCHASE_HEADER SPH &#xD;&#xA;inner join dbo.SGT_PERSON PER on PER.person_id = SPH.person_id &#xD;&#xA;inner join dbo.SGT_SERVICE_PURCHASE_PAYMENT_ALLOCATION AL on AL.SERVICE_PURCHASE_HEADER_ID = SPH. SERVICE_PURCHASE_HEADER_ID&#xD;&#xA;inner join sgs_code_value CV1 on CV1.code_id =service_purchase_payment_class_id and CV1.code_value = AL.service_purchase_payment_class_value&#xD;&#xA;inner join sgs_code_value CV2 on CV2.code_id =SPH.payor_id and CV2.code_value = SPH.payor_value  &#xD;&#xA;where AL.payment_date between @Begin_Date and @To_Date&#xD;&#xA;and (AL.service_purchase_payment_class_value =  @PaymentClass OR @PaymentClass='')&#xD;&#xA;and (SPH.payor_value = @PayorValue OR @PayorValue='')&#xD;&#xA;group by CV1.description, CV2.description,  SPH.person_id, (PER.first_name+', '+PER.middle_name+', '+PER.last_name), SPH.service_purchase_header_id&#xD;&#xA;order by SPH.service_purchase_header_id desc">
+      <parameters>
+        <parameter ID="@PaymentClass" sfwDataType="string" />
+        <parameter ID="@PayorValue" sfwDataType="string" />
+        <parameter ID="@Begin_Date" sfwDataType="DateTime" />
+        <parameter ID="@To_Date" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="LoadAllInPaymentServicePurchase" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * FROM sgt_service_purchase_header &#xD;&#xA;where action_status_value ='INPY'">
+      <parameters />
+    </query>
+    <query ID="LoadAllPaidInFullServicePurchase" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * FROM sgt_service_purchase_header &#xD;&#xA;where action_status_value ='PIF'">
+      <parameters />
+    </query>
+    <query ID="GetServicePurchaseDetailsForOrgID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_SERVICE_PURCHASE_HEADER SPH&#xD;&#xA;INNER JOIN SGT_PERSON_EMPLOYMENT SPE ON SPE.PERSON_ID = SPH.PERSON_ID&#xD;&#xA;INNER JOIN SGT_PERSON SP ON SP.PERSON_ID = SPH.PERSON_ID&#xD;&#xA;WHERE SPH.ACTION_STATUS_VALUE IN ('INPY', 'APPR')&#xD;&#xA;AND SPE.END_DATE IS NULL&#xD;&#xA;AND SPH.PAYROLL_DEDUCTION = 'Y'&#xD;&#xA;AND SPE.ORG_ID = @ORGID order by SP.LAST_NAME asc, SP.FIRST_NAME asc">
+      <parameters>
+        <parameter ID="@ORGID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="IsContributionAlreadyPosted" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT&#xA;&#x9; * &#xA;FROM&#xA;&#x9; SGT_PERSON_ACCOUNT_RETIREMENT_CONTRIBUTION WITH(NOLOCK) &#xA;WHERE&#xA;&#x9; PERSON_ACCOUNT_ID = @PersonAccountId AND&#xA;&#x9; ((ISNULL(PAY_PERIOD_MONTH,0) = MONTH(@EFFECTIVEDATE) AND&#xA;&#x9; ISNULL(PAY_PERIOD_YEAR,0) = YEAR(@EFFECTIVEDATE)) OR ( YEAR(EFFECTIVE_DATE) = YEAR(@EFFECTIVEDATE) AND MONTH(EFFECTIVE_DATE) = MONTH(@EFFECTIVEDATE))) AND &#xA;&#x9; ISNULL(PENSION_SERVICE_CREDIT,0) &gt; 0 AND&#xA;&#x9; ISNULL(VESTED_SERVICE_CREDIT,0) &gt; 0">
+      <parameters>
+        <parameter ID="@PersonAccountId" sfwDataType="int" />
+        <parameter ID="@EFFECTIVEDATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="IsVSCAlreadyPosted" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT&#xA;&#x9; * &#xA;FROM&#xA;&#x9; SGT_PERSON_ACCOUNT_RETIREMENT_CONTRIBUTION WITH(NOLOCK)&#xA;WHERE&#xA;&#x9; PERSON_ACCOUNT_ID = @PersonAccountId AND&#xA;&#x9; SUBSYSTEM_REF_ID &gt; 0 AND&#xA;&#x9; SUBSYSTEM_VALUE = 'PURC' AND&#xA;&#x9; MONTH(EFFECTIVE_DATE) = MONTH(@MISSED_SALARY_MONTH) AND&#xA;&#x9; YEAR(EFFECTIVE_DATE) = YEAR(@MISSED_SALARY_MONTH) AND&#xA;&#x9; VESTED_SERVICE_CREDIT &gt; 0 AND&#xA;&#x9; SUBSYSTEM_REF_ID in (SELECT&#xA;&#x9; Service_Purchase_Header_Id &#xA;FROM&#xA;&#x9; SGT_SERVICE_PURCHASE_HEADER WITH(NOLOCK) &#xA;WHERE&#xA;&#x9; SERVICE_PURCHASE_TYPE_VALUE = 'USRA' AND&#xA;&#x9; GRANT_FREE_FLAG = 'Y' )">
+      <parameters>
+        <parameter ID="@PersonAccountId" sfwDataType="int" />
+        <parameter ID="@MISSED_SALARY_MONTH" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="GetLatestSEASOrLOAHeader" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="&#xD;&#xA;SELECT &#xD;&#xA;SUM(ISNULL(VESTED_SERVICE_CREDIT, 0)) AS POSTED_VSC, &#xD;&#xA;SUM(ISNULL(PENSION_SERVICE_CREDIT, 0)) AS POSTED_PSC &#xD;&#xA;FROM SGT_PERSON_ACCOUNT_RETIREMENT_CONTRIBUTION WITH(NOLOCK)&#xD;&#xA;WHERE PERSON_ACCOUNT_ID = @PERSONACCOUNTID&#xD;&#xA;AND SUBSYSTEM_REF_ID &gt; 0&#xD;&#xA;AND SUBSYSTEM_VALUE = 'PURC'&#xD;&#xA;AND SUBSYSTEM_REF_ID = @SERVICEPURCHASEID&#xD;&#xA;AND ISNULL(VESTED_SERVICE_CREDIT,0) &gt; 0 &#xD;&#xA;AND ISNULL(PENSION_SERVICE_CREDIT,0) &gt; 0&#xD;&#xA;AND ((ISNULL(PAY_PERIOD_MONTH,0) = MONTH(@CONSOLIDATESTARTDATE) AND&#xD;&#xA;ISNULL(PAY_PERIOD_YEAR,0) = YEAR(@CONSOLIDATESTARTDATE)) OR ( YEAR(EFFECTIVE_DATE) = YEAR(@CONSOLIDATESTARTDATE) AND MONTH(EFFECTIVE_DATE) = MONTH(@CONSOLIDATESTARTDATE))) &#xD;&#xA;HAVING SUM(ISNULL(VESTED_SERVICE_CREDIT, 0)) &gt; 0 AND SUM(ISNULL(PENSION_SERVICE_CREDIT, 0)) &gt;0">
+      <parameters>
+        <parameter ID="@PersonAccountId" sfwDataType="int" />
+        <parameter ID="@ServicePurchaseId" sfwDataType="int" />
+        <parameter ID="@ConsolidateStartDate" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="IsContributionLessThanOne" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql=" SELECT&#xD;&#xA;&#x9; ISNULL(SUM(VESTED_SERVICE_CREDIT),0) as TOTAL_VSC,ISNULL(SUM(PENSION_SERVICE_CREDIT),0) as TOTAL_PSC&#xD;&#xA;FROM&#xD;&#xA;&#x9; SGT_PERSON_ACCOUNT_RETIREMENT_CONTRIBUTION WITH(NOLOCK) &#xD;&#xA;WHERE&#xD;&#xA;&#x9; PERSON_ACCOUNT_ID = @PersonAccountId AND&#xD;&#xA;&#x9; ((ISNULL(PAY_PERIOD_MONTH,0) = MONTH(@EFFECTIVEDATE) AND&#xD;&#xA;&#x9; ISNULL(PAY_PERIOD_YEAR,0) = YEAR(@EFFECTIVEDATE)) OR ( YEAR(EFFECTIVE_DATE) = YEAR(@EFFECTIVEDATE) AND MONTH(EFFECTIVE_DATE) = MONTH(@EFFECTIVEDATE))) AND &#xD;&#xA;&#x9; ISNULL(PENSION_SERVICE_CREDIT,0) &gt; 0 AND&#xD;&#xA;&#x9; ISNULL(VESTED_SERVICE_CREDIT,0) &gt; 0">
+      <parameters>
+        <parameter ID="@PersonAccountId" sfwDataType="int" />
+        <parameter ID="@EFFECTIVEDATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="GetMonthlyVSCAndPSC" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT ISNULL(SUM(VESTED_SERVICE_CREDIT),0) AS POSTED_VSC,&#xA;ISNULL(SUM(PENSION_SERVICE_CREDIT),0) AS POSTED_PSC,&#xA;(CASE when (ISNULL(SUM(VESTED_SERVICE_CREDIT),0)+ CAST(@VSC AS FLOAT)) &lt; 1 THEN @VSC ELSE (1 - ISNULL(SUM(VESTED_SERVICE_CREDIT),0)) END) AS VSC_To_POST,&#xA;(CASE when (ISNULL(SUM(PENSION_SERVICE_CREDIT),0)+ CAST(@PSC AS FLOAT)) &lt; 1 THEN @VSC ELSE (1 -ISNULL(SUM(PENSION_SERVICE_CREDIT),0)) END) AS PSC_To_POST&#xA;FROM&#xA;&#x9; SGT_PERSON_ACCOUNT_RETIREMENT_CONTRIBUTION WITH(NOLOCK) &#xA;WHERE&#xA;&#x9; PERSON_ACCOUNT_ID = @PersonAccountId AND&#xA;&#x9; SUBSYSTEM_REF_ID &gt; 0 AND&#xA;&#x9; SUBSYSTEM_VALUE = 'PURC' AND&#xA;&#x9; SUBSYSTEM_REF_ID = @ServicePurchaseHeaderId AND&#xA;&#x9; ((ISNULL(PAY_PERIOD_MONTH,0) = MONTH(@StartDate) AND&#xA;&#x9; ISNULL(PAY_PERIOD_YEAR,0) = YEAR(@StartDate)) OR ( YEAR(EFFECTIVE_DATE) = YEAR(@StartDate) AND MONTH(EFFECTIVE_DATE) = MONTH(@StartDate))) AND &#xA;&#x9; ISNULL(PENSION_SERVICE_CREDIT,0) &gt; 0 AND&#xA;&#x9; ISNULL(VESTED_SERVICE_CREDIT,0) &gt; 0&#xA;">
+      <parameters>
+        <parameter ID="@VSC" sfwDataType="string" />
+        <parameter ID="@PSC" sfwDataType="string" />
+        <parameter ID="@PersonAccountId" sfwDataType="int" />
+        <parameter ID="@ServicePurchaseHeaderId" sfwDataType="int" />
+        <parameter ID="@StartDate" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="IsLoggedInUserWorkingOnOwnOrSpousePurchase" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT&#xD;&#xA;&#x9;1&#xD;&#xA;FROM&#xD;&#xA;&#x9;SGS_USER U WITH(NOLOCK)&#xD;&#xA;JOIN SGT_PERSON_BASE P WITH(NOLOCK) ON (U.PERSON_ID = P.PERSON_ID OR (U.FIRST_NAME = P.FIRST_NAME AND U.LAST_NAME = P.LAST_NAME))&#xD;&#xA;JOIN SGT_PERSON_EMPLOYMENT E WITH(NOLOCK) ON E.PERSON_ID = P.PERSON_ID AND E.ORG_ID = 44 AND (GETDATE() BETWEEN E.[START_DATE] AND ISNULL(E.END_DATE, '99991231'))&#xD;&#xA;LEFT JOIN SGT_PERSON_CONTACT PC WITH(NOLOCK) ON PC.PERSON_ID = P.PERSON_ID AND PC.RELATIONSHIP_VALUE = 'SPOU' AND PC.STATUS_VALUE = 'ACT'&#xD;&#xA;WHERE ((U.[USER_ID] = @LOGGEDINUSERID) AND ((P.PERSON_ID = @PERSIDONPURCHASE) OR (ISNULL(PC.CONTACT_PERSON_ID,0) = @PERSIDONPURCHASE)))">
+      <parameters>
+        <parameter ID="@LOGGEDINUSERID" sfwDataType="string" />
+        <parameter ID="@PERSIDONPURCHASE" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetDepositDateFromRemittanceId" sfwQueryType="ScalarQuery" sfwDataType="DateTime" sfwSql="SELECT &#xA;&#x9;CASE&#xA;&#x9;&#x9;WHEN DEP.DEPOSIT_DATE IS NOT NULL THEN DEP.DEPOSIT_DATE&#xA;&#x9;&#x9;ELSE DEPT.DEPOSIT_DATE&#xA;&#x9;END&#xA;FROM SGT_REMITTANCE REM&#xA;INNER JOIN SGT_SERVICE_PURCHASE_PAYMENT_ALLOCATION SPPA ON SPPA.REMITTANCE_ID = REM.REMITTANCE_ID&#xA;INNER JOIN SGT_DEPOSIT DEP ON DEP.DEPOSIT_ID = REM.DEPOSIT_ID&#xA;INNER JOIN SGT_DEPOSIT_TAPE DEPT ON DEPT.DEPOSIT_TAPE_ID = DEP.DEPOSIT_TAPE_ID&#xA;WHERE SPPA.REMITTANCE_ID = @REMITTANCEID">
+      <parameters>
+        <parameter ID="@REMITTANCEID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="ServicePurchasePaymentInstallments" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_SERVICE_PURCHASE_HEADER WHERE ACTION_STATUS_VALUE IN ('APPR','INPY') AND PERSON_ID = @PERSON_ID">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="ServicePurchaseHeaderId" sfwType="Column" sfwValue="service_purchase_header_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PersonId" sfwType="Column" sfwValue="person_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ActionStatusDescription" sfwType="Description" sfwValue="action_status_description" />
+    <attribute ID="ActionStatusId" sfwType="Column" sfwValue="action_status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="324" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ActionStatusValue" sfwType="Column" sfwValue="action_status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="ServicePurchaseStatusDescription" sfwType="Description" sfwValue="service_purchase_status_description" />
+    <attribute ID="ServicePurchaseStatusId" sfwType="Column" sfwValue="service_purchase_status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="323" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ServicePurchaseStatusValue" sfwType="Column" sfwValue="service_purchase_status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="ServicePurchaseTypeDescription" sfwType="Description" sfwValue="service_purchase_type_description" />
+    <attribute ID="ServicePurchaseTypeId" sfwType="Column" sfwValue="service_purchase_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="326" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ServicePurchaseTypeValue" sfwType="Column" sfwValue="service_purchase_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="DateOfPurchase" sfwType="Column" sfwValue="date_of_purchase" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ExpirationDate" sfwType="Column" sfwValue="expiration_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="CurrentAgeMonthPart" sfwType="Column" sfwValue="current_age_month_part" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="CurrentAgeYearPart" sfwType="Column" sfwValue="current_age_year_part" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PlanId" sfwType="Column" sfwValue="plan_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PayorDescription" sfwType="Description" sfwValue="payor_description" />
+    <attribute ID="PayorId" sfwType="Column" sfwValue="payor_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="325" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PayorValue" sfwType="Column" sfwValue="payor_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="FinalAverageSalary" sfwType="Column" sfwValue="final_average_salary" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="TotalContractAmount" sfwType="Column" sfwValue="total_contract_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="DownPayment" sfwType="Column" sfwValue="down_payment" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="ContractInterest" sfwType="Column" sfwValue="contract_interest" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,6" />
+    <attribute ID="Limit415Flag" sfwType="Column" sfwValue="limit_415_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="GrantFreeFlag" sfwType="Column" sfwValue="grant_free_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="FreeOrDualService" sfwType="Column" sfwValue="free_or_dual_service" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ProratedVsc" sfwType="Column" sfwValue="prorated_vsc" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,6" />
+    <attribute ID="ProratedPsc" sfwType="Column" sfwValue="prorated_psc" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,6" />
+    <attribute ID="SuppressWarningsFlag" sfwType="Column" sfwValue="suppress_warnings_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="SuppressedBy" sfwType="Column" sfwValue="suppressed_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="60" />
+    <attribute ID="ExpectedInstallmentAmount" sfwType="Column" sfwValue="expected_installment_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="NumberOfPayments" sfwType="Column" sfwValue="number_of_payments" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PaymentFrequencyDescription" sfwType="Description" sfwValue="payment_frequency_description" />
+    <attribute ID="PaymentFrequencyId" sfwType="Column" sfwValue="payment_frequency_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="330" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PaymentFrequencyValue" sfwType="Column" sfwValue="payment_frequency_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="PayrollDeduction" sfwType="Column" sfwValue="payroll_deduction" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="PreTax" sfwType="Column" sfwValue="pre_tax" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="ContactTicketId" sfwType="Column" sfwValue="contact_ticket_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="MemberTypeDescription" sfwType="Description" sfwValue="member_type_description" />
+    <attribute ID="MemberTypeId" sfwType="Column" sfwValue="member_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="320" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="MemberTypeValue" sfwType="Column" sfwValue="member_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="PaidServiceCredit" sfwType="Column" sfwValue="paid_service_credit" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,6" />
+    <attribute ID="PaidFreeServiceCredit" sfwType="Column" sfwValue="paid_free_service_credit" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,6" />
+    <attribute ID="PaidRhicCostAmount" sfwType="Column" sfwValue="paid_rhic_cost_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="PaidRetirementEeCostAmount" sfwType="Column" sfwValue="paid_retirement_ee_cost_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="PaidRetirementErCostAmount" sfwType="Column" sfwValue="paid_retirement_er_cost_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="PaidContractAmountUsed" sfwType="Column" sfwValue="paid_contract_amount_used" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="DelinquentLetter1SentFlag" sfwType="Column" sfwValue="delinquent_letter1_sent_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="DelinquentLetter2SentFlag" sfwType="Column" sfwValue="delinquent_letter2_sent_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="ServicePurchaseAdjustmentFractionPsc" sfwType="Column" sfwValue="service_purchase_adjustment_fraction_psc" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,6" />
+    <attribute ID="ServicePurchaseAdjustmentFractionVsc" sfwType="Column" sfwValue="service_purchase_adjustment_fraction_vsc" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,6" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="BeWithServicePurchaseCalcId" sfwType="Column" sfwValue="be_with_service_purchase_calc_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="BeWithoutServicePurchaseCalcId" sfwType="Column" sfwValue="be_without_service_purchase_calc_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="BeDeathWithServicePurchaseCalcId" sfwType="Column" sfwValue="be_death_with_service_purchase_calc_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="BeDeathWithoutServicePurchaseCalcId" sfwType="Column" sfwValue="be_death_without_service_purchase_calc_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="IsCreatedFromPortal" sfwType="Column" sfwValue="is_created_from_portal" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="BenefitCalculationId" sfwType="Column" sfwValue="benefit_calculation_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="objPrimaryServicePurchaseDetail" sfwType="Object" sfwEntity="entServicePurchaseDetail" sfwValue="ibusPrimaryServicePurchaseDetail" />
+    <attribute ID="objPlan" sfwType="Object" sfwEntity="entPlan" sfwValue="ibusPlan" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IdecPayOffAmountFormatted" sfwValue="idecPayOffAmountFormatted" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ProratedVscFormatted" sfwValue="icdoServicePurchaseHeader.prorated_vsc_formatted" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ProratedPscFormatted" sfwValue="icdoServicePurchaseHeader.prorated_psc_formatted" />
+    <attribute ID="objPerson" sfwType="Object" sfwEntity="entPerson" sfwValue="ibusPerson" />
+    <attribute sfwDataType="string" sfwType="Property" ID="CurrentAge" sfwValue="Current_Age" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="TotalTimeToPurchase" sfwValue="TotalTimeToPurchase" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="TotalPurchaseCost" sfwValue="TotalPurchaseCost" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="HigherPurchaseCost" sfwValue="HigherPurchaseCost" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecContractInterestAmount" sfwValue="idecContractInterestAmount" />
+    <attribute sfwDataType="string" sfwType="Property" ID="TotalPscFormatted" sfwValue="icdoServicePurchaseHeader.total_psc_formatted" />
+    <attribute sfwDataType="string" sfwType="Property" ID="TotalVscFormatted" sfwValue="icdoServicePurchaseHeader.total_vsc_formatted" />
+    <attribute sfwType="Collection" sfwEntity="entServicePurchasePaymentAllocation" ID="lstAvailableRemittances" sfwValue="iclbAvailableRemittances" />
+    <attribute sfwType="Collection" sfwEntity="entServicePurchaseAmortizationSchedule" ID="lstServicePurchaseAmortizationSchedule" sfwValue="iclbServicePurchaseAmortizationSchedule" />
+    <attribute sfwType="Collection" sfwEntity="entServicePurchasePaymentAllocation" ID="lstUnPostedPaymentAllocation" sfwValue="iclbUnPostedPaymentAllocation" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecWhatIfExpextedInstallmentAmount" sfwValue="idecWhatIfExpextedInstallmentAmount" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IintWhatIfNoOfPayments" sfwValue="iintWhatIfNoOfPayments" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrWhatIfPaymentFrequency" sfwValue="istrWhatIfPaymentFrequency" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecWhatIfPaymentAmount" sfwValue="idecWhatIfPaymentAmount" />
+    <attribute sfwType="Collection" sfwEntity="entServicePurchaseAmortizationSchedule" ID="lstServicePurchaseFutureSchedule" sfwValue="iclbServicePurchaseFutureSchedule" />
+    <attribute sfwType="Collection" sfwEntity="entNotes" ID="lstNotes" sfwValue="iclbNotes" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrDBPlan" sfwValue="istrDBPlan" />
+    <attribute ID="objLastPaidSchedule" sfwType="Object" sfwEntity="entServicePurchaseAmortizationSchedule" sfwValue="ibusLastPaidSchedule" />
+    <attribute ID="objPersonAccount" sfwType="Object" sfwEntity="entPersonAccount" sfwValue="ibusPersonAccount" />
+    <attribute sfwDataType="string" sfwType="Property" ID="Istr1MonthAfterEmplDtlStartDate" sfwValue="istr1MonthAfterEmplDtlStartDate" />
+    <attribute sfwDataType="string" sfwType="Property" ID="Istr2MonthsAfterEmplDtlStartDate" sfwValue="istr2MonthsAfterEmplDtlStartDate" />
+    <attribute ID="objPersonEmploymentDetail" sfwType="Object" sfwEntity="entPersonEmploymentDetail" sfwValue="ibusPersonEmploymentDetail" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrNumberofMonths" sfwValue="istrNumberofMonths" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecProratedVSC" sfwValue="idecProratedVSC" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecEEPercentage" sfwValue="idecEEPercentage" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecERPercentage" sfwValue="idecERPercentage" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IdtLastPaidDate" sfwValue="idtLastPaidDate" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ProratedPscFormattedLc" sfwValue="prorated_psc_formatted_lc" />
+    <attribute sfwDataType="string" sfwType="Property" ID="TotalPscFormattedandRounded" sfwValue="icdoServicePurchaseHeader.total_psc_formattedandRounded" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="RoundedProratedPSC" sfwValue="icdoServicePurchaseHeader.Rounded_prorated_PSC" />
+    <attribute sfwDataType="string" sfwType="Property" ID="TotalTimeToPurchaseFormatted" sfwValue="TotalTimeToPurchase_formatted" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecDiffTotalPurchaseCostDownPayment" sfwValue="idecDiffTotalPurchaseCostDownPayment" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IintCheckFinalPaymentDue" sfwValue="iintCheckFinalPaymentDue" />
+    <attribute ID="objCurrentSchedule" sfwType="Object" sfwEntity="entServicePurchaseAmortizationSchedule" sfwValue="ibusCurrentSchedule" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecPayOffAmount" sfwValue="idecPayOffAmount" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ServiceCreditType" sfwValue="icdoServicePurchaseHeader.ServiceCreditType" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IintComparePaymentAmtInterestDue" sfwValue="iintComparePaymentAmtInterestDue" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrLastPaymentDueDateLongFormat" sfwValue="istrLastPaymentDueDateLongFormat" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IintCheckLumpSum" sfwValue="iintCheckLumpSum" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IintComparePaymentAmtPurchaseCostRHICPortion" sfwValue="iintComparePaymentAmtPurchaseCostRHICPortion" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecRHICPortionMinusPaymentAmount" sfwValue="idecRHICPortionMinusPaymentAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecFirstPaymentLessThanInterest" sfwValue="idecFirstPaymentLessThanInterest" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="IdtFirstPaymentLessThanInterest" sfwValue="idtFirstPaymentLessThanInterest" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPaymentDueDateLongFormat" sfwValue="istrPaymentDueDateLongFormat" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IintCheckPaymentElection" sfwValue="iintCheckPaymentElection" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecCheckAmount" sfwValue="idecCheckAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecContributionPercentage" sfwValue="idecContributionPercentage" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecTotalMemberPSC" sfwValue="idecTotalMemberPSC" />
+    <attribute sfwType="Collection" sfwEntity="entServicePurchasePaymentAllocation" ID="lstAllocatedPaymentPurchaseList" sfwValue="iclbAllocatedPaymentPurchaseList" />
+    <attribute ID="lstBenefitMultiplierTierData" sfwType="Collection" sfwValue="ibusPrimaryServicePurchaseDetail.iclbBenefitMultiplierTierData" sfwEntity="entBenefitProvisionMultiplier" sfwPrivate="False" />
+    <attribute ID="lstMemberInPaymentServicePurchaseList" sfwType="Collection" sfwValue="iclbMemberInPaymentServicePurchaseList" sfwEntity="entServicePurchaseHeader" sfwPrivate="False" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="RemainingServiceTodisplay" sfwValue="idecRemainingService" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="TotalInPaymentServiceTodisplay" sfwValue="idecTotalInPaymentService" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="TotalTimeToPurchaseForDisplay" sfwValue="idecTotalTimeToPurchase" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="AdditionalServiceVSC" sfwValue="idecAdditionalServiceVSC" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="AdditionalServicePSC" sfwValue="idecAdditionalServicePSC" />
+    <attribute ID="AdditionalServicePSC_formatted" sfwDataType="string" sfwPrivate="False" sfwValue="idecAdditionalServicePSC_formatted" sfwType="Property" />
+    <attribute ID="AdditionalServiceVSC_formatted" sfwDataType="string" sfwPrivate="False" sfwValue="idecAdditionalServiceVSC_formatted" sfwType="Property" />
+    <attribute ID="IintIsMain2020orDC2020" sfwDataType="int" sfwPrivate="False" sfwValue="iintIsMain2020orDC2020" sfwType="Property" />
+    <attribute ID="TotalERCost" sfwDataType="decimal" sfwPrivate="False" sfwValue="idecTotalERCost" sfwType="Property" />
+    <attribute ID="FormattedExpirationDate" sfwDataType="string" sfwPrivate="False" sfwValue="istrFormattedExpirationDate" sfwType="Property" />
+    <attribute sfwValue="overridden_final_average_salary" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,2" sfwIsNull="True" ID="OverriddenFinalAverageSalary" sfwCaption="Overridden Final Average Salary" />
+    <attribute ID="IdecUserFASSalary" sfwDataType="decimal" sfwPrivate="False" sfwValue="icdoServicePurchaseHeader.idecUserFASSalary" sfwType="Property" />
+    <attribute ID="IdecTotalFAS" sfwDataType="decimal" sfwPrivate="False" sfwValue="idecTotalFAS" sfwType="Property" />
+    <attribute ID="IblnShowTableUSERRA" sfwDataType="bool" sfwPrivate="False" sfwValue="iblnShowTableUSERRA" sfwType="Property" />
+    <attribute ID="IdecTotalMemberPSCForScreen" sfwDataType="decimal" sfwPrivate="False" sfwValue="idecTotalMemberPSCForScreen" sfwType="Property" />
+    <attribute ID="IdecCurrentTotalMemberPSCForScreen" sfwDataType="string" sfwPrivate="False" sfwValue="idecCurrentTotalMemberPSCForScreen" sfwType="Property" />
+    <attribute ID="IdecCurrentTotalMemberVSCForScreen" sfwDataType="string" sfwPrivate="False" sfwValue="idecCurrentTotalMemberVSCForScreen" sfwType="Property" />
+  </attributes>
+  <objectmethods>
+    <method ID="btnApprove_Click" sfwReturnType="ArrayList" />
+    <method ID="btnValidate_Click" sfwReturnType="ArrayList" />
+    <method ID="btnClosed_Click" sfwReturnType="Void" />
+    <method ID="btnReverse_Click" sfwReturnType="Void" />
+    <method ID="btnRefreshFAS_Click" sfwReturnType="ArrayList" />
+    <method ID="LoadPlanByContributingStatus" sfwReturnType="Collection" sfwObjectID="cdoPlan" sfwEntity="entPlan" />
+    <method ID="LoadMemberTypeByContributingStatus" sfwReturnType="Collection" sfwObjectID="cdoPersonEmploymentDetail" sfwEntity="entPersonEmploymentDetail" />
+    <method ID="btnRecalculate_Click" sfwReturnType="ArrayList" />
+    <method ID="btnRecalculateAndSave_Click" sfwReturnType="ArrayList" />
+    <method ID="btnPaymentElectionSave_Click" sfwReturnType="ArrayList" />
+    <method ID="btnApplyRemittance_Click" sfwReturnType="ArrayList" />
+    <method ID="btnGenerateWhatIfSchedule_Click" sfwReturnType="ArrayList" />
+    <method ID="LoadAllocatedPurchaseList" sfwReturnType="Void" />
+  </objectmethods>
+  <constraint />
+  <methods />
+  <lifecycle />
+  <ExtraFields />
+</entity>

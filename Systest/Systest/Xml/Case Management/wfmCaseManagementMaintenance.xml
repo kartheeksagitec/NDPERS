@@ -1,0 +1,628 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<form ID="wfmCaseManagementMaintenance" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvCase" sfwResource="1909 " sfwType="Maintenance" sfwTitle="Case Management Maintenance" version="3.5" sfwEntity="entCase">
+  <initialload>
+    <callmethods sfwMode="New" sfwMethodName="NewCase" />
+    <callmethods sfwMode="Update" sfwMethodName="FindCase" />
+  </initialload>
+  <sfwTable ID="Main">
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnltoolbar">
+          <sfwTable ID="toolbar">
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnSave" sfwMethodName="btnSave_Click" sfwNavigationParameter="Aintcaseid=CaseId" Text="Save" />
+                <sfwButton ID="btnCancel" sfwMethodName="btnCancel_Click" Text="Refresh" />
+                <sfwButton ID="btnPrev" sfwMethodName="btnPrev_Click" Text="Prev" />
+                <sfwButton ID="btnNext" sfwMethodName="btnNext_Click" Text="Next" />
+                <sfwButton ID="btnCorrespondence" sfwMethodName="btnCorrespondence_Click" Text="Correspondence" />
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlMain" sfwCaption="Case Details">
+          <sfwTable CssClass="Table" ID="tblMain">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capPersonId" Text="Member : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLinkButton ID="btnPersonId" sfwActiveForm="wfmPersonOverviewMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintpersonid=PersonId" sfwEntityField="objPerson.PersonIdWithName" />
+                <sfwLabel ID="lblPersonId" sfwEntityField="PersonId" CssClass="hideControl" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capCaseId" Text="Case ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblCaseId" sfwEntityField="CaseId" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capCaseTypeDescription" Text="Case Type : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblCaseTypeDescription" sfwEntityField="CaseTypeDescription" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capCaseStatusValue" Text="Case Status : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlCaseStatusValue" sfwLoadType="CodeGroup" sfwLoadSource="2257" sfwEntityField="CaseStatusValue" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capOverallTime" Text="Overall Days : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblOverallTime" sfwEntityField="OverallTime" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capComments" Text="Action Taken : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn CssClass="wrapped-text" Width="300px">
+                <sfwTextBox ID="txtComments" Rows="4" TextMode="MultiLine" Width="300px" sfwEntityField="Comments" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capActionBy" Text="Performed By : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList DataTextField="full_name" DataValueField="user_serial_id" ID="ddlActionBy" sfwLoadType="Query" sfwLoadSource="entUser.ListUsersForCaseManagement" sfwEntityField="ActionBy" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capFilenetDateFrom" Text="Filenet Date From : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtFilenetDateFrom" sfwDataFormat="{0:d}" sfwEntityField="FilenetDateFrom" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capFilenetDateTo" Text="Filenet Date To : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtFilenetDateTo" sfwDataFormat="{0:d}" sfwEntityField="FilenetDateTo" />
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlBenApp" sfwCaption="Benefit Appeal" sfwVisibleRule="IsCaseTypeBenefitAppeal">
+          <sfwTable CssClass="Table retirement-enro" ID="tblBenApp">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capAppealTypeDescription1" Text="Appeal Type : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblAppealTypeDescription1" sfwEntityField="AppealTypeDescription" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn ColumnSpan="5">
+                <sfwGridView AllowPaging="True" AutoGenerateColumns="False" ID="grvCaseStepDetailBen" sfwTwoWayBinding="True" sfwEntityField="lstCaseStepDetailBenefitAppeal" sfwGridEntity="entCaseStepDetail" AllowEditing="True">
+                  <Columns>
+                    <TemplateField HeaderText="Case Step Detail ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="CaseStepDetailId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Step Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="StepNameDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Start Date">
+                      <ItemTemplate>
+                        <sfwTextBox sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwEntityField="StartDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="End Date">
+                      <ItemTemplate>
+                        <sfwTextBox sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwEntityField="EndDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Target Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="TargetDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Comments">
+                      <ItemTemplate>
+                        <sfwTextBox TextMode="MultiLine" sfwEntityField="Comments" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Status">
+                      <ItemTemplate>
+                        <sfwDropDownList sfwLoadType="CodeGroup" sfwLoadSource="2255" sfwEntityField="StatusValue" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlDisRec" sfwCaption="Disability Recertification Details" sfwVisibleRule="IsCaseTypeDisabilityOrPre1991">
+          <sfwTable CssClass="Table" ID="tblDisRec">
+            <sfwRow>
+              <sfwColumn Width="1px">
+                <sfwLabel ID="capPayeeAccountId" Text="Payee Account ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblPayeeAccountId" Visible="False" sfwEntityField="PayeeAccountId" />
+                <sfwLinkButton ID="lnkPayeeAccount" sfwActiveForm="wfmPayeeAccountMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintpayeeaccountid=PayeeAccountId" sfwEntityField="PayeeAccountId" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capIstrPlanName" Text="Plan : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblIstrPlanName" sfwEntityField="IstrPlanName" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capDisabilityRecertificationNotNecessaryFlag" Text="Disability Recertification Not Necessary : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwCheckBox ID="chkDisabilityRecertificationNotNecessaryFlag1" sfwEntityField="DisabilityRecertificationNotNecessaryFlag" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capRecertificationDate" Text="Recertification Date : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblRecertificationDate" sfwDataFormat="{0:d}" sfwEntityField="RecertificationDate" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capNextRecertificationDate" Text="Next Recertification Date : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtNextRecertificationDate" sfwDataFormat="{0:d}" sfwEntityField="NextRecertificationDate" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn ColumnSpan="6" CssClass="display-tablecell">
+                <sfwGridView AllowPaging="True" AutoGenerateColumns="False" ID="grvDisbaility" sfwTwoWayBinding="True" sfwEntityField="lstCaseStepDetailDisability" sfwGridEntity="entCaseStepDetail" AllowEditing="True">
+                  <Columns>
+                    <TemplateField HeaderText="Case Step Detail ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="CaseStepDetailId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Step Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="StepNameDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Start Date">
+                      <ItemTemplate>
+                        <sfwTextBox sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwEntityField="StartDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="End Date">
+                      <ItemTemplate>
+                        <sfwTextBox sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwEntityField="EndDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Target Date" ControlStyle.CssClass="noWrap">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="TargetDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Comments">
+                      <ItemTemplate>
+                        <sfwTextBox TextMode="MultiLine" sfwEntityField="Comments" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Status">
+                      <ItemTemplate>
+                        <sfwDropDownList sfwLoadType="CodeGroup" sfwLoadSource="2255" sfwEntityField="StatusValue" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capComparableEarningsAmount" sfwVisibleRule="IsCaseTypeDisability" Text="Comparable Earnings : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtComparableEarningsAmount" sfwDataFormat="{0:C}" sfwVisibleRule="IsCaseTypeDisability" sfwEntityField="ComparableEarningsAmount" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capIncomeVerificationDate" sfwVisibleRule="IsCaseTypeDisability" Text="Income Verification Date : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtIncomeVerificationDate" sfwDataFormat="{0:d}" sfwVisibleRule="IsCaseTypeDisability" sfwEntityField="IncomeVerificationDate" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capEmployerName" sfwVisibleRule="IsCaseTypeDisability" Text="Employers : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn Width="200">
+                <sfwTextBox ID="txtEmployerName1" sfwVisibleRule="IsCaseTypeDisability" Width="150px" sfwEntityField="EmployerName1" />
+                <sfwLabel ID="lblSpace" Visible="False" Width="100px" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn Width="150">
+                <sfwTextBox ID="txtEmployerName2" sfwVisibleRule="IsCaseTypeDisability" Width="150px" sfwEntityField="EmployerName2" />
+              </sfwColumn>
+              <sfwColumn Width="150">
+                <sfwTextBox ID="txtEmployerName3" sfwVisibleRule="IsCaseTypeDisability" Width="150px" sfwEntityField="EmployerName3" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn ColumnSpan="5">
+                <sfwGridView AutoGenerateColumns="False" ID="grvCaseDisabilityIncomeVerificationDetail" sfwTwoWayBinding="True" sfwVisibleRule="IsCaseTypeDisability" sfwEntityField="lstCaseDisabilityIncomeVerificationDetail" sfwGridEntity="entCaseDisabilityIncomeVerificationDetail" AllowEditing="True">
+                  <Columns>
+                    <TemplateField HeaderText="Case Disability Income Verification Detail ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="CaseDisabilityIncomeVerificationDetailId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Month" ControlStyle.CssClass="noWrap">
+                      <ItemTemplate>
+                        <sfwLabel Width="50px" sfwEntityField="IstrMonth" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Year">
+                      <ItemTemplate>
+                        <sfwLabel Width="80px" sfwEntityField="Year" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Earnings 1" ItemStyle.HorizontalAlign="Left" HeaderStyle.HorizontalAlign="Left">
+                      <ItemTemplate>
+                        <sfwTextBox sfwDataFormat="{0:C}" Width="150px" sfwEntityField="EarningsAmount1" CssClass="AlignLeft" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Earnings 2" ItemStyle.HorizontalAlign="Left" HeaderStyle.HorizontalAlign="Left">
+                      <ItemTemplate>
+                        <sfwTextBox sfwDataFormat="{0:C}" sfwEntityField="EarningsAmount2" CssClass="AlignLeft" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Earnings 3" ItemStyle.HorizontalAlign="Left" HeaderStyle.HorizontalAlign="Left">
+                      <ItemTemplate>
+                        <sfwTextBox sfwDataFormat="{0:C}" sfwEntityField="EarningsAmount3" CssClass="AlignLeft" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Total">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="IdecTotal" CssClass="AlignLeft" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Exceeds % of &lt;/br&gt; Comparable &lt;/br&gt; Earnings">
+                      <ItemTemplate>
+                        <sfwCheckBox sfwTwoWayBinding="False" sfwEntityField="IsExceedsComparableEarningsFlag" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlFinHard" sfwCaption="Financial Hardship" sfwVisibleRule="IsCaseTypeFinancialHardship">
+          <sfwTable CssClass="Table retirement-enro" ID="tblFinHard">
+            <sfwRow>
+              <sfwColumn ColumnSpan="5">
+                <sfwGridView AllowPaging="True" AutoGenerateColumns="False" ID="grvFinhardship" sfwTwoWayBinding="True" sfwEntityField="lstCaseStepDetailFinancialHardship" sfwGridEntity="entCaseStepDetail" AllowEditing="True">
+                  <Columns>
+                    <TemplateField HeaderText="Case Step Detail ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="CaseStepDetailId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Step Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="StepNameDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Start Date">
+                      <ItemTemplate>
+                        <sfwTextBox sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwEntityField="StartDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="End Date">
+                      <ItemTemplate>
+                        <sfwTextBox sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwEntityField="EndDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Target Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="TargetDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Comments">
+                      <ItemTemplate>
+                        <sfwTextBox TextMode="MultiLine" sfwEntityField="Comments" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Status">
+                      <ItemTemplate>
+                        <sfwDropDownList sfwLoadType="CodeGroup" sfwLoadSource="2255" sfwEntityField="StatusValue" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capFinancialHardshipRequestedAmount" Text="Requested Amount : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtFinancialHardshipRequestedAmount" sfwDataFormat="{0:C}" sfwEntityField="FinancialHardshipRequestedAmount" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnOpenCaseFinancialHardshipProviderDetail" sfwActiveForm="wfmDeferredCompProviderMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintpersonaccountproviderid=PersonAccountProviderId" sfwRelatedControl="grvCaseFinancialHardshipProviderDetail" Text="Open" sfwDisableViewOnly="True" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn ColumnSpan="5">
+                <sfwGridView AllowPaging="True" AllowSorting="True" AutoGenerateColumns="False" ID="grvCaseFinancialHardshipProviderDetail" sfwSelection="Many" sfwTwoWayBinding="True" sfwEntityField="lstCaseFinancialHardshipProviderDetail" sfwGridEntity="entCaseFinancialHardshipProviderDetail" AllowEditing="True">
+                  <Columns>
+                    <TemplateField HeaderText="Provider Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpenCaseFinancialHardshipProviderDetail" sfwEntityField="IstrProviderName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Start Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="StartDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="End Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EndDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Amount Per Pay Period">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="PerPayPeriodContributionAmount" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Account Balance">
+                      <ItemTemplate>
+                        <sfwTextBox sfwDataFormat="{0:C}" sfwEntityField="AccountBalanceAmount" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Acct Balance Date">
+                      <ItemTemplate>
+                        <sfwTextBox sfwDataFormat="{0:d}" sfwEntityField="AccountBalanceDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Case Financial Hardship Provider Detail ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="CaseFinancialHardshipProviderDetailId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Person Account Provider ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="PersonAccountProviderId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlOtherDetails" sfwCaption="Other Details">
+          <sfwTable ID="tblOtherDetails">
+            <sfwRow>
+              <sfwColumn>
+                <sfwTabContainer ID="tctOtherDetails">
+                  <Tabs>
+                    <sfwTabSheet HeaderText="FileNet Documents" ID="tshFileNetDoc">
+                      <sfwTable ID="tblFileNetDoc">
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwButton ID="btnOpen" sfwActiveForm="wfmFileNetViewer" sfwLaunchInNewWindow="True" sfwMethodName="btnOpen_Click" sfwNavigationParameter="astrObjectStore=IstrObjectStore;astrVersionSeriesId=VersionSeriesId;astrDocumentId=DocumentId;astrDocumentTitle=DocumentTitle" sfwRelatedControl="grvCaseFileDetail" Text="Open" sfwDisableViewOnly="True" />
+                            <sfwButton ID="btnExecuteRefreshFromObject" sfwMethodName="btnValidateExecuteBusinessMethod_Click" sfwMode="Update" sfwObjectMethod="btnRefreshImageData_Click" sfwVisibleRule="IsCaseStatusNotApproved" Text="Refresh" />
+                            <sfwButton ID="btnExecuteRefreshFromObject1" sfwMethodName="btnValidateExecuteBusinessMethod_Click" sfwMode="Update" sfwObjectMethod="btnShowAll_Click" sfwVisibleRule="IsCaseStatusNotApproved" Text="Show All" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwGridView AllowPaging="True" AllowSorting="True" AutoGenerateColumns="False" ID="grvCaseFileDetail" sfwSelection="Many" sfwTwoWayBinding="True" sfwEntityField="lstCaseFileDetail" sfwGridEntity="entCaseFileDetail">
+                              <Columns>
+                                <TemplateField HeaderText="Case File Detail ID" Visible="False">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="CaseFileDetailId" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Case ID" Visible="False">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="CaseId" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Document Title">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpen" sfwEntityField="DocumentTitle" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Date">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="FilenetReceivedDate" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Document Code">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="DocumentCode" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Template Description">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="DocumentDescription" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Pertinent">
+                                  <ItemTemplate>
+                                    <sfwCheckBox sfwEntityField="IsFileVisibleFlag" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Version Series ID" Visible="False">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="VersionSeriesId" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Document ID" Visible="False">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="DocumentId" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="IstrObjectStore" Visible="False">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="IstrObjectStore" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                              </Columns>
+                            </sfwGridView>
+                          </sfwColumn>
+                        </sfwRow>
+                      </sfwTable>
+                    </sfwTabSheet>
+                    <sfwTabSheet HeaderText="Notes" ID="tshNotes">
+                      <sfwTable ID="tblNotes">
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwButton ID="btnNewNotes" sfwActiveForm="wfmNotesMaintenance" sfwMethodName="btnNew_Click" sfwNavigationParameter="aintPersonId=lblPersonId" sfwVisibleRule="IsCaseStatusNotApproved" Text="New" />
+                            <sfwButton ID="btnOpenNotes" sfwActiveForm="wfmNotesMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintnoteid=NoteId" sfwRelatedControl="grvNotes" Text="Open" sfwDisableViewOnly="True" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwGridView AllowPaging="True" AllowSorting="True" AutoGenerateColumns="False" ID="grvNotes" sfwSelection="Many" sfwEntityField="lstNotes" sfwGridEntity="entNotes">
+                              <Columns>
+                                <TemplateField HeaderText="Modified By">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpenNotes" sfwEntityField="ModifiedBy" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Modified Date">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="ModifiedDate" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Note ID">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="NoteId" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Notes">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="Notes" CssClass="normal-wrap" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Subsystem">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="SubsystemDescription" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                              </Columns>
+                            </sfwGridView>
+                          </sfwColumn>
+                        </sfwRow>
+                      </sfwTable>
+                    </sfwTabSheet>
+                  </Tabs>
+                </sfwTabContainer>
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlAuditInfo" sfwCaption="Audit Information">
+          <sfwTable CssClass="Table" ID="tblAuditInfo">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capCreate" Text="Create : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblCreatedBy" sfwEntityField="CreatedBy" />
+                <sfwLabel ID="lblUpdateSeq" sfwTwoWayBinding="True" Visible="False" sfwEntityField="UpdateSeq" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblCreatedDate" sfwEntityField="CreatedDate" sfwDataFormat="{0:G}" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capModify" Text="Modify : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblModifiedBy" sfwEntityField="ModifiedBy" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblModifiedDate" sfwEntityField="ModifiedDate" sfwDataFormat="{0:G}" />
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+  </sfwTable>
+  <loaddetails>
+    <entityfield ID="objPerson" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstCaseStepDetailBenefitAppeal" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstCaseStepDetailDisability" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstCaseDisabilityIncomeVerificationDetail" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstCaseStepDetailFinancialHardship" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstCaseFinancialHardshipProviderDetail" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstCaseFileDetail" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstNotes" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+  </loaddetails>
+</form>

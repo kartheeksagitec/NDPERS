@@ -1,0 +1,124 @@
+﻿<entity ID="entEmployerPayrollMonthlyStatement" sfwMainCDO="icdoEmployerPayrollMonthlyStatement" sfwType="BusinessRule" sfwActive="True" sfwStatus="Review" sfwObjectID="busEmployerPayrollMonthlyStatement" sfwTableName="sgt_employer_payroll_monthly_statement" sfwView="False">
+  <commonproperties />
+  <checklist />
+  <initialload />
+  <delete />
+  <validatedelete />
+  <softerror />
+  <groupslist />
+  <harderror>
+    <item ID="DateRangeNotSelected" sfwStatus="Active" sfwMode="All" />
+  </harderror>
+  <constraint />
+  <rules>
+    <rule ID="DateRangeNotSelected" sfwRuleType="Validation" sfwExpression="(this.icdoEmployerPayrollMonthlyStatement.idtStartDate == DateTime.MinValue) ||&#xD;&#xA;(this.icdoEmployerPayrollMonthlyStatement.idtEndDate == DateTime.MinValue)" sfwMessageId="10310" sfwObjectBased="True" />
+  </rules>
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select * from sgt_employer_payroll_monthly_statement&#xD;&#xA;order by employer_payroll_monthly_statement_id">
+      <parameters />
+    </query>
+    <query ID="GetActiveOrgPlan" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from sgt_org_plan op&#xD;&#xA;INNER JOIN sgt_organization org on op.org_id = org.org_id&#xD;&#xA;INNER JOIN sgt_plan p on op.plan_id = p.plan_id&#xD;&#xA;where status_value = 'ACTV' and org_type_value = 'EMPL' and op.participation_end_date is null&#xD;&#xA;order by org.org_id">
+      <parameters />
+    </query>
+    <query ID="GetContributionPremiumAmountByDate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select contribution_amount from &#xD;&#xA;(select Sum(isnull(EE_CONTRIBUTION_REPORTED,0)+isnull(EE_PRE_TAX_REPORTED,0)+isnull(EE_EMPLOYER_PICKUP_REPORTED,0)+isnull(ER_CONTRIBUTION_REPORTED,0)+isnull(RHIC_ER_CONTRIBUTION_REPORTED,0)+isnull(RHIC_EE_CONTRIBUTION_REPORTED,0)+ isnull(MEMBER_INTEREST_CALCULATED,0)&#xD;&#xA;+Isnull(EMPLOYER_INTEREST_CALCULATED,0)) as Contribution_Amount from sgt_employer_payroll_detail dtl&#xD;&#xA;left outer join  sgt_employer_payroll_header hdr on hdr.EMPLOYER_PAYROLL_HEADER_ID = dtl.EMPLOYER_PAYROLL_HEADER_ID&#xD;&#xA;where PLAN_ID = @plan_id&#xD;&#xA;and org_id = @org_id&#xD;&#xA;and dtl.posted_date &gt; @start_date&#xD;&#xA;and dtl.posted_date &lt; @end_date&#xD;&#xA;and dtl.status_value = 'PSTD'&#xD;&#xA;and hdr.header_type_value = 'RETR'&#xD;&#xA;union&#xD;&#xA;select Sum(Isnull(CONTRIBUTION_AMOUNT1,0)+Isnull(CONTRIBUTION_AMOUNT2,0)+Isnull(CONTRIBUTION_AMOUNT3,0)&#xD;&#xA;+Isnull(CONTRIBUTION_AMOUNT4,0)+Isnull(CONTRIBUTION_AMOUNT5,0)+Isnull(CONTRIBUTION_AMOUNT6,0)+Isnull(CONTRIBUTION_AMOUNT7,0)) as Contribution_Amount from sgt_employer_payroll_detail dtl&#xD;&#xA;left outer join  sgt_employer_payroll_header hdr on hdr.EMPLOYER_PAYROLL_HEADER_ID = dtl.EMPLOYER_PAYROLL_HEADER_ID&#xD;&#xA;where PLAN_ID = @plan_id&#xD;&#xA;and org_id = @org_id&#xD;&#xA;and dtl.posted_date &gt; @start_date&#xD;&#xA;and dtl.posted_date &lt; @end_date&#xD;&#xA;and dtl.status_value = 'PSTD'&#xD;&#xA;and hdr.header_type_value = 'DEFF'&#xD;&#xA;union&#xD;&#xA;select Isnull(Premium_Amount,0) as Contribution_Amount from sgt_employer_payroll_detail dtl&#xD;&#xA;left outer join  sgt_employer_payroll_header hdr on hdr.EMPLOYER_PAYROLL_HEADER_ID = dtl.EMPLOYER_PAYROLL_HEADER_ID&#xD;&#xA;where PLAN_ID = @plan_id&#xD;&#xA;and org_id = @org_id&#xD;&#xA;and dtl.posted_date &gt; @start_date&#xD;&#xA;and dtl.posted_date &lt; @end_date&#xD;&#xA;and dtl.status_value = 'PSTD'&#xD;&#xA;and hdr.header_type_value = 'INSR') as temp &#xD;&#xA;where contribution_amount is not null&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@plan_id" sfwDataType="int" />
+        <parameter ID="@org_id" sfwDataType="int" />
+        <parameter ID="@start_date" sfwDataType="DateTime" />
+        <parameter ID="@end_date" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="GetRemittanceAmountByDate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select sum(isnull(remittance_amount,0)) as Remittance_Amount from sgt_remittance rem&#xD;&#xA;left outer join sgt_deposit dep on dep.deposit_id = rem.deposit_id&#xD;&#xA;where rem.org_id =@org_id &#xD;&#xA;and plan_id =@plan_id &#xD;&#xA;and applied_date &gt; @start_date&#xD;&#xA;and applied_date &lt; @end_date&#xD;&#xA;and dep.status_value not in ('IVLD','NSF')&#xD;&#xA;and dep.status_value = 'APLD'">
+      <parameters>
+        <parameter ID="@org_id" sfwDataType="int" />
+        <parameter ID="@plan_id" sfwDataType="int" />
+        <parameter ID="@start_date" sfwDataType="DateTime" />
+        <parameter ID="@end_date" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="GetActiveOrgPlanForGivenOrgId" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from sgt_org_plan op&#xD;&#xA;INNER join sgt_organization org on op.org_id = org.org_id&#xD;&#xA;INNER JOIN sgt_plan p on op.plan_id = p.plan_id&#xD;&#xA;where --status_value = 'ACTV' and --PIR 10707&#xD;&#xA;--op.participation_end_date is null and &#xD;&#xA;--getdate() BETWEEN op.PARTICIPATION_START_DATE AND ISNULL(op.PARTICIPATION_END_DATE,'29001231') and -- PIR 10463 --PIR 10707&#xD;&#xA;op.org_id = @org_id&#xD;&#xA;and ISNULL(@start_date,'29001231') between op.PARTICIPATION_START_DATE and ISNULL(op.PARTICIPATION_END_DATE,'29001231') --PIR 10707">
+      <parameters>
+        <parameter ID="@org_id" sfwDataType="int" />
+        <parameter ID="@start_date" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="GetContributionPremiumAmount" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select contribution_amount from &#xD;&#xA;(select Sum(isnull(EE_CONTRIBUTION_REPORTED,0)+isnull(EE_PRE_TAX_REPORTED,0)+isnull(EE_EMPLOYER_PICKUP_REPORTED,0)+isnull(ER_CONTRIBUTION_REPORTED,0)+isnull(RHIC_ER_CONTRIBUTION_REPORTED,0)+isnull(RHIC_EE_CONTRIBUTION_REPORTED,0)+ isnull(MEMBER_INTEREST_CALCULATED,0)&#xD;&#xA;+Isnull(EMPLOYER_INTEREST_CALCULATED,0)) as Contribution_Amount from sgt_employer_payroll_detail dtl&#xD;&#xA;left outer join  sgt_employer_payroll_header hdr on hdr.EMPLOYER_PAYROLL_HEADER_ID = dtl.EMPLOYER_PAYROLL_HEADER_ID&#xD;&#xA;where PLAN_ID = @plan_id&#xD;&#xA;and org_id = @org_id&#xD;&#xA;and dtl.status_value = 'PSTD'&#xD;&#xA;and hdr.header_type_value = 'RETR'&#xD;&#xA;union&#xD;&#xA;select Sum(Isnull(CONTRIBUTION_AMOUNT1,0)+Isnull(CONTRIBUTION_AMOUNT2,0)+Isnull(CONTRIBUTION_AMOUNT3,0)&#xD;&#xA;+Isnull(CONTRIBUTION_AMOUNT4,0)+Isnull(CONTRIBUTION_AMOUNT5,0)+Isnull(CONTRIBUTION_AMOUNT6,0)+Isnull(CONTRIBUTION_AMOUNT7,0)) as Contribution_Amount from sgt_employer_payroll_detail dtl&#xD;&#xA;left outer join  sgt_employer_payroll_header hdr on hdr.EMPLOYER_PAYROLL_HEADER_ID = dtl.EMPLOYER_PAYROLL_HEADER_ID&#xD;&#xA;where PLAN_ID = @plan_id&#xD;&#xA;and org_id = @org_id&#xD;&#xA;and dtl.status_value = 'PSTD'&#xD;&#xA;and hdr.header_type_value = 'DEFF'&#xD;&#xA;union&#xD;&#xA;select Isnull(Premium_Amount,0) as Contribution_Amount from sgt_employer_payroll_detail dtl&#xD;&#xA;left outer join  sgt_employer_payroll_header hdr on hdr.EMPLOYER_PAYROLL_HEADER_ID = dtl.EMPLOYER_PAYROLL_HEADER_ID&#xD;&#xA;where PLAN_ID = @plan_id&#xD;&#xA;and org_id = @org_id&#xD;&#xA;and dtl.status_value = 'PSTD'&#xD;&#xA;and hdr.header_type_value = 'INSR') as temp &#xD;&#xA;where contribution_amount is not null">
+      <parameters>
+        <parameter ID="@plan_id" sfwDataType="int" />
+        <parameter ID="@org_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetRemittanceAmount" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT *,REM.REMITTANCE_AMOUNT - (CASE WHEN REFUND_STATUS_VALUE = 'PRCD' THEN &#xD;&#xA;     CASE WHEN ISNULL(OVERRIDDEN_REFUND_AMOUNT,0) &gt; 0  &#xD;&#xA;       THEN ISNULL(OVERRIDDEN_REFUND_AMOUNT,0) &#xD;&#xA;       ELSE ISNULL(COMPUTED_REFUND_AMOUNT,0) &#xD;&#xA;     END&#xD;&#xA;    ELSE 0 END&#xD;&#xA;   ) AS AVAILABLE_AMOUNT&#xD;&#xA;FROM SGT_REMITTANCE REM&#xD;&#xA;INNER JOIN SGT_DEPOSIT DEP ON DEP.DEPOSIT_ID = REM.DEPOSIT_ID&#xD;&#xA;INNER JOIN SGT_DEPOSIT_TAPE TAP ON DEP.DEPOSIT_TAPE_ID = TAP.DEPOSIT_TAPE_ID --prod pir 6291&#xD;&#xA;WHERE REM.ORG_ID =@ORG_ID &#xD;&#xA;AND PLAN_ID =@PLAN_ID &#xD;&#xA;AND DEP.STATUS_VALUE NOT IN ('IVLD','NSF')&#xD;&#xA;AND DEP.STATUS_VALUE = 'APLD'&#xD;&#xA;AND REM.REMITTANCE_TYPE_VALUE  NOT IN ('JSRD','PRJB')  -- pir 7282">
+      <parameters>
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+        <parameter ID="@PLAN_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetInvoiceAmountByDate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from  dbo.SGT_EMPLOYER_PAYROLL_Detail dtl&#xD;&#xA;left outer join  dbo.SGT_EMPLOYER_PAYROLL_HEADER   hdr on   hdr.EMPLOYER_PAYROLL_HEADER_ID = dtl.EMPLOYER_PAYROLL_HEADER_ID&#xD;&#xA;where hdr.org_id = @org_id&#xD;&#xA;and dtl.plan_id =@plan_id&#xD;&#xA;and dtl.posted_date &lt;&gt; null&#xD;&#xA;and dtl.posted_date &gt; @start_date&#xD;&#xA;and dtl.Posted_date&lt; @end_date&#xD;&#xA;and dtl.status_value = 'PSTD'">
+      <parameters>
+        <parameter ID="@org_id" sfwDataType="int" />
+        <parameter ID="@plan_id" sfwDataType="int" />
+        <parameter ID="@start_date" sfwDataType="DateTime" />
+        <parameter ID="@end_date" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="GetInvoiceAmount" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from  dbo.SGT_EMPLOYER_PAYROLL_Detail dtl&#xD;&#xA;INNER JOIN dbo.SGT_EMPLOYER_PAYROLL_HEADER hdr on &#xD;&#xA;dtl.EMPLOYER_PAYROLL_HEADER_ID = hdr.EMPLOYER_PAYROLL_HEADER_ID&#xD;&#xA;where hdr.org_id = @org_id&#xD;&#xA;and dtl.plan_id =@plan_id&#xD;&#xA;and dtl.status_value = 'PSTD'&#xD;&#xA;and dtl.posted_date is not null">
+      <parameters>
+        <parameter ID="@org_id" sfwDataType="int" />
+        <parameter ID="@plan_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetInvoiceAmountForPurchase" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from  dbo.SGT_EMPLOYER_PAYROLL_Detail dtl&#xD;&#xA;INNER JOIN dbo.SGT_EMPLOYER_PAYROLL_HEADER hdr on &#xD;&#xA;dtl.EMPLOYER_PAYROLL_HEADER_ID = hdr.EMPLOYER_PAYROLL_HEADER_ID&#xD;&#xA;where hdr.org_id = @org_id&#xD;&#xA;and hdr.header_type_value = 'PRCH'&#xD;&#xA;and dtl.status_value = 'PSTD'&#xD;&#xA;and dtl.posted_date is not null">
+      <parameters>
+        <parameter ID="@org_id" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="EmployerPayrollMonthlyStatementId" sfwType="Column" sfwValue="employer_payroll_monthly_statement_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="OrgId" sfwType="Column" sfwValue="org_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PlanId" sfwType="Column" sfwValue="plan_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="BeginningBalanceAmt" sfwType="Column" sfwValue="beginning_balance_amt" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="11,2" />
+    <attribute ID="MonthDueAmt" sfwType="Column" sfwValue="month_due_amt" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="11,2" />
+    <attribute ID="RemittanceAmount" sfwType="Column" sfwValue="remittance_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="11,2" />
+    <attribute ID="InvoiceAmount" sfwType="Column" sfwValue="invoice_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="11,2" />
+    <attribute ID="RunDate" sfwType="Column" sfwValue="run_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="IdtStartDate" sfwValue="icdoEmployerPayrollMonthlyStatement.idtStartDate" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="IdtEndDate" sfwValue="icdoEmployerPayrollMonthlyStatement.idtEndDate" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrOrgCodeId" sfwValue="istrOrgCodeId" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecRetCompBeginnineBalanceAmount" sfwValue="idecRetCompBeginnineBalanceAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecRetCompInvoiceAmount" sfwValue="idecRetCompInvoiceAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecRetPaymentsAmount" sfwValue="idecRetPaymentsAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecRetCompCurrentDueAmount" sfwValue="idecRetCompCurrentDueAmount" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="IdtFromDate" sfwValue="idtFromDate" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="IdtToDate" sfwValue="idtToDate" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecInsCompBeginnineBalanceAmount" sfwValue="idecInsCompBeginnineBalanceAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecInsCompInvoiceAmount" sfwValue="idecInsCompInvoiceAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecInsPaymentsAmount" sfwValue="idecInsPaymentsAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecInsCompCurrentDueAmount" sfwValue="idecInsCompCurrentDueAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecDefCompBeginnineBalanceAmount" sfwValue="idecDefCompBeginnineBalanceAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecDefCompInvoiceAmount" sfwValue="idecDefCompInvoiceAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecDefPaymentsAmount" sfwValue="idecDefPaymentsAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecDefCompCurrentDueAmount" sfwValue="idecDefCompCurrentDueAmount" />
+    <attribute ID="iintOrgID" sfwDataType="int" sfwPrivate="False" sfwValue="OrgID" sfwType="Property" />
+  </attributes>
+  <objectmethods>
+    <method ID="btnGenerateCorrespondence_Click" sfwReturnType="ArrayList" />
+    <method ID="btnGenerateAgencyExcelReport_Click" sfwReturnType="DataSet">
+      <parameters>
+        <parameter ID="aintOrgId" sfwDataType="int" />
+        <parameter ID="astrBenefitType" sfwDataType="String" />
+        <parameter ID="astrFromDate" sfwDataType="String" />
+        <parameter ID="astrToDate" sfwDataType="String" />
+      </parameters>
+    </method>
+  </objectmethods>
+  <methods />
+  <lifecycle />
+  <ExtraFields />
+</entity>

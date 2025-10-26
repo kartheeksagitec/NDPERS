@@ -1,0 +1,83 @@
+﻿<entity ID="entProviderReportDataDeffComp" sfwMainCDO="icdoProviderReportDataDeffComp" sfwType="BusinessRule" sfwActive="True" sfwStatus="Review" sfwObjectID="busProviderReportDataDeffComp" sfwTableName="sgt_provider_report_data_deff_comp">
+  <queries>
+    <query ID="LoadReportDataByProvider" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT DC.SSN,DC.PLAN_ID,DC.EFFECTIVE_START_DATE,DC.EFFECTIVE_END_DATE,DC.FIRST_NAME,DC.LAST_NAME,&#xD;&#xA;SUM(CONTRIBUTION_AMOUNT + ISNULL(ER_PRETAX_MATCH,0.00)) AS CONTRIBUTION_AMOUNT,B.PERSON_ACCOUNT_ID,OP.ORG_PLAN_ID,&#xD;&#xA;CASE WHEN OP.REPORT_FREQUENCY_VALUE ='BWLK' THEN 'P1' ELSE&#xD;&#xA;CASE WHEN OP.REPORT_FREQUENCY_VALUE ='SEMI' THEN 'P2' ELSE&#xD;&#xA;CASE WHEN OP.REPORT_FREQUENCY_VALUE ='MONT' THEN 'P3' ELSE&#xD;&#xA;CASE WHEN OP.REPORT_FREQUENCY_VALUE ='WKLY' THEN 'P4' ELSE&#xD;&#xA; '' END END END END AS REPORT_FREQUENCY_VALUE&#xD;&#xA;FROM SGT_PROVIDER_REPORT_DATA_DEFF_COMP DC&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT B ON DC.PERSON_ID = B.PERSON_ID AND DC.PLAN_ID = B.PLAN_ID AND B.PLAN_PARTICIPATION_STATUS_VALUE != 'CAN3'&#xD;&#xA;INNER JOIN SGT_EMPLOYER_PAYROLL_DETAIL EPD ON DC.SUBSYSTEM_REF_ID = EPD.EMPLOYER_PAYROLL_DETAIL_ID&#xD;&#xA;INNER JOIN SGT_EMPLOYER_PAYROLL_HEADER EPH ON EPD.EMPLOYER_PAYROLL_HEADER_ID = EPH.EMPLOYER_PAYROLL_HEADER_ID&#xD;&#xA;INNER JOIN SGT_ORG_PLAN OP ON EPH.ORG_ID = OP.ORG_ID AND EPD.PLAN_ID = OP.PLAN_ID AND (@PAYMENTDATE BETWEEN OP.PARTICIPATION_START_DATE AND ISNULL(OP.PARTICIPATION_END_DATE,'99991231'))&#xD;&#xA;WHERE DC.BATCH_REQUEST_ID IS NULL AND DC.PROVIDER_ORG_ID=@PROVIDER_ORG_ID&#xD;&#xA;AND DC.EFFECTIVE_START_DATE &lt;= @PAYMENTDATE&#xD;&#xA;GROUP BY DC.SSN,DC.PLAN_ID,DC.EFFECTIVE_START_DATE,DC.EFFECTIVE_END_DATE,DC.FIRST_NAME,DC.LAST_NAME&#xD;&#xA;,B.PERSON_ACCOUNT_ID,OP.ORG_PLAN_ID,OP.REPORT_FREQUENCY_VALUE">
+      <parameters>
+        <parameter ID="@PROVIDER_ORG_ID" sfwDataType="int" />
+        <parameter ID="@PAYMENTDATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="LoadDistinctProviderOrgCodeID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT ISNULL(PRDF.PROVIDER_ORG_ID,0) PROVIDER_ORG_ID,ISNULL(ORG.ORG_CODE,'') ORG_CODE FROM SGT_PROVIDER_REPORT_DATA_DEFF_COMP PRDF&#xD;&#xA;INNER JOIN SGT_ORGANIZATION ORG ON PRDF.PROVIDER_ORG_ID=ORG.ORG_ID&#xD;&#xA;WHERE &#xD;&#xA;BATCH_REQUEST_ID IS NULL &#xD;&#xA;GROUP BY PRDF.PROVIDER_ORG_ID,ORG.ORG_CODE ">
+      <parameters />
+    </query>
+    <query ID="LoadByBatchRequestID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="&#xD;&#xA;SELECT * FROM SGT_PROVIDER_REPORT_DATA_DEFF_COMP&#xD;&#xA;WHERE BATCH_REQUEST_ID IS NULL AND PROVIDER_ORG_ID=@ORG_ID&#xD;&#xA;AND EFFECTIVE_START_DATE &lt;= @PAYMENTDATE">
+      <parameters>
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+        <parameter ID="@PAYMENTDATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="LoadDeffCompDataGroupByOrgIDPlanID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT &#xD;&#xA;ISNULL(DC.PROVIDER_ORG_ID,0) PROVIDER_ORG_ID,&#xD;&#xA;ISNULL(DC.PLAN_ID,0) PLAN_ID,&#xD;&#xA;CASE WHEN ORG.ACH_ACCOUNT_NUMBER IS NOT NULL THEN ORG.ACH_ACCOUNT_NUMBER ELSE ISNULL(ORG.ORG_CODE,'') END AS ORG_CODE,&#xD;&#xA;ISNULL(ORG.ORG_NAME,'') ORG_NAME,&#xD;&#xA;ISNULL(SUM(DC.CONTRIBUTION_AMOUNT + ISNULL(ER_PRETAX_MATCH,0.00)),0) CONTRIBUTION_AMOUNT,&#xD;&#xA;payment_option_value&#xD;&#xA;FROM SGT_PROVIDER_REPORT_DATA_DEFF_COMP DC&#xD;&#xA;INNER JOIN SGT_ORGANIZATION ORG ON ORG.ORG_ID=DC.PROVIDER_ORG_ID&#xD;&#xA;WHERE DC.BATCH_REQUEST_ID IS NULL AND ORG.ORG_CODE=@PROVIDER_ORG_ID&#xD;&#xA;AND DC.EFFECTIVE_START_DATE &lt;= @PAYMENTDATE&#xD;&#xA;GROUP BY DC.PROVIDER_ORG_ID,DC.PLAN_ID,ORG.ORG_CODE,ORG.ORG_NAME,payment_option_value,&#xD;&#xA;CASE WHEN ORG.ACH_ACCOUNT_NUMBER IS NOT NULL THEN ORG.ACH_ACCOUNT_NUMBER ELSE ISNULL(ORG.ORG_CODE,'') END">
+      <parameters>
+        <parameter ID="@PROVIDER_ORG_ID" sfwDataType="string" />
+        <parameter ID="@PAYMENTDATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="GetRoutingNo" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT ISNULL(ROUTING_NO,0) FROM SGT_ORGANIZATION WHERE ORG_ID=@ORG_ID">
+      <parameters>
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetSource" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT TOP 1 '01' FROM SGT_PERSON_ACCOUNT">
+      <parameters />
+    </query>
+    <query ID="GetSumGroupByProviderOrg" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT SUM(CONTRIBUTION_AMOUNT + ISNULL(ER_PRETAX_MATCH,0.00)) FROM SGT_PROVIDER_REPORT_DATA_DEFF_COMP DCOM&#xD;&#xA;INNER JOIN SGT_ORGANIZATION ORG ON ORG.ORG_ID=DCOM.PROVIDER_ORG_ID&#xD;&#xA;WHERE ORG.ORG_CODE=@PROVIDER_ORG_CODE AND DCOM.BATCH_REQUEST_ID IS NULL&#xD;&#xA;AND DCOM.EFFECTIVE_START_DATE &lt;= @PAYMENTDATE">
+      <parameters>
+        <parameter ID="@PROVIDER_ORG_CODE" sfwDataType="string" />
+        <parameter ID="@PAYMENTDATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="LoadDefProviderData" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT *&#xD;&#xA;FROM SGT_PROVIDER_REPORT_DATA_DEFF_COMP PRDF WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_ORGANIZATION ORG WITH(NOLOCK) ON PRDF.PROVIDER_ORG_ID=ORG.ORG_ID&#xD;&#xA;WHERE BATCH_REQUEST_ID IS NULL&#xD;&#xA;AND PRDF.EFFECTIVE_START_DATE &lt;= @PAYMENTDATE">
+      <parameters>
+        <parameter ID="@PAYMENTDATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="LoadDeffCompProviderDetails" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT D.*&#xD;&#xA;FROM SGT_PROVIDER_REPORT_DATA_DEFF_COMP DC&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT B ON DC.PERSON_ID = B.PERSON_ID AND DC.PLAN_ID = B.PLAN_ID &#xD;&#xA;INNER JOIN SGT_ORG_PLAN C ON DC.PROVIDER_ORG_ID = C.ORG_ID AND DC.PLAN_ID = C.PLAN_ID&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT_DEFERRED_COMP_PROVIDER D&#xD;&#xA;ON B.PERSON_ACCOUNT_ID = D.PERSON_ACCOUNT_ID AND C.ORG_PLAN_ID = D.PROVIDER_ORG_PLAN_ID&#xD;&#xA;WHERE DC.BATCH_REQUEST_ID IS NULL AND DC.PROVIDER_ORG_ID=@PROVIDER_ORG_ID&#xD;&#xA;AND DC.EFFECTIVE_START_DATE &lt;= @PAYMENTDATE&#xD;&#xA;AND (DC.EFFECTIVE_END_DATE BETWEEN D.START_DATE AND ISNULL(D.END_DATE,'99991231')&#xD;&#xA;OR DC.EFFECTIVE_START_DATE BETWEEN D.START_DATE AND ISNULL(D.END_DATE,'99991231'))&#xD;&#xA;AND D.START_DATE &lt;&gt; ISNULL(D.END_DATE,'99991231')&#xD;&#xA;ORDER BY D.PERSON_ACCOUNT_ID,ISNULL(D.END_DATE,'99991231') DESC,D.START_DATE DESC">
+      <parameters>
+        <parameter ID="@PROVIDER_ORG_ID" sfwDataType="int" />
+        <parameter ID="@PAYMENTDATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="LoadReportDataByProviderOrgCode" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT ssn,PERSON_ID, &#xD;&#xA;SUM(CONTRIBUTION_AMOUNT + ISNULL(ER_PRETAX_MATCH,0.00)) as total_contribution&#xD;&#xA;FROM SGT_PROVIDER_REPORT_DATA_DEFF_COMP &#xD;&#xA;WHERE PROVIDER_ORG_ID = @PROVIDER_ORG_ID&#xD;&#xA;AND EFFECTIVE_START_DATE &lt;= @PAYMENTDATE&#xD;&#xA;AND BATCH_REQUEST_ID IS NULL&#xD;&#xA;GROUP BY SSN,PERSON_ID">
+      <parameters>
+        <parameter ID="@PROVIDER_ORG_ID" sfwDataType="int" />
+        <parameter ID="@PAYMENTDATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="ContributionAmount" sfwType="Column" sfwValue="contribution_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="11,2" />
+    <attribute ID="BatchRequestId" sfwType="Column" sfwValue="batch_request_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="EffectiveStartDate" sfwType="Column" sfwValue="effective_start_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="EffectiveEndDate" sfwType="Column" sfwValue="effective_end_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="PlanId" sfwType="Column" sfwValue="plan_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="SubsystemValue" sfwType="Column" sfwValue="subsystem_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="SubsystemRefId" sfwType="Column" sfwValue="subsystem_ref_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ProviderReportDataDeffCompId" sfwType="Column" sfwValue="provider_report_data_deff_comp_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="SubsystemDescription" sfwType="Description" sfwValue="subsystem_description" />
+    <attribute ID="SubsystemId" sfwType="Column" sfwValue="subsystem_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="349" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PersonId" sfwType="Column" sfwValue="person_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="LastName" sfwType="Column" sfwValue="last_name" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ProviderOrgId" sfwType="Column" sfwValue="provider_org_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="Ssn" sfwType="Column" sfwValue="ssn" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="9" />
+    <attribute ID="FirstName" sfwType="Column" sfwValue="first_name" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="LastFourDigitsOfSSN" sfwDataType="string" sfwValue="lstrLastFourDigitsOfSSN" sfwType="Property" />
+    <attribute ID="PersonName" sfwDataType="string" sfwValue="lstrPersonName" sfwType="Property" />
+    <attribute ID="ProviderName" sfwDataType="string" sfwValue="lstrProviderName" sfwType="Property" />
+    <attribute ID="ProviderNamebyOrgid" sfwDataType="string" sfwValue="lstrProviderNamebyOrgid" sfwType="Property" />
+    <attribute ID="ErPretaxMatch" sfwType="Column" sfwValue="er_pretax_match" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="11,2" />
+  </attributes>
+</entity>

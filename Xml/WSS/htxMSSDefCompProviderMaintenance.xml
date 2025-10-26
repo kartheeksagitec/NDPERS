@@ -1,0 +1,84 @@
+﻿<form ID="wfmMSSDefCompProviderMaintenance" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2001" sfwType="FormLinkMaintenance" sfwTitle="Deferred Compensation Provider Maintenance" version="3.5" sfwEntity="entPersonAccountDeferredCompProvider" sfwTemplate="MSSDefCompProviderMaintenance.html" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmMSSDefCompProviderLookup" sfwFormObjectType="None" isBasedOnWfm="true" sfwDefaultButtonID="btnSave">
+  <initialload>
+    <callmethods sfwMethodName="NewDeferredCompProvider" />
+  </initialload>
+  <items>
+    <sfwTable ID="Main" />
+    <sfwPanel ID="pnltoolbar" sfwCaption="Back" sfwCollapsible="False" sfwVisibleRule="IsBackButtonVisible">
+      <items>
+        <sfwTable ID="tblNewPage2" />
+        <sfwImageButton ID="btnBack" ImageAlign="AbsMiddle" ImageUrl="~/Images/back.gif" sfwMethodName="btnBack_Click" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlNewPage1" sfwCaption="Header" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblNewPage1" />
+        <sfwLiteral ID="GHE" Text="Deferred Compensation Plan Provider" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlMain" sfwCaption="Deferred Comp Provider Details">
+      <items>
+        <sfwTable ID="tblMain" />
+        <sfwLabel ID="capProviderOrgId" Text="Select an eligible provider   " sfwIsCaption="True" />
+        <sfwCascadingDropDownList DataTextField="org_name" DataValueField="org_code" ID="ddlIstrOrgCodeID1" sfwLoadType="Method" sfwLoadSource="LoadDeferredCompProvidersNew" sfwEntityField="IstrProviderOrgCode" sfwValidationRules="IsOrgCodeIDNull" />
+        <sfwLabel ID="lblLabel1" Text="Select the agent you contacted " sfwIsCaption="True" />
+        <sfwCascadingDropDownList DataTextField="ContactName" DataValueField="contact_id" ID="ddlDefCompCascadingDropDownList" sfwParameters="astrProviderOrgCode=ddlIstrOrgCodeID1" sfwParentControl="ddlIstrOrgCodeID1" sfwLoadType="Method" sfwLoadSource="LoadActiveContacts" sfwEntityField="IintMSSContactId" sfwValidationRules="IsAgentIDNull" />
+        <sfwLabel ID="lblLiteral" Text="&lt;font style=&quot;padding-left:0px&quot;&gt;In order to participate with this provider, please work with &lt;a href=&quot;https://www.ndpers.nd.gov/sites/www/files/documents/members-additional-information/all-457-deferred-comp/provider-list.pdf&quot; target=&quot;_blank&quot;&gt;your selected agent&lt;/a&gt; to establish account.&lt;/font&gt;" sfwIsCaption="True" />
+        <sfwLabel ID="capPersonEmploymentId" Text="Select your employer  " sfwIsCaption="True" />
+        <sfwDropDownList DataTextField="istrOrgName" DataValueField="person_employment_id" ID="ddlPersonEmploymentId" sfwLoadType="Method" sfwLoadSource="LoadDeferredCompEmploymentsNew" sfwEntityField="PersonEmploymentId" sfwValidationRules="IsEmployerNull" />
+        <sfwLabel ID="capPerPayPeriodContributionAmt" Text="Amount to be deducted from each paycheck   " sfwIsCaption="True" />
+        <sfwTextBox ID="txtPerPayPeriodContributionAmt1" sfwDataFormat="{0:C}" sfwEntityField="PerPayPeriodContributionAmt" />
+        <sfwLabel ID="capStartDate" Text="Based on today’s date, the soonest your deduction&lt;br/&gt;can be authorized to start is for the pay period beginning  " sfwIsCaption="True" />
+        <sfwTextBox ID="txtStartDate" sfwDataFormat="{0:d}" sfwEntityField="StartDate" sfwValidationRules="IsStartDateLessThanDefaultDate;IsStartDateWithinFutureLimit" />
+        <sfwLabel ID="lblLabel3" Text="If this is not when you want your deduction to start, please change the date." sfwIsCaption="True" />
+        <sfwLabel AssociatedControlID="ddlIstrUpdateExistingProviderFlag" ID="capIstrUpdateExistingProviderFlag" Text="Do you wish this new enrollment to end your existing enrollment?  " sfwIsCaption="True" />
+        <sfwDropDownList ID="ddlIstrUpdateExistingProviderFlag" sfwEntityField="IstrUpdateExistingProviderFlag" sfwClientVisibility="controllist:capIstrUpdateExistingEmployerMatchFlag,ddlIstrUpdateExistingEmployerMatchFlag#N:capIstrUpdateExistingEmployerMatchFlag,ddlIstrUpdateExistingEmployerMatchFlag;">
+          <ListItem Text="Yes" Value="Y" />
+          <ListItem Text="No" Value="N" />
+        </sfwDropDownList>
+        <sfwLabel AssociatedControlID="ddlIstrUpdateExistingEmployerMatchFlag" ID="capIstrUpdateExistingEmployerMatchFlag" Text="Do you want your Employer Match to be applied to this provider?" sfwIsCaption="True" sfwVisibleRule="VRIsEmployerMatchAvailable" />
+        <sfwDropDownList ID="ddlIstrUpdateExistingEmployerMatchFlag" sfwEntityField="IstrUpdateExistingEmployerFlag" sfwDefaultValue="Y" sfwVisibleRule="VRIsEmployerMatchAvailable">
+          <ListItem Text="Yes" Value="Y" />
+          <ListItem Text="No" Value="N" />
+        </sfwDropDownList>
+        <sfwLabel ID="lblPersonEmploymentDtlId" Visible="False" sfwEntityField="objPersonAccountDeferredComp.PersonEmploymentDtlId" />
+        <sfwLabel ID="lblPersonAccountId" Visible="False" sfwEntityField="PersonAccountId" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlNewPage" sfwCaption="Acknowledgement">
+      <items>
+        <sfwTable ID="tblNewPage" />
+        <sfwLabel ID="lblLabel" Text="I authorize my employer to reduce my salary for the above indicated amounts." sfwIsCaption="True" />
+        <sfwGridView AllowPaging="True" ID="grvDefCompAcknowledgement" sfwShowEmptyTable="False" sfwEntityField="lstDefCompAcknowledgementNew" CssClass="GridColumnHide">
+          <Columns>
+            <TemplateField HeaderText="Acknowledgement ID" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="AcknowledgementId" sfwRenderType="RichText" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Acknowledgement Text">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="AcknowledgementText" sfwRenderType="RichText" />
+              </ItemTemplate>
+            </TemplateField>
+          </Columns>
+        </sfwGridView>
+        <sfwCheckBox ID="chkIblnAuthorizationFlagChecked" sfwEntityField="IstrAuthorizationFlagChecked" sfwValidationRules="IsAcknowledgementChecked" />
+        <sfwLabel ID="lblIstrConfirmationText" sfwEntityField="IstrConfirmationText" sfwRenderType="RichText" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnltool" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="toolbar" />
+        <sfwButton ID="btnSave" sfwMessageId="8" sfwMethodName="btnSave_Click" sfwNavigationParameter="aintPersonAccount=icdoPersonAccountDeferredCompProvider.person_account_id;aintPersonEmpDtlId=ibusPersonAccountDeferredComp.icdoPersonAccount.person_employment_dtl_id;astr_is_pop_up_validation=#N" Text="Save" OnClientClick="ConfirmMSSAmount()" sfwExecuteAfterSuccess="btnOpen" />
+        <sfwButton ID="btnRefreshData" sfwMethodName="btnCancel_Click" Text="Cancel" />
+        <sfwButton ID="btnOpen" sfwMethodName="btnOpen_Click" Text="Open" sfwActiveForm="wfmMSSDeferredCompEnrolledMaintenance" sfwNavigationParameter="aintPersonAccount=icdoPersonAccountDeferredCompProvider.person_account_id;aintPersonEmpDtlId=ibusPersonAccountDeferredComp.icdoPersonAccount.person_employment_dtl_id;astr_is_pop_up_validation=#N" CssClass="hideControl" />
+      </items>
+    </sfwPanel>
+  </items>
+  <loaddetails>
+    <entityfield ID="objPersonAccountDeferredComp" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstDefCompAcknowledgementNew" sfwNewAutoLoad="True" sfwUpdateAutoLoad="True" />
+  </loaddetails>
+  <ExtraFields />
+</form>

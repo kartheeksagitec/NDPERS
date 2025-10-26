@@ -1,0 +1,120 @@
+﻿<form ID="wfmBoardMemberElectionLookup" sfwType="Lookup" sfwEntity="entBoardMemberElection" sfwTitle="Board Member Election Lookup" sfwActive="True" sfwStatus="Review" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmBoardMemberElectionLookup" sfwResource="2061">
+  <initialload>
+    <query sfwQueryRef="entBoardMemberElection.ElectionLookup" ID="entBoardMemberElection" />
+  </initialload>
+  <sfwTable>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlCriteria" sfwCaption="Criteria">
+          <sfwTable ID="tblCriteria">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capElectionId" Text="ID : " AssociatedControlID="txtElectionId" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtElectionId" sfwDataField="election_id" sfwDataType="Numeric" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capStartDate" Text="Start Date : " AssociatedControlID="txtStartDate" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtStartDate" sfwDataField="start_date" sfwDataType="DateTime" sfwDataFormat="{0:d}" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capEndDate" Text="End Date : " AssociatedControlID="txtEndDate" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtEndDate" sfwDataField="end_date" sfwDataType="DateTime" sfwDataFormat="{0:d}" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capAudienceValue" Text="Audience : " AssociatedControlID="ddlAudienceValue" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlAudienceValue" sfwDataField="audience_value" sfwOperator="=" sfwLoadType="CodeGroup" sfwData1EqualTo="Y" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnSearch" sfwMethodName="btnSearch_Click" sfwOperateOn="tblCriteria" Text="Search" />
+                <sfwButton ID="btnReset" sfwMethodName="btnReset_Click" sfwOperateOn="tblCriteria" Text="Reset" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwButton ID="btnStoreSearch" sfwMethodName="btnStoreUserDefaults_Click" sfwOperateOn="tblCriteria" Text="Store Search" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlResult" sfwCaption="Search Results">
+          <sfwTable ID="tblResult" CssClass="Table">
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnNew" ImageUrl="~/Image/gNew.gif" sfwMethodName="btnNew_Click" sfwOperateOn="tblCriteria" Text="New" />
+                <sfwButton ID="btnOpen" ImageUrl="~/Image/gOpen.gif" sfwMethodName="btnOpen_Click" sfwRelatedControl="dgrResult" Text="Open" sfwNavigationParameter="aintPrimaryKey=ElectionId" />
+                <sfwButton ID="btnDelete" ImageUrl="~/Image/gDelete.gif" sfwMethodName="btnDelete_Click" sfwRelatedControl="dgrResult" Text="Delete" />
+                <sfwButton ID="btnExportExcel" ImageUrl="~/Image/gExport.gif" sfwMethodName="btnColumnsToExport_Click" sfwRelatedControl="dgrResult" Text="Export To Excel" />
+                <sfwButton ID="btnOpenElectionReport" sfwMethodName="btnDownload_Click" Text="Election Report" sfwRelatedControl="dgrResult" CssClass="hideControl" sfwObjectMethod="GenerateElectionResultReport" sfwNavigationParameter="aintElectionId=ElectionId" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwGridView ID="dgrResult" AllowPaging="True" AllowSorting="True" sfwSelection="Many">
+                  <Columns>
+                    <TemplateField HeaderText="Election ID">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="ElectionId" sfwLinkable="True" sfwRelatedControl="btnOpen" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Term Start Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="TermStartDate" sfwDataFormat="{0:d}" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="TermEndDate">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="TermEndDate" sfwDataFormat="{0:d}" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Election Start Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="StartDate" sfwDataFormat="{0:d}" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Election End Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="EndDate" sfwDataFormat="{0:d}" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Audience">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="AudienceDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Votes Cast">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="iintNoOfVotesCast" sfwShowZero="True" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Election Results" sfwShowInExportToExcel="False">
+                      <ItemTemplate>
+                        <sfwLabel ID="lblOpenElectionResultsReport" sfwVisibleRule="Visible Rule - Is Election Results Report Visible" sfwLinkable="True" Text="Election Results" sfwRelatedControl="btnOpenElectionReport" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+  </sfwTable>
+  <ExtraFields />
+</form>

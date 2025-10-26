@@ -1,0 +1,57 @@
+﻿<entity ID="entOrgContactRole" sfwTableName="sgt_org_contact_role" sfwObjectID="cdoOrgContactRole" sfwObjectType="NeoSpin.CustomDataObjects.cdoOrgContactRole" sfwDataObjectID="doOrgContactRole">
+  <queries>
+    <query ID="GetOrgContactByRole" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_ORG_CONTACT OC&#xD;&#xA;INNER JOIN SGT_ORG_CONTACT_ROLE OCR ON OC.ORG_CONTACT_ID = OCR.ORG_CONTACT_ID &#xD;&#xA;WHERE OC.ORG_ID = @ORG_ID AND OCR.CONTACT_ROLE_VALUE =@CONTACT_ROLE_VALUE">
+      <parameters>
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+        <parameter ID="@CONTACT_ROLE_VALUE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="CheckPrimaryAuthorizedAgentContactExists" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_ORG_CONTACT c INNER JOIN SGT_ORG_CONTACT_ROLE d on c.ORG_CONTACT_ID=d.ORG_CONTACT_ID&#xD;&#xA;&#xD;&#xA;WHERE C.ORG_CONTACT_ID=@ORG_CONTACT_ID AND D.CONTACT_ROLE_VALUE='PAAG'">
+      <parameters>
+        <parameter ID="@ORG_CONTACT_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetContactPlanRoles" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="  select OC.CONTACT_ID,OC.ORG_CONTACT_ID,OC.PLAN_ID as plan_id,OCR.CONTACT_ROLE_VALUE,&#xD;&#xA;  SGT_PLAN.PLAN_NAME as plan_name, CV.DeScription as contact_role_value_description &#xD;&#xA;  from  SGT_ORG_CONTACT OC &#xD;&#xA;  left join SGT_ORG_CONTACT_ROLE OCR on OC.ORG_CONTACT_ID =OCR.ORG_CONTACT_ID&#xD;&#xA;  left join SGT_PLAN ON SGT_PLAN.PLAN_ID=OC.PLAN_ID&#xD;&#xA;  inner join SGS_CODE_VALUE CV ON CV.CODE_ID=OCR.CONTACT_ROLE_ID and CV.CODE_Value=OCR.CONTACT_ROLE_VALUE&#xD;&#xA;  where  OC.CONTACT_ID=@contact_id">
+      <parameters>
+        <parameter ID="@contact_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetContactPlanRolesPivot" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="DECLARE @DynamicPivotQuery AS NVARCHAR(MAX);&#xD;&#xA;DECLARE @ColumnName AS NVARCHAR(MAX);&#xD;&#xA;&#xD;&#xA;CREATE table #t&#xD;&#xA;(plan_id int, plan_name varchar(50), contact_role_value_description varchar(100))&#xD;&#xA;INSERT INTO #t(plan_id , plan_name , contact_role_value_description ) &#xD;&#xA; select OC.PLAN_ID as plan_id,&#xD;&#xA;  Replace(Replace(Replace(Replace(Replace(SGT_PLAN.PLAN_NAME, ' ','_'),'/','_'),'(','_'),')',''),'-','_') as plan_name, CV.DeScription as contact_role_value_description &#xD;&#xA;  from  SGT_ORG_CONTACT OC &#xD;&#xA;  left join SGT_ORG_CONTACT_ROLE OCR on OC.ORG_CONTACT_ID =OCR.ORG_CONTACT_ID&#xD;&#xA;  left join SGT_PLAN ON SGT_PLAN.PLAN_ID=OC.PLAN_ID&#xD;&#xA;  inner join SGS_CODE_VALUE CV ON CV.CODE_ID=OCR.CONTACT_ROLE_ID and CV.CODE_Value=OCR.CONTACT_ROLE_VALUE&#xD;&#xA;  where  OC.CONTACT_ID=@contact_id;&#xD;&#xA;&#xD;&#xA; &#xD;&#xA;&#xD;&#xA;SELECT @ColumnName= ISNULL(@ColumnName + ',','') &#xD;&#xA;       + QUOTENAME(plan_name)&#xD;&#xA;FROM (select DISTINCT&#xD;&#xA;  Replace(Replace(Replace(Replace(Replace(SGT_PLAN.PLAN_NAME, ' ','_'),'/','_'),'(','_'),')',''),'-','_') as plan_name&#xD;&#xA;  from  SGT_PLAN) AS Plans;&#xD;&#xA; &#xD;&#xA;&#xD;&#xA;SET @DynamicPivotQuery = &#xD;&#xA;  N'SELECT contact_role_value_description, ' + @ColumnName + '&#xD;&#xA;    FROM #t&#xD;&#xA;    PIVOT(Max(plan_id) &#xD;&#xA;          FOR plan_name IN (' + @ColumnName + ')) AS PVTTable';&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;EXEC ( @DynamicPivotQuery);&#xD;&#xA;&#xD;&#xA;drop TABLE #t;">
+      <parameters>
+        <parameter ID="@contact_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetContactPlanRolesGroupByRoles" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="declare @SORT_ORDER int;&#xD;&#xA;DECLARE @RoleDescription AS NVARCHAR(MAX);&#xD;&#xA;DECLARE @RoleDescriptionRpt AS NVARCHAR(MAX);&#xD;&#xA;DECLARE @PLAN_NAME AS NVARCHAR(MAX);&#xD;&#xA;DECLARE @DynamicPivotQuery AS NVARCHAR(MAX);&#xD;&#xA;DECLARE @CONTACT_ROLE_VALUE AS NVARCHAR(MAX);&#xD;&#xA;DECLARE @PAAGFlag char(1)&#xD;&#xA;SET @PAAGFlag='N'&#xD;&#xA;&#xD;&#xA;CREATE table #t&#xD;&#xA;(contact_role_description varchar(100), plan_name varchar(50), CONTACT_ROLE_VALUE varchar(50),SORT_ORDER int)&#xD;&#xA;&#xD;&#xA;DECLARE db_cursor CURSOR FOR &#xD;&#xA;SELECT CV.DESCRIPTION,E.PLAN_NAME,F.CONTACT_ROLE_VALUE, E.SORT_ORDER  FROM SGT_ORG_CONTACT A &#xD;&#xA; INNER JOIN SGT_ORGANIZATION B &#xD;&#xA;  ON A.ORG_ID=B.ORG_ID&#xD;&#xA; INNER JOIN SGT_CONTACT C&#xD;&#xA;  ON A.CONTACT_ID=C.CONTACT_ID&#xD;&#xA; INNER JOIN SGT_ORG_CONTACT_ROLE F&#xD;&#xA;  ON A.ORG_CONTACT_ID=F.ORG_CONTACT_ID&#xD;&#xA; INNER JOIN SGS_CODE_VALUE CV ON F.CONTACT_ROLE_VALUE=CV.CODE_VALUE and F.CONTACT_ROLE_ID=CV.CODE_ID&#xD;&#xA; LEFT JOIN SGT_PLAN E&#xD;&#xA;  ON A.PLAN_ID=E.PLAN_ID&#xD;&#xA;WHERE A.CONTACT_ID=@contact_id and A.ORG_ID=@ORG_ID and A.STATUS_VALUE &lt;&gt;'INCV'&#xD;&#xA;GROUP BY CV.DeScription,E.PLAN_NAME,F.CONTACT_ROLE_VALUE,E.SORT_ORDER ORDER BY CV.DESCRIPTION,E.SORT_ORDER&#xD;&#xA;&#xD;&#xA;OPEN db_cursor&#xD;&#xA;&#xD;&#xA;FETCH Next from db_cursor&#xD;&#xA;into @RoleDescription,@PLAN_NAME,@CONTACT_ROLE_VALUE,@SORT_ORDER&#xD;&#xA;&#xD;&#xA;WHILE @@FETCH_STATUS = 0&#xD;&#xA;BEGIN&#xD;&#xA;IF((@CONTACT_ROLE_VALUE='PAAG'))&#xD;&#xA;Begin&#xD;&#xA;&#x9;IF(@PAAGFlag='N')&#xD;&#xA;&#x9;Begin&#xD;&#xA;&#x9;&#x9;insert INTO #t(contact_role_description, plan_name,CONTACT_ROLE_VALUE,SORT_ORDER) VALUES(CASE WHEN @RoleDescriptionRpt=@RoleDescription THEN '' ELSE @RoleDescription END, null,@CONTACT_ROLE_VALUE,@SORT_ORDER)&#xD;&#xA;&#x9;&#x9;set @RoleDescriptionRpt=@RoleDescription;&#xD;&#xA;&#x9;&#x9;set @PAAGFlag='Y';&#xD;&#xA;&#x9;End&#xD;&#xA;&#x9;Else&#xD;&#xA;&#x9;Begin&#xD;&#xA;&#x9;&#x9;set @RoleDescriptionRpt=@RoleDescription;&#xD;&#xA;&#x9;End&#xD;&#xA;&#x9;FETCH NEXT FROM db_cursor&#xD;&#xA;&#x9;INTO @RoleDescription,@PLAN_NAME,@CONTACT_ROLE_VALUE,@SORT_ORDER&#xD;&#xA;End&#xD;&#xA;else&#xD;&#xA;Begin&#xD;&#xA;insert INTO #t(contact_role_description, plan_name,CONTACT_ROLE_VALUE,SORT_ORDER) VALUES(CASE WHEN @RoleDescriptionRpt=@RoleDescription THEN '' ELSE @RoleDescription END, @PLAN_NAME,@CONTACT_ROLE_VALUE,@SORT_ORDER)&#xD;&#xA;set @RoleDescriptionRpt=@RoleDescription;&#xD;&#xA;FETCH NEXT FROM db_cursor&#xD;&#xA;INTO @RoleDescription,@PLAN_NAME,@CONTACT_ROLE_VALUE,@SORT_ORDER&#xD;&#xA;End&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;END&#xD;&#xA;&#xD;&#xA;CLOSE db_cursor&#xD;&#xA;DEALLOCATE db_cursor&#xD;&#xA;&#xD;&#xA;SET @DynamicPivotQuery = 'SELECT * from #t order by (case when contact_role_value like ''PAAG'' then 0 else 1 end), contact_role_value'&#xD;&#xA;&#xD;&#xA;EXEC ( @DynamicPivotQuery);&#xD;&#xA;&#xD;&#xA;drop TABLE #t;">
+      <parameters>
+        <parameter ID="@contact_id" />
+        <parameter ID="@ORG_ID" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute sfwValue="org_contact_role_id" sfwType="Column" sfwKeyNo="1" sfwIsIdentity="True" sfwDataType="int" sfwDBDataType="int" sfwIsNull="False" ID="OrgContactRoleId" sfwCaption="ID" />
+    <attribute sfwValue="org_contact_id" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="False" ID="OrgContactId" sfwCaption="Org Contact Id" />
+    <attribute sfwValue="contact_role_id" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="True" ID="ContactRoleId" sfwCodeID="515" sfwCaption="Contact Role" />
+    <attribute sfwValue="contact_role_value" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="4" sfwIsNull="True" ID="ContactRoleValue" sfwCaption="Contact Role" />
+    <attribute sfwValue="created_by" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="50" sfwIsNull="False" ID="CreatedBy" sfwCaption="Created By" />
+    <attribute sfwValue="created_date" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="datetime" sfwDBDataType="datetime" sfwIsNull="False" ID="CreatedDate" sfwCaption="Created Date" />
+    <attribute sfwValue="modified_by" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="50" sfwIsNull="False" ID="ModifiedBy" sfwCaption="Modified By" />
+    <attribute sfwValue="modified_date" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="datetime" sfwDBDataType="datetime" sfwIsNull="False" ID="ModifiedDate" sfwCaption="Modified Date" />
+    <attribute sfwValue="update_seq" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="False" ID="UpdateSeq" sfwCaption="Update Seq" />
+    <attribute sfwType="Description" ID="ContactRoleDescription" sfwCaption="Contact Role" sfwValue="contact_role_description" />
+    <attribute ID="lstPlanName" sfwDataType="string" sfwPrivate="False" sfwValue="plan_name" sfwType="Property" />
+  </attributes>
+  <constraint />
+  <rules />
+  <initialload />
+  <softerror />
+  <harderror />
+  <validatedelete />
+  <delete />
+  <groupslist />
+  <checklist />
+  <methods />
+  <lifecycle />
+  <objectmethods />
+  <ExtraFields />
+</entity>

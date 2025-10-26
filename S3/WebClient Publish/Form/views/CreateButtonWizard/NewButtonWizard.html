@@ -1,0 +1,86 @@
+﻿<div class="full-height" ng-controller="NewButtonWizardController">
+    <wizard wizard-title-update hide-indicators="true" on-finish="OnFinishClick()" current-step="SelectedStep" class="full-height" id="ScopeId_{{$id}}">
+        <wz-step wz-title="Grid Select" wz-disabled="{{IsPopupStepDisable}}" class="full-height"
+                 ng-if="!IsPopupStepDisable">
+            <div ng-include="'Form/views/CreateButtonWizard/NewButtonDialog.html'" class="full-height" />
+        </wz-step>
+        <wz-step wz-title="Create New Grid" wz-disabled="{{IsPopupStepDisable}}" class="full-height"
+                 ng-if="!IsPopupStepDisable">
+            <div ng-include="'Form/views/CreateButtonWizard/CreateNewGrid.html'" class="full-height" />
+        </wz-step>
+        <wz-step wz-title="Grid Object Field" wz-disabled="{{IsPopupStepDisable}}" class="full-height"
+                 ng-if="!IsPopupStepDisable">
+            <div ng-include="'Form/views/CreateButtonWizard/GridObjectField.html'" class="full-height" />
+        </wz-step>
+        <wz-step wz-title="Grid Field Control" wz-disabled="{{IsPopupStepDisable}}" class="full-height"
+                 ng-if="!IsPopupStepDisable">
+            <div ng-include="'Form/views/CreateButtonWizard/GridFieldControls.html'" class="full-height" />
+        </wz-step>
+        <wz-step wz-title="Common Properties" wz-disabled="{{IsNewSaveStepsDisable && IsOpenWordDocStepsDisable && IsGeneralPropStepsDisable}}"
+                 class="full-height" ng-if="!IsNewSaveStepsDisable || !IsOpenWordDocStepsDisable || !IsGeneralPropStepsDisable">
+            <div class="portlet-body">
+                <div newbuttoncommonproptemplate />
+            </div>
+            <div class="form-actions">
+                <input type="button" class="dialog-btn" value="Cancel" ng-click="CloseWizardClick()" />
+                <input type="button" class="dialog-btn" wz-previous="onPrevious()" value="Back" disabled="disabled" />
+                <input type="button" class="dialog-btn" wz-next="onNext()" value="Next" ng-click="objNewButtonNaviagtionParam.Init()" ng-disabled="isAnyErrors()" />
+                <input type="button" class="dialog-btn" wz-finish value="Finish" ng-click="onFinishButtonWizardClick()" disabled="disabled" />
+            </div>
+        </wz-step>
+        <wz-step wz-title="Set Execute Method" wz-disabled="{{IsNewFilterGridSearchCriteriaStepDisable && IsNewExecuteStepsDisable && IsNewExecuteBusinessStepsDisable}}"
+                 class="full-height" ng-if="!IsNewFilterGridSearchCriteriaStepDisable || !IsNewExecuteStepsDisable || !IsNewExecuteBusinessStepsDisable">
+            <div ng-include="'Form/views/CreateButtonWizard/NewButtonServerMethods.html'" class="full-height" />
+        </wz-step>
+
+        <wz-step wz-title="Set Active Form" wz-disabled="{{IsNewButtonStepDisable}}" class="full-height"
+                 ng-if="!IsNewButtonStepDisable">
+            <div ng-include="'Form/views/CreateButtonWizard/NewButtonActiveForm.html'" class="full-height" />
+        </wz-step>
+        <wz-step wz-title="Set Open Doc Navigation Parameter" wz-disabled="{{IsOpenWordDocStepsDisable}}"
+                 ng-if="!IsOpenWordDocStepsDisable" class="full-height">
+            <div ng-include="'Form/views/CreateButtonWizard/OpenWordDocNavigationParam.html'" class="full-height" />
+        </wz-step>
+        <wz-step wz-title="Set Navigation Parameter" wz-disabled="{{IsNewButtonStepDisable && IsNewSaveStepsDisable && IsNewExecuteStepsDisable}}"
+                 class="full-height" ng-if="!IsNewButtonStepDisable || !IsNewSaveStepsDisable || !IsNewExecuteStepsDisable">
+            <div ng-include="'Form/views/CreateButtonWizard/NewButtonNavigationParameter.html'" class="full-height" />
+        </wz-step>
+        <wz-step wz-title="Set Button General Properties" wz-disabled="{{IsNewButtonStepDisable && IsNewSaveStepsDisable && IsOpenWordDocStepsDisable && IsNewExecuteStepsDisable && IsNewExecuteBusinessStepsDisable && IsGeneralPropStepsDisable}}"
+                 class="full-height" ng-if="!IsNewButtonStepDisable || !IsNewSaveStepsDisable || !IsOpenWordDocStepsDisable || !IsNewExecuteStepsDisable || !IsNewExecuteBusinessStepsDisable || !IsGeneralPropStepsDisable">
+            <div ng-include="'Form/views/CreateButtonWizard/NewButtonGeneralProperties.html'" class="full-height" />
+        </wz-step>
+        <wz-step wz-title="Set Custom Attributes" wz-disabled="{{IsNewButtonStepDisable && IsNewSaveStepsDisable && IsOpenWordDocStepsDisable && IsNewExecuteStepsDisable && IsNewExecuteBusinessStepsDisable && IsGeneralPropStepsDisable}}"
+                 class="full-height" ng-if="!IsNewButtonStepDisable || !IsNewSaveStepsDisable || !IsOpenWordDocStepsDisable || !IsNewExecuteStepsDisable || !IsNewExecuteBusinessStepsDisable || !IsGeneralPropStepsDisable">
+            <div class="portlet-body">
+                <div class="full-height" ng-include="'Form/views/CreateButtonWizard/NewButtonCustomAttributes.html'" />
+            </div>
+            <div class="form-actions">
+                <input type="button" class="dialog-btn" value="Cancel" ng-click="CloseWizardClick()" />
+                <input type="button" class="dialog-btn" wz-previous="onPrevious()" value="Back" ng-click="objNewButtonCustomAttr.OnBackToGeneralPropClick()" />
+                <input type="button" class="dialog-btn" wz-next="onNext()" value="Next" ng-click="objNewButtonCustomAttr.OnNextClick()" ng-disabled="isAnyErrors()" />
+                <input type="button" class="dialog-btn" wz-finish value="Finish" ng-click="onFinishButtonWizardClick()" disabled="disabled" />
+            </div>
+        </wz-step>
+        <wz-step wz-title="Set User Log Parameters" wz-disabled="{{IsNewButtonStepDisable && IsNewSaveStepsDisable && IsOpenWordDocStepsDisable && IsNewExecuteStepsDisable && IsNewExecuteBusinessStepsDisable && IsGeneralPropStepsDisable}}"
+                 class="full-height" ng-if="!IsNewButtonStepDisable || !IsNewSaveStepsDisable || !IsOpenWordDocStepsDisable || !IsNewExecuteStepsDisable || !IsNewExecuteBusinessStepsDisable || !IsGeneralPropStepsDisable">
+            <div class="portlet-body">
+                <div class="full-height" ng-include="'Form/views/CreateButtonWizard/NewButtonCustomAttributes.html'" />
+            </div>
+            <div class="form-actions">
+                <input type="button" class="dialog-btn" value="Cancel" ng-click="CloseWizardClick()" />
+                <input type="button" class="dialog-btn" wz-previous="onPrevious()" value="Back" ng-click="objNewButtonCustomAttr.OnBackClick()" />
+                <input type="button" class="dialog-btn" wz-next="onNext()" value="Next" disabled="disabled" />
+                <input type="button" class="dialog-btn" wz-finish value="Finish" ng-click="onFinishButtonWizardClick()" />
+            </div>
+        </wz-step>
+        <wz-step wz-title="Set New/Related Grid" wz-disabled="{{IsNewGridStepDisable}}" class="full-height" ng-if="!IsNewGridStepDisable">
+            <div ng-include="'Form/views/CreateButtonWizard/NewButtonGrid.html'" class="full-height" />
+        </wz-step>
+        <wz-step wz-title="Set Filter Grid Search Criteria" wz-disabled="{{IsNewGridStepDisable}}" class="full-height" ng-if="!IsNewGridStepDisable">
+            <div ng-include="'Form/views/CreateButtonWizard/NewButtonFilterGridCriteria.html'" class="full-height" />
+        </wz-step>
+        <wz-step wz-title="Set Grid Columns" class="full-height" wz-disabled="{{IsNewGridStepDisable}}" ng-if="!IsNewGridStepDisable">
+            <div ng-include="'Form/views/CreateButtonWizard/FilterGridResultFields.html'" class="full-height" />
+        </wz-step>
+    </wizard>
+</div>

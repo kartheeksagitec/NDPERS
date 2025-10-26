@@ -1,0 +1,124 @@
+﻿<entity ID="entPlan" sfwActive="True" sfwStatus="Valid" sfwRemoteObject="srvOrganization" sfwType="BusinessRule" sfwMainCDO="icdoPlan" sfwObjectID="busPlan" sfwTableName="sgt_plan" sfwView="False">
+  <rules>
+    <rule ID="Rule Check if benefit type is not selected" sfwMessageId="4079" sfwExpression="(string.IsNullOrEmpty(this.icdoPlan.benefit_type_value))" sfwObjectBased="True" />
+    <rule ID="Rule check if plan code duplicates" sfwMessageId="4088" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entPlan.CheckPlanCodeDuplicates&quot;, this.icdoPlan.plan_code) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="Rule Check If Plan Code is null" sfwMessageId="4089" sfwExpression="(string.IsNullOrEmpty(this.icdoPlan.plan_code))" sfwObjectBased="True" />
+    <rule ID="Rule Check plan name is null" sfwMessageId="4090" sfwExpression="(string.IsNullOrEmpty(this.icdoPlan.plan_name))" sfwObjectBased="True" />
+    <rule ID="Visible Rule Check Benefit Type is Retirement" sfwExpression="(this.icdoPlan.benefit_type_value == &quot;RETR&quot;)" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="Visible Rule Check Benefit Type is Retirement" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="Rule Check if benefit type is not selected" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule check if plan code duplicates" sfwMode="New" sfwStatus="Active" />
+    <item ID="Rule Check If Plan Code is null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check plan name is null" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <expressionfields />
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_PLAN  ORDER BY SORT_ORDER">
+      <parameters />
+    </query>
+    <query ID="CheckPlanCodeDuplicates" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select count(*) from sgt_plan&#xD;&#xA;where plan_code = @plan_code">
+      <parameters>
+        <parameter ID="@plan_code" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="InsurancePlans" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_PLAN WHERE BENEFIT_TYPE_VALUE='INSR'">
+      <parameters />
+    </query>
+    <query ID="DeffComplans" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_PLAN WHERE BENEFIT_TYPE_VALUE='DEFF'">
+      <parameters />
+    </query>
+    <query ID="RetirementPlansExceptOasis" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select *,case plan_id &#xD;&#xA;when 1 then 'Main' &#xD;&#xA;when 3 then 'National Guard'&#xD;&#xA;when 2 then 'Public Safety With Prior Service'&#xD;&#xA;when 20 then 'Public Safety Without Prior Service'&#xD;&#xA;when 5 then 'Judges'&#xD;&#xA;when 4 then 'Highway Patrol'&#xD;&#xA;when 6 then 'Job Service'&#xD;&#xA;when 7 then 'Defined Contribution'&#xD;&#xA;when 26 then 'BCI Law Enforcement'&#xD;&#xA;when 27 then 'Main 2020'&#xD;&#xA;when 28 then 'Defined Contribution 2020 - No RHIC'&#xD;&#xA;when 29 then 'State Public Safety'&#xD;&#xA;when 30 then 'Defined Contribution 2025'&#xD;&#xA;end as pln&#xD;&#xA; from sgt_plan where BENEFIT_TYPE_VALUE = 'RETR' and plan_code not in ('OASS','JBTP','PJDS','PSRV') &#xD;&#xA;order by case plan_id &#xD;&#xA;when 1 then 1 &#xD;&#xA;when 3 then 2 &#xD;&#xA;when 2 then 3&#xD;&#xA;when 20 then 4&#xD;&#xA;when 5 then 5&#xD;&#xA;when 4 then 6&#xD;&#xA;when 6 then 7&#xD;&#xA;when 7 then 8&#xD;&#xA;when 26 then 9&#xD;&#xA;when 27 then 1&#xD;&#xA;when 28 then 8&#xD;&#xA;when 29 then 10&#xD;&#xA;when 30 then 8&#xD;&#xA;end">
+      <parameters />
+    </query>
+    <query ID="DBPlans" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_PLAN WHERE BENEFIT_TYPE_VALUE='RETR' and RETIREMENT_TYPE_VALUE='DB' AND PLAN_ID NOT IN (24,25)">
+      <parameters />
+    </query>
+    <query ID="NR_DBPlans" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_PLAN WITH(NOLOCK) WHERE &#xD;&#xA;(BENEFIT_TYPE_VALUE='RETR' AND RETIREMENT_TYPE_VALUE='DB') OR&#xD;&#xA;(BENEFIT_TYPE_VALUE='DEFF') AND PLAN_ID NOT IN (24,25)&#xD;&#xA;ORDER BY BENEFIT_TYPE_VALUE DESC">
+      <parameters />
+    </query>
+    <query ID="NR_InsurancePlans" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_PLAN WITH(NOLOCK) WHERE BENEFIT_TYPE_VALUE IN ('INSR','FLEX') ORDER BY BENEFIT_TYPE_VALUE DESC">
+      <parameters />
+    </query>
+    <query ID="RetirementPlans" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select distinct p.* from SGT_PLAN P&#xD;&#xA;INNER JOIN SGT_ORG_PLAN ORGPLAN&#xD;&#xA;ON P.PLAN_ID=ORGPLAN.PLAN_ID&#xD;&#xA;where BENEFIT_TYPE_VALUE=@BENEFIT_TYPE_VALUE AND ORGPLAN.ORG_ID=@org_id">
+      <parameters>
+        <parameter ID="@org_id" sfwDataType="int" />
+        <parameter ID="@BENEFIT_TYPE_VALUE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="OrgSpecificPlans" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql=" select * from SGT_PLAN   sp  inner join SGT_ORG_plan op  on op.PLAN_ID = sp.PLAN_ID&#xD;&#xA;where op.ORG_ID = @org_id and (op.PARTICIPATION_END_DATE is null or op.PARTICIPATION_END_DATE &gt; @CurrentDate) order by SORT_ORDER, PLAN_NAME desc">
+      <parameters>
+        <parameter ID="@org_id" sfwDataType="int" />
+        <parameter ID="@CurrentDate" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="GetOrgSpecificPlanWithdate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="/*REMOVED CURRENT DATE CONDITION, ADJUSTMENTS CAN ALSO BE DONE FOR A RETRO DATE*/&#xD;&#xA;select DISTINCT SP.* from SGT_PLAN   sp  inner join SGT_ORG_plan op  on op.PLAN_ID = sp.PLAN_ID&#xD;&#xA;where op.ORG_ID = @org_id AND BENEFIT_TYPE_VALUE=@BENEFIT_TYPE_VALUE">
+      <parameters>
+        <parameter ID="@org_id" sfwDataType="int" />
+        <parameter ID="@CurrentDate" sfwDataType="DateTime" />
+        <parameter ID="@BENEFIT_TYPE_VALUE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="GetOrgSpecificPlansDetailLookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from SGT_PLAN   sp  inner join SGT_ORG_plan op  on op.PLAN_ID = sp.PLAN_ID&#xD;&#xA;where op.ORG_ID = @org_id and (op.PARTICIPATION_END_DATE is null or op.PARTICIPATION_END_DATE &gt; getdate())&#xD;&#xA;AND BENEFIT_TYPE_VALUE=@BENEFIT_TYPE_VALUE">
+      <parameters>
+        <parameter ID="@org_id" sfwDataType="int" />
+        <parameter ID="@BENEFIT_TYPE_VALUE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="PlansForIBSDetailLookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql=" Select *,case plan_id &#xD;&#xA;when 12 then 'Health' &#xD;&#xA;when 16 then 'Dental'&#xD;&#xA;when 17 then 'Vision'&#xD;&#xA;when 13 then 'Life'&#xD;&#xA;when 9 then 'Medicare Part D'&#xD;&#xA;end as pln&#xD;&#xA; from sgt_plan where PLAN_ID in (9,12,13,16,17) &#xD;&#xA;order by case plan_id &#xD;&#xA;when 12 then 1 &#xD;&#xA;when 16 then 2 &#xD;&#xA;when 17 then 3&#xD;&#xA;when 13 then 4&#xD;&#xA;when 9 then 5&#xD;&#xA;end&#xD;&#xA;">
+      <parameters />
+    </query>
+    <query ID="InsuranceAndRetirementPlans" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_PLAN WHERE BENEFIT_TYPE_VALUE IN('INSR','DEFF','RETR') ORDER BY SORT_ORDER">
+      <parameters />
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="PlanId" sfwType="Column" sfwValue="plan_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PlanName" sfwType="Column" sfwValue="plan_name" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="BenefitTypeDescription" sfwType="Description" sfwValue="benefit_type_description" />
+    <attribute ID="BenefitTypeId" sfwType="Column" sfwValue="benefit_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="250" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="BenefitTypeValue" sfwType="Column" sfwValue="benefit_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PlanCode" sfwType="Column" sfwValue="plan_code" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="AllowNewMemberEnrollFlag" sfwType="Column" sfwValue="allow_new_member_enroll_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="AllowDepositFlag" sfwType="Column" sfwValue="allow_deposit_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="AllowNewEmployerFlag" sfwType="Column" sfwValue="allow_new_employer_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="AllowProviderFlag" sfwType="Column" sfwValue="allow_provider_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="BankAccountTypeDescription" sfwType="Description" sfwValue="bank_account_type_description" />
+    <attribute ID="BankAccountTypeId" sfwType="Column" sfwValue="bank_account_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="1201" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="BankAccountTypeValue" sfwType="Column" sfwValue="bank_account_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="RetirementTypeDescription" sfwType="Description" sfwValue="retirement_type_description" />
+    <attribute ID="RetirementTypeId" sfwType="Column" sfwValue="retirement_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="251" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="RetirementTypeValue" sfwType="Column" sfwValue="retirement_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="AllowInterestPosting" sfwType="Column" sfwValue="allow_interest_posting" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AllowPepCalculation" sfwType="Column" sfwValue="allow_pep_calculation" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="VscThresholdMonths" sfwType="Column" sfwValue="vsc_threshold_months" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="SortOrder" sfwType="Column" sfwValue="sort_order" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="BenefitProvisionId" sfwType="Column" sfwValue="benefit_provision_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ApplyRhicFlag" sfwType="Column" sfwValue="apply_rhic_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="IncludeInRetireeAnnualStatementFlag" sfwType="Column" sfwValue="include_in_retiree_annual_statement_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute sfwType="Collection" sfwEntity="entPlanRetirementRate" ID="lstRetirementRate" sfwValue="iclbRetirementRate" />
+    <attribute sfwDataType="string" sfwType="Property" ID="MssPlanName" sfwValue="icdoPlan.mss_plan_name" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPLANNAME" sfwValue="icdoPlan.istr_PLAN_NAME" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrBENEFITTYPEDESCRIPTION" sfwValue="icdoPlan.istr_BENEFIT_TYPE_DESCRIPTION" />
+    <attribute sfwDataType="boolean" sfwType="Property" ID="IsPlanJobService" sfwValue="icdoPlan.IsPlanJobService" />
+  </attributes>
+  <constraint />
+  <methods />
+  <lifecycle />
+  <objectmethods />
+</entity>

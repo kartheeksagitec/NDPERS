@@ -1,0 +1,82 @@
+﻿<div>
+    <table class='form-editable-table form-editable-grid' control-head ng-click='selectControl(model,$event)' ng-dblclick='selectControlOnDoubleClick(model,$event)'
+           ng-if="formodel.dictAttributes.ID.startsWith('wfp') || (formodel.dictAttributes.ID.startsWith('udc') && formodel.dictAttributes.sfwEntity === 'entPrototype')">
+        <tr>
+            <td colspan={{getHeaderColspan(model)}} ng-class='{ "select-gridview-control" : model.IsSelected , "form-editable-grid-head" : !model.IsSelected, "bckgGrey": model.isAdvanceSearched, "bckgGreen": model.isAdvanceSearched && model.IsSelected }'>
+                <span ng-bind='getValue(model)' class='marg-right-10'></span>
+                <img ng-hide='$parent.IsDataView' title='Data View' class='proto-grid-icons' ng-click='AddShowDataRow(model,false,$event);$parent.IsDataView=true' src='images/Form/proto-grid-code-view.png' />
+                <img ng-show='$parent.IsDataView' title='Design View' class='proto-grid-icons' ng-click='ShowGridDesingView(model)' src='images/Form/proto-grid-design-view.png' />
+                <img ng-show='$parent.IsDataView' title='Add Data' class='proto-grid-icons' src='images/Form/proto-grid-add.png' ng-click='AddShowDataRow(model,true,$event)' />
+                <img ng-show='$parent.IsDataView' title='Delete Data' class='proto-grid-icons' src='images/Form/proto-grid-delete.png' ng-click='DeleteDataRow(model)' />
+                <img ng-show='$parent.IsDataView' title='Move Up' class='proto-grid-icons' src='images/Common/Icon_moveup_white.svg' ng-click='moveUp()' />
+                <img ng-show='$parent.IsDataView' title='Move Down' class='proto-grid-icons' src='images/Common/Icon_movedown_white.svg' ng-click='moveDown()' />
+            </td>
+            <td ng-class='{ "select-gridview-control" : model.IsSelected , "form-editable-grid-head" : !model.IsSelected, "bckgGrey": model.isAdvanceSearched, "bckgGreen": model.isAdvanceSearched && model.IsSelected }' ng-show='$parent.IsDataView'></td>
+        </tr>
+        <tr>
+            <th ng-repeat='ele in model.Elements[0].Elements' dropdata='ele' formodel='formodel' context-menu='templatefieldmenuOptions' ng-init='SetParentVM(model.Elements[0],ele)' control-head
+                ng-click='selectControl(ele,$event)' ng-dblclick='selectControlOnDoubleClick(ele,$event)'
+                ng-class='{ "select-gridview-control" : ele.IsSelected , "bckgGrey": ele.isAdvanceSearched, "bckgGreen": ele.isAdvanceSearched && ele.IsSelected}'>
+                <div ng-class='{"form-invisible-control": ele.dictAttributes.Visible === "False"}'>
+                    <span class='hidden-span' spellcheck=false contenteditable='true' content-editable ng-model='ele.dictAttributes.HeaderText' model='ele'></span>
+                    <input type='button' class='headerfooterbuttonstyle' ng-if='showHeaderTemplate(ele)' ng-click='openHeaderLabelProperty(ele, $event)' value='H' />
+                    <input type='button' ng-if='showFooterTemplate(ele)' ng-click='openFooterLabelProperty(ele, $event)' value='F' class='headerfooterbuttonstyle' />
+                </div>
+            </th>
+            <th ng-show='$parent.IsDataView'></th>
+        </tr>
+        <tr ng-hide=$parent.IsDataView>
+            <td ng-repeat='ele in model.Elements[0].Elements' dropdata='ele' formodel='formodel' context-menu='itemtemplatemenuOptions' ng-init='SetParentVM(model,model.Elements[0])' control-head
+                ng-click='selectControl(ele,$event)' ng-dblclick='selectControlOnDoubleClick(ele,$event)'>
+                <base-control-view ng-repeat='itmtemp in ele.Elements[0].Elements' ng-if="itmtemp.Name!='cellformat' " entitytreename='entitytreename' lstdisplayentities='lstdisplayentities'
+                                   objparent='ele.Elements[0]' formodel='formodel' model='itmtemp' ng-init='SetParentVM(ele, ele.Elements[0])' lstloadedentitytrees='lstloadedentitytrees'
+                                   lstloadedentitycolumnstree='lstloadedentitycolumnstree' buttons-collection='buttonsCollection' modelname="{{itmtemp.Name}}"></base-control-view>
+            </td>
+            <td ng-show='$parent.IsDataView'></td>
+        </tr>
+        <tr ng-repeat='ele in model.prototypemodel.Elements' context-menu='[]' ng-click='selectDataRowInPrototypeGrid(ele,$event)' ng-class="selectedDataRow==ele?'select-gridview-control':''" ng-dblclick='ele.isEditable=true' ng-show='$parent.IsDataView'>
+            <td ng-repeat='dataele in ele.Elements'>
+                <div ng-repeat='datacol in dataele.Elements'>
+                    <span ng-if='!ele.isEditable' ng-bind='datacol.dictAttributes.Value'></span>
+                    <input ng-show='ele.isEditable' type='text' title='{{datacol.dictAttributes.Value}}' ng-model='datacol.dictAttributes.Value' class='form-control input-sm' />
+                </div>
+            </td>
+            <td>
+                <i ng-if='ele.isEditable' class='fa fa-close' style='cursor:pointer' ng-click='ele.isEditable=false'></i>
+                <i ng-if='!ele.isEditable' class='fa fa-edit' style='cursor:pointer' ng-click='ele.isEditable=true'></i>
+            </td>
+        </tr>
+    </table>
+
+    <table class='form-editable-table form-editable-grid' control-head ng-click='selectControl(model,$event)' ng-dblclick='selectControlOnDoubleClick(model,$event)'
+           ng-if="!(formodel.dictAttributes.ID.startsWith('wfp') || (formodel.dictAttributes.ID.startsWith('udc') && formodel.dictAttributes.sfwEntity === 'entPrototype'))">
+        <tr>
+            <td colspan={{getHeaderColspan(model)}} ng-class='{ "select-gridview-control" : model.IsSelected , "form-editable-grid-head" : !model.IsSelected, "bckgGrey": model.isAdvanceSearched, "bckgGreen": model.isAdvanceSearched && model.IsSelected }'>
+                <span ng-bind='getValue(model)'></span>
+            </td>
+        </tr>
+        <tr>
+            <th ng-repeat='ele in model.Elements[0].Elements' formcontroldroppable dropdata='ele' formodel='formodel' lstdisplayentities='lstdisplayentities' context-menu='templatefieldmenuOptions'
+                ng-init='SetParentVM(model.Elements[0],ele)' control-head ng-click='selectControl(ele,$event)' ng-dblclick='selectControlOnDoubleClick(ele,$event)'
+                ng-class='{ "select-gridview-control" : ele.IsSelected , "bckgGrey": ele.isAdvanceSearched, "bckgGreen": ele.isAdvanceSearched && ele.IsSelected}'>
+                <div ng-class='{"form-invisible-control": ele.dictAttributes.Visible === "False"}'>
+                    <span class='hidden-span' spellcheck=false contenteditable='true' content-editable ng-model='ele.dictAttributes.HeaderText' model='ele'></span>
+                    <input type='button' class='headerfooterbuttonstyle' ng-if='showHeaderTemplate(ele)' ng-click='openHeaderLabelProperty(ele, $event)' value='H' />
+                    <input type='button' ng-if='showFooterTemplate(ele)' ng-click='openFooterLabelProperty(ele, $event)' value='F' class='headerfooterbuttonstyle' />
+                </div>
+            </th>
+        </tr>
+        <tr>
+            <td ng-repeat='ele in model.Elements[0].Elements' formcontroldroppable dropdata='ele' formodel='formodel' lstdisplayentities='lstdisplayentities' context-menu='itemtemplatemenuOptions'
+                ng-init='SetParentVM(model,model.Elements[0])' control-head ng-click='selectControl(ele,$event)' ng-dblclick='selectControlOnDoubleClick(ele,$event)'>
+                <base-control-view ng-repeat='itmtemp in ele.Elements[0].Elements' ng-if="itmtemp.Name!='cellformat' " entitytreename='entitytreename' lstdisplayentities='lstdisplayentities'
+                                   objparent='ele.Elements[0]' formodel='formodel' model='itmtemp' ng-init='SetParentVM(ele, ele.Elements[0])' lstloadedentitytrees='lstloadedentitytrees'
+                                   lstloadedentitycolumnstree='lstloadedentitycolumnstree' buttons-collection='buttonsCollection' modelname="{{itmtemp.Name}}"></base-control-view>
+            </td>
+        </tr>
+    </table>
+
+
+</div>
+
+

@@ -1,0 +1,438 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entWssEmploymentChangeRequest" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoWssEmploymentChangeRequest" sfwObjectID="busWssEmploymentChangeRequest" sfwTableName="sgt_wss_employment_change_request" sfwView="False">
+  <rules>
+    <rule ID="IsAcknowledgementFlagnotChecked" sfwMessageId="8517" sfwExpression="!(this.istrIsTermsAndConditionsAgreed == &quot;Y&quot;)" sfwObjectBased="True" />
+    <rule ID="IsChangeTypeClassificationChange" sfwExpression="(this.icdoWssEmploymentChangeRequest.change_type_value == &quot;CLSC&quot;)" sfwObjectBased="True" />
+    <rule ID="IsChangeTypeEmpTypeChange" sfwExpression="(this.icdoWssEmploymentChangeRequest.change_type_value == &quot;ETCG&quot;) || &#xA;(this.icdoWssEmploymentChangeRequest.change_type_value == &quot;CLSC&quot;)" sfwObjectBased="True" />
+    <rule ID="IsChangeTypeLOA" sfwExpression="(this.icdoWssEmploymentChangeRequest.change_type_value == &quot;LOAL&quot;) || &#xA;(this.icdoWssEmploymentChangeRequest.change_type_value == &quot;LOAM&quot;) ||&#xA;(this.icdoWssEmploymentChangeRequest.change_type_value == &quot;FMLA&quot;)" sfwObjectBased="True" />
+    <rule ID="IsChangeTypeLOAR" sfwExpression="(this.icdoWssEmploymentChangeRequest.change_type_value == &quot;LOAR&quot;)" sfwObjectBased="True" />
+    <rule ID="IsChangeTypeNull" sfwMessageId="8514" sfwExpression="(string.IsNullOrEmpty(this.icdoWssEmploymentChangeRequest.change_type_value))" sfwObjectBased="True" />
+    <rule ID="IsDateLesserThanEmploymentStartDate" sfwMessageId="8584" sfwExpression="(this.IsDateGreaterThanPersonEmploymentStartDate() == False)" sfwObjectBased="True" />
+    <rule ID="IsDateofLastRegularPaycheckNull" sfwMessageId="8528" sfwExpression="((this.iblnisFromPs == True) &amp;&amp; &#xA;!(this.icdoWssEmploymentChangeRequest.employment_end_date == DateTime.MinValue)) &amp;&amp; &#xA;(this.icdoWssEmploymentChangeRequest.date_of_last_regular_paycheck == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsDateofReturnInvalid" sfwMessageId="8536" sfwExpression="(this.icdoWssEmploymentChangeRequest.date_of_return &lt;= RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.start_date&quot;)) &amp;&amp; &#xA;!(this.icdoWssEmploymentChangeRequest.date_of_return == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsDateOfReturnLessThantoday" sfwMessageId="8512" sfwExpression="!(this.icdoWssEmploymentChangeRequest.date_of_return == DateTime.MinValue) &amp;&amp; &#xA;!(this.icdoWssEmploymentChangeRequest.date_of_return &lt;= RFunc.CurrentDate())" sfwObjectBased="True" />
+    <rule ID="IsDateOfReturnNull" sfwMessageId="8511" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;((RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;LOA&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;LOAM&quot;) ||&#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;FMLA&quot;)) &amp;&amp; &#xA;(this.icdoWssEmploymentChangeRequest.date_of_return == DateTime.MinValue) &amp;&amp; &#xA;(this.icdoWssEmploymentChangeRequest.recertified_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsDateOfReturnValid" sfwMessageId="8575" sfwExpression="!(this.icdoWssEmploymentChangeRequest.date_of_return &lt;= RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.start_date&quot;)) &amp;&amp; &#xA;!(this.icdoWssEmploymentChangeRequest.date_of_return == DateTime.MinValue) &amp;&amp; &#xA;!(this.icdoWssEmploymentChangeRequest.date_of_return &lt;= RFunc.CurrentDate()) &amp;&amp; &#xA;!(this.IsLoaDateOfReturnValid() == True)" sfwObjectBased="True" />
+    <rule ID="IsEmmploymentendDatenull" sfwMessageId="4140" sfwExpression="!(this.iblnisFromPs == True) &amp;&amp; &#xA;(this.icdoWssEmploymentChangeRequest.employment_end_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsEmploymentEndDateLessThanStartDate" sfwMessageId="8524" sfwExpression="!(this.icdoWssEmploymentChangeRequest.employment_end_date == DateTime.MinValue) &amp;&amp; &#xA;(this.icdoWssEmploymentChangeRequest.employment_end_date &lt; RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusPersonEmployment.icdoPersonEmployment.start_date&quot;))" sfwObjectBased="True" />
+    <rule ID="IsEmploymentStastusContributing" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;CONT&quot;)" sfwObjectBased="True" />
+    <rule ID="IsEmploymentStatusLOAOrLOAM" sfwExpression="((RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;LOA&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;LOAM&quot;) ||&#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;FMLA&quot;))" sfwObjectBased="True" />
+    <rule ID="IsEmploymentStatusNull" sfwMessageId="7662" sfwExpression="(string.IsNullOrEmpty(this.icdoWssEmploymentChangeRequest.employment_status_value))" sfwObjectBased="True" />
+    <rule ID="IsEmploymentTypeChangeDateNull" sfwMessageId="854" sfwExpression="(this.icdoWssEmploymentChangeRequest.employment_type_change_effective_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsEmploymentTypeChangeEffectiveDateValid" sfwMessageId="8578" sfwExpression="!(this.icdoWssEmploymentChangeRequest.employment_type_change_effective_date == DateTime.MinValue) &amp;&amp; &#xA;!(this.IsEmploymentTypeChangeEffectiveDateValid() == True)" sfwObjectBased="True" />
+    <rule ID="IsEmploymentTypeNull" sfwMessageId="8515" sfwExpression="(string.IsNullOrEmpty(this.icdoWssEmploymentChangeRequest.type_value))" sfwObjectBased="True" />
+    <rule ID="IsJobClassAppointedOfficialAndOfficiallistNull" sfwMessageId="1061" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;((this.icdoWssEmploymentChangeRequest.job_class_value == &quot;STAP&quot;) || &#xA;(this.icdoWssEmploymentChangeRequest.job_class_value == &quot;NSAP&quot;)) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoWssEmploymentChangeRequest.official_list_value))" sfwObjectBased="True" />
+    <rule ID="IsJobClassChangeDateIsNull" sfwMessageId="8523" sfwExpression="(this.icdoWssEmploymentChangeRequest.job_class_change_effective_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsJobClassEffectiveDateValid" sfwMessageId="8577" sfwExpression="!(this.icdoWssEmploymentChangeRequest.job_class_change_effective_date == DateTime.MinValue) &amp;&amp; &#xA;!(this.IsJobClassEffectiveDateValid() == True)" sfwObjectBased="True" />
+    <rule ID="IsJobClassElectedOfficialandTermBeginDateNull" sfwMessageId="1060" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;((this.icdoWssEmploymentChangeRequest.job_class_value == &quot;NSEO&quot;) || &#xA;(this.icdoWssEmploymentChangeRequest.job_class_value == &quot;SEO&quot;)) &amp;&amp; &#xA;(this.icdoWssEmploymentChangeRequest.term_begin_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsJobClassNull" sfwMessageId="4541" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoWssEmploymentChangeRequest.job_class_value))" sfwObjectBased="True" />
+    <rule ID="IsLastDateOfServiceWithAgencyInvalid" sfwMessageId="8581" sfwExpression="!(this.icdoWssEmploymentChangeRequest.last_date_of_service == DateTime.MinValue) &amp;&amp; &#xA;!(this.IsLastDateOfServiceValid() == True)" sfwObjectBased="True" />
+    <rule ID="IsLastDateofServicewithAgencyNull" sfwMessageId="8527" sfwExpression="((this.iblnisFromPs == True) &amp;&amp; &#xA;!(this.icdoWssEmploymentChangeRequest.employment_end_date == DateTime.MinValue)) &amp;&amp; &#xA;(this.icdoWssEmploymentChangeRequest.last_date_of_service == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsLastMonthOfBillingNull" sfwMessageId="8525" sfwExpression="((this.iblnisFromPs == True) &amp;&amp; &#xA;!(this.icdoWssEmploymentChangeRequest.employment_end_date == DateTime.MinValue)) &amp;&amp; &#xA;(this.icdoWssEmploymentChangeRequest.last_month_on_employer_billing == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsLastRetirementtransmittaldueNull" sfwMessageId="8529" sfwExpression="((this.iblnisFromPs == True) &amp;&amp; &#xA;!(this.icdoWssEmploymentChangeRequest.employment_end_date == DateTime.MinValue)) &amp;&amp; &#xA;(this.icdoWssEmploymentChangeRequest.last_retirement_transmittal_due == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsLastretirementtransmittalofdeductionNull" sfwMessageId="8526" sfwExpression="(this.icdoWssEmploymentChangeRequest.last_retirement_transmittal_of_deduction == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsLOADateInvalid" sfwMessageId="8534" sfwExpression="(this.icdoWssEmploymentChangeRequest.loa_start_date &lt;= RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusPerson.ibusESSPersonEmployment.ibusESSLatestPersonEmploymentDetail.icdoPersonEmploymentDetail.start_date&quot;)) &amp;&amp; &#xA;!(this.icdoWssEmploymentChangeRequest.loa_start_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsLOAStartDateLessThanToday" sfwMessageId="8510" sfwExpression="!(this.icdoWssEmploymentChangeRequest.loa_start_date == DateTime.MinValue) &amp;&amp; &#xA;!(this.icdoWssEmploymentChangeRequest.loa_start_date &lt;= RFunc.CurrentDate())" sfwObjectBased="True" />
+    <rule ID="IsLOAStartDateNull" sfwMessageId="8509" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;(this.icdoWssEmploymentChangeRequest.loa_start_date == DateTime.MinValue) &amp;&amp; &#xA;((RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;NCON&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;CONT&quot;))" sfwObjectBased="True" />
+    <rule ID="IsLoaStartDateValid" sfwMessageId="8574" sfwExpression="!(this.icdoWssEmploymentChangeRequest.loa_start_date == DateTime.MinValue) &amp;&amp; &#xA;!(this.IsLoaStartDateValid() == True)" sfwObjectBased="True" />
+    <rule ID="IsMemberWorkingLessThan12hours" sfwMessageId="8516" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;(this.istrLess12hourWorkIndicator == &quot;Custom&quot;) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoWssEmploymentChangeRequest.seasonal_value))" sfwObjectBased="True" />
+    <rule ID="IsRecertificationDateValid" sfwMessageId="8576" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;!(this.icdoWssEmploymentChangeRequest.recertified_date == DateTime.MinValue) &amp;&amp; &#xA;!(this.IsRecertificationDateValid() == True)" sfwObjectBased="True" />
+    <rule ID="IsRequestNotProcessed" sfwExpression="(this.icdoWssEmploymentChangeRequest.status_value == &quot;REVW&quot;)" sfwObjectBased="True" />
+    <rule ID="IsRequestNotRejected" sfwExpression="(this.icdoWssEmploymentChangeRequest.status_value == &quot;REVW&quot;)" sfwObjectBased="True" />
+    <rule ID="JobClassIsNotAppointedOfficialAndOfficialisSelected" sfwMessageId="1069" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;!(this.IsOfficialListNullOREmpty() == True) &amp;&amp; &#xA;!((this.icdoWssEmploymentChangeRequest.job_class_value == &quot;STAP&quot;) || &#xA;(this.icdoWssEmploymentChangeRequest.job_class_value == &quot;NSAP&quot;))" sfwObjectBased="True" />
+    <rule ID="VisibleIsEmloymentEnddateNull" sfwExpression="!(this.icdoWssEmploymentChangeRequest.last_date_of_service == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleLOAFields" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;CONT&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;NCON&quot;)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleSeasonalAndHourly" sfwExpression="!(string.IsNullOrEmpty(this.icdoWssEmploymentChangeRequest.change_type_value))" sfwObjectBased="True" />
+    <rule ID="IsPlanLTCVisible" sfwExpression="!((RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;LOA&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;LOAM&quot;) ||&#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;FMLA&quot;)) &amp;&amp;&#xA;(RFunc.GetValue&lt;Boolean&gt;(this, &quot;ibusPerson.iblnLTCEnrolled&quot;))" sfwObjectBased="True" />
+    <rule ID="IsPlanHealthVisible" sfwExpression="!((RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;LOA&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;LOAM&quot;) ||&#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;FMLA&quot;)) &amp;&amp;&#xA;(RFunc.GetValue&lt;Boolean&gt;(this, &quot;ibusPerson.iblnHealthEnrolled&quot;))" sfwObjectBased="True" />
+    <rule ID="IsPlanDentalVisible" sfwExpression="!((RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;LOA&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;LOAM&quot;) ||&#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;FMLA&quot;)) &amp;&amp;&#xA;(RFunc.GetValue&lt;Boolean&gt;(this, &quot;ibusPerson.iblnDentalEnrolled&quot;))" sfwObjectBased="True" />
+    <rule ID="IsPlanVisionVisible" sfwExpression="!((RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;LOA&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;LOAM&quot;) ||&#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;FMLA&quot;)) &amp;&amp;&#xA;(RFunc.GetValue&lt;Boolean&gt;(this, &quot;ibusPerson.iblnVisionEnrolled&quot;))" sfwObjectBased="True" />
+    <rule ID="IsPlanLifeVisible" sfwExpression="!((RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;LOA&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;LOAM&quot;) ||&#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;FMLA&quot;)) &amp;&amp;&#xA;(RFunc.GetValue&lt;Boolean&gt;(this, &quot;ibusPerson.iblnLifeEnrolled&quot;))" sfwObjectBased="True" />
+    <rule ID="IsPlanEAPVisible" sfwExpression="!((RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;LOA&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;LOAM&quot;) ||&#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;FMLA&quot;)) &amp;&amp;&#xA;(RFunc.GetValue&lt;Boolean&gt;(this, &quot;ibusPerson.iblnEAPEnrolled&quot;))" sfwObjectBased="True" />
+    <rule ID="IsPlanFlexVisible" sfwExpression="!((RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;LOA&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;LOAM&quot;) ||&#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;FMLA&quot;)) &amp;&amp;&#xA;(RFunc.GetValue&lt;Boolean&gt;(this, &quot;ibusPerson.iblnFlexEnrolled&quot;))" sfwObjectBased="True" />
+    <rule ID="IsMemberEnrolledInsurancePlans" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;(this.IsMemberEnrolledInInsurancePlans() == True)" sfwObjectBased="True" />
+    <rule ID="IsEmployeeeEnrolledInDBorDCPlan" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;(this.IsEmployeeEnrolledInDBorDCPlan() == True)" sfwObjectBased="True" />
+    <rule ID="IsLastDateOfServiceWithAgencyEntered" sfwMessageId="8527" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;(this.icdoWssEmploymentChangeRequest.last_date_of_service == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsDateOfLastRegularPayCheckEntered" sfwMessageId="8528" sfwExpression="(this.icdoWssEmploymentChangeRequest.date_of_last_regular_paycheck == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsJobClassStateAppointedOfficial" sfwExpression="(this.icdoWssEmploymentChangeRequest.job_class_value == &quot;STAP&quot;)" sfwObjectBased="True" />
+    <rule ID="IsJobClassStateElectedOfficial" sfwExpression="(this.icdoWssEmploymentChangeRequest.job_class_value == &quot;SEO&quot;)" sfwObjectBased="True" />
+    <rule ID="IsEmployerCategSchoolDistrict" sfwExpression="((this.IsEmployerTypeSchoolDistrict() == True) &amp;&amp; &#xA;(this.istrEmpCategSchoolDistrictHealthEnrolled == True)) || &#xA;(this.IsEmployerTypePeopleSoftOrgGroupValueHigherEd() == True)" sfwObjectBased="True" />
+    <rule ID="IsRecertifiedDateValid" sfwMessageId="8576" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;(this.icdoWssEmploymentChangeRequest.recertified_date == DateTime.MinValue) &amp;&amp; &#xA;!(this.IsRecertificationDateValid() == True)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleClassificationChange" sfwExpression="(this.icdoWssEmploymentChangeRequest.change_type_value == &quot;CLSC&quot;) || &#xA;(this.icdoWssEmploymentChangeRequest.change_type_value == &quot;ETCG&quot;) || &#xA;(this.icdoWssEmploymentChangeRequest.change_type_value == &quot;LOAL&quot;) || &#xA;(this.icdoWssEmploymentChangeRequest.change_type_value == &quot;LOAM&quot;) ||&#xA;(this.icdoWssEmploymentChangeRequest.change_type_value == &quot;FMLA&quot;)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleEmplTypeChange" sfwExpression="(this.icdoWssEmploymentChangeRequest.change_type_value == &quot;ETCG&quot;) || &#xA;(this.icdoWssEmploymentChangeRequest.change_type_value == &quot;CLSC&quot;) || &#xA;(this.icdoWssEmploymentChangeRequest.change_type_value == &quot;LOAL&quot;) || &#xA;(this.icdoWssEmploymentChangeRequest.change_type_value == &quot;LOAM&quot;) ||&#xA;(this.icdoWssEmploymentChangeRequest.change_type_value == &quot;FMLA&quot;)" sfwObjectBased="True" />
+    <rule ID="IsLastMonthOnEmployerBillingRequired" sfwMessageId="8525" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;!(this.IsEmployerTypeSchoolDistrict() == True) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoWssEmploymentChangeRequest.istrLastMonthOnEmployerBilling)) &amp;&amp; &#xA;(this.IsMemberEnrolledInInsurancePlans() == True)" sfwObjectBased="True" />
+    <rule ID="IsLastRepMonthRetirementRequired" sfwMessageId="10225" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;(this.IsEmployeeEnrolledInDBorDCPlan() == True) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoWssEmploymentChangeRequest.istrLastRetirementTransmittalOfDeduction))" sfwObjectBased="True" />
+    <rule ID="IsEmployeeOnTeachingAndSchoolDistrict" sfwMessageId="8525" sfwExpression="(this.icdoWssEmploymentChangeRequest.is_on_teaching_contract_value == &quot;YES&quot;) &amp;&amp; &#xA;(this.IsEmployerTypeSchoolDistrict() == True) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoWssEmploymentChangeRequest.istrLastMonthOnEmployerBilling)) &amp;&amp; &#xA;(this.IsMemberEnrolledInInsurancePlans() == True)" sfwObjectBased="True" />
+    <rule ID="IsEmployeeOnTeachingContractRequired" sfwMessage="Faculty member with a Teaching Contract required" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;(this.IsEmployerTypeSchoolDistrict() == True) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoWssEmploymentChangeRequest.is_on_teaching_contract_value)) &amp;&amp; &#xA;(this.istrEmpCategSchoolDistrictHealthEnrolled == True)" sfwObjectBased="True" />
+    <rule ID="IsMemberEnrolledHealthEmpCategSchoolDistrictLastMonthBlank" sfwExpression="(this.IsEmployerTypeSchoolDistrict() == True) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoWssEmploymentChangeRequest.istrLastMonthOnEmployerBilling))" sfwObjectBased="True" />
+    <rule ID="IsEmployeeSchoolDistrictLastMonthRequired" sfwMessageId="8525" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;(this.IsEmployerTypeSchoolDistrict() == True) &amp;&amp; &#xA;(this.istrEmpCategSchoolDistrictHealthEnrolled == True) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoWssEmploymentChangeRequest.istrLastMonthOnEmployerBilling))" sfwObjectBased="True" />
+    <rule ID="IsEmployerSchoolDistrict" sfwExpression="(this.IsEmployerTypeSchoolDistrict() == True)" sfwObjectBased="True" />
+    <rule ID="ReqFieldLastMonthOnInsurance" sfwExpression="((this.IsEmployerTypeSchoolDistrict() == True) &amp;&amp; &#xA;(this.istrEmpCategSchoolDistrictHealthEnrolled == True)) || &#xA;(!(this.IsEmployerTypeSchoolDistrict() == True) &amp;&amp; &#xA;(this.IsMemberEnrolledInInsurancePlans() == True))" sfwObjectBased="True" />
+    <rule ID="IsSingleDateSelected" sfwMessageId="10238" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;!(this.icdoWssEmploymentChangeRequest.date_of_return == DateTime.MinValue) &amp;&amp; &#xA;!(this.icdoWssEmploymentChangeRequest.recertified_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleRecertificationDate" sfwExpression="!(this.icdoWssEmploymentChangeRequest.recertified_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleDateOfReturn" sfwExpression="(this.IsVisibleLOAReturnDate() == True)" sfwObjectBased="True" />
+    <rule ID="IsLOATypeSelected" sfwMessageId="10237" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;(this.IsLOATypeSelected() == False)" sfwObjectBased="True" />
+    <rule ID="IsLOAReturnDateGreaterThanOneYear" sfwMessageId="10239" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;(this.IsLOAReturnDateGreaterThanOneYear() == True)" sfwObjectBased="True" />
+    <rule ID="Rule Check if Change Request is New or Rejected" sfwExpression="(this.icdoWssEmploymentChangeRequest.employment_change_request_id &gt; 0 &amp;&amp; this.icdoWssEmploymentChangeRequest.status_value == &quot;RJTD&quot;) || &#xA;(this.icdoWssEmploymentChangeRequest.employment_change_request_id == 0 &amp;&amp; this.icdoWssEmploymentChangeRequest.status_value == &quot;REVW&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule IsNull LOA HealthInsurance Continue" sfwMessageId="10241" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;(this.IsNullLOAHealthInsuranceContinue() == True) &amp;&amp; &#xA;(RFunc.GetValue&lt;Boolean&gt;(this, &quot;ibusPerson.iblnHealthEnrolled&quot;))" sfwObjectBased="True" />
+    <rule ID="Rule IsNull LOA LifeInsurance Continue" sfwMessageId="10241" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;(this.IsNullLOALifeInsuranceContinue() == True) &amp;&amp; &#xA;(RFunc.GetValue&lt;Boolean&gt;(this, &quot;ibusPerson.iblnLifeEnrolled&quot;))" sfwObjectBased="True" />
+    <rule ID="Rule IsNull LOA DentalInsurance Continue" sfwMessageId="10241" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;(this.IsNullLOADentalInsuranceContinue() == True) &amp;&amp; &#xA;(RFunc.GetValue&lt;Boolean&gt;(this, &quot;ibusPerson.iblnDentalEnrolled&quot;))" sfwObjectBased="True" />
+    <rule ID="Rule IsNull LOA VisionInsurance Continue" sfwMessageId="10241" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;(this.IsNullLOAVisionInsuranceContinue() == True) &amp;&amp; &#xA;(RFunc.GetValue&lt;Boolean&gt;(this, &quot;ibusPerson.iblnVisionEnrolled&quot;))" sfwObjectBased="True" />
+    <rule ID="Rule IsNull LOA EAPInsurance Continue" sfwMessageId="10241" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;(this.IsNullLOAEAPInsuranceContinue() == True) &amp;&amp; &#xA;(RFunc.GetValue&lt;Boolean&gt;(this, &quot;ibusPerson.iblnEAPEnrolled&quot;))" sfwObjectBased="True" />
+    <rule ID="Rule IsNull LOA FlexInsurance Continue" sfwMessageId="10241" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;(this.IsNullFlexInsuranceContinue() == True) &amp;&amp;&#xA;(RFunc.GetValue&lt;Boolean&gt;(this, &quot;ibusPerson.iblnFlexEnrolled&quot;))" sfwObjectBased="True" />
+    <rule ID="Rule IsNull LOA LTCInsurance Continue" sfwMessageId="10241" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;(this.IsNullLOALTCInsuranceContinue() == True) &amp;&amp; &#xA;(RFunc.GetValue&lt;Boolean&gt;(this, &quot;ibusPerson.iblnLTCEnrolled&quot;))" sfwObjectBased="True" />
+    <rule ID="IsRecertificationDateGreaterThanOneYearOfStartDate" sfwMessageId="10242" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;!(this.icdoWssEmploymentChangeRequest.recertified_date == DateTime.MinValue) &amp;&amp; &#xA;!(this.IsRecertificationDateGreaterThanOneYearOfStartDate() == True)" sfwObjectBased="True" />
+    <rule ID="IsLastMonthCoverageNull" sfwMessageId="10243" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoWssEmploymentChangeRequest.istrLastMonthOnEmployerBilling)) &amp;&amp; &#xA;(this.IsLastMonthCoverageNull() == True)" sfwObjectBased="True" />
+    <rule ID="IsLOALDateValidated" sfwMessage="LOA Start Date cannot be more than 1 week (7 days) into the future." sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;(this.IsLOALDateValidated() == False)" sfwObjectBased="True" />
+    <rule ID="IsLOAMDateValidated" sfwMessage="LOA Start Date cannot be more than 1 month into future." sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;(this.IsLOAMDateValidated() == False)" sfwObjectBased="True" />
+    <rule ID="IsMEmberWorking lessThan12AndSeasonalSelected" sfwMessage="Seasonal is required if Employee Works less than 12 months per year is yes" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;(this.istrLess12hourWorkIndicator == &quot;Yes&quot;) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoWssEmploymentChangeRequest.seasonal_value))" sfwObjectBased="True" />
+    <rule ID="IsMemberWorksForLessThan12MonthsSet" sfwMessage="Please Select Employee Works Less than 12 months" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.istrLess12hourWorkIndicator))" sfwObjectBased="True" />
+    <rule ID="IsEmployeeHourlyNull" sfwMessage="Employee Works Hourly  Is Required" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoWssEmploymentChangeRequest.hourly_value))" sfwObjectBased="True" />
+    <rule ID="VisibleRuleSeasonalDescription" sfwExpression="(!string.IsNullOrEmpty(this.icdoWssEmploymentChangeRequest.seasonal_value))" sfwObjectBased="True" />
+    <rule ID="IsJobClassStateorNonStateElectedOfficial" sfwExpression="((this.icdoWssEmploymentChangeRequest.job_class_value == &quot;NSEO&quot;) || &#xA;(this.icdoWssEmploymentChangeRequest.job_class_value == &quot;SEO&quot;))" sfwObjectBased="True" />
+    <rule ID="IsJobClassStateorNonStateAppointedOfficial" sfwExpression="((this.icdoWssEmploymentChangeRequest.job_class_value == &quot;STAP&quot;) || &#xA;(this.icdoWssEmploymentChangeRequest.job_class_value == &quot;NSAP&quot;))" sfwObjectBased="True" />
+    <rule ID="IsLOAReasonForLeaveNull" sfwMessageId="10262" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;!((RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;LOA&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;LOAM&quot;) ||&#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;FMLA&quot;))&#xA;&amp;&amp;&#xA;(string.IsNullOrEmpty(this.icdoWssEmploymentChangeRequest.loa_reason))" sfwObjectBased="True" />
+    <rule ID="IsEmployerTypeSchoolDistrictOrPeopleSoftOrgGroupValueHigherEd" sfwRuleType="Validation" sfwExpression=" (this.iblnIsFromESS == True) &amp;&amp; &#xD;&#xA;  ((this.IsEmployerTypeSchoolDistrict() == True) || &#xD;&#xA;  (this.IsEmployerTypePeopleSoftOrgGroupValueHigherEd() == True))" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForReasonForLeave" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="!((RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;LOA&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;LOAM&quot;) ||&#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;FMLA&quot;))" />
+    <rule ID="IsEmploymentStatusLOA" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;LOA&quot;)" />
+    <rule ID="IsEmploymentStatusLOAM" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;LOAM&quot;)" />
+    <rule ID="IsEmploymentStatusLOAorLOAMorFMLA" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="((RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;LOA&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;LOAM&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPersonEmploymentDetail.icdoPersonEmploymentDetail.status_value&quot;) == &quot;FMLA&quot;))" />
+    <rule ID="Rule IsLastServiceDateGreaterThanLastRegularPaycheckDate" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.iblnIsESSTerminateEmployment) &amp;&amp;&#xA;(this.icdoWssEmploymentChangeRequest.date_of_last_regular_paycheck != DateTime.MinValue)&#xA;&amp;&amp; (this.icdoWssEmploymentChangeRequest.last_date_of_service != DateTime.MinValue) &#xA;&amp;&amp; (this.icdoWssEmploymentChangeRequest.date_of_last_regular_paycheck &gt;&#xA;(RFunc.AddMonths(this.icdoWssEmploymentChangeRequest.last_date_of_service,6)))" sfwMessageId="10419" />
+    <rule ID="IsWssEmploymentChangeRequestIsRejected" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="(this.icdoWssEmploymentChangeRequest.status_value == &quot;RJTD&quot;)" />
+    <rule ID="CheckDatesBeforeTerminationRequestPost" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="this.CheckDateBeforeTerminationRequestPost() &amp;&amp;&#xA;(this.IsEmployeeEnrolledInDBorDCPlan() == True)" sfwMessageId="10453" />
+    <rule ID="VisibleRuleEmployeeNotStart" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.iblnEmployeedidnotstart() == true" />
+    <rule ID="VisibleRuleEmployeeStart" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.iblnEmployeedidnotstart() ==false" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="IsEmploymentStastusContributing" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEmploymentStatusLOAOrLOAM" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsDateOfReturnLessThantoday" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsChangeTypeLOA" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsChangeTypeEmpTypeChange" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsChangeTypeClassificationChange" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleIsEmloymentEnddateNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsRequestNotProcessed" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsRequestNotRejected" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleSeasonalAndHourly" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleLOAFields" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsChangeTypeLOAR" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPlanLTCVisible" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsPlanHealthVisible" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsPlanDentalVisible" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsPlanVisionVisible" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsPlanLifeVisible" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsPlanEAPVisible" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsMemberEnrolledInsurancePlans" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsEmployeeeEnrolledInDBorDCPlan" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsJobClassStateAppointedOfficial" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsJobClassStateElectedOfficial" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsEmployerCategSchoolDistrict" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsPlanFlexVisible" sfwStatus="Active" sfwMode="All" />
+    <item ID="VisibleRuleClassificationChange" sfwStatus="Active" sfwMode="All" />
+    <item ID="VisibleRuleEmplTypeChange" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsEmployerSchoolDistrict" sfwStatus="Active" sfwMode="All" />
+    <item ID="ReqFieldLastMonthOnInsurance" sfwStatus="Active" sfwMode="All" />
+    <item ID="VisibleRuleRecertificationDate" sfwStatus="Active" sfwMode="All" />
+    <item ID="VisibleRuleDateOfReturn" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsLOATypeSelected" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsLOAReturnDateGreaterThanOneYear" sfwStatus="Active" sfwMode="All" />
+    <item ID="Rule Check if Change Request is New or Rejected" sfwStatus="Active" sfwMode="All" />
+    <item ID="VisibleRuleSeasonalDescription" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsJobClassStateorNonStateElectedOfficial" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsJobClassStateorNonStateAppointedOfficial" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsEmployerTypeSchoolDistrictOrPeopleSoftOrgGroupValueHigherEd" sfwStatus="Active" sfwMode="All" />
+    <item ID="VisibleRuleForReasonForLeave" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEmploymentStatusLOA" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEmploymentStatusLOAM" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEmploymentStatusLOAorLOAMorFMLA" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsWssEmploymentChangeRequestIsRejected" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleEmployeeNotStart" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleEmployeeStart" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="IsLOAStartDateNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsLOAStartDateLessThanToday" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsDateOfReturnNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsChangeTypeNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEmploymentTypeNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsJobClassElectedOfficialandTermBeginDateNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsJobClassAppointedOfficialAndOfficiallistNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsJobClassNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMemberWorkingLessThan12hours" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAcknowledgementFlagnotChecked" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEmmploymentendDatenull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsJobClassChangeDateIsNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEmploymentTypeChangeDateNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEmploymentEndDateLessThanStartDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsLastMonthOfBillingNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsLastretirementtransmittalofdeductionNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsLastDateofServicewithAgencyNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsDateofLastRegularPaycheckNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsLastRetirementtransmittaldueNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsLOADateInvalid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsDateofReturnInvalid" sfwMode="All" sfwStatus="Active" />
+    <item ID="JobClassIsNotAppointedOfficialAndOfficialisSelected" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEmploymentStatusNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsLoaStartDateValid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsRecertificationDateValid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsDateOfReturnValid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEmploymentTypeChangeEffectiveDateValid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsJobClassEffectiveDateValid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsLastDateOfServiceWithAgencyEntered" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsDateOfLastRegularPayCheckEntered" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsRecertifiedDateValid" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsLastMonthOnEmployerBillingRequired" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsLastRepMonthRetirementRequired" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsEmployeeOnTeachingAndSchoolDistrict" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsEmployeeOnTeachingContractRequired" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsMemberEnrolledHealthEmpCategSchoolDistrictLastMonthBlank" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsEmployeeSchoolDistrictLastMonthRequired" sfwStatus="Active" sfwMode="All" />
+    <item ID="Rule IsNull LOA HealthInsurance Continue" sfwStatus="Active" sfwMode="All" />
+    <item ID="Rule IsNull LOA LifeInsurance Continue" sfwStatus="Active" sfwMode="All" />
+    <item ID="Rule IsNull LOA VisionInsurance Continue" sfwStatus="Active" sfwMode="All" />
+    <item ID="Rule IsNull LOA EAPInsurance Continue" sfwStatus="Active" sfwMode="All" />
+    <item ID="Rule IsNull LOA FlexInsurance Continue" sfwStatus="Active" sfwMode="All" />
+    <item ID="Rule IsNull LOA LTCInsurance Continue" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsRecertificationDateGreaterThanOneYearOfStartDate" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsLastMonthCoverageNull" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsLOALDateValidated" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsLOAMDateValidated" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsMEmberWorking lessThan12AndSeasonalSelected" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsMemberWorksForLessThan12MonthsSet" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsEmployeeHourlyNull" sfwStatus="Active" sfwMode="All" />
+  </harderror>
+  <validatedelete />
+  <groupslist>
+    <group ID="ClassificationChange">
+      <item ID="IsJobClassAppointedOfficialAndOfficiallistNull" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsJobClassElectedOfficialandTermBeginDateNull" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsJobClassNull" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsJobClassChangeDateIsNull" sfwMode="All" sfwStatus="Active" />
+      <item ID="JobClassIsNotAppointedOfficialAndOfficialisSelected" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsJobClassEffectiveDateValid" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsDateLesserThanEmploymentStartDate" sfwMode="All" sfwStatus="Active" />
+    </group>
+    <group ID="EmpTypeChange">
+      <item ID="IsEmploymentTypeNull" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsEmploymentTypeChangeDateNull" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsEmploymentStatusNull" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsEmploymentTypeChangeEffectiveDateValid" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsDateLesserThanEmploymentStartDate" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsJobClassStateAppointedOfficial" sfwStatus="Active" sfwMode="All" />
+      <item ID="IsJobClassStateElectedOfficial" sfwStatus="Active" sfwMode="All" />
+      <item ID="IsMemberWorkingLessThan12hours" sfwStatus="Active" />
+      <item ID="IsJobClassAppointedOfficialAndOfficiallistNull" sfwStatus="Active" />
+      <item ID="IsJobClassElectedOfficialandTermBeginDateNull" sfwStatus="Active" />
+      <item ID="IsJobClassNull" sfwStatus="Active" />
+      <item ID="JobClassIsNotAppointedOfficialAndOfficialisSelected" sfwStatus="Active" />
+      <item ID="IsMemberWorksForLessThan12MonthsSet" sfwStatus="Active" />
+      <item ID="IsMEmberWorking lessThan12AndSeasonalSelected" sfwStatus="Active" />
+      <item ID="IsEmployeeHourlyNull" sfwStatus="Active" />
+      <item ID="VisibleRuleSeasonalDescription" sfwStatus="Active" />
+      <item ID="IsJobClassStateorNonStateElectedOfficial" sfwStatus="Active" />
+      <item ID="IsJobClassStateorNonStateAppointedOfficial" sfwStatus="Active" />
+    </group>
+    <group ID="Finish">
+      <item ID="IsAcknowledgementFlagnotChecked" sfwMode="All" sfwStatus="Active" />
+      <item ID="VisibleRuleRecertificationDate" sfwStatus="Active" sfwMode="All" />
+    </group>
+    <group ID="LOA">
+      <item ID="IsDateOfReturnLessThantoday" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsDateOfReturnNull" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsLOAStartDateNull" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsLOADateInvalid" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsDateofReturnInvalid" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsLoaStartDateValid" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsDateOfReturnValid" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsDateLesserThanEmploymentStartDate" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsSingleDateSelected" sfwStatus="Active" />
+      <item ID="IsRecertificationDateValid" sfwStatus="Active" />
+      <item ID="VisibleRuleDateOfReturn" sfwStatus="Active" />
+      <item ID="VisibleRuleRecertificationDate" sfwStatus="Active" />
+      <item ID="IsLOATypeSelected" sfwStatus="Active" />
+      <item ID="IsLOAReturnDateGreaterThanOneYear" sfwStatus="Active" />
+      <item ID="Rule IsNull LOA HealthInsurance Continue" sfwStatus="Active" />
+      <item ID="Rule IsNull LOA LifeInsurance Continue" sfwStatus="Active" />
+      <item ID="Rule IsNull LOA DentalInsurance Continue" sfwStatus="Active" />
+      <item ID="Rule IsNull LOA VisionInsurance Continue" sfwStatus="Active" />
+      <item ID="Rule IsNull LOA EAPInsurance Continue" sfwStatus="Active" />
+      <item ID="Rule IsNull LOA FlexInsurance Continue" sfwStatus="Active" />
+      <item ID="Rule IsNull LOA LTCInsurance Continue" sfwStatus="Active" />
+      <item ID="IsRecertificationDateGreaterThanOneYearOfStartDate" sfwStatus="Active" />
+      <item ID="IsLastMonthCoverageNull" sfwStatus="Active" />
+      <item ID="IsLOALDateValidated" sfwStatus="Active" />
+      <item ID="IsLOAMDateValidated" sfwStatus="Active" />
+      <item ID="IsLOAReasonForLeaveNull" sfwStatus="Active" />
+    </group>
+    <group ID="SeasonalAndHourly">
+      <item ID="IsMemberWorkingLessThan12hours" sfwMode="All" sfwStatus="Active" />
+    </group>
+    <group ID="TerminateEmployment">
+      <item ID="IsLastDateOfServiceWithAgencyInvalid" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsDateLesserThanEmploymentStartDate" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsDateofLastRegularPaycheckNull" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsMemberEnrolledInsurancePlans" sfwStatus="Active" sfwMode="All" />
+      <item ID="IsLastDateOfServiceWithAgencyEntered" sfwStatus="Active" />
+      <item ID="IsDateOfLastRegularPayCheckEntered" sfwStatus="Active" />
+      <item ID="IsEmployeeeEnrolledInDBorDCPlan" sfwStatus="Active" />
+      <item ID="IsEmployerCategSchoolDistrict" sfwStatus="Active" />
+      <item ID="IsLastMonthOnEmployerBillingRequired" sfwStatus="Active" />
+      <item ID="IsLastRepMonthRetirementRequired" sfwStatus="Active" />
+      <item ID="IsEmployeeOnTeachingContractRequired" sfwStatus="Active" />
+      <item ID="IsEmployeeSchoolDistrictLastMonthRequired" sfwStatus="Active" />
+      <item ID="ReqFieldLastMonthOnInsurance" sfwStatus="Active" />
+      <item ID="Rule IsLastServiceDateGreaterThanLastRegularPaycheckDate" sfwMode="All" sfwStatus="Active" />
+      <item ID="CheckDatesBeforeTerminationRequestPost" sfwMode="All" sfwStatus="Active" />
+    </group>
+    <group ID="TypeOfChange">
+      <item ID="IsChangeTypeNull" sfwMode="All" sfwStatus="Active" />
+    </group>
+    <group ID="LOAR">
+      <item ID="IsRecertifiedDateValid" sfwStatus="Active" />
+    </group>
+  </groupslist>
+  <aliaslist />
+  <updateablecdo />
+  <commonproperties />
+  <logicalrulelist />
+  <expressionfields />
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from sgt_wss_employment_change_request A WITH(NOLOCK)">
+      <parameters />
+    </query>
+    <query ID="LookupESS" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_WSS_EMPLOYMENT_CHANGE_REQUEST WITH(NOLOCK)&#xD;&#xA;WHERE STATUS_VALUE IN ('REVW','RJTD')">
+      <parameters />
+    </query>
+    <query ID="LOAQuestions" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from sgs_code_value where code_id = 3510 and isnull(data1,'') = 'DV'&#xD;&#xA;order by 1 ">
+      <parameters />
+    </query>
+    <query ID="LoadOrg" sfwQueryType="SubSelectQuery" sfwSql="select * from sgt_organization B where A.org_id=B.Org_id">
+      <parameters />
+    </query>
+    <query ID="LoadEmploymentChangeRequest" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT *, REQ.MODIFIED_BY AS istrRejectedByName FROM SGT_WSS_EMPLOYMENT_CHANGE_REQUEST REQ WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_PERSON PER ON REQ.PERSON_ID=PER.PERSON_ID&#xD;&#xA;WHERE STATUS_VALUE IN ('REVW','RJTD') and ORG_ID=@ORGID&#xD;&#xA;AND DATEDIFF(d,REQ.MODIFIED_DATE,GETDATE()) &lt;=90">
+      <parameters>
+        <parameter ID="@ORGID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="EmploymentChangeRequestId" sfwType="Column" sfwValue="employment_change_request_id" sfwIsNull="False" sfwKeyNo="1" sfwIsIdentity="True" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="PersonId" sfwType="Column" sfwValue="person_id" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="OrgId" sfwType="Column" sfwValue="org_id" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="ChangeTypeDescription" sfwType="Description" sfwValue="change_type_description" />
+    <attribute ID="ChangeTypeId" sfwType="Column" sfwValue="change_type_id" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="3506" sfwIsSequence="False" />
+    <attribute ID="ChangeTypeValue" sfwType="Column" sfwValue="change_type_value" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwIsSequence="False" />
+    <attribute ID="LoaStartDate" sfwType="Column" sfwValue="loa_start_date" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="LoaReason" sfwType="Column" sfwValue="loa_reason" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="2000" sfwIsSequence="False" />
+    <attribute ID="RecertifiedDate" sfwType="Column" sfwValue="recertified_date" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="DateOfReturn" sfwType="Column" sfwValue="date_of_return" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="JobClassChangeEffectiveDate" sfwType="Column" sfwValue="job_class_change_effective_date" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="JobClassDescription" sfwType="Description" sfwValue="job_class_description" />
+    <attribute ID="JobClassId" sfwType="Column" sfwValue="job_class_id" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="314" sfwIsSequence="False" />
+    <attribute ID="JobClassValue" sfwType="Column" sfwValue="job_class_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwIsSequence="False" />
+    <attribute ID="TermBeginDate" sfwType="Column" sfwValue="term_begin_date" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="OfficialListDescription" sfwType="Description" sfwValue="official_list_description" />
+    <attribute ID="OfficialListId" sfwType="Column" sfwValue="official_list_id" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="318" sfwIsSequence="False" />
+    <attribute ID="OfficialListValue" sfwType="Column" sfwValue="official_list_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwIsSequence="False" />
+    <attribute ID="EmploymentTypeChangeEffectiveDate" sfwType="Column" sfwValue="employment_type_change_effective_date" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="HourlyDescription" sfwType="Description" sfwValue="hourly_description" />
+    <attribute ID="HourlyId" sfwType="Column" sfwValue="hourly_id" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="311" sfwIsSequence="False" />
+    <attribute ID="HourlyValue" sfwType="Column" sfwValue="hourly_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwIsSequence="False" />
+    <attribute ID="SeasonalDescription" sfwType="Description" sfwValue="seasonal_description" />
+    <attribute ID="SeasonalId" sfwType="Column" sfwValue="seasonal_id" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="312" sfwIsSequence="False" />
+    <attribute ID="SeasonalValue" sfwType="Column" sfwValue="seasonal_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwIsSequence="False" />
+    <attribute ID="TypeDescription" sfwType="Description" sfwValue="type_description" />
+    <attribute ID="TypeId" sfwType="Column" sfwValue="type_id" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="313" sfwIsSequence="False" />
+    <attribute ID="TypeValue" sfwType="Column" sfwValue="type_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwIsSequence="False" />
+    <attribute ID="EmploymentEndDate" sfwType="Column" sfwValue="employment_end_date" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="EndDatedEmploymentDtlId" sfwType="Column" sfwValue="end_dated_employment_dtl_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="NewEmploymentDtlId" sfwType="Column" sfwValue="new_employment_dtl_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="PostedInPerslinkBy" sfwType="Column" sfwValue="posted_in_perslink_by" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwIsSequence="False" />
+    <attribute ID="PostedDate" sfwType="Column" sfwValue="posted_date" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwIsSequence="False" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwIsSequence="False" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="StatusDescription" sfwType="Description" sfwValue="status_description" />
+    <attribute ID="StatusId" sfwType="Column" sfwValue="status_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="3508" sfwIsSequence="False" />
+    <attribute ID="StatusValue" sfwType="Column" sfwValue="status_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwIsSequence="False" />
+    <attribute ID="DateOfLastRegularPaycheck" sfwType="Column" sfwValue="date_of_last_regular_paycheck" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="LastMonthOnEmployerBilling" sfwType="Column" sfwValue="last_month_on_employer_billing" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="LastDateOfService" sfwType="Column" sfwValue="last_date_of_service" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="LastRetirementTransmittalOfDeduction" sfwType="Column" sfwValue="last_retirement_transmittal_of_deduction" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="LastRetirementTransmittalDue" sfwType="Column" sfwValue="last_retirement_transmittal_due" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="RejectionReason" sfwType="Column" sfwValue="rejection_reason" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="2000" sfwIsSequence="False" />
+    <attribute ID="ContactId" sfwType="Column" sfwValue="contact_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="EmploymentStatusDescription" sfwType="Description" sfwValue="employment_status_description" />
+    <attribute ID="EmploymentStatusId" sfwType="Column" sfwValue="employment_status_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="310" sfwIsSequence="False" />
+    <attribute ID="EmploymentStatusValue" sfwType="Column" sfwValue="employment_status_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwIsSequence="False" />
+    <attribute ID="HealthInsuranceContinued" sfwType="Column" sfwValue="health_insurance_continued" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwIsSequence="False" />
+    <attribute ID="LifeInsuranceContinued" sfwType="Column" sfwValue="life_insurance_continued" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwIsSequence="False" />
+    <attribute ID="DentalInsuranceContinued" sfwType="Column" sfwValue="dental_insurance_continued" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwIsSequence="False" />
+    <attribute ID="VisionInsuranceContinued" sfwType="Column" sfwValue="vision_insurance_continued" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwIsSequence="False" />
+    <attribute ID="EapInsuranceContinued" sfwType="Column" sfwValue="eap_insurance_continued" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwIsSequence="False" />
+    <attribute ID="PsEmplRecordNumber" sfwType="Column" sfwValue="ps_empl_record_number" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="5" />
+    <attribute ID="LtcContinued" sfwType="Column" sfwValue="ltc_continued" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="FlexCompContinued" sfwType="Column" sfwValue="flex_comp_continued" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="PeoplesoftId" sfwType="Column" sfwValue="peoplesoft_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="7" />
+    <attribute ID="IsOnTeachingContractDescription" sfwType="Description" sfwValue="is_on_teaching_contract_description" />
+    <attribute ID="IsOnTeachingContractId" sfwType="Column" sfwValue="is_on_teaching_contract_id" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="311" />
+    <attribute ID="IsOnTeachingContractValue" sfwType="Column" sfwValue="is_on_teaching_contract_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="objPerson" sfwType="Object" sfwEntity="entPerson" sfwValue="ibusPerson" />
+    <attribute ID="objOrganization" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusOrganization" />
+    <attribute ID="objPersonEmployment" sfwType="Object" sfwEntity="entPersonEmployment" sfwValue="ibusPersonEmployment" />
+    <attribute ID="objPersonEmploymentDetail" sfwType="Object" sfwEntity="entPersonEmploymentDetail" sfwValue="ibusPersonEmploymentDetail" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrIsTFFRorTIAA" sfwValue="istrIsTFFRorTIAA" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrLastMonthOnEmployerBilling" sfwValue="icdoWssEmploymentChangeRequest.istrLastMonthOnEmployerBilling" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrLastRetirementTransmittalOfDeduction" sfwValue="icdoWssEmploymentChangeRequest.istrLastRetirementTransmittalOfDeduction" />
+    <attribute sfwDataType="int" sfwType="Property" ID="PlanId" sfwValue="icdoWssEmploymentChangeRequest.plan_id" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrIsTermsAndConditionsAgreed" sfwValue="istrIsTermsAndConditionsAgreed" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrTypeOfChange" sfwValue="istrTypeOfChange" />
+    <attribute sfwDataType="string" sfwType="Property" ID="TypeOfChange" sfwValue="icdoWssEmploymentChangeRequest.type_of_change" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrLess12hourWorkIndicator" sfwValue="istrLess12hourWorkIndicator" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrLOAHealthInsuranceContinue" sfwValue="istrLOAHealthInsuranceContinue" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrLOALifeInsuranceContinue" sfwValue="istrLOALifeInsuranceContinue" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrLOADentalInsuranceContinue" sfwValue="istrLOADentalInsuranceContinue" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrLOAVisionInsuranceContinue" sfwValue="istrLOAVisionInsuranceContinue" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrLOAEAPInsuranceContinue" sfwValue="istrLOAEAPInsuranceContinue" />
+    <attribute sfwDataType="string" sfwType="Property" ID="LastMonthYearOnEmployerBilling" sfwValue="icdoWssEmploymentChangeRequest.last_month_year_on_employer_billing" />
+    <attribute sfwDataType="int" sfwType="Property" ID="PersonEmploymentDetailId" sfwValue="icdoWssEmploymentChangeRequest.person_employment_detail_id" />
+    <attribute sfwDataType="int" sfwType="Property" ID="PersonEmploymentId" sfwValue="icdoWssEmploymentChangeRequest.person_employment_id" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrLOALTCInsuranceContinue" sfwValue="istrLOALTCInsuranceContinue" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrLOAFlexInsuranceContinue" sfwValue="istrLOAFlexInsuranceContinue" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrEmpDetailStatusDescription" sfwValue="icdoWssEmploymentChangeRequest.istrEmpDetailStatusDescription" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrEmpDetailStartDate" sfwValue="icdoWssEmploymentChangeRequest.istrEmpDetailStartDate" />
+    <attribute sfwDataType="string" sfwType="Property" ID="LastMonthYearRetirementTransmittalOfDeduction" sfwValue="icdoWssEmploymentChangeRequest.last_month_year_retirement_transmittal_of_deduction" />
+    <attribute sfwDataType="string" sfwType="Property" ID="RequestedByContactId" sfwValue="icdoWssEmploymentChangeRequest.Requested_By_Contact_id" />
+    <attribute sfwDataType="string" sfwType="Property" ID="RequestedByContactName" sfwValue="icdoWssEmploymentChangeRequest.Requested_By_Contact_Name" />
+    <attribute sfwDataType="string" sfwType="Property" ID="RequestedByContactPhoneNo" sfwValue="icdoWssEmploymentChangeRequest.Requested_By_Contact_Phone_No" />
+    <attribute ID="RequestedByEmail" sfwDataType="string" sfwPrivate="False" sfwValue="icdoWssEmploymentChangeRequest.istrRequestByContactEmail" sfwType="Property" />
+    <attribute ID="lstrRejectedByName" sfwDataType="string" sfwPrivate="False" sfwValue="istrRejectedByName" sfwType="Property" />
+    <attribute ID="lstrRejectedDate" sfwDataType="datetime" sfwPrivate="False" sfwValue="idtmRejectedDate" sfwType="Property" />
+    <attribute ID="IdtmSuspendEffectiveDateDCandFlex" sfwDataType="datetime" sfwPrivate="False" sfwValue="ibusPerson.ibusESSPersonEmployment.idtmSuspendEffectiveDateDCandFlex" sfwType="Property" />
+    <attribute ID="IdtmSuspendEffectiveDateDefaultInsPlans" sfwDataType="datetime" sfwPrivate="False" sfwValue="ibusPerson.ibusESSPersonEmployment.idtmSuspendEffectiveDateDefaultInsPlans" sfwType="Property" />
+    <attribute ID="IstrEmploymentEndDateDefault" sfwDataType="string" sfwPrivate="False" sfwValue="icdoWSSEmploymentChangeRequest.istrEmploymentEndDateDefault" sfwType="Property" />
+    <attribute ID="lstEnrolledPlansForGrid" sfwType="Collection" sfwValue="icolEnrolledPlansForGrid" sfwEntity="entPersonAccountEmploymentDetail" sfwPrivate="False" />
+    <attribute ID="IstrMessageToShowAfterPostClick" sfwDataType="string" sfwPrivate="False" sfwValue="istrMessageToShowAfterPostClick" sfwType="Property" />
+    <attribute sfwValue="employee_never_started" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="1" sfwIsNull="True" ID="EmployeeNeverStarted" sfwCaption="Employee Never Started" />
+  </attributes>
+  <objectmethods>
+    <method ID="LoadJobClassByEmployerCategory" sfwReturnType="Collection" sfwObjectID="cdoCodeValue" sfwEntity="entPostRetirementDeathApplication" />
+    <method ID="Post_click" sfwReturnType="ArrayList" />
+    <method ID="Reject_click" sfwReturnType="ArrayList">
+      <parameters>
+        <parameter ID="iintChangeRequestId" sfwDataType="int" />
+      </parameters>
+    </method>
+    <method ID="Ignore_click" sfwReturnType="ArrayList" />
+    <method ID="LoadRetirementParticipationStatusValueDropdown" sfwReturnType="Collection" sfwEntity="entCodeValue" />
+  </objectmethods>
+  <constraint />
+  <methods />
+  <lifecycle />
+  <ExtraFields />
+</entity>

@@ -1,0 +1,187 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entDeposit" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvEmployerReport" sfwType="BusinessRule" sfwMainCDO="icdoDeposit" sfwObjectID="busDeposit" sfwTableName="sgt_deposit" sfwView="False">
+  <rules>
+    <rule ID="IsOrgNotActive" sfwMessageId="8543" sfwExpression="(this.IsOrganizationNotActive() == True)" sfwObjectBased="True" />
+    <rule ID="Rule Check Apply Button Visibility" sfwMessage="Cannot Delete Remittance if the Deposit Status is Applied" sfwExpression="(this.IsApplyButtonVisible() == True)" sfwObjectBased="True" />
+    <rule ID="Rule Check If Both PERSLinkID and OrgId is not Null" sfwMessageId="4110" sfwExpression="(this.icdoDeposit.person_id != 0) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.icdoDeposit.istrOrgCode))" sfwObjectBased="True" />
+    <rule ID="Rule Check If Both PERSLinkID and OrgID is Null" sfwMessageId="4109" sfwExpression="(this.icdoDeposit.person_id == 0) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoDeposit.istrOrgCode))" sfwObjectBased="True" />
+    <rule ID="Rule Check If Deposit Already Exists New Mode" sfwMessageId="4116" sfwExpression="(this.icdoDeposit.payment_date != DateTime.MinValue) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.icdoDeposit.reference_no)) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entDeposit.GetDepositCountInNewMode&quot;, this.icdoDeposit.reference_no, this.icdoDeposit.payment_date, this.icdoDeposit.org_id, this.icdoDeposit.person_id) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="Rule Check If Deposit Already Exists Update Mode" sfwMessageId="4116" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entDeposit.GetDepositCountInUpdateMode&quot;, this.icdoDeposit.person_id, this.icdoDeposit.org_id, this.icdoDeposit.payment_date, this.icdoDeposit.reference_no, this.icdoDeposit.deposit_id) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="Rule Check If Deposit Amount Greater than DepositTapeAmt" sfwMessageId="4159" sfwExpression="(this.icdoDeposit.deposit_amount &gt; RFunc.GetValue&lt;Decimal&gt;(this, &quot;ibusDepositTape.icdoDepositTape.total_amount&quot;))" sfwObjectBased="True" />
+    <rule ID="Rule Check if Deposit Amount is Less than equals Zero" sfwMessageId="4113" sfwExpression="(this.icdoDeposit.deposit_amount &lt;= 0)" sfwObjectBased="True" />
+    <rule ID="Rule Check If Deposit Status is NOT Review" sfwMessageId="4124" sfwExpression="(this.icdoDeposit.status_value != &quot;REVW&quot;) &amp;&amp; &#xA;(this.icdoDeposit.status_value != &quot;VALD&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule Check If OrgId Valid" sfwMessageId="4115" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entDeposit.GetOrgCountByOrgID&quot;, this.icdoDeposit.istrOrgCode) &lt; 1) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.icdoDeposit.istrOrgCode))" sfwObjectBased="True" />
+    <rule ID="Rule Check If Payment Date is Null" sfwMessageId="4112" sfwExpression="(this.icdoDeposit.payment_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="Rule Check If PERSLinkID Valid" sfwMessageId="4114" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entPerson.VALIDATE_PERSLINK_ID&quot;, this.icdoDeposit.person_id) &lt; 1) &amp;&amp; &#xA;(this.icdoDeposit.person_id != 0)" sfwObjectBased="True" />
+    <rule ID="Rule Check If Reference No is Null" sfwMessageId="4111" sfwExpression="(string.IsNullOrEmpty(this.icdoDeposit.reference_no))" sfwObjectBased="True" />
+    <rule ID="Rule Check New Button Visible" sfwExpression="(this.IsNewButtonVisible() == True)" sfwObjectBased="True" />
+    <rule ID="Rule Check NSF, Invalidate Button Visibility" sfwExpression="(this.IsInvalidateNSFButtonVisible() == True)" sfwObjectBased="True" />
+    <rule ID="Rule Check Save Button Visibility" sfwExpression="(this.IsSaveButtonVisible() == True)" sfwObjectBased="True" />
+    <rule ID="Rule Check Validate Button Visibilty" sfwExpression="(this.icdoDeposit.status_value == &quot;CORD&quot;)" sfwObjectBased="True" />
+    <rule ID="Visible rule for Delete Button" sfwExpression="(this.IsDeleteButtonVisible() == True)" sfwObjectBased="True" />
+    <rule ID="Rule-CheckSaveButtonVisibilityFalse" sfwExpression="!(this.IsSaveButtonVisible() == True)" sfwObjectBased="True" />
+    <rule ID="Rule Check If Payment Date is exceeds 5 Days" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="(this.icdoDeposit.payment_date != DateTime.MinValue) &amp;&amp; (this.icdoDeposit.payment_date &gt; RFunc.AddDays(RFunc.CurrentDateTime(),5))" sfwMessageId="10411" />
+  </rules>
+  <delete>
+    <property ID="lstRemittance" sfwMethodName="LoadRemittances" />
+  </delete>
+  <checklist />
+  <initialload>
+    <item ID="Rule Check Apply Button Visibility" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check NSF, Invalidate Button Visibility" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check Save Button Visibility" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check Validate Button Visibilty" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check New Button Visible" sfwMode="All" sfwStatus="Active" />
+    <item ID="Visible rule for Delete Button" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule-CheckSaveButtonVisibilityFalse " sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Reference No is Null" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="Rule Check If Both PERSLinkID and OrgID is Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Both PERSLinkID and OrgId is not Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Reference No is Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Payment Date is Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check if Deposit Amount is Less than equals Zero" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If OrgId Valid" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If PERSLinkID Valid" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Deposit Already Exists New Mode" sfwMode="New" sfwStatus="Active" />
+    <item ID="Rule Check If Deposit Already Exists Update Mode" sfwMode="Update" sfwStatus="Active" />
+    <item ID="Rule Check If Deposit Amount Greater than DepositTapeAmt" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsOrgNotActive" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Payment Date is exceeds 5 Days" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete>
+    <item ID="Rule Check If Deposit Status is NOT Review" sfwMode="All" sfwStatus="Active" />
+  </validatedelete>
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <expressionfields />
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from sgt_deposit d WITH(NOLOCK)&#xD;&#xA;left join sgt_deposit_tape sdt WITH(NOLOCK) on d.deposit_tape_id = sdt.deposit_tape_id&#xD;&#xA;order by deposit_id desc">
+      <parameters />
+    </query>
+    <query ID="GetOrgCountByOrgID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) from sgt_organization where org_code=@org_code">
+      <parameters>
+        <parameter ID="@org_code" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="GetDepositCountInNewMode" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_DEPOSIT &#xD;&#xA;WHERE &#xD;&#xA;(((person_id=@PERSLINK_ID)AND(person_id&lt;&gt;0)) OR (@PERSLINK_ID=0))&#xD;&#xA;AND (((ORG_ID=@ORG_ID)AND(ORG_ID&lt;&gt;0)) OR (@ORG_ID=0))&#xD;&#xA;AND PAYMENT_DATE=@PAYMENT_DATE&#xD;&#xA;AND REFERENCE_NO=@REFERENCE_NO&#xD;&#xA;AND ( STATUS_VALUE&lt;&gt;'IVLD')&#xD;&#xA;AND ( STATUS_VALUE&lt;&gt;'NSF')">
+      <parameters>
+        <parameter ID="@REFERENCE_NO" sfwDataType="string" />
+        <parameter ID="@PAYMENT_DATE" sfwDataType="DateTime" />
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+        <parameter ID="@PERSLINK_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetDepositCountInUpdateMode" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_DEPOSIT &#xD;&#xA;WHERE &#xD;&#xA;(((person_id=@PERSLINK_ID)AND(person_id&lt;&gt;0)) OR (@PERSLINK_ID=0))&#xD;&#xA;AND (((ORG_ID=@ORG_ID)AND(ORG_ID&lt;&gt;0)) OR (@ORG_ID=0))&#xD;&#xA;AND PAYMENT_DATE=@PAYMENT_DATE&#xD;&#xA;AND REFERENCE_NO=@REFERENCE_NO&#xD;&#xA;AND DEPOSIT_ID &lt;&gt; @DEPOSIT_ID&#xD;&#xA;AND ( STATUS_VALUE&lt;&gt;'IVLD')&#xD;&#xA;AND ( STATUS_VALUE&lt;&gt;'NSF')">
+      <parameters>
+        <parameter ID="@PERSLINK_ID" sfwDataType="int" />
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+        <parameter ID="@PAYMENT_DATE" sfwDataType="DateTime" />
+        <parameter ID="@REFERENCE_NO" sfwDataType="string" />
+        <parameter ID="@DEPOSIT_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetInvalidDepositCountByDepositTapeID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_DEPOSIT &#xD;&#xA;WHERE DEPOSIT_TAPE_ID=@DEPOSIT_TAPE_ID&#xD;&#xA;AND STATUS_VALUE='IVLD'">
+      <parameters>
+        <parameter ID="@DEPOSIT_TAPE_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LookupOrgCode" sfwQueryType="SubSelectQuery" sfwSql="SELECT * FROM SGT_ORGANIZATION ORG &#xD;&#xA;WHERE ORG.ORG_ID=d.org_id">
+      <parameters />
+    </query>
+    <query ID="LoadOtherDeposits" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="--Old Query&#xD;&#xA;--SELECT * FROM SGT_DEPOSIT&#xD;&#xA;--WHERE DEPOSIT_TAPE_ID=@DEPOSIT_TAPE_ID AND DEPOSIT_ID &lt;&gt; @DEPOSIT_ID&#xD;&#xA;&#xD;&#xA;SELECT DEP.DEPOSIT_ID,ORG.ORG_CODE,SUM(REM.REMITTANCE_AMOUNT) AS AMOUNT INTO #TEMP&#xD;&#xA;FROM SGT_DEPOSIT DEP WITH (NOLOCK)&#xD;&#xA;INNER JOIN SGT_REMITTANCE REM WITH (NOLOCK)&#xD;&#xA;ON REM.DEPOSIT_ID = DEP.DEPOSIT_ID&#xD;&#xA;LEFT OUTER JOIN SGT_ORGANIZATION ORG WITH (NOLOCK)&#xD;&#xA;ON DEP.ORG_ID = ORG.ORG_ID&#xD;&#xA;GROUP BY DEP.DEPOSIT_ID,ORG.ORG_CODE&#xD;&#xA;&#xD;&#xA;SELECT DEP.*,TEM.ORG_CODE AS istrOrgCode,TEM.AMOUNT AS idecRemittanceAmount FROM SGT_DEPOSIT DEP WITH (NOLOCK) LEFT OUTER JOIN #TEMP TEM&#xD;&#xA;ON TEM.DEPOSIT_ID = DEP.DEPOSIT_ID&#xD;&#xA;WHERE DEPOSIT_TAPE_ID=@DEPOSIT_TAPE_ID AND DEP.DEPOSIT_ID &lt;&gt; @DEPOSIT_ID&#xD;&#xA;&#xD;&#xA;DROP TABLE #TEMP">
+      <parameters>
+        <parameter ID="@DEPOSIT_TAPE_ID" sfwDataType="int" />
+        <parameter ID="@DEPOSIT_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LookupDepositTape" sfwQueryType="SubSelectQuery" sfwSql="SELECT * FROM SGT_DEPOSIT_TAPE SDT&#xD;&#xA;WHERE SDT.DEPOSIT_TAPE_ID=d.DEPOSIT_TAPE_ID">
+      <parameters />
+    </query>
+    <query ID="CreateDeposit" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="INSERT INTO SGT_DEPOSIT&#xD;&#xA;(&#xD;&#xA;DEPOSIT_TAPE_ID, PERSON_ID, ORG_ID, REFERENCE_NO, PAYMENT_DATE, DEPOSIT_AMOUNT, STATUS_ID, STATUS_VALUE, ACH_RETRIEVE_FLAG, DEPOSIT_SOURCE_ID, DEPOSIT_SOURCE_VALUE, PAYMENT_HISTORY_HEADER_ID, CREATED_BY, CREATED_DATE, MODIFIED_BY, MODIFIED_DATE, UPDATE_SEQ,DEPOSIT_DATE&#xD;&#xA;)&#xD;&#xA;SELECT @DEPOSIT_TAPE_ID AS DEPOSIT_TAPE_ID,&#xD;&#xA;&#xD;&#xA;            PERSON_ID, &#xD;&#xA;&#xD;&#xA;            NULL AS ORG_ID,&#xD;&#xA;&#xD;&#xA;            REFERENCE_NO,&#xD;&#xA;&#xD;&#xA;            PAYMENT_DATE,&#xD;&#xA;&#xD;&#xA;            DEPOSIT_AMOUNT,&#xD;&#xA;&#xD;&#xA;            1500 AS STATUS_ID,&#xD;&#xA;&#xD;&#xA;            'APLD' AS STATUS_VALUE,&#xD;&#xA;&#xD;&#xA;            NULL AS ACH_RETRIEVE_FLAG,&#xD;&#xA;&#xD;&#xA;            1211 AS DEPOSIT_SOURCE_ID,&#xD;&#xA;&#xD;&#xA;            'RD' AS DEPOSIT_SOURCE_VALUE,&#xD;&#xA;            &#xD;&#xA;    REFERENCE_NO,&#xD;&#xA;    &#xD;&#xA;            'PERSLink Batch'+' '+ convert(nvarchar,@batchscheduleid) AS CREATED_BY,&#xD;&#xA;&#xD;&#xA;            GETDATE() AS CREATED_DATE,&#xD;&#xA;&#xD;&#xA;            'PERSLink Batch'+' '+ convert(nvarchar,@batchscheduleid) AS MODIFIED_BY,&#xD;&#xA;&#xD;&#xA;            GETDATE() AS MODIFIED_DATE,&#xD;&#xA;&#xD;&#xA;            0 AS UPDATE_SEQ, @DEPOSIT_DATE AS DEPOSIT_DATE&#xD;&#xA;&#xD;&#xA;FROM &#xD;&#xA;&#xD;&#xA;(&#xD;&#xA;&#xD;&#xA;            SELECT PHH.PAYMENT_HISTORY_HEADER_ID AS REFERENCE_NO,PS.EFFECTIVE_DATE AS PAYMENT_DATE ,PERSON_ID,SUM(AMOUNT) AS DEPOSIT_AMOUNT&#xD;&#xA;&#xD;&#xA;            FROM SGT_PAYMENT_HISTORY_DETAIL PHD&#xD;&#xA;&#xD;&#xA;            INNER JOIN SGT_PAYMENT_HISTORY_HEADER  PHH&#xD;&#xA;&#xD;&#xA;                        ON PHH.PAYMENT_HISTORY_HEADER_ID = PHD.PAYMENT_HISTORY_HEADER_ID&#xD;&#xA;&#xD;&#xA;            INNER JOIN SGT_PAYMENT_ITEM_TYPE PIT&#xD;&#xA;&#xD;&#xA;                        ON PHD.PAYMENT_ITEM_TYPE_ID = PIT.PAYMENT_ITEM_TYPE_ID&#xD;&#xA;&#xD;&#xA;            INNER JOIN SGT_PAYMENT_SCHEDULE PS &#xD;&#xA;&#xD;&#xA;                        ON PHH.PAYMENT_SCHEDULE_ID = PS.PAYMENT_SCHEDULE_ID&#xD;&#xA;&#xD;&#xA;            WHERE PHH.PAYMENT_SCHEDULE_ID = @PAYMENTSCHEDULEID&#xD;&#xA;&#xD;&#xA;                        AND ITEM_TYPE_DIRECTION = -1 &#xD;&#xA;&#xD;&#xA;                        AND  ITEM_USAGE_VALUE = 'MNTP'&#xD;&#xA;&#xD;&#xA;                        AND PLSO_FLAG = 'N'&#xD;&#xA;&#xD;&#xA;                        AND RETRO_PAYMENT_TYPE_VALUE IS NULL&#xD;&#xA;&#xD;&#xA;                        AND DEDUCTION_VALUE='RONL'&#xD;&#xA;&#xD;&#xA;            GROUP BY PHH.PAYMENT_HISTORY_HEADER_ID,EFFECTIVE_DATE ,PERSON_ID&#xD;&#xA;&#xD;&#xA;) AS DEPOSIT">
+      <parameters>
+        <parameter ID="@DEPOSIT_TAPE_ID" sfwDataType="int" />
+        <parameter ID="@PAYMENTSCHEDULEID" sfwDataType="int" />
+        <parameter ID="@DEPOSIT_DATE" sfwDataType="DateTime" />
+        <parameter ID="@batchscheduleid" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetTotalRemittance" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT ISNULL(SUM(REMITTANCE_AMOUNT),0) AS TOTAL_REMITTANCE FROM SGT_REMITTANCE A WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_DEPOSIT B WITH(NOLOCK)&#xD;&#xA;ON A.DEPOSIT_ID=B.DEPOSIT_ID&#xD;&#xA;WHERE B.DEPOSIT_TAPE_ID=@DEPOSIT_ID&#xD;&#xA;AND B.STATUS_VALUE != 'IVLD'&#xD;&#xA;AND B.STATUS_VALUE != 'NSF'">
+      <parameters>
+        <parameter ID="@DEPOSIT_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="ESSLookupOrgCode" sfwQueryType="SubSelectQuery" sfwSql="SELECT * FROM SGT_ORGANIZATION ORG &#xD;&#xA;WHERE ORG.ORG_ID=d.org_id and d.status_value = 'APLD' and sdt.DEPOSIT_METHOD_VALUE != 'WITR'">
+      <parameters />
+    </query>
+    <query ID="GetBenefitTypeByOrganization" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select cv.CODE_VALUE, cv.DESCRIPTION from SGS_CODE_VALUE cv where cv.CODE_VALUE in (&#xD;&#xA;select Distinct p.BANK_ACCOUNT_TYPE_VALUE from SGT_ORG_PLAN sp &#xD;&#xA;inner join  sgt_plan p on sp.PLAN_ID = p.PLAN_ID&#xD;&#xA;where sp.ORG_ID= @org_id) and cv.CODE_ID =  1201 and cv.CODE_VALUE &lt;&gt; 'FLEX'">
+      <parameters>
+        <parameter ID="@org_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="ESSLookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from sgt_deposit d WITH(NOLOCK)&#xD;&#xA;left join sgt_deposit_tape sdt WITH(NOLOCK) on d.deposit_tape_id = sdt.deposit_tape_id&#xD;&#xA;where d.DEPOSIT_AMOUNT &gt; = 0  &#xD;&#xA;order by sdt.deposit_date desc">
+      <parameters />
+    </query>
+    <query ID="GetPaymentDateForEmployer" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT CASE WHEN SDT.DEPOSIT_DATE IS NULL THEN (CASE WHEN D.PAYMENT_DATE IS NULL THEN D.PAYMENT_DATE ELSE CONVERT(DATE,D.PAYMENT_DATE) END) ELSE CONVERT(DATE,SDT.DEPOSIT_DATE) END AS PAYMENT_DATE,* FROM SGT_DEPOSIT D WITH(NOLOCK)INNER JOIN  SGT_REMITTANCE RE WITH(NOLOCK) on D.DEPOSIT_ID =RE.DEPOSIT_ID &#xD;&#xA;INNER JOIN SGT_EMPLOYER_REMITTANCE_ALLOCATION ERA WITH(NOLOCK)  on RE.REMITTANCE_ID = ERA.REMITTANCE_ID&#xD;&#xA;INNER JOIN SGT_EMPLOYER_PAYROLL_DETAIL EPD WITH(NOLOCK) on EPD.EMPLOYER_PAYROLL_HEADER_ID = ERA.EMPLOYER_PAYROLL_HEADER_ID &#xD;&#xA;LEFT JOIN SGT_DEPOSIT_TAPE SDT WITH(NOLOCK) ON SDT.DEPOSIT_TAPE_ID = D.DEPOSIT_TAPE_ID&#xD;&#xA; where EPD.EMPLOYER_PAYROLL_DETAIL_ID = @EMPLOYER_PAYROLL_DETAIL_ID">
+      <parameters>
+        <parameter ID="@EMPLOYER_PAYROLL_DETAIL_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LookupBenefitType" sfwQueryType="SubSelectQuery" sfwSql="SELECT * FROM SGT_PLAN PLN with(nolock) INNER JOIN&#xD;&#xA;SGT_REMITTANCE R WITH(NOLOCK) ON PLN.PLAN_ID=R.PLAN_ID WHERE R.DEPOSIT_ID=D.DEPOSIT_ID">
+      <parameters />
+    </query>
+    <query ID="LoadBenfitTypeValue" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT CV.DESCRIPTION FROM SGT_PLAN PLN with(nolock) INNER JOIN&#xD;&#xA;SGT_REMITTANCE R WITH(NOLOCK) ON PLN.PLAN_ID=R.PLAN_ID &#xD;&#xA;JOIN SGS_CODE_VALUE CV ON CV.CODE_VALUE=PLN.BENEFIT_TYPE_VALUE AND CV.CODE_ID=PLN.BENEFIT_TYPE_ID&#xD;&#xA; WHERE R.DEPOSIT_ID=@DEPOSIT_ID">
+      <parameters>
+        <parameter ID="@DEPOSIT_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="DepositId" sfwType="Column" sfwValue="deposit_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="DepositTapeId" sfwType="Column" sfwValue="deposit_tape_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PersonId" sfwType="Column" sfwValue="person_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="OrgId" sfwType="Column" sfwValue="org_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ReferenceNo" sfwType="Column" sfwValue="reference_no" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="PaymentDate" sfwType="Column" sfwValue="payment_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="DepositAmount" sfwType="Column" sfwValue="deposit_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="18,2" />
+    <attribute ID="StatusDescription" sfwType="Description" sfwValue="status_description" />
+    <attribute ID="StatusId" sfwType="Column" sfwValue="status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="1500" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusValue" sfwType="Column" sfwValue="status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="AchRetrieveFlag" sfwType="Column" sfwValue="ach_retrieve_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="DepositSourceDescription" sfwType="Description" sfwValue="deposit_source_description" />
+    <attribute ID="DepositSourceId" sfwType="Column" sfwValue="deposit_source_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="1211" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="DepositSourceValue" sfwType="Column" sfwValue="deposit_source_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PaymentHistoryHeaderId" sfwType="Column" sfwValue="payment_history_header_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="EmployerPayrollHeaderId" sfwType="Column" sfwValue="employer_payroll_header_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ContactTicketId" sfwType="Column" sfwValue="contact_ticket_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="Notes" sfwType="Column" sfwValue="notes" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1000" />
+    <attribute ID="objDepositTape" sfwType="Object" sfwEntity="entDepositTape" sfwValue="ibusDepositTape" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrOrgCode" sfwValue="icdoDeposit.istrOrgCode" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="LdclTotalDepositAmount" sfwValue="ldclTotalDepositAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecTotalRemittance" sfwValue="idecTotalRemittance" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPersonName" sfwValue="istrPersonName" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrOrgName" sfwValue="istrOrgName" />
+    <attribute sfwType="Collection" sfwEntity="entRemittance" ID="lstRemittance" sfwValue="iclbRemittance" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPERSLinkID" sfwValue="istrPERSLinkID" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecRemittanceAmount" sfwValue="icdoDeposit.idecRemittanceAmount" />
+    <attribute sfwType="Object" sfwEntity="entPerson" sfwValue="ibusPerson" ID="objPerson" />
+    <attribute sfwValue="deposit_date" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="datetime" sfwDBDataType="datetime" sfwIsNull="True" ID="DepositDate" sfwCaption="Deposit Date" />
+    <attribute ID="lstrBenfitTypeValue" sfwDataType="string" sfwPrivate="False" sfwValue="icdoDeposit.istrBenfitTypeValue" sfwType="Property" />
+  </attributes>
+  <objectmethods>
+    <method ID="btnApply_Click" sfwReturnType="ArrayList" />
+    <method ID="btnInvalidate_Click" sfwReturnType="ArrayList" />
+    <method ID="btnNSF_Click" sfwReturnType="ArrayList" />
+    <method ID="btnValidate_Click" sfwReturnType="Void" />
+    <method ID="ReloadHandButtonData" sfwReturnType="ArrayList" />
+    <method ID="LoadRemittances" sfwReturnType="Void" />
+  </objectmethods>
+</entity>

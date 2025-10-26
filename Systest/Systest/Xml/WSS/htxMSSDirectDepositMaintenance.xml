@@ -1,0 +1,103 @@
+﻿<form ID="wfmMSSDirectDepositMaintenance" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2001" sfwType="FormLinkMaintenance" sfwTitle="Direct Deposit Information" version="3.5" sfwEntity="entPayeeAccount" sfwTemplate="MSSDirectDepositMaintenance.html" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmMSSDirectDepositLookup" sfwFormObjectType="None" isBasedOnWfm="true">
+  <initialload>
+    <callmethods sfwMethodName="FindMSSPayeeAccounts" />
+  </initialload>
+  <items>
+    <sfwTable ID="Main" />
+    <sfwPanel ID="pnlHeading" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblHeading" />
+        <sfwLiteral Text="Direct Deposit Information" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlMain" sfwCaption="Direct Deposit Information">
+      <items>
+        <sfwTable ID="tblNewPage7" />
+        <sfwButton ID="btnOpenAchDetail" sfwActiveForm="wfmPayeeAccountAchDetailMaintenance" sfwCopyActivitySessionVariables="True" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintpayeeaccountachdetailid=PayeeAccountAchDetailId" sfwRelatedControl="grvAchDetail" Text="Open" Visible="False" />
+        <sfwGridView AllowPaging="True" AllowSorting="True" ID="grvAchDetail" sfwEntityField="lstFutureDatedACHDetails" sfwGridEntity="entPayeeAccountAchDetail">
+          <Columns>
+            <TemplateField HeaderText="ACH ID" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="PayeeAccountAchDetailId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Bank Name">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objBankOrg.OrgName" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Account Type">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="BankAccountTypeDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Routing Number">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objBankOrg.RoutingNo" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Account Number" SortExpression="AccountNumber">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="ScrambledAccountNumber" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Primary Account">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="PrimaryAccountFlag" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Pre-Note Flag" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="PreNoteFlag" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Pre-Note Completion Date" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="PreNoteCompletionDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Percentage" Visible="False" ItemStyle.HorizontalAlign="Right">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:#0.00'%}" sfwEntityField="PercentageOfNetAmount" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Percentage" ItemStyle.HorizontalAlign="Right">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:#0.00'%}" sfwEntityField="IstrPercentage" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Amount" Visible="False" ItemStyle.HorizontalAlign="Right">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="PartialAmount" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Amount" ItemStyle.HorizontalAlign="Right">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="IstrAmount" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Start Date">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="AchStartDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="End Date">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="AchEndDate" />
+              </ItemTemplate>
+            </TemplateField>
+          </Columns>
+        </sfwGridView>
+        <sfwLinkButton ID="btnDirectLinkButton" sfwActiveForm="wfmMSSDirectDepositInformationMaintenance" sfwMethodName="btnNew_Click" sfwNavigationParameter="Aintpayeeaccountid=lblPayeeAccountId" OnClientClick="fnOpenDirectDepositandPayeeAccount(e);" sfwVisibleRule="VisibleRuleBasedOnPayeeAccountStatus" />
+        <sfwLabel ID="lblLabel" sfwObjectField="icdoPayeeAccount.payee_account_id" sfwObjectID="busPayeeAccount" Visible="False" />
+        <sfwLabel ID="lblIsEmailAddressWaived" sfwObjectField="iblnIsEmailAddressWaived" sfwObjectID="busPayeeAccount" CssClass="hideControl" />
+        <sfwLabel ID="lblPayeeAccountId" sfwEntityField="PayeeAccountId" CssClass="hideControl" />
+        <sfwLabel ID="lblPopUpMessageForCertify" sfwEntityField="IstrPopUpMessageForCertify" CssClass="hideControl" sfwRenderType="RichText" />
+      </items>
+    </sfwPanel>
+  </items>
+  <loaddetails>
+    <entityfield ID="lstActiveACHDetails" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+  </loaddetails>
+  <ExtraFields />
+</form>

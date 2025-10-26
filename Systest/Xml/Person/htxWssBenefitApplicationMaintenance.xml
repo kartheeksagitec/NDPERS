@@ -1,0 +1,1109 @@
+﻿<form ID="wfmWssBenefitApplicationMaintenance" WebSite="NeoSpinWebClient" sfwResource="2001" sfwRemoteObject="srvNeoSpinWSS" sfwType="FormLinkMaintenance" sfwTitle="Wss Benefit Application Maintenance" sfwActive="True" sfwStatus="Review" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmWssBenefitApplicationLookup" sfwEntity="entWssBenApp" sfwTemplate="WssBenefitApplicationMaintenance.html" sfwFormObjectType="None" isBasedOnWfm="true">
+  <initialload>
+    <custommethod sfwMode="New" sfwMethodName="NewBenAppWizard" sfwReturnType="NeoSpin.BusinessObjects.busWssBenApp">
+      <parameter ID="aintPersonId" sfwDataType="System.Int32" sfwField="aint_person_id" />
+      <parameter ID="aintPlanId" sfwDataType="System.Int32" sfwField="aint_plan_id" />
+    </custommethod>
+    <custommethod sfwMode="Update" sfwMethodName="FindWssBenAppRequest" sfwReturnType="NeoSpin.BusinessObjects.busWssBenApp">
+      <parameter ID="aintWssBenAppId" sfwDataType="System.Int32" sfwField="aint_wss_ben_app_id" />
+    </custommethod>
+  </initialload>
+  <items>
+    <sfwPanel ID="pnltoolbar">
+      <items>
+        <sfwTable ID="toolbar" />
+        <sfwButton ID="btnCancel" sfwMethodName="btnCancel_Click" Text="Refresh" />
+        <sfwButton ID="btnPrev" sfwMethodName="btnPrev_Click" Text="Prev" />
+        <sfwButton ID="btnNext" sfwMethodName="btnNext_Click" Text="Next" />
+        <sfwButton ID="btnButton2" Text="Print" OnClientClick="PrintCenterMiddle()" sfwMethodName="btnOpen_Click" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlPrintSummary" sfwCaption="Benefit Application">
+      <items>
+        <sfwTable ID="tblPrintSummary" />
+        <sfwPanel ID="pnlPrntBenType" sfwCaption="Benefit Type">
+          <items>
+            <sfwTable ID="tblSelBenPrnt" />
+            <sfwLabel ID="lblSelBenTypePrnt" Text="Benefit Type :" sfwIsCaption="True" />
+            <sfwLabel ID="lblSelBenType1Prnt" sfwEntityField="lstrBenTypeText" />
+            <sfwLabel ID="lblBenOptionPrnt" Text="Benefit Option :" sfwIsCaption="True" />
+            <sfwLabel ID="lblSelBenOptionPrnt" sfwEntityField="BenOptDescription" />
+            <sfwLabel ID="capRHICPrnt" Text="RHIC Option :" sfwIsCaption="True" sfwVisibleRule="VisibleRuleIsBenefitAccountTypeRetirementOrDisability" />
+            <sfwLabel ID="lblRHICOptionPrnt" sfwEntityField="RhicOptionNullDescription" sfwVisibleRule="VisibleRuleIsBenefitAccountTypeRetirementOrDisability" />
+            <sfwLabel ID="lblRetEffDatePrnt" Text="Retirement Effective Date :" sfwVisibleRule="VisibleRuleIsBenefitAccountTypeRetirementOrDisability" sfwIsCaption="True" />
+            <sfwLabel ID="lblRetEffecDatePrnt" sfwVisibleRule="VisibleRuleIsBenefitAccountTypeRetirementOrDisability" sfwEntityField="RetirementDate" />
+            <sfwLabel ID="lblDefDatePrnt" Text="Deferral Date :" sfwVisibleRule="VisibleRuleIsDeferredRetirement" sfwIsCaption="True" />
+            <sfwLabel ID="lblDeferralDateDisplayPrnt" sfwVisibleRule="VisibleRuleIsDeferredRetirement" sfwEntityField="DeferredDate" />
+            <sfwLabel ID="lblLabelPaymentDatePrnt" Text="Payment Date :" sfwVisibleRule="VisibleRuleIsBenefitAccountTypeRefund" sfwIsCaption="True" />
+            <sfwLabel ID="lblLabelPaymentDateDisPrnt" sfwVisibleRule="VisibleRuleIsBenefitAccountTypeRefund" sfwEntityField="PaymentDate" />
+            <sfwLabel ID="capSickLeaveConPrnt" Text="Sick Leave Conversion :" sfwVisibleRule="VisibleRuleIsBenefitAccountTypeRetirementOrDisability" sfwIsCaption="True" />
+            <sfwLabel ID="lblLabel46Prnt" sfwVisibleRule="VisibleRuleIsBenefitAccountTypeRetirementOrDisability" sfwEntityField="SickLeaveFlagDesc" />
+            <sfwLabel ID="lblSLCAuthPrnt" sfwEntityField="lstrSLCConfirmationText" CssClass="view-inline" sfwRenderType="RichText" sfwVisibleRule="VRSickLeaveAcknowledgement" />
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlWorkHistoryPrnt" sfwCaption="Work History" sfwVisibleRule="VisibleRuleIsBenefitAccountTypeDisability">
+          <items>
+            <sfwTable ID="tblworkHIstoryPrnt" />
+            <sfwGridView ID="grvBusWssBenAppDisaWorkHisPrnt" sfwEntityField="lstIclcWssBenAppDisaWorkHistory" sfwGridEntity="entWssBenAppDisaWorkHistory">
+              <Columns>
+                <TemplateField Visible="False" HeaderText="Disa Work History ID">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="DisaWorkHistoryId" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Employer Name">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="EmployerName" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Supervisor Name">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="SupervisorName" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Job Titles">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="JobTitles" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Emp From Date">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataType="DateTime" sfwDataFormat="{0:d}" sfwEntityField="EmploymentFromDate" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Emp To Date">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataType="DateTime" sfwDataFormat="{0:d}" sfwEntityField="EmploymentToDate" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Emp Salary" ItemStyle.HorizontalAlign="Right">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="EmploymentSalary" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField>
+                  <ItemTemplate />
+                </TemplateField>
+                <TemplateField HeaderText="Emp Duties">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="EmploymentDuties" />
+                  </ItemTemplate>
+                </TemplateField>
+              </Columns>
+            </sfwGridView>
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlOtherBenPrnt" sfwCaption="Other Benefits" sfwVisibleRule="VisibleRuleIsBenefitAccountTypeDisability">
+          <items>
+            <sfwTable ID="tblOtherBenPrnt" />
+            <sfwGridView ID="grvBusWssBenAppDisaOtherBenPrnt" sfwEntityField="lstIclcWssBenAppDisaOtherBenefits" sfwGridEntity="entWssBenAppDisaOtherBenefits" AllowEditing="True" sfwTwoWayBinding="True">
+              <Columns>
+                <TemplateField Visible="False" HeaderText="Disa Othr Benefit ID">
+                  <ItemTemplate>
+                    <sfwLabel Visible="False" sfwEntityField="DisaOthrBenefitId" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Benefits">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="OthrDisabilityBenefitDescription" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Date Benefits Began">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="OthrDisaBeneBeginDate" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Date Benefits Terminate">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="OthrDisaBeneEndDate" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Amount" ItemStyle.HorizontalAlign="Right">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="OthrDisaMonBenefitAmount" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField>
+                  <ItemTemplate />
+                </TemplateField>
+                <TemplateField HeaderText="Pay Frequency">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="OthrDisaFreqDescription" />
+                  </ItemTemplate>
+                </TemplateField>
+              </Columns>
+            </sfwGridView>
+            <sfwLabel ID="lblSSappPrnt" Text="Has Social Security Been Applied For?" sfwIsCaption="True" />
+            <sfwLabel ID="ddlIsSocialSecurityAppPrnt" sfwEntityField="IsSocialSecurityAppliedDesc" />
+            <sfwLabel ID="lblWorkcmpPrnt" Text="Has Worker's Compensation Benefis Been Applied For?" sfwIsCaption="True" />
+            <sfwLabel ID="ddlIsWorkerCompBenefitApplPrnt" sfwEntityField="IsWorkerCompBenefitAppliedDesc" />
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlSicknessInjuryPrnt" sfwCaption="Sickness/Injury Data" sfwVisibleRule="VisibleRuleIsBenefitAccountTypeDisability">
+          <items>
+            <sfwTable ID="tblSicknessPrnt" />
+            <sfwLabel ID="capDateOfSicknessOrInjuryPrnt" Text="Date Of Sickness Or Injury : " sfwIsCaption="True" />
+            <sfwLabel ID="txtDateOfSicknessOrInjuryPrnt" sfwDataFormat="{0:d}" sfwEntityField="DateOfSicknessOrInjury" />
+            <sfwLabel ID="capFirstNoticedSymptomsDatePrnt" Text="Date You First Noticed Symptoms : " sfwIsCaption="True" />
+            <sfwLabel ID="txtFirstNoticedSymptomsDatePrnt" sfwDataFormat="{0:d}" sfwEntityField="FirstNoticedSymptomsDate" />
+            <sfwLabel ID="capCODPrnt" Text="Cause Of Disability : " sfwIsCaption="True" />
+            <sfwLabel ID="txtCODPrnt" sfwEntityField="CauseOfDisability" />
+            <sfwLabel ID="capFirstPhysicianSawDatePrnt" Text="Date You First Saw a Physician " sfwIsCaption="True" />
+            <sfwLabel ID="capFirstPhysicianSawDate1Prnt" Text="For This Sickness Or Injury : " sfwIsCaption="True" />
+            <sfwLabel ID="txtFirstPhysicianSawDatePrnt" sfwDataFormat="{0:d}" sfwEntityField="FirstPhysicianSawDate" />
+            <sfwLabel ID="capNameOfTreatingPhysicianPrnt" Text="Name Of Treating Physician: " sfwIsCaption="True" />
+            <sfwLabel ID="capNameOfTreatingPhysician1Prnt" Text="(If more than one, list on separate sheet of paper) : " sfwIsCaption="True" />
+            <sfwLabel ID="txtNameOfTreatingPhysicianPrnt" sfwEntityField="NameOfTreatingPhysician" />
+            <sfwLabel ID="capAddressPrnt" Text="Address : " sfwIsCaption="True" />
+            <sfwLabel ID="txtAddressPrnt" sfwEntityField="Address" />
+            <sfwLabel ID="capCityPrnt" Text="City : " sfwIsCaption="True" />
+            <sfwLabel ID="txtCityPrnt" sfwEntityField="City" />
+            <sfwLabel ID="capStatePrnt" Text="State : " sfwIsCaption="True" />
+            <sfwLabel ID="txtStatePrnt" sfwEntityField="State" />
+            <sfwLabel ID="capZipCodePrnt" Text="Zip Code : " sfwIsCaption="True" />
+            <sfwLabel ID="txtZipCodePrnt" sfwEntityField="ZipCode" />
+            <sfwLabel ID="capNameOfHospitalPrnt" Text="If Hospitalized For Sickness or Injury, Give Name Of Hospital: " sfwIsCaption="True" />
+            <sfwLabel ID="txtNameOfHospitalPrnt" sfwEntityField="NameOfHospital" />
+            <sfwLabel ID="capAdmittedDatePrnt" Text="Admitted Date : " sfwIsCaption="True" />
+            <sfwLabel ID="txtAdmittedDatePrnt" sfwDataFormat="{0:d}" sfwEntityField="AdmittedDate" />
+            <sfwLabel ID="capReleasedDatePrnt" Text="Released Date : " sfwIsCaption="True" />
+            <sfwLabel ID="txtReleasedDatePrnt" sfwDataFormat="{0:d}" sfwEntityField="ReleasedDate" />
+            <sfwLabel ID="capIsBedConfinedPrnt" Text="Are You Bed Confined : " sfwIsCaption="True" />
+            <sfwLabel ID="ddlIsBedConfinedPrnt" sfwEntityField="IsBedConfinedDesc" />
+            <sfwLabel ID="capIsHouseConfinedPrnt" Text="Are You House Confined : " sfwIsCaption="True" />
+            <sfwLabel ID="ddlIsHouseConfinedPrnt" sfwEntityField="IsHouseConfinedDesc" />
+            <sfwLabel ID="capDidYouHaveSameKindOfSicknessOrInjuryPrnt" Text="Have You Ever Had The Same Kind Of Sickness Or Injury Before?" sfwIsCaption="True" />
+            <sfwLabel ID="ddlDidYouHaveSameKindOfSicknessOrInjuryPrnt" sfwClientVisibility="controllist:capYesSpecifiedLblPrnt,txtSpecifiedPrnt,capSpecifiedPhyscnPrnt,txtSpecifiedPhyscanPrnt,capSpecifiedPhyscnAddPrnt,txtSpecifiedPhysicianAddressPrnt,lblphyAddline2Prnt,txtAddlinePrnt,capSpcfdPhyscnAddrCityPrnt,txtSpcfdPhyscnAddrCityPrnt,capSpcfdPhyscnAddrStateValuePrnt,ddlSpcfdPhyscnAddrStateValuePrnt,capSpcfdPhyscnAddrCountryValuePrnt,ddlSpcfdPhyscnAddrCountryValuePrnt,capSpcfdPhyscnAddrZipCodePrnt,txtPhyAddrZipCodePrnt,txtPhyAddrZip4CodePrnt#Yes:capYesSpecifiedLblPrnt,txtSpecifiedPrnt,capSpecifiedPhyscnPrnt,txtSpecifiedPhyscanPrnt,capSpecifiedPhyscnAddPrnt,txtSpecifiedPhysicianAddressPrnt,lblphyAddline2Prnt,txtAddlinePrnt,capSpcfdPhyscnAddrCityPrnt,txtSpcfdPhyscnAddrCityPrnt,capSpcfdPhyscnAddrStateValuePrnt,ddlSpcfdPhyscnAddrStateValuePrnt,capSpcfdPhyscnAddrCountryValuePrnt,ddlSpcfdPhyscnAddrCountryValuePrnt,capSpcfdPhyscnAddrZipCodePrnt,txtPhyAddrZipCodePrnt,txtPhyAddrZip4CodePrnt;" sfwEntityField="DidYouHaveSameKindOfSickOrInjDesc" />
+            <sfwLabel ID="capYesSpecifiedLblPrnt" Text="Date : " sfwIsCaption="True" />
+            <sfwLabel ID="txtSpecifiedPrnt" sfwDataFormat="{0:d}" sfwEntityField="SpecifiedDate" />
+            <sfwLabel ID="capSpecifiedPhyscnPrnt" Text="Physician : " sfwIsCaption="True" />
+            <sfwLabel ID="txtSpecifiedPhyscanPrnt" sfwEntityField="SpcfdPhyscn" />
+            <sfwLabel ID="capSpecifiedPhyscnAddPrnt" Text="Physician's Address Line 1 : " sfwIsCaption="True" />
+            <sfwLabel ID="txtSpecifiedPhysicianAddressPrnt" sfwEntityField="SpcfdPhyscnAddrLine1" />
+            <sfwLabel ID="lblphyAddline2Prnt" Text="Physician's Address Line 2 : " sfwIsCaption="True" />
+            <sfwLabel ID="txtAddlinePrnt" sfwEntityField="SpcfdPhyscnAddrLine2" />
+            <sfwLabel ID="capSpcfdPhyscnAddrCityPrnt" Text="Physician's City : " sfwIsCaption="True" />
+            <sfwLabel ID="txtSpcfdPhyscnAddrCityPrnt" sfwEntityField="SpcfdPhyscnAddrCity" />
+            <sfwLabel ID="capSpcfdPhyscnAddrStateValuePrnt" Text="Physician State : " sfwIsCaption="True" />
+            <sfwLabel ID="ddlSpcfdPhyscnAddrStateValuePrnt" sfwEntityField="SpcfdPhyscnAddrStateDescription" />
+            <sfwLabel ID="capSpcfdPhyscnAddrCountryValuePrnt" Text="Physician Country : " sfwIsCaption="True" />
+            <sfwLabel ID="ddlSpcfdPhyscnAddrCountryValuePrnt" sfwEntityField="SpcfdPhyscnAddrCountryDescription" />
+            <sfwLabel ID="capSpcfdPhyscnAddrZipCodePrnt" Text="Zip Code : " sfwIsCaption="True" />
+            <sfwLabel ID="txtPhyAddrZipCodePrnt" Width="50px" sfwEntityField="SpcfdPhyscnAddrZipCode" />
+            <sfwLabel ID="txtPhyAddrZip4CodePrnt" Width="40px" sfwEntityField="SpcfdPhyscnAddrZip4Code" />
+            <sfwLabel ID="capDateAndTimeOfAccidentPrnt" Text="Date And Time Of Accident : " sfwIsCaption="True" />
+            <sfwLabel ID="txtDateAndTimeOfAccidentPrnt" sfwDataFormat="{0:d}" sfwEntityField="DateAndTimeOfAccident" />
+            <sfwLabel ID="capWasAccidentWorkRelatedPrnt" Text="Was Accident Work Related : " sfwIsCaption="True" />
+            <sfwLabel ID="ddlWasAccidentWorkRelatePrnt" sfwEntityField="WasAccidentWorkRelatedDesc" />
+            <sfwLabel ID="capPlaceOfAccidentPrnt" Text="Where Did The Accident Occur? " sfwIsCaption="True" />
+            <sfwLabel ID="txtPlaceOfAccidentPrnt" sfwEntityField="PlaceOfAccident" />
+            <sfwLabel ID="lblLabel23Prnt" Text="Date You Were First Able To Leave Home" sfwIsCaption="True" />
+            <sfwLabel ID="lblLabel234Prnt" Text="For Any Purpose?" sfwIsCaption="True" />
+            <sfwLabel ID="txtAbleToLeaveHomeDatePrnt" sfwDataFormat="{0:d}" sfwEntityField="AbleToLeaveHomeDate" />
+            <sfwLabel ID="capAbleToWorkDatePrnt" Text="Date You Were First Able To Do " sfwIsCaption="True" />
+            <sfwLabel ID="capLabel" sfwIsCaption="True" Text="Any Part Of Your Work, Supervisory or Otherwise? " />
+            <sfwLabel ID="txtAbleToWorkDatePrnt" sfwDataFormat="{0:d}" sfwEntityField="AbleToWorkDate" />
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlEducationPrnt" sfwCaption="Education" sfwVisibleRule="VisibleRuleIsBenefitAccountTypeDisability">
+          <items>
+            <sfwTable ID="tblEducatPrnt" />
+            <sfwLabel ID="capLastYearCompletedPrnt" Text="Last Year Completed : " sfwIsCaption="True" />
+            <sfwLabel ID="txtLastYearCompletedPrnt" sfwEntityField="LastYearCompleted" />
+            <sfwLabel ID="capNameOfSchoolPrnt" Text="Name Of School : " sfwIsCaption="True" />
+            <sfwLabel ID="txtNameOfSchoolPrnt" sfwEntityField="NameOfSchool" />
+            <sfwLabel ID="capLastYearInSchoolPrnt" Text="Last Year In School : " sfwIsCaption="True" />
+            <sfwLabel ID="txtLastYearInSchoolPrnt" sfwEntityField="LastYearInSchool" />
+            <sfwLabel ID="capDegreeCertificatePrnt" Text="Degree/Certificate : " sfwIsCaption="True" />
+            <sfwLabel ID="txtDegreeCertificatePrnt" sfwEntityField="DegreeCertificate" />
+            <sfwLabel ID="capAdditionalTrainingPrnt" Text="Additional Training : " sfwIsCaption="True" />
+            <sfwLabel ID="txtAdditionalTrainingPrnt" sfwEntityField="AdditionalTraining" />
+            <sfwLabel ID="capAttitudeTowardsSchoolPrnt" Text="Attitude Towards School : " sfwIsCaption="True" />
+            <sfwLabel ID="rblAttitudeTowardsSchoolPrnt" sfwEntityField="AttitudeTowardsSchool" />
+            <sfwLabel ID="capFavourableCoursesPrnt" Text="Favourable Courses : " sfwIsCaption="True" />
+            <sfwLabel ID="txtFavourableCoursesPrnt" sfwEntityField="FavourableCourses" />
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlMilitaryServicePrnt" sfwCaption="Military Service" sfwVisibleRule="VisibleRuleIsBenefitAccountTypeDisability">
+          <items>
+            <sfwTable ID="tblMilitaryPrnt" />
+            <sfwLabel ID="capBranchPrnt" Text="Branch : " sfwIsCaption="True" />
+            <sfwLabel ID="txtBranchPrnt" sfwEntityField="Branch" />
+            <sfwLabel ID="capDateFromPrnt" Text="Date From : " sfwIsCaption="True" />
+            <sfwLabel ID="txtDateFromPrnt" sfwDataFormat="{0:d}" sfwEntityField="DateFrom" />
+            <sfwLabel ID="capDateToPrnt" Text="Date To : " sfwIsCaption="True" />
+            <sfwLabel ID="txtDateToPrnt" sfwDataFormat="{0:d}" sfwEntityField="DateTo" />
+            <sfwLabel ID="capDischargeValuePrnt" Text="Discharge : " sfwIsCaption="True" />
+            <sfwLabel ID="ddlDischargeValuePrnt" sfwEntityField="DischargeDescription" />
+            <sfwLabel ID="capDutiesOrResponsibilitiesPrnt" Text="Duties Or Responsibilities : " sfwIsCaption="True" />
+            <sfwLabel ID="txtDutiesOrResponsibilitiesPrnt" sfwEntityField="DutiesOrResponsibilities" />
+            <sfwLabel ID="capRankPrnt" Text="Rank : " sfwIsCaption="True" />
+            <sfwLabel ID="txtRankPrnt" sfwEntityField="Rank" />
+            <sfwLabel ID="capSpecialTrainingPrnt" Text="Special Training : " sfwIsCaption="True" />
+            <sfwLabel ID="txtSpecialTrainingPrnt" sfwEntityField="SpecialTraining" />
+            <sfwLabel ID="capServiceConnectedDisabilitiesPrnt" Text="Service Connected Disabilities : " sfwIsCaption="True" />
+            <sfwLabel ID="txtServiceConnectedDisabilitiesPrnt" sfwEntityField="ServiceConnectedDisabilities" />
+          </items>
+        </sfwPanel>
+        <sfwLabel ID="lblLabel47" sfwVisibleRule="VisibleRuleDCTIAAText" Text="A TIAA Distribution Form MUST be completed and accompany this application." sfwIsCaption="True" />
+        <sfwPanel ID="pnlRefundDistributionPrnt" sfwCaption="Refund Distribution" sfwVisibleRule="VisibleRuleIsBenefitAccountTypeRefund">
+          <items>
+            <sfwTable ID="tblRefundDistPrnt" />
+            <sfwLabel ID="capIstrRefundDistributionPrnt" Text="Refund Distribution : " sfwIsCaption="True" />
+            <sfwLabel ID="ddlIstrRefundDistributionPrnt" sfwEntityField="RefDistDescription" />
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlRetPrnt" sfwCaption="PLSO/Graduated Benefit Options" sfwVisibleRule="VRPLSOGradOptionsSummary">
+          <items>
+            <sfwTable ID="tblPLSOPrnt" />
+            <sfwLabel ID="lblPLSORequestedPrnt" Text="Partial Lump Sum Option? :" sfwIsCaption="True" />
+            <sfwLabel ID="lblPLSORequestedPrnt1" sfwDefaultValue="N" sfwEntityField="PlsoRequestedFlagDesc" />
+            <sfwLabel ID="lblGraduatedBenefitOptPrnt" Text="Graduated Benefit Option :" sfwVisibleRule="VisibleRuleIsNotJobService" sfwIsCaption="True" />
+            <sfwLabel ID="lblGradBenPrnt" sfwVisibleRule="VisibleRuleIsNotJobService" sfwEntityField="GRBenOptDescription" />
+            <sfwPanel ID="pnlPLSOConfprnt" sfwCaption="Acknowledgement" sfwVisibleRule="VRIsPlsoRequestedFlagTrue">
+              <items>
+                <sfwTable ID="tblPLSOConfprnt" />
+                <sfwLabel ID="lblViewPLSOConfirmationprnt" sfwEntityField="lstrPLSOConfirmationText" sfwRenderType="RichText" CssClass="view-inline" />
+              </items>
+            </sfwPanel>
+            <sfwPanel ID="pnlGBConfprnt" sfwCaption="Acknowledgement" sfwVisibleRule="VRGraduatedBenefitOptionSelected">
+              <items>
+                <sfwTable ID="tblGBConfprnt" />
+                <sfwLabel ID="lblViewGBConfirmationprnt" sfwEntityField="lstrGBConfirmationText" sfwRenderType="RichText" CssClass="view-inline" />
+              </items>
+            </sfwPanel>
+            <sfwLabel ID="lblRolloverPLSOPrnt" Text="Rollover PLSO ? :" sfwIsCaption="True" />
+            <sfwLabel ID="lblDropDoMSSPLSOPrnt" sfwEntityField="RolloverPlsoFlagDesc" />
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlRoDetPrnt" sfwCaption="Rollover information" sfwVisibleRule="VisibleRuleRolloverInfo">
+          <items>
+            <sfwTable ID="tblRoPrnt" />
+            <sfwLabel ID="capIdecMSSTotalTaxablePrnt" Text="Total Taxable : " sfwIsCaption="True" />
+            <sfwLabel ID="lblIdecMSSTotalTaxablePrnt" sfwDataFormat="{0:C}" sfwEntityField="TotalTaxableAmount" />
+            <sfwLabel ID="capIdecMSSTotalNonTaxablePrnt" Text="Total Non Taxable : " sfwIsCaption="True" />
+            <sfwLabel ID="lblIdecMSSTotalNonTaxablePrnt" sfwDataFormat="{0:C}" sfwEntityField="TotalNonTaxableAmount" />
+            <sfwLabel AssociatedControlID="lblMemberAccountBalanceLtdPrnt" ID="capMemberAccountBalanceLtdPrnt" sfwVisibleRule="VisibleRuleIsNotDC" Text="Total Member Account Balance : " sfwIsCaption="True" />
+            <sfwLabel ID="lblMemberAccountBalanceLtdPrnt" sfwDataFormat="{0:C}" sfwVisibleRule="VisibleRuleIsNotDC" sfwEntityField="TotalMemberAccountBalance" />
+            <sfwLabel ID="lblMemberAccountBalanceTextPrnt" Text="(Amounts displayed are current and may not reflect actual amounts at the time of distribution.)" />
+            <sfwLabel ID="capOrgNamePrnt" Text="Rollover Institution Name : " sfwIsCaption="True" />
+            <sfwLabel ID="txtOrgNamePrnt" sfwEntityField="RolloverInstitutionName" />
+            <sfwLabel ID="capAddRollInsNamePrnt" Text="Address Line 1 : " sfwIsCaption="True" />
+            <sfwLabel ID="txtAddInsNamePrnt" sfwEntityField="AddrLine1" />
+            <sfwLabel ID="lblRollAddrCityPrnt" Text="City : " sfwIsCaption="True" />
+            <sfwLabel ID="txtAddcityPrnt" sfwEntityField="AddrCity" />
+            <sfwLabel ID="lblAddLine2Prnt" Text="Address Line 2 : " sfwIsCaption="True" />
+            <sfwLabel ID="txtAddLine2Prnt" sfwEntityField="AddrLine2" />
+            <sfwLabel ID="lblRollAddrStatePrnt" Text="State : " sfwIsCaption="True" />
+            <sfwLabel ID="ddlAddStatePrnt" sfwEntityField="AddrStateDescription" />
+            <sfwLabel ID="capRollAddrCountryPrnt" Text="Country : " sfwIsCaption="True" />
+            <sfwLabel ID="ddlCountryPrnt" sfwEntityField="AddrCountryDescription" sfwClientVisibility="controllist:lblRollAddrStatePrnt,ddlAddStatePrnt,capForeignPostalCodePrnt,lblForeignPostalCodePrnt,capForeignProvincePrnt,lblForeignProvincePrnt#default:capForeignPostalCodePrnt,lblForeignPostalCodePrnt,capForeignProvincePrnt,lblForeignProvincePrnt;United States of America:lblRollAddrStatePrnt,ddlAddStatePrnt;Canada:lblRollAddrStatePrnt,ddlAddStatePrnt;" />
+            <sfwLabel ID="capRAddrZipPrnt" Text="Zip Code :" sfwIsCaption="True" />
+            <sfwLabel ID="txtAddrZipCodePrnt" Width="50px" sfwEntityField="AddrZipCode" />
+            <sfwLabel ID="txtAddrZip4CodePrnt" Width="40px" sfwEntityField="AddrZip4Code" />
+            <sfwLabel ID="capForeignPostalCodePrnt" Text="Foreign Postal Code : " sfwIsCaption="True" />
+            <sfwLabel ID="lblForeignPostalCodePrnt" sfwEntityField="foreign_postal_code" />
+            <sfwLabel ID="capForeignProvincePrnt" Text="Foreign Province : " sfwIsCaption="True" />
+            <sfwLabel ID="lblForeignProvincePrnt" sfwEntityField="foreign_province" />
+            <sfwLabel ID="capROptPrnt" Text="Rollover Option : " sfwIsCaption="True" />
+            <sfwLabel ID="ddlROptPrnt" sfwEntityField="RolloverOptionDescription" />
+            <sfwLabel ID="capAccountNumberPrnt" Text="Account Number : " sfwIsCaption="True" />
+            <sfwLabel ID="txtAccountNumberPrnt" sfwEntityField="RolloverAccountNumber" />
+            <sfwLabel ID="capAmountOfTaxPrnt" Text="Rollover Amount : " sfwIsCaption="True" sfwVisibleRule="VisibleRuleRolloverAmount" />
+            <sfwLabel ID="txtAmountOfTaxPrnt" sfwDataFormat="{0:C}" sfwEntityField="AmountOfTaxable" sfwVisibleRule="VisibleRuleRolloverAmount" />
+            <sfwLabel ID="capPercentOfTaxPrnt" Text="Percentage : " sfwIsCaption="True" sfwVisibleRule="VisibleRuleRolloverPercentage" />
+            <sfwLabel ID="txtPercentOfTaxPrnt" sfwEntityField="PercentOfTaxable" sfwVisibleRule="VisibleRuleRolloverPercentage" />
+            <sfwLabel ID="capRolloverTypePrnt" Text="Rollover Type : " sfwIsCaption="True" />
+            <sfwLabel ID="ddlRolloverTypePrnt" sfwEntityField="RolloverTypeDescription" sfwClientVisibility="controllist:lblStateTaxPrnt,ddlStateTaxPrnt#Roth IRA:lblStateTaxPrnt,ddlStateTaxPrnt;" />
+            <sfwLabel ID="lblStateTaxPrnt" Text="State Tax Option:" sfwIsCaption="True" />
+            <sfwLabel ID="ddlStateTaxPrnt" sfwEntityField="StateTaxOptionDescription" />
+            <sfwLabel ID="lblRolloverTextPrnt" Text="Your rollover includes a non-taxable amount, a letter of acceptance is required from your financial institution. &lt;br /&gt;You may upload the letter after your application has been submitted." sfwIsCaption="True" sfwVisibleRule="VRRollOverText" />
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlACHDepositinfoPrnt" sfwCaption="ACH Deposit Information " sfwVisibleRule="VisibleRuleACHInformation">
+          <items>
+            <sfwTable ID="tblACHDepPrnt" />
+            <sfwLabel ID="lblLabel34Prnt" Text="Primary" />
+            <sfwLabel ID="lblLabel35Prnt" Text="Secondary" sfwVisibleRule="VisibleRuleIsSecondaryApplicable" />
+            <sfwLabel ID="capRoutingNoPrnt" Text="Routing No : " sfwIsCaption="True" />
+            <sfwLabel ID="txtRoutingNoPrnt" sfwEntityField="RoutingNo" />
+            <sfwLabel ID="capBankNamePrnt" Text="Bank Name : " sfwIsCaption="True" />
+            <sfwLabel ID="lblBakNaePrnt" sfwEntityField="BankName" />
+            <sfwLabel ID="capRoutingNoPrnt1" Text="Routing No : " sfwIsCaption="True" sfwVisibleRule="VisibleRuleIsSecondaryApplicable" />
+            <sfwLabel ID="txtRoutingNo1Prnt" sfwVisibleRule="VisibleRuleIsSecondaryApplicable" sfwEntityField="RoutingNo1" />
+            <sfwLabel ID="capBankNamePrnt1" Text="Bank Name : " sfwIsCaption="True" sfwVisibleRule="VisibleRuleIsSecondaryApplicable" />
+            <sfwLabel ID="lblBnkNae1Prnt" sfwVisibleRule="VisibleRuleIsSecondaryApplicable" sfwEntityField="BankName1" />
+            <sfwLabel ID="capAccntNumberPrnt" Text="Account Number : " sfwIsCaption="True" />
+            <sfwLabel ID="txtAccouNumbPrnt" sfwEntityField="AccountNumber" />
+            <sfwLabel ID="capBankAccountTypeValuePrnt" Text="Account Type : " sfwIsCaption="True" />
+            <sfwLabel ID="ddlBankAccountTypeValuePrnt" sfwEntityField="BankAccountTypeDescription" />
+            <sfwLabel ID="capAccntNumberPrnt1" Text="Account Number : " sfwIsCaption="True" sfwVisibleRule="VisibleRuleIsSecondaryApplicable" />
+            <sfwLabel ID="txtTextBox13Prnt" sfwVisibleRule="VisibleRuleIsSecondaryApplicable" sfwEntityField="AccountNumber1" />
+            <sfwLabel ID="capBankAccountTypeValuePrnt1" Text="Account Type : " sfwIsCaption="True" sfwVisibleRule="VisibleRuleIsSecondaryApplicable" />
+            <sfwLabel ID="ddlBankAccountTypeValue1Prnt" sfwVisibleRule="VisibleRuleIsSecondaryApplicable" sfwEntityField="BankAccountTypeDescription1" />
+            <sfwLabel ID="capPercentageOfNetAmountPrnt" Text="Percentage : " sfwIsCaption="True" sfwVisibleRule="VRIsRefundDistributionRefundtoMe" />
+            <sfwLabel ID="txtPercentageOfNetAmountPrnt" sfwDataFormat="{0:#0.00'%}" sfwEntityField="PercentageOfNetAmount" sfwVisibleRule="VRIsRefundDistributionRefundtoMe" />
+            <sfwLabel ID="capPartialAmountPrnt" Text="OR Flat Amount : " sfwIsCaption="True" sfwVisibleRule="VRIsRefundDistributionRefundtoMe" />
+            <sfwLabel ID="txtPartialAmountPrnt" sfwDataFormat="{0:C}" sfwEntityField="PartialAmount" sfwVisibleRule="VRIsRefundDistributionRefundtoMe" />
+            <sfwLabel ID="capPercentageOfNetAmountPrnt1" Text="Percentage : " sfwIsCaption="True" sfwVisibleRule="VisibleRuleIsSecondaryApplicable" />
+            <sfwLabel ID="txtPercentageOfNetAmount1Prnt" sfwDataFormat="{0:#0.00'%}" sfwVisibleRule="VisibleRuleIsSecondaryApplicable" sfwEntityField="PercentageOfNetAmount1" />
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlPanelPrnt" sfwCaption="State Tax Withholding" sfwVisibleRule="VisibleRuleIsBenefitDistributionTypeMonthlyBenefit">
+          <items>
+            <sfwTable ID="tblRefundStateTaxwithholdingPrnt" />
+            <sfwLabel ID="lblRefundTaxWithHoldingTextPrnt" Text="Federal income tax, at the rate of 20%, will be withheld from the taxable portion of your refund.  ND state income tax, at the rate 3.92%, will be automatically withheld &lt;br/&gt;from taxable portion of your refund unless indicated below." sfwIsCaption="True" />
+            <sfwLabel ID="lblLabel48" Text="No – DO NOT Withhold North Dakota State Income Tax :" sfwIsCaption="True" />
+            <sfwLabel ID="lblLabel49" sfwEntityField="RefStateTaxNotWithholdDesc" />
+            <sfwLabel ID="lblLabel39Prnt" Text="After a refund check is issued, any adjustments to Federal or State income tax paid is the responsibility of the taxpayer." sfwIsCaption="True" />
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlFedTaxWithholdingPrnt" sfwCaption="Federal Tax Withholding" sfwVisibleRule="VisibleRuleIsBenefitDistributionTypeMonthlyBenefit">
+          <items>
+            <sfwTable ID="tblMonthlyBenefitFederalPrnt" />
+            <sfwLabel ID="lblLiteralPrnt" Text="For income tax purposes, the amount of withholding is based on the marital status and the number of allowances (including zero) you indicate. &lt;/br&gt; If you wish to change your income tax election, please complete the Marital Status, Tax Allowance, and Tax Option fields.&lt;/br&gt; If you select the Tax Option of “Based on IRS Table and Additional Tax” you must also complete the Additional Tax Amount field.&lt;/br&gt; The additional tax amount will be added to the calculated income tax based on your Marital Status and Tax Allowance." sfwIsCaption="True" />
+            <sfwLabel ID="capFedMaritalStatusValuePrnt" Text="Marital Status : " sfwIsCaption="True" />
+            <sfwLabel ID="ddlFedMaritalStatusValuePrnt" sfwEntityField="MaritalStatusDescription" />
+            <sfwLabel ID="capFedTaxOptionValue2Prnt" Text="Tax Option : " sfwIsCaption="True" />
+            <sfwLabel ID="ddlFedMonthlyBenefitTaxOptionPrnt" sfwEntityField="TaxOptionDescription" sfwClientVisibility="controllist:capFedAdditionalStateTaxAmountPrnt,txtFedAdditionalStateTaxAmountPrnt#Based on IRS Table and Additional Tax:capFedAdditionalStateTaxAmountPrnt,txtFedAdditionalStateTaxAmountPrnt;" />
+            <sfwLabel ID="capFedTaxAllowancePrnt" Text="Tax Allowance : " sfwIsCaption="True" />
+            <sfwLabel ID="txtFedNoOfTaxAllowancePrnt" sfwDataType="Numeric" sfwEntityField="NoTaxAllowance" />
+            <sfwLabel ID="capFedAdditionalStateTaxAmountPrnt" Text="Additional Tax Amount : " sfwIsCaption="True" />
+            <sfwLabel ID="txtFedAdditionalStateTaxAmountPrnt" sfwDataFormat="{0:C}" sfwEntityField="AdditionalTaxAmount" />
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlNewfederalelectionPrnt" sfwCaption="New Federal Withholding Elections" sfwVisibleRule="VisibleRuleIsBenefitAccountTypeRetirementOrDisability">
+          <items>
+            <sfwLabel ID="capNamePrnt" AssociatedControlID="lblNamePrnt" sfwIsCaption="True" />
+            <sfwLabel ID="lblNamePrnt" sfwEntityField="objMemberPerson.IstrFirstNameMiddleInitial" />
+            <sfwLabel ID="capLastNamePrnt" AssociatedControlID="lblLastNamePrnt" sfwIsCaption="True" />
+            <sfwLabel ID="lblLastNamePrnt" sfwEntityField="objMemberPerson.LastName" />
+            <sfwLabel ID="capSSNPrnt" sfwIsCaption="True" />
+            <sfwLabel ID="lblSSNFormatPrnt" sfwEntityField="objMemberPerson.IstrScrambledSSN" sfwDataFormat="{0:000-##-####}" />
+            <sfwLabel ID="capAddressPrnt" AssociatedControlID="lblAddressPrnt" sfwIsCaption="True" />
+            <sfwLabel ID="lblAddressPrnt" sfwEntityField="objMemberPerson.objPersonCurrentAddress.IstrPersonAddress" />
+            <sfwLabel ID="capCityStateZipPrnt" AssociatedControlID="lblCityStateZipPrnt" sfwIsCaption="True" />
+            <sfwLabel ID="lblCityStateZipPrnt" sfwEntityField="objMemberPerson.objPersonCurrentAddress.IstrCityStateZIPAddress" />
+            <sfwLabel ID="capFederalMaritalStatusValuePrnt" AssociatedControlID="lblFederalFilingStatusValuePrnt" sfwIsCaption="True" />
+            <sfwLabel ID="lblFederalFilingStatusValuePrnt" sfwEntityField="FilingStatusDesc" />
+            <sfwLiteral ID="ltrLieralaccoutndetailsPrnt" />
+            <sfwLiteral ID="ltrLiteralStep2Prnt" sfwMode="All" />
+            <sfwLabel ID="capAnnualTaxablePaymentAmtPrnt" AssociatedControlID="txtAnnualTaxablePaymentAmtPrnt" sfwIsCaption="True" />
+            <sfwLabel ID="txtAnnualTaxablePaymentAmtPrnt" sfwDataFormat="{0:C}" sfwEntityField="TwoBI" />
+            <sfwLabel ID="capPensionAnnuityAmtPrnt" AssociatedControlID="txtPensionAnnuityAmtPrnt" sfwIsCaption="True" />
+            <sfwLabel ID="txtPensionAnnuityAmtPrnt" sfwDataFormat="{0:C}" sfwEntityField="TwoBIi" />
+            <sfwLabel ID="capTotalTaxablePensionAmountPrnt" AssociatedControlID="txtTotalTaxablePensionAmountPrnt" sfwIsCaption="True" />
+            <sfwLabel ID="txtTotalTaxablePensionAmountPrnt" sfwDataFormat="{0:C}" sfwEntityField="TwoBIii" />
+            <sfwLiteral ID="ltrLiteralStep3Prnt" sfwMode="All" />
+            <sfwLabel ID="lblToatlincomeTextPrnt" sfwEntityField="three_first_line" />
+            <sfwLabel ID="capQualifyingChildrenAmtPrnt" AssociatedControlID="txtQualifyingChildrenAmtPrnt" sfwEntityField="three_second_line" />
+            <sfwLabel ID="txtQualifyingChildrenAmtPrnt" sfwDataFormat="{0:C}" sfwEntityField="Three1" />
+            <sfwLabel ID="capOtherDependentsAmtPrnt" AssociatedControlID="txtOtherDependentsAmtPrnt" sfwEntityField="three_third_line" />
+            <sfwLabel ID="txtOtherDependentsAmtPrnt" sfwDataFormat="{0:C}" sfwEntityField="Three2" />
+            <sfwLabel ID="capForeignEducationTaxCreditAmtPrnt" AssociatedControlID="txtForeignEducationTaxCreditAmtPrnt" sfwIsCaption="True" />
+            <sfwLabel ID="txtForeignEducationTaxCreditAmtPrnt" sfwDataFormat="{0:C}" sfwEntityField="Three3" />
+            <sfwLabel ID="capTotalClaimDependentAmountPrnt" AssociatedControlID="txtTotalClaimDependentAmountPrnt" sfwIsCaption="True" />
+            <sfwLabel ID="txtTotalClaimDependentAmountPrnt" sfwDataFormat="{0:C}" sfwEntityField="ThreeTotal" />
+            <sfwLabel ID="ltrLabelPrnt" />
+            <sfwLiteral ID="ltrLiteralStep4Prnt" sfwMode="All" />
+            <sfwLabel ID="capOtherIncomeAmtPrnt" AssociatedControlID="txtOtherIncomeAmtPrnt" sfwIsCaption="True" />
+            <sfwLabel ID="capOtherDeductionAmtPrnt" AssociatedControlID="txtOtherDeductionAmtPrnt" sfwIsCaption="True" />
+            <sfwLabel ID="capFederalAdditionalWithholdingAmtPrnt" AssociatedControlID="txtFederalAdditionalWithholdingAmtPrnt" sfwIsCaption="True" />
+            <sfwLabel ID="txtOtherIncomeAmtPrnt" sfwDataFormat="{0:C}" sfwEntityField="FourA" />
+            <sfwLabel ID="txtOtherDeductionAmtPrnt" sfwDataFormat="{0:C}" sfwEntityField="FourB" />
+            <sfwLabel ID="txtFederalAdditionalWithholdingAmtPrnt" sfwDataFormat="{0:C}" sfwEntityField="FourC" />
+            <sfwLabel ID="capFederalFixedWithholdingAmtPrnt" sfwIsCaption="True" Visible="False" />
+            <sfwLabel ID="chkW4PFederalNoWithholdingFlagPrnt" />
+            <sfwLabel ID="lblW4PFederalNoWithholdingFlagPrnt" sfwEntityField="NoFedWithholdingDesc" />
+            <sfwLiteral ID="ltrLiteralFedAckTextPrnt" Text="&lt;b&gt;I, &lt;/b&gt;" />
+            <sfwLabel ID="lblLiteralFedAckNamePrnt" sfwEntityField="objMemberPerson.FullName" />
+            <sfwLiteral ID="ltrLiteralFedRemAckTextPrnt" Text="&lt;b&gt;, certify that the information contained on this form is correct to the best of my knowledge and belief.&lt;/b&gt;" />
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlStateTaxWithholdingPrnt" sfwCaption="State Tax Withholding" sfwVisibleRule="VisibleRuleIsBenefitDistributionTypeMonthlyBenefit">
+          <items>
+            <sfwTable ID="tblMonthlyBenefitStatePrnt" />
+            <sfwLabel ID="lblLabelPrnt" Text="For income tax purposes, the amount of withholding is based on the marital status and the number of allowances (including zero) you indicate.&lt;/br&gt; If you wish to change your income tax election, please complete the Marital Status, Tax Allowance, and Tax Option fields.&lt;/br&gt; If you select the Tax Option of “Based on State Table and Additional Tax” you must also complete the Additional Tax Amount field.&lt;br/&gt; The additional tax amount will be added to the calculated income tax based on your Marital Status and Tax Allowance." sfwIsCaption="True" />
+            <sfwLabel ID="capStateMaritalStatusValuePrnt" Text="Marital Status : " sfwIsCaption="True" />
+            <sfwLabel ID="ddlStatMaritalStatusValuePrnt" sfwEntityField="MaritalStatusDescription1" />
+            <sfwLabel ID="capTaxOptionValue2Prnt" Text="Tax Option : " sfwIsCaption="True" />
+            <sfwLabel ID="ddlMonthlyBenefitTaxOptionPrnt" sfwEntityField="TaxOptionDescription1" sfwClientVisibility="controllist:capAdditionalStateTaxAmountPrnt,txtAdditionalStateTaxAmountPrnt#From State Table and Additional Tax:capAdditionalStateTaxAmountPrnt,txtAdditionalStateTaxAmountPrnt;" />
+            <sfwLabel ID="capStateTaxAllowancePrnt" Text="Tax Allowance : " sfwIsCaption="True" />
+            <sfwLabel ID="txtNoOfTaxAllowancePrnt" sfwDataType="Numeric" sfwEntityField="NoTaxAllowance1" />
+            <sfwLabel ID="capAdditionalStateTaxAmountPrnt" Text="Additional Tax Amount : " sfwIsCaption="True" />
+            <sfwLabel ID="txtAdditionalStateTaxAmountPrnt" sfwDataFormat="{0:C}" sfwShowZero="True" sfwEntityField="AdditionalTaxAmount1" />
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlStateTaxRefundPrnt" sfwCaption="Refund" sfwVisibleRule="VisibleRuleIsBenefitAccountTypeRetirementOrDisability">
+          <items>
+            <sfwTable ID="tblStateTaxRefundPrnt" />
+            <sfwLabel ID="capRefundStateTaxAmountPrnt" Text="Amount to withhold for ND State Tax : " sfwIsCaption="True" />
+            <sfwLabel ID="txtRefundStateTaxAmountPrnt" sfwDataFormat="{0:C}" sfwEntityField="RefundStateAmt" />
+            <sfwLabel ID="txtMothlyDisStateTaxAmountPrnt" sfwDataFormat="{0:C}" sfwEntityField="StateFlatAmount" Visible="False" />
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlTaxPrnt" sfwCaption="Refund" sfwVisibleRule="VisibleRuleIsBenefitAccountTypeRefund">
+          <items>
+            <sfwLabel ID="ltrWithHoldingTextPrnt" Text="Your withholding rate is determined by the type of payment you will receive." />
+            <sfwLabel ID="ltrWithHoldingText1Prnt" Text="• For nonperiodic payments, the default withholding rate is 10%. You can choose to have a different rate by entering a rate between 0% and 100% on line 2. Generally, you can’t choose less than 10% for payments to be delivered outside the United States and its possessions." />
+            <sfwLabel ID="ltrWithHoldingText2Prnt" Text="• For an eligible rollover distribution, the default withholding rate is 20%. You can choose a rate greater than 20% by entering the rate on line 2. You may not choose a rate less than 20%." />
+            <sfwLabel ID="ltrWithHoldingText3Prnt" Text="Complete this line if you would like a rate of withholding that is different from the default withholding rate. See the instructions on page 2 and the Marginal Rate Tables below for additional information. Enter the rate as a whole number (no decimals)" />
+            <sfwLabel ID="txtFedTaxPrnt" sfwDataFormat="{0'%}" sfwVisibleRule="VisibleRuleIsTaxIdentifierFedTax" sfwEntityField="RefundFedPercent" />
+            <sfwLiteral ID="ltrLiteralPrnt" Text="&lt;b&gt;I, &lt;/b&gt;" />
+            <sfwLabel ID="lblLiteral123Prnt" sfwEntityField="objMemberPerson.FullName" />
+            <sfwLiteral ID="ltrLiteral2Prnt" Text="&lt;b&gt;, certify that the information contained on this form is correct to the best of my knowledge and belief.&lt;/b&gt;" />
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlRefundPrnt" sfwCaption="Refund" sfwVisibleRule="VisibleRuleIsBenefitAccountTypeRefund">
+          <items>
+            <sfwTable ID="tblRefundPrnt" />
+            <sfwLabel ID="capTaxOptionValue31Prnt" Text="Tax Option : " sfwIsCaption="True" />
+            <sfwLabel ID="ddlRefundTaxOptionPrnt" sfwEntityField="TaxOptionDescription1" />
+            <sfwLabel ID="capSuppressWarningsFlag2Prnt" Text="Suppress Warnings : " sfwIsCaption="True" />
+            <sfwLabel ID="chkRefundSupressWarningPrnt" sfwEntityField="RefundSupressWarning" />
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlHealthEnrollPrnt" sfwCaption="Health Enrollment Option" sfwVisibleRule="VisibleRuleIsHealthStepVisible">
+          <items>
+            <sfwTable ID="tblhealthPanel" />
+            <sfwLabel ID="capHealplanEnrOptSelPrnt" Text="Plan Enrollment Option : " sfwIsCaption="True" />
+            <sfwLabel ID="lblHealplanEnrOptSelPrnt" sfwEntityField="objPAEnrollReqHealth.PlanEnrollmentOptionDescription" />
+            <sfwLabel ID="capLevelOfCoverageValueHealthPrnt" Text="Level of NDPERS Coverage : " sfwVisibleRule="VisibleRuleIsHealthEnrolled" sfwIsCaption="True" />
+            <sfwLabel ID="ddlLevelOfCoverageValueHealthPrnt" sfwVisibleRule="VisibleRuleIsHealthEnrolled" sfwEntityField="objPAEnrollReqHealth.LevelOfCoverageDescription" />
+            <sfwLabel ID="lblPrintPageBreakTwoHealthAuth" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwPanel ID="pnlNewPane45" sfwCaption="Acknowledgements" sfwVisibleRule="VisibleRuleIsHealthEnrolled" CssClass="GridColumnHide">
+              <items>
+                <sfwTable ID="tblNewPage45" />
+                <sfwLabel ID="lblPrintHPConfirmation" sfwEntityField="lstrHPConfirmationText" sfwRenderType="RichText" sfwVisibleRule="VRIsHealthEnrltAsCobra" />
+                <sfwLabel ID="lblPrintHPRTConfirmation" sfwEntityField="IstrHPRTConfirmationText" sfwRenderType="RichText" />
+              </items>
+            </sfwPanel>
+            <sfwPanel ID="pnlPrintHPCancellationPolicy" sfwCaption="CANCELLATION POLICY" sfwVisibleRule="VisibleRuleIsHealthEnrolled">
+              <items>
+                <sfwTable ID="tblPrintHPCancellationPolicy" />
+                <sfwLabel ID="lblPrintHPCNConfirmationText" sfwEntityField="IstrHPCNConfirmationText" sfwRenderType="RichText" CssClass="view-inline" />
+                <sfwLabel ID="lblPrintHPCRConfirmation" sfwEntityField="IstrHPCRConfirmationText" sfwRenderType="RichText" CssClass="view-inline" sfwVisibleRule="VisibleRuleIsBenTypeNotRefund" />
+              </items>
+            </sfwPanel>
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlOtherHealthPrnt" sfwCaption="Other Coverage" sfwVisibleRule="VisibleRuleIsHealthEnrolledOtherYes">
+          <items>
+            <sfwTable ID="tblOtherHealthPrnt" />
+            <sfwLabel ID="lblOtherCovPrnt" Text="Other Coverages" sfwIsCaption="True" />
+            <sfwLabel ID="lblSpousPrnt" Text="Are you or spouse or any of your Eligible Dependent currently or previously covered by another insurance benefit plan(s)?  " sfwIsCaption="True" />
+            <sfwLabel ID="lblKeepOthrCovFlagPrnt" sfwEntityField="objPAEnrollReqHealth.IsEligibleDependentExistsFlagDesc" />
+            <sfwGridView AllowPaging="True" ID="grvMSSOtherCoverageDetailHealthPrnt" sfwEntityField="objPAEnrollReqHealth.lstMSSOtherCoverageDetail" sfwGridEntity="entWssPersonAccountOtherCoverageDetail">
+              <Columns>
+                <TemplateField HeaderText="Provider Name">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="ProviderOrgName" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Other Coverage&lt;br/&gt;Telephone  Number" SortExpression="OtherCoverageNumber">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:(###)###-####}" sfwEntityField="OtherCoverageNumber" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Policy Number" SortExpression="PolicyNumber">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="PolicyNumber" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Policy Holder" SortExpression="PolicyHolder">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="PolicyHolder" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Date Of Birth" SortExpression="DateOfBirth">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="DateOfBirth" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Policy Coverage Start Date" SortExpression="PolicyStartDate">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="PolicyStartDate" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Policy Coverage End Date" SortExpression="PolicyEndDate">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="PolicyEndDate" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Name(s) of Person(s)&lt;/br&gt; Covered" SortExpression="CoveredPerson">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="CoveredPerson" />
+                  </ItemTemplate>
+                </TemplateField>
+              </Columns>
+            </sfwGridView>
+            <hr ID="hrOtherCoverageHealthPrnt" />
+            <sfwLabel ID="lblDoYouHealthPrnt" sfwWrap="True" Text="Do you intend to keep your current policy(ies) in force after the effective date of this Application? " sfwIsCaption="True" />
+            <sfwLabel ID="lblKeepingOtherCoverageFlagHealthPrnt" sfwEntityField="objPAEnrollReqHealth.KeepingOtherCoverageFlagDesc" />
+            <sfwLabel ID="lblKeepCurrentFlagPolicyReasonHealthPrnt" Width="1000px" sfwEntityField="objPAEnrollReqHealth.KeepCurrentFlagPolicyReason" />
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlWorkerCompHealthPrnt" sfwCaption="Workers’ Compensation/No-Fault" sfwVisibleRule="VisRuleIsHealthEnrolledAndWorkCompCovYes">
+          <items>
+            <sfwTable ID="tblworkCompHealthPrnt" />
+            <sfwLabel ID="lblWorkkCompPrnt" Text="Workers’ Compensation/No-Fault" sfwIsCaption="True" />
+            <sfwLabel ID="lbleligDepPrnt" Text="Are you, your spouse or any of your eligible dependents currently receiving or have received worker’s compensation benefits?  " sfwIsCaption="True" />
+            <sfwLabel ID="lblDepsRecPrnt" sfwEntityField="objPAEnrollReqHealth.DependentReceivingWorkersCompensationFlagDesc" />
+            <sfwLabel ID="lblEligDepsNoFaultPrnt" Text="Are you, your spouse or any of your eligible dependents currently receiving no-fault benefits?  " sfwIsCaption="True" />
+            <sfwLabel ID="lblNOFaultValue" sfwEntityField="objPAEnrollReqHealth.DependentReceivingNoFaultBenefitsFlagDesc" />
+            <sfwGridView AllowPaging="True" ID="grvMSSWorkerCompensationHealthPrnt" sfwEntityField="objPAEnrollReqHealth.lstMSSWorkerCompensation" sfwGridEntity="entWssPersonAccountWorkerCompensation">
+              <Columns>
+                <TemplateField HeaderText="Injured Person’s Name">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="PersonName" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Date of Injury">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="InjuryDate" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Type of Injury">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="TypeOfInjury" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Company Providing Benefits ">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="CompanyName" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Company’s Telephone Number">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:(###)###-####}" sfwEntityField="PhoneNumber" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Wss Person Account Worker Compensation ID" Visible="False">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="WssPersonAccountWorkerCompensationId" />
+                  </ItemTemplate>
+                </TemplateField>
+              </Columns>
+            </sfwGridView>
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlMedicareDependentsPrnt" sfwCaption="Medicare Coverage Information" sfwVisibleRule="VisRuleIsHealthEnrolledAndMedicareCovYes">
+          <items>
+            <sfwTable ID="tblNewPage11" />
+            <sfwLabel ID="lblYouSpouCovMed" Text="Are you or spouse or any of your Eligible Dependents currently covered by Medicare?  " sfwIsCaption="True" />
+            <sfwLabel ID="lblDepMedEligDes" sfwEntityField="objPAEnrollReqHealth.IsDependentMedicareEligibleDesc" sfwClientVisibility="controllist:lblPrintHPRTConfirmation#Yes:lblPrintHPRTConfirmation;" />
+            <sfwLabel ID="lblYouSpouMediESRD" Text="Are you or spouse or any of your Eligible Dependents currently covered by Medicare due to ESRD?  " sfwIsCaption="True" />
+            <sfwLabel ID="lblCheckBox4" sfwEntityField="objPAEnrollReqHealth.IsDependentMedicareEsrdDesc" />
+            <sfwPanel GroupingText="&lt;b&gt;Member's Medicare Coverage Information&lt;/b&gt;" ID="pnlMembeMedicare" sfwCaption="Member's Medicare Coverage Information" sfwCollapsible="False">
+              <items>
+                <sfwTable ID="tblNewPage17" />
+                <sfwLabel ID="capMedicareClaimNo2" Text="Member Medicare Claim No : " sfwIsCaption="True" />
+                <sfwLabel ID="lblMedicareClaimNo" sfwEntityField="objPAEnrollReqHealth.MedicareClaimNo" />
+                <sfwLabel ID="capMedicarePartAEffectiveDate2" Text="Medicare Part A Effective Date : " sfwIsCaption="True" />
+                <sfwLabel ID="lblMedicarePartAEffectiveDate" sfwDataFormat="{0:d}" sfwEntityField="objPAEnrollReqHealth.MedicarePartAEffectiveDate" />
+                <sfwLabel ID="capMedicarePartBEffectiveDate2" Text="Medicare Part B Effective Date : " sfwIsCaption="True" />
+                <sfwLabel ID="lblMedicarePartBEffectiveDate" sfwDataFormat="{0:d}" sfwEntityField="objPAEnrollReqHealth.MedicarePartBEffectiveDate" />
+              </items>
+            </sfwPanel>
+            <sfwPanel ID="pnlPanel6" sfwCaption="Dependents Medicare Coverage Information">
+              <items>
+                <sfwTable ID="tblDepMed" />
+                <sfwGridView AllowPaging="True" ID="grvMSSMedicareDependentsHealthPrnt" sfwTwoWayBinding="True" AllowEditing="True" sfwEntityField="lstRetireeDeps" sfwGridEntity="entWssPersonDependent">
+                  <Columns>
+                    <TemplateField HeaderText="First Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="FirstName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Last Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="LastName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Middle Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="MiddleName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="SSN">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:XXX-XX-0000}" sfwEntityField="LastFourDigitsOfSSN" CssClass="SSNColumn-wrap" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Medicare Claim No">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="MedicareClaimNo" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Medicare Part A&lt;br&gt; Effective Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="MedicarePartAEffectiveDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Medicare Part B&lt;br&gt; Effective Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="MedicarePartBEffectiveDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Wss Person Dependent ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="WssPersonDependentId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </items>
+            </sfwPanel>
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlDentalEnrollPrnt" sfwCaption="Dental Enrollment Option" sfwVisibleRule="VisibleRuleIsDentalStepVisible">
+          <items>
+            <sfwTable ID="tblDentalPanel" />
+            <sfwLabel ID="capDentplanEnrOptSelPrnt" Text="Plan Enrollment Option : " sfwIsCaption="True" />
+            <sfwLabel ID="lblDentalplanEnrOptSelPrnt" sfwEntityField="objPAEnrollReqDental.PlanEnrollmentOptionDescription" />
+            <sfwLabel ID="capLOfCValueDentalPrnt" Text="Level of NDPERS Coverage : " sfwVisibleRule="VisibleRuleIsDentalEnrolled" sfwIsCaption="True" />
+            <sfwLabel ID="ddlLOfCValueDentalPrnt" sfwVisibleRule="VisibleRuleIsDentalEnrolled" sfwEntityField="objPAEnrollReqDental.LevelOfCoverageDescription" />
+            <sfwLabel ID="lblPrintPageBreakTwoDentalAuth" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwPanel ID="pnlNewPane46" sfwCaption="Acknowledgement" sfwVisibleRule="VisibleRuleIsDentalEnrolled" CssClass="GridColumnHide">
+              <items>
+                <sfwTable ID="tblNewPage46" />
+                <sfwLabel ID="lblPrintDPConfirmation" sfwEntityField="lstrDPConfirmationText" sfwRenderType="RichText" />
+              </items>
+            </sfwPanel>
+            <sfwPanel ID="pnlPrintDPCancellationPolicy" sfwCaption="CANCELLATION POLICY" sfwVisibleRule="VisibleRuleIsDentalEnrolled">
+              <items>
+                <sfwTable ID="tblPrintDPCancellationPolicy" />
+                <sfwLabel ID="lblPrintDPCNConfirmationText" sfwEntityField="IstrDPCNConfirmationText" sfwRenderType="RichText" CssClass="view-inline" />
+                <sfwLabel ID="lblPrintDPCRConfirmation" sfwEntityField="IstrDPCRConfirmationText" sfwRenderType="RichText" CssClass="view-inline" sfwVisibleRule="VisibleRuleIsBenTypeNotRefund" />
+              </items>
+            </sfwPanel>
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlOtherDentalPrnt" sfwCaption="Other Coverage" sfwVisibleRule="VisibleRuleIsDentalEnrolledOtherYes">
+          <items>
+            <sfwTable ID="tblOtherDentalPrnt" />
+            <sfwLabel ID="lblOtherCovDentalPrnt" Text="Other Coverages" sfwIsCaption="True" />
+            <sfwLabel ID="lblDentalSpousPrnt" Text="Are you or spouse or any of your Eligible Dependent currently or previously covered by another insurance benefit plan(s)?  " sfwIsCaption="True" />
+            <sfwLabel ID="lblKeepOthrCovDentalFlagPrnt" sfwEntityField="objPAEnrollReqDental.IsEligibleDependentExistsFlagDesc" />
+            <sfwGridView AllowPaging="True" ID="grvMSSOtherCoverageDetailDentalPrnt" sfwEntityField="objPAEnrollReqDental.lstMSSOtherCoverageDetail" sfwGridEntity="entWssPersonAccountOtherCoverageDetail">
+              <Columns>
+                <TemplateField HeaderText="Provider Name">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="ProviderOrgName" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Other Coverage&lt;br/&gt;Telephone  Number" SortExpression="OtherCoverageNumber">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:(###)###-####}" sfwEntityField="OtherCoverageNumber" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Policy Number" SortExpression="PolicyNumber">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="PolicyNumber" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Policy Holder" SortExpression="PolicyHolder">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="PolicyHolder" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Date Of Birth" SortExpression="DateOfBirth">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="DateOfBirth" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Policy Coverage &lt;/br&gt;Start Date" SortExpression="PolicyStartDate">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="PolicyStartDate" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Policy Coverage &lt;/br&gt;End Date" SortExpression="PolicyEndDate">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="PolicyEndDate" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Name(s) of Person(s)&lt;/br&gt; Covered" SortExpression="CoveredPerson">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="CoveredPerson" />
+                  </ItemTemplate>
+                </TemplateField>
+              </Columns>
+            </sfwGridView>
+            <hr ID="hrOtherCoverageDentalPrnt" />
+            <sfwLabel ID="lblDoYouDentalPrnt" sfwWrap="True" Text="Do you intend to keep your current policy(ies) in force after the effective date of this Application? " sfwIsCaption="True" />
+            <sfwLabel ID="lblKeepOtherCovFlagDentalPrnt" sfwEntityField="objPAEnrollReqDental.KeepingOtherCoverageFlagDesc" />
+            <sfwLabel ID="lblKeepCurrentFlagPolicyReasonDentalPrnt" Width="1000px" sfwEntityField="objPAEnrollReqDental.KeepCurrentFlagPolicyReason" />
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlWorkerCompDentalPrnt" sfwCaption="Workers’ Compensation/No-Fault" sfwVisibleRule="VisRuleIsDentalEnrolledAndWorkCompCovYes">
+          <items>
+            <sfwTable ID="tblworkCompDentalPrnt" />
+            <sfwLabel ID="lblWorkCompDentalPrnt" Text="Workers’ Compensation/No-Fault" sfwIsCaption="True" />
+            <sfwLabel ID="lbleligDepDentalPrnt" Text="Are you, your spouse or any of your eligible dependents currently receiving or have received worker’s compensation benefits?  " sfwIsCaption="True" />
+            <sfwLabel ID="lblDepsRecDentalPrnt" sfwEntityField="objPAEnrollReqDental.DependentReceivingWorkersCompensationFlagDesc" />
+            <sfwLabel ID="lblEligDepsNoFaultDentalPrnt" Text="Are you, your spouse or any of your eligible dependents currently receiving no-fault benefits?  " sfwIsCaption="True" />
+            <sfwLabel ID="lblNOFaultValueDentalPrnt" sfwEntityField="objPAEnrollReqDental.DependentReceivingNoFaultBenefitsFlagDesc" />
+            <sfwGridView AllowPaging="True" ID="grvMSSWorkerCompensationDentalPrnt" sfwEntityField="objPAEnrollReqDental.lstMSSWorkerCompensation" sfwGridEntity="entWssPersonAccountWorkerCompensation">
+              <Columns>
+                <TemplateField HeaderText="Injured Person’s Name">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="PersonName" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Date of Injury">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="InjuryDate" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Type of Injury">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="TypeOfInjury" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Company Providing Benefits ">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="CompanyName" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Company’s Telephone Number">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:(###)###-####}" sfwEntityField="PhoneNumber" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Wss Person Account Worker Compensation ID" Visible="False">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="WssPersonAccountWorkerCompensationId" />
+                  </ItemTemplate>
+                </TemplateField>
+              </Columns>
+            </sfwGridView>
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlVisionEnrollPrnt" sfwCaption="Vision Enrollment Option" sfwVisibleRule="VisibleRuleIsVisionStepVisible">
+          <items>
+            <sfwTable ID="tblVisionPanel" />
+            <sfwLabel ID="capVisplanEnrOptSelPrnt" Text="Plan Enrollment Option : " sfwIsCaption="True" />
+            <sfwLabel ID="lblVisionplanEnrOptSelPrnt" sfwEntityField="objPAEnrollReqVision.PlanEnrollmentOptionDescription" />
+            <sfwLabel ID="capLOfCValueVisionPrnt" Text="Level of NDPERS Coverage : " sfwVisibleRule="VisibleRuleIsVisionEnrolled" sfwIsCaption="True" />
+            <sfwLabel ID="ddlLOfCValueVisionPrnt" sfwVisibleRule="VisibleRuleIsVisionEnrolled" sfwEntityField="objPAEnrollReqVision.LevelOfCoverageDescription" />
+            <sfwLabel ID="lblPrintPageBreakTwoVisionAuth" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwPanel ID="pnlNewPane47" sfwCaption="Acknowledgement" sfwVisibleRule="VisibleRuleIsVisionEnrolled">
+              <items>
+                <sfwTable ID="tblNewPage47" />
+                <sfwLabel ID="lblPrintVPConfirmation" sfwEntityField="lstrVPConfirmationText" sfwRenderType="RichText" CssClass="GridColumnHide" />
+              </items>
+            </sfwPanel>
+            <sfwPanel ID="pnlPrintVPCancellationPolicy" sfwCaption="CANCELLATION POLICY" sfwVisibleRule="VisibleRuleIsVisionEnrolled">
+              <items>
+                <sfwTable ID="tblPrintVPCancellationPolicy" />
+                <sfwLabel ID="lblPrintVPCNConfirmationText" sfwEntityField="IstrDPCNConfirmationText" sfwRenderType="RichText" CssClass="view-inline" />
+                <sfwLabel ID="lblPrintVPCRConfirmation" sfwEntityField="IstrDPCRConfirmationText" sfwRenderType="RichText" CssClass="view-inline" sfwVisibleRule="VisibleRuleIsBenTypeNotRefund" />
+              </items>
+            </sfwPanel>
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlOtherVisionPrnt" sfwCaption="Other Coverage" sfwVisibleRule="VisibleRuleIsVisionEnrolledOtherYes">
+          <items>
+            <sfwTable ID="tblOtherVisionPrnt" />
+            <sfwLabel ID="lblOtherCovVisionPrnt" Text="Other Coverages" sfwIsCaption="True" />
+            <sfwLabel ID="lblVisionSpousPrnt" Text="Are you or spouse or any of your Eligible Dependent currently or previously covered by another insurance benefit plan(s)?  " sfwIsCaption="True" />
+            <sfwLabel ID="lblKeepOthrCovVisionFlagPrnt" sfwEntityField="objPAEnrollReqVision.IsEligibleDependentExistsFlagDesc" />
+            <sfwGridView AllowPaging="True" ID="grvMSSOtherCoverageDetailVisionPrnt" sfwEntityField="objPAEnrollReqVision.lstMSSOtherCoverageDetail" sfwGridEntity="entWssPersonAccountOtherCoverageDetail">
+              <Columns>
+                <TemplateField HeaderText="Provider Name">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="ProviderOrgName" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Other Coverage&lt;br/&gt;Telephone  Number" SortExpression="OtherCoverageNumber">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:(###)###-####}" sfwEntityField="OtherCoverageNumber" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Policy Number" SortExpression="PolicyNumber">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="PolicyNumber" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Policy Holder" SortExpression="PolicyHolder">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="PolicyHolder" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Date Of Birth" SortExpression="DateOfBirth">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="DateOfBirth" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Policy Coverage &lt;/br&gt;Start Date" SortExpression="PolicyStartDate">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="PolicyStartDate" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Policy Coverage &lt;/br&gt;End Date" SortExpression="PolicyEndDate">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="PolicyEndDate" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Name(s) of Person(s)&lt;/br&gt; Covered" SortExpression="CoveredPerson">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="CoveredPerson" />
+                  </ItemTemplate>
+                </TemplateField>
+              </Columns>
+            </sfwGridView>
+            <hr ID="hrOtherCoverageVisionPrnt" />
+            <sfwLabel ID="lblDoYouVisionPrnt" sfwWrap="True" Text="Do you intend to keep your current policy(ies) in force after the effective date of this Application? " sfwIsCaption="True" />
+            <sfwLabel ID="lblKeepOtherCovFlagVisionPrnt" sfwEntityField="objPAEnrollReqVision.KeepingOtherCoverageFlagDesc" />
+            <sfwLabel ID="lblKeepCurrentFlagPolicyReasonVisionPrnt" Width="1000px" sfwEntityField="objPAEnrollReqVision.KeepCurrentFlagPolicyReason" />
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlWorkerCompVisionPrnt" sfwCaption="Workers’ Compensation/No-Fault" sfwVisibleRule="VisRuleIsVisionEnrolledAndWorkCompCovYes">
+          <items>
+            <sfwTable ID="tblworkCompVisionPrnt" />
+            <sfwLabel ID="lblWorkCompVisionPrnt" Text="Workers’ Compensation/No-Fault" sfwIsCaption="True" />
+            <sfwLabel ID="lbleligDepVisionPrnt" Text="Are you, your spouse or any of your eligible dependents currently receiving or have received worker’s compensation benefits?  " sfwIsCaption="True" />
+            <sfwLabel ID="lblDepsRecVisionPrnt" sfwEntityField="objPAEnrollReqVision.DependentReceivingWorkersCompensationFlagDesc" />
+            <sfwLabel ID="lblEligDepsNoFaultVisionPrnt" Text="Are you, your spouse or any of your eligible dependents currently receiving no-fault benefits?  " sfwIsCaption="True" />
+            <sfwLabel ID="lblNOFaultValueVisionPrnt" sfwEntityField="objPAEnrollReqVision.DependentReceivingNoFaultBenefitsFlagDesc" />
+            <sfwGridView AllowPaging="True" ID="grvMSSWorkerCompensationVisionPrnt" sfwEntityField="objPAEnrollReqVision.lstMSSWorkerCompensation" sfwGridEntity="entWssPersonAccountWorkerCompensation">
+              <Columns>
+                <TemplateField HeaderText="Injured Person’s Name">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="PersonName" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Date of Injury">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="InjuryDate" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Type of Injury">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="TypeOfInjury" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Company Providing Benefits ">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="CompanyName" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Company’s Telephone Number">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:(###)###-####}" sfwEntityField="PhoneNumber" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Wss Person Account Worker Compensation ID" Visible="False">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="WssPersonAccountWorkerCompensationId" />
+                  </ItemTemplate>
+                </TemplateField>
+              </Columns>
+            </sfwGridView>
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlPanel4Prnt" sfwCaption="Medicare Part D" sfwVisibleRule="VisibleRuleIsMedicarePanelVisible">
+          <items>
+            <sfwTable ID="tblMedPartDPrnt" />
+            <sfwLabel ID="capMedPlanEnrolOptionSelPrnt" Text="Plan Enrollment Option Selection - Self : " sfwIsCaption="True" />
+            <sfwLabel ID="ddlPlanEnrollmentOptionValueMedicarePrnt" sfwData1EqualTo="Y" sfwEntityField="objPAEnrollReqMedicare.PlanEnrollmentOptionDescription" />
+            <sfwLabel ID="lblLabel16Prnt" Text="Plan Enrollment Option Selection - Spouse / Dependent : " sfwIsCaption="True" />
+            <sfwLabel ID="ddlDropDownList5Prnt" sfwEntityField="DepMedicarePlanOptionDesc" />
+            <sfwLabel ID="lblPrintPageBreakTwoMedicareAuth" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwPanel ID="pnlNewPane48" sfwCaption="Acknowledgement" sfwVisibleRule="VisibleRuleIsMedicareEnrolled">
+              <items>
+                <sfwTable ID="tblNewPage48" />
+                <sfwLabel ID="lblPrintMPConfirmation" sfwEntityField="lstrMPConfirmationText" sfwRenderType="RichText" />
+              </items>
+            </sfwPanel>
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlNewPanelSpouseDepPrnt" sfwCaption="Spouse / Dependent" sfwVisibleRule="VisibleRuleIsMedicarePanelVisible">
+          <items>
+            <sfwTable ID="tblPnaelSpouseDepPrnt" />
+            <sfwLabel ID="lblLabel42Prnt" Text="Your Spouse or Dependent must complete and sign the ‘Medicare Prescription Drug Plan Enrollment Form (SFN-58860)’ and return to NDPERS for enrolment to be processed." sfwIsCaption="True" />
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlPanel5MedicarePrnt" sfwCaption="Member's Medicare Coverage Information" sfwVisibleRule="VisibleRuleIsMedicarePanelVisible">
+          <items>
+            <sfwTable ID="tblNewPageMedicarePrnt" />
+            <sfwLabel ID="capMedicareClaimNoMedicarePrnt" Text="Member Medicare Claim No : " sfwIsCaption="True" />
+            <sfwLabel ID="txtMedieClaimMedicarePrnt" sfwEntityField="objPAEnrollReqMedicare.MedicareClaimNo" />
+            <sfwLabel ID="capMedicarePartAEffectiveDateMedicarePrnt" Text="Medicare Part A Effective Date : " sfwIsCaption="True" />
+            <sfwLabel ID="txtMedicarePartAEffectiveDateMedicarePrnt" sfwDataFormat="{0:d}" sfwEntityField="objPAEnrollReqMedicare.MedicarePartAEffectiveDate" />
+            <sfwLabel ID="capMedicarePartBEffectiveDateMedicarePrnt" Text="Medicare Part B Effective Date : " sfwIsCaption="True" />
+            <sfwLabel ID="txtMedicarePartBEffectiveDateMedicarePrnt" sfwDataFormat="{0:d}" sfwEntityField="objPAEnrollReqMedicare.MedicarePartBEffectiveDate" />
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlNewPanelMedSpeCobraPrnt" sfwCaption="Medical Spending (COBRA) " sfwVisibleRule="VisibleRuleIsFlexPanelVisible">
+          <items>
+            <sfwTable ID="tblMedSpeCobradPrnt" />
+            <sfwLabel ID="lblLabel45Prnt" Text="&lt;b&gt;If you elect Medical Spending Continuation coverage, it will be in effect to the end of the current plan year, or December 31.&lt;/b&gt;" sfwIsCaption="True" />
+            <br ID="lblBRID" />
+            <sfwLabel ID="lblLabelFlexMedPrnt" Text="Do you wish to continue your current participation in the NDPERS Flexcomp Plan Medical Spending Account?: " sfwIsCaption="True" />
+            <sfwLabel ID="ddlDropDownList6Prnt" sfwEntityField="ContinueFlexMedSpendingDesc" />
+            <sfwLabel ID="lblCheckBox1Prnt" Text="I wish to pre-pay the premium through the end of the plan year with pre-tax dollars deducted from my final pay checks: " sfwIsCaption="True" />
+            <sfwLabel ID="lblwishPayPrePrnt" sfwEntityField="PayPremiumPreTaxDesc" />
+            <sfwLabel ID="lblCheckBox2Prnt" Text="I will pay the premium plus a 2% administration fee with after-tax dollars through the remainder of the plan year: " sfwIsCaption="True" />
+            <sfwLabel ID="lblwishPayPostPrnt" sfwEntityField="PayPremiumPostTaxDesc" />
+            <sfwLabel ID="lblPageBreakTwoFPAuthPrnt" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwPanel ID="pnlFPAuthPrnt" sfwCaption="Acknowledgement" sfwVisibleRule="VRIsFlexPlanEnrolled">
+              <items>
+                <sfwTable ID="tblFPAuthPrnt" />
+                <sfwLabel ID="lblFPAuthPrnt" sfwEntityField="lstrFPConfirmationText" CssClass="view-inline" sfwRenderType="RichText" />
+              </items>
+            </sfwPanel>
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlLifeInsurancePrnt" sfwCaption="Life Insurance" sfwVisibleRule="VisibleRuleIsLifePanelVisible">
+          <items>
+            <sfwTable ID="tblLifeINsurancePrnt" />
+            <sfwLabel ID="lblLifeInsuPrintInfoText" sfwEntityField="IstrLIInformationText" sfwRenderType="RichText" />
+            <sfwLabel ID="capLifeplanEnrOptSelPrint" Text="Plan Enrollment Option : " sfwIsCaption="True" />
+            <sfwLabel ID="lblLifeplanEnrOptSelPrint" sfwEntityField="objPAEnrollReqLife.PlanEnrollmentOptionDescription" />
+            <sfwLabel ID="capLOfCValueLifePrint" Text="Life Insurance Options : " sfwVisibleRule="VisibleRuleIsLifeEnrolled" sfwIsCaption="True" />
+            <sfwGridView sfwEntityField="lstPersonAccountLifeOption" ID="grvLstPersonAccountLifeOptionPrint" AllowPaging="True" sfwVisibleRule="VisibleRuleIsLifeEnrolled" AllowEditing="True" sfwTwoWayBinding="True">
+              <Columns>
+                <TemplateField Visible="False" HeaderText="AccountLifeOptionId">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="AccountLifeOptionId" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Coverage Description">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="LevelOfCoverageDescription" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Coverage Amount" ItemStyle.HorizontalAlign="Right">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="CoverageAmount" sfwDataFormat="{0:C}" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField>
+                  <ItemTemplate />
+                </TemplateField>
+                <TemplateField HeaderText="New Reduced Coverage Amount" ItemStyle.HorizontalAlign="Right">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="NewReducedCoverageAmount" sfwDataFormat="{0:C}" />
+                  </ItemTemplate>
+                </TemplateField>
+              </Columns>
+            </sfwGridView>
+            <sfwLabel ID="lblViewPageBreakThreeprnt" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="capLifeStepInformationTextPrnt" Text="*Supplemental amount indicates the TOTAL Coverage Amount (including Basic).  Any supplemental coverage will end when the member turns 65. Carrier may offer to port or convert this coverage." sfwIsCaption="True" sfwVisibleRule="VRIsLifeOptionBasicOnly" />
+            <sfwLabel ID="lblViewPageBreakFourPrnt" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="lblViewPageBreakTwoLifeAuthPrint" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwPanel ID="pnlLifeAcknoldgementPrint" sfwCaption="Acknowledgement" sfwVisibleRule="VisibleRuleIsLifeEnrolled">
+              <items>
+                <sfwTable ID="tblLifeAcknoldgementPrint" />
+                <sfwLabel ID="lblViewLPConfirmationPrint" sfwEntityField="lstrLPConfirmationText" sfwRenderType="RichText" />
+              </items>
+            </sfwPanel>
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlAppMSSDependentsPrnt" sfwCaption="Dependents" sfwVisibleRule="VisibleRuleRetireeDependents">
+          <items>
+            <sfwTable ID="tblAppRetireeDepsPrnt" />
+            <sfwGridView AllowPaging="True" ID="grvMSSPersonDependentAppPrnt" sfwEntityField="lstRetireeDeps" sfwGridEntity="entWssPersonDependent" AllowEditing="True" sfwTwoWayBinding="True">
+              <Columns>
+                <TemplateField HeaderText="FullName">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="IstrDependantFullName" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Relationship">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="RelationshipDescription" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Health">
+                  <ItemTemplate>
+                    <sfwCheckBox sfwDefaultValue="N" sfwTwoWayBinding="False" sfwEntityField="IsHealthEnrolled" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Dental">
+                  <ItemTemplate>
+                    <sfwCheckBox sfwDefaultValue="N" sfwTwoWayBinding="False" sfwEntityField="IsDentalEnrolled" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Vision">
+                  <ItemTemplate>
+                    <sfwCheckBox sfwDefaultValue="N" sfwTwoWayBinding="False" sfwEntityField="IsVisionEnrolled" />
+                  </ItemTemplate>
+                </TemplateField>
+              </Columns>
+            </sfwGridView>
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlPanel1Prnt" sfwCaption="Insurance Payment ACH Bank Info" sfwVisibleRule="VisibleRuleAnyInsPlanEnrolled">
+          <items>
+            <sfwTable ID="tblNewPage1Prnt" />
+            <sfwLabel ID="lblFinInstiTxtPrnt" Text="The financial institution may be any bank, savings bank, savings and loan association or similar institution, or Federal or State chartered credit union within the United States." sfwIsCaption="True" />
+            <sfwLabel ID="lblLabel1Prnt" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="lblRoutingNoInsPrnt" Text="Routing Number :" sfwIsCaption="True" />
+            <sfwLabel ID="txtRoutNumberInsPrnt" sfwEntityField="RoutingNo2" />
+            <sfwLabel ID="lblnsPayBanknamePrnt" Text="Bank Name :" sfwIsCaption="True" />
+            <sfwLabel ID="lblBankNameInsPayPrnt" sfwEntityField="BankName2" />
+            <sfwLabel ID="txtBankNameInsPayPrnt" sfwVisibleRule="VRBankNameEditableIns" sfwEntityField="IstrBankName2" />
+            <sfwLabel ID="lblActNumberInspayPrnt" Text="Account Number :" sfwIsCaption="True" />
+            <sfwLabel ID="txtActNoInsPayPrnt" sfwEntityField="AccountNumber2" />
+            <sfwLabel ID="lblActTypeInsPayPrnt" Text="Account Type :" sfwIsCaption="True" />
+            <sfwLabel ID="ddlDropDownListInsPayPrnt" sfwEntityField="BankAccountTypeDescription2" />
+          </items>
+        </sfwPanel>
+        <sfwLabel ID="lblPrintPageBreakDBDCAuthprnt" Text="&lt;br/&gt;" sfwIsCaption="True" />
+        <sfwPanel ID="pnlDBDCAuthprnt" sfwCaption="Acknowledgement" sfwVisibleRule="VisibleRuleIsBenefitAccountTypeRetirementOrDisability">
+          <items>
+            <sfwTable ID="tblDBDCAuthprnt" />
+            <sfwLabel ID="lblPrintDBDCConfirmation" sfwEntityField="lstrAPDBDCConfirmationText" sfwRenderType="RichText" />
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlNewPanel2" sfwCaption="Documents" sfwVisibleRule="VRIsDocWarningMsgRqd">
+          <items>
+            <sfwTable ID="tblNewPage" />
+            <sfwLabel ID="lblLabelPersonid" sfwEntityField="PersonId" Visible="False" />
+            <sfwLabel ID="lblDocWarMsg" Text="Your application for benefits will not be processed until NDPERS receives the following documents:" sfwVisibleRule="VisibleRuleIsNotDefferedRetirement" sfwIsCaption="True" />
+            <sfwLabel ID="lblMemBirCert" Text="Member Birth Certificate" sfwIsCaption="True" />
+            <sfwLabel ID="lblMemberBirthCertificate" Text="Uploaded" sfwVisibleRule="VisibleRuleIsMemberBirthDocUploaded" />
+            <sfwLabel ID="lblNotMemberBirthCertificate" Text="Need to be Upload" sfwVisibleRule="InVisibleRuleIsMemberBirthDocUploaded" />
+            <sfwLabel ID="lblBenBirCerti" Text="Beneficiary Birth Certificate" sfwVisibleRule="VRIsMemberMarried" sfwIsCaption="True" />
+            <sfwLabel ID="lblBeneficiaryBirthCertificate" Text="Uploaded" sfwVisibleRule="VisibleRuleIsBeneficiaryBirthDocUploaded" />
+            <sfwLabel ID="lblNotBeneficiaryBirthCertificate" Text="Need to be Upload" sfwVisibleRule="InVisibleRuleIsBeneficiaryBirthDocUploaded" />
+            <sfwLabel ID="lblMarriageCert" Text="Marriage Certificate" sfwVisibleRule="VRIsMemberMarried" sfwIsCaption="True" />
+            <sfwLabel ID="lblMarriageCertificate" Text="Uploaded" sfwVisibleRule="VisibleRuleIsMarriageDocUploaded" />
+            <sfwLabel ID="lblNotMarriageCertificate" Text="Need to be Upload" sfwVisibleRule="InVisibleRuleIsMarriageDocUploaded" />
+            <sfwLabel ID="lblLabel12" Text="Medicare ID Card" sfwVisibleRule="VRIsMedClaimNoNotNullOnHealthReqest" sfwIsCaption="True" />
+            <sfwLabel ID="lblMedicareIDCertificate" Text="Uploaded" sfwVisibleRule="VisibleRuleIsMedicareIDDocUploaded" />
+            <sfwLabel ID="lblNotMedicareIDCertificate" Text="Need to be Upload" sfwVisibleRule="InVisibleRuleIsMedicareIDDocUploaded" />
+            <sfwLabel ID="lblOcuDem" Text="Occupational Demands – Completed and signed by Employer" sfwVisibleRule="VisibleRuleIsBenefitAccountTypeDisability" sfwIsCaption="True" />
+            <sfwLabel ID="lblOccupationalDemandCertificate" Text="Uploaded" sfwVisibleRule="VisibleRuleIsOccupationalDemandDocUploaded" />
+            <sfwLabel ID="lblNotOccupationalDemandCertificate" Text="Need to be Upload" sfwVisibleRule="InVisibleRuleIsOccupationalDemandDocUploaded" />
+            <sfwLabel ID="lblAtePhy" Text="Attending Physician’s Statement of Disability – Completed and signed by Doctor" sfwVisibleRule="VisibleRuleIsBenefitAccountTypeDisability" sfwIsCaption="True" />
+            <sfwLabel ID="lblStatementOfDisabilityCertificate" Text="Uploaded" sfwVisibleRule="VisibleRuleIsStatementOfDisabilityDocUploaded" />
+            <sfwLabel ID="lblNotStatementOfDisabilityCertificate" Text="Need to be Upload" sfwVisibleRule="InVisibleRuleIsStatementOfDisabilityDocUploaded" />
+          </items>
+        </sfwPanel>
+      </items>
+    </sfwPanel>
+  </items>
+  <loaddetails>
+    <entityfield ID="lstIclcWssBenAppDisaWorkHistory" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+    <entityfield ID="lstIclcWssBenAppDisaOtherBenefits" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+    <entityfield ID="objMemberPerson" sfwUpdateAutoLoad="True" sfwNewAutoLoad="True" />
+    <entityfield ID="objMemberPerson.objPersonCurrentAddress" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+    <entityfield ID="objPAEnrollReqHealth" sfwUpdateAutoLoad="True" sfwNewAutoLoad="True" />
+    <entityfield ID="objPAEnrollReqHealth.lstMSSOtherCoverageDetail" sfwUpdateAutoLoad="True" sfwNewAutoLoad="True" />
+    <entityfield ID="objPAEnrollReqHealth.lstMSSWorkerCompensation" sfwUpdateAutoLoad="True" sfwNewAutoLoad="True" />
+    <entityfield ID="lstRetireeDeps" sfwUpdateAutoLoad="True" sfwNewAutoLoad="True" />
+    <entityfield ID="objPAEnrollReqDental" sfwUpdateAutoLoad="True" sfwNewAutoLoad="True" />
+    <entityfield ID="objPAEnrollReqDental.lstMSSOtherCoverageDetail" sfwUpdateAutoLoad="True" sfwNewAutoLoad="True" />
+    <entityfield ID="objPAEnrollReqDental.lstMSSWorkerCompensation" sfwUpdateAutoLoad="True" sfwNewAutoLoad="True" />
+    <entityfield ID="objPAEnrollReqVision" sfwUpdateAutoLoad="True" sfwNewAutoLoad="True" />
+    <entityfield ID="objPAEnrollReqVision.lstMSSOtherCoverageDetail" sfwUpdateAutoLoad="True" sfwNewAutoLoad="True" />
+    <entityfield ID="objPAEnrollReqVision.lstMSSWorkerCompensation" sfwUpdateAutoLoad="True" sfwNewAutoLoad="True" />
+    <entityfield ID="objPAEnrollReqMedicare" sfwUpdateAutoLoad="True" sfwNewAutoLoad="True" />
+    <entityfield ID="objPAEnrollReqLife" sfwUpdateAutoLoad="True" sfwNewAutoLoad="True" />
+    <entityfield ID="lstPersonAccountLifeOption" sfwUpdateAutoLoad="True" sfwNewAutoLoad="True" />
+  </loaddetails>
+  <ExtraFields />
+</form>

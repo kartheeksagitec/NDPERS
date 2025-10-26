@@ -1,0 +1,89 @@
+﻿<div class="portlet-body">
+    <div class="col-xs-12 padding-10 gray-background-color">
+        <div class="div-left-heading"><b>Button ID</b></div>
+        <div class="div-right-icons">
+            <a ><img src="images/Common/icon_add_dark.svg" ng-click="AddNewValidationRule()" title="Add new validation"></a>
+            <a ><img src="images/Common/icon_delete_dark.svg" ng-click="DeleteValidationRule()" ng-disabled="!canDeleteRule()" title="Delete validation"></a>
+        </div>
+    </div>
+    <div class="col-xs-12 padding-10 height-90">
+        <table class="table table-condensed table-hover table-fixedheader full-height">
+            <tbody class="cust-setting-tbody-max-height">
+                <tr ng-repeat-start="obj in objValidateNew.Elements" ng-click="selectedValidateRule(obj)" ng-class="objSelectedRule== obj ?'div-grid-row selected':''">
+                    <td width="2%">
+                        <div class="margin5N" ng-class="obj.IsFieldVisibility?'fa fa-minus':'fa fa-plus'" ng-attr-title="{{obj.IsFieldVisibility?'Collapse':'Expand'}}" ng-click="ExpandRule(obj)" ></div>
+                    </td>
+                    <td width="98%">
+                        <div class='input-group'>
+                            <span class="info-tooltip dtc-span" ng-if="obj.errors.inValid_id" ng-attr-title="{{obj.errors.inValid_id}}"><i style="color:red !important;" class="fa fa-exclamation-circle"></i></span>
+                            <input type="text" class="form-control input-sm" title="{{obj.dictAttributes.ButtonID}}" ng-model='obj.dictAttributes.ButtonID'  ng-keydown="GetButtonIntellisense($event)" ng-change="validateButtonID(obj)" />
+                            <span class='input-group-addon button-intellisense' ng-click='GetButtonIntellisense($event)'></span>
+                        </div>
+                    </td>
+                </tr>
+                <tr ng-repeat-end ng-show="obj.IsFieldVisibility && objSelectedRule">
+                    <td width="2%"></td>
+                    <td width="100%">
+                        <table class="table table-condensed table-hover table-fixedheader full-height">
+                            <thead>
+                                <tr>
+                                    <th class="pull-right">
+                                        <i class="fa fa-arrow-down fright padding-2" title="Move Down" ng-click="moveItemsDown(obj)" ng-disabled="!canMoveItemsDown()" />
+                                        <i class="fa fa-arrow-up fright padding-2" title="Move Up" ng-click="moveItemsUp(obj)" ng-disabled="!canMoveItemsUp()" />
+                                        <i class="fa fa-minus fright padding-2" title="Remove Item" ng-click="deleteItems(obj)" ng-disabled="!canDeleteItems()"></i>
+                                        <i class="fa fa-plus fright padding-2" ng-disabled="!obj.dictAttributes.ButtonID || objSelectedRule!= obj || obj.errors.inValid_id" title="Add New Item" ng-click="addItems(obj,'Add')"></i>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th width="10%">ID</th>
+                                    <th width="10%">Validation Type</th>
+                                    <th width="10%">Param</th>
+                                    <th width="10%">Req</th>
+                                    <th width="10%">Query</th>
+                                    <th width="10%">Parameter</th>
+                                    <th width="10%">Oper</th>
+                                    <th width="10%">Value</th>
+                                    <th width="10%">Message</th>
+                                    <th width="10%">Edit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in obj.Elements" ng-click="selectItem(item,obj)" ng-dblclick="EditItems(obj,item)" ng-class="{'selected': selectedItem == item}">
+                                    <!--<td width="10%"><input type="text" placeholder="Control ID" disabled ng-model="item.dictAttributes.sfwControlID" /></td>
+                                    <td width="10%"><input type="text" placeholder="Validation Type" disabled ng-model="item.dictAttributes.sfwValidationType" /></td>
+                                    <td width="10%"><input type="text" placeholder="Method Parameter" disabled ng-model="item.dictAttributes.sfwMethodParam" /></td>
+                                    <td width="10%"><input type="text" placeholder="Required" disabled ng-model="item.dictAttributes.sfwRequired" /></td>
+                                    <td width="10%"><input type="text" placeholder="QueryID" disabled ng-model="item.dictAttributes.sfwQueryID" /></td>
+                                    <td width="10%"><input type="text" placeholder="Parameter" disabled ng-model="item.dictAttributes.sfwParameter" /></td>
+                                    <td width="10%"><input type="text" placeholder="Operator" disabled ng-model="item.dictAttributes.sfwOperator" /></td>
+                                    <td width="10%"><input type="text" placeholder="Value" disabled ng-model="item.dictAttributes.Value" /></td>
+                                    <td width="10%"><input type="text" placeholder="Message" disabled ng-model="item.dictAttributes.sfwMessageID" /></td>
+                                    <td width="10%"><input type="text" placeholder="Error Message" disabled ng-model="item.dictAttributes.sfwErrorMessage" /></td>-->
+                                    <td width="10%">{{item.dictAttributes.sfwControlID}}</td>
+                                    <td width="10%">{{item.dictAttributes.sfwValidationType}}</td>
+                                    <td width="10%">{{item.dictAttributes.sfwMethodParam}}</td>
+                                    <td width="10%">{{item.dictAttributes.sfwRequired}}</td>
+                                    <td width="10%">{{item.dictAttributes.sfwQueryID}}</td>
+                                    <td width="10%">{{item.dictAttributes.sfwParameters}}</td>
+                                    <td width="10%">{{item.dictAttributes.sfwOperator}}</td>
+                                    <td width="10%">{{item.dictAttributes.Value}}</td>
+                                    <td width="10%">
+                                        <span>{{item.dictAttributes.sfwMessageID}}</span>
+                                        <span>{{item.dictAttributes.sfwErrorMessage}}</span>
+                                     </td>                                   
+                                    <td width="10%" title="Edit">
+                                        <i class="fa fa-edit" ng-click="EditItems(obj,item)"></i>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="form-actions right">
+    <input type="button" value="OK" class="btn  default" ng-click="onOkClick()" />
+    <input type="button" value="Cancel" class="btn  default" ng-click="onCancelClick()" />
+</div>

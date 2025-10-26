@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entMergeEmployerDetail" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwErrorTable="sgt_merge_employer_detail_error" sfwParentKey="merge_employer_detail_id" sfwParentKeyValue="icdoMergeEmployerDetail.merge_employer_detail_id" sfwMainCDO="icdoMergeEmployerDetail" sfwStatusColumn="status_value" sfwObjectID="busMergeEmployerDetail" sfwTableName="sgt_merge_employer_detail">
+  <rules>
+    <rule ID="IsMergeEffectiveDateAndEmploymentSame" sfwMessageId="4172" sfwExpression="(this.IsEffectDateAndEmploymentSame() == True)" sfwObjectBased="True" />
+  </rules>
+  <delete>
+    <property ID="SoftErrors" sfwMethodName="LoadErrors" />
+  </delete>
+  <checklist />
+  <initialload />
+  <softerror>
+    <item ID="IsMergeEffectiveDateAndEmploymentSame" sfwMode="All" sfwStatus="Active" />
+  </softerror>
+  <harderror />
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select * from sgt_merge_employer_detail a inner join sgt_merge_employer_header b&#xD;&#xA;on a.merge_employer_header_id=b.merge_employer_header_id">
+      <parameters />
+    </query>
+    <query ID="LookupSubQuery1" sfwQueryType="SubSelectQuery" sfwSql="Select * from sgt_organization c where c.org_id= b.from_employer_id">
+      <parameters />
+    </query>
+    <query ID="LookupSubquery2" sfwQueryType="SubSelectQuery" sfwSql="Select * from sgt_organization d where d.org_id= b.to_employer_id">
+      <parameters />
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="MergeEmployerDetailId" sfwType="Column" sfwValue="merge_employer_detail_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="MergeEmployerHeaderId" sfwType="Column" sfwValue="merge_employer_header_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PersonId" sfwType="Column" sfwValue="person_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusDescription" sfwType="Description" sfwValue="status_description" />
+    <attribute ID="StatusId" sfwType="Column" sfwValue="status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="336" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusValue" sfwType="Column" sfwValue="status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="objPerson" sfwType="Object" sfwEntity="entPerson" sfwValue="ibusPerson" />
+    <attribute ID="objMergeEmployerHeader" sfwType="Object" sfwEntity="entMergeEmployerHeader" sfwValue="ibusMergeEmployerHeader" />
+    <attribute sfwDataType="" sfwType="Property" ID="SoftErrors" sfwValue="ibusSoftErrors" />
+  </attributes>
+  <objectmethods>
+    <method ID="LoadErrors" sfwReturnType="Void" />
+  </objectmethods>
+</entity>

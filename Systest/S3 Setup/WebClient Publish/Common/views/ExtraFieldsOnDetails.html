@@ -1,0 +1,47 @@
+﻿
+<div ng-class="isCretaeNewObjectSteps?'portlet-body':''">
+    <table class="sws-table" role="grid">
+        <thead>
+            <tr>
+                <th>Column Name</th>
+                <th>Description</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr ng-repeat="obj in objExtraFields" ng-class="SelectExtraFieldRow==obj?'selected':''" ng-click="selectExtraFieldRow(obj)">
+                <td><span ng-bind="obj.ID"></span></td>
+                <td><span ng-bind="obj.Description"></span></td>
+                <td class="rule-extra-fields-value">
+
+                    <a href="{{obj.URL}}" target="_blank" ng-if="obj.ControlType=='HyperLink'" class="hyperlink-url-underline">{{obj.Value}}</a>
+                    <button ng-if="obj.ControlType=='HyperLink'" ng-click="AddHyperLinkUrl(obj)">Link</button>
+                    <input type="text" ng-if="obj.ControlType=='TextBox'" title="{{obj.Value}}" ng-model="obj.Value" class="form-control input-sm" />
+                    <input type="checkbox" ng-if="obj.ControlType=='CheckBox'" ng-model="obj.Value" ng-true-value="'True'" ng-false-value="" />
+                    <label ng-if="obj.ControlType=='CheckBoxList'" ng-repeat="list in obj.Children">
+                        <input type="checkbox" ng-model="list.Value" ng-true-value="'True'" ng-false-value="" /> {{list.Description}}<br />
+                    </label>
+                    <select ng-if="obj.ControlType=='ComboBox'" title="{{obj.ID}}" ng-model="obj.Value" class="form-control input-sm">
+                        <option ng-repeat="opt in obj.Children" value="{{opt.ID}}">{{opt.Description}}</option>
+                    </select>
+
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
+
+<div class="form-actions" ng-if="isCretaeNewObjectSteps">
+    <div class="col-xs-6 text-left">
+        <span class="alert-error-msg" ng-if="extraFieldsErrorMessage.length>0" ng-bind="extraFieldsErrorMessage"></span>
+    </div>
+    <div class="col-xs-6">
+        <input class="dialog-btn" type="button" value="Cancel" ng-click="CloseWizard()" />
+        <input class="dialog-btn" type="button" wz-previous="$parent.$parent.onPrevious()" value="Back" />
+        <input class="dialog-btn" type="button" wz-next="onNext()" value="Next" disabled="disabled" />
+        <input class="dialog-btn" type="button" wz-finish value="Finish" ng-disabled="objFn.validateExtraFieldsData();" />
+    </div>
+</div>

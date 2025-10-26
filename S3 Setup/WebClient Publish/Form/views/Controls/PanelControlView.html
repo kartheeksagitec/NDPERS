@@ -1,0 +1,66 @@
+﻿<div class='panel panel-default form-panel-wrapper no-margin' ng-class='{ "active": model.IsVisible, "bckgGrey": model.isAdvanceSearched, "bckgGreen": model.isAdvanceSearched && model.IsSelected,"form-invisible-control" : model.dictAttributes.Visible === "False" }'>
+    <div ng-show="panelindex==0" class="addPanelhoverdiv" ng-mouseenter="getAddpanelTrigger($event, formodel.dictAttributes.sfwType)" ng-mouseleave="deleteAddpanelTrigger()">
+    </div>
+    <div class="panel-content-wrapper">
+
+        <div id="panel_{{$id}}" class="panel-heading form-panel-heading accordion-toggle" context-menu="panelMenuOption" ng-class="!initialvisibilty ? 'collapsed' : ''" ng-click="setInitialVisibility()">
+            <span placeholder="{{model.dictAttributes.ID}}" ng-if="model.Name == 'sfwWizardStep'" class="fleft hidden-span font-entityfield" ng-class="{'hasContent' : !model.dictAttributes.Title }"
+                  spellcheck=false contenteditable="true" content-editable ng-model="model.dictAttributes.Title" model="model">
+            </span>
+            <span class="fleft hidden-span font-entityfield" ng-if="model.Name != 'sfwWizardStep'" ng-class="{'hasContent' : !model.dictAttributes.sfwCaption }" spellcheck=false contenteditable="true"
+                  content-editable ng-model="model.dictAttributes.sfwCaption" model="model" placeholder="{{model.dictAttributes.ID}}">
+
+            </span>
+
+            <ul class="form-area-icons" ng-if="ShowPanelButtons()">
+                <li title="Delete Wizard Step" ng-click="DeleteWizardStepClick()" ng-show="formodel.dictAttributes.sfwType == 'Wizard'">
+                    <img class="image-icon-tools" src="images/Common/icon_delete_dark.svg">
+                </li>
+                <li title="Move Up" ng-click="MoveUpWizardClick()" ng-disabled="canMoveUpWizardDisable()" ng-show="formodel.dictAttributes.sfwType == 'Wizard'">
+                    <img width="12" height="16" class="image-icon-tools" src="images/Common/Icon_moveup_dark.svg">
+                </li>
+                <li title="Move Down" ng-click="MoveDownWizardClick()" ng-disabled="canMoveDownWizardDisable()" ng-show="formodel.dictAttributes.sfwType == 'Wizard'">
+                    <img width="12" height="16" class="image-icon-tools" src="images/Common/Icon_movedown_dark.svg">
+
+                </li>
+                <li ng-click="DeleteMainPanelClick()" title="Delete Panel" ng-show="formodel.dictAttributes.sfwType == 'Maintenance' || formodel.dictAttributes.sfwType == 'Tooltip'">
+                    <img class="image-icon-tools" src="images/Common/icon_delete_dark.svg">
+
+                </li>
+                <li ng-click="MoveUpMainPanelClick()" title="Move Up" ng-disabled="canMoveUpDisable()" ng-hide="formodel.dictAttributes.sfwType == 'Wizard'">
+                    <img width="12" height="16" class="image-icon-tools" src="images/Common/Icon_moveup_dark.svg">
+
+                </li>
+
+                <li ng-click="MoveDownMainPanelClick()" title="Move Down" ng-disabled="canMoveDownDisable()" ng-hide="formodel.dictAttributes.sfwType == 'Wizard'">
+
+                    <img width="12" height="16" class="image-icon-tools" src="images/Common/Icon_movedown_dark.svg">
+
+                </li>
+
+            </ul>
+
+        </div>
+        <div class="panel-collapse" ng-class="(initialvisibilty) ? 'in' : 'collapse'">
+            <div class="panel-body form-panel-body">
+
+                <div ng-if="(formodel.IsLookupCriteriaEnabled && model.Name!='sfwDialogPanel') || (formodel.IsPrototypeLookupCriteriaEnabled)" class="marg-bot-10">
+
+                    <input type="button" class="panel-criteria-icon active" ng-class="'lookup-section-selected'" title="Criteria" />
+                    <input type="button" ng-click="OnAdvCriteriaClick($event)" ng-class="objSelectionClassAttributes.LookupAdvCriteria" title="Advance Criteria" />
+                    <input type="button" ng-click="OnAdvSortClick($event)" ng-class="objSelectionClassAttributes.LookupAdvSort" title="Advance Sort" />
+                    <input type="button" ng-click="OnQueryClick($event)" ng-class="objSelectionClassAttributes.LookupQuery" title="Query" />
+
+                </div>
+                <base-control-view ng-repeat='elem in model.Elements' entitytreename='entitytreename' lstdisplayentities='lstdisplayentities' ng-if='model.isLoaded' objparent='model' formodel='formodel' model='elem'
+                                 lstloadedentitytrees='lstloadedentitytrees' lstloadedentitycolumnstree='lstloadedentitycolumnstree' buttons-collection='buttonsCollection' modelname="{{elem.Name}}"/>
+
+            </div>
+
+        </div>
+
+    </div>
+    <div ng-show="panelindex" class="addPanelhoverdiv" ng-mouseenter="getAddpanelTrigger($event, formodel.dictAttributes.sfwType, panelindex)" ng-mouseleave="deleteAddpanelTrigger()">
+
+    </div>
+</div>

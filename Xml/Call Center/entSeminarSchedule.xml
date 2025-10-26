@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entSeminarSchedule" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvCallCenter" sfwType="BusinessRule" sfwMainCDO="icdoSeminarSchedule" sfwObjectID="busSeminarSchedule" sfwTableName="sgt_seminar_schedule" sfwView="False" sfwParentEntity="entExtendBase">
+  <rules />
+  <delete>
+    <property ID="lstSeminarAttendeeDetail" sfwMethodName="LoadSeminarAttendeeDetail" />
+    <property ID="lstGuestSpeakers" sfwMethodName="LoadGuestSpeakers" />
+  </delete>
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror />
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <queries>
+    <query ID="rptListOfScheduledSeminars" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT &#xD;&#xA;O.ORG_CODE AS ORGCODEID,&#xD;&#xA;A.CONTACT_TICKET_ID AS TICKETNUMBER,&#xD;&#xA;CV2.DESCRIPTION AS SEMINARTYPE,&#xD;&#xA;C.USER_ID AS FACILITATOR,&#xD;&#xA;A.SEMINAR_DATE1 AS SEMINARDAY1,&#xD;&#xA;A.SEMINAR_DATE2 AS SEMINARDAY2,&#xD;&#xA;A.ATTENDEE_FEE AS ATTENDEEFEE,&#xD;&#xA;B.SEMINAR_ATTENDEE_DETAIL_ID AS SEMINARATTENDEEID&#xD;&#xA;&#xD;&#xA;FROM SGT_SEMINAR_SCHEDULE A&#xD;&#xA;INNER JOIN SGT_SEMINAR_ATTENDEE_DETAIL B ON A.SEMINAR_SCHEDULE_ID = B.SEMINAR_SCHEDULE_ID &#xD;&#xA;INNER JOIN SGS_CODE_VALUE CV2 ON CV2.CODE_ID=A.SEMINAR_TYPE_ID AND CV2.CODE_VALUE=A.SEMINAR_TYPE_VALUE&#xD;&#xA;LEFT JOIN SGS_USER C ON A.FACILITATOR=C.USER_SERIAL_ID&#xD;&#xA;INNER JOIN SGT_CONTACT_TICKET CT ON CT.CONTACT_TICKET_ID=A.CONTACT_TICKET_ID&#xD;&#xA;LEFT JOIN SGT_ORGANIZATION O ON O.ORG_ID=CT.ORG_ID&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;WHERE ((@ddlFacilitator &lt;&gt; '' AND A.FACILITATOR=@ddlFacilitator  ) OR @ddlFacilitator= '') &#xD;&#xA;AND   ((@ddlSeminarType &lt;&gt; '' AND A.SEMINAR_TYPE_VALUE=@ddlSeminarType) OR @ddlSeminarType= '') &#xD;&#xA;AND (A.SEMINAR_DATE1 BETWEEN @start_date AND @end_date)&#xD;&#xA;AND A.SEMINAR_CANCEL_FLAG&lt;&gt;'Y'&#xD;&#xA;AND  B.GUEST_SPEAKER_FLAG &lt;&gt; 'Y'">
+      <parameters>
+        <parameter ID="@ddlFacilitator" sfwDataType="string" />
+        <parameter ID="@ddlSeminarType" sfwDataType="string" />
+        <parameter ID="@start_date" sfwDataType="DateTime" />
+        <parameter ID="@end_date" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="LISTOFSEMINARSCHDULEDETAILS" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_SEMINAR_SCHEDULE WITH(NOLOCK) &#xD;&#xA;WHERE SEMINAR_TYPE_VALUE = CASE WHEN @IS_NEW_DEF_COMP = 'Y' THEN 'NDFC' ELSE 'DEFC' END AND &#xD;&#xA;SEMINAR_DATE1 &gt; GETDATE()">
+      <parameters>
+        <parameter ID="@IS_NEW_DEF_COMP" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="rptSeminarDemographicReport" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT PER.last_name + ', ' + PER.first_name + ' ' +PER.MIDDLE_NAME AS PERSON_NAME,&#xD;&#xA;PER.PERSON_ID AS PersonID, &#xD;&#xA;PER.DATE_OF_BIRTH AS DATEOFBIRTH,PLA.PLAN_NAME AS PLANNAME,&#xD;&#xA;SCH.SEMINAR_DATE1 AS SEMINARDATE,&#xD;&#xA; * FROM SGT_SEMINAR_SCHEDULE SCH WITH(NOLOCK) &#xD;&#xA;INNER JOIN SGT_SEMINAR_ATTENDEE_DETAIL DET WITH(NOLOCK) ON SCH.SEMINAR_SCHEDULE_ID=DET.SEMINAR_SCHEDULE_ID &#xD;&#xA;lEFT OUTER JOIN SGT_PERSON_ACCOUNT PERACC WITH(NOLOCK) ON PERACC.PERSON_ID = DET.PERSON_ID&#xD;&#xA;lEFT OUTER JOIN SGT_PERSON PER WITH(NOLOCK) ON PER.PERSON_ID=DET.PERSON_ID &#xD;&#xA;lEFT OUTER JOIN SGT_PLAN PLA WITH(NOLOCK) ON PLA.PLAN_ID = PERACC.PLAN_ID&#xD;&#xA;WHERE SEMINAR_DATE1 BETWEEN @FROMDATE AND ISNULL(@TODATE,GETDATE())&#xD;&#xA;AND ((@SEMINARTYPE &lt;&gt; '' AND SEMINAR_TYPE_VALUE=@SEMINARTYPE) OR @SEMINARTYPE= '')&#xD;&#xA;AND ISNULL(DET.ATTENDED_FLAG,'Y')='Y'&#xD;&#xA;AND  ISNULL(DET.GUEST_SPEAKER_FLAG,'N')='N'&#xD;&#xA;AND DET.PERSON_ID IS NOT NULL &#xD;&#xA;AND SCH.SEMINAR_CANCEL_FLAG &lt;&gt;'Y'&#xD;&#xA; AND PLA.BENEFIT_TYPE_VALUE &lt;&gt; 'INSR'&#xD;&#xA; AND PERACC.PLAN_PARTICIPATION_STATUS_VALUE IN ('ENL1','ENL3','SUS1','SUS2')">
+      <parameters>
+        <parameter ID="@FROMDATE" sfwDataType="DateTime" />
+        <parameter ID="@TODATE" sfwDataType="DateTime" />
+        <parameter ID="@SEMINARTYPE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="LoadSeminarsForMSS" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT A.* FROM SGT_SEMINAR_SCHEDULE A WITH(NOLOCK) &#xD;&#xA;WHERE SEMINAR_TYPE_VALUE IN ('PREN') AND (SEMINAR_DATE1 &gt;= GETDATE() OR SEMINAR_DATE2 &gt;=GETDATE())&#xD;&#xA;&#xD;&#xA;UNION&#xD;&#xA;&#xD;&#xA;SELECT A.* FROM SGT_SEMINAR_SCHEDULE A WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_SEMINAR_ATTENDEE_DETAIL B WITH(NOLOCK) ON A.SEMINAR_SCHEDULE_ID = B.SEMINAR_SCHEDULE_ID&#xD;&#xA;AND B.PERSON_ID = @personID&#xD;&#xA;WHERE SEMINAR_TYPE_VALUE IN ('ONSC','PREE')&#xD;&#xA;AND (A.SEMINAR_DATE1 &gt;= GETDATE() OR A.SEMINAR_DATE2 &gt;=GETDATE())">
+      <parameters>
+        <parameter ID="@personID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadSeminarsByOrgForESS" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Declare @intSeminarValidityDays INT;&#xD;&#xA;select @intSeminarValidityDays= cast(DATA1 as int) from SGS_CODE_VALUE where CODE_ID=52 and CODE_VALUE='SPAY'&#xD;&#xA;&#xD;&#xA;select distinct a.*,@orgID as org_id  ,&#xD;&#xA;SeminarStatus=(case When DATEADD (day , @intSeminarValidityDays*-1 , a.seminar_date1 ) &lt; GetDate() THEN 'Closed' ELSE 'Open' END)&#xD;&#xA;from sgt_seminar_schedule a WITH(NOLOCK)&#xD;&#xA;inner join sgt_contact_ticket b on a.contact_ticket_id = b.contact_ticket_id&#xD;&#xA;where ((seminar_type_value in ('PAYC','AUTH'))) AND B.STATUS_VALUE = 'OPEN'">
+      <parameters>
+        <parameter ID="@orgID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="ListofDefCompAgentsHavingActiveTraining" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="-- Def Comp Agents who had training earlier within 2 years&#xD;&#xA;SELECT DISTINCT C.*, SS.SEMINAR_DATE1 FROM SGT_CONTACT C WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_ORG_CONTACT OC WITH(NOLOCK) ON C.CONTACT_ID = OC.CONTACT_ID&#xD;&#xA;INNER JOIN SGT_ORG_CONTACT_ROLE OCR WITH(NOLOCK) ON OC.ORG_CONTACT_ID = OCR.ORG_CONTACT_ID&#xD;&#xA;INNER JOIN &#xD;&#xA;(&#xD;&#xA; SELECT SAD.CONTACT_ID,SS.SEMINAR_DATE1, &#xD;&#xA; ROW_NUMBER() OVER(PARTITION BY SAD.CONTACT_ID ORDER BY SS.SEMINAR_DATE1 DESC) AS ROWRANK&#xD;&#xA; FROM SGT_SEMINAR_ATTENDEE_DETAIL SAD WITH(NOLOCK)&#xD;&#xA; INNER JOIN SGT_SEMINAR_SCHEDULE SS WITH(NOLOCK) ON SAD.SEMINAR_SCHEDULE_ID = SS.SEMINAR_SCHEDULE_ID&#xD;&#xA;    WHERE SS.SEMINAR_TYPE_VALUE IN ('DEFC','NDFC') AND &#xD;&#xA;    SAD.ATTENDED_FLAG = 'Y' AND &#xD;&#xA;    --SS.SEMINAR_DATE1 &gt; DATEADD(YEAR,-2,@EFFECTIVEDATE) &#xD;&#xA;    YEAR(@EFFECTIVE_DATE)-YEAR(SS.SEMINAR_DATE1) = 2&#xD;&#xA;) SS ON SS.CONTACT_ID=C.CONTACT_ID&#xD;&#xA;WHERE OCR.CONTACT_ROLE_VALUE = 'AGNT' AND &#xD;&#xA;OC.STATUS_VALUE = 'ACTV' AND &#xD;&#xA;OC.PLAN_ID IN (8, 19) AND&#xD;&#xA;ROWRANK =1 AND&#xD;&#xA;ISNULL(C.EXEMPT_FROM_TRAINING_FLAG,'N') &lt;&gt; 'Y' --PROD PIR ID 3243">
+      <parameters>
+        <parameter ID="@EFFECTIVE_DATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="ListofNewDefCompAgentsHavingNOTraining" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql=" -- Def Comp Agents who had NO recent training&#xD;&#xA;SELECT DISTINCT C.*, SS.SEMINAR_DATE1, ORG.ORG_CODE, ORG.ORG_NAME FROM SGT_CONTACT C WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_ORG_CONTACT OC WITH(NOLOCK) ON C.CONTACT_ID = OC.CONTACT_ID&#xD;&#xA;INNER JOIN SGT_ORG_CONTACT_ROLE OCR WITH(NOLOCK) ON OC.ORG_CONTACT_ID = OCR.ORG_CONTACT_ID&#xD;&#xA;INNER JOIN SGT_ORGANIZATION ORG WITH(NOLOCK) ON OC.ORG_ID = ORG.ORG_ID&#xD;&#xA;INNER JOIN &#xD;&#xA;(&#xD;&#xA; SELECT SAD.CONTACT_ID,SS.SEMINAR_DATE1,&#xD;&#xA; ROW_NUMBER() OVER(PARTITION BY SAD.CONTACT_ID ORDER BY SS.SEMINAR_DATE1 DESC) AS ROWRANK&#xD;&#xA; FROM SGT_SEMINAR_ATTENDEE_DETAIL SAD WITH(NOLOCK)&#xD;&#xA; INNER JOIN SGT_SEMINAR_SCHEDULE SS WITH(NOLOCK) ON SAD.SEMINAR_SCHEDULE_ID = SS.SEMINAR_SCHEDULE_ID&#xD;&#xA;    WHERE SS.SEMINAR_TYPE_VALUE IN ('DEFC', 'NDFC') AND &#xD;&#xA;    SAD.ATTENDED_FLAG = 'Y'&#xD;&#xA;) SS ON SS.CONTACT_ID=C.CONTACT_ID&#xD;&#xA;WHERE&#xD;&#xA;OCR.CONTACT_ROLE_VALUE = 'AGNT' AND &#xD;&#xA;OC.STATUS_VALUE = 'ACTV' AND &#xD;&#xA;OC.PLAN_ID IN (8, 19) AND&#xD;&#xA;ROWRANK=1 AND &#xD;&#xA;SS.SEMINAR_DATE1 &lt;= DATEADD(YEAR,-1,@EFFECTIVEDATE) AND&#xD;&#xA;ISNULL(C.EXEMPT_FROM_TRAINING_FLAG,'N') &lt;&gt; 'Y' --PROD PIR ID 3243&#xD;&#xA;&#xD;&#xA;UNION&#xD;&#xA;&#xD;&#xA;-- Def Comp Agents who had NO training at all&#xD;&#xA;SELECT DISTINCT C.*, NULL AS 'SEMINAR_DATE1', ORG.ORG_CODE, ORG.ORG_NAME FROM SGT_CONTACT C WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_ORG_CONTACT OC WITH(NOLOCK) ON C.CONTACT_ID = OC.CONTACT_ID&#xD;&#xA;INNER JOIN SGT_ORG_CONTACT_ROLE OCR WITH(NOLOCK) ON OC.ORG_CONTACT_ID = OCR.ORG_CONTACT_ID&#xD;&#xA;INNER JOIN SGT_ORGANIZATION ORG WITH(NOLOCK) ON OC.ORG_ID = ORG.ORG_ID&#xD;&#xA;WHERE&#xD;&#xA;OCR.CONTACT_ROLE_VALUE = 'AGNT' AND &#xD;&#xA;OC.STATUS_VALUE = 'ACTV' AND &#xD;&#xA;OC.PLAN_ID IN (8, 19) AND NOT EXISTS &#xD;&#xA;(&#xD;&#xA; SELECT DISTINCT 'X' FROM SGT_SEMINAR_ATTENDEE_DETAIL SAD WITH(NOLOCK)&#xD;&#xA; INNER JOIN SGT_SEMINAR_SCHEDULE SS WITH(NOLOCK) ON SAD.SEMINAR_SCHEDULE_ID = SS.SEMINAR_SCHEDULE_ID&#xD;&#xA;    WHERE SAD.CONTACT_ID = C.CONTACT_ID&#xD;&#xA;    AND SS.SEMINAR_TYPE_VALUE IN ('DEFC', 'NDFC')&#xD;&#xA;    AND SAD.ATTENDED_FLAG = 'Y'&#xD;&#xA;)  AND&#xD;&#xA;ISNULL(C.EXEMPT_FROM_TRAINING_FLAG,'N') &lt;&gt; 'Y' --PROD PIR ID 3243&#xD;&#xA;&#xD;&#xA;ORDER BY CONTACT_ID">
+      <parameters>
+        <parameter ID="@EFFECTIVEDATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="LoadSeminarsForConfirmationLetter" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * &#xD;&#xA;FROM SGT_SEMINAR_SCHEDULE &#xD;&#xA;WHERE&#x9;SEMINAR_DATE1 BETWEEN GETDATE() AND DATEADD(DD, 21,GETDATE())&#xD;&#xA;&#x9;&#x9;AND SEMINAR_TYPE_VALUE IN ('PREE','PREN')&#xD;&#xA;&#x9;&#x9;AND ISNULL(CONFIRMATION_SENT_FLAG, 'N') &lt;&gt; 'Y'&#xD;&#xA;">
+      <parameters />
+    </query>
+    <query ID="LoadSeminarDetailsForConfirmationLetter" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql=" SELECT&#x9;SGT_SEMINAR_SCHEDULE.SEMINAR_SCHEDULE_ID,SGT_SEMINAR_ATTENDEE_DETAIL.PERSON_ID ATTENDEE_PERSON_ID, SGT_SEMINAR_SCHEDULE.SEMINAR_DATE1, SGT_SEMINAR_SCHEDULE.LOCATION_NAME, SGT_SEMINAR_SCHEDULE.LOCATION_ADDRESS, &#xD;&#xA;        SGT_SEMINAR_SCHEDULE.LOCATION_CITY, SGT_SEMINAR_SCHEDULE.MEETING_ROOM, SGS_CODE_VALUE.DESCRIPTION AS SEMINAR_TYPE_DESCRIPTION&#xD;&#xA;FROM    SGT_SEMINAR_ATTENDEE_DETAIL INNER JOIN&#xD;&#xA;        SGT_SEMINAR_SCHEDULE ON SGT_SEMINAR_ATTENDEE_DETAIL.SEMINAR_SCHEDULE_ID = SGT_SEMINAR_SCHEDULE.SEMINAR_SCHEDULE_ID INNER JOIN&#xD;&#xA;        SGS_CODE_VALUE ON SGT_SEMINAR_SCHEDULE.SEMINAR_TYPE_ID = SGS_CODE_VALUE.CODE_ID AND SGT_SEMINAR_SCHEDULE.SEMINAR_TYPE_VALUE = SGS_CODE_VALUE.CODE_VALUE&#xD;&#xA;WHERE   (SGT_SEMINAR_ATTENDEE_DETAIL.SEMINAR_SCHEDULE_ID = @SEMINAR_SCHEDULE_ID)&#xD;&#xA;&#x9;&#x9;AND PERSON_ID IS NOT NULL">
+      <parameters>
+        <parameter ID="@SEMINAR_SCHEDULE_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="SeminarScheduleId" sfwType="Column" sfwValue="seminar_schedule_id" sfwIsNull="False" sfwKeyNo="1" sfwIsIdentity="True" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="ContactTicketId" sfwType="Column" sfwValue="contact_ticket_id" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="SeminarName" sfwType="Column" sfwValue="seminar_name" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="200" sfwIsSequence="False" />
+    <attribute ID="SeminarTypeDescription" sfwType="Description" sfwValue="seminar_type_description" />
+    <attribute ID="SeminarTypeId" sfwType="Column" sfwValue="seminar_type_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="1013" sfwIsSequence="False" />
+    <attribute ID="SeminarTypeValue" sfwType="Column" sfwValue="seminar_type_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwIsSequence="False" />
+    <attribute ID="SeminarDate1" sfwType="Column" sfwValue="seminar_date1" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="SeminarDate2" sfwType="Column" sfwValue="seminar_date2" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="Facilitator" sfwType="Column" sfwValue="facilitator" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="TimeZone" sfwType="Column" sfwValue="time_zone" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="15" sfwIsSequence="False" />
+    <attribute ID="LocationName" sfwType="Column" sfwValue="location_name" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwIsSequence="False" />
+    <attribute ID="LocationAddress" sfwType="Column" sfwValue="location_address" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwIsSequence="False" />
+    <attribute ID="LocationCity" sfwType="Column" sfwValue="location_city" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwIsSequence="False" />
+    <attribute ID="MeetingRoom" sfwType="Column" sfwValue="meeting_room" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="500" sfwIsSequence="False" />
+    <attribute ID="AttendeeFee" sfwType="Column" sfwValue="attendee_fee" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="7,2" sfwIsSequence="False" />
+    <attribute ID="Notes" sfwType="Column" sfwValue="notes" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="2000" sfwIsSequence="False" />
+    <attribute ID="SeminarCancelFlag" sfwType="Column" sfwValue="seminar_cancel_flag" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="1" sfwIsSequence="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwIsSequence="False" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwIsSequence="False" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="SeminarDate1StartTimeDescription" sfwType="Description" sfwValue="seminar_date1_start_time_description" />
+    <attribute ID="SeminarDate1StartTimeId" sfwType="Column" sfwValue="seminar_date1_start_time_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="1009" sfwIsSequence="False" />
+    <attribute ID="SeminarDate1StartTimeValue" sfwType="Column" sfwValue="seminar_date1_start_time_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwIsSequence="False" />
+    <attribute ID="SeminarDate1EndTimeDescription" sfwType="Description" sfwValue="seminar_date1_end_time_description" />
+    <attribute ID="SeminarDate1EndTimeId" sfwType="Column" sfwValue="seminar_date1_end_time_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="1010" sfwIsSequence="False" />
+    <attribute ID="SeminarDate1EndTimeValue" sfwType="Column" sfwValue="seminar_date1_end_time_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwIsSequence="False" />
+    <attribute ID="SeminarDate2StartTimeDescription" sfwType="Description" sfwValue="seminar_date2_start_time_description" />
+    <attribute ID="SeminarDate2StartTimeId" sfwType="Column" sfwValue="seminar_date2_start_time_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="1009" sfwIsSequence="False" />
+    <attribute ID="SeminarDate2StartTimeValue" sfwType="Column" sfwValue="seminar_date2_start_time_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwIsSequence="False" />
+    <attribute ID="SeminarDate2EndTimeDescription" sfwType="Description" sfwValue="seminar_date2_end_time_description" />
+    <attribute ID="SeminarDate2EndTimeId" sfwType="Column" sfwValue="seminar_date2_end_time_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="1010" sfwIsSequence="False" />
+    <attribute ID="SeminarDate2EndTimeValue" sfwType="Column" sfwValue="seminar_date2_end_time_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwIsSequence="False" />
+    <attribute ID="SeminarDate1MeetingRequestUid" sfwType="Column" sfwValue="seminar_date1_meeting_request_uid" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwIsSequence="False" />
+    <attribute ID="SeminarDate2MeetingRequestUid" sfwType="Column" sfwValue="seminar_date2_meeting_request_uid" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwIsSequence="False" />
+    <attribute ID="WebcastAvailable" sfwType="Column" sfwValue="webcast_available" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="1" />
+    <attribute ID="ConfirmationSentFlag" sfwType="Column" sfwValue="confirmation_sent_flag" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="1" />
+    <attribute sfwDataType="int" sfwType="Property" ID="NoOfOnsiteAttendees" sfwValue="NoOfOnsiteAttendees" />
+    <attribute sfwDataType="int" sfwType="Property" ID="NoOfWebcastAttendees" sfwValue="NoOfWebcastAttendees" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="TotalAmount" sfwValue="TotalAmount" />
+    <attribute sfwDataType="int" sfwType="Property" ID="NoOfOnsiteGuest" sfwValue="NoOfOnsiteGuest" />
+    <attribute sfwType="Collection" sfwEntity="entSeminarAttendeeDetail" ID="lstSeminarAttendeeDetail" sfwValue="iclbSeminarAttendeeDetail" />
+    <attribute sfwType="Collection" sfwEntity="entSeminarAttendeeDetail" ID="lstGuestSpeakers" sfwValue="iclbGuestSpeakers" />
+    <attribute ID="objContactTicket" sfwType="Object" sfwEntity="entContactTicket" sfwValue="ibusContactTicket" />
+    <attribute sfwDataType="int" sfwType="Property" ID="OrgId" sfwValue="icdoSeminarSchedule.org_id" />
+    <attribute sfwDataType="string" sfwType="Property" ID="SeminarStatus" sfwValue="icdoSeminarSchedule.SeminarStatus" />
+    <attribute ID="objPerson" sfwType="Object" sfwEntity="entPerson" sfwValue="ibusPerson" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrSeminarDate" sfwValue="istrSeminarDate" />
+    <attribute sfwDataType="int" sfwType="Property" ID="NoOfAttendees" sfwValue="NoOfAttendees" />
+    <attribute sfwDataType="string" sfwType="Property" ID="FullAddressToSearchInGoogle" sfwValue="icdoSeminarSchedule.full_address_to_search_in_google" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="SeminarStartDateDay1Minus15Days" sfwValue="SeminarStartDateDay1Minus15Days" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="SeminarStartDateDay1Minus30Days" sfwValue="SeminarStartDateDay1Minus30Days" />
+    <attribute sfwDataType="int" sfwType="Property" ID="TotalNoOfAttendees" sfwValue="TotalNoOfAttendees" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrFirstChoice" sfwValue="icdoSeminarSchedule.istrFirstChoice" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrSecondChoice" sfwValue="icdoSeminarSchedule.istrSecondChoice" />
+    <attribute sfwDataType="int" sfwType="Property" ID="NoOfOnlyAttendees" sfwValue="NoOfOnlyAttendees" />
+    <attribute sfwDataType="int" sfwType="Property" ID="NoOfGuests" sfwValue="NoOfGuests" />
+  </attributes>
+  <objectmethods>
+    <method ID="LoadSeminarAttendeeDetail" sfwReturnType="Void" />
+    <method ID="LoadGuestSpeakers" sfwReturnType="Void" />
+  </objectmethods>
+</entity>

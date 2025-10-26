@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entPersonRelease1" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvPerson" sfwType="BusinessRule" sfwChecklistId="10" sfwObjectID="busPersonRelease1" sfwParentEntity="entPerson">
+  <rules>
+    <rule ID="RULE CHECK CELL PHONE IS NUMERIC" sfwMessageId="1040" sfwExpression="!(string.IsNullOrEmpty(this.icdoPerson.cell_phone_no)) &amp;&amp; &#xA;(!RFunc.IsNumeric(this.icdoPerson.cell_phone_no))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK CELL PHONE LENGTH" sfwMessageId="1053" sfwExpression="!(string.IsNullOrEmpty(this.icdoPerson.cell_phone_no)) || &#xA;(RFunc.Length(this.icdoPerson.cell_phone_no) &lt; 10)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK COMM PREF IS EMAIL AND EMAIL IS NULL" sfwMessageId="1009" sfwExpression="((this.icdoPerson.communication_preference_value == &quot;EMIL&quot;) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoPerson.email_address)))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK DATE OF BIRTH IS NOT NULL  AND FUTURE DATE" sfwMessageId="1042" sfwExpression="!(this.icdoPerson.date_of_birth == DateTime.MinValue) &amp;&amp; &#xA;(this.icdoPerson.date_of_birth &gt; RFunc.CurrentDate())" sfwObjectBased="True" />
+    <rule ID="RULE CHECK DATE OF BIRTH IS NULL" sfwMessageId="153" sfwExpression="(this.icdoPerson.date_of_birth == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK DATE OF DEATH IS LESS THAN DATE OF BIRTH DATE" sfwMessageId="1041" sfwExpression="(this.icdoPerson.date_of_death &lt; this.icdoPerson.date_of_birth) &amp;&amp; &#xA;!(this.icdoPerson.date_of_birth == DateTime.MinValue) &amp;&amp; &#xA;(this.icdoPerson.date_of_death != DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK DATE OF DEATH IS NOT NULL  AND FUTURE DATE" sfwMessageId="1043" sfwExpression="(this.icdoPerson.date_of_death != DateTime.MinValue) &amp;&amp; &#xA;(this.icdoPerson.date_of_death &gt; RFunc.CurrentDate())" sfwObjectBased="True" />
+    <rule ID="RULE CHECK DATE_OF_BIRTH IS NULL" sfwMessageId="1002" sfwExpression="(this.icdoPerson.date_of_birth == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK EMAIL IS NOT NULL AND NOT VALID" sfwMessageId="1012" sfwExpression="!(string.IsNullOrEmpty(this.icdoPerson.email_address)) &amp;&amp; &#xA;(this.ValidateEmail() == False)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK FAX NUMBER LENGTH" sfwMessageId="1054" sfwExpression="!(string.IsNullOrEmpty(this.icdoPerson.fax_no)) || &#xA;(RFunc.Length(this.icdoPerson.fax_no) &lt; 10)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK FIRST NAME AND LAST NAME IS BLANK" sfwMessageId="1001" sfwExpression="((string.IsNullOrEmpty(this.icdoPerson.first_name)) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoPerson.last_name)))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK GENDER AND PREFIX" sfwMessageId="1045" sfwExpression="(this.CheckGenderNamePrefix() == True) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.icdoPerson.name_prefix_value)) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.icdoPerson.gender_value))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK GENDER IS NULL" sfwMessageId="1003" sfwExpression="(string.IsNullOrEmpty(this.icdoPerson.gender_value))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK HOME PHONE IS NUMERIC" sfwMessageId="1040" sfwExpression="!(string.IsNullOrEmpty(this.icdoPerson.home_phone_no)) &amp;&amp; &#xA;(!RFunc.IsNumeric(this.icdoPerson.home_phone_no))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK HOME PHONE LENGTH" sfwMessageId="1052" sfwExpression="!(string.IsNullOrEmpty(this.icdoPerson.home_phone_no)) || &#xA;(RFunc.Length(this.icdoPerson.home_phone_no) &lt; 10)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK MARITAL STATUS IS NULL" sfwMessageId="1004" sfwExpression="(string.IsNullOrEmpty(this.icdoPerson.marital_status_value))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK PERSON HAS EMPL AND DATE OF BIRTH IS NULL" sfwMessageId="1011" sfwExpression="((RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entPerson.GET_COUNT_OF_EMPLOYMENT_HISTORY_FOR_PERSON&quot;, this.icdoPerson.person_id) &gt; 0) &amp;&amp; &#xA;(this.icdoPerson.date_of_birth == DateTime.MinValue))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK PERSON HAS EMPL AND SSN IS NULL" sfwMessageId="1010" sfwExpression="((RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entPerson.GET_COUNT_OF_EMPLOYMENT_HISTORY_FOR_PERSON&quot;, this.icdoPerson.person_id) &gt; 0) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoPerson.ssn)))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK SSN DIGITS" sfwMessageId="1055" sfwExpression="(!string.IsNullOrEmpty(this.icdoPerson.ssn)) &amp;&amp; &#xA;(RFunc.Length(this.icdoPerson.ssn) &lt; 9)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK SSN EXISTS WHILE CREATING NEW" sfwMessageId="157" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entPerson.VALIDATE_DUPLICATE_SSN&quot;, this.icdoPerson.ssn) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK SSN EXISTS WHILE UPDATE PERSON" sfwMessageId="157" sfwExpression="(this.CheckSSNExists() == True)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK SSN IS NULL" sfwMessageId="152" sfwExpression="(string.IsNullOrEmpty(this.icdoPerson.ssn))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK SSN IS NUMERIC" sfwMessageId="1037" sfwExpression="(!string.IsNullOrEmpty(this.icdoPerson.ssn)) &amp;&amp; &#xA;(!RFunc.IsNumeric(this.icdoPerson.ssn))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK VALIDATE DELETE PERSON" sfwMessageId="1067" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entPerson.VALIDATE DELETE&quot;, this.icdoPerson.person_id) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK WORK PHONE IS NUMERIC" sfwMessageId="1038" sfwExpression="!(string.IsNullOrEmpty(this.icdoPerson.work_phone_no)) &amp;&amp; &#xA;(!RFunc.IsNumeric(this.icdoPerson.work_phone_no))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK WORKPHONE LENGTH" sfwMessageId="1051" sfwExpression="!(string.IsNullOrEmpty(this.icdoPerson.work_phone_no)) || &#xA;(RFunc.Length(this.icdoPerson.work_phone_no) &lt; 10)" sfwObjectBased="True" />
+  </rules>
+  <delete>
+    <property ID="lstPersonAddress" sfwMethodName="LoadAddresses" />
+    <property ID="icolPersonEmploymentHistory" sfwMethodName="LoadEmploymentHistory" />
+    <property ID="icolPersonBeneficiary" sfwMethodName="LoadBeneficiary" />
+    <property ID="lstPersonContact" sfwMethodName="LoadContacts" />
+    <property ID="icolPersonDependent" sfwMethodName="LoadDependent" />
+    <property ID="IcdoPerson" />
+  </delete>
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror>
+    <item ID="RULE CHECK FIRST NAME AND LAST NAME IS BLANK" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK DATE OF BIRTH IS NOT NULL  AND FUTURE DATE" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK SSN IS NUMERIC" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK SSN EXISTS WHILE UPDATE PERSON" sfwMode="Update" sfwStatus="Active" />
+    <item ID="RULE CHECK SSN DIGITS " sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK SSN IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK DATE OF BIRTH IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPersonDuplicated" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK GENDER IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK SSN EXISTS WHILE CREATING NEW" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete>
+    <item ID="RULE CHECK VALIDATE DELETE PERSON" sfwMode="All" sfwStatus="Active" />
+  </validatedelete>
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <attributes>
+    <attribute sfwDataType="int" sfwType="Property" ID="PersonId" sfwValue="icdoPerson.person_id" />
+    <attribute sfwDataType="string" sfwType="Property" ID="LastName" sfwValue="icdoPerson.last_name" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="DateOfBirth" sfwValue="icdoPerson.date_of_birth" />
+    <attribute sfwDataType="string" sfwType="Property" ID="GenderValue" sfwValue="icdoPerson.gender_value" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IintScreenIdentifier" sfwValue="iintScreenIdentifier" />
+    <attribute sfwDataType="string" sfwType="Property" ID="Ssn" sfwValue="icdoPerson.ssn" />
+    <attribute sfwDataType="string" sfwType="Property" ID="SuppressSsnFlag" sfwValue="icdoPerson.suppress_ssn_flag" />
+    <attribute sfwDataType="string" sfwType="Property" ID="LastFourDigitsOfSSN" sfwValue="icdoPerson.LastFourDigitsOfSSN" />
+    <attribute sfwDataType="string" sfwType="Property" ID="FirstName" sfwValue="icdoPerson.first_name" />
+    <attribute sfwDataType="string" sfwType="Property" ID="MiddleName" sfwValue="icdoPerson.middle_name" />
+    <attribute sfwDataType="string" sfwType="Property" ID="CreatedBy" sfwValue="icdoPerson.created_by" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="CreatedDate" sfwValue="icdoPerson.created_date" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ModifiedBy" sfwValue="icdoPerson.modified_by" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="ModifiedDate" sfwValue="icdoPerson.modified_date" />
+    <attribute sfwType="Collection" sfwEntity="entPersonAddress" ID="lstPersonAddress" sfwValue="icolPersonAddress" />
+    <attribute sfwType="Collection" sfwEntity="entPersonContact" ID="lstPersonContact" sfwValue="icolPersonContact" />
+    <attribute sfwDataType="" sfwType="Property" ID="IcdoPerson" sfwValue="icdoPerson" />
+  </attributes>
+  <objectmethods>
+    <method ID="LoadAddresses" sfwReturnType="Void" />
+    <method ID="LoadContacts" sfwReturnType="Void" />
+  </objectmethods>
+</entity>

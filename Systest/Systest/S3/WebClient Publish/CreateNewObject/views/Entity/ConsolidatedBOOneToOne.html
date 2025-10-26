@@ -1,0 +1,87 @@
+﻿<div class="portlet-body">
+
+    <div class="form-body">
+        <div class="form-group">
+            <label class="control-label"> MainTable : </label>
+            <label class="control-label" ng-bind="objEntityDetail.TableName"></label>
+        </div>
+    </div>
+
+    <div class="create-object-container col-xs-12">
+
+        <div class="col-xs-5 full-height ">
+            <div class="panel panel-primary full-height" style="margin-bottom:0px;">
+                <div class="panel-heading">
+                    Table
+                </div>
+                <div class="panel-body">
+                    <ul style="margin-bottom:0px;">
+                        <li ng-repeat="table in objOneToOne.ParentTableCollection" ng-click="SelectParentTableClick(table)" ng-class="SetClassForOneToOne(table,objOneToOne.SelectedParentTable)">
+                            <span ng-bind="table.TableName"></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-1 add-btn-adjust">
+            <div class="form-group">
+                <input type="button" class="dialog-btn" value="Add" ng-click="OnAddParentTable()" />
+            </div>
+        </div>
+
+        <div class="col-xs-6 full-height">
+
+            <div class="panel panel-primary full-height" style="margin-bottom:0px;">
+                <div class="panel-heading">
+                    One To One
+                    <div class="fright">
+                        <a ><img ng-click="DeleteParentTableRowCommand()" src="images/Common/icon_delete_dark.svg"></a>
+                    </div>
+                </div>
+
+                <div class="panel-body">
+                    <div class="table-scrollable">
+                        <table class="table table-striped table-hover table-bordered dataTable no-footer" role="grid">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Property Name
+                                    </th>
+                                    <th>
+                                        Table Name
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="oneToOne in objEntityDetail.OneToOneSelectedTableCollection track by $index" ng-if="oneToOne.isFromTable" ng-click="SelectOneToOneParentTable(oneToOne, $event)" ng-class="objOneToOne.SelectedOneToOneTable == oneToOne?'selected':''">
+                                    <td>
+                                        <div><span>ibus</span><input type="text" class="form-control form-filter input-sm" title="{{oneToOne.ObjectName}}" ng-model="oneToOne.ObjectName" /></div>
+                                    </td>
+                                    <td>
+                                        <span ng-bind="oneToOne.TableName"></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+</div>
+<div class="form-actions">
+    <div class="col-xs-6 text-left">
+        <span class="alert-error-msg" ng-if="objOneToMany.ErrorMessageForDisplay.length>0">{{objOneToMany.ErrorMessageForDisplay}}</span>
+    </div>
+    <div class="col-xs-6">
+        <input class="dialog-btn" type="button" value="Cancel" ng-click="CloseWizardClick()" />
+        <input class="dialog-btn" type="button" wz-previous="onPrevious()" value="Back" />
+        <input class="dialog-btn" type="button" wz-next="UpdateOnNextFromOneToOne();onNext()" value="Next" />
+        <input class="dialog-btn" type="button" wz-finish value="Finish" disabled="disabled" />
+    </div>
+</div>

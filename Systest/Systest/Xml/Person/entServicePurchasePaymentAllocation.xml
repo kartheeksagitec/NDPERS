@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entServicePurchasePaymentAllocation" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoServicePurchasePaymentAllocation" sfwObjectID="busServicePurchasePaymentAllocation" sfwTableName="sgt_service_purchase_payment_allocation">
+  <rules />
+  <delete />
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror />
+  <validatedelete />
+  <updateablecdo />
+  <queries>
+    <query ID="GetRemittanceForPerson" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT &#xD;&#xA; SR.REMITTANCE_AMOUNT&#xD;&#xA;,CASE WHEN SDT.DEPOSIT_DATE IS NULL THEN (CASE WHEN SD.PAYMENT_DATE IS NULL THEN SD.PAYMENT_DATE ELSE CONVERT(DATE,SD.PAYMENT_DATE) END) ELSE CONVERT(DATE,SDT.DEPOSIT_DATE) END AS PAYMENT_DATE&#xD;&#xA;,SR.REMITTANCE_ID &#xD;&#xA;FROM&#xD;&#xA;       SGT_DEPOSIT SD (NOLOCK) &#xD;&#xA;JOIN &#xD;&#xA;       SGT_REMITTANCE SR (NOLOCK) ON (SR.DEPOSIT_ID = SD.DEPOSIT_ID)&#xD;&#xA;LEFT JOIN&#xD;&#xA;       SGT_DEPOSIT_TAPE SDT (NOLOCK) ON SDT.DEPOSIT_TAPE_ID = SD.DEPOSIT_TAPE_ID&#xD;&#xA;Where&#xD;&#xA;SR.PERSON_ID = @PERSONID&#xD;&#xA;AND SD.STATUS_VALUE = 'APLD'&#xD;&#xA;AND SR.REMITTANCE_TYPE_VALUE = 'PURC'&#xD;&#xA;        AND SR.PLAN_ID =@PLAN_ID">
+      <parameters>
+        <parameter ID="@PersonId" sfwDataType="int" />
+        <parameter ID="@plan_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetAppliedAmtForHeaderIdAndDateRange" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select IsNull(Sum(IsNull(Applied_Amount,0)),0) Applied_Amount from SGT_Service_Purchase_Payment_Allocation (nolock)&#xD;&#xA;Where&#xD;&#xA; Payment_Date &gt;= @Payment_Start_Date  and Payment_Date &lt;= @Payment_End_Date&#xD;&#xA; and Service_Purchase_Header_Id = @Service_Purchase_Header_Id&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@Payment_Start_Date" sfwDataType="DateTime" />
+        <parameter ID="@Payment_End_Date" sfwDataType="DateTime" />
+        <parameter ID="@Service_Purchase_Header_Id" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="ServicePurchasePaymentAllocationId" sfwType="Column" sfwValue="service_purchase_payment_allocation_id" sfwIsNull="False" sfwKeyNo="1" sfwIsIdentity="True" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="ServicePurchaseHeaderId" sfwType="Column" sfwValue="service_purchase_header_id" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="RemittanceId" sfwType="Column" sfwValue="remittance_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="EmployerPayrollDetailId" sfwType="Column" sfwValue="employer_payroll_detail_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="ServicePurchasePaymentClassDescription" sfwType="Description" sfwValue="service_purchase_payment_class_description" />
+    <attribute ID="ServicePurchasePaymentClassId" sfwType="Column" sfwValue="service_purchase_payment_class_id" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="331" sfwIsSequence="False" />
+    <attribute ID="ServicePurchasePaymentClassValue" sfwType="Column" sfwValue="service_purchase_payment_class_value" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwIsSequence="False" />
+    <attribute ID="PaymentDate" sfwType="Column" sfwValue="payment_date" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="AppliedAmount" sfwType="Column" sfwValue="applied_amount" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" sfwIsSequence="False" />
+    <attribute ID="PostedFlag" sfwType="Column" sfwValue="posted_flag" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="1" />
+    <attribute ID="ProratedPsc" sfwType="Column" sfwValue="prorated_psc" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="11,6" />
+    <attribute ID="ProratedVsc" sfwType="Column" sfwValue="prorated_vsc" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="11,6" />
+    <attribute ID="PostTaxErAmount" sfwType="Column" sfwValue="post_tax_er_amount" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="PostTaxEeAmount" sfwType="Column" sfwValue="post_tax_ee_amount" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="PreTaxErAmount" sfwType="Column" sfwValue="pre_tax_er_amount" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="PreTaxEeAmount" sfwType="Column" sfwValue="pre_tax_ee_amount" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="EeRhicAmount" sfwType="Column" sfwValue="ee_rhic_amount" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="ErRhicAmount" sfwType="Column" sfwValue="er_rhic_amount" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwIsSequence="False" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwIsSequence="False" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwIsSequence="False" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="RemittanceAmount" sfwValue="icdoServicePurchasePaymentAllocation.remittance_amount" />
+    <attribute ID="objServicePurchaseHeader" sfwType="Object" sfwEntity="entServicePurchaseHeader" sfwValue="ibusServicePurchaseHeader" />
+  </attributes>
+</entity>

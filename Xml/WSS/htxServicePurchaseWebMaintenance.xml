@@ -1,0 +1,302 @@
+﻿<form ID="wfmServicePurchaseWebMaintenance" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2001" sfwType="FormLinkMaintenance" sfwTitle="Service Purchase Web Maintenance" version="3.5" sfwEntity="entServicePurchaseWeb" sfwTemplate="ServicePurchaseWebMaintenance.html" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmServicePurchaseWebLookup" sfwFormObjectType="None" isBasedOnWfm="true">
+  <initialload>
+    <callmethods sfwMethodName="NewServicePurchaseEstimateWeb" />
+  </initialload>
+  <items>
+    <sfwTable ID="Main" />
+    <sfwPanel ID="pnltoolbar" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblNewPage4" />
+        <sfwImageButton ID="btnBack" ImageAlign="AbsMiddle" ImageUrl="~/Images/back.gif" sfwMethodName="btnBack_Click" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlMain" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblMain" />
+        <sfwLiteral ID="ltrlMessage" Text="Service Purchase Estimate" />
+        <sfwCheckBox ID="chkfocus" sfwDefaultValue="N" CssClass="hideControl" />
+        <sfwLabel ID="lblLabel4" Text="Note: Service purchase estimate computed in this screen cannot be saved." sfwIsCaption="True" />
+        <sfwLabel ID="lblLabel3" Text="&lt;br/&gt;" sfwIsCaption="True" />
+        <sfwPanel ID="pnlSCPurchase" sfwCaption="Service Credit Purchase">
+          <items>
+            <sfwTable ID="tblNewPage1" />
+            <sfwLabel ID="capPlanId" Text="Plan :  " sfwIsCaption="True" />
+            <sfwDropDownList DataTextField="plan_name" DataValueField="plan_id" ID="ddlPlanId" sfwVisibleRule="IsAvailablePlanCountMoreThanOne" sfwLoadType="Method" sfwLoadSource="LoadPlansForServicePurchase" sfwEntityField="PlanId" />
+            <sfwLabel ID="lblPlanName" sfwVisibleRule="IsAvailablePlanCountEqualsOne" sfwEntityField="objServicePurchaseHeader.objPlan.PlanName" />
+            <sfwLabel ID="lbl" Text="What type of purchase would you like an estimate for? " sfwIsCaption="True" />
+            <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlServicePurchaseTypeValue" sfwClientVisibility="controllist:pnlUnusedSickLeave,tblNewPage2,capUnusedSickLeaveHours,txtUnusedSickLeaveHours,pnlConsolidatePurchase,tblNewPage,grvConsolidatedPurchase,lblLabel2,lblLabel6,lblLabel13,capIdecDownPaymentAmount,txtIdecDownPaymentAmount,capIintNumberofPayments,txtIintNumberofPayments,lblLabel14,capIdecPaymentAmount,txtIdecPaymentAmount,lblLabel12,ddlIstrWhatIfPaymentFrequency,btnExecuteRefreshFromObject,capIdecAdditionalServiceCredits1,lblTotalTimeToPurchase,lblTotalPurchaseCost,lblLabel8,lblSickLeaveTotalPurchaseCost,lblLabel7,lblUnusedSickLeaveHours1,capUnusedSickLeaveHours2#UNUS:pnlUnusedSickLeave,tblNewPage2,capUnusedSickLeaveHours,txtUnusedSickLeaveHours,btnExecuteRefreshFromObject,capUnusedSickLeaveHours2,lblUnusedSickLeaveHours1,lblLabel7,lblSickLeaveTotalPurchaseCost;ADDP:pnlConsolidatePurchase,tblNewPage,grvConsolidatedPurchase,lblLabel2,lblLabel6,lblLabel13,capIdecDownPaymentAmount,txtIdecDownPaymentAmount,capIintNumberofPayments,lblLabel14,txtIintNumberofPayments,capIdecPaymentAmount,txtIdecPaymentAmount,lblLabel12,ddlIstrWhatIfPaymentFrequency,btnExecuteRefreshFromObject,capIdecAdditionalServiceCredits1,lblTotalTimeToPurchase,lblLabel8,lblTotalPurchaseCost;BOTH:pnlUnusedSickLeave,tblNewPage2,capUnusedSickLeaveHours,txtUnusedSickLeaveHours,pnlConsolidatePurchase,tblNewPage,grvConsolidatedPurchase,lblLabel2,lblLabel6,lblLabel13,capIdecDownPaymentAmount,txtIdecDownPaymentAmount,capIintNumberofPayments,lblLabel14,txtIintNumberofPayments,capIdecPaymentAmount,txtIdecPaymentAmount,lblLabel12,ddlIstrWhatIfPaymentFrequency,btnExecuteRefreshFromObject,capUnusedSickLeaveHours2,lblUnusedSickLeaveHours1,lblLabel7,lblSickLeaveTotalPurchaseCost,capIdecAdditionalServiceCredits1,lblTotalTimeToPurchase,lblLabel8,lblTotalPurchaseCost;" sfwLoadType="CodeGroup" sfwLoadSource="6008" sfwEntityField="IstrServicePurchaseType" />
+            <sfwPanel ID="pnlUnusedSickLeave" sfwCaption="UnusedSickLeave" sfwCollapsible="False">
+              <items>
+                <sfwTable ID="tblNewPage2" />
+                <sfwLabel ID="capUnusedSickLeaveHours" Text="Unused Sick Leave Purchase : &lt;br&gt; (Enter projected hours of unused sick leave at termination of employment) " sfwIsCaption="True" />
+                <sfwTextBox ID="txtUnusedSickLeaveHours" sfwEntityField="objServicePurchaseHeader.objPrimaryServicePurchaseDetail.UnusedSickLeaveHours1" sfwCustomAttributes="maxlength=13" />
+              </items>
+            </sfwPanel>
+            <sfwPanel ID="pnlConsolidatePurchase" sfwCaption="Consolidate Purchase" sfwCollapsible="False">
+              <items>
+                <sfwTable ID="tblNewPage" />
+                <sfwGridView AllowPaging="True" ID="grvConsolidatedPurchase" sfwTwoWayBinding="True" sfwEntityField="lstConsolidatedPurchase" sfwGridEntity="entConsolidatedPurchaseWeb" AllowEditing="True">
+                  <Columns>
+                    <TemplateField HeaderText="Purchase Type">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="IstrConsolidatePurchaseType" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText=" From Date" sfwVisibleRule="IsConsolidatePurchaseTypeAdditionalMonths">
+                      <ItemTemplate>
+                        <sfwTextBox sfwDataFormat="{0:d}" sfwReadOnlyRule="IsAdditionalSCConsolidatedPurchaseType" sfwEntityField="IdtFromDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="To Date">
+                      <ItemTemplate>
+                        <sfwTextBox sfwDataFormat="{0:d}" sfwReadOnlyRule="IsAdditionalSCConsolidatedPurchaseType" sfwEntityField="IdtToDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Additional Service Credits">
+                      <ItemTemplate>
+                        <sfwTextBox sfwReadOnlyRule="IsPurchaseTypeOtherthanAdditionSC" sfwEntityField="IintAdditionalServiceCredits" sfwShowZero="True" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+                <sfwLabel ID="lblLabel2" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel6" Text="The purchase payment schedule will determine what your required payments need to be based upon the payment frequency selected and&lt;br/&gt;either the number of payments or payment amount that you have entered.  If you do not enter amounts in the payment election section,&lt;br/&gt;the payment schedule will automatically calculate a monthly payment amount based upon a 15 year (180 months) period." sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel13" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwLabel ID="capIdecDownPaymentAmount" Text="&lt;b&gt;1.&lt;/b&gt; If you would like the payment schedule to consider a down payment, please enter Down Payment Amount : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtIdecDownPaymentAmount" sfwDataFormat="{0:C}" sfwEntityField="objServicePurchaseHeader.IdecWhatIfPaymentAmount" />
+                <sfwLabel ID="capIintNumberofPayments" Text="&lt;b&gt;2.&lt;/b&gt; If you would like the payment schedule to consider a specific number of payments, enter the Number of Payments : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtIintNumberofPayments" sfwDefaultValue="180" sfwEntityField="objServicePurchaseHeader.IintWhatIfNoOfPayments" />
+                <sfwLabel ID="lblLabel14" Text="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;OR" sfwIsCaption="True" />
+                <sfwLabel ID="capIdecPaymentAmount" Text="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;If you would like the payment schedule to consider a specific payment amount, enter the Payment Amount : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtIdecPaymentAmount" sfwDataFormat="{0:C}" sfwEntityField="objServicePurchaseHeader.IdecWhatIfExpextedInstallmentAmount" />
+                <sfwLabel ID="lblLabel12" Text="&lt;b&gt;3.&lt;/b&gt; Please select a Payment Frequency :" sfwIsCaption="True" />
+                <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlIstrWhatIfPaymentFrequency" sfwLoadType="CodeGroup" sfwLoadSource="330" sfwEntityField="objServicePurchaseHeader.IstrWhatIfPaymentFrequency" />
+              </items>
+            </sfwPanel>
+          </items>
+        </sfwPanel>
+        <sfwButton ID="btnExecuteRefreshFromObject" sfwMethodName="btnValidateExecuteBusinessMethod_Click" sfwObjectMethod="btnCalculatedEstimatedServicePurchase_Click" Text="Estimate Service Purchase" sfwExecuteAfterSuccess="btnCancel" />
+        <sfwButton ID="btnCancel" sfwMethodName="btnCancel_Click" Text="Refresh" OnClientClick="fnServicePurchaseWebPanelVisibility(e);" CssClass="hideControl" />
+        <sfwPanel ID="pnResults" sfwCaption="Service Credit Purchase Cost" CssClass="hideControl">
+          <items>
+            <sfwTable ID="tblNewPage7" />
+            <sfwPanel ID="pnlNewPage" sfwCaption="Cost" sfwCollapsible="False">
+              <items>
+                <sfwTable ID="tblNewPage3" />
+                <sfwLabel ID="capUnusedSickLeaveHours2" sfwVisibleRule="VisibiilityIsNotDCMember" Text="Unused Sick Leave Converted (Months) : " sfwIsCaption="True" />
+                <sfwLabel ID="lblUnusedSickLeaveHours1" sfwVisibleRule="VisibiilityIsNotDCMember" sfwEntityField="IdecUnusedTotalTimeToPurchase" />
+                <sfwLabel ID="capIdecAdditionalServiceCredits1" sfwVisibleRule="VisibiilityIsNotDCMember" Text="Service Months Purchased  : " sfwIsCaption="True" />
+                <sfwLabel ID="lblTotalTimeToPurchase" sfwVisibleRule="VisibiilityIsNotDCMember" sfwEntityField="objServicePurchaseHeader.TotalTimeToPurchase" />
+                <sfwLabel ID="lblLabel7" sfwVisibleRule="VisibiilityIsNotDCMember" Text="Unused Sick Leave Conversion Cost :" sfwIsCaption="True" />
+                <sfwLabel ID="lblSickLeaveTotalPurchaseCost" sfwDataFormat="{0:C}" sfwVisibleRule="VisibiilityIsNotDCMember" sfwEntityField="objServicePurchaseHeader.objPrimaryServicePurchaseDetail.SickLeaveTotalPurchaseCost" />
+                <sfwLabel ID="lblLabel8" sfwVisibleRule="VisibiilityIsNotDCMember" Text="Service Months Purchase Cost :" sfwIsCaption="True" />
+                <sfwLabel ID="lblTotalPurchaseCost" sfwDataFormat="{0:C}" sfwVisibleRule="VisibiilityIsNotDCMember" sfwEntityField="objServicePurchaseHeader.TotalPurchaseCost" />
+                <sfwLabel ID="capCreditedPsc" Text="Credited Service on File : " Visible="False" sfwIsCaption="True" />
+                <sfwLabel ID="lblCreditedPsc" Visible="False" sfwEntityField="objRetirementBenefitCalculation.CreditedPsc" />
+                <sfwLabel ID="lblLabel10" Text="Estimated Credited Service (years) :" Visible="False" sfwIsCaption="True" />
+                <sfwLabel ID="lblIdecEstimatedSCYearlyForBenCalFormatted" Visible="False" sfwEntityField="IdecEstimatedSCYearlyForBenCalFormatted" />
+                <sfwLabel ID="capIdecMemberAgeBasedOnRetirementDate" Text="Age at Retirement :" Visible="False" sfwIsCaption="True" />
+                <sfwLabel ID="lblIdecMemberAgeBasedOnRetirementDateFormatted" Visible="False" sfwEntityField="objRetirementBenefitCalculation.IdecMemberAgeBasedOnRetirementDateFormatted" />
+                <sfwLabel ID="lblLabel9" Text="Estimated Credited Service (months) :" Visible="False" sfwIsCaption="True" />
+                <sfwLabel ID="lblIdecEstimatedSCForBenCal" Visible="False" sfwEntityField="IdecEstimatedSCForBenCal" />
+                <sfwLabel ID="lblLabel11" Text="Service Age :" Visible="False" sfwIsCaption="True" />
+                <sfwLabel ID="lblIdecServiceAgeFormatted" Visible="False" sfwEntityField="IdecServiceAgeFormatted" />
+              </items>
+            </sfwPanel>
+            <sfwLabel ID="lblLabel" Text="Unused Sick Leave Purchase Payment Schedule" Visible="False" sfwIsCaption="True" />
+            <sfwGridView AllowPaging="True" ID="grvServicePurchaseAmortizationSchedule" Visible="False" sfwEntityField="lstUnusedSickLeavePurchaseSchedule" sfwGridEntity="entServicePurchaseAmortizationSchedule">
+              <Columns>
+                <TemplateField HeaderText="Payment Date" Visible="False">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:d}" sfwWrap="True" sfwEntityField="PaymentDate" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Payment Due Date" ItemStyle.HorizontalAlign="Center">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:d}" sfwWrap="True" sfwEntityField="PaymentDueDate" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Payment Number" Visible="False" ItemStyle.HorizontalAlign="Center">
+                  <ItemTemplate>
+                    <sfwLabel sfwWrap="True" sfwEntityField="PaymentNumber" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Payment Amount" Visible="False">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:C}" sfwWrap="True" sfwEntityField="PaymentAmount" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Expected Payment Amount" ItemStyle.HorizontalAlign="Right">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:C}" sfwWrap="True" sfwEntityField="ExpectedPaymentAmount" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Principal" ItemStyle.HorizontalAlign="Right">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="PrincipleInPaymentAmount" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Interest" ItemStyle.HorizontalAlign="Right">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="InterestInPaymentAmount" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Principal Balance" ItemStyle.HorizontalAlign="Right">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:C}" sfwWrap="True" sfwEntityField="PrincipleBalance" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Prorated PSC" SortExpression="ProratedPsc" Visible="False" ItemStyle.HorizontalAlign="Center">
+                  <ItemTemplate>
+                    <sfwLabel sfwWrap="True" sfwEntityField="ProratedPscFormatted" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Prorated VSC" SortExpression="ProratedVsc" Visible="False" ItemStyle.HorizontalAlign="Center">
+                  <ItemTemplate>
+                    <sfwLabel sfwWrap="True" sfwEntityField="ProratedVscFormatted" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Service Purchase Amortization Schedule ID" Visible="False">
+                  <ItemTemplate>
+                    <sfwLabel sfwWrap="True" sfwEntityField="ServicePurchaseAmortizationScheduleId" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Pay-off Amount" ItemStyle.HorizontalAlign="Right">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:C}" sfwWrap="True" sfwEntityField="IdecPayOffAmountFormatted" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="IintRemittanceID" Visible="False">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="IintRemittanceID" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Payment Class" Visible="False">
+                  <ItemTemplate>
+                    <sfwLabel sfwWrap="True" sfwEntityField="IstrPaymentClass" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="IintReferenceID" Visible="False">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="IintReferenceID" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="IstrReferenceConst" Visible="False">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="IstrReferenceConst" />
+                  </ItemTemplate>
+                </TemplateField>
+              </Columns>
+            </sfwGridView>
+            <sfwPanel GroupingText="&lt;b&gt;Service Purchase Payment Schedule&lt;/b&gt;" ID="pnlPaymentSchedule" sfwCaption="Payment Schedule" sfwCollapsible="False">
+              <items>
+                <sfwTable ID="tblNewPage5" />
+                <sfwGridView AllowPaging="True" ID="grvGridView" sfwEntityField="lstConsolidatedPurchaseSchedule" sfwGridEntity="entServicePurchaseAmortizationSchedule">
+                  <Columns>
+                    <TemplateField HeaderText="Payment Date" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwWrap="True" sfwEntityField="PaymentDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Payment Due Date" ItemStyle.HorizontalAlign="Center">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwWrap="True" sfwEntityField="PaymentDueDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Payment Number" Visible="False" ItemStyle.HorizontalAlign="Center">
+                      <ItemTemplate>
+                        <sfwLabel sfwWrap="True" sfwEntityField="PaymentNumber" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Payment Amount" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwWrap="True" sfwEntityField="PaymentAmount" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Expected Payment Amount" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwWrap="True" sfwEntityField="ExpectedPaymentAmount" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Principal" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="PrincipleInPaymentAmount" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Interest" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="InterestInPaymentAmount" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Principal Balance" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwWrap="True" sfwEntityField="PrincipleBalance" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Prorated PSC" SortExpression="ProratedPsc" Visible="False" ItemStyle.HorizontalAlign="Center">
+                      <ItemTemplate>
+                        <sfwLabel sfwWrap="True" sfwEntityField="ProratedPscFormatted" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Prorated VSC" SortExpression="ProratedVsc" Visible="False" ItemStyle.HorizontalAlign="Center">
+                      <ItemTemplate>
+                        <sfwLabel sfwWrap="True" sfwEntityField="ProratedVscFormatted" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Service Purchase Amortization Schedule ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwWrap="True" sfwEntityField="ServicePurchaseAmortizationScheduleId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Pay-off Amount" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwWrap="True" sfwEntityField="IdecPayOffAmountFormatted" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="IintRemittanceID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="IintRemittanceID" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Payment Class" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwWrap="True" sfwEntityField="IstrPaymentClass" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="IintReferenceID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="IintReferenceID" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="IstrReferenceConst" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="IstrReferenceConst" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+                <sfwLabel ID="lblLesseramount" Text="Your purchase payment election amount must be higher to complete your purchase within 180 Months, please enter in a higher amount." sfwIsCaption="True" />
+              </items>
+            </sfwPanel>
+            <sfwLabel ID="lblLabel1" Text="Please read the  " sfwIsCaption="True" />
+            <sfwTextBox ID="txtDownloadFileName" sfwEntityField="IstrDownloadFileName" />
+            <sfwLinkButton ID="btnLinkButtonclik" sfwMethodName="btn_OpenPDF" sfwNavigationParameter="pdf_file_name=IstrDownloadFileName" />
+            <sfwLabel ID="lblLabel5" Text="If you would like to request an official service credit purchase estimate from NDPERS, submit your  " sfwIsCaption="True" />
+            <sfwLinkButton ID="btnLinkButton" sfwActiveForm="wfmMSSServicePurchaseEstimateMaintenance" sfwMethodName="btnNew_Click" sfwNavigationParameter="aintPersonId=lblPersonId" />
+          </items>
+        </sfwPanel>
+        <sfwLabel ID="lblPersonId" Visible="False" sfwEntityField="PersonId" />
+      </items>
+    </sfwPanel>
+  </items>
+  <loaddetails>
+    <entityfield ID="objServicePurchaseHeader.objPlan" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objServicePurchaseHeader.objPrimaryServicePurchaseDetail" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstConsolidatedPurchase" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objServicePurchaseHeader" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objRetirementBenefitCalculation" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstUnusedSickLeavePurchaseSchedule" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstConsolidatedPurchaseSchedule" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+  </loaddetails>
+  <ExtraFields />
+</form>

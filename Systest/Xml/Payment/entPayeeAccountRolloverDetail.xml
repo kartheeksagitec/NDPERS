@@ -1,0 +1,167 @@
+﻿<entity ID="entPayeeAccountRolloverDetail" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoPayeeAccountRolloverDetail" sfwObjectID="busPayeeAccountRolloverDetail" sfwTableName="sgt_payee_account_rollover_detail" sfwView="False" sfwDataObjectID="doPayeeAccountRolloverDetail">
+  <rules>
+    <rule ID="IsAccountNumberNull" sfwMessageId="4602" sfwExpression="(this.icdoPayeeAccountRolloverDetail.suppress_warnings_flag != &quot;Y&quot;) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoPayeeAccountRolloverDetail.account_number))" sfwObjectBased="True" />
+    <rule ID="IsAmountGreaterThanTaxableAmount" sfwMessageId="5563" sfwExpression="!(this.icdoPayeeAccountRolloverDetail.amount_of_taxable == 0.00) &amp;&amp; &#xA;!(this.IsReissueRolloverValid() == True) &amp;&amp; &#xA;(this.icdoPayeeAccountRolloverDetail.amount_of_taxable &gt;= RFunc.GetValue&lt;Decimal&gt;(this, &quot;ibusPayeeAccount.idecTotalTaxableAmountForFlatRates&quot;))" sfwObjectBased="True" />
+    <rule ID="IsAmountNegative" sfwMessageId="5583" sfwExpression="(this.icdoPayeeAccountRolloverDetail.amount_of_taxable &lt; 0)" sfwObjectBased="True" />
+    <rule ID="IsOrgCodeNull" sfwMessageId="1032" sfwExpression="(string.IsNullOrEmpty(this.icdoPayeeAccountRolloverDetail.org_code))" sfwObjectBased="True" />
+    <rule ID="IsOrgTypeNotRolleverInstituition" sfwMessageId="5508" sfwExpression="!(string.IsNullOrEmpty(this.icdoPayeeAccountRolloverDetail.org_code)) &amp;&amp; &#xA;!(RFunc.GetValue&lt;String&gt;(this, &quot;ibusRolloverOrg.icdoOrganization.org_type_value&quot;) == &quot;RLIT&quot;)" sfwObjectBased="True" />
+    <rule ID="IsPAStatusCPorCLD" sfwMessageId="5655" sfwExpression="(this.IsPayeeAccountStatusCancelPendingOrCancelled() == True)" sfwObjectBased="True" />
+    <rule ID="IsPaymentOption$And$NotEntered" sfwMessageId="5514" sfwExpression="(this.icdoPayeeAccountRolloverDetail.rollover_option_value == &quot;DLOT&quot;) &amp;&amp; &#xA;(this.icdoPayeeAccountRolloverDetail.amount_of_taxable == 0.00)" sfwObjectBased="True" />
+    <rule ID="IsPaymentOption%And%NotEntered" sfwMessageId="5513" sfwExpression="(this.icdoPayeeAccountRolloverDetail.rollover_option_value == &quot;PROT&quot;) &amp;&amp; &#xA;(this.icdoPayeeAccountRolloverDetail.percent_of_taxable == 0.00)" sfwObjectBased="True" />
+    <rule ID="IsPaymentOptionNot$And$Entered" sfwMessageId="5515" sfwExpression="!(this.icdoPayeeAccountRolloverDetail.rollover_option_value == &quot;DLOT&quot;) &amp;&amp; &#xA;!(this.icdoPayeeAccountRolloverDetail.amount_of_taxable == 0.00)" sfwObjectBased="True" />
+    <rule ID="IsPaymentOptionNot%And%Entered" sfwMessageId="5516" sfwExpression="!(this.icdoPayeeAccountRolloverDetail.rollover_option_value == &quot;PROT&quot;) &amp;&amp; &#xA;!(this.icdoPayeeAccountRolloverDetail.percent_of_taxable == 0.00)" sfwObjectBased="True" />
+    <rule ID="IsPercentageGreaterThan100" sfwMessageId="1023" sfwExpression="(this.icdoPayeeAccountRolloverDetail.percent_of_taxable &gt;= 100)" sfwObjectBased="True" />
+    <rule ID="IsRecordExist" sfwMessageId="6462" sfwExpression="(this.IsActiveRolloverExistFortheData() == True)" sfwObjectBased="True" />
+    <rule ID="IsRolloverNotAllowed" sfwMessageId="5581" sfwExpression="(this.IsRolloverAllowed() == True)" sfwObjectBased="True" />
+    <rule ID="IsRolloverOptionNotAllofGross" sfwMessageId="6459" sfwExpression="(this.IsReissueRolloverAllowed() == True)" sfwObjectBased="True" />
+    <rule ID="IsRolloverOptionNull" sfwMessageId="5577" sfwExpression="(string.IsNullOrEmpty(this.icdoPayeeAccountRolloverDetail.rollover_option_value))" sfwObjectBased="True" />
+    <rule ID="IsRolloverPosted" sfwMessageId="5582" sfwExpression="(this.icdoPayeeAccountRolloverDetail.rollover_flag == &quot;Y&quot;)" sfwObjectBased="True" />
+    <rule ID="IsRolloverRecordExistForSameOrg" sfwMessageId="5617" sfwExpression="(this.IsRolloverExistForSameOrg() == True)" sfwObjectBased="True" />
+    <rule ID="IsRolloverTypeNull" sfwMessageId="10098" sfwExpression="(string.IsNullOrEmpty(this.icdoPayeeAccountRolloverDetail.rollover_type_value))" sfwObjectBased="True" />
+    <rule ID="IsSameRolloverRecordNotExistinCancelledStatus" sfwMessageId="6463" sfwExpression="(this.IsSameRolloverRecordNotExistinCancelledStatus() == True)" sfwObjectBased="True" />
+    <rule ID="IsStatusCancelled" sfwMessageId="6456" sfwExpression="(this.IsCancelStatusSelect() == True)" sfwObjectBased="True" />
+    <rule ID="IsStatusChangedToActive" sfwMessageId="5631" sfwExpression="(this.IsStatusActive() == True)" sfwObjectBased="True" />
+    <rule ID="IsStatusNull" sfwMessageId="5509" sfwExpression="(string.IsNullOrEmpty(this.icdoPayeeAccountRolloverDetail.status_value))" sfwObjectBased="True" />
+    <rule ID="IsStatusProcessedInNewMode" sfwMessageId="5564" sfwExpression="(this.icdoPayeeAccountRolloverDetail.status_value == &quot;PRCD&quot;)" sfwObjectBased="True" />
+    <rule ID="IsStatusProcessedUpdate" sfwMessageId="6461" sfwExpression="!(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPayeeAccount.icdoPayeeAccount.benefit_option_value&quot;) == &quot;5YTL&quot;) &amp;&amp; &#xA;(this.icdoPayeeAccountRolloverDetail.status_value == &quot;PRCD&quot;)" sfwObjectBased="True" />
+    <rule ID="IsThereNoItemRollover" sfwMessageId="5567" sfwExpression="(this.IsThereNoItemToRollover() == True)" sfwObjectBased="True" />
+    <rule ID="IsTotalPercentageNot100" sfwMessageId="5512" sfwExpression="(this.IsTotalRolloverPercentageOrAmountInvalid() == True)" sfwObjectBased="True" />
+    <rule ID="StatusIsProcessed" sfwMessageId="5552" sfwExpression="(this.icdoPayeeAccountRolloverDetail.status_value == &quot;PRCD&quot;)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleIsRolloverFlagNull" sfwExpression="(string.IsNullOrEmpty(this.icdoPayeeAccountRolloverDetail.rollover_flag))" sfwObjectBased="True" />
+    <rule ID="IsstateTaxOptionBlank" sfwRuleType="Validation" sfwExpression="(this.icdoPayeeAccountRolloverDetail.rollover_type_value == &quot;RIRA&quot;)&amp;&amp;&#xD;&#xA;(string.IsNullOrEmpty(this.icdoPayeeAccountRolloverDetail.state_tax_option_value))" sfwMessageId="10308" sfwObjectBased="True" />
+    <rule ID="VisibleRuleIsMemberRequestedRolloverDetailVisible" sfwRuleType="Validation" sfwExpression="this.ibusPayeeAccount.DoesMemberEnteredRolloverDetailExist()" sfwObjectBased="True" />
+    <rule ID="IsPAStatusCancelOrSuspendOrCompleteOrProcessed" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.icdoPayeeAccountRolloverDetail.suppress_warnings_flag != &quot;Y&quot;)&amp;&amp; &#xA;(this.ibusPayeeAccount != null) &amp;&amp;&#xA;(this.ibusPayeeAccount.IsPayeeAccountStatusCancelOrSuspendOrCompleteOrProcessed())" sfwMessageId="10490" />
+    <rule ID="VisibleRuleStateTaxOption" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.icdoPayeeAccountRolloverDetail.rollover_type_value == &quot;RIRA&quot;)" />
+  </rules>
+  <delete>
+    <property ID="lstRolloverItemDetail" sfwMethodName="LoadRolloverItemDetail" />
+    <property ID="lstPayeeAcountRolloverItems" sfwMethodName="LoadPayeeAccountRolloverItems" />
+  </delete>
+  <checklist />
+  <initialload>
+    <item ID="VisibleRuleIsRolloverFlagNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleIsMemberRequestedRolloverDetailVisible" sfwStatus="Active" sfwMode="All" />
+    <item ID="VisibleRuleStateTaxOption" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="IsStatusNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsOrgCodeNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsOrgTypeNotRolleverInstituition" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPercentageGreaterThan100" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsTotalPercentageNot100" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPaymentOption%And%NotEntered" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPaymentOption$And$NotEntered" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPaymentOptionNot$And$Entered" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPaymentOptionNot%And%Entered" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAmountGreaterThanTaxableAmount" sfwMode="New" sfwStatus="Active" />
+    <item ID="IsStatusProcessedInNewMode" sfwMode="New" sfwStatus="Active" />
+    <item ID="IsRolloverOptionNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsRolloverNotAllowed" sfwMode="New" sfwStatus="Active" />
+    <item ID="IsAmountNegative" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsThereNoItemRollover" sfwMode="New" sfwStatus="Active" />
+    <item ID="IsRolloverRecordExistForSameOrg" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsSameRolloverRecordNotExistinCancelledStatus" sfwMode="New" sfwStatus="Active" />
+    <item ID="IsStatusCancelled" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsRolloverOptionNotAllofGross" sfwMode="New" sfwStatus="Active" />
+    <item ID="IsStatusProcessedUpdate" sfwMode="Update" sfwStatus="Active" />
+    <item ID="IsRecordExist" sfwMode="New" sfwStatus="Active" />
+    <item ID="IsStatusChangedToActive" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPAStatusCPorCLD" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsRolloverTypeNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsstateTaxOptionBlank" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsPAStatusCancelOrSuspendOrCompleteOrProcessed" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete>
+    <item ID="StatusIsProcessed" sfwMode="All" sfwStatus="Active" />
+  </validatedelete>
+  <groupslist />
+  <updateablecdo />
+  <commonproperties>
+    <item ID="person_id" sfwObjectField="ibusPayeeAccount.icdoPayeeAccount.payee_perslink_id" sfwBeforeMethodName="LoadPayeeAccount" />
+  </commonproperties>
+  <expressionfields />
+  <queries>
+    <query ID="UpdateRolloverDetailStatusToProcessed" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="UPDATE PARD SET PARD.STATUS_VALUE='PRCD',MODIFIED_BY='PERSLink Batch'+' '+ convert(nvarchar,@batchscheduleid),MODIFIED_DATE=GETDATE(),&#xD;&#xA;   PARD.UPDATE_SEQ = PARD.UPDATE_SEQ+1&#xD;&#xA;FROM SGT_PAYEE_ACCOUNT_ROLLOVER_DETAIL PARD&#xD;&#xA; INNER JOIN SGT_PAYMENT_HISTORY_HEADER PHH &#xD;&#xA; ON PARD.PAYEE_ACCOUNT_ID =PHH.PAYEE_ACCOUNT_ID&#xD;&#xA; AND PHH.ORG_ID = PARD.ROLLOVER_ORG_ID  &#xD;&#xA;INNER JOIN&#xD;&#xA; (&#xD;&#xA;  SELECT DISTINCT PAYMENT_HISTORY_HEADER_ID FROM SGT_PAYMENT_HISTORY_DISTRIBUTION WHERE &#xD;&#xA;  PAYMENT_METHOD_VALUE IN ('RCHK','RACH')&#xD;&#xA; ) AS PHDN&#xD;&#xA; ON PHDN.PAYMENT_HISTORY_HEADER_ID = PHH.PAYMENT_HISTORY_HEADER_ID&#xD;&#xA;INNER JOIN SGT_PAYEE_ACCOUNT PA on&#xD;&#xA;PARD.PAYEE_ACCOUNT_ID = PA.PAYEE_ACCOUNT_ID &#xD;&#xA;WHERE PHH.PAYMENT_SCHEDULE_ID=@PAYMENTSCHEDULEID&#xD;&#xA;and PA.BENEFIT_OPTION_VALUE &lt;&gt; '5YTL'&#xD;&#xA;AND PARD.STATUS_VALUE = 'ACTV' -- PIR 938 (CANCELED ROLLOVER DETAILS WERE ALSO GETTING PROCESSED)&#xD;&#xA;&#xD;&#xA;UPDATE PARD SET PARD.STATUS_VALUE='PRCD',MODIFIED_BY='PERSLink Batch',MODIFIED_DATE=GETDATE(),&#xD;&#xA;   PARD.UPDATE_SEQ = PARD.UPDATE_SEQ+1&#xD;&#xA;FROM SGT_PAYEE_ACCOUNT_ROLLOVER_DETAIL PARD&#xD;&#xA; INNER JOIN SGT_PAYMENT_HISTORY_HEADER PHH &#xD;&#xA; ON PARD.PAYEE_ACCOUNT_ID =PHH.PAYEE_ACCOUNT_ID&#xD;&#xA; AND PHH.ORG_ID = PARD.ROLLOVER_ORG_ID  &#xD;&#xA;INNER JOIN&#xD;&#xA; (&#xD;&#xA;  SELECT DISTINCT PAYMENT_HISTORY_HEADER_ID FROM SGT_PAYMENT_HISTORY_DISTRIBUTION WHERE &#xD;&#xA;  PAYMENT_METHOD_VALUE IN ('RCHK','RACH')&#xD;&#xA; ) AS PHDN&#xD;&#xA; ON PHDN.PAYMENT_HISTORY_HEADER_ID = PHH.PAYMENT_HISTORY_HEADER_ID&#xD;&#xA;INNER JOIN SGT_PAYEE_ACCOUNT PA &#xD;&#xA; ON PARD.PAYEE_ACCOUNT_ID = PA.PAYEE_ACCOUNT_ID &#xD;&#xA;INNER JOIN SGT_PAYMENT_SCHEDULE PS&#xD;&#xA; ON PHH.PAYMENT_SCHEDULE_ID = PS.PAYMENT_SCHEDULE_ID&#xD;&#xA;WHERE PHH.PAYMENT_SCHEDULE_ID=@PAYMENTSCHEDULEID&#xD;&#xA;and PA.BENEFIT_OPTION_VALUE = '5YTL'&#xD;&#xA;and PA.BENEFIT_END_DATE &lt;= (DATEADD(M,1,PS.PAYMENT_DATE)-1 )&#xD;&#xA;AND PARD.STATUS_VALUE = 'ACTV' -- PIR 938 (CANCELED ROLLOVER DETAILS WERE ALSO GETTING PROCESSED)">
+      <parameters>
+        <parameter ID="@PAYMENTSCHEDULEID" sfwDataType="int" />
+        <parameter ID="@batchscheduleid" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadRolloverDetailsForNextPaymentDate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT PARD.* FROM SGT_PAYEE_ACCOUNT_ROLLOVER_DETAIL PARD&#xD;&#xA; INNER JOIN &#xD;&#xA; (&#xD;&#xA;  SELECT PA.* FROM SGT_PAYEE_ACCOUNT PA &#xD;&#xA;  INNER JOIN SGT_PAYEE_ACCOUNT_STATUS PAS&#xD;&#xA;   ON PAS.PAYEE_ACCOUNT_ID=PA.PAYEE_ACCOUNT_ID &#xD;&#xA;  INNER JOIN SGS_CODE_VALUE CV WITH(NOLOCK)&#xD;&#xA;   ON PAS.STATUS_ID= CV.CODE_ID AND PAS.STATUS_VALUE = CV.CODE_VALUE&#xD;&#xA;  WHERE PA.BENEFIT_BEGIN_DATE&lt;=@PAYMENTDATE&#xD;&#xA;   AND (CV.DATA2 = 'RECV' OR CV.DATA2 = 'APRD' ) &#xD;&#xA;   AND PAS.PAYEE_ACCOUNT_STATUS_ID  = &#xD;&#xA;   (&#xD;&#xA;    SELECT TOP 1 PAYEE_ACCOUNT_STATUS_ID&#xD;&#xA;     FROM SGT_PAYEE_ACCOUNT_STATUS PAS1 (NOLOCK)&#xD;&#xA;     WHERE PAS1.PAYEE_ACCOUNT_ID = PA.PAYEE_ACCOUNT_ID&#xD;&#xA;      AND PAS1.STATUS_EFFECTIVE_DATE &lt;= @PAYMENTDATE&#xD;&#xA;     ORDER BY PAS1.STATUS_EFFECTIVE_DATE DESC,PAS1.PAYEE_ACCOUNT_STATUS_ID DESC&#xD;&#xA;   )&#xD;&#xA; )PAYEE &#xD;&#xA; ON PAYEE.PAYEE_ACCOUNT_ID=PARD.PAYEE_ACCOUNT_ID">
+      <parameters>
+        <parameter ID="@PAYMENTDATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="LoadTaxableAmountBasedOnRolloverId" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select PAPIT.AMOUNT,PARD.ROLLOVER_ORG_ID from SGT_PAYEE_ACCOUNT_ROLLOVER_DETAIL PARD WITH(NOLOCK)&#xD;&#xA;inner join SGT_PAYEE_ACCOUNT_ROLLOVER_ITEM_DETAIL PARID WITH(NOLOCK)&#xD;&#xA;on PARD.PAYEE_ACCOUNT_ROLLOVER_DETAIL_ID = PARID.PAYEE_ACCOUNT_ROLLOVER_DETAIL_ID&#xD;&#xA;inner join SGT_PAYEE_ACCOUNT_PAYMENT_ITEM_TYPE PAPIT WITH(NOLOCK)&#xD;&#xA;on PARD.PAYEE_ACCOUNT_ID = PAPIT.PAYEE_ACCOUNT_ID&#xD;&#xA;and PAPIT.PAYEE_ACCOUNT_PAYMENT_ITEM_TYPE_ID = PARID.PAYEE_ACCOUNT_PAYMENT_ITEM_TYPE_ID&#xD;&#xA;inner join SGT_PAYMENT_ITEM_TYPE PIT WITH(NOLOCK)&#xD;&#xA;ON PAPIT.PAYMENT_ITEM_TYPE_ID = PIT.PAYMENT_ITEM_TYPE_ID&#xD;&#xA;where PAPIT.PAYEE_ACCOUNT_ID = @PAYEE_ACCOUNT_ID&#xD;&#xA;and PARD.PAYEE_ACCOUNT_ROLLOVER_DETAIL_ID = @PAYEE_ACCOUNT_ROLLOVER_DETAIL_ID &#xD;&#xA;and PIT.ITEM_TYPE_CODE in ('ITEM217','ITEM220')">
+      <parameters>
+        <parameter ID="@PAYEE_ACCOUNT_ID" sfwDataType="int" />
+        <parameter ID="@PAYEE_ACCOUNT_ROLLOVER_DETAIL_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="SetUpdateFlag" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from SGT_PAYEE_ACCOUNT_ROLLOVER_DETAIL PARD WITH(NOLOCK)&#xD;&#xA;inner join SGT_PAYEE_ACCOUNT_ROLLOVER_ITEM_DETAIL PARID WITH(NOLOCK)&#xD;&#xA;on PARD.PAYEE_ACCOUNT_ROLLOVER_DETAIL_ID = PARID.PAYEE_ACCOUNT_ROLLOVER_DETAIL_ID&#xD;&#xA;inner join SGT_PAYEE_ACCOUNT_PAYMENT_ITEM_TYPE PAPIT WITH(NOLOCK)&#xD;&#xA;on PARD.PAYEE_ACCOUNT_ID = PAPIT.PAYEE_ACCOUNT_ID&#xD;&#xA;and PAPIT.PAYEE_ACCOUNT_PAYMENT_ITEM_TYPE_ID = PARID.PAYEE_ACCOUNT_PAYMENT_ITEM_TYPE_ID&#xD;&#xA;where PAPIT.PAYEE_ACCOUNT_ID = @PAYEE_ACCOUNT_ID&#xD;&#xA;and PARD.ROLLOVER_ORG_ID = @ROLLOVER_ORG_ID &#xD;&#xA;and PAPIT.PAYMENT_ITEM_TYPE_ID = @PAYMENT_ITEM_TYPE_ID">
+      <parameters>
+        <parameter ID="@PAYEE_ACCOUNT_ID" sfwDataType="int" />
+        <parameter ID="@ROLLOVER_ORG_ID" sfwDataType="int" />
+        <parameter ID="@PAYMENT_ITEM_TYPE_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadTaxableAmountBasedOnstateTaxOptionValue" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select PAPIT.AMOUNT,PARD.ROLLOVER_ORG_ID from SGT_PAYEE_ACCOUNT_ROLLOVER_DETAIL PARD WITH(NOLOCK)&#xD;&#xA;inner join SGT_PAYEE_ACCOUNT_ROLLOVER_ITEM_DETAIL PARID WITH(NOLOCK)&#xD;&#xA;on PARD.PAYEE_ACCOUNT_ROLLOVER_DETAIL_ID = PARID.PAYEE_ACCOUNT_ROLLOVER_DETAIL_ID&#xD;&#xA;inner join SGT_PAYEE_ACCOUNT_PAYMENT_ITEM_TYPE PAPIT WITH(NOLOCK)&#xD;&#xA;inner join SGT_PAYMENT_ITEM_TYPE PIT WITH(NOLOCK)&#xD;&#xA;ON PAPIT.PAYMENT_ITEM_TYPE_ID = PIT.PAYMENT_ITEM_TYPE_ID&#xD;&#xA;on PARD.PAYEE_ACCOUNT_ID = PAPIT.PAYEE_ACCOUNT_ID&#xD;&#xA;and PAPIT.PAYEE_ACCOUNT_PAYMENT_ITEM_TYPE_ID = PARID.PAYEE_ACCOUNT_PAYMENT_ITEM_TYPE_ID&#xD;&#xA;where PAPIT.PAYEE_ACCOUNT_ID = @PAYEE_ACCOUNT_ID&#xD;&#xA;and PARD.PAYEE_ACCOUNT_ROLLOVER_DETAIL_ID = @PAYEE_ACCOUNT_ROLLOVER_DETAIL_ID&#xD;&#xA;and PIT.ITEM_TYPE_CODE in ('ITEM217','ITEM220')&#xD;&#xA;and PARD.STATE_TAX_OPTION_VALUE = @STATE_TAX_OPTION_VALUE">
+      <parameters>
+        <parameter ID="@PAYEE_ACCOUNT_ID" sfwDataType="int" />
+        <parameter ID="@STATE_TAX_OPTION_VALUE" sfwDataType="string" />
+        <parameter ID="@PAYEE_ACCOUNT_ROLLOVER_DETAIL_ID" sfwDataType="string" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="PayeeAccountRolloverDetailId" sfwType="Column" sfwValue="payee_account_rollover_detail_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PayeeAccountId" sfwType="Column" sfwValue="payee_account_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="RolloverOrgId" sfwType="Column" sfwValue="rollover_org_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="RolloverOptionDescription" sfwType="Description" sfwValue="rollover_option_description" />
+    <attribute ID="RolloverOptionId" sfwType="Column" sfwValue="rollover_option_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="2214" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="RolloverOptionValue" sfwType="Column" sfwValue="rollover_option_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="PercentOfTaxable" sfwType="Column" sfwValue="percent_of_taxable" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="6,2" />
+    <attribute ID="AmountOfTaxable" sfwType="Column" sfwValue="amount_of_taxable" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="AccountNumber" sfwType="Column" sfwValue="account_number" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="30" />
+    <attribute ID="StatusDescription" sfwType="Description" sfwValue="status_description" />
+    <attribute ID="StatusId" sfwType="Column" sfwValue="status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="2202" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusValue" sfwType="Column" sfwValue="status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="RolloverFlag" sfwType="Column" sfwValue="rollover_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="OldRolloverDtlId" sfwType="Column" sfwValue="old_rollover_dtl_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="RolloverTypeDescription" sfwType="Description" sfwValue="rollover_type_description" />
+    <attribute ID="RolloverTypeId" sfwType="Column" sfwValue="rollover_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="2219" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="RolloverTypeValue" sfwType="Column" sfwValue="rollover_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="StateTaxOptionDescription" sfwType="Description" sfwValue="state_tax_option_description" />
+    <attribute ID="StateTaxOptionId" sfwType="Column" sfwValue="state_tax_option_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="2218" />
+    <attribute ID="StateTaxOptionValue" sfwType="Column" sfwValue="state_tax_option_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="objRolloverOrg" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusRolloverOrg" />
+    <attribute ID="objPayeeAccount" sfwType="Object" sfwEntity="entPayeeAccount" sfwValue="ibusPayeeAccount" />
+    <attribute sfwDataType="string" sfwType="Property" ID="OrgCode" sfwValue="icdoPayeeAccountRolloverDetail.org_code" />
+    <attribute sfwDataType="string" sfwType="Property" ID="SuppressWarningsFlag" sfwValue="icdoPayeeAccountRolloverDetail.suppress_warnings_flag" />
+    <attribute sfwType="Collection" sfwEntity="entPayeeAccountRolloverItemDetail" ID="lstRolloverItemDetail" sfwValue="iclbRolloverItemDetail" />
+    <attribute sfwType="Collection" sfwEntity="entPayeeAccountPaymentItemType" ID="lstPayeeAcountRolloverItems" sfwValue="iclbPayeeAcountRolloverItems" />
+    <attribute ID="objWssBenAppRolloverDetailRequested" sfwType="Object" sfwEntity="entWssBenAppRolloverDetail" sfwPrivate="False" sfwCaption="WssBenAppRolloverDetailRequested" sfwValue="icdoWssBenAppRolloverDetailRequested" />
+    <attribute sfwValue="fbo" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="100" sfwIsNull="True" ID="Fbo" sfwCaption="Fbo" />
+    <attribute sfwValue="addr_line_1" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="60" sfwIsNull="True" ID="AddrLine1" sfwCaption="Addr Line 1" />
+    <attribute sfwValue="addr_line_2" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="60" sfwIsNull="True" ID="AddrLine2" sfwCaption="Addr Line 2" />
+    <attribute sfwValue="city" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="50" sfwIsNull="True" ID="City" sfwCaption="City" />
+    <attribute sfwValue="state_value" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="4" sfwIsNull="True" ID="StateValue" sfwCaption="State" />
+    <attribute sfwValue="zip_code" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="5" sfwIsNull="True" ID="ZipCode" sfwCaption="Zip Code" />
+    <attribute sfwValue="zip_4_code" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="4" sfwIsNull="True" ID="Zip4Code" sfwCaption="Zip 4 Code" />
+    <attribute sfwValue="state_id" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="True" ID="StateId" sfwCaption="State" sfwCodeID="150" />
+    <attribute sfwType="Description" ID="StateDescription" sfwCaption="State" sfwValue="state_description" />
+  </attributes>
+  <objectmethods>
+    <method ID="LoadRolloverItemDetail" sfwReturnType="Void" />
+    <method ID="LoadPayeeAccountRolloverItems" sfwReturnType="Void" />
+  </objectmethods>
+  <constraint />
+  <methods />
+  <lifecycle />
+</entity>

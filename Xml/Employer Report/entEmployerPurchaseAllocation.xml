@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entEmployerPurchaseAllocation" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoEmployerPurchaseAllocation" sfwObjectID="busEmployerPurchaseAllocation" sfwTableName="sgt_employer_purchase_allocation">
+  <rules>
+    <rule ID="RuleCheckExpectedAmtNotSameAsReportedAmt" sfwMessageId="1140" sfwExpression="(this.icdoEmployerPurchaseAllocation.service_purchase_header_id != 0) &amp;&amp; &#xA;(RFunc.GetValue&lt;Decimal&gt;(this, &quot;ibusServicePurchaseHeader.icdoServicePurchaseHeader.expected_installment_amount&quot;) &gt; 0) &amp;&amp; &#xA;(this.idecTotalExpectedPaymentAmount != RFunc.GetValue&lt;Decimal&gt;(this, &quot;ibusEmployerPayrollDetail.icdoEmployerPayrollDetail.purchase_amount_reported&quot;))" sfwObjectBased="True" />
+    <rule ID="RuleIsPurchaseStatusIsInPayment" sfwMessageId="1139" sfwExpression="(this.icdoEmployerPurchaseAllocation.service_purchase_header_id != 0) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entEmployerPurchaseAllocation.IsPurchaseStatusInPayment&quot;, this.icdoEmployerPurchaseAllocation.service_purchase_header_id) == 0)" sfwObjectBased="True" />
+    <rule ID="RulePersonNotLinkedToPuchase" sfwMessageId="1322" sfwExpression="(this.icdoEmployerPurchaseAllocation.service_purchase_header_id != 0) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entEmployerPurchaseAllocation.IsPurchaseIDAssociatedToPerson&quot;, this.ibusEmployerPayrollDetail.icdoEmployerPayrollDetail.person_id, this.icdoEmployerPurchaseAllocation.service_purchase_header_id) &lt; 1)" sfwObjectBased="True" />
+    <rule ID="HRDPurchaseContractIdRequired" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.icdoEmployerPurchaseAllocation.service_purchase_header_id == 0)" sfwMessageId="10400" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror>
+    <item ID="RuleIsPurchaseStatusIsInPayment" sfwMode="All" sfwStatus="Inactive" />
+    <item ID="RuleCheckExpectedAmtNotSameAsReportedAmt" sfwMode="All" sfwStatus="Inactive" />
+    <item ID="RulePersonNotLinkedToPuchase" sfwMode="All" sfwStatus="Inactive" />
+    <item ID="HRDPurchaseContractIdRequired" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <updateablecdo />
+  <queries>
+    <query ID="IsPurchaseStatusInPayment" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) from sgt_service_purchase_header where ACTION_STATUS_VALUE = 'INPY'&#xD;&#xA;and&#xD;&#xA;service_purchase_header_id = @service_purchase_header_id">
+      <parameters>
+        <parameter ID="@service_purchase_header_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetExpectedAmountFromPurchase" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select EXPECTED_INSTALLMENT_AMOUNT from sgt_service_purchase_header where &#xD;&#xA;service_purchase_header_id = @service_purchase_header_id ">
+      <parameters>
+        <parameter ID="@service_purchase_header_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="IsPurchaseIDAssociatedToPerson" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) from sgt_service_purchase_header where person_id = @person_id and service_purchase_header_id = @Purchase_Header_id">
+      <parameters>
+        <parameter ID="@person_id" sfwDataType="int" />
+        <parameter ID="@Purchase_Header_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadPurchaseForPerson" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from sgt_service_purchase_header where&#xD;&#xA;payroll_deduction = 'Y' &#xD;&#xA;and &#xD;&#xA;action_status_value in ('INPY','APPR')&#xD;&#xA;and&#xD;&#xA;person_id = @person_id">
+      <parameters>
+        <parameter ID="@person_id" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="EmployerPurchaseAllocationId" sfwType="Column" sfwValue="employer_purchase_allocation_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ServicePurchaseHeaderId" sfwType="Column" sfwValue="service_purchase_header_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="EmployerPayrollDetailId" sfwType="Column" sfwValue="employer_payroll_detail_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AllocatedAmount" sfwType="Column" sfwValue="allocated_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="11,2" sfwRequired="False" />
+    <attribute ID="AllocatedDate" sfwType="Column" sfwValue="allocated_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="objServicePurchaseHeader" sfwType="Object" sfwEntity="entServicePurchaseHeader" sfwValue="ibusServicePurchaseHeader" />
+    <attribute sfwDataType="int" sfwType="Property" ID="UpdateSeq" sfwValue="icdoEmployerPurchaseAllocation.update_seq" />
+  </attributes>
+</entity>

@@ -1,0 +1,54 @@
+﻿<entity ID="entDocument" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoDocument" sfwObjectID="busDocument" sfwTableName="sgt_document" sfwView="False">
+  <rules>
+    <rule ID="CodeIsBlank" sfwMessageId="4198" sfwExpression="(string.IsNullOrEmpty(this.icdoDocument.document_code))" sfwObjectBased="True" />
+    <rule ID="IsCodeDuplicateInNewMode" sfwMessageId="4050" sfwExpression="(!string.IsNullOrEmpty(this.icdoDocument.document_code)) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entDocument.CheckCodeDuplicationInNewMode&quot;, this.icdoDocument.document_code) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="IsCodeDuplicateInUpdateMode" sfwMessageId="4050" sfwExpression="(!string.IsNullOrEmpty(this.icdoDocument.document_code)) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entDocument.CheckCodeDuplicationInUpdateMode&quot;, this.icdoDocument.document_code, this.icdoDocument.document_id) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="NameIsBlank" sfwMessageId="4199" sfwExpression="(string.IsNullOrEmpty(this.icdoDocument.document_name))" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror>
+    <item ID="CodeIsBlank" sfwMode="All" sfwStatus="Active" />
+    <item ID="NameIsBlank" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsCodeDuplicateInNewMode" sfwMode="New" sfwStatus="Active" />
+    <item ID="IsCodeDuplicateInUpdateMode" sfwMode="Update" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <updateablecdo />
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from sgt_document doc&#xD;&#xA;order by doc.document_id desc">
+      <parameters />
+    </query>
+    <query ID="CheckCodeDuplicationInNewMode" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) from sgt_document&#xD;&#xA;where document_code=@document_code">
+      <parameters>
+        <parameter ID="@document_code" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="CheckCodeDuplicationInUpdateMode" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) from sgt_document&#xD;&#xA;where document_code=@document_code&#xD;&#xA;and Document_id &lt;&gt; @document_id">
+      <parameters>
+        <parameter ID="@document_code" sfwDataType="string" />
+        <parameter ID="@document_id" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="DocumentId" sfwType="Column" sfwValue="document_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="DocumentCode" sfwType="Column" sfwValue="document_code" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="DocumentName" sfwType="Column" sfwValue="document_name" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="200" />
+    <attribute ID="IgnoreProcessFlag" sfwType="Column" sfwValue="ignore_process_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="Wss" sfwType="Column" sfwValue="wss" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="FilenetDocumentType" sfwType="Column" sfwValue="filenet_document_type" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="20" />
+  </attributes>
+  <constraint />
+  <groupslist />
+  <methods />
+  <lifecycle />
+  <objectmethods />
+</entity>

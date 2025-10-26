@@ -1,0 +1,446 @@
+﻿<form ID="wfmPayeeAccountLookup" sfwActive="True" sfwStatus="Valid" sfwRemoteObject="srvPayment" sfwResource="1203" sfwType="Lookup" sfwTitle="Payee Account Lookup" sfwMaxCount="250" version="3.5" sfwEntity="entPayeeAccount" sfwGridCollection="busPayeeAccountLookup.iclbPayeeAccount">
+  <initialload>
+    <query ID="Lookup" sfwQueryRef="entPayeeAccount.Lookup" sfwMethodName="LoadPayeeAccounts" />
+    <query ID="LookupSubQueryAchDetail" sfwQueryRef="entPayeeAccount.LookupSubQueryAchDetail" />
+    <query ID="LookupSubQueryTaxWithHolding" sfwQueryRef="entPayeeAccount.LookupSubQueryTaxWithHolding" />
+  </initialload>
+  <sfwTable ID="Main">
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlHeaderTab" sfwCaption="Search Parameters">
+          <sfwTable ID="tblHeaderTab">
+            <sfwRow>
+              <sfwColumn>
+                <sfwTabContainer ID="tctHeaderTab">
+                  <Tabs>
+                    <sfwTabSheet HeaderText="Criteria" ID="tshCriteria">
+                      <sfwTable ID="tblCriteria">
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capPayeePerslinkId" Text="Payee PERSLink ID : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtPayeePerslinkId" sfwDataField="payee_perslink_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="Lookup" />
+                            <sfwImageButton ID="btnRetrieve" ImageAlign="AbsMiddle" ImageUrl="~/Image/Lookup.jpg" sfwActiveForm="wfmPersonLookup" sfwMethodName="btnRetrieve_Click" sfwRelatedControl="txtPayeePerslinkId" sfwSelectedIndex="PersonId" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capPayeeAccountId" Text="Member PERSLink ID : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtMemberperslinkid" sfwDataField="memberperslinkid" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="Lookup" />
+                            <sfwImageButton ID="btnRetrieve1" ImageAlign="AbsMiddle" ImageUrl="~/Image/Lookup.jpg" sfwActiveForm="wfmPersonLookup" sfwMethodName="btnRetrieve_Click" sfwRelatedControl="txtMemberperslinkid" sfwSelectedIndex="PersonId" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capRecipientOrgId" Text="Payee Org Code ID : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtFOrgCode" sfwDataField="payeeorgcode" sfwOperator="like" sfwQueryID="Lookup" />
+                            <sfwImageButton ID="btnRetrieve2" ImageAlign="AbsMiddle" ImageUrl="~/Image/Lookup.jpg" sfwActiveForm="wfmOrganizationLookup" sfwMethodName="btnRetrieve_Click" sfwRelatedControl="txtFOrgCode" sfwSelectedIndex="OrgCode" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capPlanId" Text="Plan : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList DataTextField="plan_name" DataValueField="plan_id" ID="ddlPlanId" sfwDataField="plan_id" sfwOperator="=" sfwQueryID="Lookup" sfwLoadType="Query" sfwLoadSource="entPlan.Lookup" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capStatusValue" Text="Payee Account Status : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlStatusValue" sfwDataField="kdata2" sfwOperator="like" sfwQueryID="Lookup" sfwLoadType="CodeGroup" sfwLoadSource="2215" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capBenefitTypeValue" Text="Benefit Type : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList ID="ddlBenefitAccountTypeValue" sfwDataField="benefit_account_type_value" sfwOperator="like" sfwQueryID="Lookup" sfwLoadType="CodeGroup" sfwLoadSource="1904" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capBenefitPaymentSubTypeValue" Text="Benefit Sub-Type : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList ID="ddlBenefitAccountSubTypeValue" sfwDataField="benefit_account_sub_type_value" sfwOperator="like" sfwQueryID="Lookup" sfwLoadType="CodeGroup" sfwLoadSource="2201" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capBenefitOptionValue" Text="Benefit Option : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlBenefitOptionValue" sfwDataField="b_benefit_option_value" sfwOperator="like" sfwQueryID="Lookup" sfwLoadType="CodeGroup" sfwLoadSource="2216" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capAccountRelationValue" Text="Account Relationship : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlAccountRelationValue" sfwDataField="account_relation_value" sfwOperator="like" sfwQueryID="Lookup" sfwLoadType="CodeGroup" sfwLoadSource="2225" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capFamilyRelationValue" Text="Family Relationship : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList ID="ddlFamilyRelationValue" sfwDataField="family_relation_value" sfwOperator="like" sfwQueryID="Lookup" sfwLoadType="CodeGroup" sfwLoadSource="321" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn>
+                            <sfwLabel ID="capApplicationId" Text="Application ID : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtApplicationId" sfwDataField="application_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="Lookup" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capCalculationId" Text="Calculation ID : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtCalculationId" sfwDataField="calculation_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="Lookup" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capPayeeAccountId1" Text="Payee Account ID : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtPayeeAccountId" sfwDataField="payee_account_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="Lookup" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel sfwIsCaption="True" ID="capRetirementDateFrom" Text="Retirement Date From : " />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtRetirementDateFrom" sfwQueryID="Lookup" sfwDataField="retirement_date" sfwOperator="between" sfwRelatedControl="txtRetirementDateTo" sfwDataType="DateTime" sfwDataFormat="{0:d}" />
+                            <CompareValidator ID="valRetirementDateFrom" Text="*" sfwOperator="DataTypeCheck" ControlToValidate="txtRetirementDateFrom" Type="Date" ErrorMessage="Retirement DateFrom must be in mm/dd/yyyy format." />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel sfwIsCaption="True" ID="capRetirementDateTo" Text="Retirement Date To : " />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtRetirementDateTo" sfwQueryID="Lookup" sfwDataField="retirement_date" sfwOperator="between" sfwDataType="DateTime" sfwDataFormat="{0:d}" />
+                            <CompareValidator ID="valRetirementDateTo" Text="*" Operator="DataTypeCheck" ControlToValidate="txtRetirementDateTo" Type="Date" ErrorMessage="Retirement DateFrom must be in mm/dd/yyyy format." />
+                            <CompareValidator ID="valRetirementDateRange" Text="*" Operator="GreaterThanEqual" ControlToValidate="txtRetirementDateTo" ControlToCompare="txtRetirementDateFrom" ErrorMessage="Retirement Date To cannot be less than Retirement Date From." Type="Date" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel sfwIsCaption="True" ID="capBenefitBeginDateFrom" Text="Benefit Begin Date From : " />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtBenefitBeginDateFrom" sfwQueryID="Lookup" sfwDataField="benefit_begin_date" sfwOperator="between" sfwRelatedControl="txtBenefitBeginDateTo" sfwDataType="DateTime" sfwDataFormat="{0:d}" />
+                            <CompareValidator ID="valBenefitBeginDateFrom" Text="*" sfwOperator="DataTypeCheck" ControlToValidate="txtBenefitBeginDateFrom" Type="Date" ErrorMessage="Benefit Begin DateFrom must be in mm/dd/yyyy format." />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel sfwIsCaption="True" ID="capBenefitBeginDateTo" Text="Benefit Begin Date To : " />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtBenefitBeginDateTo" sfwQueryID="Lookup" sfwDataField="benefit_begin_date" sfwOperator="between" sfwDataType="DateTime" sfwDataFormat="{0:d}" />
+                            <CompareValidator ID="valBenefitBeginDateTo" Text="*" Operator="DataTypeCheck" ControlToValidate="txtBenefitBeginDateTo" Type="Date" ErrorMessage="Benefit Begin DateFrom must be in mm/dd/yyyy format." />
+                            <CompareValidator ID="valBenefitBeginDateRange" Text="*" Operator="GreaterThanEqual" ControlToValidate="txtBenefitBeginDateTo" ControlToCompare="txtBenefitBeginDateFrom" ErrorMessage="Benefit Begin Date To cannot be less than Benefit Begin Date From." Type="Date" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capRecertificationDateFrom" Text="Recertification Date From : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtRecertificationDateFrom" sfwDataField="recertification_date" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="between" sfwQueryID="Lookup" sfwRelatedControl="txtRecertificationDateTo" />
+                            <CompareValidator ControlToValidate="txtRecertificationDateFrom" ErrorMessage="Recertification Date From must be in mm/dd/yyyy format." ID="valRecertificationDateFrom" Operator="DataTypeCheck" Text="*" Type="Date" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capRecertificationDateTo" Text="Recertification Date To : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtRecertificationDateTo" sfwDataField="recertification_date" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="between" sfwQueryID="Lookup" sfwRelatedControl="txtRecertificationDateFrom" />
+                            <CompareValidator ControlToValidate="txtRecertificationDateTo" ErrorMessage="Recertification Date To must be in mm/dd/yyyy format." ID="valRecertificationDateTo" Operator="DataTypeCheck" Text="*" Type="Date" />
+                            <CompareValidator ControlToCompare="txtRecertificationDateFrom" ControlToValidate="txtRecertificationDateTo" ErrorMessage="Recertification Date To cannot be less than Recertification Date From." ID="valRecertificationDateRange" Operator="GreaterThanEqual" Text="*" Type="Date" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capBankOrgId" Text="Bank : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtOrgCode1" sfwDataField="f.org_code" sfwOperator="=" sfwQueryID="LookupSubQueryAchDetail" />
+                            <sfwImageButton ID="btnRetrieve3" ImageAlign="AbsMiddle" ImageUrl="~/Image/Lookup.jpg" sfwActiveForm="wfmOrganizationLookup" sfwMethodName="btnRetrieve_Click" sfwRelatedControl="txtOrgCode1" sfwSelectedIndex="OrgCode" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capNOrgCode" Text="Employer at Retirement : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtNOrgCode" sfwDataField="retirementorgcode" sfwOperator="like" sfwQueryID="Lookup" />
+                            <sfwImageButton ID="btnRetrieve4" ImageAlign="AbsMiddle" ImageUrl="~/Image/Lookup.jpg" sfwActiveForm="wfmOrganizationLookup" sfwMethodName="btnRetrieve_Click" sfwRelatedControl="txtNOrgCode" sfwSelectedIndex="OrgCode" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwButton ID="btnSearch" sfwMethodName="btnSearch_Click" Text="Search" />
+                            <sfwButton ID="btnReset" sfwMethodName="btnReset_Click" Text="Reset" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwButton ID="btnStoreSearch" sfwMethodName="btnStoreUserDefaults_Click" Text="StoreSearch" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capSuspensionStatusReasonValue" Text="Suspension Reason : " Visible="False" sfwIsCaption="True" />
+                            <sfwLabel ID="capTerminatedStatusReasonValue" Text="Termination Reason : " Visible="False" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlSuspensionStatusReasonValue" sfwDataField="suspension_status_reason_value" sfwOperator="like" sfwQueryID="Lookup" Visible="False" sfwLoadType="CodeGroup" sfwLoadSource="2206" />
+                            <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlTerminatedStatusReasonValue" sfwDataField="terminated_status_reason_value" sfwOperator="like" sfwQueryID="Lookup" Visible="False" sfwLoadType="CodeGroup" sfwLoadSource="2205" />
+                          </sfwColumn>
+                        </sfwRow>
+                      </sfwTable>
+                    </sfwTabSheet>
+                    <sfwTabSheet HeaderText="Adv. Criteria" ID="tshAdvCriteria" sfwResource="112">
+                      <sfwTable ID="tblAdvCriteria">
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capAdvCPlanId" Text="Plan : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList ID="ddlAdvOpCPlanId" sfwLoadType="CodeGroup" sfwLoadSource="4" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList DataTextField="plan_name" DataValueField="plan_id" ID="ddlAdvCPlanId" sfwDataField="plan_id" sfwOperator="=" sfwQueryID="Lookup" sfwLoadType="Query" sfwLoadSource="entPlan.Lookup" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capAdvBenefitTypeValue" Text="Benefit Type : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList ID="ddlAdvOpBenefitAccountTypeValue" sfwLoadType="CodeGroup" sfwLoadSource="4" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlAdvBenefitAccountTypeValue" sfwDataField="benefit_account_type_value" sfwOperator="like" sfwQueryID="Lookup" sfwLoadType="CodeGroup" sfwLoadSource="1904" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capAdvBenefitPaymentSubTypeValue" Text="Benefit Sub Type : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList ID="ddlAdvOpBenefitAccountSubTypeValue" sfwLoadType="CodeGroup" sfwLoadSource="4" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlAdvBenefitAccountSubTypeValue" sfwDataField="benefit_account_sub_type_value" sfwOperator="like" sfwQueryID="Lookup" sfwLoadType="CodeGroup" sfwLoadSource="2201" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capAdvBBenefitOptionValue" Text="Benefit Option : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList ID="ddlAdvOpBBenefitOptionValue" sfwLoadType="CodeGroup" sfwLoadSource="4" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlAdvBBenefitOptionValue" sfwDataField="b_benefit_option_value" sfwOperator="like" sfwQueryID="Lookup" sfwLoadType="CodeGroup" sfwLoadSource="2216" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capAdvAccountRelationValue" Text="Account Relationship : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList ID="ddlAdvOpAccountRelationValue" sfwLoadType="CodeGroup" sfwLoadSource="4" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlAdvAccountRelationValue" sfwDataField="account_relation_value" sfwOperator="like" sfwQueryID="Lookup" sfwLoadType="CodeGroup" sfwLoadSource="2225" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capAdvFamilyRelationValue" Text="Family Relationship : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList ID="ddlAdvOpFamilyRelationValue" sfwLoadType="CodeGroup" sfwLoadSource="4" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlAdvFamilyRelationValue" sfwDataField="family_relation_value" sfwOperator="like" sfwQueryID="Lookup" sfwLoadType="CodeGroup" sfwLoadSource="321" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capAdvBRetirementDate" Text="Retirement Date From : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtAdvBRetirementDate" sfwDataField="retirement_date" sfwDataFormat="{0:d}" sfwOperator="&gt;=" sfwQueryID="Lookup" />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn>
+                            <sfwLabel ID="capAdvBRetirementDate1" Text="Retirement Date To : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtAdvBRetirementDate1" sfwDataField="retirement_date" sfwDataFormat="{0:d}" sfwOperator="&lt;=" sfwQueryID="Lookup" />
+                          </sfwColumn>
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capAdvBenefitBeginDate" Text="Benefit Begin Date from : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtAdvBenefitBeginDate" sfwDataField="benefit_begin_date" sfwDataFormat="{0:d}" sfwOperator="&gt;=" sfwQueryID="Lookup" />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn>
+                            <sfwLabel ID="capAdvBenefitBeginDate1" Text="Benefit Begin Date to : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtAdvBenefitBeginDate1" sfwDataField="benefit_begin_date" sfwDataFormat="{0:d}" sfwOperator="&lt;=" sfwQueryID="Lookup" />
+                          </sfwColumn>
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capAdvEPreNoteCompletionDate" Text="Pre Note Completion Date From: " Width="200px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtAdvEPreNoteCompletionDate" sfwDataField="e.pre_note_completion_date" sfwDataFormat="{0:d}" sfwOperator="&gt;=" sfwQueryID="LookupSubQueryAchDetail" />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn>
+                            <sfwLabel ID="capAdvEPreNoteCompletionDate1" Text="Pre Note Completion Date To: " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtAdvEPreNoteCompletionDate1" sfwDataField="e.pre_note_completion_date" sfwDataFormat="{0:d}" sfwOperator="&lt;=" sfwQueryID="LookupSubQueryAchDetail" />
+                          </sfwColumn>
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capAdvFedTaxOptionValue" Text="Tax Option : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList ID="ddlAdvOpFedTaxOptionValue" sfwLoadType="CodeGroup" sfwLoadSource="4" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlAdvFedTaxOptionValue" sfwDataField="m.tax_option_value" sfwOperator="=" sfwQueryID="LookupSubQueryTaxWithHolding" sfwLoadType="CodeGroup" sfwLoadSource="2218" />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwButton ID="btnAdvSearch" sfwMethodName="btnSearch_Click" Text="AdvSearch" />
+                            <sfwButton ID="btnAdvReset" sfwMethodName="btnReset_Click" Text="AdvReset" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwButton ID="btnAdvStoreSearch" sfwMethodName="btnStoreUserDefaults_Click" Text="AdvStoreSearch" />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                      </sfwTable>
+                    </sfwTabSheet>
+                    <sfwTabSheet HeaderText="Adv. Sort" ID="tshAdvSort" Visible="False">
+                      <sfwTable ID="tblAdvSort">
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwAdvSort ID="AdvSort" sfwRelatedControl="dgrResult" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwButton ID="btnApplySort" sfwMethodName="btnApplySort_Click" sfwRelatedControl="dgrResult" Text="ApplySort" sfwToolBarGrid="none" />
+                          </sfwColumn>
+                        </sfwRow>
+                      </sfwTable>
+                    </sfwTabSheet>
+                  </Tabs>
+                </sfwTabContainer>
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlResult" sfwCaption="Search Results">
+          <sfwTable CssClass="Table" ID="tblResult">
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnOpen" sfwActiveForm="wfmPayeeAccountMaintenance" sfwCopyActivitySessionVariables="True" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintpayeeaccountid=PayeeAccountId" sfwRelatedControl="dgrResult" Text="Open" sfwDisableViewOnly="True" />
+                <sfwButton ID="btnExportExcel" sfwMethodName="btnColumnsToExport_Click" sfwRelatedControl="dgrResult" Text="Export To Excel" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwGridView AllowPaging="True" AllowSorting="True" ID="dgrResult" sfwSelection="Many" sfwSortExpression="PayeeAccountId desc" SortExpressionUpdated="true">
+                  <Columns>
+                    <TemplateField HeaderText="Payee Account ID">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpen" sfwEntityField="PayeeAccountId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Payee" Visible="False" sfwShowInExportToExcel="True">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpen" sfwEntityField="objPayee.PayeeName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Payee">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="IstrPayee" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Member">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objMember.MemberName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Benefit Type">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="BenefitAccountTypeDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Benefit Sub Type">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="BenefitAccountSubTypeDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Benefit Option">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objApplication.BenefitOptionDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Plan">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objPlan.PlanName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Benefit Begin Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="BenefitBeginDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Retirement Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="objApplication.RetirementDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Payee Status">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objPayeeAccountActiveStatus.StatusDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Account Relationship">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="AccountRelationDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+  </sfwTable>
+  <loaddetails />
+</form>

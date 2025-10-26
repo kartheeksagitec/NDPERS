@@ -1,0 +1,55 @@
+﻿<div ng-controller="CellFormatController" class="full-height">
+
+    <!--<div class="dropout-head"> Cell Format </div>-->
+    <div class="portlet-body">
+        <div class="col-xs-12">
+            <div class="form-group">
+                <span class="col-xs-4">Column Name:</span>
+                <div class="col-xs-8">
+                    <select name="columnname" class="form-control input-sm" ng-options='column for column in lstColumnName' title="{{cellFormat.dictAttributes.sfwEntityField}}" ng-model='cellFormat.dictAttributes.sfwEntityField' undoredodirective model='model' ng-change="clearRoworCellFormat()" />
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="form-group div-border">
+                <div class="pull-right">
+                    <a  ng-click="AddNewCssCondition(cellFormat.dictAttributes.sfwEntityField)" ng-disabled="!cellFormat.dictAttributes.sfwEntityField"><img src="images/Common/icon_add_dark.svg" /></a>
+                    <a  ng-click="deleteCssCondition()" ng-disabled="conditions.length==0||selectedCssClassCondition==undefined"><img src="images/Common/icon_delete_dark.svg" /></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="form-group">
+                <table class="table table-condensed table-hover table-fixedheader">
+                    <thead>
+                        <tr>
+                            <th width="50%">Value</th>
+                            <th width="50%">Css Class</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="condition in cellFormat.Elements[0].Elements" ng-class="condition==selectedCssClassCondition?'selected':''" ng-click="setRowSelection(condition)">
+                            <td width="50%" ng-show="!isDropDown"><input class="form-control input-sm" type="text" title="{{condition.dictAttributes.value}}" ng-model="condition.dictAttributes.value" /></td>
+                            <!--<td ng-show="isDropDown"><select ng-options="codeValues.CodeValue as codeValues.Description for codeValues in lstCodeValues" ng-model="condition.dictAttributes.value" /></td>-->
+                            <td width="50%" ng-if="isDropDown">
+                                <codevaluesintellisensetemplate codevalueslabelclass="col-xs-2 control-label padding-0"
+                                                                codevaluestextboxclass="col-xs-12"
+                                                                codevaluesid='condition.dictAttributes.value'
+                                                                model='condition'
+                                                                showcodevaluestext='false'
+                                                                codedescription="codeDescription"
+                                                                codeid="CurrentCodeID">
+                                </codevaluesintellisensetemplate>
+                            </td>
+                            <td width="50%"><input type="text" class="form-control input-sm" title="{{condition.dictAttributes.cssclass}}" ng-model="condition.dictAttributes.cssclass" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="form-actions">
+        <input type="button" class="btn dialog-btn-default" value="OK" ng-click="onCondtionSaveClick(cellFormat)" />
+        <input type="button" class="btn dialog-btn-default" value="Cancel" ng-click="onCancelClick()" />
+    </div>
+</div>

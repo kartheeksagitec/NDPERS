@@ -1,0 +1,92 @@
+﻿<div class="portlet-body">
+    <div class="create-object-container full-height">
+        <div class="lookup-result-field-list-wrapper">
+
+            <div class="col-xs-4 pop-up-box">
+
+                <div class="popup-box-header">
+                    Select fields for Result Grid
+                </div>
+
+                <div class="popup-box-content">
+                    <div class="form-group">
+                        <input type="Text" placeholder="Search" class="tree-boxes-search-box form-control input-sm margin-bottom-10" title="{{objFilterGridFieldsDetails.SearchField}}" ng-model="objFilterGridFieldsDetails.SearchField" />
+                    </div>
+                    <div class="form-group form-entity-list-maintenance">
+                        <ul>
+                            <li ng-repeat="field in objFilterGridFieldsDetails.AvailableFieldColletion| filter:{ControlName:objFilterGridFieldsDetails.SearchField}"
+                                ng-class="field.IsSelected?'selected':''">
+                                <input type="checkbox" id="chk{{field.ControlName}}" class="ver-mid" ng-model="field.IsSelected" />
+                                <span class="datatype-iconproperties datatype-icon-{{field.DataType}}"></span>
+                                <span ng-bind="field.ControlName"></span>
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+           
+            <div class="col-xs-1 add-btn-adjust">
+                <div class="form-group">
+                    <input type="button" class="dialog-btn" value="Add" ng-click="objFilterGridFieldsDetails.addResultFields()" />
+                </div>
+            </div>
+            <div class="col-xs-7 pop-up-box">
+
+                <div class="popup-box-header">
+                    Result Fields
+                    <div class="fright">
+                        <i class="fa fa-arrow-down" ng-click="objFilterGridFieldsDetails.moveSelectedRowDown()" ng-disabled="objFilterGridFieldsDetails.canmoveSelectedRowDown()"></i>
+                        <i class="fa fa-arrow-up" ng-click="objFilterGridFieldsDetails.moveSelectedRowUp()" ng-disabled="objFilterGridFieldsDetails.canmoveSelectedRowUp()"></i>
+                        <i class="fa fa-minus" ng-click="objFilterGridFieldsDetails.deleteSelectedRow()" ng-disabled="objFilterGridFieldsDetails.canDeleteSelectedRow()"></i>
+                    </div>
+                </div>
+                <div id="lookup-result-grid" class="popup-box-content">
+                    <table class="pop-up-box-table lookup-result-field-table">
+                        <thead>
+                            <tr>
+                                <th>Field Name</th>
+                                <th>Data Type</th>
+                                <th>Header</th>
+                                <th>Control Type</th>
+                                <th>Sort Expression</th>
+                                <th>Default Order</th>
+                                <th>Visible</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="obj in objFilterGridFieldsDetails.lstResultFieldsForGrid" ng-click="objFilterGridFieldsDetails.SelectedResultGridRow(obj)" ng-class="{'selected':obj==objFilterGridFieldsDetails.SelectedCurrentResultGridRow}">
+                                <td><span ng-bind="obj.ID"></span></td>
+                                <td><span ng-bind="obj.strDataType"></span></td>
+
+                                <td><input type="text" name="header" title="{{obj.strHeaderText}}" ng-model="obj.strHeaderText" class="form-control form-filter input-sm" /></td>
+                                <td>
+                                    <select ng-options="x for x in lstControlTypes" title="{{obj.strControlType}}" ng-model="obj.strControlType" class="form-control form-filter input-sm"></select>
+                                </td>
+
+                                <td>
+                                    <select ng-options="x for x in ArrSort" title="{{obj.strSort}}" ng-model="obj.strSort" class="form-control form-filter input-sm" ng-change="objFilterGridFieldsDetails.ChangeSortExpression(obj)"></select>
+                                </td>
+                                <td>
+                                    <select ng-disabled="!obj.strSort" ng-options="x for x in ArrOrder" title="{{obj.strOrder}}" ng-model="obj.strOrder" class="form-control form-filter input-sm"></select>
+                                </td>
+                                <td>
+                                    <input type="checkbox" ng-model="obj.IsVisible" ng-true-value="'True'" ng-false-value="'False'" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="form-actions">
+    <input class="dialog-btn" type="button" value="Cancel" ng-click="CloseWizardClick()" />
+    <input class="dialog-btn" type="button" value="Back" wz-previous="onPrevious()" />
+    <input class="dialog-btn" type="button" value="Next" disabled="disabled" />
+    <input type="button" class="dialog-btn" wz-finish value="Finish" ng-click="objFilterGridFieldsDetails.onFinishButtonWizardClick()" ng-disabled="objFilterGridFieldsDetails.lstResultFieldsForGrid.length==0"/>
+</div>

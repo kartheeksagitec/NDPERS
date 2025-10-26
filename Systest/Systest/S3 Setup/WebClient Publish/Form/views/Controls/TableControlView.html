@@ -1,0 +1,27 @@
+﻿<div>
+
+
+    <a  ng-show='objparent.Name!="udc"'
+      >
+        <img class='form-table-select' ng-click='selectControl(model,$event)' ng-dblclick='AddRowsAndColumns(model,$event)' title='Select Table' src='images/Form/select_table.svg' />
+    </a>
+    <table ng-class="{ 'form-editable-table form-table-hover' : model == formodel.SelectedControl , 'form-editable-table' : model != formodel.SelectedControl, 'bckgGrey' : model.isAdvanceSearched, 'bckgGreen' : model.isAdvanceSearched && model == formodel.SelectedControl }" ng-click='selectControl(model,$event)' ng-dblclick='selectControlOnDoubleClick(model,$event)'
+           >
+        <tr>
+            <td style='position: relative;border:0;'></td>
+            <td ng-repeat='row in model.Elements[0].Elements' class='top-row-cell' cellposition='top' ng-mouseenter='tdMouseEnterEvent($event)' style='position: relative;border:0;'></td>
+        </tr>
+        <tr ng-repeat='row in model.Elements' ng-init='SetParentVM(model,row)'>
+            <td style='position: relative;border:0;width:10px!important;' cellposition='left' class='left-row-cell' ng-mouseenter='tdMouseEnterEvent($event)'></td>
+            <td ng-keydown='tdKeyDown(col,$event)' tabindex='0' context-menu='menuOptions' ng-repeat='col in row.Elements' entitytreename='entitytreename' colspan={{SetColSpan(col)}} rowspan={{SetRowSpan(col)}}
+                lstdisplayentities='lstdisplayentities' formcontroldroppable dropdata='col' formodel='formodel' ng-init='SetParentVM(row,col)' control-head ng-click='selectControl(col,$event)'
+                ng-dblclick='selectControlOnDoubleClick(col,$event)'
+                ng-class='{ "select-cell-control" : col.IsSelected, "form-control-column" : !col.IsSelected, "bckgGrey": col.isAdvanceSearched, "bckgGreen": col.isAdvanceSearched && col.IsSelected, "form-invisible-control" : col.dictAttributes.Visible === "False"}'>
+                <base-control-view ng-repeat='elem in col.Elements' entitytreename='entitytreename' lstdisplayentities='lstdisplayentities' objparent='col' formodel='formodel' model='elem'
+                                   lstloadedentitytrees='lstloadedentitytrees' lstloadedentitycolumnstree='lstloadedentitycolumnstree' buttons-collection='buttonsCollection' modelname="{{elem.Name}}" />
+            </td>
+        </tr>
+    </table>
+
+  
+</div>

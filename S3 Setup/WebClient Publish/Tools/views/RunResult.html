@@ -1,0 +1,100 @@
+﻿<div class="portlet-body run-result-main" id="$id">
+    <div class="form-body">
+        <div class="col-xs-4">
+            <div class="form-group">
+                <label class="control-label">Execution ID</label>
+                <input type="text" class="form-control input-sm" title="{{StrExecutionId}}" ng-model="StrExecutionId" ng-change="ValidateExecutionIdForRunResult(StrExecutionId)" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Execution Date</label>
+                <input class="form-control input-sm form-control-inline date-picker" size="16" type="text" ng-model="EffectiveDate" ng-change="validationForDate(EffectiveDate)">
+            </div>
+            <div class="form-group">
+                <label class="control-label">To Date</label>
+                <input class="form-control input-sm form-control-inline date-picker" size="16" type="text" ng-model="ToDate" ng-change="validationForDate(ToDate)">
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <div class="form-group">
+                <label class="control-label">User Name</label>
+                <input type="text" class="form-control input-sm" title="{{UserName}}" ng-model="UserName" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Primary Key</label>
+                <input class="form-control input-sm" size="16" type="text" ng-model="PrimaryKey">
+            </div>
+            <div class="form-group">
+                <label class="control-label">Business Object Field</label>
+                <input class="form-control input-sm" size="16" type="text" ng-model="BusinessObjectField">
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <div class="form-group">
+                <label class="control-label">Rule Name</label>
+                <input type="text" class="form-control input-sm" title="{{RuleName}}" ng-model="RuleName" ng-disabled="RuleNameReadOnly" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Error Status</label>
+                <select class="form-control input-sm" title="{{ErrorStatus}}" ng-model="ErrorStatus">
+                    <option selected="selected">All</option>
+                    <option>With Error</option>
+                    <option>Without Error</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="button" class="btn dialog-btn-default dialog-btn-search" value="Clear" ng-click="OnClearSearchClick('Run Results')" style="margin-left:5px;" />
+                <input type="button" class="btn dialog-btn-default dialog-btn-search" value="Search" ng-click="OnSearchClick('Run Results')" ng-disabled="!isValid" />
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 run-result-table-outer div-border">
+        <div class="run-result-table-inner full-height" ng-scrolldown callback="OnSearchScrollDown()" ngpausescroll="runResult.IsProcessing" ngscrollheight="9" ng-show="runResult.lstRunresults != null && runResult.lstRunresults !=undefined">
+            <table class="table table-condensed table-hover">
+                <thead>
+                    <tr ng-show="runResult.lstRunresults != null && runResult.lstRunresults !=undefined">
+                        <th>EXECUTION_ID</th>
+                        <th>RULE_NAME</th>
+                        <th>EFFECTIVE_DATE</th>
+                        <th>EXECUTION_START_TIME</th>
+                        <th>EXECUTION_END_TIME</th>
+                        <th>RETURN_VALUE</th>
+                        <th>EXECUTION_SOURCE</th>
+                        <th>MACHINE_NAME</th>
+                        <th>BUSINESS_OBJECT</th>
+                        <th>ERROR_ID</th>
+                        <th>PRIMARY_KEY</th>
+                        <th>RULE_NOTES</th>
+                        <th>CREATED_BY</th>
+                        <th>CREATED_DATE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="data in runResult.lstRunresults" ng-dblclick="viewDiagram(data)">
+                        <td><span ng-bind="data.EXECUTION_ID"></span></td>
+                        <td><span ng-bind="data.RULE_NAME"></span></td>
+                        <td><span ng-bind="data.EFFECTIVE_DATE"></span></td>
+                        <td><span ng-bind="data.EXECUTION_START_TIME"></span></td>
+                        <td><span ng-bind="data.EXECUTION_END_TIME"></span></td>
+                        <td><span ng-bind="data.RETURN_VALUE"></span></td>
+                        <td><span ng-bind="data.EXECUTION_SOURCE"></span></td>
+                        <td><span ng-bind="data.MACHINE_NAME"></span></td>
+                        <td><span ng-bind="data.BUSINESS_OBJECT"></span></td>
+                        <td><span ng-bind="data.ERROR_ID"></span></td>
+                        <td><span ng-bind="data.PRIMARY_KEY"></span></td>
+                        <td><span ng-bind="data.RULE_NOTES"></span></td>
+                        <td><span ng-bind="data.CREATED_BY"></span></td>
+                        <td><span ng-bind="data.CREATED_DATE"></span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="form-actions">
+    <div class="col-xs-8 text-left">
+        <span class="alert-error-msg" ng-bind="errorMessage"></span>
+    </div>
+    <div class="col-xs-4">
+        <input type="button" value="OK" class="btn dialog-btn-default" ng-click="CloseRunResultsDialog()" />
+    </div>
+</div>

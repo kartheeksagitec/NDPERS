@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entPsPerson" sfwMainCDO="icdoPsPerson" sfwType="BusinessRule" sfwActive="True" sfwStatus="Review" sfwObjectID="busPsPerson" sfwTableName="sgt_ps_person" sfwView="False">
+  <queries>
+    <query ID="GetPsPersonBySSN" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT TOP 1 [PS_PERSON_ID]&#xD;&#xA;      ,[PEOPLESOFT_ID]&#xD;&#xA;      ,CASE WHEN LEN(NAME_PREFIX_VALUE) &gt; 0 THEN NAME_PREFIX_VALUE ELSE NULL END AS NAME_PREFIX_VALUE&#xD;&#xA;&#x9;&#x9;,FIRST_NAME&#xD;&#xA;&#x9;&#x9;,CASE WHEN LEN(MIDDLE_NAME) &gt; 0 THEN MIDDLE_NAME ELSE NULL END AS MIDDLE_NAME&#xD;&#xA;&#x9;&#x9;,LAST_NAME&#xD;&#xA;&#x9;&#x9;,CASE WHEN LEN(NAME_SUFFIX_VALUE) &gt; 0 THEN NAME_SUFFIX_VALUE ELSE NULL END AS NAME_SUFFIX_VALUE&#xD;&#xA;      ,[DATE_OF_BIRTH]&#xD;&#xA;      ,[GENDER_VALUE]&#xD;&#xA;      ,[SSN]&#xD;&#xA;      ,CASE WHEN [MARITAL_STATUS_VALUE] = 'UNKN' THEN 'SNGL' ELSE [MARITAL_STATUS_VALUE] END AS MARITAL_STATUS_VALUE&#xD;&#xA;      ,[MS_CHANGE_DATE]&#xD;&#xA;      ,CASE WHEN LEN([WORK_PHONE_NO]) &gt; 0 THEN [WORK_PHONE_NO] ELSE NULL END AS [WORK_PHONE_NO]&#xD;&#xA;      ,CASE WHEN LEN([WORK_PHONE_EXT]) &gt; 0 THEN [WORK_PHONE_EXT] ELSE NULL END AS [WORK_PHONE_EXT]&#xD;&#xA;      ,CASE WHEN LEN([CELL_PHONE_NO]) &gt; 0 THEN [CELL_PHONE_NO] ELSE NULL END AS [CELL_PHONE_NO]&#xD;&#xA;      ,CASE WHEN LEN([HOME_PHONE_NO]) &gt; 0 THEN [HOME_PHONE_NO] ELSE NULL END AS [HOME_PHONE_NO]&#xD;&#xA;      ,[PROCESSED_FLAG]&#xD;&#xA;      ,[CREATED_BY]&#xD;&#xA;      ,[CREATED_DATE]&#xD;&#xA;      ,[MODIFIED_BY]&#xD;&#xA;      ,[MODIFIED_DATE] &#xD;&#xA;FROM SGT_PS_PERSON WHERE SSN =@SSN AND PROCESSED_FLAG = 'N' ORDER BY PS_PERSON_ID">
+      <parameters>
+        <parameter ID="@SSN" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="Gettop10PsPerson" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_PS_PERSON where SSN IN('502065124','123456789') AND PROCESSED_FLAG='N'">
+      <parameters />
+    </query>
+    <query ID="GetUnprocessedPsPerson" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT TEMP_PER.* FROM &#xD;&#xA;(SELECT &#xD;&#xA;&#x9;  [PS_EMPLOYMENT_ID]&#xD;&#xA;&#x9;  ,[SSN]&#xD;&#xA;      ,[EMPL_START_DATE]&#xD;&#xA;      ,[EMPL_END_DATE]&#xD;&#xA;&#x9;  FROM &#xD;&#xA;(SELECT  ROW_NUMBER() OVER (PARTITION BY SSN ORDER BY PS_EMPLOYMENT_ID) AS ROWNUM,* FROM SGT_PS_EMPLOYMENT WHERE PROCESSED_FLAG = 'N') TEMP&#xD;&#xA;&#xD;&#xA;WHERE TEMP.ROWNUM = 1) AS TEMP_EMP &#xD;&#xA;&#xD;&#xA;RIGHT JOIN &#xD;&#xA;&#xD;&#xA;(SELECT [PS_PERSON_ID]&#xD;&#xA;      ,[PEOPLESOFT_ID]&#xD;&#xA;      ,CASE WHEN LEN(NAME_PREFIX_VALUE) &gt; 0 THEN TEMP.NAME_PREFIX_VALUE ELSE NULL END AS NAME_PREFIX_VALUE&#xD;&#xA;&#x9;&#x9;,FIRST_NAME&#xD;&#xA;&#x9;&#x9;,CASE WHEN LEN(MIDDLE_NAME) &gt; 0 THEN TEMP.MIDDLE_NAME ELSE NULL END AS MIDDLE_NAME&#xD;&#xA;&#x9;&#x9;,LAST_NAME&#xD;&#xA;&#x9;&#x9;,CASE WHEN LEN(NAME_SUFFIX_VALUE) &gt; 0 THEN TEMP.NAME_SUFFIX_VALUE ELSE NULL END AS NAME_SUFFIX_VALUE&#xD;&#xA;      ,TEMP.[DATE_OF_BIRTH]&#xD;&#xA;      ,TEMP.[GENDER_VALUE]&#xD;&#xA;      ,TEMP.[SSN]&#xD;&#xA;      ,CASE WHEN TEMP.[MARITAL_STATUS_VALUE] = 'UNKN' THEN 'SNGL' ELSE TEMP.[MARITAL_STATUS_VALUE] END AS [MARITAL_STATUS_VALUE] &#xD;&#xA;      ,TEMP.[MS_CHANGE_DATE]&#xD;&#xA;      ,CASE WHEN LEN(TEMP.[WORK_PHONE_NO]) &gt; 0 THEN TEMP.[WORK_PHONE_NO] ELSE NULL END AS [WORK_PHONE_NO]&#xD;&#xA;      ,CASE WHEN LEN(TEMP.[WORK_PHONE_EXT]) &gt; 0 THEN TEMP.[WORK_PHONE_EXT] ELSE NULL END AS [WORK_PHONE_EXT]&#xD;&#xA;      ,CASE WHEN LEN(TEMP.[CELL_PHONE_NO]) &gt; 0 THEN TEMP.[CELL_PHONE_NO] ELSE NULL END AS [CELL_PHONE_NO]&#xD;&#xA;      ,CASE WHEN LEN(TEMP.[HOME_PHONE_NO]) &gt; 0 THEN TEMP.[HOME_PHONE_NO] ELSE NULL END AS [HOME_PHONE_NO]&#xD;&#xA;      ,TEMP.[PROCESSED_FLAG]&#xD;&#xA;      ,TEMP.[CREATED_BY]&#xD;&#xA;      ,TEMP.[CREATED_DATE]&#xD;&#xA;      ,TEMP.[MODIFIED_BY]&#xD;&#xA;      ,TEMP.[MODIFIED_DATE]&#xD;&#xA;  FROM &#xD;&#xA;(SELECT  ROW_NUMBER() OVER (PARTITION BY SSN ORDER BY PS_PERSON_ID) AS ROWNUM,* FROM SGT_PS_PERSON WHERE PROCESSED_FLAG = 'N' &#xD;&#xA;) TEMP&#xD;&#xA;WHERE TEMP.ROWNUM = 1) AS  TEMP_PER&#xD;&#xA; ON TEMP_EMP.SSN=TEMP_PER.SSN &#xD;&#xA; WHERE ((TEMP_EMP.PS_EMPLOYMENT_ID IS NOT NULL AND TEMP_EMP.EMPL_START_DATE  &lt;=DATEADD(DAY, 30, GETDATE())) OR  (TEMP_EMP.PS_EMPLOYMENT_ID IS NULL)&#xD;&#xA;  AND (TEMP_EMP.EMPL_END_DATE IS NULL OR TEMP_EMP.EMPL_END_DATE &lt;= DATEADD(DAY, 30, GETDATE())))">
+      <parameters />
+    </query>
+    <query ID="CheckIfSSNAndPeopleSoftIDMatches" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_PERSON &#xD;&#xA;WHERE SSN != @SSN&#xD;&#xA;AND PEOPLESOFT_ID = @PS_PEOPLESOFT_ID">
+      <parameters>
+        <parameter ID="@SSN" sfwDataType="string" />
+        <parameter ID="@PS_PEOPLESOFT_ID" sfwDataType="string" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="PsPersonId" sfwType="Column" sfwValue="ps_person_id" sfwKeyNo="1" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="PeoplesoftId" sfwType="Column" sfwValue="peoplesoft_id" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="7" />
+    <attribute ID="NamePrefixValue" sfwType="Column" sfwValue="name_prefix_value" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="FirstName" sfwType="Column" sfwValue="first_name" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="MiddleName" sfwType="Column" sfwValue="middle_name" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="LastName" sfwType="Column" sfwValue="last_name" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="NameSuffixValue" sfwType="Column" sfwValue="name_suffix_value" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="DateOfBirth" sfwType="Column" sfwValue="date_of_birth" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="GenderValue" sfwType="Column" sfwValue="gender_value" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="Ssn" sfwType="Column" sfwValue="ssn" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="9" />
+    <attribute ID="MaritalStatusValue" sfwType="Column" sfwValue="marital_status_value" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="MsChangeDate" sfwType="Column" sfwValue="ms_change_date" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="WorkPhoneNo" sfwType="Column" sfwValue="work_phone_no" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="WorkPhoneExt" sfwType="Column" sfwValue="work_phone_ext" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="12" />
+    <attribute ID="CellPhoneNo" sfwType="Column" sfwValue="cell_phone_no" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="HomePhoneNo" sfwType="Column" sfwValue="home_phone_no" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="ProcessedFlag" sfwType="Column" sfwValue="processed_flag" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="1" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="Error" sfwValue="error" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="1" sfwIsNull="True" sfwCaption="Error" sfwDefaultValue="N" />
+  </attributes>
+</entity>

@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entBatchSchedule" sfwActive="True" sfwStatus="Valid" sfwRemoteObject="srvAdmin" sfwType="BusinessRule" sfwMainCDO="icdoBatchSchedule" sfwObjectID="busBatchSchedule" sfwTableName="sgs_batch_schedule">
+  <rules>
+    <rule ID="CheckScheduleIDIsNull" sfwMessageId="78" sfwExpression="(this.icdoBatchSchedule.batch_schedule_id == 0)" sfwObjectBased="True" />
+    <rule ID="CheckStepNameEmpty" sfwMessageId="77" sfwExpression="(string.IsNullOrEmpty(this.icdoBatchSchedule.step_name))" sfwObjectBased="True" />
+    <rule ID="checkStepNumberISEmpty" sfwMessageId="79" sfwExpression="(this.icdoBatchSchedule.step_no == 0)" sfwObjectBased="True" />
+    <rule ID="DuplicateSchedule" sfwMessage="Duplicate schedule Id not allowed" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entBatchSchedule.BatchScheduleExists&quot;, this.icdoBatchSchedule.batch_schedule_id) &gt;= 1)" sfwObjectBased="True" />
+    <rule ID="FreqInMonthAndDaysIsNotZero" sfwMessage="Only one of the values, Frequency in Days or Frequency in Months, can be &gt; 0" sfwExpression="(this.icdoBatchSchedule.frequency_in_days &gt; 0) &amp;&amp; &#xA;(this.icdoBatchSchedule.frequency_in_months &gt; 0)" sfwObjectBased="True" />
+    <rule ID="FreqInMonthAndDaysIsZero" sfwMessage="Please enter the Frequency" sfwExpression="(this.icdoBatchSchedule.frequency_in_days == 0) &amp;&amp; &#xA;(this.icdoBatchSchedule.frequency_in_months == 0) &amp;&amp; &#xA;(this.icdoBatchSchedule.active_flag == &quot;Y&quot;)" sfwObjectBased="True" />
+    <rule ID="StepNoExistsNew" sfwMessage="Step No Exists please enter a new step no" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entBatchSchedule.StepNoExistsNew&quot;, this.icdoBatchSchedule.step_no) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="StepNoExistsUpdate" sfwMessage="Step No Exists please enter a new step no" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entBatchSchedule.StepNoExistsUpdate&quot;, this.icdoBatchSchedule.step_no, this.icdoBatchSchedule.batch_schedule_id) &gt; 0)" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror>
+    <item ID="FreqInMonthAndDaysIsZero" sfwMode="All" sfwStatus="Active" />
+    <item ID="FreqInMonthAndDaysIsNotZero" sfwMode="All" sfwStatus="Active" />
+    <item ID="StepNoExistsNew" sfwMode="New" sfwStatus="Active" />
+    <item ID="StepNoExistsUpdate" sfwMode="Update" sfwStatus="Active" />
+    <item ID="DuplicateSchedule" sfwMode="New" sfwStatus="Active" />
+    <item ID="CheckStepNameEmpty" sfwMode="All" sfwStatus="Active" />
+    <item ID="CheckScheduleIDIsNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="checkStepNumberISEmpty" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <updateablecdo />
+  <queries>
+    <query ID="LookUp" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select * from sgs_batch_schedule&#xD;&#xA;order by step_no">
+      <parameters />
+    </query>
+    <query ID="StepNoExistsNew" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select count(*) from sgs_batch_schedule&#xD;&#xA;where step_no = @step_no">
+      <parameters>
+        <parameter ID="@step_no" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="StepNoExistsUpdate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select count(*) from sgs_batch_schedule&#xD;&#xA;where step_no = @step_no&#xD;&#xA;and batch_schedule_id &lt;&gt; @batch_schedule_id">
+      <parameters>
+        <parameter ID="@step_no" sfwDataType="int" />
+        <parameter ID="@batch_schedule_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="BatchScheduleExists" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select count(*) from sgs_batch_schedule&#xD;&#xA;where batch_schedule_id = @batch_schedule_id">
+      <parameters>
+        <parameter ID="@batch_schedule_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadReloadInsuranceBatchSchedule" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select * from sgs_batch_schedule&#xD;&#xA;where step_no = @step_no">
+      <parameters>
+        <parameter ID="@step_no" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="BatchScheduleId" sfwType="Column" sfwValue="batch_schedule_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StepNo" sfwType="Column" sfwValue="step_no" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StepName" sfwType="Column" sfwValue="step_name" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="200" />
+    <attribute ID="StepDescription" sfwType="Column" sfwValue="step_description" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="255" />
+    <attribute ID="FrequencyInDays" sfwType="Column" sfwValue="frequency_in_days" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="FrequencyInMonths" sfwType="Column" sfwValue="frequency_in_months" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="NextRunDate" sfwType="Column" sfwValue="next_run_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="StepParameters" sfwType="Column" sfwValue="step_parameters" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="200" />
+    <attribute ID="ActiveFlag" sfwType="Column" sfwValue="active_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="RequiresTransactionFlag" sfwType="Column" sfwValue="requires_transaction_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="EmailNotification" sfwType="Column" sfwValue="email_notification" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="300" />
+    <attribute ID="OrderNo" sfwType="Column" sfwValue="order_no" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="7" />
+    <attribute ID="CutoffStart" sfwType="Column" sfwValue="cutoff_start" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="CutoffEnd" sfwType="Column" sfwValue="cutoff_end" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+  </attributes>
+</entity>

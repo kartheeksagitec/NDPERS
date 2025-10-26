@@ -1,0 +1,80 @@
+﻿<div class="portlet-body">
+    <div class="form-body">
+        <div class="col-xs-6">
+            <div class="form-group relative-parent">
+                <label class="control-label  blocked-element">Report ID </label>
+                <span class="file-prefix">rpt</span>
+                <input type="text" class="form-control input-sm ng-pristine ng-untouched ng-valid ng-empty file-suffix" title="{{objReportDetails.ID}}" ng-change="objReportDetails.isFinsihDisable()" ng-model="objReportDetails.ID">
+
+            </div>
+            <div class="form-group">
+                <label class="control-label ">Report Name</label>
+                <div class='input-group'>
+                    <input type="text" class="form-control input-sm " ng-keydown="objReportDetails.onReportNameChange($event)" title="{{objReportDetails.sfwReportName}}" ng-change="objReportDetails.isFinsihDisable()" ng-model="objReportDetails.sfwReportName" />
+                    <span class='input-group-addon button-intellisense' ng-click='objReportDetails.onReportNameClick($event)'></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Description</label>
+                <input type="text" title="{{objReportDetails.sfwDescription}}" ng-model="objReportDetails.sfwDescription" class="form-control input-sm" />
+
+            </div>
+           
+
+            <div class="form-group">
+
+                <resourceintellisensetemplate showvertical="true" resourceid="objReportDetails.sfwResource" resourcetext="'Resources'" showresourcetext='true' onchangeresourcecallback="objReportDetails.isFinsihDisable()"></resourceintellisensetemplate>
+
+            </div>
+        </div>
+
+        <div class="col-xs-6">
+            <div class="form-group ">
+                <label class="control-label"> Path</label>
+                <locationintellisensetemplate locationchanged="objReportDetails.isFinsihDisable()" locationname="objReportDetails.Path" model="objReportDetails" validate="true" errorprop="objReportDetails.errors.invalid_path"></locationintellisensetemplate>
+
+            </div>
+            <div class="form-group">
+                <label class="control-label"> Report Category</label>
+                <common-intellisense-without-undo-redo collection="objReportDetails.lstReportCategory" display-property-name="'CodeValueDescription'" selected-property-name="'CodeValue'" selected-item="objReportDetails.sfwReportCategory" model="objReportDetails" change-callback="objReportDetails.isFinsihDisable()" propertyname="'sfwReportCategory'"></common-intellisense-without-undo-redo>
+
+            </div>
+            <div class="form-group">
+                <label class="control-label"> Type</label>
+                <div class="radio-btn-form-control">
+                    <input type="radio" name="message" value="Query" ng-model="objReportDetails.sfwType" ng-change="objReportDetails.isFinsihDisable()" /><label>Query</label>
+                    <input type="radio" value="Method" ng-model="objReportDetails.sfwType" ng-change="objReportDetails.isFinsihDisable()" /><label>Method</label>
+
+                </div>
+            </div>
+            <div class="form-group " ng-show="objReportDetails.sfwType=='Query'">
+                <label class="control-label">Query</label>
+                <entityqueryintellisense selecteditem="objReportDetails.sfwQueryRef" onchangecallback="objReportDetails.isFinsihDisable()" model="objReportDetails" propertyname="'sfwQueryRef'" showsearchbutton="true" isinsidedialog="true"></entityqueryintellisense>
+
+            </div>
+            <div class="form-group" ng-show="objReportDetails.sfwType=='Method'">
+                <label class="control-label">Method</label>
+                <select ng-options="method.ShortName as method.ShortName for method in objReportDetails.lstReportMethod" ng-change="objReportDetails.isFinsihDisable()" ng-model="objReportDetails.sfwMethodName"
+                        class="form-control input-sm" title="{{method.Description}}"></select>
+            </div>
+        </div>
+
+
+
+
+
+    </div>
+</div>
+<div class="form-actions">
+    <div class="col-xs-6 text-left">
+        <span class="alert-error-msg" ng-if="objReportDetails.ErrorMessageForDisplay.length>0">{{objReportDetails.ErrorMessageForDisplay}}</span>
+    </div>
+    <div class="col-xs-6">
+        <input type="button" value="Cancel" class="dialog-btn" ng-click="CloseWizardClick()" />
+        <input type="button" value="Back" class="dialog-btn" wz-previous="onPrevious()" disabled="disabled" />
+        <input class="dialog-btn" type="button" value="Next" wz-next="onNext()" ng-if="!showExtraFieldsTab" disabled="disabled" />
+        <input class="dialog-btn" type="button" value="Next" wz-next="onNext()" ng-if="showExtraFieldsTab" ng-disabled="!objReportDetails.isReportFinsihDisable" />
+        <input class="dialog-btn" type="button" wz-finish value="Finish" ng-if="showExtraFieldsTab" disabled="disabled" />
+        <input class="dialog-btn" type="button" wz-finish value="Finish" ng-if="!showExtraFieldsTab" ng-disabled="!objReportDetails.isReportFinsihDisable" />
+    </div>
+</div>

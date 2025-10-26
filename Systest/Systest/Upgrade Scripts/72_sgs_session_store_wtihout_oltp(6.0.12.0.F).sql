@@ -1,0 +1,121 @@
+
+/****** Object:  StoredProcedure [dbo].[GetActivityRuleFromSessionStore]    Script Date: 05-06-2020 19:16:11 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+CREATE PROCEDURE [dbo].[GetActivityRuleFromSessionStore]
+	-- Add the parameters for the stored procedure here
+	@SESSION_STORE_SERIAL_ID INT
+AS 
+BEGIN
+   --Insert statements for the stored procedure here
+ SELECT ACTIVITY_INSTANCE_ID, RULE_RESULT FROM dbo.SGS_SESSION_STORE WITH(NOLOCK)  WHERE SESSION_STORE_SERIAL_ID = @SESSION_STORE_SERIAL_ID 
+END
+GO
+
+
+
+
+/****** Object:  StoredProcedure [dbo].[GetBusObjectFromSessionStore]    Script Date: 05-06-2020 19:16:49 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+CREATE PROCEDURE [dbo].[GetBusObjectFromSessionStore]
+	-- Add the parameters for the stored procedure here
+	@SESSION_USER_KEY VARCHAR(200)
+AS 
+BEGIN
+   --Insert statements for the stored procedure here
+ SELECT BUS_OBJECT FROM DBO.SGS_SESSION_STORE WITH(NOLOCK) where SESSION_USER_KEY=@SESSION_USER_KEY
+END
+GO
+
+
+
+
+
+CREATE PROCEDURE [dbo].[GetDetailsFromSessionStore]
+	-- Add the parameters for the stored procedure here
+	@SESSION_STORE_SERIAL_ID INT
+AS 
+BEGIN
+   --Insert statements for the stored procedure here
+ SELECT PRIMARY_KEY,SESSION_ID,FORM_ID,GRID_HASH FROM DBO.SGS_SESSION_STORE WITH(NOLOCK)  WHERE SESSION_STORE_SERIAL_ID = @SESSION_STORE_SERIAL_ID
+END
+GO
+
+
+
+
+
+CREATE PROCEDURE [dbo].[GetSessionDetails]
+	-- Add the parameters for the stored procedure here
+	@SESSION_STORE_SERIAL_ID INT
+AS 
+BEGIN
+   --Insert statements for the stored procedure here
+ SELECT SESSION_ID,FORM_ID,BUS_OBJECT FROM DBO.SGS_SESSION_STORE WITH(NOLOCK)   where SESSION_STORE_SERIAL_ID = @SESSION_STORE_SERIAL_ID
+END
+
+GO
+
+
+
+
+
+
+CREATE PROCEDURE [dbo].[InsertSessionStore]
+	-- Add the parameters for the stored procedure here
+	@SESSION_USER_KEY varchar(100) ,
+	@SESSION_ID  VARCHAR (50) ,
+	@WINDOW_NAME VARCHAR(40),
+	@FORM_ID VARCHAR(100) ,
+	@PRIMARY_KEY INT ,
+	@DATE_CREATED DATETIME ,
+	@RULE_RESULT VARBINARY ,
+	@ACTIVITY_INSTANCE_ID INT ,
+	@GRID_HASH VARBINARY (MAX)
+AS 
+BEGIN
+   --Insert statements for the stored procedure here
+   DECLARE @SESSION_STORE_SERIAL_ID INT ; 
+ INSERT INTO DBO.SGS_SESSION_STORE (SESSION_USER_KEY, SESSION_ID, WINDOW_NAME, FORM_ID, PRIMARY_KEY, DATE_CREATED, RULE_RESULT, ACTIVITY_INSTANCE_ID, GRID_HASH)
+                           VALUES (@SESSION_USER_KEY, @SESSION_ID, @WINDOW_NAME, @FORM_ID, @PRIMARY_KEY, @DATE_CREATED, @RULE_RESULT, @ACTIVITY_INSTANCE_ID, @GRID_HASH) 
+  SET @SESSION_STORE_SERIAL_ID = SCOPE_IDENTITY()  ;
+
+  return @SESSION_STORE_SERIAL_ID ; 
+END
+GO
+
+
+
+
+
+
+
+
+
+CREATE PROCEDURE [dbo].[UpdateSessionStore]
+	-- Add the parameters for the stored procedure here
+	@ACTIVITY_INSTANCE_ID INT ,
+	@GRID_HASH VARBINARY (MAX) ,
+	@RULE_RESULT VARBINARY (MAX),
+	@DATE_CREATED DATETIME ,
+	@BUS_OBJECT VARBINARY (MAX),
+	@SESSION_STORE_SERIAL_ID INT
+AS 
+
+begin
+   --Insert statements for the stored procedure here
+ UPDATE DBO.SGS_SESSION_STORE SET ACTIVITY_INSTANCE_ID = @ACTIVITY_INSTANCE_ID, GRID_HASH = @GRID_HASH, RULE_RESULT = @RULE_RESULT, DATE_CREATED = @DATE_CREATED, BUS_OBJECT= @BUS_OBJECT WHERE SESSION_STORE_SERIAL_ID = @SESSION_STORE_SERIAL_ID
+END
+GO
+

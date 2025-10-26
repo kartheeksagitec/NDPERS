@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entDocUpload" sfwMainCDO="icdoDocUpload" sfwType="BusinessRule" sfwActive="True" sfwStatus="Review" sfwObjectID="busDocUpload" sfwTableName="sgs_doc_upload" sfwView="False">
+  <queries>
+    <query ID="LookUp" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from sgs_doc_upload ">
+      <parameters />
+    </query>
+    <query ID="LoadMSSDocuments" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT top 200 MSS.DOCUMENT_NAME FROM (&#xD;&#xA;SELECT DOCUMENT_NAME FROM SGT_DOCUMENT WITH(NOLOCK)&#xD;&#xA;WHERE WSS = 'MSS') MSS">
+      <parameters />
+    </query>
+    <query ID="LoadDocuments" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT&#xA;&#x9; SDU.*,&#xA;&#x9;CASE WHEN D.DOCUMENT_CODE = '' THEN '0' ELSE D.DOCUMENT_CODE END  AS istrUploadedDocumentCode&#xA;FROM&#xA;&#x9; SGS_DOC_UPLOAD SDU WITH(NOLOCK)   &#xA;&#x9; JOIN SGT_DOCUMENT D WITH(NOLOCK) &#xA;&#x9; ON D.DOCUMENT_ID = SDU.DOCUMENT_ID">
+      <parameters />
+    </query>
+    <query ID="FindDocumentIdByDocName" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT &#xD;&#xA;&#x9;DOCUMENT_ID&#xD;&#xA;FROM &#xD;&#xA;&#x9;SGT_DOCUMENT &#xD;&#xA;WHERE &#xD;&#xA;&#x9;TRIM(DOCUMENT_NAME) = TRIM(@DOCUMENTNAME)">
+      <parameters>
+        <parameter ID="@DOCUMENTNAME" sfwDataType="string" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="UploadId" sfwType="Column" sfwValue="upload_id" sfwIsNull="False" sfwKeyNo="1" sfwIsIdentity="True" sfwDataType="int" />
+    <attribute ID="DocumentId" sfwType="Column" sfwValue="document_id" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="PersonId" sfwType="Column" sfwValue="person_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="OrgId" sfwType="Column" sfwValue="org_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="ContactId" sfwType="Column" sfwValue="contact_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="DocStatusDescription" sfwType="Description" sfwValue="doc_status_description" />
+    <attribute ID="DocStatusId" sfwType="Column" sfwValue="doc_status_id" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="13" />
+    <attribute ID="DocStatusValue" sfwType="Column" sfwValue="doc_status_value" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="UploadedDate" sfwType="Column" sfwValue="uploaded_date" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="ImagedDate" sfwType="Column" sfwValue="imaged_date" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="ConvertedToImageFlag" sfwType="Column" sfwValue="converted_to_image_flag" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="1" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="IstrUserUploadedFileName" sfwDataType="string" sfwPrivate="False" sfwValue="istrUserUploadedFileName" sfwType="Property" />
+  </attributes>
+</entity>

@@ -1,0 +1,86 @@
+﻿<div class="portlet-body">
+    <div class="form-body" ng-if="SelectedCorrespondenceTab=='DataFields'">
+        <div class="form-group">
+            <div class="col-xs-6">
+                <label class="control-label">Bookmark ID</label>
+                
+                <input type="text" ondrop="return false" class="form-control input-sm" title="{{model.dictAttributes.ID}}" ng-model="model.dictAttributes.ID"  readonly/>
+            </div>
+            <div class="col-xs-6">
+                <label class="control-label">Entity Field</label>
+                <span class="info-tooltip dtc-span ng-scope" ng-if="model.errors.sfwEntityField" ng-attr-title="{{model.errors.sfwEntityField}}" style="color:red !important"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                <entityfieldelementintellisense modebinding="model.dictAttributes.sfwEntityField" model="model" entityid="objCorrespondenceDetails.dictAttributes.sfwEntity" propertyname="'dictAttributes.sfwEntityField'" validate="true" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-6">
+                <label class="control-label">Rule ID</label>
+                <input type="text" ondrop="return false" class="form-control input-sm" title="{{model.dictAttributes.sfwRuleID}}" ng-model="model.dictAttributes.sfwRuleID" />
+            </div>
+            <div class="col-xs-6">
+                <label class="control-label">Entity Method</label>
+                <span class="info-tooltip dtc-span ng-scope" ng-if="model.errors.invalid_method" ng-attr-title="{{model.errors.invalid_method}}" style="color:red !important"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                <entitymethodsintellisense model="model" entityid="objCorrespondenceDetails.dictAttributes.sfwEntity" modelvalue="model.dictAttributes.sfwXmlMethod" propertyname="'dictAttributes.sfwXmlMethod'"  validate="true"></entitymethodsintellisense>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-6">
+                <label class="control-label">Data Format</label>
+                <common-intellisense collection="dataformats" selected-item="model.dictAttributes.sfwDataFormat" model="model" propertyname="'dictAttributes.sfwDataFormat'"></common-intellisense>
+            </div>
+            <div class="col-xs-6">
+                <label class="control-label">Data Type</label>
+                <select class="form-control input-sm" ng-options="datatype.CodeID as datatype.CodeValue for datatype in datatypes" title="{{model.dictAttributes.sfwDataType}}" ng-model="model.dictAttributes.sfwDataType"></select>
+            </div>
+        </div>
+       
+    </div>
+
+    <div class="form-body" ng-if="SelectedCorrespondenceTab=='Templates'">
+        <div class="form-group">
+            <div class="col-xs-6">
+                <label class="control-label">Bookmark ID</label>
+
+                <input type="text" ondrop="return false" class="form-control input-sm" title="{{model.dictAttributes.ID}}" ng-model="model.dictAttributes.ID" readonly />
+            </div>
+            <div class="col-xs-6">
+                <label class="control-label">Object Type</label>
+                <select class="form-control input-sm" ng-options="x for x in templatetypes" ng-model="model.dictAttributes.sfwChildTemplateType"  ng-change="IsGroupChange(model.dictAttributes.sfwChildTemplateType)"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-6">
+                <label class="control-label">Entity Field</label>
+                <span class="info-tooltip dtc-span" ng-show="model.dictAttributes.sfwChildTemplateType == 'Entity'" ng-if="model.errors.sfwEntityField" ng-attr-title="{{model.errors.sfwEntityField}}" style="color:red !important"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                <entityfieldelementintellisense ng-show="model.dictAttributes.sfwChildTemplateType == 'Entity'" modebinding="model.dictAttributes.sfwEntityField" model="model" entityid="objCorrespondenceDetails.dictAttributes.sfwEntity"
+                                                propertyname="'dictAttributes.sfwEntityField'" isshowonetoone="true" onblurcallback="onTemplateEntityChange()"
+                                                ontextchangecallback="onTemplateEntityChange()" validate="true"></entityfieldelementintellisense>
+
+
+                <span class="info-tooltip dtc-span" ng-show="model.dictAttributes.sfwChildTemplateType == 'Collection'" ng-if="model.errors.sfwEntityField" ng-attr-title="{{model.errors.sfwEntityField}}" style="color:red !important"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                <entityfieldelementintellisense ng-show="model.dictAttributes.sfwChildTemplateType == 'Collection'" modebinding="model.dictAttributes.sfwEntityField" model="model" entityid="objCorrespondenceDetails.dictAttributes.sfwEntity"
+                                                propertyname="'dictAttributes.sfwEntityField'" isshowonetoone="true"
+                                                isshowonetomany="true"
+                                                ontextchangecallback="onTemplateEntityChange()" onblurcallback="onTemplateEntityChange()" validate="true"></entityfieldelementintellisense>
+
+            </div>
+            <div class="col-xs-6">
+                <label class="control-label">Template Name</label>
+                <span class="info-tooltip dtc-span" ng-if="model.errors.sfwTemplateName" ng-attr-title="{{model.errors.sfwTemplateName}}" style="color:red !important"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                <div class="input-group">
+                    <input type="text" class="form-control input-sm" title="{{model.dictAttributes.sfwTemplateName}}" ng-model="model.dictAttributes.sfwTemplateName"
+                            ng-keydown="onActionKeyDownForTemplates($event)" ng-change="validateTemplateName(model,'edit')" ng-keyup="validateTemplateName(model,'edit')" />
+                    <span class="input-group-addon button-intellisense" ng-click="showTemplateNameList($event)"></span>
+                    </div>
+                </div>
+            </div>
+        
+
+    </div>
+</div>
+<div class="form-actions right">
+    <div class="col-xs-12">
+        <input type="button" value="OK" class="btn dialog-btn-default" ng-click="OkClick()"  ng-disabled="model.errors.sfwEntityField || model.errors.sfwTemplateName"/>
+        <input type="button" value="Cancel" class="btn dialog-btn" ng-click="onCancelClick()" />
+    </div>
+</div>

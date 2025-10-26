@@ -1,0 +1,178 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entWssMessageHeader" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoWssMessageHeader" sfwObjectID="busWssMessageHeader" sfwTableName="sgt_wss_message_header" sfwView="False">
+  <rules>
+    <rule ID="IsMessageTextEntered" sfwMessageId="8504" sfwExpression="!(this.icdoWssMessageHeader.message_id &gt; 0) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoWssMessageHeader.message_text))" sfwObjectBased="True" />
+    <rule ID="IsMessageTextLengthGreaterThan2000" sfwMessageId="8503" sfwExpression="(this.IsMessageLengthGreaterThan2000() == True)" sfwObjectBased="True" />
+    <rule ID="IsMessgeIdInvalid" sfwMessageId="8502" sfwExpression="(this.IsMessageIdNotValid() == True)" sfwObjectBased="True" />
+    <rule ID="IsNoContactExits" sfwMessageId="8501" sfwExpression="(this.IsNoContactExists() == True)" sfwObjectBased="True" />
+    <rule ID="IsNoWSSMessageDetailExists" sfwMessageId="8505" sfwExpression="(this.IsWSSMessageDetailExists() == False)" sfwObjectBased="True" />
+    <rule ID="IsMemberMessageInvalid" sfwMessageId="8506" sfwExpression="(this.IsMemberMessageParametersInvalid() == True)" sfwObjectBased="True" />
+    <rule ID="IsEmployerMessageInvalid" sfwMessageId="8507" sfwExpression="(this.IsEmployerMessageParametersInvalid() == True)" sfwObjectBased="True" />
+    <rule ID="VisibilityForActiveMember" sfwRuleType="Validation" sfwExpression="(this.icdoWssMessageHeader.member_type_value == &quot;ACTV&quot;)" sfwObjectBased="True" />
+    <rule ID="VisibilityForRetire" sfwRuleType="Validation" sfwExpression="this.icdoWssMessageHeader.member_type_value == &quot;RETR&quot;" sfwObjectBased="True" />
+    <rule ID="VisibilityForEmployer" sfwRuleType="Validation" sfwExpression="this.icdoWssMessageHeader.member_type_value == &quot;EMPL&quot;" sfwObjectBased="True" />
+    <rule ID="IsWssBatchRequestExecuted" sfwRuleType="Validation" sfwExpression="(this.icdoWssMessageHeader.is_message_sent == &quot;N&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule-PlanREquiredForRetiree" sfwRuleType="Validation" sfwExpression="(this.icdoWssMessageHeader.member_type_value == &quot;RETR&quot;) &amp;&amp;&#xD;&#xA;(this.icdoWssMessageHeader.plan_id == 0)" sfwMessageId="1057" sfwObjectBased="True" />
+    <rule ID="Rule-IfPermanentNoplan" sfwRuleType="Validation" sfwExpression="(this.icdoWssMessageHeader.member_type_value == &quot;ACTV&quot;) &amp;&amp;&#xD;&#xA;(this.icdoWssMessageHeader.type_value == &quot;PERM&quot;) &amp;&amp;&#xD;&#xA;(this.icdoWssMessageHeader.plan_id  !=  0)" sfwMessageId="6425" sfwObjectBased="True" />
+    <rule ID="IsOrgValidForEmployee" sfwRuleType="Validation" sfwExpression="(this.icdoWssMessageHeader.member_type_value == &quot;EMPL&quot;) &amp;&amp;&#xD;&#xA;(this.icdoWssMessageHeader.org_id == 0)" sfwMessageId="1032" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="VisibilityForActiveMember" sfwStatus="Active" sfwMode="All" />
+    <item ID="VisibilityForRetire" sfwStatus="Active" sfwMode="All" />
+    <item ID="VisibilityForEmployer" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsWssBatchRequestExecuted" sfwStatus="Active" sfwMode="All" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="IsNoContactExits" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMessgeIdInvalid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMessageTextEntered" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMessageTextLengthGreaterThan2000" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsNoWSSMessageDetailExists" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMemberMessageInvalid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEmployerMessageInvalid" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule-PlanREquiredForRetiree" sfwStatus="Active" sfwMode="All" />
+    <item ID="Rule-IfPermanentNoplan" sfwStatus="Active" sfwMode="All" />
+  </harderror>
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <queries>
+    <query ID="LookUp" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_WSS_MESSAGE_HEADER HED WITH(NOLOCK)&#xD;&#xA;WHERE HED.IS_MESSAGE_SENT IS NULL&#xD;&#xA;ORDER BY HED.PRIORITY_VALUE ASC, HED.CREATED_DATE DESC">
+      <parameters />
+    </query>
+    <query ID="LoadESSMessageBoard" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_WSS_MESSAGE_DETAIL DETL WITH (NOLOCK) &#xD;&#xA; INNER JOIN SGT_WSS_MESSAGE_HEADER HED WITH(NOLOCK)&#xD;&#xA; ON DETL.WSS_MESSAGE_ID = HED.WSS_MESSAGE_ID&#xD;&#xA; WHERE DETL.ORG_ID = @ORGID AND DETL.CONTACT_ID = @CONTACTID &#xD;&#xA; AND DETL.CLEAR_MESSAGE_FLAG = 'N' &#xD;&#xA; AND ISNULL(MESSAGE_TEXT,'') LIKE '%'+@MESSAGETEXT+'%'&#xD;&#xA; ORDER BY CASE WHEN HED.PRIORITY_VALUE = 'HIGH' THEN 1 ELSE 0 END DESC,HED.CREATED_DATE DESC">
+      <parameters>
+        <parameter ID="@ORGID" sfwDataType="int" />
+        <parameter ID="@CONTACTID" sfwDataType="int" />
+        <parameter ID="@MESSAGETEXT" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="LoadESSMessageForLast3Months" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_WSS_MESSAGE_DETAIL DETL WITH (NOLOCK) &#xD;&#xA; INNER JOIN SGT_WSS_MESSAGE_HEADER HED WITH(NOLOCK)&#xD;&#xA; ON DETL.WSS_MESSAGE_ID = HED.WSS_MESSAGE_ID&#xD;&#xA; WHERE DETL.ORG_ID = @ORGID AND DETL.CONTACT_ID = @CONTACTID &#xD;&#xA; AND DATEDIFF(M,HED.CREATED_DATE,GETDATE()) &lt;= 3 &#xD;&#xA; ORDER BY CASE WHEN HED.PRIORITY_VALUE = 'HIGH' THEN 1 ELSE 0 END DESC,HED.CREATED_DATE DESC">
+      <parameters>
+        <parameter ID="@ORGID" sfwDataType="int" />
+        <parameter ID="@CONTACTID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LookUpSubquery" sfwQueryType="SubSelectQuery" sfwSql="SELECT * FROM SGT_WSS_MESSAGE_DETAIL DETL&#xD;&#xA;WHERE DETL.WSS_MESSAGE_ID = HED.WSS_MESSAGE_ID">
+      <parameters />
+    </query>
+    <query ID="LoadGeneratedReports" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_WSS_MESSAGE_DETAIL DETL WITH (NOLOCK) &#xD;&#xA; INNER JOIN SGT_WSS_MESSAGE_HEADER HED WITH(NOLOCK)&#xD;&#xA; ON DETL.WSS_MESSAGE_ID = HED.WSS_MESSAGE_ID&#xD;&#xA; WHERE DETL.ORG_ID = @ORGID &#xD;&#xA; AND ISNULL(MESSAGE_TEXT,'') LIKE '%'+@MESSAGETEXT+'%'&#xD;&#xA; AND CORRESPONDENCE_LINK LIKE '%rptBenefitEnrollment%'&#xD;&#xA; ORDER BY CASE WHEN HED.PRIORITY_VALUE = 'HIGH' THEN 1 ELSE 0 END DESC,HED.CREATED_DATE DESC">
+      <parameters>
+        <parameter ID="@ORGID" sfwDataType="int" />
+        <parameter ID="@MESSAGETEXT" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="GetLastReportCreatedDate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT top 1 DETL.REPORT_CREATED_DATE FROM SGT_WSS_MESSAGE_DETAIL DETL WITH (NOLOCK) &#xD;&#xA; INNER JOIN SGT_WSS_MESSAGE_HEADER HED WITH(NOLOCK)&#xD;&#xA; ON DETL.WSS_MESSAGE_ID = HED.WSS_MESSAGE_ID&#xD;&#xA; WHERE DETL.ORG_ID = @ORGID AND ISNULL(MESSAGE_TEXT,'') LIKE '%'+@MESSAGETEXT+'%'&#xD;&#xA; AND DETL.CORRESPONDENCE_LINK IS NOT NULL&#xD;&#xA; ORDER BY DETL.REPORT_CREATED_DATE DESC&#xD;&#xA; ">
+      <parameters>
+        <parameter ID="@ORGID" sfwDataType="int" />
+        <parameter ID="@MESSAGETEXT" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="CheckIfMessageAlreadyPosted" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * from SGT_WSS_MESSAGE_HEADER &#xD;&#xA;WHERE ORG_ID = @ORGID AND ISNULL(MESSAGE_TEXT,'') LIKE '%'+@MESSAGETEXT+'%'&#xD;&#xA;AND CREATED_DATE &gt; @CREATEDDATE&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@ORGID" sfwDataType="int" />
+        <parameter ID="@CREATEDDATE" sfwDataType="DateTime" />
+        <parameter ID="@MESSAGETEXT" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="UpdateReportLink" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="UPDATE SGT_WSS_MESSAGE_DETAIL SET CORRESPONDENCE_LINK = @REPORTLINK, REPORT_CREATED_DATE = @CREATED_DATE&#xD;&#xA;WHERE WSS_MESSAGE_DETAIL_ID IN&#xD;&#xA;(SELECT WSS_MESSAGE_DETAIL_ID FROM SGT_WSS_MESSAGE_HEADER HDR &#xD;&#xA;INNER JOIN SGT_WSS_MESSAGE_DETAIL DTL ON HDR.WSS_MESSAGE_ID = DTL.WSS_MESSAGE_ID &#xD;&#xA;WHERE DTL.ORG_ID = @ORGID AND ISNULL(HDR.MESSAGE_TEXT,'') LIKE '%'+@MESSAGETEXT+'%'&#xD;&#xA;AND DTL.CORRESPONDENCE_LINK IS NULL)&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@ORGID" sfwDataType="int" />
+        <parameter ID="@REPORTLINK" sfwDataType="string" />
+        <parameter ID="@CREATED_DATE" sfwDataType="DateTime" />
+        <parameter ID="@MESSAGETEXT" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="DeleteWssMessage" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="&#xD;&#xA;DELETE FROM SGT_WSS_MESSAGE_DETAIL WHERE WSS_MESSAGE_ID = @WSS_MESSAGE_ID&#xD;&#xA;&#xD;&#xA;DELETE FROM SGT_WSS_MESSAGE_HEADER WHERE WSS_MESSAGE_ID = @WSS_MESSAGE_ID">
+      <parameters>
+        <parameter ID="@WSS_MESSAGE_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadESSUnReadMessageForLast3Months" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql=" SELECT * FROM SGT_WSS_MESSAGE_DETAIL DETL WITH (NOLOCK) &#xD;&#xA; INNER JOIN SGT_WSS_MESSAGE_HEADER HED WITH(NOLOCK)&#xD;&#xA; ON DETL.WSS_MESSAGE_ID = HED.WSS_MESSAGE_ID&#xD;&#xA; WHERE DETL.ORG_ID = @ORGID AND DETL.CONTACT_ID = @CONTACTID &#xD;&#xA; AND DETL.CLEAR_MESSAGE_FLAG = 'N'&#xD;&#xA; AND ISNULL(MESSAGE_TEXT,'') LIKE '%'+@MESSAGETEXT+'%'&#xD;&#xA; AND DATEDIFF(M,HED.CREATED_DATE,GETDATE()) &lt;= 3 &#xD;&#xA; ORDER BY HED.CREATED_DATE DESC">
+      <parameters>
+        <parameter ID="@ORGID" sfwDataType="int" />
+        <parameter ID="@CONTACTID" sfwDataType="int" />
+        <parameter ID="@MESSAGETEXT" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="UpdateClearMessageFlag" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="     UPDATE SGT_WSS_MESSAGE_DETAIL &#xD;&#xA;    SET CLEAR_MESSAGE_FLAG = 'Y'    &#xD;&#xA;   WHERE  WSS_MESSAGE_DETAIL_ID IN&#xD;&#xA;   (&#xD;&#xA;SELECT DTL.WSS_MESSAGE_DETAIL_ID FROM SGT_WSS_MESSAGE_HEADER HDR INNER JOIN SGT_WSS_MESSAGE_DETAIL DTL ON HDR.WSS_MESSAGE_ID = DTL.WSS_MESSAGE_ID &#xD;&#xA;and HDR.MESSAGE_TEXT = 'New Enrollments/Change have occurred since you last generated your Benefit Enrollment/ Change Report'&#xD;&#xA;and DTL.CORRESPONDENCE_LINK IS null AND DTL.CONTACT_ID = @CONTACTID AND DTL.ORG_ID = @ORGID&#xD;&#xA;    )&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@CONTACTID" sfwDataType="int" />
+        <parameter ID="@ORGID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadWssMessageRequest" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_WSS_MESSAGE_HEADER HED WITH(NOLOCK)&#xD;&#xA;WHERE HED.IS_MESSAGE_SENT IS NOT NULL&#xD;&#xA;ORDER BY HED.PRIORITY_VALUE ASC, HED.CREATED_DATE DESC">
+      <parameters />
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="WssMessageId" sfwType="Column" sfwValue="wss_message_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="MessageId" sfwType="Column" sfwValue="message_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="MessageText" sfwType="Column" sfwValue="message_text" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="2000" />
+    <attribute ID="PriorityDescription" sfwType="Description" sfwValue="priority_description" />
+    <attribute ID="PriorityId" sfwType="Column" sfwValue="priority_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="3501" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PriorityValue" sfwType="Column" sfwValue="priority_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="AudienceDescription" sfwType="Description" sfwValue="audience_description" />
+    <attribute ID="AudienceId" sfwType="Column" sfwValue="audience_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="3502" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AudienceValue" sfwType="Column" sfwValue="audience_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="PersonId" sfwType="Column" sfwValue="person_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PlanId" sfwType="Column" sfwValue="plan_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PersonTypeDescription" sfwType="Description" sfwValue="person_type_description" />
+    <attribute ID="PersonTypeId" sfwType="Column" sfwValue="person_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="3503" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PersonTypeValue" sfwType="Column" sfwValue="person_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="OrgId" sfwType="Column" sfwValue="org_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ContactRoleDescription" sfwType="Description" sfwValue="contact_role_description" />
+    <attribute ID="ContactRoleId" sfwType="Column" sfwValue="contact_role_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="515" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ContactRoleValue" sfwType="Column" sfwValue="contact_role_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="ContactId" sfwType="Column" sfwValue="contact_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="EmpCategoryDescription" sfwType="Description" sfwValue="emp_category_description" />
+    <attribute ID="EmpCategoryId" sfwType="Column" sfwValue="emp_category_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="EmpCategoryValue" sfwType="Column" sfwValue="emp_category_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="CentralPayrollFlag" sfwType="Column" sfwValue="central_payroll_flag" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="1" />
+    <attribute ID="PeoplesoftOrgGroupDescription" sfwType="Description" sfwValue="peoplesoft_org_group_description" />
+    <attribute ID="PeoplesoftOrgGroupId" sfwType="Column" sfwValue="peoplesoft_org_group_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="364" />
+    <attribute ID="PeoplesoftOrgGroupValue" sfwType="Column" sfwValue="peoplesoft_org_group_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="BenefitOptionDescription" sfwType="Description" sfwValue="benefit_option_description" />
+    <attribute ID="BenefitOptionId" sfwType="Column" sfwValue="benefit_option_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="2216" />
+    <attribute ID="BenefitOptionValue" sfwType="Column" sfwValue="benefit_option_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="BenefitTypeDescription" sfwType="Description" sfwValue="benefit_type_description" />
+    <attribute ID="BenefitTypeId" sfwType="Column" sfwValue="benefit_type_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="1904" />
+    <attribute ID="BenefitTypeValue" sfwType="Column" sfwValue="benefit_type_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="MemberTypeDescription" sfwType="Description" sfwValue="member_type_description" />
+    <attribute ID="MemberTypeId" sfwType="Column" sfwValue="member_type_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="7008" />
+    <attribute ID="MemberTypeValue" sfwType="Column" sfwValue="member_type_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="TypeDescription" sfwType="Description" sfwValue="type_description" />
+    <attribute ID="TypeId" sfwType="Column" sfwValue="type_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="313" />
+    <attribute ID="TypeValue" sfwType="Column" sfwValue="type_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="JobClassDescription" sfwType="Description" sfwValue="job_class_description" />
+    <attribute ID="JobClassId" sfwType="Column" sfwValue="job_class_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="314" />
+    <attribute ID="JobClassValue" sfwType="Column" sfwValue="job_class_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="BenefitBeginDateFrom" sfwType="Column" sfwValue="benefit_begin_date_from" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="BenefitBeginDateTo" sfwType="Column" sfwValue="benefit_begin_date_to" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="IsMessageSent" sfwType="Column" sfwValue="is_message_sent" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="1" />
+    <attribute sfwValue="wss_message_request_flag" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="char" sfwLength="1" sfwIsNull="True" ID="WssMessageRequestFlag" sfwCaption="Wss Message Request Flag" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrOrgCode" sfwValue="icdoWssMessageHeader.istrOrgCode" />
+    <attribute sfwDataType="string" sfwType="Property" ID="DisplayMessage" sfwValue="icdoWssMessageHeader.display_message" />
+    <attribute ID="objPerson" sfwType="Object" sfwEntity="entPerson" sfwValue="ibusPerson" />
+    <attribute ID="objOrganization" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusOrganization" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrOrgCode" sfwValue="icdoWssMessageHeader.istrOrgCode" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrWebLink" sfwValue="icdoWssMessageHeader.istrWebLink" />
+    <attribute ID="lstrContactTicketId" sfwDataType="string" sfwPrivate="False" sfwValue="icdoWssMessageHeader.istrContactTicketId" sfwType="Property" />
+    <attribute ID="lstrEndText" sfwDataType="string" sfwPrivate="False" sfwValue="icdoWssMessageHeader.istrEndText" sfwType="Property" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrCorrespondenceLink" sfwValue="icdoWssMessageHeader.istrCorrespondenceLink" />
+    <attribute sfwType="Collection" sfwEntity="entWssMessageDetail" ID="lstWssMessageDetail" sfwValue="iclbWssMessageDetail" />
+    <attribute ID="lintRequestId" sfwDataType="int" sfwPrivate="False" sfwValue="icdoWssMessageHeader.iintRequestId" sfwType="Property" />
+    <attribute ID="lintPersonEmploymentId" sfwDataType="int" sfwPrivate="False" sfwValue="icdoWssMessageHeader.iintPersonEmploymentId" sfwType="Property" />
+    <attribute ID="lintPersonEmploymentDetailId" sfwDataType="int" sfwPrivate="False" sfwValue="icdoWssMessageHeader.iintPersonEmploymentDetailId" sfwType="Property" />
+    <attribute ID="lstrRequestType" sfwDataType="string" sfwPrivate="False" sfwValue="icdoWssMessageHeader.istrRequestType" sfwType="Property" />
+  </attributes>
+</entity>

@@ -1,0 +1,292 @@
+﻿<entity ID="entPersonBeneficiary" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvPerson" sfwType="BusinessRule" sfwMainCDO="icdoPersonBeneficiary" sfwObjectID="busPersonBeneficiary" sfwTableName="sgt_person_beneficiary" sfwView="False" sfwParentEntity="entExtendBase">
+  <rules>
+    <rule ID="IsAddressNOTasMembersAndNOTEntered" sfwMessageId="7012" sfwExpression="(this.AintValidatedAddress == 2)" sfwObjectBased="True" />
+    <rule ID="IsAddressNotEntered" sfwMessageId="7062" sfwExpression="(this.AintValidatedAddress == 4)" sfwObjectBased="True" />
+    <rule ID="IsAddressValid" sfwMessageId="127" sfwExpression="!(this.icdoPersonBeneficiary.beneficiary_person_id != 0) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoPersonBeneficiary.suppress_warning) || this.icdoPersonBeneficiary.suppress_warning == &quot;N&quot;) &amp;&amp; &#xA;(this.icdoPersonBeneficiary.address_country_value == &quot;0001&quot;) &amp;&amp; &#xA;(this.icdoPersonBeneficiary.address_validate_flag == &quot;N&quot;) &amp;&amp;&#xA;(!this.iblnIsFromDeathNotification)" sfwObjectBased="True" />
+    <rule ID="IsApplicationBeneficiaryTypeEntered" sfwMessageId="1161" sfwExpression="(this.IsApplicationBeneficiaryTypeNotEntered == True)" sfwObjectBased="True" />
+    <rule ID="IsApplicationSelected" sfwMessageId="1164" sfwExpression="(this.iintApplicationCount &gt; 0) &amp;&amp; &#xA;(this.IsApplicationSelected == False)" sfwObjectBased="True" />
+    <rule ID="IsApplicationStartDateIsEarlierThanRetDAte" sfwMessageId="1160" sfwExpression="(this.IsApplicationStartDateIsEarlierThanRetDAte == True)" sfwObjectBased="True" />
+    <rule ID="IsBeneficiaryAlreadyExistsNew" sfwMessageId="7017" sfwExpression="(this.icdoPersonBeneficiary.beneficiary_person_id != 0) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entPersonBeneficiary.IsPersonAlreadyABeneficiaryNew&quot;, this.icdoPersonBeneficiary.beneficiary_person_id, this.icdoPersonBeneficiary.person_id) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="IsBeneficiaryAlreadyExistsUpdate" sfwMessageId="7017" sfwExpression="(this.icdoPersonBeneficiary.beneficiary_person_id != 0) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entPersonBeneficiary.IsPersonAlreadyABeneficiaryUpdate&quot;, this.icdoPersonBeneficiary.beneficiary_person_id, this.icdoPersonBeneficiary.person_id, this.icdoPersonBeneficiary.beneficiary_id) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="IsBeneficiaryInfoAndPersonIDEntered" sfwMessageId="7083" sfwExpression="(this.AintValidatedAddress == 6)" sfwObjectBased="True" />
+    <rule ID="IsBeneficiaryInNOPlan" sfwMessageId="7009" sfwExpression="(this.AintValidateBeneficiary == 8)" sfwObjectBased="True" />
+    <rule ID="IsBeneficiaryOrganizationIsNOTTrust" sfwMessageId="7003" sfwExpression="(!string.IsNullOrEmpty(this.icdoPersonBeneficiary.beneficiary_org_code)) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entPersonBeneficiary.CheckBeneficiaryOrgIsTrust&quot;, this.icdoPersonBeneficiary.beneficiary_org_code) == 0)" sfwObjectBased="True" />
+    <rule ID="IsBeneficiaryOrgNOTActive" sfwMessageId="7005" sfwExpression="(!string.IsNullOrEmpty(this.icdoPersonBeneficiary.beneficiary_org_code)) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entPersonBeneficiary.CheckBeneficiaryOrgActive&quot;, this.icdoPersonBeneficiary.beneficiary_org_code) == 0)" sfwObjectBased="True" />
+    <rule ID="IsBeneficiaryOrgNOTExists" sfwMessageId="7001" sfwExpression="(!string.IsNullOrEmpty(this.icdoPersonBeneficiary.beneficiary_org_code)) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entPersonBeneficiary.CheckBenficiaryOrgExists&quot;, this.icdoPersonBeneficiary.beneficiary_org_code) == 0)" sfwObjectBased="True" />
+    <rule ID="IsBeneficiaryPersonNOTExists" sfwMessageId="7000" sfwExpression="(this.icdoPersonBeneficiary.beneficiary_person_id != 0) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entPersonBeneficiary.CheckBeneficiaryPersonExists&quot;, this.icdoPersonBeneficiary.beneficiary_person_id) == 0)" sfwObjectBased="True" />
+    <rule ID="IsBenefitTypeNull" sfwMessageId="7006" sfwExpression="(this.AintValidateBeneficiary == 1)" sfwObjectBased="True" />
+    <rule ID="IsBothPersonOrgEntered" sfwMessageId="7002" sfwExpression="(this.icdoPersonBeneficiary.beneficiary_person_id != 0) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.icdoPersonBeneficiary.beneficiary_org_code)) &amp;&amp; &#xA;((!string.IsNullOrEmpty(this.icdoPersonBeneficiary.first_name)) || &#xA;(!string.IsNullOrEmpty(this.icdoPersonBeneficiary.last_name)))" sfwObjectBased="True" />
+    <rule ID="IsContactInfoEnteredAndFlagYes" sfwMessageId="7061" sfwExpression="(this.AintValidatedAddress == 1)" sfwObjectBased="True" />
+    <rule ID="IsContigentBeneNotAllowed" sfwMessageId="1163" sfwExpression="(this.IsContigentBeneNotAllowed == True)" sfwObjectBased="True" />
+    <rule ID="IsCountryNotUS" sfwMessageId="7013" sfwExpression="(this.AintValidatedAddress == 3)" sfwObjectBased="True" />
+    <rule ID="IsDROBeneficiaryNotAllowed" sfwMessageId="7669" sfwExpression="(this.IsDroBeneficiaryAllowed() == True)" sfwObjectBased="True" />
+    <rule ID="IsDROBeneficiaryStartDateentered" sfwMessageId="7008" sfwExpression="(this.IsDROBeneficiaryStartDateNotEntered() == True)" sfwObjectBased="True" />
+    <rule ID="IsEndDateBetweenParticipationDates" sfwMessageId="7015" sfwExpression="(this.iblnIsFromDeathNotification &amp;&amp; this.icdoPersonBeneficiary.Suppress_Warning != &quot;Y&quot; &amp;&amp; this.AintValidateBeneficiary == 7)&#xA;|| (!this.iblnIsFromDeathNotification &amp;&amp; this.AintValidateBeneficiary == 7)" sfwObjectBased="True" />
+    <rule ID="IsInvalidPercentage" sfwMessageId="7007" sfwExpression="(this.AintValidateBeneficiary == 2)" sfwObjectBased="True" />
+    <rule ID="IsMaritialStatusNOTSame" sfwMessageId="7079" sfwExpression="(this.AintValidateBeneficiary == 10)" sfwObjectBased="True" />
+    <rule ID="IsMemberAndBeneficiarySame" sfwMessageId="1024" sfwExpression="(this.icdoPersonBeneficiary.beneficiary_person_id == RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusPerson.icdoPerson.person_id&quot;))" sfwObjectBased="True" />
+    <rule ID="IsParentPageDROAppMaintenance" sfwExpression="!(this.IsParentPagePersonMaintenance() == True)" sfwObjectBased="True" />
+    <rule ID="IsParentPagePersonMaintenance" sfwExpression="(this.IsParentPagePersonMaintenance() == True)" sfwObjectBased="True" />
+    <rule ID="IsPersonDoesNOTHave ValidAddress" sfwMessageId="7081" sfwExpression="(this.AintValidatedAddress == 5) &amp;&amp;&#xA;(!this.iblnIsFromDeathNotification)" sfwObjectBased="True" />
+    <rule ID="IsPrimaryBeneficiaryExistsForDRO" sfwMessageId="2052" sfwExpression="(string.IsNullOrEmpty(this.icdoPersonBeneficiary.suppress_warning) || this.icdoPersonBeneficiary.suppress_warning == &quot;N&quot;) &amp;&amp; &#xA;(this.ValidatePersonAccountBeneficiary() == 14)" sfwObjectBased="True" />
+    <rule ID="IsPrimaryBeneficiaryNOTExists" sfwMessageId="1020" sfwExpression="(this.AintValidateBeneficiary == 4)" sfwObjectBased="True" />
+    <rule ID="IsRelationshipNull" sfwMessageId="7004" sfwExpression="(string.IsNullOrEmpty(this.icdoPersonBeneficiary.relationship_value))" sfwObjectBased="True" />
+    <rule ID="IsSpouseAlreadyExists" sfwMessageId="7077" sfwExpression="(this.AintValidateBeneficiary == 9)" sfwObjectBased="True" />
+    <rule ID="IsSpouseGenderSame" sfwMessageId="7078" sfwExpression="(this.AintValidateBeneficiary == 11)" sfwObjectBased="True" />
+    <rule ID="IsSpouseJointSurvivor" sfwMessageId="1960" sfwExpression="(string.IsNullOrEmpty(this.icdoPersonBeneficiary.suppress_warning) || this.icdoPersonBeneficiary.suppress_warning == &quot;N&quot;) &amp;&amp; &#xA;(this.ValidatePersonAccountBeneficiary() == 12)" sfwObjectBased="True" />
+    <rule ID="IsSpouseJointSurvivorForJobService" sfwMessageId="1961" sfwExpression="(string.IsNullOrEmpty(this.icdoPersonBeneficiary.suppress_warning) || this.icdoPersonBeneficiary.suppress_warning == &quot;N&quot;) &amp;&amp; &#xA;(this.ValidatePersonAccountBeneficiary() == 13)" sfwObjectBased="True" />
+    <rule ID="IsSpouseRelationshipValid" sfwMessageId="7018" sfwExpression="(string.IsNullOrEmpty(this.icdoPersonBeneficiary.suppress_warning) || this.icdoPersonBeneficiary.suppress_warning == &quot;N&quot;) &amp;&amp; &#xA;(this.IsSpouseRelationshipValid() == False)" sfwObjectBased="True" />
+    <rule ID="IsStartDateEarlierThanEndDate" sfwMessageId="117" sfwExpression="(this.IsStartDateEarlierThanEndDate == True)" sfwObjectBased="True" />
+    <rule ID="IsStartDateEarlierThanPAStartDate" sfwMessageId="7014" sfwExpression="(this.AintValidateBeneficiary == 6)" sfwObjectBased="True" />
+    <rule ID="IsStartDateEnteredForApplication" sfwMessageId="1162" sfwExpression="(this.IsStartDateNotEnteredForApplication == True)" sfwObjectBased="True" />
+    <rule ID="IsStartDateGreaterThanEndDate" sfwMessageId="117" sfwExpression="(this.AintValidateBeneficiary == 15)" sfwObjectBased="True" />
+    <rule ID="IsStartDateNull" sfwMessageId="7008" sfwExpression="(this.AintValidateBeneficiary == 3)" sfwObjectBased="True" />
+    <rule ID="IsTotalPercentageExceeds100" sfwMessageId="7010" sfwExpression="(this.AintValidateBeneficiary == 5)" sfwObjectBased="True" />
+    <rule ID="IsValidDistPercentForApplication" sfwMessageId="1159" sfwExpression="(this.IsInValidPercentageEnteredForApplication == True)" sfwObjectBased="True" />
+    <rule ID="IsValidPercentageEnteredForApplication" sfwMessageId="1023" sfwExpression="(this.IsPercentageGreaterThan100() == True)" sfwObjectBased="True" />
+    <rule ID="ValidateEmailAddress" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(!string.IsNullOrEmpty(this.icdoPersonBeneficiary.email_address)) &amp;&amp;&#xA;(this.ValidateEmailPattern() == False)" sfwMessageId="10343" />
+    <rule ID="IsAddressValidForDeath" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.iblnIsFromDeathNotification) &amp;&amp;&#xA;((string.IsNullOrEmpty(this.icdoPersonBeneficiary.suppress_warning) || this.icdoPersonBeneficiary.suppress_warning == &quot;N&quot;) &amp;&amp; &#xA;(this.icdoPersonBeneficiary.address_country_value == &quot;0001&quot;) &amp;&amp; &#xA;(this.icdoPersonBeneficiary.address_validate_flag == &quot;N&quot;)) &amp;&amp;&#xA;(this.IsPersonAddressExistOnBeneficiary() == False)" sfwMessageId="10501" />
+    <rule ID="IsPersonDoesNotHaveValidAddressFromDeath" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.AintValidatedAddress == 5) &amp;&amp;&#xA;(this.iblnIsFromDeathNotification)" sfwMessageId="10501" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="IsParentPageDROAppMaintenance" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsParentPagePersonMaintenance" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="IsRelationshipNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsBeneficiaryPersonNOTExists" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsBeneficiaryOrgNOTExists" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsBothPersonOrgEntered" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsBeneficiaryOrgNOTActive" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAddressNOTasMembersAndNOTEntered" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsCountryNotUS" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsBeneficiaryOrganizationIsNOTTrust" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsContactInfoEnteredAndFlagYes" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAddressNotEntered" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMemberAndBeneficiarySame" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAddressValid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPersonDoesNOTHave ValidAddress" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsBeneficiaryInfoAndPersonIDEntered" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsBeneficiaryAlreadyExistsNew" sfwMode="New" sfwStatus="Active" />
+    <item ID="IsBeneficiaryAlreadyExistsUpdate" sfwMode="Update" sfwStatus="Active" />
+    <item ID="IsParentPagePersonMaintenance" sfwMode="All" sfwStatus="Active">
+      <items>
+        <rule ID="IsBenefitTypeNull" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+        <rule ID="IsEndDateBetweenParticipationDates" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+        <rule ID="IsInvalidPercentage" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+        <rule ID="IsMaritialStatusNOTSame" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+        <rule ID="IsPrimaryBeneficiaryNOTExists" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+        <rule ID="IsSpouseAlreadyExists" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+        <rule ID="IsSpouseGenderSame" sfwMode="All" sfwStatus="Inactive" sfwObjectBased="True" />
+        <rule ID="IsStartDateEarlierThanPAStartDate" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+        <rule ID="IsStartDateNull" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+        <rule ID="IsTotalPercentageExceeds100" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+        <rule ID="IsBeneficiaryInNOPlan" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+        <rule ID="IsSpouseJointSurvivor" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+        <rule ID="IsSpouseJointSurvivorForJobService" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+        <rule ID="IsPrimaryBeneficiaryExistsForDRO" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+        <rule ID="IsApplicationSelected" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+        <rule ID="IsContigentBeneNotAllowed" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+        <rule ID="IsStartDateEnteredForApplication" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+        <rule ID="IsApplicationStartDateIsEarlierThanRetDAte" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+        <rule ID="IsStartDateEarlierThanEndDate" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+        <rule ID="IsApplicationBeneficiaryTypeEntered" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+        <rule ID="IsValidDistPercentForApplication" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+        <rule ID="IsValidPercentageEnteredForApplication" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+      </items>
+    </item>
+    <item ID="IsParentPageDROAppMaintenance" sfwMode="All" sfwStatus="Active">
+      <items>
+        <rule ID="IsContigentBeneNotAllowed" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+        <rule ID="IsStartDateEnteredForApplication" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+        <rule ID="IsStartDateEarlierThanEndDate" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+        <rule ID="IsApplicationBeneficiaryTypeEntered" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+        <rule ID="IsValidDistPercentForApplication" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+        <rule ID="IsValidPercentageEnteredForApplication" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+      </items>
+    </item>
+    <item ID="IsSpouseRelationshipValid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsDROBeneficiaryNotAllowed" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsStartDateGreaterThanEndDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="ValidateEmailAddress" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAddressValidForDeath" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPersonDoesNotHaveValidAddressFromDeath" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties>
+    <item ID="person_id" sfwObjectField="icdoPersonBeneficiary.person_id" />
+  </commonproperties>
+  <expressionfields />
+  <queries>
+    <query ID="LoadPlanEnrolledByPerson" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT CAST(ROW_NUMBER() OVER(ORDER BY SPA.PERSON_ACCOUNT_ID) AS INT) AS PERSON_ACCOUNT_BENEFICIARY_ID,&#xD;&#xA; SPA.PERSON_ACCOUNT_ID ,PL.PLAN_NAME AS istrPlanName ,&#xD;&#xA;100.00 as dist_percent, SPA.START_DATE as idtInitialPlanStartDate,&#xD;&#xA;cv1.description as istrPlanParticipationStatus  FROM SGT_PERSON_ACCOUNT SPA&#xD;&#xA;INNER JOIN SGT_PLAN PL ON PL.PLAN_ID=SPA.PLAN_ID&#xD;&#xA;inner join sgs_code_value cv1 on cv1.code_id =PLAN_PARTICIPATION_STATUS_ID and cv1.code_value =  PLAN_PARTICIPATION_STATUS_VALUE &#xD;&#xA;WHERE SPA.PERSON_ID=@person_id AND &#xD;&#xA;PL.PLAN_ID IN (1,2,3,4,5,6,7,10,11,20,21,13,26,27,28,29,30)&#xD;&#xA;and (&#xD;&#xA; (pl.benefit_type_value = 'INSR' AND cv1.data2 in ('ERLD','SPND') )&#xD;&#xA; OR&#xD;&#xA; (pl.benefit_type_value = 'RETR' AND cv1.data2 in ('ERLD','SPND','RTRD'))&#xD;&#xA; )">
+      <parameters>
+        <parameter ID="@person_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="CheckBeneficiaryPersonExists" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_PERSON WHERE PERSON_ID=@PERSON_ID">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="CheckBenficiaryOrgExists" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_ORGANIZATION WHERE ORG_CODE=@ORG_CODE">
+      <parameters>
+        <parameter ID="@ORG_CODE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="CheckBeneficiaryOrgIsTrust" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_ORGANIZATION WHERE (ORG_TYPE_VALUE='TRST' OR ORG_TYPE_VALUE='EST') AND ORG_CODE=@ORG_CODE">
+      <parameters>
+        <parameter ID="@ORG_CODE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="CheckBeneficiaryOrgActive" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_ORGANIZATION WHERE STATUS_VALUE='ACTV' AND ORG_CODE=@ORG_CODE">
+      <parameters>
+        <parameter ID="@ORG_CODE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="GetPercentageSumByPersonAccountIDNew" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT SUM(DIST_PERCENT) FROM SGT_PERSON_ACCOUNT_BENEFICIARY WHERE&#xD;&#xA;PERSON_ACCOUNT_ID=@PERSON_ACCOUNT_ID  AND&#xD;&#xA;BENEFICIARY_TYPE_VALUE=@BENEFICIARY_TYPE_VALUE  AND&#xD;&#xA;((START_DATE BETWEEN @START_DATE AND @END_DATE ) OR &#xD;&#xA;(case when end_date is null then '12/31/9999' else end_date end BETWEEN @START_DATE AND @END_DATE))&#xD;&#xA;GROUP BY PERSON_ACCOUNT_ID">
+      <parameters>
+        <parameter ID="@PERSON_ACCOUNT_ID" sfwDataType="int" />
+        <parameter ID="@BENEFICIARY_TYPE_VALUE" sfwDataType="string" />
+        <parameter ID="@START_DATE" sfwDataType="DateTime" />
+        <parameter ID="@END_DATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="GetPercentageSumByPersonAccountIDUpdate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT SUM(DIST_PERCENT) FROM SGT_PERSON_ACCOUNT_BENEFICIARY WHERE&#xD;&#xA;PERSON_ACCOUNT_ID=@PERSON_ACCOUNT_ID AND PERSON_ACCOUNT_BENEFICIARY_ID!=@PABID  AND&#xD;&#xA;BENEFICIARY_TYPE_VALUE=@BENEFICIARY_TYPE_VALUE  AND&#xD;&#xA;((START_DATE BETWEEN @START_DATE AND @END_DATE ) OR &#xD;&#xA;(case when end_date is null then '12/31/9999' else end_date end BETWEEN @START_DATE AND @END_DATE))&#xD;&#xA;GROUP BY PERSON_ACCOUNT_ID">
+      <parameters>
+        <parameter ID="@PERSON_ACCOUNT_ID" sfwDataType="int" />
+        <parameter ID="@PABID" sfwDataType="int" />
+        <parameter ID="@BENEFICIARY_TYPE_VALUE" sfwDataType="string" />
+        <parameter ID="@START_DATE" sfwDataType="DateTime" />
+        <parameter ID="@END_DATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="CheckPrimaryBeneficiaryExistsNew" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_PERSON_ACCOUNT_BENEFICIARY WHERE&#xD;&#xA;PERSON_ACCOUNT_ID=@PERSON_ACCOUNT_ID  AND&#xD;&#xA;BENEFICIARY_TYPE_VALUE='PRIM'   AND&#xD;&#xA;((@START_DATE BETWEEN START_DATE AND ISNULL(END_DATE,'12/31/9999')) OR &#xD;&#xA;(@END_DATE BETWEEN START_DATE AND ISNULL(END_DATE,'12/31/9999')))&#xD;&#xA;GROUP BY PERSON_ACCOUNT_ID">
+      <parameters>
+        <parameter ID="@PERSON_ACCOUNT_ID" sfwDataType="int" />
+        <parameter ID="@START_DATE" sfwDataType="DateTime" />
+        <parameter ID="@END_DATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="CheckPrimaryBeneficiaryExistsUpdate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_PERSON_ACCOUNT_BENEFICIARY WHERE&#xD;&#xA;PERSON_ACCOUNT_ID=@PERSON_ACCOUNT_ID  AND&#xD;&#xA;BENEFICIARY_TYPE_VALUE='PRIM' AND&#xD;&#xA;PERSON_ACCOUNT_BENEFICIARY_ID != @PA_BENEFICIARY_ID   AND&#xD;&#xA;((@START_DATE BETWEEN START_DATE AND ISNULL(END_DATE,'12/31/9999')) OR &#xD;&#xA;(@END_DATE BETWEEN START_DATE AND ISNULL(END_DATE,'12/31/9999')))&#xD;&#xA;GROUP BY PERSON_ACCOUNT_ID">
+      <parameters>
+        <parameter ID="@PA_BENEFICIARY_ID" sfwDataType="int" />
+        <parameter ID="@PERSON_ACCOUNT_ID" sfwDataType="int" />
+        <parameter ID="@START_DATE" sfwDataType="DateTime" />
+        <parameter ID="@END_DATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="IsPersonAlreadyABeneficiaryNew" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_PERSON_BENEFICIARY&#xD;&#xA;WHERE BENEFICIARY_PERSON_ID=@BENEFICIARY_PERSON AND PERSON_ID=@PERSON_ID">
+      <parameters>
+        <parameter ID="@BENEFICIARY_PERSON" sfwDataType="int" />
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="IsPersonAlreadyABeneficiaryUpdate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_PERSON_BENEFICIARY&#xD;&#xA;WHERE BENEFICIARY_PERSON_ID=@BENEFICIARY_PERSON AND PERSON_ID=@PERSON_ID AND BENEFICIARY_ID != @BENEFICIARY_ID">
+      <parameters>
+        <parameter ID="@BENEFICIARY_PERSON" sfwDataType="int" />
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+        <parameter ID="@BENEFICIARY_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetBeneficiariesByPersonAccountNew" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_PERSON_ACCOUNT_BENEFICIARY WHERE&#xD;&#xA;PERSON_ACCOUNT_ID=@PERSON_ACCOUNT_ID AND&#xD;&#xA;BENEFICIARY_TYPE_VALUE=@BENEFICIARY_TYPE_VALUE  AND&#xD;&#xA;START_DATE &lt;= @END_DATE AND (END_DATE &gt;= @START_DATE OR END_DATE is NULL)">
+      <parameters>
+        <parameter ID="@PERSON_ACCOUNT_ID" sfwDataType="int" />
+        <parameter ID="@BENEFICIARY_TYPE_VALUE" sfwDataType="string" />
+        <parameter ID="@END_DATE" sfwDataType="DateTime" />
+        <parameter ID="@START_DATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="GetBeneficiariesByPersonAccountUpdate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_PERSON_ACCOUNT_BENEFICIARY WHERE&#xD;&#xA;PERSON_ACCOUNT_ID=@PERSON_ACCOUNT_ID AND PERSON_ACCOUNT_BENEFICIARY_ID!=@PABID  AND&#xD;&#xA;BENEFICIARY_TYPE_VALUE=@BENEFICIARY_TYPE_VALUE  AND&#xD;&#xA;START_DATE &lt;= @END_DATE AND (END_DATE &gt;=@START_DATE OR END_DATE is NULL)">
+      <parameters>
+        <parameter ID="@PERSON_ACCOUNT_ID" sfwDataType="int" />
+        <parameter ID="@PABID" sfwDataType="int" />
+        <parameter ID="@BENEFICIARY_TYPE_VALUE" sfwDataType="string" />
+        <parameter ID="@END_DATE" sfwDataType="DateTime" />
+        <parameter ID="@START_DATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="BeneficiaryId" sfwType="Column" sfwValue="beneficiary_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PersonId" sfwType="Column" sfwValue="person_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="BeneficiaryPersonId" sfwType="Column" sfwValue="beneficiary_person_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="BenificiaryOrgId" sfwType="Column" sfwValue="benificiary_org_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="FirstName" sfwType="Column" sfwValue="first_name" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="LastName" sfwType="Column" sfwValue="last_name" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="MiddleName" sfwType="Column" sfwValue="middle_name" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="DateOfBirth" sfwType="Column" sfwValue="date_of_birth" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="MaritalStatusDescription" sfwType="Description" sfwValue="marital_status_description" />
+    <attribute ID="MaritalStatusId" sfwType="Column" sfwValue="marital_status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="306" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="MaritalStatusValue" sfwType="Column" sfwValue="marital_status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="AddressLine1" sfwType="Column" sfwValue="address_line_1" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="60" />
+    <attribute ID="AddressLine2" sfwType="Column" sfwValue="address_line_2" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="60" />
+    <attribute ID="AddressCity" sfwType="Column" sfwValue="address_city" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="AddressStateDescription" sfwType="Description" sfwValue="address_state_description" />
+    <attribute ID="AddressStateId" sfwType="Column" sfwValue="address_state_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="150" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AddressStateValue" sfwType="Column" sfwValue="address_state_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="AddressCountryDescription" sfwType="Description" sfwValue="address_country_description" />
+    <attribute ID="AddressCountryId" sfwType="Column" sfwValue="address_country_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="151" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AddressCountryValue" sfwType="Column" sfwValue="address_country_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="ForeignProvince" sfwType="Column" sfwValue="foreign_province" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ForeignPostalCode" sfwType="Column" sfwValue="foreign_postal_code" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="10" />
+    <attribute ID="AddressZipCode" sfwType="Column" sfwValue="address_zip_code" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="5" />
+    <attribute ID="AddressZip4Code" sfwType="Column" sfwValue="address_zip_4_code" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="ContactPhoneNo" sfwType="Column" sfwValue="contact_phone_no" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="EmailAddress" sfwType="Column" sfwValue="email_address" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="RelationshipDescription" sfwType="Description" sfwValue="relationship_description" />
+    <attribute ID="RelationshipId" sfwType="Column" sfwValue="relationship_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="321" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="RelationshipValue" sfwType="Column" sfwValue="relationship_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="AddressValidateFlag" sfwType="Column" sfwValue="address_validate_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="AddressValidateError" sfwType="Column" sfwValue="address_validate_error" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="100" />
+    <attribute ID="SameAsMemberAddress" sfwType="Column" sfwValue="same_as_member_address" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="objBeneficiaryOrganization" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusBeneficiaryOrganization" />
+    <attribute sfwDataType="string" sfwType="Property" ID="BeneficiaryName" sfwValue="icdoPersonBeneficiary.beneficiary_name" />
+    <attribute ID="objPersonAccountBeneficiary" sfwType="Object" sfwEntity="entPersonAccountBeneficiary" sfwValue="ibusPersonAccountBeneficiary" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrIsAddressActive" sfwValue="icdoPersonBeneficiary.istrIsAddressActive" />
+    <attribute ID="objBenefitApplicationBeneficiary" sfwType="Object" sfwEntity="entBenefitApplicationBeneficiary" sfwValue="ibusBenefitApplicationBeneficiary" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrParentPage" sfwValue="istrParentPage" />
+    <attribute ID="objPerson" sfwType="Object" sfwEntity="entPerson" sfwValue="ibusPerson" />
+    <attribute sfwDataType="string" sfwType="Property" ID="SuppressWarning" sfwValue="icdoPersonBeneficiary.suppress_warning" />
+    <attribute sfwDataType="string" sfwType="Property" ID="BeneficiaryOrgCode" sfwValue="icdoPersonBeneficiary.beneficiary_org_code" />
+    <attribute sfwType="Collection" sfwEntity="entPersonAccountBeneficiary" ID="lstPersonAccountBeneficiary" sfwValue="iclbPersonAccountBeneficiary" />
+    <attribute sfwType="Collection" sfwEntity="entPersonBeneficiary" ID="lstOtherBeneficiaries" sfwValue="iclbOtherBeneficiaries" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IintDROApplicationID" sfwValue="iintDROApplicationID" />
+    <attribute sfwType="Collection" sfwEntity="entBenefitApplication" ID="lstBenefitApplicationForOtherBene" sfwValue="iclbBenefitApplicationForOtherBene" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IintBeneficiaryToPersonId" sfwValue="iintBeneficiaryToPersonId" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrBeneficiaryToName" sfwValue="istrBeneficiaryToName" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPlanName" sfwValue="istrPlanName" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPlanParticipationStatus" sfwValue="istrPlanParticipationStatus" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="IdtInitialPlanStartDate" sfwValue="idtInitialPlanStartDate" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="BeneficiaryDOB" sfwValue="icdoPersonBeneficiary.beneficiary_DOB" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrMSSPlanName" sfwValue="istrMSSPlanName" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrZipCode" sfwValue="icdoPersonBeneficiary.istrZipCode" />
+    <attribute ID="objBeneficiaryPerson" sfwType="Object" sfwEntity="entPerson" sfwValue="ibusBeneficiaryPerson" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrFirstPaymentDate" sfwValue="istrFirstPaymentDate" />
+    <attribute sfwDataType="string" sfwType="Property" ID="BeneficiaryAddressLine1" sfwValue="icdoPersonBeneficiary.beneficiary_address_line_1" />
+    <attribute sfwDataType="string" sfwType="Property" ID="BeneficiaryAddressLine2" sfwValue="icdoPersonBeneficiary.beneficiary_address_line_2" />
+    <attribute sfwDataType="string" sfwType="Property" ID="BeneficiaryCity" sfwValue="icdoPersonBeneficiary.beneficiary_city" />
+    <attribute sfwDataType="string" sfwType="Property" ID="BeneficiaryState" sfwValue="icdoPersonBeneficiary.beneficiary_state" />
+    <attribute sfwDataType="string" sfwType="Property" ID="BeneficiaryZip" sfwValue="icdoPersonBeneficiary.beneficiary_zip" />
+    <attribute sfwDataType="string" sfwType="Property" ID="BeneId" sfwValue="icdoPersonBeneficiary.bene_id" />
+    <attribute sfwDataType="string" sfwType="Property" ID="BeneficiaryStateAbbr" sfwValue="icdoPersonBeneficiary.beneficiary_state_abbr" />
+    <attribute sfwDataType="string" sfwType="Property" ID="BeneficiaryNameCaps" sfwValue="icdoPersonBeneficiary.beneficiary_name_caps" />
+    <attribute ID="lstBenefitApplicationBeneficiary" sfwType="Collection" sfwValue="iclbBenefitApplicationBeneficiary" sfwEntity="entBenefitApplicationBeneficiary" sfwPrivate="False" />
+    <attribute ID="IblnIsRecordSelectToGenerateCor" sfwDataType="bool" sfwPrivate="False" sfwValue="iblnIsRecordSelectToGenerateCor" sfwType="Property" />
+  </attributes>
+  <objectmethods>
+    <method ID="ReloadHandButtonData" sfwReturnType="ArrayList" />
+  </objectmethods>
+  <constraint />
+  <methods />
+  <lifecycle />
+</entity>

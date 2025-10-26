@@ -1,0 +1,93 @@
+﻿<div class="col-xs-12 padding-10 custom-settings-div">
+    <table class="table table-condensed table-hover table-fixedheader full-height">
+        <thead>
+            <tr>
+                <th width="2%"></th>
+                <th width="23%">Column Name</th>
+                <th width="25%">Description</th>
+                <th width="25%">Control Type</th>
+                <th width="25%">Is required</th>
+            </tr>
+        </thead>
+        <tbody class="cust-setting-tbody-max-height">
+            <tr ng-repeat-start="obj in objSettings.Elements track by $index" ng-click="selectedObjectfield(obj)" ng-class="objSettings.SelectedField == obj ?'div-grid-row selected':''">
+                <td width="2%">
+                    <div ng-class="obj.IsFieldVisibility?'callactivity-arrow-down':'callactivity-arrow-right'" ng-click="obj.IsFieldVisibility=!obj.IsFieldVisibility"></div>
+                </td>
+                <td width="23%">
+                    <span ng-bind="obj.dictAttributes.value"></span>
+                </td>
+                <td width="25%">
+                    <span ng-bind="obj.dictAttributes.Description"></span>
+                </td>
+                <td width="25%">
+                    <span ng-bind="obj.dictAttributes.ControlType"></span>
+                </td>
+                <td width="25%">
+                    <span ng-bind="obj.dictAttributes.IsRequired"></span>
+                </td>
+            </tr>
+            <tr ng-repeat-end ng-show="obj.IsFieldVisibility">
+                <td width="2%"></td>
+                <td colspan="4" width="98%">
+                    <div class="col-xs-12 div-border">
+                        <div class="col-xs-5">
+                            <div class="form-group">
+                                <label class="col-xs-4">Column Name :</label>
+                                <div class="col-xs-8">
+                                    <span ng-if="!obj.dictAttributes.value" class="cust-setting-span">!</span>
+                                    <input type="text" class="form-control input-sm cust-setting-textbox" title="{{obj.dictAttributes.value}}" ng-model="obj.dictAttributes.value" undoredodirective model="obj" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-4">Control Type :</label>
+                                <div class="col-xs-8">
+                                    <select ng-options="x for x in ControlTypes" class="form-control input-sm" title="{{obj.dictAttributes.ControlType}}" ng-model="obj.dictAttributes.ControlType" undoredodirective model="obj" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-4">Description :</label>
+                                <div class="col-xs-8">
+                                    <input type="text" class="form-control input-sm" title="{{obj.dictAttributes.Description}}" ng-model="obj.dictAttributes.Description" undoredodirective model="obj" />
+                                </div>
+                            </div>
+                            <div class="form-group" ng-hide="obj.dictAttributes.ControlType=='CheckBox'">
+                                <label class="col-xs-4">Is Required :</label>
+                                <div class="col-xs-8">
+                                    <input type="checkbox" ng-model="obj.dictAttributes.IsRequired" ng-true-value="'True'" ng-false-value="'False'" undoredodirective model="obj" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-7" ng-hide="getBoolValueForEnablingOrDisabling(obj)">
+                            <div class="panel panel-default div-border padding-0">
+                                <div class="panel-heading">
+                                    <div class="div-left-heading"><b>Value</b></div>
+                                    <div class="div-right-icons">
+                                        <a><img src="images/Common/icon_add_dark.svg" ng-click="AddValues(obj)"></a>
+                                        <a><img src="images/Common/icon_delete_dark.svg" ng-click="DeleteValues(obj,'Entity')" ng-disabled="!obj.SelectedValue"></a>
+                                    </div>
+                                </div>
+                                <div class="panel-body cust-setting-panel-body">
+                                    <table class="table table-condensed table-hover table-fixedheader full-height">
+                                        <thead>
+                                            <tr>
+                                                <th width="20%">ID</th>
+                                                <th width="80%" align="left">Description</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="height-90" ng-init="slectFirstObjectValue(obj)">
+                                            <tr ng-repeat="objvalues in obj.Elements" ng-click="selectedObjectValueIndex($index, obj, objvalues)" ng-class="obj.SelectedValue == objvalues ?'selected':''">
+                                                <td width="20%"><input type="text" class="form-control input-sm" title="{{objvalues.dictAttributes.Text}}" ng-model="objvalues.dictAttributes.Text" undoredodirective model="objvalues" ng-trim="false"/></td>
+                                                <td width="80%" align="left"><input type="text" class="form-control input-sm" title="{{objvalues.dictAttributes.Description}}" ng-model="objvalues.dictAttributes.Description" undoredodirective model="objvalues" /></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

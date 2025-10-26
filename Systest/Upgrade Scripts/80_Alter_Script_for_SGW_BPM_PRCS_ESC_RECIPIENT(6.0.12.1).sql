@@ -1,0 +1,40 @@
+------------------------------------------------------------------------------------------------------------------------ 
+--Created By	:	Siddharth Sabadra
+--Created On	:	30th June 2020
+--Description	:	Adding audit columns in  SGW_BPM_PRCS_ESC_RECIPIENT
+------------------------------------------------------------------------------------------------------------------------ 
+
+IF COL_LENGTH('dbo.SGW_BPM_PRCS_ESC_RECIPIENT', 'CREATED_BY') IS NULL
+BEGIN
+ALTER TABLE SGW_BPM_PRCS_ESC_RECIPIENT
+ADD CREATED_BY varchar(50) NOT NULL DEFAULT 'BPM Service'
+END
+GO
+
+IF COL_LENGTH('dbo.SGW_BPM_PRCS_ESC_RECIPIENT', 'CREATED_DATE') IS NULL
+BEGIN
+ALTER TABLE SGW_BPM_PRCS_ESC_RECIPIENT
+ADD CREATED_DATE datetime NOT NULL DEFAULT getdate()
+END
+GO
+
+IF COL_LENGTH('dbo.SGW_BPM_PRCS_ESC_RECIPIENT', 'MODIFIED_BY') IS NULL
+BEGIN
+ALTER TABLE SGW_BPM_PRCS_ESC_RECIPIENT
+ADD MODIFIED_BY varchar(50) NOT NULL DEFAULT 'BPM Service'
+END
+GO
+
+IF COL_LENGTH('dbo.SGW_BPM_PRCS_ESC_RECIPIENT', 'MODIFIED_DATE') IS NULL
+BEGIN
+ALTER TABLE SGW_BPM_PRCS_ESC_RECIPIENT
+ADD MODIFIED_DATE datetime NOT NULL DEFAULT getdate()
+END
+GO
+
+IF COL_LENGTH('dbo.SGW_BPM_PRCS_ESC_RECIPIENT', 'UPDATE_SEQ') IS NULL
+BEGIN
+ALTER TABLE SGW_BPM_PRCS_ESC_RECIPIENT
+ADD UPDATE_SEQ int NOT NULL DEFAULT 0
+END
+GO

@@ -1,0 +1,211 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<form ID="wfmRequirementLookup" sfwActive="True" sfwStatus="Valid" sfwRemoteObject="srvScout" sfwResource="802 " sfwType="Lookup" sfwTitle="Requirement Lookup" sfwMaxCount="8000" version="3.5" sfwEntity="entRequirement" sfwGridCollection="busRequirementLookup.iclbLookupResult">
+  <initialload>
+    <query ID="cdoRequirement" sfwQueryRef="entRequirement.Lookup" sfwMethodName="LoadRequirement" />
+    <query ID="cdoRequirement" sfwQueryRef="entRequirement.sqUseCaseFlow" sfwMethodName="LoadRequirement" />
+  </initialload>
+  <sfwTable ID="Main">
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlCriteria" sfwCaption="Criteria">
+          <sfwTable CssClass="Table" ID="tblCriteria">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel Text="Requirement Key :" sfwIsCaption="True" ID="capRequirementKey" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtRequirementKey" sfwDataField="requirement_key" sfwQueryID="cdoRequirement" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capRequirementTypeValue" Text="Type : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="lblRequirementTypeValue" sfwDataField="requirement_type_value" sfwQueryID="cdoRequirement" sfwTwoWayBinding="False" sfwLoadType="CodeGroup" sfwLoadSource="55" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel Text="Status :" sfwIsCaption="True" ID="capStatus" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlStatusValue" sfwDataField="a.status_value" sfwQueryID="cdoRequirement" sfwLoadType="CodeGroup" sfwLoadSource="35" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel Text="Description :" sfwIsCaption="True" ID="capDescription" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtRequirementDesc" sfwDataField="requirement_desc" sfwQueryID="cdoRequirement" Width="250px" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capCategoryValue" Text="Category : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn ColumnSpan="3">
+                <sfwDropDownList ID="ddlCategoryValue" sfwDataField="category_value" sfwOperator="like" sfwQueryID="cdoRequirement" Width="300px" sfwLoadType="CodeGroup" sfwLoadSource="56" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel Text="Usecase :" sfwIsCaption="True" ID="capUsecase" />
+              </sfwColumn>
+              <sfwColumn ColumnSpan="3">
+                <sfwDropDownList DataTextField="usecase_desc" DataValueField="usecase_id" ID="ddlUsecase1" sfwDataField="D.usecase_id" sfwOperator="=" sfwQueryID="cdoRequirement" Width="500px" sfwLoadType="Query" sfwLoadSource="entUsecase.Lookup" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capCreatedDateFrom" Text="Created Date From : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtCreatedDateFrom" sfwDataField="convert(datetime, convert(varchar(10), A.created_date, 101))" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="between" sfwQueryID="cdoRequirement" sfwRelatedControl="txtCreatedDateTo" />
+                <CompareValidator ControlToValidate="txtCreatedDateFrom" ErrorMessage="Created Date From must be in mm/dd/yyyy format." ID="valCreatedDateFrom" Operator="DataTypeCheck" Text="*" Type="Date" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capCreatedDateTo" Text="Created Date To : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtCreatedDateTo" sfwDataField="convert(datetime, convert(varchar(10), A.created_date, 101))" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="between" sfwQueryID="cdoRequirement" sfwRelatedControl="txtCreatedDateFrom" />
+                <CompareValidator ControlToValidate="txtCreatedDateTo" ErrorMessage="Created Date To must be in mm/dd/yyyy format." ID="valCreatedDateTo" Operator="DataTypeCheck" Text="*" Type="Date" />
+                <CompareValidator ControlToCompare="txtCreatedDateFrom" ControlToValidate="txtCreatedDateTo" ErrorMessage="Created Date To cannot be less than Created Date From." ID="valCreatedDateRange" Operator="GreaterThanEqual" Text="*" Type="Date" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="lblPilot" Text="Pilot :" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlPilot" sfwDataField="C.increment_value" sfwOperator="=" sfwQueryID="cdoRequirement" sfwLoadType="CodeGroup" sfwLoadSource="36" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnSearch" sfwMethodName="btnSearchCriteriaRequired_Click" Text="Search" />
+                <sfwButton ID="btnReset" sfwMethodName="btnReset_Click" Text="Reset" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwButton ID="btnStoreSearch" sfwMethodName="btnStoreUserDefaults_Click" Text="Store Search" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn>
+                <sfwTextBox sfwDataField="requirement_id" sfwQueryID="cdoRequirement" Visible="False" CssClass="hideControl" ID="txtRequirement_id" />
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlResult" sfwCaption="Search Result">
+          <sfwTable CssClass="Table" ID="tblResult">
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnNew" sfwActiveForm="wfmRequirementMaintenance" sfwMethodName="btnNew_Click" Text="New" />
+                <sfwButton ID="btnOpen" sfwActiveForm="wfmRequirementMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="aintRequirementId=RequirementId" sfwRelatedControl="dgrResult" Text="Open" sfwDisableViewOnly="True" />
+                <sfwButton ID="btnDelete" sfwMethodName="btnDelete_Click" sfwNavigationParameter="RequirementId" sfwRelatedControl="dgrResult" sfwResource="806" Text="Delete" />
+                <sfwButton ID="btnExportExcel" sfwMethodName="btnColumnsToExport_Click" sfwRelatedControl="dgrResult" Text="Export To Excel" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwGridView AllowPaging="True" AllowSorting="True" ID="dgrResult" sfwSelection="Many">
+                  <Columns>
+                    <TemplateField HeaderText="Requirement Id" Visible="False" sfwShowInExportToExcel="True">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="RequirementId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Requirement Key">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpen" sfwEntityField="RequirementKey" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Parent Requirement Key">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="ParentRequirementKey" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Requirement Type" Visible="False" sfwShowInExportToExcel="True">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="RequirementTypeDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Status">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="StatusDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Category" Visible="False" sfwShowInExportToExcel="True">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="CategoryDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Short Description">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="RequirementShortDesc" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Requirement Desc" Visible="False" sfwShowInExportToExcel="True">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="RequirementDesc" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Notes" Visible="False" sfwShowInExportToExcel="True">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="Notes" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Priority" Visible="False" sfwShowInExportToExcel="True">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="Priority" sfwShowZero="True" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Owner" Visible="False" sfwShowInExportToExcel="True">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="Owner" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Created By" Visible="False" sfwShowInExportToExcel="True">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="CreatedBy" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Created Date" Visible="False" sfwShowInExportToExcel="True">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="CreatedDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Modified By" Visible="False" sfwShowInExportToExcel="True">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="ModifiedBy" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Modified Date" Visible="False" sfwShowInExportToExcel="True">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="ModifiedDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+  </sfwTable>
+  <loaddetails />
+</form>

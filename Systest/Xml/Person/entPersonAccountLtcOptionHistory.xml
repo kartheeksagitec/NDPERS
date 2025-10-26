@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entPersonAccountLtcOptionHistory" sfwActive="True" sfwStatus="Review" sfwType="BusinessRule" sfwMainCDO="icdoPersonAccountLtcOptionHistory" sfwObjectID="busPersonAccountLtcOptionHistory" sfwTableName="sgt_person_account_ltc_option_history" sfwView="False">
+  <rules />
+  <delete />
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror />
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <queries>
+    <query ID="LoadLtcHistory" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select A.* from SGT_PERSON_ACCOUNT_LTC_OPTION_HISTORY A &#xD;&#xA;left join SGT_PERSON_ACCOUNT_LTC_OPTION B ON A.PERSON_ACCOUNT_LTC_OPTION_ID=B.PERSON_ACCOUNT_LTC_OPTION_ID&#xD;&#xA;Where B.PERSON_ACCOUNT_ID=@PERSONACCOUNTID &#xD;&#xA;ORDER BY PERSON_ACCOUNT_LTC_OPTION_HISTORY_ID DESC">
+      <parameters>
+        <parameter ID="@PERSONACCOUNTID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="UpdateReportGeneratedFlag" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="&#xD;&#xA;UPDATE SGT_PERSON_ACCOUNT_LTC_OPTION_HISTORY SET IS_ENROLLMENT_REPORT_GENERATED = 'N'&#xD;&#xA;WHERE PERSON_ACCOUNT_LTC_OPTION_HISTORY_ID IN&#xD;&#xA;(&#xD;&#xA; SELECT TOP 1 PERSON_ACCOUNT_LTC_OPTION_HISTORY_ID FROM SGT_PERSON_ACCOUNT_LTC_OPTION_HISTORY &#xD;&#xA; WHERE PERSON_ACCOUNT_LTC_OPTION_ID = @LTC_OPTION_ID&#xD;&#xA; ORDER BY 1 DESC&#xD;&#xA;)">
+      <parameters>
+        <parameter ID="@LTC_OPTION_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="UpdatePreviousEnrolledFlag" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="UPDATE SGT_PERSON_ACCOUNT_LTC_OPTION_HISTORY SET IS_ENROLLMENT_REPORT_GENERATED = 'Y'&#xD;&#xA;WHERE PERSON_ACCOUNT_LTC_OPTION_HISTORY_ID IN&#xD;&#xA;(&#xD;&#xA; SELECT TOP 1 PERSON_ACCOUNT_LTC_OPTION_HISTORY_ID FROM SGT_PERSON_ACCOUNT_LTC_OPTION_HISTORY &#xD;&#xA; WHERE PERSON_ACCOUNT_LTC_OPTION_ID = @LTC_OPTION_ID AND PLAN_PARTICIPATION_STATUS_VALUE = 'ENL2'&#xD;&#xA; ORDER BY 1 DESC&#xD;&#xA;)">
+      <parameters>
+        <parameter ID="@LTC_OPTION_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="PersonAccountLtcOptionHistoryId" sfwType="Column" sfwValue="person_account_ltc_option_history_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PersonAccountLtcOptionId" sfwType="Column" sfwValue="person_account_ltc_option_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StartDate" sfwType="Column" sfwValue="start_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="EndDate" sfwType="Column" sfwValue="end_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="PlanParticipationStatusDescription" sfwType="Description" sfwValue="plan_participation_status_description" />
+    <attribute ID="PlanParticipationStatusId" sfwType="Column" sfwValue="plan_participation_status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="337" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PlanParticipationStatusValue" sfwType="Column" sfwValue="plan_participation_status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="StatusDescription" sfwType="Description" sfwValue="status_description" />
+    <attribute ID="StatusId" sfwType="Column" sfwValue="status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="336" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusValue" sfwType="Column" sfwValue="status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="FromPersonAccountId" sfwType="Column" sfwValue="from_person_account_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ToPersonAccountId" sfwType="Column" sfwValue="to_person_account_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="SuppressWarningsFlag" sfwType="Column" sfwValue="suppress_warnings_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="SuppressWarningsBy" sfwType="Column" sfwValue="suppress_warnings_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="SuppressWarningsDate" sfwType="Column" sfwValue="suppress_warnings_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="PlanOptionStatusDescription" sfwType="Description" sfwValue="plan_option_status_description" />
+    <attribute ID="PlanOptionStatusId" sfwType="Column" sfwValue="plan_option_status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="340" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PlanOptionStatusValue" sfwType="Column" sfwValue="plan_option_status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="LtcRelationshipDescription" sfwType="Description" sfwValue="ltc_relationship_description" />
+    <attribute ID="LtcRelationshipId" sfwType="Column" sfwValue="ltc_relationship_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="338" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="LtcRelationshipValue" sfwType="Column" sfwValue="ltc_relationship_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="LtcInsuranceTypeDescription" sfwType="Description" sfwValue="ltc_insurance_type_description" />
+    <attribute ID="LtcInsuranceTypeId" sfwType="Column" sfwValue="ltc_insurance_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="339" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="LtcInsuranceTypeValue" sfwType="Column" sfwValue="ltc_insurance_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="LevelOfCoverageDescription" sfwType="Description" sfwValue="level_of_coverage_description" />
+    <attribute ID="LevelOfCoverageId" sfwType="Column" sfwValue="level_of_coverage_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="408" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="LevelOfCoverageValue" sfwType="Column" sfwValue="level_of_coverage_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="EffectiveStartDate" sfwType="Column" sfwValue="effective_start_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="EffectiveEndDate" sfwType="Column" sfwValue="effective_end_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="PersonId" sfwType="Column" sfwValue="person_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ProviderOrgId" sfwType="Column" sfwValue="provider_org_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ReasonDescription" sfwType="Description" sfwValue="reason_description" />
+    <attribute ID="ReasonId" sfwType="Column" sfwValue="reason_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="332" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ReasonValue" sfwType="Column" sfwValue="reason_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="IsEnrollmentReportGenerated" sfwType="Column" sfwValue="is_enrollment_report_generated" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwDefaultValue="N" sfwLength="1" />
+    <attribute ID="objPlan" sfwType="Object" sfwEntity="entPlan" sfwValue="ibusPlan" />
+  </attributes>
+</entity>

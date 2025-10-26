@@ -1,0 +1,67 @@
+﻿<entity ID="entSolBpmRequest" sfwActive="True" sfwStatus="Review" sfwType="BusinessRule" sfwMainCDO="icdoBpmRequest" sfwObjectID="busSolBpmRequest" sfwParentEntity="entBpmRequest">
+  <reference />
+  <conditionlist />
+  <compoundconditionlist />
+  <rulelist />
+  <harderror>
+    <item ID="Rule - Is Person ID or Org ID Not Entered" sfwStatus="Active" sfwMode="All" />
+  </harderror>
+  <groupslist />
+  <aliaslist />
+  <softerror />
+  <validatedelete />
+  <delete>
+    <property ID="lstBpmRequestParameter" sfwMethodName="LoadBpmRequestParameters" />
+  </delete>
+  <updateablecdo />
+  <initialload>
+    <item ID="Visible Rule - Show Reinitiate Button" sfwStatus="Active" sfwMode="All" />
+    <item ID="Visible Rule - PersonID and PersonName" sfwMode="All" sfwStatus="Active" />
+    <item ID="Visible Rule - OrgID and OrgName" sfwMode="All" sfwStatus="Active" />
+    <item ID="Visible Rule - DocType and EcmGuid" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <checklist />
+  <commonproperties />
+  <expressionfields />
+  <logicalrulelist />
+  <rules>
+    <rule ID="Rule - Is Person ID or Org ID Not Entered" sfwRuleType="Validation" sfwExpression="(this.icdoBpmRequest.person_id == 0 &amp;&amp; this.icdoBpmRequest.org_id == 0)" sfwMessageId="20007031" sfwObjectBased="True" />
+    <rule ID="Visible Rule - Show Reinitiate Button" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.icdoBpmRequest.status_value == &quot;RETR&quot;" />
+    <rule ID="Visible Rule - PersonID and PersonName" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.icdoBpmRequest.person_id&gt;0)" />
+    <rule ID="Visible Rule - OrgID and OrgName" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.icdoBpmRequest.org_id&gt;0)" />
+    <rule ID="Visible Rule - DocType and EcmGuid" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.icdoBpmRequest.source_value == &quot;INDX&quot;" />
+  </rules>
+  <constraint />
+  <queries />
+  <ExtraFields />
+  <methods>
+    <method ID="FindBpmRequest" sfwMethodType="Load" sfwMode="All" sfwLoadMainObject="True" sfwParameter="aintPrimaryKey">
+      <parameter ID="aintPrimaryKey" sfwDataType="int" />
+      <item ID="LoadOrganization" sfwDataType="Void" sfwItemType="Method" />
+      <item ID="LoadPerson" sfwDataType="Void" sfwItemType="Method" />
+      <item ID="LoadBpmProcess" sfwDataType="Void" sfwItemType="Method" />
+      <item ID="LoadBpmRequestParameters" sfwDataType="Void" sfwItemType="Method" />
+      <item ID="lstAttachedDocumentsProcessInstances" sfwParameter="@REQUEST_ID" sfwItemType="Collection" sfwLoadType="Query" sfwLoadSource="entSolBpmProcessInstance.LoadProcessInstancesForDocument" />
+      <parameter ID="REQUEST_ID" sfwDataType="int" />
+    </method>
+    <method ID="NewBpmRequest" sfwMethodType="Load" sfwMode="New">
+      <item ID="NewBpmRequest" sfwDataType="Void" sfwItemType="Method" />
+      <item ID="lstBpmRequestParameter" sfwItemType="Collection" sfwLoadType="None" />
+    </method>
+  </methods>
+  <lifecycle />
+  <attributes>
+    <attribute ID="IstrOrgCode" sfwDataType="string" sfwValue="istrOrgCode" sfwType="Property" />
+  </attributes>
+  <objectmethods>
+    <method ID="InitializeScanDocumentReceivedProcess" sfwReturnType="ArrayList" />
+    <method ID="InitializeProcess" sfwReturnType="ArrayList" />
+    <method ID="ReInitiateRequest" sfwReturnType="ArrayList" />
+    <method ID="LoadOrganization" sfwReturnType="Void" />
+    <method ID="LoadPerson" sfwReturnType="Void" />
+    <method ID="LoadBpmProcess" sfwReturnType="Void" />
+    <method ID="NewBpmRequest" sfwReturnType="Void" />
+    <method ID="LoadRequestParametersForOnlineInitiation" sfwReturnType="ArrayList" />
+    <method ID="LoadProcessInstance" sfwReturnType="Void" />
+  </objectmethods>
+</entity>

@@ -1,0 +1,123 @@
+﻿<form ID="wfmESSDeathNoticeMaintenance" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2009" sfwType="FormLinkMaintenance" sfwTitle="Report a Death Maintenance" version="3.5" sfwEntity="entContactTicket" sfwTemplate="ESSDeathNoticeMaintenance.html" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmESSDeathNoticeLookup" sfwFormObjectType="None" isBasedOnWfm="true" sfwDefaultButtonID="btnSave">
+  <initialload>
+    <callmethods sfwMode="New" sfwMethodName="NewESSDeathNotice" />
+    <callmethods sfwMode="Update" sfwMethodName="FindESSDeathNotice" />
+  </initialload>
+  <items>
+    <sfwTable ID="Main" />
+    <sfwPanel ID="pnlHeader" sfwCollapsible="False" sfwDataField="icdoPerson.person_id" sfwCaption="pnlHeader">
+      <items>
+        <sfwTable ID="tblN" />
+        <sfwLiteral ID="ltrlReportaDeath " Text="Report a Death " />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnltoolbar" Visible="False">
+      <items>
+        <sfwTable ID="toolbar" />
+        <sfwButton ID="btnPrev" sfwMethodName="btnPrev_Click" Text="Prev" />
+        <sfwButton ID="btnNext" sfwMethodName="btnNext_Click" Text="Next" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlMain" sfwCaption="Report a Death">
+      <items>
+        <sfwTable ID="tblMain" />
+        <sfwLabel ID="capContactTicketId" Text="Ticket Number : " sfwIsCaption="True" />
+        <sfwLabel ID="lblContactTicketId" sfwEntityField="ContactTicketId" />
+        <sfwLabel ID="capStatusDescription" Text="Ticket Status : " sfwIsCaption="True" />
+        <sfwLabel ID="lblStatusDescription" sfwEntityField="StatusDescription" />
+        <sfwLabel ID="lblLabel13" SkinID="ReqInformation" Text="*" sfwIsCaption="True" />
+        <sfwLabel ID="lblLabel7" Text="PERSLink ID :" sfwIsCaption="True" />
+        <sfwTextBox ID="txtPersonId" sfwRetrievalControls="lblDeasedPersonName=icdoPerson.FullName;lblisEnrolledinRetrPlan=icdoPerson.iblnIsPersonEnrolledInRetirementPlan" sfwParameters="AintPersonID=txtPersonId" sfwRetrievalMethod="GetPersonNameByPersonID" sfwAfterRetrievalScriptMethod="CheckIsPersonEnrolledInRetirementPlan" sfwEntityField="objDeathNotice.PerslinkId" sfwValidationRules="IsDeceasedPerslinkIdIsValid;IsDeceasedPERSLinkIdNotEntered;Rule check Employee Not working in Org" />
+        <sfwImageButton ID="btnRetrieve" ImageAlign="AbsMiddle" ImageUrl="~/Image/Lookup1.jpg" sfwActiveForm="wfmESSPersonLookup" sfwMethodName="btnRetrieve_Click" sfwRelatedControl="txtPersonId" sfwSelectedIndex="PersonId" />
+        <sfwLabel ID="lblLabel3" Text="Deceased Employee Name :" sfwIsCaption="True" />
+        <sfwLabel ID="lblDeasedPersonName" sfwEntityField="objDeathNotice.DeceasedName" />
+        <sfwLabel ID="lblLabel5" SkinID="ReqInformation" Text="*" sfwIsCaption="True" />
+        <sfwLabel ID="capDeathDate" Text="Date of Death : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtDeathDate" sfwDataFormat="{0:d}" sfwEntityField="objDeathNotice.DeathDate" sfwValidationRules="RULE CHECK IF DATE OF DEATH IS NULL;Rule check id date of death is past date" />
+        <sfwLabel ID="lblAstrikRegularPayCheck" SkinID="ReqInformation" Text="*" sfwIsCaption="True" />
+        <sfwLabel ID="lblLastDateOfRegularPayCheck" Text="Date of Last Regular Paycheck : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtLastDateOfRegularPayCheck" sfwDataFormat="{0:d}" sfwEntityField="objDeathNotice.LastRegularPaycheckDate" sfwValidationRules="Check Last Regular Paycheck Date" />
+        <sfwLabel ID="lblNote1" Text=" Note: A Regular Paycheck is a payroll check for regular hours (no overtime). Checks for lump sum payouts of annual/personal leave or sick lieave are &lt;u&gt;not&lt;/u&gt; considered in determining a regular paycheck." sfwWrap="True" sfwIsCaption="True" />
+        <sfwLabel ID="lblAstrikLastReportingMonth" SkinID="ReqInformation" Text="*" sfwIsCaption="True" />
+        <sfwLabel ID="lblLastReportingMonthForRetrPlan" Text="Last Reporting Month for Retirement Contributions : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtLastReportingMonthForRetrPlan" sfwDataFormat="{0:MM/YYYY}" sfwEntityField="objDeathNotice.ReportingMonth" sfwValidationRules="Check Last Reporting month is null" />
+        <sfwLabel ID="lblNote2" Text="Note:  This is the last month you will report employee's FINAL retirement contributions." sfwIsCaption="True" />
+        <sfwLabel ID="lblLabel8" SkinID="ReqInformation" Text="*" sfwIsCaption="True" />
+        <sfwLabel ID="capContactName" Text="Contact Name : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtContactName" sfwEntityField="objDeathNotice.ContactName" sfwValidationRules="RULE CHECK IF CONTACT NAME IS NULL" />
+        <sfwLabel ID="lblLabel12" SkinID="ReqInformation" Text="*" sfwIsCaption="True" />
+        <sfwLabel ID="capContactAddress" Text="Contact Address : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtContactAddress" sfwEntityField="objDeathNotice.ContactAddress" sfwValidationRules="RULE CHECK IF CONTACT ADDRESS IS NULL;Rule check if Address Is not valid" />
+        <sfwLabel ID="lblLabel9" SkinID="ReqInformation" Text="*" sfwIsCaption="True" />
+        <sfwLabel ID="capContactCity" Text="Contact City : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtContactCity" sfwEntityField="objDeathNotice.ContactCity" sfwValidationRules="RULE CHECK IF CONTACT CITY IS NULL" />
+        <sfwLabel ID="lblLabel16" SkinID="ReqInformation" Text="*" sfwIsCaption="True" />
+        <sfwLabel ID="capContactStateValue" Text="Contact State : " sfwDefaultValue="ND" sfwIsCaption="True" />
+        <sfwDropDownList ID="ddlContactStateValue" sfwDefaultValue="ND" sfwLoadType="CodeGroup" sfwLoadSource="150" sfwEntityField="objDeathNotice.ContactStateValue" sfwValidationRules="RULE CHECK IF CONTACT STATE IS BLANK" />
+        <sfwLabel ID="lblLabel10" SkinID="ReqInformation" Text="*" sfwIsCaption="True" />
+        <sfwLabel ID="capContactZip" Text="Contact Zip : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtContactZip" Width="45px" sfwEntityField="objDeathNotice.ContactZip" sfwValidationRules="RULE CHECK IF CONTACT ZIP IS NULL" />
+        <sfwLiteral ID="ltrLiteral" Text=" - " />
+        <sfwTextBox ID="txtContactZip4" Width="35px" sfwEntityField="objDeathNotice.ContactZip4Code" />
+        <sfwLabel ID="lblLabel11" SkinID="ReqInformation" Text="*" sfwIsCaption="True" />
+        <sfwLabel ID="capContactPhone" Text="Contact Daytime Phone Number : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtContactPhone" sfwDataFormat="{0:(###)###-####}" Width="130px" sfwEntityField="objDeathNotice.ContactPhone" sfwValidationRules="RULE CHECK IF CONTACT PHONE IS NULL;Check If Contact Phone Number is Valid" />
+        <sfwLabel ID="lblLabel" Text="Ignore the warning and update the address?" sfwIsCaption="True" />
+        <sfwCheckBox ID="chkCheckBox" sfwDefaultValue="N" sfwEntityField="IstrSuppressWarning" />
+        <sfwLabel ID="lblisEnrolledinRetrPlan" sfwEntityField="objDeathNotice.IblnIsPersonEnrolledInRetirementPlan" CssClass="hideControl" />
+        <sfwButton ID="btnSave" sfwMethodName="btnSave_Click" sfwNavigationParameter="aintContactTicketId=ContactTicketId" Text="Save" sfwMessageId="10394" OnClientClick="TriggerChange()" sfwMode="New" />
+        <sfwButton ID="btnCancel" sfwMethodName="btnCancel_Click" Text="Refresh" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlHistory" sfwCaption="History">
+      <items>
+        <sfwTable ID="tblAuditInfo" />
+        <sfwButton ID="btnButton" sfwActiveForm="wfmESSViewDeathNoticeMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="aintContactTicketId=ContactTicketId" sfwRelatedControl="grvDeathNotices" Text="Open" />
+        <sfwGridView ID="grvDeathNotices" AllowPaging="True" AllowSorting="True" sfwSelection="Many" sfwEntityField="lstESSDeathNotices" sfwGridEntity="entContactTicket">
+          <Columns>
+            <TemplateField HeaderText=" Ticket Number">
+              <ItemTemplate>
+                <sfwLabel sfwLinkable="True" sfwRelatedControl="btnButton" sfwEntityField="ContactTicketId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Contact Type">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="ContactTypeDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="PERSLink ID">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objDeathNotice.PerslinkId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Employee Name">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objDeathNotice.DeceasedName" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Submitted Date">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="CreatedDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Ticket Status">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="StatusDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Created By">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="CreatedBy" />
+              </ItemTemplate>
+            </TemplateField>
+          </Columns>
+        </sfwGridView>
+      </items>
+    </sfwPanel>
+  </items>
+  <loaddetails>
+    <entityfield ID="objDeathNotice" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstESSDeathNotices" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+  </loaddetails>
+  <ExtraFields />
+</form>

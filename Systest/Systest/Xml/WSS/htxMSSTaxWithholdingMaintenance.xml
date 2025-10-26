@@ -1,0 +1,309 @@
+﻿<form ID="wfmMSSTaxWithholdingMaintenance" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2001" sfwType="FormLinkMaintenance" sfwTitle="Tax Withholding Maintenance" version="3.5" sfwEntity="entMSSTaxWithholding" sfwTemplate="MSSTaxWithholdingMaintenance.html" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmMSSTaxWithholdingLookup" sfwFormObjectType="None" isBasedOnWfm="true">
+  <initialload>
+    <callmethods sfwMethodName="NewMSSTaxWithholding" />
+  </initialload>
+  <items>
+    <sfwTable ID="Main" />
+    <sfwLabel ID="lblPayeeAccId" sfwEntityField="PayeeAccountId" CssClass="hideControl" />
+    <sfwButton ID="btnGoBackToCompletionPage" sfwMethodName="btnOpen_Click" sfwActiveForm="wfmMSSTaxWithholdingCompletionMaintenance" sfwNavigationParameter="aintPayeeAccountId=PayeeAccountId" CssClass="hideControl" />
+    <sfwButton ID="btnGoBackToParentPage" sfwMethodName="btnOpen_Click" sfwActiveForm="wfmMSSTaxWithholdingInformationMaintenance" sfwNavigationParameter="aintPayeeAccountId=PayeeAccountId" CssClass="hideControl" />
+    <sfwPanel ID="pnlHeading" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblHeading" />
+        <sfwLiteral Text="Tax Withholding Maintenance" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnltoolbar">
+      <items>
+        <sfwTable ID="toolbar" />
+        <sfwImageButton ID="btnBack" ImageAlign="AbsMiddle" ImageUrl="~/Images/back.gif" sfwMethodName="btnBack_Click" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlMonthlyBenefit" sfwCaption="Tax Withholding" sfwVisibleRule="VisibleRuleIsBenefitDistributionTypeMonthlyBenefit">
+      <items>
+        <sfwTable ID="tblMonthlyBenefit" />
+        <sfwLabel ID="lblLiteral" sfwVisibleRule="VisibleRuleIsTaxIdentifierFedTax" Text="For income tax purposes, the amount of withholding is based on the marital status and the number of allowances (including zero) you indicate.  If you wish to change your income tax election, please complete the Marital Status, Tax Allowance, and Tax Option fields.  If you select the Tax Option of “Based on IRS Table and Additional Tax” you must also complete the Additional Tax Amount field.  The additional tax amount will be added to the calculated income tax based on your Marital Status and Tax Allowance." sfwIsCaption="True" />
+        <sfwLabel ID="lblLabel" sfwVisibleRule="VisibleRuleIsTaxIdentifierStateTax" Text="For income tax purposes, the amount of withholding is based on the marital status and the number of allowances (including zero) you indicate.  If you wish to change your income tax election, please complete the Marital Status, Tax Allowance, and Tax Option fields.  If you select the Tax Option of “Based on State Table and Additional Tax” you must also complete the Additional Tax Amount field.  The additional tax amount will be added to the calculated income tax based on your Marital Status and Tax Allowance." sfwIsCaption="True" />
+        <sfwLabel ID="capSuppressWarningsFlag" Text="Suppress Warnings : " Visible="False" sfwIsCaption="True" />
+        <sfwCheckBox ID="chkMonthlybenefitSuppressWarning" sfwDefaultValue="N" Visible="False" sfwEntityField="MonthlybenefitSuppressWarning" />
+        <sfwLabel ID="capStateMaritalStatusValue" Text="Marital Status : " sfwIsCaption="True" />
+        <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlStateMaritalStatusValue" sfwLoadType="Query" sfwLoadSource="entFedStateTaxRate.LoadMaritalStatusForPaymentTaxRates" sfwEntityField="MaritalStatusValue" sfwValidationRules="IsFedTaxBsedOnIRSOrAdditional" />
+        <sfwLabel ID="capTaxOptionValue2" Text="Tax Option : " sfwIsCaption="True" />
+        <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlMonthlyBenefitTaxOption" sfwLoadType="Method" sfwLoadSource="LoadTaxOptionBasedOnTaxIdentifier" sfwEntityField="MonthlyBenefitTaxOption" sfwValidationRules="IsTaxOptionNull" />
+        <sfwLabel ID="capStateTaxAllowance" Text="Tax Allowance : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtNoOfTaxAllowance" sfwDataType="Numeric" sfwEntityField="NoOfTaxAllowance" sfwValidationRules="IsTaxRecordValid" />
+        <sfwLabel ID="capAdditionalStateTaxAmount" Text="Additional Tax Amount : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtAdditionalStateTaxAmount" sfwDataFormat="{0:C}" sfwEntityField="AdditionalTaxAmount" sfwValidationRules="IsAdditionalTaxAmountEnteredandFedTaxOptionNotIRSAndAddional" />
+        <sfwLabel ID="lblreq1" SkinID="ReqInformation" Text="*&amp;nbsp;" sfwIsCaption="True" />
+        <sfwLabel ID="capStartDate" Text="Start Date : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtStartDate" sfwDataFormat="{0:d}" sfwEntityField="StartDate" sfwValidationRules="IsStartDatePastDate;IsStartDateNotValid;IsStartDateNull" />
+        <sfwLabel ID="capEndDate" Text="End Date : " Visible="False" sfwIsCaption="True" />
+        <sfwTextBox ID="txtEndDate" sfwDataFormat="{0:d}" Visible="False" sfwEntityField="EndDate" />
+        <sfwLabel AssociatedControlID="lblIdecTaxAmount" ID="capIdecTaxAmount" Text="Tax Amount : " sfwIsCaption="True" />
+        <sfwLabel ID="lblIdecTaxAmount" sfwDataFormat="{0:C}" sfwEntityField="IdecTaxAmount" />
+        <sfwLabel ID="lblPayeeAccountId" Visible="False" />
+        <sfwLabel ID="lblPayeeAccountTaxWithholdingId" Visible="False" sfwEntityField="PayeeAccountTaxWithholdingId" />
+        <sfwLabel ID="lblLiteral1" Text="&lt;font color=&quot;red&quot;&gt;To estimate your new withholding amount, select the &quot;Estimate Tax&quot; button and view results in the Estimated Tax panel below. To save and update your withholding election, select the &quot;Update Federal Tax&quot; button after you have estimated your tax.&lt;/font&gt;" sfwIsCaption="True" />
+        <sfwButton ID="btnSave" sfwMethodName="btnSave_Click" sfwNavigationParameter="Aintpayeeaccountid=PayeeAccountId" Text="Save" sfwExecuteAfterSuccess="btnBack" />
+        <sfwButton ID="btnCalculate1" sfwMethodName="btnValidateExecuteBusinessMethod_Click" sfwObjectMethod="btnMSSCalculateTax" Text="Estimate Tax" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlCurrentTaxElection" sfwVisibleRule="VisibleRuleIsMonthlyBenefitForNewFDSTTax">
+      <items>
+        <sfwLabel ID="lblPayeeAccountId" Visible="False" />
+        <sfwLabel ID="lblMwpTaxWithholdingId" Visible="False" />
+        <sfwLabel ID="lblPersonAddStateValue" Visible="False" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlNewfederalelection" sfwCaption="Federal Withholding" sfwVisibleRule="VisibleRuleIsMonthlyBenefitForNewFDSTTax">
+      <items>
+        <sfwPanel ID="pnlNewfederalelection" sfwCaption="New Federal Withholding Elections">
+          <items>
+            <sfwLabel ID="capName" AssociatedControlID="lblName" sfwIsCaption="True" />
+            <sfwLabel ID="lblName" sfwEntityField="objPayeeAccount.objPayee.IstrFirstNameMiddleInitial" />
+            <sfwLabel ID="capLastName" AssociatedControlID="lblLastName" sfwIsCaption="True" />
+            <sfwLabel ID="lblLastName" sfwEntityField="objPayeeAccount.objPayee.LastName" />
+            <sfwLabel ID="capSSN" sfwIsCaption="True" />
+            <sfwLabel ID="lblSSNFormat" sfwEntityField="objPayeeAccount.objPayee.IstrScrambledSSN" sfwDataFormat="{0:000-##-####}" />
+            <sfwLabel ID="capAddress" AssociatedControlID="lblAddress" sfwIsCaption="True" />
+            <sfwLabel ID="lblAddress" sfwEntityField="objPayeeAccount.objPayee.objPersonCurrentAddress.IstrPersonAddress" />
+            <sfwLabel ID="capCityStateZip" AssociatedControlID="lblCityStateZip" sfwIsCaption="True" />
+            <sfwLabel ID="lblCityStateZip" sfwEntityField="objPayeeAccount.objPayee.objPersonCurrentAddress.IstrCityStateZIPAddress" />
+            <sfwLabel ID="capFederalMaritalStatusValue" AssociatedControlID="ddlFederalMaritalStatusValue" sfwIsCaption="True" />
+            <sfwRadioButtonList ID="rblFederalFilingStatusValue" sfwEntityField="FilingStatusValue" sfwLoadType="CodeGroup" sfwLoadSource="7033" DataTextField="description" DataValueField="code_value" />
+            <sfwLiteral ID="ltrLieralaccoutndetails" />
+            <sfwLiteral ID="ltrLiteralStep2" sfwMode="All" />
+            <sfwLabel ID="capAnnualTaxablePaymentAmt" AssociatedControlID="txtAnnualTaxablePaymentAmt" sfwIsCaption="True" />
+            <sfwTextBox ID="txtAnnualTaxablePaymentAmt" sfwDataFormat="{0:C}" sfwEntityField="TwoBI" />
+            <sfwLabel ID="capPensionAnnuityAmt" AssociatedControlID="txtPensionAnnuityAmt" sfwIsCaption="True" />
+            <sfwTextBox ID="txtPensionAnnuityAmt" sfwDataFormat="{0:C}" sfwEntityField="TwoBIi" />
+            <sfwLabel ID="capTotalTaxablePensionAmount" AssociatedControlID="lblTotalTaxablePensionAmount" sfwIsCaption="True" />
+            <sfwTextBox ID="txtTotalTaxablePensionAmount" sfwDataFormat="{0:C}" sfwEntityField="TwoBIii" />
+            <sfwLabel ID="lblStepTwoTip" sfwEntityField="StepTwoTip" sfwRenderType="RichText" />
+            <sfwLiteral ID="ltrLiteralStep3" sfwMode="All" />
+            <sfwLabel ID="lblToatlincomeText" sfwEntityField="ThreeFirstLine" />
+            <sfwLabel ID="capQualifyingChildrenAmt" AssociatedControlID="txtQualifyingChildrenAmt" sfwEntityField="ThreeSecondLine" />
+            <sfwTextBox ID="txtQualifyingChildrenAmt" sfwDataFormat="{0:C}" sfwEntityField="Three1" />
+            <sfwLabel ID="capOtherDependentsAmt" AssociatedControlID="txtOtherDependentsAmt" sfwEntityField="ThreeThirdLine" />
+            <sfwTextBox ID="txtOtherDependentsAmt" sfwDataFormat="{0:C}" sfwEntityField="Three2" />
+            <sfwLabel ID="capForeignEducationTaxCreditAmt" AssociatedControlID="txtForeignEducationTaxCreditAmt" sfwIsCaption="True" />
+            <sfwTextBox ID="txtForeignEducationTaxCreditAmt" sfwDataFormat="{0:C}" sfwEntityField="Three3" />
+            <sfwLabel ID="capTotalClaimDependentAmount" AssociatedControlID="txtTotalClaimDependentAmount" sfwIsCaption="True" />
+            <sfwTextBox ID="txtTotalClaimDependentAmount" sfwDataFormat="{0:C}" sfwEntityField="ThreeTotal" />
+            <sfwLabel ID="ltrLabel" />
+            <sfwLiteral ID="ltrLiteralStep4" sfwMode="All" />
+            <sfwLabel ID="capOtherIncomeAmt" AssociatedControlID="txtOtherIncomeAmt" sfwIsCaption="True" />
+            <sfwLabel ID="capOtherDeductionAmt" AssociatedControlID="txtOtherDeductionAmt" sfwIsCaption="True" />
+            <sfwLabel ID="capFederalAdditionalWithholdingAmt" AssociatedControlID="txtFederalAdditionalWithholdingAmt" sfwIsCaption="True" />
+            <sfwTextBox ID="txtOtherIncomeAmt" sfwDataFormat="{0:C}" sfwEntityField="FourA" />
+            <sfwTextBox ID="txtOtherDeductionAmt" sfwDataFormat="{0:C}" sfwEntityField="FourB" />
+            <sfwTextBox ID="txtFederalAdditionalWithholdingAmt" sfwDataFormat="{0:C}" sfwEntityField="FourC" />
+            <sfwLabel ID="capFederalFixedWithholdingAmt" AssociatedControlID="txtFederalFixedWithholdingAmt" sfwIsCaption="True" Visible="False" />
+            <sfwCheckBox ID="chkW4PFederalNoWithholdingFlag" sfwEntityField="NoFedWithholding" />
+            <sfwCheckBox ID="chkW4PFederalNoDesignationFlag" />
+            <sfwCheckBox ID="chkIstrIsTermsAndConditionsAgreed1" sfwEntityField="lstrIsAcknowledged" />
+            <sfwLiteral ID="ltrLiteralFedAckText" Text="&lt;b&gt;I, &lt;/b&gt;" />
+            <sfwLabel ID="lblLiteralFedAckName" sfwEntityField="objPayeeAccount.objPayee.IstrFullName" />
+            <sfwLiteral ID="ltrLiteralFedRemAckText" Text="&lt;b&gt;, certify that the information contained on this form is correct to the best of my knowledge and belief.&lt;/b&gt;" />
+            <sfwLabel ID="capEffectiveDate" AssociatedControlID="txtEffectiveDate" sfwIsCaption="True" />
+            <sfwLabel ID="lblLabel" sfwIsCaption="True" />
+            <sfwTextBox ID="txtEffectiveDate" sfwDataFormat="{0:d}" sfwEntityField="StartDate" />
+            <sfwLabel ID="lblLiteral1" Text="&lt;font color=&quot;red&quot;&gt;To estimate your new withholding amount, select the &quot;Estimate Tax&quot; button and view results in the Estimated Tax panel below. To save and update your withholding election, select the &quot;Update Federal Tax&quot; button.&lt;/font&gt;" sfwIsCaption="True" />
+            <sfwButton ID="btnEstimateTax" sfwMethodName="btnValidateExecuteBusinessMethod_Click" sfwObjectMethod="CalculateEstimateTax" sfwExecuteMethodType="ObjectMethod" />
+          </items>
+        </sfwPanel>
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlNewPage" sfwCaption="PLSO" sfwVisibleRule="VisibleRuleIsBenefitDistributionTypePLSO" Visible="False">
+      <items>
+        <sfwTable ID="tblNewPage" />
+        <sfwLabel ID="capTaxOption1" Text="Tax Option : " sfwIsCaption="True" />
+        <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlPlsoTaxOption" sfwLoadType="Method" sfwLoadSource="LoadPLSOTaxOptionBasedOnTaxIdentifier" sfwEntityField="PlsoTaxOption" />
+        <sfwLabel ID="capSuppressWarningsFlag1" Text="Suppress Warnings : " sfwIsCaption="True" />
+        <sfwCheckBox ID="chkPlsoSupressWarning" sfwEntityField="PlsoSupressWarning" />
+        <sfwButton ID="btnSavePLSO" sfwMethodName="btnSave_Click" sfwNavigationParameter="Aintpayeeaccountid=PayeeAccountId" Text="Save" />
+        <sfwButton ID="btnCalculate2" sfwMethodName="btnValidateExecuteBusinessMethod_Click" sfwObjectMethod="btnMSSCalculateTax" Text="Calculate Tax" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlRefund" sfwCaption="Refund" sfwVisibleRule="VisibleRuleIsBenefitDistributionTypeRefund">
+      <items>
+        <sfwTable ID="tblRefund" />
+        <sfwLabel ID="capTaxOptionValue31" Text="Tax Option : " sfwIsCaption="True" />
+        <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlRefundTaxOption" sfwLoadType="Method" sfwLoadSource="LoadTaxOptionBasedOnTaxIdentifier" sfwEntityField="RefundTaxOption" />
+        <sfwLabel ID="capSuppressWarningsFlag2" Text="Suppress Warnings : " sfwIsCaption="True" />
+        <sfwCheckBox ID="chkRefundSupressWarning" sfwEntityField="RefundSupressWarning" />
+        <sfwButton ID="btnSaveRefund" sfwMethodName="btnSave_Click" sfwNavigationParameter="Aintpayeeaccountid=PayeeAccountId" Text="Save" Visible="False" />
+        <sfwButton ID="btnCalculate" sfwMethodName="btnSave_Click" sfwExecuteAfterSuccess="btnGoBackToCompletionPage" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlTax" sfwCaption="Refund" sfwVisibleRule="IsMSSFederalVisible">
+      <items>
+        <sfwLabel ID="ltrWithHoldingText" Text="Your withholding rate is determined by the type of payment you will receive." />
+        <sfwLabel ID="ltrWithHoldingText1" Text="• For nonperiodic payments, the default withholding rate is 10%. You can choose to have a different rate by entering a rate between 0% and 100% on line 2. Generally, you can’t choose less than 10% for payments to be delivered outside the United States and its possessions." />
+        <sfwLabel ID="ltrWithHoldingText2" Text="• For an eligible rollover distribution, the default withholding rate is 20%. You can choose a rate greater than 20% by entering the rate on line 2. You may not choose a rate less than 20%." />
+        <sfwLabel ID="ltrWithHoldingText3" Text="Complete this line if you would like a rate of withholding that is different from the default withholding rate. See the instructions on page 2 and the Marginal Rate Tables below for additional information. Enter the rate as a whole number (no decimals)" />
+        <sfwTextBox ID="txtFedTax" sfwEntityField="RefundFedPercent" sfwDataFormat="{0'%}" sfwVisibleRule="VisibleRuleIsTaxIdentifierFedTax" />
+        <sfwCheckBox ID="chkIstrIsTermsAndConditionsAgreed" sfwEntityField="lstrIsAcknowledged" />
+        <sfwLiteral ID="ltrLiteral" Text="&lt;b&gt;I, &lt;/b&gt;" />
+        <sfwLabel ID="lblLiteral123" sfwEntityField="objPayeeAccount.objPayee.IstrFullName" />
+        <sfwLiteral ID="ltrLiteral2" Text="&lt;b&gt;, certify that the information contained on this form is correct to the best of my knowledge and belief.&lt;/b&gt;" />
+        <sfwButton ID="btnFedRefundCalculate" sfwMethodName="btnSave_Click" sfwExecuteAfterSuccess="btnGoBackToCompletionPage" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlStateTaxRefund" sfwCaption="Refund" sfwVisibleRule="IsMSSStateTaxPanelVisible">
+      <items>
+        <sfwTable ID="tblStateTaxRefund" />
+        <sfwLabel ID="capRefundStateTaxAmount" Text="Amount to withhold for ND State Tax : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtRefundStateTaxAmount" sfwDataFormat="{0:C}" sfwEntityField="RefundStateAmt" sfwVisibleRule="IsMSSDistributionNotMonthly" />
+        <sfwTextBox ID="txtMothlyDisStateTaxAmount" sfwDataFormat="{0:C}" sfwEntityField="StateFlatAmount" sfwVisibleRule="ISMSSMonthlyBenfitDistribution" />
+        <sfwLabel ID="capRefundStartDate" Text="Effective Start Date : " sfwIsCaption="True" sfwVisibleRule="ISMSSMonthlyBenfitDistribution" />
+        <sfwTextBox ID="txtRefundStartDate" sfwDataFormat="{0:d}" sfwEntityField="StartDate" sfwValidationRules="IsStartDatePastDate;IsStartDateNotValid;IsStartDateNull" sfwVisibleRule="ISMSSMonthlyBenfitDistribution" />
+        <sfwButton ID="btnStateTaxRefundCalculate" sfwMethodName="btnSave_Click" Text="Update State Tax" sfwExecuteAfterSuccess="btnGoBackToCompletionPage" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnltbTax" sfwCaption="Estimated Tax" sfwVisibleRule="VisibleRuleIsBenefitDistributionTypeMonthlyBenefit">
+      <items>
+        <sfwTable ID="tbTax" />
+        <sfwGridView AllowPaging="True" AllowSorting="True" ID="grvTaxWithHoldingTaxItems" sfwEntityField="lstMSSTaxWithHoldingTaxItems" sfwGridEntity="entPayeeAccountTaxWithholdingItemDetail" Visible="False">
+          <Columns>
+            <TemplateField HeaderText="Item Description">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objPaymentItemType.ItemTypeDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Amount" ItemStyle.HorizontalAlign="Right">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="Amount" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Payee Account Tax Withholding Item Dtl ID" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="PayeeAccountTaxWithholdingItemDtlId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Start Date">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="objPayeeAccountPaymentItemType.StartDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="End Date">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="objPayeeAccountPaymentItemType.EndDate" />
+              </ItemTemplate>
+            </TemplateField>
+          </Columns>
+        </sfwGridView>
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlEstimatetbTax" sfwCaption="Estimated Tax" sfwVisibleRule="VisibleRuleIsMonthlyBenefitForNewFDSTTax" CssClass="hideControl">
+      <items>
+        <sfwTable ID="tbEstimatetTax" />
+        <sfwLabel ID="capEstimatedTaxAmount" Text="Estimated Federal Tax : " sfwIsCaption="True" />
+        <sfwLabel ID="lblEstimatedTaxAmount" Text="0.00" sfwDataFormat="{0:C}" sfwEntityField="IdecEstimatedFedTaxAmt" />
+        <sfwButton ID="btnFD22Calculate" sfwMethodName="btnSave_Click" sfwExecuteAfterSuccess="btnGoBackToCompletionPage" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlhistory" sfwCaption="History" sfwVisibleRule="VisibleRuleIsBenefitDistributionTypeMonthlyBenefit">
+      <items>
+        <sfwTable ID="tblhistory" Visible="False" />
+        <sfwButton ID="btnOpenTaxWithholingHistory" sfwActiveForm="wfmTaxWithholdingInformationMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintpayeeaccounttaxwithholdingid=PayeeAccountTaxWithholdingId" sfwRelatedControl="grvFedTaxWithholingHistory" Text="Open" Visible="False" />
+        <sfwGridView AllowPaging="True" ID="grvFedTaxWithholingHistory" sfwVisibleRule="VisibleRuleIsTaxIdentifierFedTax" sfwEntityField="objPayeeAccount.lstFederalTaxWithholding" sfwGridEntity="entPayeeAccountTaxWithholding" Visible="False">
+          <Columns>
+            <TemplateField HeaderText="Tax Type">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="TaxIdentifierDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Tax Id" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="PayeeAccountTaxWithholdingId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Effective Start Date">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="StartDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Marital Status">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="MaritalStatusDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Allowances" ItemStyle.HorizontalAlign="Left">
+              <ItemTemplate>
+                <sfwLabel sfwShowZero="True" sfwEntityField="TaxAllowance" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Additional Tax Amount" ItemStyle.HorizontalAlign="Right">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="AdditionalTaxAmount" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Tax Option">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="TaxOptionDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="End Date" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EndDate" />
+              </ItemTemplate>
+            </TemplateField>
+          </Columns>
+        </sfwGridView>
+        <sfwGridView AllowPaging="True" ID="grvStateTaxWithholingHistory" sfwVisibleRule="VisibleRuleIsTaxIdentifierStateTax" sfwEntityField="objPayeeAccount.lstStateTaxWithholding" sfwGridEntity="entPayeeAccountTaxWithholding">
+          <Columns>
+            <TemplateField HeaderText="Tax Type">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="TaxIdentifierDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Tax Id" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="PayeeAccountTaxWithholdingId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Effective Start Date">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="StartDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Marital Status">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="MaritalStatusDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Allowances" ItemStyle.HorizontalAlign="Left">
+              <ItemTemplate>
+                <sfwLabel sfwShowZero="True" sfwEntityField="TaxAllowance" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Additional Tax Amount" ItemStyle.HorizontalAlign="Right">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="AdditionalTaxAmount" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Tax Option">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="TaxOptionDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="End Date" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EndDate" />
+              </ItemTemplate>
+            </TemplateField>
+          </Columns>
+        </sfwGridView>
+      </items>
+    </sfwPanel>
+  </items>
+  <loaddetails>
+    <entityfield ID="objPayeeAccount.objPayee" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objPayeeAccount.objPayee.objPersonCurrentAddress" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstMSSTaxWithHoldingTaxItems" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objPayeeAccount.lstFederalTaxWithholding" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objPayeeAccount.lstStateTaxWithholding" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+  </loaddetails>
+  <ExtraFields />
+</form>

@@ -1,0 +1,59 @@
+﻿<entity ID="entPERSAudit" sfwObjectID="busPERSAudit" sfwObjectType="NeoSpin.BusinessObjects.busPERSAudit" sfwType="RuleEntity" sfwActive="True" sfwStatus="Review" sfwParentEntity="entAuditLog" sfwMainCDO="icdoAuditLog">
+  <attributes>
+    <attribute sfwDataType="int" sfwType="Property" ID="AuditLogId" sfwValue="icdoAuditLog.audit_log_id" />
+    <attribute sfwDataType="string" sfwType="Property" ID="FormName" sfwValue="icdoAuditLog.form_name" />
+    <attribute sfwDataType="string" sfwType="Property" ID="TableName" sfwValue="icdoAuditLog.table_name" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ChangeDescription" sfwValue="icdoAuditLog.change_description" />
+    <attribute sfwDataType="long" sfwType="Property" ID="PrimaryKey" sfwValue="icdoAuditLog.primary_key" />
+    <attribute sfwDataType="int" sfwType="Property" ID="PersonId" sfwValue="icdoAuditLog.person_id" />
+    <attribute ID="objOrganization" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusOrganization" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ModifiedBy" sfwValue="icdoAuditLog.modified_by" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="ModifiedDate" sfwValue="icdoAuditLog.modified_date" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IintOrgId" sfwValue="iintOrgId" />
+    <attribute sfwDataType="string" sfwType="Property" ID="OrgCode" sfwValue="istrOrgCode" />
+    <attribute sfwDataType="string" sfwType="Property" ID="OrgName" sfwValue="istrOrgName" />
+    <attribute ID="objPerson" sfwType="Object" sfwEntity="entPerson" sfwPrivate="False" sfwValue="ibusPerson" />
+  </attributes>
+  <queries>
+    <query ID="PersAuditLookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select a.*,o.org_code, o.org_name, o.org_id from sgs_audit_log a left outer join sgt_organization o on o.org_id = a.org_id order by modified_date desc">
+      <parameters />
+      <mappedcolumns>
+        <column ID="audit_log_id" sfwEntityField="AuditLogId" />
+        <column ID="form_name" sfwEntityField="FormName" />
+        <column ID="table_name" sfwEntityField="TableName" />
+        <column ID="primary_key" sfwEntityField="PrimaryKey" />
+        <column ID="person_id" sfwEntityField="PersonId" />
+        <column ID="org_id" sfwEntityField="OrgId" />
+        <column ID="org_plan_id" sfwEntityField="OrgPlanId" />
+        <column ID="change_type" sfwEntityField="ChangeType" />
+        <column ID="modified_by" sfwEntityField="ModifiedBy" />
+        <column ID="modified_date" sfwEntityField="ModifiedDate" />
+        <column ID="client_ip_address" sfwEntityField="ClientIpAddress" />
+        <column ID="bo_primary_key" sfwEntityField="BoPrimaryKey" />
+        <column ID="guid_transaction_id" sfwEntityField="GuidTransactionId" />
+        <column ID="audit_details" sfwEntityField="AuditDetails" />
+        <column ID="org_code" sfwEntityField="objOrganization.OrgCode" />
+        <column ID="org_name" sfwEntityField="objOrganization.OrgName" />
+      </mappedcolumns>
+    </query>
+  </queries>
+  <constraint />
+  <rules />
+  <initialload />
+  <softerror />
+  <harderror />
+  <validatedelete />
+  <delete />
+  <groupslist />
+  <checklist />
+  <methods>
+    <method ID="FindAllDetails" sfwMethodType="Load" sfwMode="Update" sfwLoadMainObject="True" sfwParameter="aintPrimaryKey">
+      <parameter ID="aintPrimaryKey" sfwDataType="int" Value="AuditLogId" />
+      <item ID="objPerson" sfwItemType="Object" sfwLoadType="Query" />
+      <item ID="objOrganization" sfwItemType="Object" sfwLoadType="Query" />
+    </method>
+  </methods>
+  <lifecycle />
+  <objectmethods />
+  <ExtraFields />
+</entity>

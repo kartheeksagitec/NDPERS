@@ -1,0 +1,153 @@
+﻿<div class="portlet-body">
+    <div class="col-xs-5 parameter-query-inner-left full-height" style="border:0px!important">
+        <div class="normal-content-wrapper">
+            <div class="normal-content-wrapper-header">
+                <h3>Series</h3>
+                <div class="panel-icons">
+                    <a title="Add New Series">
+                        <img src="images/Common/icon_add_dark.svg" ng-click="addSeries()" />
+                    </a>
+                    <a title="Delete Series">
+                        <img src="images/Common/icon_delete_dark.svg" ng-click="deleteSeries()" />
+                    </a>
+                </div>
+            </div>
+            <ul class="normal-left-content-list">
+                <li ng-class="series==ObjSeriesModel?'active':''" ng-repeat="series in chartSeries.Elements">
+                    <a  ng-click="selectSeries(series)">
+                        <span ng-bind="series.dictAttributes.Name"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-xs-6 parameter-query-right series-prop-ht" ng-show="chartSeries.Elements.length>0">
+        <div class="form-group">
+            <label class="col-xs-3 control-label">Chart Type:</label>
+            <div class="col-xs-9">
+                <input type="text" class="form-control input-sm" title="{{ObjSeriesModel.dictAttributes.ChartType}}" ng-model="ObjSeriesModel.dictAttributes.ChartType" ng-disabled="true">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-3 control-label">Name:</label>
+            <div class="col-xs-9">
+                <input type="text" class="form-control input-sm" title="{{ObjSeriesModel.dictAttributes.Name}}" ng-model="ObjSeriesModel.dictAttributes.Name" ng-change="validateSeriesNameNotEmpty()" undoredodirective model='ObjSeriesModel'>
+
+            </div>
+        </div>
+        
+        <div class="form-group" ng-show="ChartModel.dictAttributes.sfwIsDynamicSeries == 'True'">
+            <label class="col-xs-3 control-label">Series Column Name:</label>
+            <div class="col-xs-9">
+                <div class="textbox-autocomplete-block">
+                    <entityfieldelementintellisense modebinding="ObjSeriesModel.dictAttributes.sfwSeriesColumnName" model="ObjSeriesModel" entityid="ParentEntityName" propertyname='"dictAttributes.sfwSeriesColumnName"' errorprop="ObjSeriesModel.errors.sfwSeriesColumnName" validate="true"></entityfieldelementintellisense>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-3 control-label">X Value Member:</label>
+            <div class="col-xs-9">
+                <div class="textbox-autocomplete-block">
+                    <entityfieldelementintellisense modebinding="ObjSeriesModel.dictAttributes.XValueMember" model="ObjSeriesModel" entityid="ParentEntityName" propertyname='"dictAttributes.XValueMember"' errorprop="ObjSeriesModel.errors.XValueMember" validate="true"></entityfieldelementintellisense>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-3 control-label">Y Value Members:</label>
+            <div class="col-xs-9">
+                <div class="textbox-autocomplete-block">
+                    <entityfieldelementintellisense modebinding="ObjSeriesModel.dictAttributes.YValueMembers" model="ObjSeriesModel" entityid="ParentEntityName" propertyname='"dictAttributes.YValueMembers"' errorprop="ObjSeriesModel.errors.YValueMembers" validate="true"></entityfieldelementintellisense>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-3 control-label">Y Member Color:</label>
+            <div class="col-xs-9">
+                <input type="text" class="form-control input-sm" title="{{ObjSeriesModel.dictAttributes.YMemberColor}}" ng-model="ObjSeriesModel.dictAttributes.YMemberColor" undoredodirective model='ObjSeriesModel'>
+
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-3 control-label">Is Value Shown As Label:</label>
+            <div class="col-xs-9">
+                <input type="checkbox" ng-model="ObjSeriesModel.dictAttributes.IsValueShownAsLabel" ng-checked="ObjSeriesModel.dictAttributes.IsValueShownAsLabel" ng-true-value="'True'" ng-false-value="'False'" undoredodirective model='ObjSeriesModel'>
+
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-3 control-label">Format Field:</label>
+            <div class="col-xs-9">
+                <select ng-options="x for x in DataFormats" class="form-control input-sm" title="{{ObjSeriesModel.dictAttributes.sfwFormatField}}" ng-model="ObjSeriesModel.dictAttributes.sfwFormatField" undoredodirective model='ObjSeriesModel'/>
+
+
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-3 control-label">Tooltip Type:</label>
+            <div class="col-xs-9">
+                <select ng-options="x for x in lstToolTipTypes" class="form-control input-sm" title="{{ObjSeriesModel.dictAttributes.sfwTooltipType}}" ng-model="ObjSeriesModel.dictAttributes.sfwTooltipType" undoredodirective model='ObjSeriesModel'/>
+
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-3 control-label">Tooltip Type Params:</label>
+            <div class="col-xs-9">
+                <div class="input-group">
+                    <input type="text" class="form-control input-sm" title="{{ObjSeriesModel.dictAttributes.sfwTooltipTableParams}}" ng-model="ObjSeriesModel.dictAttributes.sfwTooltipTableParams" undoredodirective model='ObjSeriesModel'>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default btn-search-popup" ng-click="OpenTooltipParams()"></button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-xs-3" ng-if='ObjSeriesModel.errors.invalid_active_form || !ObjSeriesModel.dictAttributes.sfwActiveForm'>Navigation Form:</label>
+            <label class="control-label col-xs-3" ng-if='ObjSeriesModel.dictAttributes.sfwActiveForm && !ObjSeriesModel.errors.invalid_active_form'><a style="color: #5b9bd1!important;" ng-click='NavigateToActiveForm(ObjSeriesModel.dictAttributes.sfwActiveForm)'>Navigation Form:</a></label>
+            <div class="col-xs-9">
+                <activeformintellisensetemplate activeformname='ObjSeriesModel.dictAttributes.sfwActiveForm' formtype="'Lookup,Maintenance'" multiactiveformflag='false' canhidesearchactiveformwindow="true" onactiveformchange="ClearParameter()" model="ObjSeriesModel" propertyname='"dictAttributes.sfwActiveForm"'/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-xs-3">Navigation Parameter</label>
+            <div class="col-xs-9">
+                <div class="input-group">
+                    <input type="text" class="form-control input-sm" title="{{ObjSeriesModel.dictAttributes.sfwNavigationParameter}}" ng-model='ObjSeriesModel.dictAttributes.sfwNavigationParameter' undoredodirective model='ObjSeriesModel'>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default btn-search-popup" type="button" ng-disabled="!ObjSeriesModel.dictAttributes.sfwActiveForm" ng-click='onNavigationParamsClick()'></button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-xs-3">Additional Chart Columns</label>
+            <div class="col-xs-9">
+                <div class="input-group">
+                    <input type="text" class="form-control input-sm" title="{{ObjSeriesModel.dictAttributes.swfAddtionalChartColumns}}" ng-model='ObjSeriesModel.dictAttributes.swfAddtionalChartColumns' undoredodirective model='ObjSeriesModel'>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default btn-search-popup" type="button" ng-click='onAdditionalChartColumnClick()'></button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-3 control-label">Label:</label>
+            <div class="col-xs-9">
+                <input type="text" class="form-control input-sm" title="{{ObjSeriesModel.dictAttributes.Label}}" ng-model="ObjSeriesModel.dictAttributes.Label" undoredodirective model='ObjSeriesModel'>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-actions right">
+    <div class="col-xs-12">
+        <div class="col-xs-8">
+            <span style="color:red;float:left" ng-bind="strError"></span>
+        </div>
+        <div class="col-xs-4">
+            <input type="button" value="OK" class="btn btn dialog-btn-default" ng-disabled="strError.length>0" ng-click="onOkClick()" />
+        </div>
+    </div>
+</div>

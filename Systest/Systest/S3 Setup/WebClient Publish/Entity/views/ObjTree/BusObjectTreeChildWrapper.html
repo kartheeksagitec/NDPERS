@@ -1,0 +1,36 @@
+﻿<div>
+    <div class="padding-0" ng-class="field.IsRecordSelected?'selected':''" ng-mousedown="selectField(field, $event)" ng-show="field.IsVisible">
+        <!--<div class="object-tree-expand" ng-dblclick="ExpandCollapsedObjectTreeField(field,$event)" ng-click="ExpandCollapsedObjectTreeField(field,$event)" ng-show="field.DataType == 'TableObjectType' || field.DataType == 'BusObjectType' || field.DataType == 'CollctionType' || field.IsMainBusObject || field.HasProperties">
+            <i ng-class="field.IsExpanded?'fa fa-minus-square-o':'fa fa-plus-square-o'"></i>
+        </div>-->
+        <div class="object-tree-img">
+            <img ng-if="field.DataTypeName == 'Int32'" src="images/Form/icon-integer.png" />
+            <img ng-if="field.DataTypeName == 'Boolean'" src="images/Form/icon-boolean.png" />
+            <img ng-if="field.DataType == 'collection' || obj.DataType == 'List' || obj.DataType == 'CDOCollection'" src="images/Form/icon-collection.png" />
+            <img ng-if="field.DataTypeName == 'DateTime'" src="images/Form/icon-datetime.png" />
+            <img ng-if="field.DataTypeName == 'Decimal'" src="images/Form/icon-decimal.png" />
+            <img ng-if="field.DataTypeName == 'Int64'" src="images/Form/icon-double.png" />
+            <img ng-if="field.DataTypeName == 'Float'" src="images/Form/icon-float.png" />
+            <img ng-if="field.DataTypeName == 'String'" src="images/Form/icon-string.png" />
+            <!--<img style="height:16px;width:16px" ng-show="field.DataTypeName == 'Int16'" src="../../../images/Form/" />-->
+            <img ng-if="field.DataType == 'TableObjectType'" src="images/Form/icon-collection.png" />
+            <img ng-if="field.DataType == 'BusObjectType'" src="images/Form/icon-collection.png" />
+            <img ng-if="field.DataType == 'CollctionType'" src="images/Form/icon-collection.png" />
+            <img ng-if="field.DataType == 'OtherReferenceType'" src="images/Form/icon-collection.png" />
+        </div>
+        <span class="msgfont-11" customdraggable dragdata="field.FullPath" ng-mousedown="selectField(field, $event)" ng-click='selectField(field, $event)' ng-if="!field.IsMainBusObject" ng-bind="field.Name"></span>
+        <span class="msgfont-11" ng-if="field.IsMainBusObject" ng-bind="field.ObjName" ng-mousedown="selectField(field, $event)" ng-click='selectField(field, $event)'></span>
+    </div>
+    <ul ng-if="field.IsExpanded">
+        <li ng-repeat='field in field.ChildProperties' busobjecttreechildtemplate ng-dblclick='loadNextLevel(field, $event)' 
+            ng-if="isshowproperties"></li>
+        <li ng-repeat='field in field.lstMethods' ng-dblclick='loadNextLevel(field, $event)' 
+            ng-if="isshowmethods">
+            <span class="msgfont-11" customdraggable dragdata="field.FullPath" ng-mousedown="selectField(field, $event)" ng-click='selectField(field, $event)' ng-if="!field.IsMainBusObject" ng-bind="field.Name"></span>
+        </li>
+        <li ng-repeat='field in field.Rules' ng-dblclick='loadNextLevel(field, $event)' 
+            ng-if="isshowrules">
+            <span class="msgfont-11" customdraggable dragdata="field.ID" ng-mousedown="selectField(field, $event)" ng-click='selectField(field, $event)' ng-if="!field.IsMainBusObject">{{field.ReturnType + " " + field.ID}}</span>
+        </li>
+    </ul>
+</div>

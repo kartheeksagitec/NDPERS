@@ -1,0 +1,227 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<form ID="wfmPersonLookup" sfwActive="True" sfwStatus="Valid" sfwRemoteObject="srvPerson" sfwResource="200" sfwType="Lookup" sfwTitle="Person Lookup" sfwMaxCount="100" version="3.5" sfwEntity="entPerson" sfwGridCollection="busPersonLookup.icolPerson">
+  <initialload>
+    <query ID="cdoPerson" sfwQueryRef="entPerson.Lookup" sfwMethodName="LoadPersons" />
+    <query ID="sqLoadPersonAccount" sfwQueryRef="entPerson.sqLoadPersonAccount" />
+    <query ID="SubQueryByOrg" sfwQueryRef="entPerson.SubQueryByOrg" />
+  </initialload>
+  <sfwTable ID="Main">
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlCriteria" sfwCaption="Criteria">
+          <sfwTable CssClass="Table" ID="tblCriteria">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="lbllast_name" Text="Last Name : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txt_last_name" sfwDataField="last_name" sfwQueryID="cdoPerson" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblfirst_name" Text="First Name : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txt_first_name" sfwDataField="first_name" sfwQueryID="cdoPerson" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="lblSSN1" Text="Last 4 Digits of SSN :" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtSSN1" MaxLength="4" sfwDataField="substring(ssn, 6, 4)" sfwOperator="like" sfwQueryID="cdoPerson" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lbldate_of_birth" Text="Date of Birth : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txt_date_of_birth" sfwDataField="date_of_birth" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="=" sfwQueryID="cdoPerson" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="lblperson_id" Text="PERSLink ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txt_person_id" sfwDataField="P.person_id" sfwDataType="Numeric" sfwQueryID="cdoPerson" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capPeoplesoftId" Text="PeopleSoft ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtPeoplesoftId" sfwDataField="peoplesoft_id" sfwQueryID="cdoPerson" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capNdpersLoginId" Text="ND Login ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="lblNdpersLoginId" sfwDataField="ndpers_login_id" sfwOperator="like" sfwQueryID="cdoPerson" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capMaritalStatusValue" Text="Marital Status : " AssociatedControlID="ddlMaritalStatusValue" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlMaritalStatusValue" sfwDataField="marital_status_value" sfwQueryID="cdoPerson" sfwLoadType="CodeGroup" sfwOperator="=" sfwData3EqualTo="Y" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capHomePhoneNo1" Text="Home Phone No/Cell Phone No/work Phone No : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtCellPhoneNo1" sfwDataField="cell_phone_no" sfwOperator="like" sfwQueryID="cdoPerson" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capPlanId" Text="Plan ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList DataTextField="plan_name" DataValueField="plan_id" ID="ddlPlanId" sfwDataField="spa.plan_id" sfwOperator="=" sfwQueryID="sqLoadPersonAccount" sfwLoadType="Query" sfwLoadSource="entPlan.Lookup" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capStatusValue" Text="Status : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlStatusValue" sfwDataField="spa.status_value" sfwOperator="=" sfwQueryID="sqLoadPersonAccount" sfwLoadType="CodeGroup" sfwLoadSource="336" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capOrgCode" Text="Org Code ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtOrgCode" sfwDataField="org_code" sfwOperator="=" sfwQueryID="SubQueryByOrg" />
+                <sfwImageButton ID="btnRetrieve" ImageAlign="AbsMiddle" ImageUrl="~/Image/Lookup.jpg" sfwActiveForm="wfmOrganizationLookup" sfwMethodName="btnRetrieve_Click" sfwRelatedControl="txtOrgCode" sfwSelectedIndex="OrgCode" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="lblPlanParticipationStatus" Text="Plan Participation Status :" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="drpPlanParticipationStatus" sfwDataField="cv.data2" sfwOperator="=" sfwQueryID="sqLoadPersonAccount" sfwLoadType="CodeGroup" sfwLoadSource="358" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblBenefitTier" Text="Benefit Tier :" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList DataTextField="description" DataValueField="description" ID="ddlBenefitTier" sfwDataField="cv1.description" sfwOperator="=" sfwQueryID="sqLoadPersonAccount" sfwLoadType="Query" sfwLoadSource="entCodeValue.LoadCodeValue" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn />
+              <sfwColumn />
+              <sfwColumn>
+                <sfwLabel ID="capSsn" Text="SSN : " Visible="False" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtSsn" sfwDataField="ssn" sfwOperator="like" sfwQueryID="cdoPerson" Visible="False" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnSearch" sfwMethodName="btnSearch_Click" Text="Search" />
+                <sfwButton ID="btnReset" sfwMethodName="btnReset_Click" Text="Reset" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwButton ID="btnStoreSearch" sfwMethodName="btnStoreUserDefaults_Click" Text="Store Search" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlResult" sfwCaption="Search Results">
+          <sfwTable CssClass="Table" ID="tblResult">
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnNew" sfwActiveForm="wfmPersonMaintenance" sfwMethodName="btnNew_Click" Text="New" />
+                <sfwButton ID="btnOpen" sfwActiveForm="wfmPersonMaintenance" sfwCopyActivitySessionVariables="True" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintpersonid=PersonId" sfwRelatedControl="dgrResult" Text="Open" sfwDisableViewOnly="True" />
+                <sfwButton ID="btnDelete" sfwMethodName="btnDelete_Click" sfwRelatedControl="dgrResult" sfwResource="208" Text="Delete" />
+                <sfwButton ID="btnExportExcel" sfwMethodName="btnColumnsToExport_Click" sfwRelatedControl="dgrResult" Text="Export To Excel" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwGridView AllowPaging="True" AllowSorting="True" CssClass="persongridhead" HeaderStyle.Wrap="False" ID="dgrResult" sfwSelection="Many">
+                  <Columns>
+                    <TemplateField HeaderText="PERSLink ID">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpen" sfwEntityField="PersonId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Last Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="LastName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="First Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="FirstName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Middle Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="MiddleName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Last 4 Digits of SSN">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="LastFourDigitsOfSSN" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Date Of Birth">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="DateOfBirth" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Date Of Death">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="DateOfDeath" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="PeopleSoft ID">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="PeoplesoftId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Home Phone">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:(###)###-####}" sfwEntityField="HomePhoneNo" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Work Phone">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:(###)###-####}" sfwEntityField="WorkPhoneNo" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Marital Status">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="MaritalStatusDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="ND Login ID">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="NdpersLoginId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+  </sfwTable>
+  <loaddetails />
+</form>

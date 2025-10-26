@@ -1,0 +1,71 @@
+﻿<div class="portlet-body">
+    <div class="form-body">
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label class="control-label">Table Name</label>
+                <tablenameintellisense selecteditem="objEntityDetail.TableName" onchangecallback="TableNameChangedClick()" />
+
+            </div>
+
+
+            <div class="form-group">
+                <label class="control-label"> Description</label>
+                <textarea rows="5" title="{{objEntityDetail.Description}}" ng-model="objEntityDetail.Description" class="form-control input-sm" />
+
+            </div>
+
+            <div class="form-group ">
+                <label class="control-label"> Parent Entity</label>
+                <fileintellisensetemplate model="objEntityDetail" propertyname="'ParentEntity'" filename="objEntityDetail.ParentEntity" onfileblur="objEntityDetail.isNextDisable()" onfilechange="objEntityDetail.isNextDisable()" filetype="'Entity'" isinsidedialog="true" tablename="objEntityDetail.validTableName" isreset="true" />
+
+            </div>
+
+        </div>
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label class="control-label blocked-element"> Name(ID)</label>
+                <span class="file-prefix">ent</span>
+                <input type="text" class="form-control file-suffix input-sm ng-pristine ng-untouched ng-valid ng-empty" title="{{objEntityDetail.EntityID}}" ng-model="objEntityDetail.EntityID" ng-change="objEntityDetail.onEntityNameChange();objEntityDetail.isNextDisable()">
+
+            </div>
+
+            <div class="form-group">
+                <div> <label class="control-label"> Path</label></div>
+                <div class="col-xs-12" style="padding-left: 0;">
+                    <locationintellisensetemplate locationchanged="objEntityDetail.isNextDisable()" locationname="objEntityDetail.Path" islocationdisabled="objEntityDetail.IsExistingEntity" model="objEntityDetail" validate="true" errorprop="objEntityDetail.errors.invalid_path"></locationintellisensetemplate>
+                </div>
+
+            </div>
+
+            <div class="form-group ">
+                <label class="control-label"> Create with C# classes</label>
+                <div class="form-control radio-btn-form-control">
+                    <input type="checkbox" name="Lookup Form" ng-model="objFormsDetails.IsCreatewithbusinessobject" ng-change="CreatewithbusinessobjectChange(objFormsDetails.IsCreatewithbusinessobject)"
+                           ng-true-value="'True'" ng-false-value="'False'" />
+                </div>
+
+
+            </div>
+
+            <div class="form-group" ng-show="objFormsDetails.IsCreatewithbusinessobject=='True'">
+                <label class="control-label"> Business Object</label>
+                <businessobjectintellisensetemplate busobjectname="objEntityDetail.BusinessObjectName" isentitycreation=true isonlybusobject=true onblurcallback="onbusObjectChange();objEntityDetail.isNextDisable()" isbusobjectreadonly="objEntityDetail.isBusObjectDisabled"></businessobjectintellisensetemplate>
+
+            </div>
+        </div>
+    </div>
+    <div class="form-body" ng-show="objEntityDetail.IsExistingEntity">
+        <span class="alert alert-warning entity-creation-warning">Warning : The entity 'ent{{objEntityDetail.EntityID}}' is already present. User can update the entity table name/ business object.</span>
+    </div>
+</div>
+<div class="form-actions">
+    <div class="col-xs-6 text-left">
+        <span class="alert-error-msg" ng-if="objEntityDetail.ErrorMessageForDisplay.length>0" ng-bind="objEntityDetail.ErrorMessageForDisplay"></span>
+    </div>
+    <div class="col-xs-6">
+        <input class="dialog-btn" type="button" value="Cancel" ng-click="CloseWizardClick()" />
+        <input class="dialog-btn" type="button" wz-previous="onPrevious()" value="Back" disabled="disabled"/>
+        <input class="dialog-btn" type="button" wz-next="UpdateOnNextFromEntityDetail();onNext()" value="Next" ng-disabled="objEntityDetail.isNextDisableForEntity" />
+        <input class="dialog-btn" type="button" wz-finish value="Finish" ng-disabled="showExtraFieldsTab || !objEntityDetail.isValidEntity " />
+    </div>
+</div>

@@ -1,0 +1,196 @@
+﻿<div class="portlet-body bpm-body-content">
+    <div ng-if="!ObjConditonAndExternaltask.IsPreCondition" class="user-task-prop-grid-wrap">
+        <div class="form-group" ng-show="lstActiveForm.length > 0">
+            <label class="control-label margin-bottom-5 col-xs-5">Active Form </label>
+            <div class="col-xs-7">
+                <select class="form-control" ng-options="x for x in lstActiveForm" ng-model="defaultConditionModels.sfwActiveForm">
+                    <option></option>
+                </select>
+            </div>
+        </div>
+        <div class="bpm-container">
+            <div class="bpm-container-title" ng-show="defaultConditionModels.sfwActiveForm || lstActiveForm.length ==0 ">
+                <span>Default Condition</span>
+                <div class="bpmn-right" ng-hide="IsDisabledforVersioning">
+                    <a><img src="images/Common/icon_add_dark.svg" ng-click="addPerformersDefaultCondition()" /></a>
+                    <a><img src="images/Common/icon_delete_dark.svg" ng-click="deletePerformersDefaultCondition()" /></a>
+                </div>
+            </div>
+            <div class="user-task-prop-grid" ng-if="lstActiveForm.length == 0">
+                <usertaskperformerstabledatatemplate isdisabledforversioning="IsDisabledforVersioning" selected-condition="defaultConditionModel.selectedCondition" conditions-model="defaultConditionModel" lstbpmnrelatedcodevalues="lstBPMNRelatedCodeValues" mapvariablesmodel="mapvariablesmodel" lstuserroles="UserRoles"></usertaskperformerstabledatatemplate>
+            </div>
+            <div class="user-task-prop-grid" ng-repeat="defaultConditionmodel in defaultConditionModels" ng-if="lstActiveForm.length > 0">
+                <div ng-show="defaultConditionmodel.dictAttributes.sfwActiveForm == defaultConditionModels.sfwActiveForm">
+                    <usertaskperformerstabledatatemplate isdisabledforversioning="IsDisabledforVersioning" selected-condition="defaultConditionmodel.selectedCondition" conditions-model="defaultConditionmodel" lstbpmnrelatedcodevalues="lstBPMNRelatedCodeValues" mapvariablesmodel="mapvariablesmodel" lstuserroles="UserRoles"></usertaskperformerstabledatatemplate>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-if="ObjConditonAndExternaltask.IsPreCondition" class="full-height">
+        <div class="bpm-container bpm-container-pre-condition full-height overflowH">
+            <div class="bpm-container-title">
+                <span>Pre Conditions</span>
+            </div>
+            <div ng-if="lstActiveForm.length == 0" class="bpm-container-body full-height overflowH">
+                <div class="bpm-pre-conditions-tab-container" ng-repeat="objPreconditonsModel in PerformersModel.Elements" ng-if="objPreconditonsModel.Name == 'preconditions'">
+                    <i class="fa fa-caret-left marg-right-10 bpm-pre-conditions-tab-icons" ng-click="scrollLeft($event)"></i>
+                    <ul class="nav nav-tabs bpm-pre-conditions-tabs">
+                        <li ng-class="objpreconditonmodel == objPreconditonModel?'active':''" ng-repeat="objpreconditonmodel in objPreconditonsModel.Elements" ng-click="changePreConditionModelBasedonselectedtab(objpreconditonmodel,$index)"
+                            ng-dblclick="editNameForPreCondition(objpreconditonmodel)" style="white-space:nowrap">
+                            <a>
+                                <span>{{objpreconditonmodel.dictAttributes.sfwName}}</span>
+                                <i ng-if="!IsDisabledforVersioning" class="fa fa-minus" ng-click="removePreconditonfromPreconditionsModel($index)"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <i class="fa fa-caret-right marg-left-10 bpm-pre-conditions-tab-icons" ng-click="scrollRight($event)"></i>
+                    <i class="fa fa-plus marg-left-5 bpm-pre-conditions-tab-icons" ng-click="AddNewTabForPreConditonsClick(item)"></i>
+                </div>
+                <div class="tab-content full-height overflowH" ng-show="objPreconditonsModel.Elements.length > 0">
+                    <div class="col-xs-2 no-left-padding no-right-padding">
+                        <div class="form-group checkbox-row">
+                            <label class="control-label">
+                                Is Dynamic Expression
+                            </label>
+                            <input class="popup-single-checkbox" ng-disabled="IsDisabledforVersioning" type="checkbox" ng-model="objPreconditonModel.dictAttributes.sfwDynamicExpression" ng-change="(objPreconditonModel.dictAttributes.sfwLeftSideSource='')" ng-true-value="'True'" ng-false-value="'False'" />
+                        </div>
+                    </div>
+                    <div class="col-xs-3 no-left-padding">
+                        <div class="form-group">
+                            <label class="control-label">
+                                Left Side
+                            </label>
+                            <select class="form-control input-sm" ng-disabled="IsDisabledforVersioning" ng-options="variable for variable in queryParametersValues" title="{{objPreconditonModel.dictAttributes.sfwLeftSideSource}}" ng-model="objPreconditonModel.dictAttributes.sfwLeftSideSource" ng-show="objPreconditonModel.dictAttributes.sfwDynamicExpression !== 'True'"></select>
+                            <input class="form-control input-sm" ng-disabled="IsDisabledforVersioning" title="{{objPreconditonModel.dictAttributes.sfwLeftSideSource}}" ng-model="objPreconditonModel.dictAttributes.sfwLeftSideSource" ng-show="objPreconditonModel.dictAttributes.sfwDynamicExpression === 'True'" />
+                        </div>
+                    </div>
+                    <div class="col-xs-2 no-left-padding">
+                        <div class="form-group ">
+                            <label class="control-label">
+                                Operator
+                            </label>
+                            <select class="form-control input-sm" ng-disabled="IsDisabledforVersioning" ng-options="x for x in operatorsList" title="{{objPreconditonModel.dictAttributes.sfwOperator}}" ng-model="objPreconditonModel.dictAttributes.sfwOperator"></select>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 no-left-padding">
+                        <div class="form-group ">
+                            <label class="control-label">
+                                Right Side
+                            </label>
+                            <div>
+                                <select class="form-control input-sm" ng-disabled="IsDisabledforVersioning" ng-options="variable for variable in queryParametersValues" ng-show="objPreconditonModel.dictAttributes.sfwIsConstant != 'True' " title="{{objPreconditonModel.dictAttributes.sfwRightSideSource}}" ng-model="objPreconditonModel.dictAttributes.sfwRightSideSource"></select>
+                                <input class="form-control input-sm" ng-disabled="IsDisabledforVersioning" type="text" title="{{objPreconditonModel.dictAttributes.sfwRightSideSource}}" ng-model="objPreconditonModel.dictAttributes.sfwRightSideSource" ng-show="objPreconditonModel.dictAttributes.sfwIsConstant == 'True' " />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-2 no-left-padding no-right-padding">
+                        <div class="form-group checkbox-row">
+                            <label class="control-label">
+                                Is Constant
+                            </label>
+                            <input class="popup-single-checkbox" ng-disabled="IsDisabledforVersioning" type="checkbox" ng-model="objPreconditonModel.dictAttributes.sfwIsConstant" ng-change="(objPreconditonModel.dictAttributes.sfwRightSideSource='')" ng-true-value="'True'" ng-false-value="'False'" />
+                        </div>
+                    </div>
+                    <div class="form-group" ng-show="lstActiveForm.length > 0">
+                        <label class="control-label margin-bottom-5 col-xs-5">Active Form </label>
+                        <div class="col-xs-7">
+                            <select class="form-control" ng-options="x for x in lstActiveForm" ng-model="objPreconditonModel.dictAttributes.sfwActiveForm">
+                                <option></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="panel-icons" ng-if="!IsDisabledforVersioning">
+                        <a><img src="images/Common/icon_add_dark.svg" ng-click="addPerformersPreCondition()" /></a>
+                        <a><img src="images/Common/icon_delete_dark.svg" ng-click="deletePerformersPreCondition()" /></a>
+                    </div>
+                    <div class="user-task-prop-grid">
+                        <usertaskperformerstabledatatemplate isdisabledforversioning="IsDisabledforVersioning" selected-condition="objPreconditonModel.selectedCondition" conditions-model="objPreconditonModel" lstbpmnrelatedcodevalues="lstBPMNRelatedCodeValues" mapvariablesmodel="mapvariablesmodel" lstuserroles="UserRoles"></usertaskperformerstabledatatemplate>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" style="padding:5px" ng-show="lstActiveForm.length > 0">
+                <label class="control-label margin-bottom-5 col-xs-5">Active Form </label>
+                <div class="col-xs-7">
+                    <select class="form-control" ng-options="x for x in lstActiveForm" ng-change="onChangePreconditionsActiveForm(PerformersModels.sfwActiveForm)" ng-model="PerformersModels.sfwActiveForm">
+                        <option></option>
+                    </select>
+                </div>
+            </div>
+            <div ng-if="lstActiveForm.length > 0" ng-repeat="performersmodel in PerformersModels" class="bpm-container-body full-height overflowH">
+                <div class="bpm-pre-conditions-tab-container" ng-repeat="objpreconditonsmodel in performersmodel.Elements" ng-show="PerformersModels.sfwActiveForm == objpreconditonsmodel.dictAttributes.sfwActiveForm">
+                    <i class="fa fa-caret-left marg-right-10 bpm-pre-conditions-tab-icons" ng-click="scrollLeft($event)"></i>
+                    <ul class="nav nav-tabs bpm-pre-conditions-tabs">
+                        <li ng-class="objpreconditonmodel == objPreconditonModel?'active':''" ng-repeat="objpreconditonmodel in objpreconditonsmodel.Elements" ng-click="changePreConditionModelBasedonselectedtab(objpreconditonmodel,$index)"
+                            ng-dblclick="editNameForPreCondition(objpreconditonmodel)">
+                            <a>
+                                <span>{{objpreconditonmodel.dictAttributes.sfwName}}</span>
+                                <i ng-if="!IsDisabledforVersioning" class="fa fa-minus" ng-click="removePreconditonfromPreconditionsModel($index)"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <i class="fa fa-caret-right marg-left-10 bpm-pre-conditions-tab-icons" ng-click="scrollRight($event)"></i>
+                    <i class="fa fa-plus marg-left-5 bpm-pre-conditions-tab-icons" ng-click="AddNewTabForPreConditonsClick(objpreconditonsmodel)"></i>
+                </div>
+                <div class="tab-content full-height overflowH" ng-show="objPreconditonsModel.Elements.length > 0">
+                    <div class="col-xs-2 no-left-padding no-right-padding">
+                        <div class="form-group checkbox-row">
+                            <label class="control-label">
+                                Is Dynamic Expression
+                            </label>
+                            <input class="popup-single-checkbox" ng-disabled="IsDisabledforVersioning" type="checkbox" ng-model="objPreconditonModel.dictAttributes.sfwDynamicExpression" ng-change="(objPreconditonModel.dictAttributes.sfwLeftSideSource='')" ng-true-value="'True'" ng-false-value="'False'" />
+                        </div>
+                    </div>
+                    <div class="col-xs-3 no-left-padding">
+                        <div class="form-group">
+                            <label class="control-label">
+                                Left Side
+                            </label>
+                            <select class="form-control input-sm" ng-disabled="IsDisabledforVersioning" ng-options="variable for variable in queryParametersValues" title="{{objPreconditonModel.dictAttributes.sfwLeftSideSource}}" ng-model="objPreconditonModel.dictAttributes.sfwLeftSideSource" ng-show="objPreconditonModel.dictAttributes.sfwDynamicExpression !== 'True'"></select>
+                            <input class="form-control input-sm" ng-disabled="IsDisabledforVersioning" title="{{objPreconditonModel.dictAttributes.sfwLeftSideSource}}" ng-model="objPreconditonModel.dictAttributes.sfwLeftSideSource" ng-show="objPreconditonModel.dictAttributes.sfwDynamicExpression === 'True'" />
+                        </div>
+                    </div>
+                    <div class="col-xs-2 no-left-padding">
+                        <div class="form-group ">
+                            <label class="control-label">
+                                Operator
+                            </label>
+                            <select class="form-control input-sm" ng-disabled="IsDisabledforVersioning" ng-options="x for x in operatorsList" title="{{objPreconditonModel.dictAttributes.sfwOperator}}" ng-model="objPreconditonModel.dictAttributes.sfwOperator"></select>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 no-left-padding">
+                        <div class="form-group ">
+                            <label class="control-label">
+                                Right Side
+                            </label>
+                            <div>
+                                <select class="form-control input-sm" ng-disabled="IsDisabledforVersioning" ng-options="variable for variable in queryParametersValues" ng-show="objPreconditonModel.dictAttributes.sfwIsConstant != 'True' " title="{{objPreconditonModel.dictAttributes.sfwRightSideSource}}" ng-model="objPreconditonModel.dictAttributes.sfwRightSideSource"></select>
+                                <input class="form-control input-sm" ng-disabled="IsDisabledforVersioning" type="text" title="{{objPreconditonModel.dictAttributes.sfwRightSideSource}}" ng-model="objPreconditonModel.dictAttributes.sfwRightSideSource" ng-show="objPreconditonModel.dictAttributes.sfwIsConstant == 'True' " />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-2 no-left-padding no-right-padding">
+                        <div class="form-group checkbox-row">
+                            <label class="control-label">
+                                Is Constant
+                            </label>
+                            <input class="popup-single-checkbox" ng-disabled="IsDisabledforVersioning" type="checkbox" ng-model="objPreconditonModel.dictAttributes.sfwIsConstant" ng-change="(objPreconditonModel.dictAttributes.sfwRightSideSource='')" ng-true-value="'True'" ng-false-value="'False'" />
+                        </div>
+                    </div>
+                    <div class="panel-icons" ng-if="!IsDisabledforVersioning">
+                        <a><img src="images/Common/icon_add_dark.svg" ng-click="addPerformersPreCondition()" /></a>
+                        <a><img src="images/Common/icon_delete_dark.svg" ng-click="deletePerformersPreCondition()" /></a>
+                    </div>
+                    <div class="user-task-prop-grid">
+                        <usertaskperformerstabledatatemplate isdisabledforversioning="IsDisabledforVersioning" selected-condition="objPreconditonModel.selectedCondition" conditions-model="objPreconditonModel" lstbpmnrelatedcodevalues="lstBPMNRelatedCodeValues" mapvariablesmodel="mapvariablesmodel" lstuserroles="UserRoles"></usertaskperformerstabledatatemplate>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-actions">
+    <button type="button" class="btn dialog-btn-default" ng-if="!IsDisabledforVersioning" ng-click="onOKClick()">OK</button>
+    <button type="button" class="btn dialog-btn-default" ng-click="onCancelClick()">Cancel</button>
+</div>
+
+

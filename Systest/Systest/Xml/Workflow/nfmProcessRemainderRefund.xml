@@ -1,0 +1,65 @@
+<form ID="nfmProcessRemainderRefund" sfwActive="True" sfwStatus="Valid" sfwType="WorkflowMap" sfwRemoveDeletedActivities="False">
+  <ProcessVariables>
+    <ProcessVariable ID="refund_calc_reference_id" sfwObjectID="busBenefitRefundCalculation" sfwObjectField="icdoBenefitRefundCalculation.benefit_calculation_id" />
+    <ProcessVariable sfwParameterValue="icdoPayeeAccount.payee_account_id" sfwDataType="int" sfwObjectID="busPayeeAccount" sfwObjectField="icdoPayeeAccount.payee_account_id" ID="payee_account_reference_id" />
+  </ProcessVariables>
+  <activity sfwDisplayName="Enter and Calculate Remainder Refund" sfwReferenceID="refund_calc_reference_id" sfwFirstActivityFlag="True" sfwLastActivityFlag="False" sfwActivityType="User">
+    <form sfwMode="new" sfwFormName="wfmRetirementBenefitCalculationLookup" sfwFormMode="new">
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="sbc.person_id" sfwDataType="int" sfwParamaterName="sbc.person_id" sfwParameterValue="ibusProcessInstance.icdoProcessInstance.person_id" sfwValueSource="Object Field" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="per.last_name" sfwDataType="string" sfwParamaterName="per.last_name" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="per.first_name" sfwDataType="string" sfwParamaterName="per.first_name" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="org.org_code" sfwDataType="string" sfwParamaterName="org.org_code" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="org.org_name" sfwDataType="string" sfwParamaterName="org.org_name" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="app.person_id" sfwDataType="int" sfwParamaterName="app.person_id" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="app.last_name" sfwDataType="string" sfwParamaterName="app.last_name" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="app.first_name" sfwDataType="string" sfwParamaterName="app.first_name" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="substring(ssn, 6, 4)" sfwDataType="string" sfwParamaterName="substring(ssn, 6, 4)" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="benefit_account_type_value" sfwDataType="string" sfwParamaterName="benefit_account_type_value" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="pln.plan_id" sfwDataType="string" sfwParamaterName="pln.plan_id" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="status_value" sfwDataType="string" sfwParamaterName="status_value" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="retirement_date" sfwDataType="datetime" sfwParamaterName="retirement_date" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="retirement_date" sfwDataType="datetime" sfwParamaterName="retirement_date" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="per.date_of_death" sfwDataType="datetime" sfwParamaterName="per.date_of_death" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="per.date_of_death" sfwDataType="datetime" sfwParamaterName="per.date_of_death" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="termination_date" sfwDataType="datetime" sfwParamaterName="termination_date" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="termination_date" sfwDataType="datetime" sfwParamaterName="termination_date" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="action_status_value" sfwDataType="string" sfwParamaterName="action_status_value" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="sbc.created_date" sfwDataType="datetime" sfwParamaterName="sbc.created_date" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="sbc.created_date" sfwDataType="datetime" sfwParamaterName="sbc.created_date" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="calculation_type_value" sfwDataType="string" sfwParamaterName="calculation_type_value" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="sbc.created_by" sfwDataType="string" sfwParamaterName="sbc.created_by" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="sbc.approved_by" sfwDataType="string" sfwParamaterName="sbc.approved_by" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="sbc.benefit_calculation_id" sfwDataType="int" sfwParamaterName="sbc.benefit_calculation_id" />
+    </form>
+    <form sfwMode="update" sfwFormName="wfmRefundBenefitCalculationMaintenance">
+      <parameter sfwParameterSource="FindBenefitRefundCalculation" sfwParamaterName="aintBenefitCalculationID" sfwDataType="int" sfwFieldName="benefit_calculation_id" sfwParameterValue="refund_calc_reference_id" sfwValueSource="Parameter" />
+    </form>
+  </activity>
+  <activity sfwDisplayName="Validate and Approve Payee Account" sfwActivityType="User" sfwLastActivityFlag="True" sfwReferenceID="payee_account_reference_id">
+    <form sfwMode="update" sfwFormName="wfmPayeeAccountMaintenance">
+      <parameter sfwParameterSource="FindPayeeAccount" sfwParamaterName="Aintpayeeaccountid" sfwDataType="int" sfwFieldName="aintpayeeaccountid" sfwParameterValue="payee_account_reference_id" sfwValueSource="Parameter" />
+    </form>
+    <form sfwMode="new" sfwFormName="wfmPayeeAccountLookup" sfwFormMode="update">
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="payee_perslink_id" sfwDataType="int" sfwParamaterName="payee_perslink_id" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="memberperslinkid" sfwDataType="int" sfwParamaterName="memberperslinkid" sfwParameterValue="ibusProcessInstance.icdoProcessInstance.person_id" sfwValueSource="Object Field" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="payeeorgcode" sfwDataType="string" sfwParamaterName="payeeorgcode" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="plan_id" sfwDataType="string" sfwParamaterName="plan_id" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="kdata2" sfwDataType="string" sfwParamaterName="kdata2" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="benefit_account_type_value" sfwDataType="string" sfwParamaterName="benefit_account_type_value" sfwParameterValue="RFND" sfwValueSource="Constant" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="benefit_account_sub_type_value" sfwDataType="string" sfwParamaterName="benefit_account_sub_type_value" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="b_benefit_option_value" sfwDataType="string" sfwParamaterName="b_benefit_option_value" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="account_relation_value" sfwDataType="string" sfwParamaterName="account_relation_value" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="family_relation_value" sfwDataType="string" sfwParamaterName="family_relation_value" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="f.org_code" sfwDataType="string" sfwParamaterName="f.org_code" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="application_id" sfwDataType="int" sfwParamaterName="application_id" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="calculation_id" sfwDataType="int" sfwParamaterName="calculation_id" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="payee_account_id" sfwDataType="int" sfwParamaterName="payee_account_id" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="retirement_date" sfwDataType="datetime" sfwParamaterName="retirement_date" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="retirementorgcode" sfwDataType="string" sfwParamaterName="retirementorgcode" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="recertification_date" sfwDataType="datetime" sfwParamaterName="recertification_date" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="recertification_date" sfwDataType="datetime" sfwParamaterName="recertification_date" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="suspension_status_reason_value" sfwDataType="string" sfwParamaterName="suspension_status_reason_value" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="terminated_status_reason_value" sfwDataType="string" sfwParamaterName="terminated_status_reason_value" />
+    </form>
+  </activity>
+</form>

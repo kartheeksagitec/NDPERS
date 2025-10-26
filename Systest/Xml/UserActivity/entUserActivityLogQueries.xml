@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entUserActivityLogQueries" sfwMainCDO="icdoUserActivityLogQueries" sfwType="BusinessRule" sfwActive="True" sfwStatus="Review" sfwObjectID="busUserActivityLogQueries" sfwTableName="sgs_user_activity_log_queries" sfwView="False">
+  <queries>
+    <query ID="GetQueriesWithParamCount" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT&#xA;  UALQ.*,&#xA;  ( &#xA;  SELECT&#xA;   count(*) &#xA;  FROM&#xA;   SGS_USER_ACTIVITY_LOG_QUERY_PARAMETERS UALQP WITH(NOLOCK) &#xA;  WHERE&#xA;   UALQ.USER_ACTIVITY_LOG_QUERY_ID = UALQP.USER_ACTIVITY_LOG_QUERY_ID&#xA;  )  AS param_count&#xA;FROM&#xA;  SGS_USER_ACTIVITY_LOG_QUERIES UALQ&#xA;WHERE&#xA;  TRANSACTION_ID = @TRANSACTION_ID">
+      <parameters>
+        <parameter ID="@TRANSACTION_ID" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT&#xA;  UALQ.* ,&#xA;  (&#xA;  SELECT&#xA;   count(*) &#xA;  FROM&#xA;   SGS_USER_ACTIVITY_LOG_QUERY_PARAMETERS UALQP WITH(NOLOCK)                  &#xA;  WHERE&#xA;   UALQ.USER_ACTIVITY_LOG_QUERY_ID = UALQP.USER_ACTIVITY_LOG_QUERY_ID&#xA;  ) param_count,&#xA; UAL.IP_ADDRESS,&#xA; UAL.MACHINE_NAME,&#xA; UAL.MAC_ADDRESS,&#xA; UAL.LOGGED_USER_ID,&#xA; UALD.USER_ACTIVITY_LOG_DETAIL_ID,&#xA; UALD.ACTION_LOCATION_DISP,&#xA; UALD.ACTION_NAME_DISP,&#xA; UALD.TARGET_FORM_DISP&#xA;FROM&#xA; SGS_USER_ACTIVITY_LOG UAL,&#xA; SGS_USER_ACTIVITY_LOG_DETAIL UALD WITH(NOLOCK),&#xA; SGS_USER_ACTIVITY_LOG_QUERIES UALQ WITH(NOLOCK)&#xA;WHERE&#xA; UAL.USER_ACTIVITY_LOG_ID = UALD.USER_ACTIVITY_LOG_ID  AND&#xA; UALD.TRANSACTION_ID = UALQ.TRANSACTION_ID">
+      <parameters />
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="UserActivityLogQueryId" sfwType="Column" sfwValue="user_activity_log_query_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="Query" sfwType="Column" sfwValue="query" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="-1" />
+    <attribute ID="Result" sfwType="Column" sfwValue="result" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="20" />
+    <attribute ID="StartTime" sfwType="Column" sfwValue="start_time" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="EndTime" sfwType="Column" sfwValue="end_time" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="TransactionId" sfwType="Column" sfwValue="transaction_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="Guid" sfwRequired="False" />
+    <attribute sfwDataType="double" sfwType="Property" ID="IintTimeTakenInMS" sfwValue="icdoUserActivityLogQueries.iintTimeTakenInMS" />
+    <attribute sfwType="Collection" sfwEntity="entUserActivityLogQueryParameters" ID="lstUserActivityLogQueryParameters" sfwValue="iclbUserActivityLogQueryParameters" />
+  </attributes>
+  <objectmethods>
+    <method ID="LoadUserActivityLogQueryParameterss" sfwReturnType="Void" />
+  </objectmethods>
+</entity>

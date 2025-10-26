@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entRateChangeLetterDetail" sfwMainCDO="icdoRateChangeLetterDetail" sfwType="BusinessRule" sfwActive="True" sfwStatus="Review" sfwObjectID="busRateChangeLetterDetail" sfwTableName="sgt_rate_change_letter_detail" sfwView="False" sfwParentEntity="entExtendBase">
+  <queries>
+    <query ID="LoadRetireeMembersForCorrespondance" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT D.*, P.*, PADD.* &#xD;&#xA;FROM SGT_RATE_CHANGE_LETTER_DETAIL D&#xD;&#xA;INNER JOIN SGT_PERSON P ON D.PERSON_ID = P.PERSON_ID&#xD;&#xA;INNER JOIN ( &#xD;&#xA;&#x9;SELECT &#xD;&#xA;&#x9;ROW_NUMBER() OVER (PARTITION BY PERADD.PERSON_ID ORDER BY &#xD;&#xA;&#x9;&#x9;CASE WHEN ADDRESS_TYPE_VALUE = 'TEMP' AND ( CONVERT(DATETIME,PERADD.START_DATE,101) &lt;= CONVERT(DATETIME,GETDATE(),101) &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;AND CONVERT(DATETIME, isnull(PERADD.END_DATE,'99991231'),101) &gt;= CONVERT(DATETIME,GETDATE(),101)) THEN 0&#xD;&#xA;&#x9;&#x9;&#x9;WHEN ADDRESS_TYPE_VALUE = 'PERM' AND (PERADD.END_DATE IS NULL) THEN 1&#xD;&#xA;&#x9;&#x9;&#x9;WHEN ADDRESS_TYPE_VALUE = 'PERM' AND PERADD.END_DATE IS NOT NULL THEN 2&#xD;&#xA;&#x9;&#x9;&#x9;ELSE 3&#xD;&#xA;&#x9;&#x9;END, PERADD.END_DATE DESC) AS SR_NO,&#xD;&#xA;&#x9;&#x9;&#x9;PERADD.* &#xD;&#xA;FROM SGT_PERSON_ADDRESS AS PERADD WITH(NOLOCK)&#xD;&#xA;) as PADD ON PADD.PERSON_ID = P.PERSON_ID and PADD.SR_NO = 1&#xD;&#xA;WHERE ISNULL(D.LETTER_GENERATED, 'N') = 'N' AND D.BATCH_REQUEST_ID = @BATCH_REQUEST_ID&#xD;&#xA;ORDER BY D.PERSON_ID&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@BATCH_REQUEST_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="RateChangeLetterDetailId" sfwType="Column" sfwValue="rate_change_letter_detail_id" sfwIsNull="False" sfwKeyNo="1" sfwIsIdentity="True" sfwDataType="int" />
+    <attribute ID="BatchRequestId" sfwType="Column" sfwValue="batch_request_id" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="PersonId" sfwType="Column" sfwValue="person_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="RhicAmount" sfwType="Column" sfwValue="rhic_amount" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="CurrHealthPrem" sfwType="Column" sfwValue="curr_health_prem" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="NewHealthPrem" sfwType="Column" sfwValue="new_health_prem" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="CurrMeddPrem" sfwType="Column" sfwValue="curr_medd_prem" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="NewMeddPrem" sfwType="Column" sfwValue="new_medd_prem" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="CurrDenPrem" sfwType="Column" sfwValue="curr_den_prem" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="NewDenPrem" sfwType="Column" sfwValue="new_den_prem" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="CurrVisPrem" sfwType="Column" sfwValue="curr_vis_prem" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="NewVisPrem" sfwType="Column" sfwValue="new_vis_prem" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="LifeBasicAmt" sfwType="Column" sfwValue="life_basic_amt" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="CurrBasicPrem" sfwType="Column" sfwValue="curr_basic_prem" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="NewBasicPrem" sfwType="Column" sfwValue="new_basic_prem" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="LifeSuppAmt" sfwType="Column" sfwValue="life_supp_amt" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="CurrSuppPrem" sfwType="Column" sfwValue="curr_supp_prem" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="NewSuppPrem" sfwType="Column" sfwValue="new_supp_prem" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="LifeDepSuppAmt" sfwType="Column" sfwValue="life_dep_supp_amt" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="CurrDepSuppPrem" sfwType="Column" sfwValue="curr_dep_supp_prem" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="NewDepSuppPrem" sfwType="Column" sfwValue="new_dep_supp_prem" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="LifeSpSuppAmt" sfwType="Column" sfwValue="life_sp_supp_amt" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="CurrSpSuppPrem" sfwType="Column" sfwValue="curr_sp_supp_prem" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="NewSpSuppPrem" sfwType="Column" sfwValue="new_sp_supp_prem" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="CurrRhicMult" sfwType="Column" sfwValue="curr_rhic_mult" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="NewRhicMult" sfwType="Column" sfwValue="new_rhic_mult" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="LetterGenerated" sfwType="Column" sfwValue="letter_generated" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="1" sfwDefaultValue="N" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute sfwDataType="boolean" sfwType="Property" ID="IsForeignCountry" sfwValue="IsForeignCountry" />
+    <attribute sfwDataType="boolean" sfwType="Property" ID="IsLetterTypeRHIC" sfwValue="IsLetterTypeRHIC" />
+    <attribute ID="objRateChangeLetterRequest" sfwType="Object" sfwEntity="entRateChangeLetterRequest" sfwValue="ibusRateChangeLetterRequest" />
+    <attribute sfwDataType="boolean" sfwType="Property" ID="IsRHICApplied" sfwValue="IsRHICApplied" />
+    <attribute sfwDataType="boolean" sfwType="Property" ID="IsInsurancePlansExceptLifeEnrolled" sfwValue="IsInsurancePlansExceptLifeEnrolled" />
+    <attribute sfwDataType="boolean" sfwType="Property" ID="IsMedicarePartDEnrolled" sfwValue="IsMedicarePartDEnrolled" />
+    <attribute sfwDataType="boolean" sfwType="Property" ID="IsInsurancePlanLifeEnrolled" sfwValue="IsInsurancePlanLifeEnrolled" />
+    <attribute sfwType="Collection" sfwEntity="entRateChangeLetterDetail" ID="lstInsuPlansExcLifePremDetails" sfwValue="iclbInsuPlansExcLifePremDetails" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrInsurancePlanName" sfwValue="istrInsurancePlanName" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecCurrPremium" sfwValue="idecCurrPremium" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecNewPremium" sfwValue="idecNewPremium" />
+    <attribute sfwType="Collection" sfwEntity="entRateChangeLetterDetail" ID="lstInsuPlansLifePremDetails" sfwValue="iclbInsuPlansLifePremDetails" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecCoverageAmount" sfwValue="idecCoverageAmount" />
+  </attributes>
+</entity>

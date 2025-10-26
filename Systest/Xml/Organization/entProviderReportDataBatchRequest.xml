@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entProviderReportDataBatchRequest" sfwActive="True" sfwStatus="Review" sfwType="BusinessRule" sfwMainCDO="icdoProviderReportDataBatchRequest" sfwObjectID="busProviderReportDataBatchRequest" sfwTableName="sgt_provider_report_data_batch_request">
+  <rules>
+    <rule ID="CheckAllMandatoryFieldsEntered" sfwMessageId="4195" sfwExpression="(this.icdoProviderReportDataBatchRequest.effective_start_date == DateTime.MinValue) || &#xA;(string.IsNullOrEmpty(this.icdoProviderReportDataBatchRequest.org_code))" sfwObjectBased="True" />
+    <rule ID="CheckOrgCodeIDNumeric" sfwMessageId="4194" sfwExpression="(!RFunc.IsNumeric(this.icdoProviderReportDataBatchRequest.org_code))" sfwObjectBased="True" />
+    <rule ID="CheckOrgCodeValid" sfwMessageId="4641" sfwExpression="!(string.IsNullOrEmpty(this.icdoProviderReportDataBatchRequest.org_code)) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entProviderReportDataBatchRequest.CheckOrgCodeisValid&quot;, this.icdoProviderReportDataBatchRequest.org_code) == 0)" sfwObjectBased="True" />
+    <rule ID="CheckOrgNameIsProvider" sfwMessageId="4097" sfwExpression="!(string.IsNullOrEmpty(this.icdoProviderReportDataBatchRequest.org_code)) &amp;&amp; &#xA;(this.IsSelectedOrgvendorOrProvider() != True)" sfwObjectBased="True" />
+    <rule ID="CheckOrgPlanExists" sfwMessageId="4196" sfwExpression="!(string.IsNullOrEmpty(this.icdoProviderReportDataBatchRequest.org_code)) &amp;&amp; &#xA;!(this.icdoProviderReportDataBatchRequest.plan_id == 0) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entProviderReportDataBatchRequest.CheckOrgPlanCombinationExists&quot;, this.icdoProviderReportDataBatchRequest.org_id, this.icdoProviderReportDataBatchRequest.plan_id) == 0)" sfwObjectBased="True" />
+    <rule ID="CheckStatusIsNotProcessed" sfwExpression="(this.icdoProviderReportDataBatchRequest.status_value == &quot;NTPR&quot;)" sfwObjectBased="True" />
+    <rule ID="IsEffectiveEndDateNotRequired" sfwMessageId="6428" sfwExpression="!(this.IsSelectedOrgvendor() == True) &amp;&amp; &#xA;!(this.icdoProviderReportDataBatchRequest.effective_end_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsEffectiveEndDateRequired" sfwMessageId="6429" sfwExpression="(this.IsSelectedOrgvendor() == True) &amp;&amp; &#xA;(this.icdoProviderReportDataBatchRequest.effective_end_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsPlanNotRequired" sfwMessageId="6425" sfwExpression="!(this.icdoProviderReportDataBatchRequest.plan_id == 0) &amp;&amp; &#xA;(this.IsSelectedOrgvendor() == True)" sfwObjectBased="True" />
+    <rule ID="IsPlanRequired" sfwMessageId="1057" sfwExpression="!(this.IsSelectedOrgvendor() == True) &amp;&amp; &#xA;(this.icdoProviderReportDataBatchRequest.plan_id == 0)" sfwObjectBased="True" />
+    <rule ID="IsReloadInsuranceBatchRunForCurrentRequest" sfwMessageId="9899" sfwExpression="!(this.icdoProviderReportDataBatchRequest.plan_id == 0) &amp;&amp; &#xA;(this.IsReloadInsuranceBatchRunForCurrentRequest() == False)" sfwObjectBased="True" />
+    <rule ID="RecordAlreadyExists" sfwMessageId="4197" sfwExpression="!(string.IsNullOrEmpty(this.icdoProviderReportDataBatchRequest.org_code)) &amp;&amp; &#xA;!(this.icdoProviderReportDataBatchRequest.effective_start_date == DateTime.MinValue) &amp;&amp; &#xA;(this.IsRecordExist() == True)" sfwObjectBased="True" />
+    <rule ID="ValidateDeletingProcessedRecords" sfwMessageId="4190" sfwExpression="(this.icdoProviderReportDataBatchRequest.status_value == &quot;PRSD&quot;)" sfwObjectBased="True" />
+    <rule ID="IsVisibleReportDataDc" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.icdoProviderReportDataBatchRequest.provider_report_data_batch_request_id &gt;0) &amp;&amp;&#xA;((this.icdoProviderReportDataBatchRequest.plan_id == 7)||&#xA;(this.icdoProviderReportDataBatchRequest.plan_id == 28)||&#xA;(this.icdoProviderReportDataBatchRequest.plan_id == 30))" />
+    <rule ID="IsVisbleReportDataDeffComp" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.icdoProviderReportDataBatchRequest.provider_report_data_batch_request_id &gt;0) &amp;&amp;&#xA;(this.icdoProviderReportDataBatchRequest.plan_id == 19)" />
+    <rule ID="IsVisibleReportDataInsurance" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.icdoProviderReportDataBatchRequest.provider_report_data_batch_request_id &gt;0) &amp;&amp;((this.icdoProviderReportDataBatchRequest.plan_id == 12)||&#xA;(this.icdoProviderReportDataBatchRequest.plan_id == 13)||&#xA;(this.icdoProviderReportDataBatchRequest.plan_id == 14)||&#xA;(this.icdoProviderReportDataBatchRequest.plan_id == 16)||&#xA;(this.icdoProviderReportDataBatchRequest.plan_id == 17))" />
+    <rule ID="IsVisibleReportDataMedicarePartD" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.icdoProviderReportDataBatchRequest.provider_report_data_batch_request_id &gt;0) &amp;&amp;(this.icdoProviderReportDataBatchRequest.plan_id == 9)" />
+    <rule ID="IsVisibleDataInsurance" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.icdoProviderReportDataBatchRequest.provider_report_data_batch_request_id &gt;0) &amp;&amp;(this.icdoProviderReportDataBatchRequest.plan_id == 12)" />
+    <rule ID="IsVisiblePanel" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.icdoProviderReportDataBatchRequest.provider_report_data_batch_request_id &gt;0)" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="CheckStatusIsNotProcessed" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsVisibleReportDataDc" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsVisbleReportDataDeffComp" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsVisibleReportDataInsurance" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsVisibleReportDataMedicarePartD" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsVisibleDataInsurance" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsVisiblePanel" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="CheckAllMandatoryFieldsEntered" sfwMode="All" sfwStatus="Active" />
+    <item ID="CheckOrgCodeIDNumeric" sfwMode="All" sfwStatus="Active" />
+    <item ID="CheckOrgCodeValid" sfwMode="All" sfwStatus="Active" />
+    <item ID="CheckOrgPlanExists" sfwMode="All" sfwStatus="Active" />
+    <item ID="CheckOrgNameIsProvider" sfwMode="All" sfwStatus="Active" />
+    <item ID="RecordAlreadyExists" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEffectiveEndDateRequired" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEffectiveEndDateNotRequired" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPlanNotRequired" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPlanRequired" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsReloadInsuranceBatchRunForCurrentRequest" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete>
+    <item ID="ValidateDeletingProcessedRecords" sfwMode="All" sfwStatus="Active" />
+  </validatedelete>
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <expressionfields />
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_PROVIDER_REPORT_DATA_BATCH_REQUEST REQ&#xD;&#xA;LEFT JOIN SGT_ORGANIZATION ORG ON ORG.ORG_ID=REQ.ORG_ID&#xD;&#xA;LEFT JOIN SGT_PLAN PLN ON PLN.PLAN_ID=REQ.PLAN_ID&#xD;&#xA;WHERE REQ.VISIBILITY_FLAG='Y' order by EFFECTIVE_START_DATE desc">
+      <parameters />
+    </query>
+    <query ID="CheckOrgCodeisValid" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*)FROM SGT_ORGANIZATION WHERE ORG_CODE=@ORG_CODE">
+      <parameters>
+        <parameter ID="@ORG_CODE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="CheckOrgPlanCombinationExists" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) from sgt_org_plan where org_id=@org_id and plan_id=@plan_id">
+      <parameters>
+        <parameter ID="@org_id" sfwDataType="int" />
+        <parameter ID="@plan_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="CheckRecordExistsForSameParameters" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from SGT_PROVIDER_REPORT_DATA_BATCH_REQUEST (nolock)&#xD;&#xA;where ORG_ID=@ORG_ID and ((@planid = 0) or (plan_id = @planid))">
+      <parameters>
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+        <parameter ID="@planid" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetNonProcessedRequests" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_PROVIDER_REPORT_DATA_BATCH_REQUEST&#xD;&#xA;WHERE &#xD;&#xA;STATUS_VALUE='NTPR' AND&#xD;&#xA;EFFECTIVE_START_DATE&lt;=@EFFECTIVE_DATE&#xD;&#xA;AND EFFECTIVE_END_DATE IS NULL&#xD;&#xA;AND ISNULL(VISIBILITY_FLAG,'') = 'Y'">
+      <parameters>
+        <parameter ID="@EFFECTIVE_DATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="LoadProviderReportDataMedicarePartD" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT&#xA;&#x9; BATCH_REQUEST_ID,&#xA;&#x9;FIRST_NAME,&#xA;&#x9;LAST_NAME,&#xA;&#x9;PLAN_ID,&#xA;&#x9;EFFECTIVE_DATE,&#xA;&#x9;PROVIDER_ORG_ID,&#xA;&#x9;PERSON_ID,&#xA;&#x9;SUBSYSTEM_VALUE,&#xA;&#x9;SUBSYSTEM_REF_ID,&#xA;&#x9;SSN,&#xA;&#x9;PREMIUM_AMOUNT,&#xA;&#x9;LIS_AMOUNT,&#xA;&#x9;LEP_AMOUNT,&#xA;&#x9;RECORD_TYPE_VALUE &#xA;FROM&#xA;&#x9; SGT_PROVIDER_REPORT_DATA_MEDICARE_PART_D WITH(NOLOCK)  &#xA;WHERE&#xA;&#x9; BATCH_REQUEST_ID = @BATCH_REQUEST_ID &#xA;ORDER BY   EFFECTIVE_DATE desc">
+      <parameters>
+        <parameter ID="@BATCH_REQUEST_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadProviderDataDC" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT&#xA;&#x9; BATCH_REQUEST_ID,&#xA;&#x9;FIRST_NAME,&#xA;&#x9;LAST_NAME,&#xA;&#x9;PLAN_ID,&#xA;&#x9;EFFECTIVE_DATE,&#xA;&#x9;PROVIDER_ORG_ID,&#xA;&#x9;PERSON_ID,&#xA;&#x9;SUBSYSTEM_VALUE,&#xA;&#x9;SUBSYSTEM_REF_ID,&#xA;&#x9;SSN,&#xA;&#x9;EE_PRE_TAX,&#xA;&#x9;EE_EMPLOYER_PICKUP,&#xA;&#x9;ER_CONTRIBUTION &#xA;FROM&#xA;&#x9; SGT_PROVIDER_REPORT_DATA_DC WITH(NOLOCK)  &#xA;WHERE&#xA;&#x9; BATCH_REQUEST_ID = @BATCH_REQUEST_ID &#xA;ORDER BY   EFFECTIVE_DATE desc">
+      <parameters>
+        <parameter ID="@BATCH_REQUEST_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LaodProviderDataInsurance" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT&#xA;&#x9;BATCH_REQUEST_ID,&#xA;&#x9;FIRST_NAME,&#xA;&#x9;LAST_NAME,&#xA;&#x9;PLAN_ID,&#xA;&#x9;EFFECTIVE_DATE,&#xA;&#x9;PROVIDER_ORG_ID,&#xA;&#x9;PREMIUM_AMOUNT,&#xA;&#x9;FEE_AMOUNT,&#xA;&#x9;BUYDOWN_AMOUNT,&#xA;&#x9;RATE_STRUCTURE_CODE ,&#xA;&#x9;COVERAGE_CODE,&#xA;&#x9;RECORD_TYPE_VALUE,&#xA;&#x9;GROUP_NUMBER,&#xA;&#x9;PERSON_ID,&#xA;&#x9;SUBSYSTEM_VALUE,&#xA;&#x9;SUBSYSTEM_REF_ID,&#xA;&#x9;SSN &#xA;FROM&#xA;&#x9; SGT_PROVIDER_REPORT_DATA_INSURANCE WITH(NOLOCK)   &#xA;WHERE&#xA;&#x9; BATCH_REQUEST_ID = @BATCH_REQUEST_ID &#xA;ORDER BY EFFECTIVE_DATE desc">
+      <parameters>
+        <parameter ID="@BATCH_REQUEST_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadProviderDataDiffComp" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT&#xA;&#x9; BATCH_REQUEST_ID,&#xA;&#x9;FIRST_NAME,&#xA;&#x9;LAST_NAME,&#xA;&#x9;PLAN_ID,&#xA;&#x9;EFFECTIVE_START_DATE,&#xA;&#x9;EFFECTIVE_END_DATE,&#xA;&#x9;PROVIDER_ORG_ID,&#xA;&#x9;PERSON_ID,&#xA;&#x9;SUBSYSTEM_VALUE,&#xA;&#x9;SUBSYSTEM_REF_ID,&#xA;&#x9;SSN,&#xA;&#x9;CONTRIBUTION_AMOUNT &#xA;FROM&#xA;&#x9; SGT_PROVIDER_REPORT_DATA_DEFF_COMP WITH(NOLOCK)  &#xA;WHERE&#xA;&#x9; BATCH_REQUEST_ID = @BATCH_REQUEST_ID &#xA;ORDER BY  EFFECTIVE_START_DATE desc">
+      <parameters>
+        <parameter ID="@BATCH_REQUEST_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="ProviderReportDataBatchRequestId" sfwType="Column" sfwValue="provider_report_data_batch_request_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="VisibilityFlag" sfwType="Column" sfwValue="visibility_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="OrgId" sfwType="Column" sfwValue="org_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PlanId" sfwType="Column" sfwValue="plan_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusDescription" sfwType="Description" sfwValue="status_description" />
+    <attribute ID="StatusId" sfwType="Column" sfwValue="status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="1506" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusValue" sfwType="Column" sfwValue="status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="EffectiveStartDate" sfwType="Column" sfwValue="effective_start_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="EffectiveEndDate" sfwType="Column" sfwValue="effective_end_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="objOrganization" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusOrganization" />
+    <attribute ID="objPlan" sfwType="Object" sfwEntity="entPlan" sfwValue="ibusPlan" />
+    <attribute sfwDataType="string" sfwType="Property" ID="OrgCode" sfwValue="icdoProviderReportDataBatchRequest.org_code" />
+    <attribute ID="lstProviderReportDataDC" sfwType="Collection" sfwValue="iclbProviderReportDataDC" sfwEntity="entProviderReportDataDC" />
+    <attribute ID="lstProviderReportDataDeffComp" sfwType="Collection" sfwValue="iclbProviderReportDataDeffComp" sfwEntity="entProviderReportDataDeffComp" />
+    <attribute ID="lstProviderReportDataInsurance" sfwType="Collection" sfwValue="iclbProviderReportDataInsurance" sfwEntity="entProviderReportDataInsurance" />
+    <attribute ID="lstProviderReportDataMedicarePartD" sfwType="Collection" sfwValue="iclbProviderReportDataMedicarePartD" sfwEntity="entProviderReportDataMedicarePartD" sfwPrivate="False" />
+  </attributes>
+</entity>

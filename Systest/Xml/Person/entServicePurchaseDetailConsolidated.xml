@@ -1,0 +1,191 @@
+﻿<entity ID="entServicePurchaseDetailConsolidated" sfwActive="True" sfwStatus="Review" sfwType="BusinessRule" sfwErrorTable="sgt_service_purchase_header_error" sfwParentKey="service_purchase_header_id" sfwParentKeyValue="ibusServicePurchaseDetail.ibusServicePurchaseHeader.icdoServicePurchaseHeader.service_purchase_header_id" sfwMainCDO="icdoServicePurchaseDetailConsolidated" sfwObjectID="busServicePurchaseDetailConsolidated" sfwTableName="sgt_service_purchase_detail_consolidated" sfwView="False" sfwParentEntity="entExtendBase">
+  <rules>
+    <rule ID="IsContributionExistsForPurchasePeriod" sfwMessageId="1345" sfwExpression="!(RFunc.GetValue&lt;Int32&gt;(this, &quot;icdoServicePurchaseDetailConsolidated.time_to_purchase_contribution_months&quot;) == 0)" sfwObjectBased="True" />
+    <rule ID="IsContributionExistsForPurchasePeriodForJudgesConversion" sfwMessageId="1147" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusServicePurchaseDetail.icdoServicePurchaseDetail.judges_conversion_flag&quot;) == &quot;Y&quot;) &amp;&amp; &#xA;!(this.IsContributionExistsForPurchasePeriodForJudgesConversion() == True)" sfwObjectBased="True" />
+    <rule ID="IsInvalidServiceCreditTypeSelectedForJudgesConversion" sfwMessageId="1146" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusServicePurchaseDetail.icdoServicePurchaseDetail.judges_conversion_flag&quot;) == &quot;Y&quot;) &amp;&amp; &#xA;(this.IsInvalidServiceCreditTypeSelectedForJudgesConversion() == True)" sfwObjectBased="True" />
+    <rule ID="Rule - Additional Service Credit Threshold Exceeded" sfwMessageId="1113" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entServicePurchaseDetailConsolidated.GetSumOfTimeToPurchaseForAdditionalServiceCredit&quot;, this.icdoServicePurchaseDetailConsolidated.service_purchase_detail_id) &gt; RFunc.SystemConstant&lt;Int32&gt;(&quot;ERAS&quot;))" sfwObjectBased="True" />
+    <rule ID="Rule - Age Criteria For Additional Service Credit For Member in DB Plan And HP" sfwMessageId="1117" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;icdoServicePurchaseDetailConsolidated.service_credit_type_value&quot;) == &quot;ASC&quot;) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entServicePurchaseDetailConsolidated.MemberInDBPlanAndHP&quot;, this.ibusServicePurchaseDetail.ibusServicePurchaseHeader.icdoServicePurchaseHeader.plan_id) &gt; 0) &amp;&amp; &#xA;(RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusServicePurchaseDetail.ibusServicePurchaseHeader.MemberAgePlusPSCServiceCredit&quot;) &lt; RFunc.SystemConstant&lt;Int32&gt;(&quot;MHAP&quot;)) &amp;&amp; &#xA;!((this.ibusServicePurchaseDetail.ibusServicePurchaseHeader.icdoServicePurchaseHeader.current_age_year_part &gt;= RFunc.SystemConstant&lt;Int32&gt;(&quot;MAHP&quot;)) &amp;&amp; &#xA;(this.ibusServicePurchaseDetail.ibusServicePurchaseHeader.icdoServicePurchaseHeader.total_psc &gt;= RFunc.SystemConstant&lt;Decimal&gt;(&quot;MHPS&quot;)))" sfwObjectBased="True" />
+    <rule ID="Rule - Age Criteria For Additional Service Credit For Member in DB Plan Except HP" sfwMessageId="1115" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;icdoServicePurchaseDetailConsolidated.service_credit_type_value&quot;) == &quot;ASC&quot;) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entServicePurchaseDetailConsolidated.IsMemberInDBPlanExceptHP&quot;, this.ibusServicePurchaseDetail.ibusServicePurchaseHeader.icdoServicePurchaseHeader.plan_id) &gt; 0) &amp;&amp; &#xA;(RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusServicePurchaseDetail.ibusServicePurchaseHeader.MemberAgePlusPSCServiceCredit&quot;) &lt; RFunc.SystemConstant&lt;Int32&gt;(&quot;MAPS&quot;)) &amp;&amp; &#xA;!((this.ibusServicePurchaseDetail.ibusServicePurchaseHeader.icdoServicePurchaseHeader.total_psc &gt;= RFunc.SystemConstant&lt;Decimal&gt;(&quot;MPSC&quot;)) &amp;&amp; &#xA;(this.ibusServicePurchaseDetail.ibusServicePurchaseHeader.icdoServicePurchaseHeader.current_age_year_part &gt;= RFunc.SystemConstant&lt;Int32&gt;(&quot;MAGE&quot;)))" sfwObjectBased="True" />
+    <rule ID="Rule - CheckAdditionalCreditTotalExceeds60ForEmployee" sfwMessageId="1337" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;icdoServicePurchaseDetailConsolidated.service_credit_type_value&quot;) == &quot;ASC&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusServicePurchaseDetail.ibusServicePurchaseHeader.icdoServicePurchaseHeader.payor_value&quot;) == &quot;EMPL&quot;) &amp;&amp; &#xA;(this.IsTotalASCExceeds60ForPayorEmployee() == True)" sfwObjectBased="True" />
+    <rule ID="Rule - CheckAdditionalCreditTotalExceeds60ForEmployer" sfwMessageId="1143" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;icdoServicePurchaseDetailConsolidated.service_credit_type_value&quot;) == &quot;ASC&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusServicePurchaseDetail.ibusServicePurchaseHeader.icdoServicePurchaseHeader.payor_value&quot;) == &quot;EMPR&quot;) &amp;&amp; &#xA;(this.IsTotalASCExceeds60ForPayorEmployer() == True)" sfwObjectBased="True" />
+    <rule ID="Rule - Header Action Status Not in Payment" sfwExpression="(RFunc.EvaluateRule(&quot;ibusServicePurchaseDetail.ibusServicePurchaseHeader.Rule - Visible when Status not Inpayment&quot;, this))" sfwObjectBased="True" />
+    <rule ID="Rule - Header Action Type InPayment" sfwExpression="(RFunc.EvaluateRule(&quot;ibusServicePurchaseDetail.ibusServicePurchaseHeader.Rule - Visible status Inpayment&quot;, this))" sfwObjectBased="True" />
+    <rule ID="Rule - HP Plan VSC threshold value" sfwMessageId="1101" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusServicePurchaseDetail.ibusServicePurchaseHeader.ibusPlan.icdoPlan.plan_code&quot;) == &quot;HWPL&quot;) &amp;&amp; &#xA;(this.ibusServicePurchaseDetail.ibusServicePurchaseHeader.icdoServicePurchaseHeader.total_vsc &lt; RFunc.SystemConstant&lt;Decimal&gt;(&quot;HVSC&quot;))" sfwObjectBased="True" />
+    <rule ID="Rule - Invalid combination in Truth Table" sfwMessageId="1102" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entServicePurchaseHeader.ValidateTruthTableforServiceCreditPurchase&quot;, this.icdoServicePurchaseDetailConsolidated.service_credit_type_value, this.ibusServicePurchaseDetail.ibusServicePurchaseHeader.icdoServicePurchaseHeader.plan_id, this.ibusServicePurchaseDetail.ibusServicePurchaseHeader.icdoServicePurchaseHeader.payor_value) &lt;= 0)" sfwObjectBased="True" />
+    <rule ID="Rule - IsPurchseMorethan240MonthsForJudgesConversion" sfwMessageId="1166" sfwExpression="(this.IsPurchseMorethan240MonthsForJudgesConversion() == True)" sfwObjectBased="True" />
+    <rule ID="Rule - Juges Plan VSC threshold value" sfwMessageId="1101" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusServicePurchaseDetail.ibusServicePurchaseHeader.ibusPlan.icdoPlan.plan_code&quot;) == &quot;JDGS&quot;) &amp;&amp; &#xA;(this.ibusServicePurchaseDetail.ibusServicePurchaseHeader.icdoServicePurchaseHeader.total_vsc &lt; RFunc.SystemConstant&lt;Decimal&gt;(&quot;JVSC&quot;))" sfwObjectBased="True" />
+    <rule ID="Rule - Main LE or NG VSC threshold value" sfwMessageId="1101" sfwExpression="((RFunc.GetValue&lt;String&gt;(this, &quot;ibusServicePurchaseDetail.ibusServicePurchaseHeader.ibusPlan.icdoPlan.plan_code&quot;) == &quot;MAIN&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusServicePurchaseDetail.ibusServicePurchaseHeader.ibusPlan.icdoPlan.plan_code&quot;) == &quot;LEOE&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusServicePurchaseDetail.ibusServicePurchaseHeader.ibusPlan.icdoPlan.plan_code&quot;) == &quot;LENE&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusServicePurchaseDetail.ibusServicePurchaseHeader.ibusPlan.icdoPlan.plan_code&quot;) == &quot;NAGD&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusServicePurchaseDetail.ibusServicePurchaseHeader.ibusPlan.icdoPlan.plan_code&quot;) == &quot;BCLE&quot;) ||&#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusServicePurchaseDetail.ibusServicePurchaseHeader.ibusPlan.icdoPlan.plan_code&quot;) == &quot;STLE&quot;)) &amp;&amp; &#xA;(this.ibusServicePurchaseDetail.ibusServicePurchaseHeader.icdoServicePurchaseHeader.total_vsc &lt; RFunc.SystemConstant&lt;Decimal&gt;(&quot;MVSC&quot;))" sfwObjectBased="True" />
+    <rule ID="Rule - Member not eligible by age" sfwMessageId="1131" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;icdoServicePurchaseDetailConsolidated.service_credit_type_value&quot;) != &quot;ASC&quot;) &amp;&amp; &#xA;(this.GetMemberAge() &lt; 18)" sfwObjectBased="True" />
+    <rule ID="Rule - Org Code Id Entered but Invalid" sfwMessageId="1119" sfwExpression="(!string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoServicePurchaseDetailConsolidated.istrOrgCodeId&quot;))) &amp;&amp; &#xA;(RFunc.GetValue&lt;Int32&gt;(this, &quot;icdoServicePurchaseDetailConsolidated.org_id&quot;) == 0)" sfwObjectBased="True" />
+    <rule ID="Rule - PSC Service Credit threshold value for Free Service" sfwMessageId="1120" sfwExpression="(this.ibusServicePurchaseDetail.ibusServicePurchaseHeader.icdoServicePurchaseHeader.total_psc &lt; RFunc.SystemConstant&lt;Decimal&gt;(&quot;FPSC&quot;))" sfwObjectBased="True" />
+    <rule ID="Rule - PSC Service Credit threshold value not reached for Additional Service Credit type in DC Plan" sfwMessageId="1114" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;icdoServicePurchaseDetailConsolidated.service_credit_type_value&quot;) == &quot;ASC&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusServicePurchaseDetail.ibusServicePurchaseHeader.ibusPlan.icdoPlan.retirement_type_value&quot;) == &quot;DC&quot;) &amp;&amp; &#xA;(this.ibusServicePurchaseDetail.ibusServicePurchaseHeader.icdoServicePurchaseHeader.total_psc &lt; RFunc.SystemConstant&lt;Decimal&gt;(&quot;PSCM&quot;))" sfwObjectBased="True" />
+    <rule ID="Rule - Service Credit End Date is Required" sfwMessageId="1097" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;icdoServicePurchaseDetailConsolidated.service_credit_type_value&quot;) != &quot;ASC&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;DateTime&gt;(this, &quot;icdoServicePurchaseDetailConsolidated.service_purchase_end_date&quot;) == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="Rule - Service Credit is not of Type Additional Service Credit" sfwMessageId="1118" sfwExpression="!(RFunc.GetValue&lt;String&gt;(this, &quot;icdoServicePurchaseDetailConsolidated.service_credit_type_value&quot;) == &quot;ASC&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule - Service Credit Start Date greater than End Date" sfwMessageId="1098" sfwExpression="(RFunc.GetValue&lt;DateTime&gt;(this, &quot;icdoServicePurchaseDetailConsolidated.service_purchase_end_date&quot;) != DateTime.MinValue) &amp;&amp; &#xA;(RFunc.GetValue&lt;DateTime&gt;(this, &quot;icdoServicePurchaseDetailConsolidated.service_purchase_start_date&quot;) != DateTime.MinValue) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;icdoServicePurchaseDetailConsolidated.service_credit_type_value&quot;) != &quot;ASC&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;DateTime&gt;(this, &quot;icdoServicePurchaseDetailConsolidated.service_purchase_start_date&quot;) &gt; RFunc.GetValue&lt;DateTime&gt;(this, &quot;icdoServicePurchaseDetailConsolidated.service_purchase_end_date&quot;))" sfwObjectBased="True" />
+    <rule ID="Rule - Service Credit Start Date is Required" sfwMessageId="1096" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;icdoServicePurchaseDetailConsolidated.service_credit_type_value&quot;) != &quot;ASC&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;DateTime&gt;(this, &quot;icdoServicePurchaseDetailConsolidated.service_purchase_start_date&quot;) == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="Rule - Service Credit Type is Additional Service Credit" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;icdoServicePurchaseDetailConsolidated.service_credit_type_value&quot;) == &quot;ASC&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule - Service Credit Type is Required" sfwMessageId="1095" sfwExpression="(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoServicePurchaseDetailConsolidated.service_credit_type_value&quot;)))" sfwObjectBased="True" />
+    <rule ID="Rule - Service Purchase Date Overlapping" sfwMessageId="1099" sfwExpression="(RFunc.GetValue&lt;DateTime&gt;(this, &quot;icdoServicePurchaseDetailConsolidated.service_purchase_end_date&quot;) != DateTime.MinValue) &amp;&amp; &#xA;(RFunc.GetValue&lt;DateTime&gt;(this, &quot;icdoServicePurchaseDetailConsolidated.service_purchase_start_date&quot;) != DateTime.MinValue) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entServicePurchaseDetailConsolidated.CheckForOverlapping Date Range&quot;, this.icdoServicePurchaseDetailConsolidated.service_purchase_consolidated_detail_id, this.ibusServicePurchaseDetail.ibusServicePurchaseHeader.icdoServicePurchaseHeader.person_id, this.icdoServicePurchaseDetailConsolidated.service_purchase_start_date, this.icdoServicePurchaseDetailConsolidated.service_purchase_end_date) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="Rule - Threshold value reached for Judges Conversion" sfwMessageId="1106" sfwExpression="(this.GetTotalTimeToPurchaseForValidation() == True)" sfwObjectBased="True" />
+    <rule ID="Rule - Time to Purchase Entered for Service Credit Type other than Additional Service Credit" sfwMessageId="1094" sfwExpression="(RFunc.GetValue&lt;Int32&gt;(this, &quot;icdoServicePurchaseDetailConsolidated.time_to_purchase&quot;) != 0) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;icdoServicePurchaseDetailConsolidated.service_credit_type_value&quot;) != &quot;ASC&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule - Total Months above the threshold value for Free Service Credit" sfwMessageId="1121" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entServicePurchaseDetailConsolidated.IsMemberInDBPlanExceptHP&quot;, this.ibusServicePurchaseDetail.ibusServicePurchaseHeader.icdoServicePurchaseHeader.plan_id) &gt; 0) &amp;&amp; &#xA;(RFunc.GetValue&lt;Int32&gt;(this, &quot;icdoServicePurchaseDetailConsolidated.calculated_time_to_purchase&quot;) &gt; RFunc.SystemConstant&lt;Int32&gt;(&quot;TMFS&quot;))" sfwObjectBased="True" />
+    <rule ID="Rule Check Time Range Entered For Additional Service" sfwMessageId="1335" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;icdoServicePurchaseDetailConsolidated.service_credit_type_value&quot;) == &quot;ASC&quot;) &amp;&amp; &#xA;((RFunc.GetValue&lt;DateTime&gt;(this, &quot;icdoServicePurchaseDetailConsolidated.service_purchase_start_date&quot;) != DateTime.MinValue) || &#xA;(RFunc.GetValue&lt;DateTime&gt;(this, &quot;icdoServicePurchaseDetailConsolidated.service_purchase_end_date&quot;) != DateTime.MinValue))" sfwObjectBased="True" />
+    <rule ID="Rule Tree - Payor Type Employer" sfwExpression="(this.ibusServicePurchaseDetail.ibusServicePurchaseHeader.icdoServicePurchaseHeader.payor_value == &quot;EMPR&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule Tree - Payor Type Employer - For Pune Error" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusServicePurchaseDetail.ibusServicePurchaseHeader.icdoServicePurchaseHeader.payor_value&quot;) == &quot;EMPR&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule Tree - Service Credit Type is Free Service" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;icdoServicePurchaseDetailConsolidated.service_credit_type_value&quot;) == &quot;FS&quot;)" sfwObjectBased="True" />
+    <rule ID="IsServicePurchaseDetailConsolidatedPIForClosed" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(!((RFunc.GetValue&lt;String&gt;(this, &quot;ibusServicePurchaseDetail.ibusServicePurchaseHeader.icdoServicePurchaseHeader.action_status_value&quot;) == &quot;PIF&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusServicePurchaseDetail.ibusServicePurchaseHeader.icdoServicePurchaseHeader.action_status_value&quot;) == &quot;CLOS&quot;))) &amp;&amp;&#xA;!(this.ibusServicePurchaseDetail.ibusServicePurchaseHeader.IsUserCheckingOwnOrSpouseServicePurchase())" />
+  </rules>
+  <delete>
+    <property ID="IcdoServicePurchaseDetailConsolidated" />
+  </delete>
+  <checklist />
+  <initialload>
+    <item ID="Rule - Header Action Type InPayment" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - Header Action Status Not in Payment" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsServicePurchaseDetailConsolidatedPIForClosed" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror>
+    <item ID="Rule - Service Purchase Date Overlapping " sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - Service Credit Type is Additional Service Credit" sfwMode="All" sfwStatus="Active">
+      <items>
+        <rule ID="Rule - Juges Plan VSC threshold value" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+        <rule ID="Rule - HP Plan VSC threshold value" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+        <rule ID="Rule - Main LE or NG VSC threshold value" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+      </items>
+    </item>
+    <item ID="Rule - Threshold value reached for Judges Conversion" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Tree - Payor Type Employer" sfwMode="All" sfwStatus="Active">
+      <items>
+        <rule ID="Rule - Additional Service Credit Threshold Exceeded" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+        <rule ID="Rule - Age Criteria For Additional Service Credit For Member in DB Plan Except HP" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+        <rule ID="Rule - Age Criteria For Additional Service Credit For Member in DB Plan And HP" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+        <rule ID="Rule - Service Credit is not of Type Additional Service Credit" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+      </items>
+    </item>
+    <item ID="Rule Tree - Service Credit Type is Free Service" sfwMode="All" sfwStatus="Active">
+      <items>
+        <rule ID="Rule - PSC Service Credit threshold value for Free Service" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+        <rule ID="Rule - Total Months above the threshold value for Free Service Credit" sfwMode="All" sfwStatus="Active" sfwObjectBased="True" />
+      </items>
+    </item>
+    <item ID="IsContributionExistsForPurchasePeriod" sfwMode="All" sfwStatus="Active" />
+  </softerror>
+  <harderror>
+    <item ID="Rule - Service Credit Type is Required" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - Service Credit Start Date is Required" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - Service Credit End Date is Required" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - Service Credit Start Date greater than End Date" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - Org Code Id Entered but Invalid" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - Time to Purchase Entered for Service Credit Type other than Additional Service Credit" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - Invalid combination in Truth Table" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - Member not eligible by age" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check Time Range Entered For Additional Service" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - CheckAdditionalCreditTotalExceeds60ForEmployee" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - CheckAdditionalCreditTotalExceeds60ForEmployer" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsInvalidServiceCreditTypeSelectedForJudgesConversion" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsContributionExistsForPurchasePeriodForJudgesConversion" sfwMode="All" sfwStatus="Inactive" />
+    <item ID="Rule - PSC Service Credit threshold value not reached for Additional Service Credit type in DC Plan" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - IsPurchseMorethan240MonthsForJudgesConversion" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <expressionfields />
+  <constraint />
+  <queries>
+    <query ID="GetConsolidatedServiceCreditType" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select *&#xD;&#xA;From&#xD;&#xA;    SGS_Code_Value (nolock)&#xD;&#xA;Where&#xD;&#xA;    Code_Id = 326&#xD;&#xA;    and Data1 = 'Consolidated'">
+      <parameters />
+    </query>
+    <query ID="CheckForOverlapping Date Range" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select Count(*) &#xD;&#xA;From &#xD;&#xA; SGT_Service_Purchase_Header SPH (nolock)&#xD;&#xA; Join SGT_Service_Purchase_Detail SPD (nolock)&#xD;&#xA;  on (SPD.Service_Purchase_Header_Id = SPH.Service_Purchase_Header_Id)&#xD;&#xA; Join SGT_Service_Purchase_Detail_Consolidated SPDC (nolock)&#xD;&#xA;  on (SPDC.Service_Purchase_Detail_Id = SPD.Service_Purchase_Detail_Id)&#xD;&#xA;Where&#xD;&#xA; SPH.Person_Id = @PersLink_Id and Service_Purchase_Consolidated_Detail_Id &lt;&gt; @Service_Purchase_Consolidated_Detail_Id &#xD;and Service_Purchase_Type_Value = 'CONS' and Action_Status_Value &lt;&gt; 'VOID' and ( @Start_Date between Service_Purchase_Start_Date and Service_Purchase_End_Date or @End_Date between Service_Purchase_Start_Date and Service_Purchase_End_Date)">
+      <parameters>
+        <parameter ID="@Service_Purchase_Consolidated_Detail_Id" sfwDataType="int" />
+        <parameter ID="@PersLink_Id" sfwDataType="int" />
+        <parameter ID="@Start_Date" sfwDataType="DateTime" />
+        <parameter ID="@End_Date" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="GetSumOfTimeToPurchaseForAdditionalServiceCredit" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select&#xD;&#xA; isnull(Sum(IsNull ( DateDiff(mm, service_purchase_start_date, service_purchase_end_date) +1 + IsNull(Time_To_Purchase, 0),0)),0)&#xD;&#xA;From&#xD;&#xA; SGT_Service_Purchase_Detail_Consolidated SPDC (nolock)&#xD;&#xA;Where&#xD;&#xA; SPDC.Service_Purchase_Detail_Id = @Service_Purchase_Detail_Id&#xD;&#xA; and SPDC.Service_Credit_Type_Value = 'ASC'&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@Service_Purchase_Detail_Id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="IsMemberInDBPlanExceptHP" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select &#xD;&#xA; IsNull(Count(*),0) &#xD;&#xA;From&#xD;&#xA;     SGT_Plan  (nolock)&#xD;&#xA;Where&#xD;&#xA;    Plan_Id = @Plan_Id and Retirement_Type_Value = 'DB'&#xD; and Plan_Code &lt;&gt; 'HWPL'&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@Plan_Id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="MemberInDBPlanAndHP" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select &#xD;&#xA; IsNull(Count(*),0) &#xD;&#xA;From&#xD;&#xA;     SGT_Plan  (nolock)&#xD;&#xA;Where&#xD;&#xA;    Plan_Id = @Plan_Id and Retirement_Type_Value = 'DB'&#xD; and Plan_Code = 'HWPL'&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@Plan_Id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetTotalASCForPersonByPayorEmployee" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT isnull(sum(a.calculated_time_to_purchase),0) AS calculated_time_to_purchase from SGT_SERVICE_PURCHASE_DETAIL_CONSOLIDATED a&#xD;&#xA;INNER JOIN SGT_SERVICE_PURCHASE_DETAIL b ON a.service_purchase_detail_id = b.service_purchase_detail_id&#xD;&#xA;INNER JOIN SGT_SERVICE_PURCHASE_HEADER C ON b.service_purchase_header_id = c.service_purchase_header_id&#xD;&#xA;WHERE c.person_id = @PersonID and c.action_status_value &lt;&gt; 'VOID' and service_credit_type_value = 'ASC'&#xD;&#xA;AND SERVICE_PURCHASE_CONSOLIDATED_DETAIL_ID &lt;&gt; @spConsolidatedDetailID AND C.Payor_Value = 'EMPL'&#xD;&#xA;AND ACTION_STATUS_VALUE IN ('INPY','PIF')">
+      <parameters>
+        <parameter ID="@PersonID" sfwDataType="int" />
+        <parameter ID="@spConsolidatedDetailID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetTotalASCForPersonByPayorEmployer" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT isnull(sum(a.calculated_time_to_purchase),0) AS calculated_time_to_purchase from SGT_SERVICE_PURCHASE_DETAIL_CONSOLIDATED a&#xD;&#xA;INNER JOIN SGT_SERVICE_PURCHASE_DETAIL b ON a.service_purchase_detail_id = b.service_purchase_detail_id&#xD;&#xA;INNER JOIN SGT_SERVICE_PURCHASE_HEADER C ON b.service_purchase_header_id = c.service_purchase_header_id&#xD;&#xA;WHERE c.person_id = @PersonID and c.action_status_value &lt;&gt; 'VOID' and service_credit_type_value = 'ASC'&#xD;&#xA;AND SERVICE_PURCHASE_CONSOLIDATED_DETAIL_ID &lt;&gt; @spConsolidatedDetailID AND C.Payor_Value = 'EMPR'&#xD;&#xA;AND ACTION_STATUS_VALUE IN ('INPY','PIF')">
+      <parameters>
+        <parameter ID="@PersonID" sfwDataType="int" />
+        <parameter ID="@spConsolidatedDetailID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetConsolidatedInpaymentorPaidInfullPurchaseByPerson" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_SERVICE_PURCHASE_DETAIL_CONSOLIDATED CONS&#xD;&#xA;INNER JOIN SGT_SERVICE_PURCHASE_DETAIL DTL ON CONS.SERVICE_PURCHASE_DETAIL_ID=DTL.SERVICE_PURCHASE_DETAIL_ID&#xD;&#xA;INNER JOIN SGT_SERVICE_PURCHASE_HEADER HDR ON DTL.SERVICE_PURCHASE_HEADER_ID=HDR.SERVICE_PURCHASE_HEADER_ID&#xD;&#xA;WHERE&#xD;&#xA;HDR.PERSON_ID=@PERSON_ID AND&#xD;&#xA;CONS.PAYEE_ACCOUNT_ID=@PAYEE_ACCOUNT_ID AND&#xD;&#xA;HDR.ACTION_STATUS_VALUE IN ('INPY','PIF')">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+        <parameter ID="@PAYEE_ACCOUNT_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="ServicePurchaseConsolidatedDetailId" sfwType="Column" sfwValue="service_purchase_consolidated_detail_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ServicePurchaseDetailId" sfwType="Column" sfwValue="service_purchase_detail_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ServiceCreditTypeDescription" sfwType="Description" sfwValue="service_credit_type_description" />
+    <attribute ID="ServiceCreditTypeId" sfwType="Column" sfwValue="service_credit_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="326" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ServiceCreditTypeValue" sfwType="Column" sfwValue="service_credit_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="ServicePurchaseStartDate" sfwType="Column" sfwValue="service_purchase_start_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ServicePurchaseEndDate" sfwType="Column" sfwValue="service_purchase_end_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="TimeToPurchase" sfwType="Column" sfwValue="time_to_purchase" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="CalculatedTimeToPurchase" sfwType="Column" sfwValue="calculated_time_to_purchase" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="TimeToPurchaseContributionMonths" sfwType="Column" sfwValue="time_to_purchase_contribution_months" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="RefundWithInterest" sfwType="Column" sfwValue="refund_with_interest" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="RefundDate" sfwType="Column" sfwValue="refund_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="SuppressWarningsFlag" sfwType="Column" sfwValue="suppress_warnings_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="OrgId" sfwType="Column" sfwValue="org_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PayeeAccountId" sfwType="Column" sfwValue="payee_account_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute sfwDataType="int" sfwType="Property" ID="ServicePurchaseConsolidatedDetailId1" sfwValue="icdoServicePurchaseDetailConsolidated.service_purchase_consolidated_detail_id" />
+    <attribute ID="objServicePurchaseDetail" sfwType="Object" sfwEntity="entServicePurchaseDetail" sfwValue="ibusServicePurchaseDetail" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ServiceCreditTypeValue1" sfwValue="icdoServicePurchaseDetailConsolidated.service_credit_type_value" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ServiceCreditTypeDescription1" sfwValue="icdoServicePurchaseDetailConsolidated.service_credit_type_description" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="ServicePurchaseStartDate1" sfwValue="icdoServicePurchaseDetailConsolidated.service_purchase_start_date" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="ServicePurchaseEndDate1" sfwValue="icdoServicePurchaseDetailConsolidated.service_purchase_end_date" />
+    <attribute sfwDataType="int" sfwType="Property" ID="TimeToPurchase1" sfwValue="icdoServicePurchaseDetailConsolidated.time_to_purchase" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="RefundDate1" sfwValue="icdoServicePurchaseDetailConsolidated.refund_date" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="RefundWithInterest1" sfwValue="icdoServicePurchaseDetailConsolidated.refund_with_interest" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrOrgCodeId" sfwValue="icdoServicePurchaseDetailConsolidated.istrOrgCodeId" />
+    <attribute sfwDataType="string" sfwType="Property" ID="CreatedBy1" sfwValue="icdoServicePurchaseDetailConsolidated.created_by" />
+    <attribute sfwDataType="int" sfwType="Property" ID="UpdateSeq1" sfwValue="icdoServicePurchaseDetailConsolidated.update_seq" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="CreatedDate1" sfwValue="icdoServicePurchaseDetailConsolidated.created_date" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ModifiedBy1" sfwValue="icdoServicePurchaseDetailConsolidated.modified_by" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="ModifiedDate1" sfwValue="icdoServicePurchaseDetailConsolidated.modified_date" />
+    <attribute sfwDataType="int" sfwType="Property" ID="CalculatedTimeToPurchase1" sfwValue="icdoServicePurchaseDetailConsolidated.calculated_time_to_purchase" />
+    <attribute sfwDataType="string" sfwType="Property" ID="CalculatedTimeToPurchaseYears" sfwValue="icdoServicePurchaseDetailConsolidated.calculated_time_to_purchase_years" />
+    <attribute sfwDataType="int" sfwType="Property" ID="TimeToPurchaseContributionMonths1" sfwValue="icdoServicePurchaseDetailConsolidated.time_to_purchase_contribution_months" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ServicePurchaseStartDateLongDate" sfwValue="icdoServicePurchaseDetailConsolidated.service_purchase_start_date_longDate" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ServicePurchaseEndDateLongDate" sfwValue="icdoServicePurchaseDetailConsolidated.service_purchase_end_date_longDate" />
+    <attribute ID="objOrganization" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusOrganization" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPaymentMinusExpirationDateDate" sfwValue="istrPaymentMinusExpirationDateDate" />
+    <attribute sfwType="Property" ID="IcdoServicePurchaseDetailConsolidated" sfwValue="icdoServicePurchaseDetailConsolidated" />
+  </attributes>
+  <methods />
+  <lifecycle />
+  <objectmethods />
+  <ExtraFields />
+</entity>

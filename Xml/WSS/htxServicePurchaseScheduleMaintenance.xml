@@ -1,0 +1,183 @@
+﻿<form ID="wfmServicePurchaseScheduleMaintenance" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2001" sfwType="FormLinkMaintenance" sfwTitle="Service Purchase Schedule Maintenance" version="3.5" WebSite="NeoSpinWSS" sfwEntity="entServicePurchaseAmortizationScheduleWeb" sfwTemplate="ServicePurchaseScheduleMaintenance.html" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmServicePurchaseScheduleLookup" sfwFormObjectType="None" isBasedOnWfm="true">
+  <initialload>
+    <callmethods sfwMethodName="FindServicePurchaseScheduleWeb" />
+  </initialload>
+  <items>
+    <sfwTable ID="Main" />
+    <sfwPanel ID="pnltoolbar" sfwCaption="Header" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblNewPage" />
+        <sfwImageButton ID="btnBack" ImageAlign="AbsMiddle" ImageUrl="~/Images/back.gif" sfwMethodName="btnBack_Click" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlMain" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblMain" />
+        <sfwPanel ID="pnlWhatif" sfwCaption="What If" sfwVisibleRule="IsPreTaxedCheckedInPayment">
+          <items>
+            <sfwTable ID="tbl2" />
+            <sfwLabel ID="capIdecWhatIfExpextedInstallmentAmount" Text="Expected Installment Amount :" sfwIsCaption="True" />
+            <sfwTextBox ID="txtIdecWhatIfPaymentAmount1" sfwDataType="Numeric" sfwEntityField="objServicePurchaseHeader.IdecWhatIfExpextedInstallmentAmount" />
+            <sfwLabel ID="capIintWhatIfNoOfPayments" Text="No of Payments : " sfwIsCaption="True" />
+            <sfwTextBox ID="txtIintWhatIfNoOfPayments1" sfwAutoMinLength="0" sfwDataType="Numeric" sfwEntityField="objServicePurchaseHeader.IintWhatIfNoOfPayments" />
+            <sfwLabel ID="capIstrWhatIfPaymentFrequency" Text="Payment Frequency : " sfwIsCaption="True" />
+            <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlIstrWhatIfPaymentFrequency1" sfwLoadType="CodeGroup" sfwLoadSource="330" sfwEntityField="objServicePurchaseHeader.IstrWhatIfPaymentFrequency" />
+            <sfwLabel ID="capIdecPayOffAmount" Text="Payoff Amount : " sfwIsCaption="True" />
+            <sfwLabel ID="lblIdecPayOffAmountFormatted" sfwDataFormat="{0:C}" sfwEntityField="objServicePurchaseHeader.IdecPayOffAmountFormatted" />
+            <sfwLabel ID="capIdecWhatIfPaymentAmount" Text="Onetime Additional Payment : " sfwIsCaption="True" />
+            <sfwTextBox ID="txtIdecWhatIfPaymentAmount2" sfwDataType="Numeric" sfwEntityField="objServicePurchaseHeader.IdecWhatIfPaymentAmount" />
+            <sfwLabel ID="lblServicePurchaseHeaderId" Visible="False" sfwEntityField="objServicePurchaseHeader.ServicePurchaseHeaderId" />
+            <sfwButton ID="btnGenerateWhatIfSchdule11" sfwActiveForm="wfmServicePurchaseWhatIfScheduleMaintenance" sfwLaunchInNewWindow="True" sfwMethodName="btnOpen_Click" sfwNavigationParameter="aintHeaderID=objServicePurchaseHeader.ServicePurchaseHeaderId;aintNumberofPayments=objServicePurchaseHeader.IintWhatIfNoOfPayments;adecOneTimePaymentAmount=objServicePurchaseHeader.IdecWhatIfPaymentAmount;adecExpectedInstallmentAmount=objServicePurchaseHeader.IdecWhatIfExpextedInstallmentAmount;astrPaymentFrequency=objServicePurchaseHeader.IstrWhatIfPaymentFrequency" Text="Generate 'What If' Schedule" />
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlPayments" sfwCaption="Payments" sfwVisibleRule="IsActionStatusInPayment">
+          <items>
+            <sfwTable ID="tbl1" />
+            <sfwGridView AllowPaging="True" ID="grvServicePurchaseAmortizationSchedule" sfwEntityField="objServicePurchaseHeader.lstServicePurchaseAmortizationSchedule" sfwGridEntity="entServicePurchaseAmortizationSchedule">
+              <Columns>
+                <TemplateField HeaderText="Payment Number">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="PaymentNumber" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Payment Received Date">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="PaymentDate" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Payment Due Date">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="PaymentDueDate" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Payment Amount" ItemStyle.HorizontalAlign="Right">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="PaymentAmount" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Expected Payment Amount" ItemStyle.HorizontalAlign="Right">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="ExpectedPaymentAmount" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Principal" ItemStyle.HorizontalAlign="Right">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="PrincipleInPaymentAmount" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Interest" ItemStyle.HorizontalAlign="Right">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="InterestInPaymentAmount" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Principal Balance" ItemStyle.HorizontalAlign="Right">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="PrincipleBalance" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Pay-off Amount" ItemStyle.HorizontalAlign="Right">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="IdecPayOffAmount" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Service Purchase Amortization Schedule ID" Visible="False">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="ServicePurchaseAmortizationScheduleId" />
+                  </ItemTemplate>
+                </TemplateField>
+              </Columns>
+            </sfwGridView>
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlCons" sfwCaption="Service Credit Purchase" sfwVisibleRule="IsPurchaseConsolidatedAndStatusClosedPIF">
+          <items>
+            <sfwTable ID="tbl3" />
+            <sfwGridView AllowPaging="True" ID="grvServicePurchaseDetailConsolidated" sfwEntityField="objServicePurchaseHeader.objPrimaryServicePurchaseDetail.lstServicePurchaseDetailConsolidated" sfwGridEntity="entServicePurchaseDetailConsolidated">
+              <Columns>
+                <TemplateField HeaderText="Type of Service">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="ServiceCreditTypeDescription1" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Date From">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="ServicePurchaseStartDate1" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Date To">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="ServicePurchaseEndDate1" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Service Credit Purchased">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="CalculatedTimeToPurchaseYears" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Time To Purchase Contribution Months" Visible="False">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="TimeToPurchaseContributionMonths1" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Service Purchase Consolidated Detail ID" Visible="False">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="ServicePurchaseConsolidatedDetailId1" />
+                  </ItemTemplate>
+                </TemplateField>
+              </Columns>
+            </sfwGridView>
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlPay" sfwCaption="Payments" sfwVisibleRule="IsActionStatusClosedOrPIF">
+          <items>
+            <sfwTable ID="tbl4" />
+            <sfwGridView AllowPaging="True" ID="grvServicePurchaseAmortizationSchedule2" sfwEntityField="objServicePurchaseHeader.lstServicePurchaseAmortizationSchedule" sfwGridEntity="entServicePurchaseAmortizationSchedule">
+              <Columns>
+                <TemplateField HeaderText="Payment Number">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="PaymentNumber" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Payment Received Date">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="PaymentDate" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Payment Amount" ItemStyle.HorizontalAlign="Right">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="PaymentAmount" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Principal" ItemStyle.HorizontalAlign="Right">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="PrincipleInPaymentAmount" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Interest" ItemStyle.HorizontalAlign="Right">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="InterestInPaymentAmount" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Principal Balance" ItemStyle.HorizontalAlign="Right">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="PrincipleBalance" />
+                  </ItemTemplate>
+                </TemplateField>
+                <TemplateField HeaderText="Service Purchase Amortization Schedule ID" Visible="False">
+                  <ItemTemplate>
+                    <sfwLabel sfwEntityField="ServicePurchaseAmortizationScheduleId" />
+                  </ItemTemplate>
+                </TemplateField>
+              </Columns>
+            </sfwGridView>
+          </items>
+        </sfwPanel>
+      </items>
+    </sfwPanel>
+  </items>
+  <loaddetails>
+    <entityfield ID="objServicePurchaseHeader" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objServicePurchaseHeader.lstServicePurchaseAmortizationSchedule" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objServicePurchaseHeader.objPrimaryServicePurchaseDetail.lstServicePurchaseDetailConsolidated" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+  </loaddetails>
+</form>

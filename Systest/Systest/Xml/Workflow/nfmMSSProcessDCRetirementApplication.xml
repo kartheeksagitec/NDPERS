@@ -1,0 +1,48 @@
+﻿<form ID="nfmMSSProcessDCRetirementApplication" sfwActive="True" sfwStatus="Valid" sfwType="WorkflowMap" sfwRemoveDeletedActivities="False">
+  <ProcessVariables>
+    <ProcessVariable ID="application_reference_id" sfwDataType="int" sfwObjectID="busRetirementDisabilityApplication" sfwObjectField="icdoBenefitApplication.benefit_application_id" />
+    <ProcessVariable ID="calculation_reference_id" sfwObjectID="busRetirementBenefitCalculation" sfwObjectField="icdoBenefitCalculation.benefit_calculation_id" />
+    <ProcessVariable ID="payee_account_reference_id" sfwObjectID="busPayeeAccount" sfwObjectField="icdoPayeeAccount.payee_account_id" />
+  </ProcessVariables>
+  <activity sfwDisplayName="Enter DC Retirement Application Data" sfwFirstActivityFlag="True" sfwLastActivityFlag="False" sfwActivityType="User">
+    <form sfwMode="new" sfwFormName="wfmRetirementApplicationLookup" sfwFormMode="new">
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="member_person_id" sfwDataType="int" sfwParamaterName="member_person_id" sfwParameterValue="ibusProcessInstance.icdoProcessInstance.person_id" sfwValueSource="Object Field" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="p.last_name" sfwDataType="string" sfwParamaterName="p.last_name" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="p.first_name" sfwDataType="string" sfwParamaterName="p.first_name" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="o.org_code" sfwDataType="int" sfwParamaterName="o.org_code" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="o.org_name" sfwDataType="string" sfwParamaterName="o.org_name" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="recipient_person_id" sfwDataType="int" sfwParamaterName="recipient_person_id" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="m.last_name" sfwDataType="string" sfwParamaterName="m.last_name" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="m.first_name" sfwDataType="string" sfwParamaterName="m.first_name" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="RA.benefit_account_type_value" sfwDataType="string" sfwParamaterName="RA.benefit_account_type_value" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="ra.plan_id" sfwDataType="string" sfwParamaterName="ra.plan_id" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="ra.status_value" sfwDataType="string" sfwParamaterName="ra.status_value" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="convert(datetime, convert(varchar(10), received_date, 101))" sfwDataType="datetime" sfwParamaterName="convert(datetime, convert(varchar(10), received_date, 101))" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="convert(datetime, convert(varchar(10), received_date, 101))" sfwDataType="datetime" sfwParamaterName="convert(datetime, convert(varchar(10), received_date, 101))" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="action_status_value" sfwDataType="string" sfwParamaterName="action_status_value" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="convert(datetime, convert(varchar(10), retirement_date, 101))" sfwDataType="datetime" sfwParamaterName="convert(datetime, convert(varchar(10), retirement_date, 101))" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="convert(datetime, convert(varchar(10), retirement_date, 101))" sfwDataType="datetime" sfwParamaterName="convert(datetime, convert(varchar(10), retirement_date, 101))" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="benefit_application_id" sfwDataType="int" sfwParamaterName="benefit_application_id" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="convert(datetime, convert(varchar(10), termination_date, 101))" sfwDataType="datetime" sfwParamaterName="convert(datetime, convert(varchar(10), termination_date, 101))" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="convert(datetime, convert(varchar(10), termination_date, 101))" sfwDataType="datetime" sfwParamaterName="convert(datetime, convert(varchar(10), termination_date, 101))" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="RA.benefit_option_value" sfwDataType="string" sfwParamaterName="RA.benefit_option_value" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="convert(datetime, convert(varchar(10), payment_date, 101))" sfwDataType="datetime" sfwParamaterName="convert(datetime, convert(varchar(10), payment_date, 101))" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="convert(datetime, convert(varchar(10), payment_date, 101))" sfwDataType="datetime" sfwParamaterName="convert(datetime, convert(varchar(10), payment_date, 101))" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="uniform_income_flag" sfwDataType="string" sfwParamaterName="uniform_income_flag" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="reduced_benefit_flag" sfwDataType="string" sfwParamaterName="reduced_benefit_flag" />
+      <parameter sfwParameterSource="Criteria Field" sfwFieldName="originating_payee_account_id" sfwDataType="int" sfwParamaterName="originating_payee_account_id" />
+    </form>
+    <form sfwMode="update" sfwFormName="wfmRetirementApplicationMaintenance">
+      <parameter sfwParameterSource="FindRetirementDisabilityApplication" sfwParamaterName="aintReferenceID" sfwDataType="int" sfwFieldName="reference_id" sfwParameterValue="icdoActivityInstance.reference_id" sfwValueSource="Object Field" />
+      <parameter sfwParameterSource="FindRetirementDisabilityApplication" sfwParamaterName="astrBenfitType" sfwDataType="string" sfwFieldName="benfit_type" sfwParameterValue="RETR" sfwValueSource="Constant" />
+    </form>
+  </activity>
+  <activity sfwDisplayName="Audit &amp; Approve DC Retirement Application Data" sfwActivityType="User" sfwLastActivityFlag="True" sfwReferenceID="calculation_reference_id">
+    <form sfwMode="update" sfwFormName="wfmRetirementBenefitCalculationFinalMaintenance" sfwFormMode="update">
+      <parameter sfwParameterSource="FindBenefitCalculationFinal" sfwParamaterName="aintBenefitCalculationID" sfwDataType="int" sfwFieldName="benefit_calculation_id" sfwParameterValue="calculation_reference_id" sfwValueSource="Parameter" />
+    </form>
+    <form sfwMode="new" sfwFormName="wfmRetirementBenefitCalculationFinalMaintenance">
+      <parameter sfwParameterSource="FindBenefitCalculationFinal" sfwParamaterName="aintBenefitCalculationID" sfwDataType="int" sfwFieldName="benefit_calculation_id" sfwParameterValue="calculation_reference_id" sfwValueSource="Parameter" />
+    </form>
+  </activity>
+</form>

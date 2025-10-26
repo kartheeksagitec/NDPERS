@@ -1,0 +1,72 @@
+﻿<div class="portlet-body">
+    <div class="form-group">
+        <label class="col-xs-3 control-label">ID :</label>
+        <div class="col-xs-9">
+            <div class='input-group'>
+                <span class="info-tooltip" ng-if="objItem.errors.sfwControlID" ng-attr-title="{{objItem.errors.sfwControlID}}" style="color:red !important"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                <input type="text" class="form-control input-sm" title="{{objItem.dictAttributes.sfwControlID}}" ng-model='objItem.dictAttributes.sfwControlID' undoredodirective model='objItem' ng-keydown="getControlIDIntellisense($event)" ng-change="validateNewItem(objItem)"/>
+                <span class='input-group-addon button-intellisense' ng-click='getControlIDIntellisense($event)'></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-3 control-label">Validation Type :</label>
+        <div class="col-xs-9">
+            <input  type="radio"  value="Required" name="sfwValidationType" ng-model="objItem.dictAttributes.sfwValidationType" ng-change="objItem.dictAttributes.sfwRequired = 'True'" undoredodirective model="objItem">Required
+            <input  type="radio" name="sfwValidationType" value="Query" ng-model="objItem.dictAttributes.sfwValidationType" ng-change="objItem.dictAttributes.sfwRequired = 'False'" undoredodirective model="objItem">Query
+        </div>
+    </div>
+    <div class="form-group" ng-if="objItem.dictAttributes.sfwValidationType=='Required'">
+        <label class="col-xs-3 control-label">Parameter :</label>
+        <div class="col-xs-9">
+            <select class="form-control input-sm" ng-options="methodparam for methodparam in lstMethodParam" ng-model="objItem.dictAttributes.sfwMethodParam" undoredodirective model="objItem">
+                <option></option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group"  ng-if="objItem.dictAttributes.sfwValidationType=='Query'">
+        <label class="col-xs-3 control-label">Query :</label>
+        <div class="col-xs-9">
+            <entityqueryintellisense selecteditem="objItem.dictAttributes.sfwQueryID" model="objItem" propertyname="'dictAttributes.sfwQueryID'" parametermodel="objItem.TempQueryParameters" querytype="'ScalarQuery'" onchangecallback="QueryChange()" errorprop="objItem.errors.sfwQueryID" validate="true"></entityqueryintellisense>
+            <!--<input class="form-control input-sm" type="text" ng-model="objItem.dictAttributes.sfwQueryID">-->
+        </div>
+    </div>
+    <div class="form-group" ng-if="objItem.dictAttributes.sfwValidationType=='Query'">
+        <label class="col-xs-3 control-label">Parameter :</label>
+        <div class="col-xs-9">
+            <div class="input-group">
+                <input class="form-control input-sm" type="text" ng-disabled="true" ng-model="objItem.dictAttributes.sfwParameters" undoredodirective model="objItem">
+                <span class="input-group-btn">
+                    <button  class="textbox-search-icon" ng-disabled="!objItem.TempQueryParameters" type="button" ng-click="openQueryParameterDialog()"></button>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group" ng-if="objItem.dictAttributes.sfwValidationType=='Query'">
+        <label class="col-xs-3 control-label">Operator :</label>
+        <div class="col-xs-9">
+            <select ng-options="operator for operator in lstoperator" class="form-control input-sm" ng-model="objItem.dictAttributes.sfwOperator" undoredodirective model="objItem"/>
+        </div>
+    </div>
+    <div class="form-group" ng-if="objItem.dictAttributes.sfwValidationType=='Query'">
+        <label class="col-xs-3 control-label">Value :</label>
+        <div class="col-xs-9">
+            <input class="form-control input-sm" type="text" ng-model="objItem.dictAttributes.Value" undoredodirective model="objItem">
+        </div>
+    </div>
+    <div class="form-group">
+        <messageintellisensetemplate messageid='objItem.dictAttributes.sfwMessageID' propertyname="'dictAttributes.sfwMessageID'"
+                                     model='objItem' messagetext="'Message ID'" showmessagetext='true'
+                                     messagelabelclass="col-xs-3 control-label" messagetextboxclass="col-xs-9" onchangecallback="objItem.dictAttributes.sfwErrorMessage=''" errorprop="objItem.errors.sfwMessageID" isvalidate="true">
+        </messageintellisensetemplate>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-3 control-label">Message Description :</label>
+        <div class="col-xs-9">
+            <input class="form-control input-sm" ng-disabled="objItem.dictAttributes.sfwMessageID" type="text" ng-model="objItem.dictAttributes.sfwErrorMessage" undoredodirective model="objItem">
+        </div>
+    </div>
+</div>
+<div class="form-actions right">
+    <input type="button" value="OK" class="btn  default" ng-click="onOkClick(objItem)" />
+</div>

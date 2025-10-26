@@ -1,0 +1,142 @@
+﻿<div class="portlet-body">
+    <div class="form-body full-height">
+        <div class="col-xs-12">
+            <div newbuttoncommonproptemplate></div>
+            <div class="form-group" ng-show="!IsNewSaveStepsDisable">
+                <messageintellisensetemplate messageid='sfxControl.dictAttributes.sfwMessageId' propertyname="'dictAttributes.sfwMessageId'"
+                                             model='sfxControl' messagetext="'Message ID:'" showmessagetext='true'
+                                             messagelabelclass="col-xs-2 control-label" messagetextboxclass="col-xs-10" errorprop="sfxControl.errors.sfwMessageId" isvalidate="'true'"></messageintellisensetemplate>
+            </div>
+            <div class="form-group" ng-show="!IsNewSaveStepsDisable && sfxControl.dictAttributes.sfwMethodName !== 'btnSaveNew_Click'">
+                <label class="control-label col-xs-2">Message Parameters</label>
+                <div class="col-xs-10">
+                    <div class="textbox-autocomplete-block">
+                        <entityfieldelementintellisense modebinding="sfxControl.dictAttributes.sfwMessageParameters" model="sfxControl" entityid="entityName" propertyname='"dictAttributes.sfwMessageParameters"'></entityfieldelementintellisense>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group" ng-show="SelectedButtonDetails.Method == 'btnNew_Click' || SelectedButtonDetails.Method == 'btnNewUpdate_Click'">
+                <div class="col-xs-2"></div>
+                <div class="col-xs-10">
+                    <input type="checkbox" ng-model="sfxControl.dictAttributes.sfwForceValidateNew"
+                           ng-true-value="'True'" ng-false-value="'False'" class="margin-left-3" /> <label>Force Validate</label>
+                </div>
+            </div>
+            <div class="form-group" ng-show="SelectedButtonDetails.Method == 'btnNew_Click' || SelectedButtonDetails.Method == 'btnNewUpdate_Click' || SelectedButtonDetails.Method == 'btnOpen_Click'">
+                <div class="col-xs-2"></div>
+                <div class="col-xs-10">
+                    <input type="checkbox" ng-model="sfxControl.dictAttributes.sfwCopyActivitySessionVariables"
+                           ng-true-value="'True'" ng-false-value="'False'" class="margin-left-3" />  <label>Copy Activity Variables</label>
+                </div>
+            </div>
+            <div class="form-group" ng-show="SelectedButtonDetails.Method == 'btnOpen_Click'">
+                <div class="col-xs-2">Selection</div>
+                <div class="col-xs-10">
+                    <select title="{{sfxControl.dictAttributes.sfwSelection}}" ng-model="sfxControl.dictAttributes.sfwSelection" class="form-control input-sm">
+                        <option value=""></option>
+                        <option value="None">None</option>
+                        <option value="One">One</option>
+                        <option value="Many">Many</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" ng-show="SelectedButtonDetails.Method == 'btnOpen_Click' && !objNewButtonActiveForm.objRelatedGrid">
+                <div class="col-xs-2">Related Control:</div>
+                <div class="col-xs-10">
+                    <div class='select-editable common-prop-select-editable'>
+                        <select ng-options='relatedGrid for relatedGrid in objNewButtonFilterGrid.lstRelatedGrid' title="{{sfxControl.dictAttributes.sfwRelatedControl}}" ng-model='sfxControl.dictAttributes.sfwRelatedControl' ng-change="objNewButtonFilterGrid.onRelatedGridChange()" />
+                        <input type='text' title="{{sfxControl.dictAttributes.sfwRelatedControl}}" ng-model='sfxControl.dictAttributes.sfwRelatedControl' ng-change="objNewButtonFilterGrid.onRelatedGridChange()" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-xs-12 create-btn-wizard-right-table">
+
+            <div class="col-xs-4 full-height">
+                <div class="span-extended-name">
+                    <label>Source Form :</label>
+                    <span title="{{formodel.dictAttributes.ID}}" ng-bind="formodel.dictAttributes.ID"></span>
+                </div>
+
+                <div class="navigation-param-tree-list">
+
+
+                    <div class="client-visi-layout-inner">
+                        <div class="client-visi-header">
+                            <span>Available Fields</span>
+                            <div class="fright">
+                                <input type="checkbox" ng-model="objNewButtonNaviagtionParam.IsShowAllControl" ng-change="objNewButtonNaviagtionParam.showAllControlChange()" />
+                                <span class="heading-span">Show All Controls</span>
+                            </div>
+                        </div>
+                        <div class="client-visi-content" style="height:calc(100% - 38px) !important">
+                            <ul>
+                                <li ng-repeat="field in objNewButtonNaviagtionParam.FieldCollection" class="common-tree-list">
+                                    <div navigationparamtreetemplatefornewbutton></div>
+                                </li>
+                            </ul>
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-xs-8 full-height">
+
+                <div class="span-extended-name">
+                    <label ng-bind="objNewButtonNaviagtionParam.TargetFormCaption"></label>
+                    <span title="{{objNewButtonNaviagtionParam.TargetForm}}" ng-bind="objNewButtonNaviagtionParam.TargetForm"></span>
+                </div>
+                <div class="navigation-param-value-table">
+
+                    <div class="client-visi-layout-inner">
+                        <div class="client-visi-header">
+                            <span>Parameters</span>
+                        </div>
+                        <div class="client-visi-content">
+                            <table class="sws-table">
+                                <thead>
+                                    <tr>
+                                        <th width="15%">Type</th>
+                                        <th width="31%">Parameter Field</th>
+                                        <th width="20%">Entity Field</th>
+                                        <th width="32%">Parameter Value</th>
+                                        <th width="22%">Constant</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="param in objNewButtonNaviagtionParam.ParameterCollection" ng-click="objNewButtonNaviagtionParam.SelectedParameter = param"
+                                        ng-class="objNewButtonNaviagtionParam.SelectedParameter == param?'selected':''">
+                                        <td width="15%"><span ng-bind="param.Type"></span></td>
+                                        <td width="31%"><span ng-bind="param.ParameterField"></span></td>
+                                        <td width="20%"><span title="{{param.EntityField}}" ng-bind="param.EntityField"></span></td>
+                                        <td width="32%"><input type="text" class="form-control input-sm" title="{{param.ParameterValue}}" ng-model="param.ParameterValue" parameterdroppable dropdata="param.ParameterValue" /></td>
+                                        <td width="22%"><input type="checkbox" class="checkbox" ng-model="param.Constants" /></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="col-xs-12">
+                <p>Drag the fields from Available Fields list and drop on the Parameter Value column in Parameter grid.</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="form-actions">
+    <input type="button" class="dialog-btn" value="Cancel" ng-click="CloseWizardClick()" />
+    <input type="button" class="dialog-btn" wz-previous="onPrevious()" value="Back" />
+    <input type="button" class="dialog-btn" wz-next="onNext()" value="Next" ng-disabled="isAnyErrors()" ng-click="objNewButtonNaviagtionParam.OnNextClick()" />
+    <input type="button" class="dialog-btn" wz-finish value="Finish" ng-click="onFinishButtonWizardClick()" disabled="disabled" />
+</div>

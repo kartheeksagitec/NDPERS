@@ -1,0 +1,196 @@
+﻿<form ID="wfmIbsDetailLookup" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvEmployerReport" sfwResource="1003" sfwType="Lookup" sfwTitle="IBS Detail Lookup" sfwMaxCount="10000" version="3.5" sfwDefaultButtonID="btnSearch" sfwEntity="entIbsDetail" sfwGridCollection="busIbsDetailLookup.icolIbsDetail">
+  <initialload>
+    <query ID="cdoIbsDetail" sfwQueryRef="entIbsDetail.Lookup" sfwMethodName="LoadIbsDetails" />
+  </initialload>
+  <sfwTable ID="Main">
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlCriteria" sfwCaption="Criteria">
+          <sfwTable CssClass="Table" ID="tblCriteria">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="lblperson_id" Text="PERSLink ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txt_person_id" sfwDataField="A.person_id" sfwDataType="Numeric" sfwQueryID="cdoIbsDetail" />
+                <sfwImageButton ID="btnRetrieve" ImageAlign="AbsMiddle" ImageUrl="~/Image/Lookup.jpg" sfwActiveForm="wfmPersonLookup" sfwMethodName="btnRetrieve_Click" sfwRelatedControl="txt_person_id" sfwSelectedIndex="PersonId" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capReportTypeValue" Text="Report Type : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlReportTypeValue" sfwDataField="report_type_value" sfwOperator="=" sfwQueryID="LookupSubQuery1" sfwLoadType="CodeGroup" sfwLoadSource="1701" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="lblibs_header_id" Text="IBS Header ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txt_ibs_header_id" sfwDataField="A.ibs_header_id" sfwDataType="Numeric" sfwQueryID="cdoIbsDetail" />
+                <sfwImageButton ID="btnRetrieve1" ImageAlign="AbsMiddle" ImageUrl="~/Image/Lookup.jpg" sfwActiveForm="wfmIbsHeaderLookup" sfwMethodName="btnRetrieve_Click" sfwRelatedControl="txt_ibs_header_id" sfwSelectedIndex="IbsHeaderId" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capReportStatusValue" Text="Status : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlReportStatusValue" sfwDataField="A.detail_status_value" sfwOperator="=" sfwQueryID="cdoIbsDetail" DataValueField="code_value" DataTextField="description" sfwData1EqualTo="Y" sfwLoadType="CodeGroup" sfwLoadSource="1210" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="lblibs_detail_id" Text="IBS Detail ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txt_ibs_detail_id" sfwDataField="ibs_detail_id" sfwDataType="Numeric" sfwQueryID="cdoIbsDetail" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblplan_id" Text="Plan : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList DataValueField="plan_id" DataTextField="pln" ID="ddl_plan_id" sfwDataField="A.plan_id" sfwQueryID="cdoIbsDetail" sfwLoadType="Query" sfwLoadSource="entPlan.PlansForIBSDetailLookup" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="lblLabel1" Text="Billing Period From :" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtTextBox" sfwDataFormat="{0:d}" sfwOperator="&gt;=" sfwDataField="A.billing_month_and_year" sfwQueryID="cdoIbsDetail" sfwDataType="DateTime" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblLabel" Text="Billing Period To :" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtTextBox1" sfwDataFormat="{0:d}" sfwOperator="&lt;=" sfwQueryID="cdoIbsDetail" sfwDataField="A.billing_month_and_year" sfwDataType="DateTime" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capModeOfPaymentValue" Text="Payment Method : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlModeOfPaymentValue" sfwDataField="mode_of_payment_value" sfwOperator="like" sfwQueryID="cdoIbsDetail" sfwLoadType="CodeGroup" sfwLoadSource="1703" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnSearch" sfwMethodName="btnSearchCriteriaRequired_Click" Text="Search" />
+                <sfwButton ID="btnReset" sfwMethodName="btnReset_Click" Text="Reset" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwButton ID="btnStoreSearch" sfwMethodName="btnStoreUserDefaults_Click" Text="StoreSearch" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlResult" sfwCaption="Search Results">
+          <sfwTable CssClass="Table" ID="tblResult">
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnNew" sfwActiveForm="wfmIbsDetailMaintenance" sfwMethodName="btnNew_Click" sfwNavigationParameter="aintIBSHeaderID=txt_ibs_header_id;aintPersonID=txt_person_id" Text="New" Visible="False" />
+                <sfwButton ID="btnOpen" sfwActiveForm="wfmIbsDetailMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintibsdetailid=IbsDetailId" sfwRelatedControl="dgrResult" Text="Open" sfwDisableViewOnly="True" />
+                <sfwButton ID="btnDelete" sfwMethodName="btnDelete_Click" sfwNavigationParameter="IbsDetailId" sfwRelatedControl="dgrResult" sfwResource="1013" Text="Delete" />
+                <sfwButton ID="btnIgnore" sfwMethodName="btnExecuteServerMethodFromLookup_Click" sfwNavigationParameter="IbsDetailId" sfwObjectID="busIbsDetail" sfwObjectMethod="btnIgnoreClick" sfwRelatedControl="dgrResult" Text="Ignore" OnClientClick="return confirm('Are you sure you want to ignore selected record(s)?')" sfwMessageNoRowSelected="44" />
+                <sfwButton ID="btnExportExcel" sfwMethodName="btnColumnsToExport_Click" sfwRelatedControl="dgrResult" Text="Export To Excel" />
+                <sfwButton ID="btnOpenPerson" sfwActiveForm="wfmPersonMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintpersonid=PersonId" sfwRelatedControl="dgrResult" Text="Open" Visible="False" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwGridView AllowPaging="True" AllowSorting="True" ID="dgrResult" sfwSelection="Many" sfwSortExpression="IbsDetailId desc" SortExpressionUpdated="true">
+                  <Columns>
+                    <TemplateField HeaderText="IBS Detail ID">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpen" sfwEntityField="IbsDetailId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="PERSLink ID">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpenPerson" sfwEntityField="PersonId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Name">
+                      <ItemTemplate>
+                        <sfwLabel Width="75px" sfwEntityField="objPerson.PersonMemberName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Premium For">
+                      <ItemTemplate>
+                        <sfwLabel sfwVisibleRule="Visible Rule Medicare Fields" sfwEntityField="objPerson.MemberPersonName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Billing Month and Year">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="objIbsHeader.BillingMonthAndYear" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Plan">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objPlan.PlanName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Status">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="DetailStatusDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Coverage Code">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="CoverageCode" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Total Premium Amount" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="TotalPremiumAmount" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="RHIC Amount" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="RhicAmount" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Member Premium Amount" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="MemberPremiumAmount" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Balance Forward" ItemStyle.HorizontalAlign="Right" Visible="False" sfwShowInExportToExcel="True">
+                      <ItemTemplate>
+                        <sfwLabel Visible="False" sfwEntityField="objIbsPersonSummary.BalanceForward" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Provider Premium Amount" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="ProviderPremiumAmount" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Provider">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="IstrProviderOrgCode" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Payment Method">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="ModeOfPaymentDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+  </sfwTable>
+  <loaddetails />
+</form>

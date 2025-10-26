@@ -1,0 +1,64 @@
+﻿<form ID="wfmESSReportsMaintenance" WebSite="NeoSpinWSS" sfwResource="2014" sfwRemoteObject="srvNeoSpinWSS" sfwType="FormLinkMaintenance" sfwTitle="ESSReports Maintenance" sfwActive="True" sfwStatus="Review" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmESSReportsLookup" sfwEntity="entESSHome" sfwTemplate="ESSReportsMaintenance.html" sfwFormObjectType="None" isBasedOnWfm="true">
+  <initialload>
+    <callmethods sfwMethodName="FindReportListing" />
+  </initialload>
+  <items>
+    <sfwPanel ID="pnlHeading" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblHeading" />
+        <sfwLiteral Text="Reports" ID="litResource" />
+        <sfwButton ID="btnGenerateReport" sfwMethodName="btnDownloadAttachment_Click" sfwNavigationParameter="aintOrgId=OrgId;astrReportName=IstrReportName" sfwObjectMethod="ViewEssReport_Click" sfwRelatedControl="grvBusWssMessageDetail" sfwSelection="One" Text="Open Report" Visible="False" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="Reports" sfwCaption="Other Details">
+      <items>
+        <sfwTable ID="tblNewPage" />
+        <sfwGridView ID="grvBusWssMessageDetail" AllowPaging="True" AllowSorting="True" sfwSortExpression="IstrReportNameHidden asc" sfwEntityField="lstWSSMessageDetails" sfwGridEntity="entWssMessageDetail" PageSize="15">
+          <Columns>
+            <TemplateField HeaderText="Report Name">
+              <ItemTemplate>
+                <sfwLabel ID="IstrReportNameAsHidden" sfwEntityField="IstrReportNameHidden" CssClass="hideControl" />
+                <sfwLabel ID="IstrReportNameAsLink" sfwEntityField="IstrReportName" sfwLinkable="True" sfwRelatedControl="btnESSReportsDownload" />
+                <sfwLabel ID="IstrReportNameAsText" sfwEntityField="IstrReportNameText" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Org ID" Visible="False" sfwUseAsSortExpression="True">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="OrgId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Contact ID" Visible="False" sfwUseAsSortExpression="True">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="ContactId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Download As" sfwUseAsSortExpression="True">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="IstrPDF" sfwLinkable="True" sfwRelatedControl="btnESSReportsDownload" sfwVisibleRule="VRShowDownloadLinks" />
+                <sfwLabel Text=" / " sfwVisibleRule="VRShowDownloadLinks" />
+                <sfwLabel sfwEntityField="IstrCSV" sfwLinkable="True" sfwRelatedControl="btnESSCSVReportsDownload" sfwVisibleRule="VRShowDownloadLinks" />
+              </ItemTemplate>
+            </TemplateField>
+          </Columns>
+        </sfwGridView>
+        <sfwButton sfwMethodName="btnOpen_Click" Text="Open" ID="btnOpen" sfwRelatedControl="grvBusWssMessageDetail" sfwEntityField="IstrReportName" sfwActiveForm="Benefit Enrollment Report=wfmBenefitEnrollmentReportMaintenance;Transaction History=wfmESSAgencyStatementMaintenance;Payroll Reporting=wfmCreatePayrollMaintenance;Retirement Contributions - Audit Confirmation=wfmESSDownloadReportsMaintenance" sfwNavigationParameter="aintOrgID=OrgId;aintContactID=ContactId;IstrReportName" />
+        <sfwImageButton ID="btnOpenBenefitEnrollment" ImageUrl="Images/home_balance.png" sfwActiveForm="wfmBenefitEnrollmentReportMaintenance" sfwMethodName="btnOpen_Click" />
+        <sfwImageButton ID="btnCreatePayroll" ImageUrl="Images/home_balance.png" sfwActiveForm="wfmCreatePayrollMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="aintOrgID=IstrOrgId;aintContactID=IstrContactId;IstrReportName" />
+        <sfwImageButton ID="btnESSAgencyStatement" ImageUrl="Images/home_balance.png" sfwActiveForm="wfmESSAgencyStatementMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="aintOrgID=IstrOrgId;aintContactID=IstrContactId;IstrReportName" />
+        <sfwImageButton ID="btnOpenESSDownloadReports" ImageUrl="Images/home_balance.png" sfwActiveForm="wfmESSDownloadReportsMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="aintOrgID=IstrOrgId;aintContactID=IstrContactId;astrReportName=#Retirement Contributions - Audit Confirmation" />
+        <sfwTextBox ID="txtDownloadFileName" sfwEntityField="IstrDownloadFileName" />
+        <sfwTextBox ID="txtOrgId" sfwEntityField="IstrOrgId" />
+        <sfwTextBox ID="txtContactId" sfwEntityField="IstrContactId" />
+        <sfwTextBox ID="txtReportName" sfwEntityField="IstrReportName" />
+        <sfwTextBox ID="txtReportNameText" sfwEntityField="IstrReportNameText" />
+        <sfwButton ID="btnOpenPdfFile" sfwNavigationParameter="pdf_file_name=IstrDownloadFileName" sfwMethodName="btn_OpenPDF" sfwResource="-1" />
+        <sfwButton ID="btnESSReportsDownload" sfwMethodName="btnDownload_Click" onClientClick="ExecuteESSReportViewClick(e);" sfwNavigationParameter="aintOrgId=OrgId;astrReportName=IstrReportNameText" sfwRelatedControl="grvBusWssMessageDetail" Text="Open Report" sfwObjectMethod="ViewEssReport_Click" sfwResource="-1" />
+        <sfwButton ID="btnESSCSVReportsDownload" sfwMethodName="btnDownload_Click" onClientClick="ExecuteESSReportViewClick(e);" sfwNavigationParameter="aintOrgId=OrgId;astrReportName=IstrReportNameText" sfwRelatedControl="grvBusWssMessageDetail" Text="Open Report" sfwObjectMethod="ViewEssReport_Click" sfwResource="-1" />
+      </items>
+    </sfwPanel>
+  </items>
+  <loaddetails>
+    <entityfield ID="lstWSSMessageDetails" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+  </loaddetails>
+  <ExtraFields />
+</form>

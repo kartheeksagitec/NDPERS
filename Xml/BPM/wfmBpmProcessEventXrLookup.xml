@@ -1,0 +1,99 @@
+﻿<form xsi="http://www.w3.org/2001/XMLSchema-instance" di="http://www.omg.org/spec/DD/20100524/DI" bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" dc="http://www.omg.org/spec/DD/20100524/DC" semantic="http://www.omg.org/spec/BPMN/20100524/MODEL" ID="wfmBpmProcessEventXrLookup" sfwType="Lookup" sfwTitle="BPMN Process Event Xr Lookup" sfwActive="True" sfwStatus="Review" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmBpmProcessEventXrLookup" sfwEntity="entBpmProcessEventXr">
+  <initialload>
+    <query ID="cdoBpmProcessEventXr" sfwQueryRef="entBpmProcessEventXr.LookupQuery" />
+  </initialload>
+  <sfwTable>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlCriteria" sfwCaption="Search Criteria">
+          <sfwTable ID="tblCriteria">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capEveBpmEventTypeId" Text="Event Type : " AssociatedControlID="ddlEveBpmEventTypeId" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlEveBpmEventTypeId" sfwDataField="event_type_value" DataTextField="description" DataValueField="code_value" sfwOperator="like" sfwLoadType="CodeGroup" sfwLoadSource="2010" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capEveEventDesc" Text="Event Desc : " AssociatedControlID="txtEveEventDesc" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtEveEventDesc" sfwQueryID="cdoBpmProcessEventXr" sfwDataField="event_desc" sfwOperator="like" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capProcessId" Text="Process ID : " AssociatedControlID="ddlProcessId" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlProcessId" sfwQueryID="cdoBpmProcessEventXr" sfwDataField="PEXR.process_id" sfwOperator="=" DataTextField="name" DataValueField="process_id" sfwLoadType="Query" sfwLoadSource="entBpmProcess.GetAllProcess" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capActionValue" Text="Action : " AssociatedControlID="ddlActionValue" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlActionValue" sfwQueryID="cdoBpmProcessEventXr" sfwDataField="action_value" sfwOperator="like" DataTextField="description" DataValueField="code_value" sfwLoadType="CodeGroup" sfwLoadSource="2005" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnSearch" sfwMethodName="btnSearch_Click" sfwOperateOn="tblCriteria" Text="Search" />
+                <sfwButton ID="btnReset" sfwMethodName="btnReset_Click" sfwOperateOn="tblCriteria" Text="Reset" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwButton ID="btnStoreSearch" sfwMethodName="btnStoreUserDefaults_Click" sfwOperateOn="tblCriteria" Text="Store Search" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlResult" sfwCaption="Search Results">
+          <sfwTable ID="tblResult" CssClass="Table">
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnNew" ImageUrl="~/Images/gNew.gif" sfwMethodName="btnNew_Click" sfwOperateOn="tblCriteria" sfwActiveForm="wfmBpmProcessEventXrMaintenance" Text="New" />
+                <sfwButton ID="btnOpen" ImageUrl="~/Images/gOpen.gif" sfwMethodName="btnOpen_Click" sfwRelatedControl="dgrResult" sfwActiveForm="wfmBpmProcessEventXrMaintenance" Text="Open" sfwNavigationParameter="aintPrimaryKey=BpmProcessEventXrId" />
+                <sfwButton ID="btnDelete" ImageUrl="~/Images/gDelete.gif" sfwMethodName="btnDelete_Click" sfwRelatedControl="dgrResult" Text="Delete" />
+                <sfwButton ID="btnExportExcel" ImageUrl="~/Images/gExport.gif" sfwMethodName="btnColumnsToExport_Click" sfwRelatedControl="dgrResult" Text="Export To Excel" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwGridView asp="ASPControl" swc="SagitecWebControls" xsi="http://www.w3.org/2001/XMLSchema-instance" di="http://www.omg.org/spec/DD/20100524/DI" bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" dc="http://www.omg.org/spec/DD/20100524/DC" semantic="http://www.omg.org/spec/BPMN/20100524/MODEL" ID="dgrResult" AllowPaging="True" AllowSorting="True" sfwSelection="Many">
+                  <Columns>
+                    <TemplateField HeaderText="Bpm Process Event Xr ID">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpen" sfwEntityField="BpmProcessEventXrId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Process Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objBpmProcess.Name" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Event Description">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objBpmEvent.EventDesc" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Action">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="ActionDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+  </sfwTable>
+  <loaddetails />
+</form>

@@ -1,0 +1,341 @@
+﻿<form ID="wfmESSManualEmployerPayrollHeaderMaintenance" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2004" sfwType="FormLinkMaintenance" sfwTitle="Employer Payroll Header Maintenance" version="3.5" sfwEntity="entEmployerPayrollHeader" sfwTemplate="ESSManualEmployerPayrollHeaderMaintenance.html" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmESSManualEmployerPayrollHeaderLookup" sfwFormObjectType="None" isBasedOnWfm="true" sfwDefaultButtonID="btnSave">
+  <initialload>
+    <callmethods sfwMode="New" sfwMethodName="NewEmployerPayrollHeaderESS" />
+    <callmethods sfwMode="Update" sfwMethodName="FindEmployerPayrollHeaderESS" />
+  </initialload>
+  <items>
+    <sfwTable ID="Main" />
+    <sfwPanel ID="pnlHeader" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblN" />
+        <sfwLiteral ID="ltrl PayrollHeaderMaintenance" Text=" Payroll Header Maintenance" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnltoolbar">
+      <items>
+        <sfwTable ID="toolbar" />
+        <sfwButton ID="btnSave" sfwMethodName="btnNoChangesSave_Click" sfwNavigationParameter="Aintemployerpayrollheaderid=EmployerPayrollHeaderId" Text="Save" />
+        <sfwButton ID="btnPrev" sfwMethodName="btnPrev_Click" Text="Prev" />
+        <sfwButton ID="btnNext" sfwMethodName="btnNext_Click" Text="Next" />
+        <sfwButton ID="btnExportToText" sfwMessageId="4687" sfwMethodName="btnExecuteBusinessMethod_Click" sfwMode="Update" sfwObjectMethod="ExportToText_Click" Text="Export To Text" Visible="False" />
+        <sfwButton ID="btnCreatePayrollDetail" sfwMessageId="4681" sfwMethodName="btnExecuteBusinessMethod_Click" sfwObjectMethod="btnCreatePayroll_Click" sfwVisibleRule="ESSVisibleRuleForDetailCreationButton" Text="Create Payroll Detail" />
+        <sfwButton ID="btnValidate" sfwMessageId="4684" sfwMethodName="btnExecuteBusinessMethod_Click" sfwMode="Update" sfwObjectMethod="btnValidate_Click" sfwVisibleRule="VisibleRuleForValidateButton" Text="Validate" />
+        <sfwButton ID="btnReadyToPost" sfwMessageId="4686" sfwMethodName="btnExecuteBusinessMethod_Click" sfwMode="Update" sfwObjectMethod="btnReadyToPost_Click" Text="Ready To Post" Visible="False" />
+        <sfwButton ID="btnReloadInsuranceDetails" sfwMessageId="4598" sfwMethodName="btnExecuteBusinessMethod_Click" sfwMode="Update" sfwObjectMethod="ReLoad_Click" sfwVisibleRule="Visible Reload Button" Text="ReLoad" />
+        <sfwButton ID="btnNewDetail" sfwActiveForm="wfmESSEmployerPayrollDetailMaintenance" sfwMethodName="btnNew_Click" sfwMode="Update" sfwNavigationParameter="aintEmployerPayrollHeaderId=lblEmployerPayrollHeaderId" sfwVisibleRule="ESSVisibleRuleForNewDetail" Text="New Detail" />
+        <sfwButton ID="btnAccpt" sfwMessageId="4686" sfwMethodName="btn_AcceptReadyToPost" sfwMode="Update" sfwObjectMethod="btnAcceptReport_Click" sfwVisibleRule="VISIBLE_RULE_IF_HEADER_STATUS_IS_VALID_REVIEW" Text="Ready to Post" />
+        <sfwButton ID="btnDownload" sfwMethodName="btnDownload_Click" sfwNavigationParameter="Aintemployerpayrollheaderid=EmployerPayrollHeaderId" sfwObjectMethod="GenerateCSVFromCollection" sfwTriggerPostBack="True" Text="Export to Excel" />
+        <sfwButton ID="btnCancel" sfwMethodName="btnCancel_Click" Text="Refresh" />
+        <sfwButton ID="btnIgnore" sfwMessageId="4685" sfwMethodName="btnExecuteBusinessMethod_Click" sfwMode="Update" sfwObjectMethod="btnIgnore_Click" sfwVisibleRule="Visible Rule Ignore button ESS" Text="Ignore" />
+        <sfwButton ID="btnBack" sfwMethodName="btnBack_Click" Text="Back" Visible="False" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlMain" sfwCaption="Employer Payroll Header Details">
+      <items>
+        <sfwTable ID="tblMain" />
+        <sfwLabel ID="capOrgId" Text="Org Code ID : " sfwIsCaption="True" />
+        <sfwLabel ID="lblOrgName1" sfwEntityField="objOrganization.OrgCode" />
+        <sfwLabel ID="capOrgName" Text="Org Name : " sfwIsCaption="True" />
+        <sfwLabel ID="lblOrgName" sfwEntityField="objOrganization.OrgName" />
+        <sfwLabel ID="capEmployerPayrollHeaderId" Text="Report ID : " Width="200px" sfwIsCaption="True" />
+        <sfwLabel ID="lblEmployerPayrollHeaderId" sfwEntityField="EmployerPayrollHeaderId" />
+        <sfwLabel ID="capBenefitTypeValue" Text="Benefit Type : " sfwIsCaption="True" />
+        <sfwLabel ID="lblHeaderTypeDescription" sfwEntityField="HeaderTypeDescription" />
+        <sfwLabel ID="capReportTypeValue" Text="Type : " sfwIsCaption="True" />
+        <sfwDropDownList ID="ddlReportTypeValue" sfwMode="New" sfwVisibleRule="IsESSHeaderFieldsUpdatable" sfwLoadType="CodeGroup" sfwLoadSource="1206" sfwEntityField="ReportTypeValue" />
+        <sfwLabel ID="lblReportTypeDescription" sfwMode="Update" sfwVisibleRule="IsESSHeaderFieldsReadOnly" sfwEntityField="ReportTypeDescription" />
+        <sfwLabel ID="capSubmittedDate" Text="Date Submitted : " Width="200px" sfwIsCaption="True" />
+        <sfwLabel ID="lblSubmittedDate" sfwDataFormat="{0:d}" sfwEntityField="SubmittedDate" />
+        <sfwLabel ID="capPayrollPaidDate" sfwVisibleRule="RULE CHECK BENEFIT TYPE IS NOT DEFF COMP" Text="Reporting Month : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtPayPeriod" sfwDataFormat="{0:MM/YYYY}" sfwMode="New" sfwVisibleRule="RULE CHECK BENEFIT TYPE IS NOT DEFF COMP" sfwEntityField="PayPeriod" />
+        <sfwLabel ID="lblPayPeriod" sfwMode="Update" sfwVisibleRule="RULE CHECK BENEFIT TYPE IS NOT DEFF COMP" sfwEntityField="PayPeriod" />
+        <sfwLabel ID="capPayPeriodStartDate" sfwVisibleRule="RULE CHECK BENEFIT TYPE IS DEFF COMP" Text="Pay Period Start Date : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtPayPeriodStartDate" sfwDataFormat="{0:d}" sfwVisibleRule="RULE CHECK BENEFIT TYPE IS DEFF COMP" sfwEntityField="PayPeriodStartDate" />
+        <sfwLabel ID="cap4" sfwMode="New" sfwVisibleRule="RULE CHECK BENEFIT TYPE IS DEFF COMP" SkinID="ReqInformation" Text="*" sfwIsCaption="True" />
+        <sfwLabel ID="capPayPeriodEndDate" sfwVisibleRule="RULE CHECK BENEFIT TYPE IS DEFF COMP" Text="Pay Period End Date : " Width="200px" sfwIsCaption="True" />
+        <sfwTextBox ID="txtPayPeriodEndDate" sfwDataFormat="{0:d}" sfwVisibleRule="RULE CHECK BENEFIT TYPE IS DEFF COMP" sfwEntityField="PayPeriodEndDate" />
+        <sfwLabel ID="cap5" sfwMode="New" sfwVisibleRule="RULE CHECK BENEFIT TYPE IS DEFF COMP" SkinID="ReqInformation" Text="*" sfwIsCaption="True" />
+        <sfwLabel ID="capPayCheckDate" sfwVisibleRule="RULE CHECK BENEFIT TYPE IS DEFF COMP" Text="Pay Check Date : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtPayCheckDate" sfwDataFormat="{0:d}" sfwVisibleRule="RULE CHECK BENEFIT TYPE IS DEFF COMP" sfwEntityField="PayCheckDate" />
+        <sfwLabel ID="capStatusDescription" Text="Status : " sfwIsCaption="True" />
+        <sfwLabel ID="lblStatusDescription" sfwEntityField="StatusDescription" />
+        <sfwLabel ID="capTotalDetailRecordCount" Text="Detail Record Count : " Width="200px" sfwIsCaption="True" />
+        <sfwLabel ID="txtTotalDetailRecordCount" sfwTwoWayBinding="True" sfwEntityField="TotalDetailRecordCount" />
+        <sfwLabel ID="capPostedDate" Text="Posted Date : " sfwIsCaption="True" />
+        <sfwLabel ID="lblPostedDate" sfwDataFormat="{0:d}" sfwEntityField="PostedDate" />
+        <sfwLabel ID="capValidatedDate" Text="Last Validated Date : " sfwIsCaption="True" />
+        <sfwLabel ID="lblValidatedDate" sfwDataFormat="{0:d}" sfwEntityField="ValidatedDate" />
+        <sfwLabel ID="capTotalWagesReported" sfwVisibleRule="Visible Allocation grid if benefit type is Retirement" Text="Total Wages Reported : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtTotalWagesReported" sfwDataFormat="{0:C}" sfwVisibleRule="Visible Allocation grid if benefit type is Retirement" sfwEntityField="TotalWagesReported" />
+        <sfwLabel ID="capTotalWagesCalculated" sfwVisibleRule="Visible Allocation grid if benefit type is Retirement" Text="Total Wages From Details : " sfwIsCaption="True" />
+        <sfwLabel ID="lblTotalWagesCalculated" sfwDataFormat="{0:C}" sfwVisibleRule="Visible Allocation grid if benefit type is Retirement" sfwEntityField="TotalWagesCalculated" />
+        <sfwLabel ID="lblLabel" Text="Total PERS Calculated Wages:" sfwIsCaption="True" />
+        <sfwLabel ID="lblLabel1" sfwDataFormat="{0:C}" sfwEntityField="TotalWagesReported" />
+        <sfwLabel ID="capTotalPremiumAmountReported" sfwVisibleRule="Rule check if benefit type Insurance" Text="Total Premium Amount Reported : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtTotalPremiumAmountReported" sfwDataFormat="{0:C}" sfwVisibleRule="Rule check if benefit type Insurance" sfwEntityField="TotalPremiumAmountReported" />
+        <sfwLabel ID="capIdecTotalPremiumReportedForIns" sfwMode="Update" sfwVisibleRule="Rule check if benefit type Insurance" Text="Total Premium Calculated : " sfwIsCaption="True" />
+        <sfwLabel ID="lblIdecTotalPremiumReportedForIns" sfwDataFormat="{0:C}" sfwMode="Update" sfwVisibleRule="Rule check if benefit type Insurance" sfwEntityField="IdecTotalPremiumReportedForIns" />
+        <sfwLabel ID="capTotalPurchaseAmount1" sfwVisibleRule="CheckHeaderTypeIsPurchase" Text="Total Purchase Amount Reported : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtTotalPurchaseAmountReported" sfwDataFormat="{0:C}" sfwVisibleRule="CheckHeaderTypeIsPurchase" sfwEntityField="TotalPurchaseAmountReported" />
+        <sfwLabel ID="capIdecTotalPurchaseAmount" sfwVisibleRule="CheckHeaderTypeIsPurchase" Text="Total Purchase Amount Calculated:  : " sfwIsCaption="True" />
+        <sfwLabel ID="lblTotalPurchaseAmount" sfwDataFormat="{0:C}" sfwVisibleRule="CheckHeaderTypeIsPurchase" Visible="False" sfwEntityField="TotalPurchaseAmount" />
+        <sfwLabel ID="capTotalContributionReported" sfwVisibleRule="IsBenefitTypeRetOrDefComp" Text="Total Contribution Reported : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtTotalContributionReported" sfwDataFormat="{0:C}" sfwVisibleRule="IsBenefitTypeRetOrDefComp" sfwEntityField="TotalContributionReported" />
+        <sfwLabel ID="capContributionAmount" sfwVisibleRule="IsBenefitTypeRetOrDefComp" Text="Total Contribution From Details : " sfwIsCaption="True" />
+        <sfwLabel ID="lblContributionAmountDef" sfwDataFormat="{0:C}" sfwVisibleRule="IsBenefitTypeRetOrDefComp" sfwEntityField="TotalContributionCalculated" />
+        <sfwLabel ID="lblLabel2" Text="Total PERS Calculated Contributions:" sfwIsCaption="True" />
+        <sfwLabel ID="lblLabel3" sfwDataFormat="{0:C}" sfwObjectField="idecTotalContributionAmountHeader" sfwObjectID="busEmployerPayrollHeader" sfwVisibleRule="IsBenefitTypeRetOrDefComp" />
+        <sfwLabel ID="capTotalInterest" sfwVisibleRule="Visible Allocation grid if benefit type is Retirement" Text="Total Interest Calculated: " Width="200px" sfwIsCaption="True" />
+        <sfwLabel ID="lblTotalInterest" sfwDataFormat="{0:C}" sfwVisibleRule="Visible Allocation grid if benefit type is Retirement" sfwEntityField="TotalInterestCalculated" />
+        <sfwLabel ID="capIdecTotalContributionCalculatedForOther457" sfwVisibleRule="RULE CHECK BENEFIT TYPE IS DEFF COMP" Text="Total Contribution Calculated For Other457 : " sfwIsCaption="True" />
+        <sfwLabel ID="lblIdecTotalContributionCalculatedForOther457" sfwDataFormat="{0:C}" sfwVisibleRule="RULE CHECK BENEFIT TYPE IS DEFF COMP" sfwEntityField="IdecTotalContributionCalculatedForOther457" />
+        <sfwLabel ID="capComments" Text="Comment : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtComments" sfwVisibleRule="IsESSHeaderFieldsUpdatable" TextMode="MultiLine" Width="400px" sfwEntityField="Comments" />
+        <sfwButton ID="btnServerSideRefresh" sfwMethodName="btnValidateExecuteBusinessMethod_Click" sfwObjectMethod="ReloadHandButtonData" Text="Execute Refresh From Object" Visible="False" />
+        <sfwLabel ID="lblOrgId" Visible="False" sfwEntityField="OrgId" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlAllocationInfo" sfwCaption="Allocation Detail Information">
+      <items>
+        <sfwTable ID="tblAllocationInfo1" />
+        <sfwTabContainer ID="tctAllocationInfo">
+          <Tabs>
+            <sfwTabSheet HeaderText="Payment Applied" ID="tshAllocationInfo">
+              <items>
+                <sfwTable ID="tblAllocationInfo" />
+                <sfwLabel ID="capIdecTotalAppliedAmountByHeaderID" Text="Total Applied Amount to this report : " Visible="False" Width="220px" sfwIsCaption="True" />
+                <sfwButton ID="btnExecuteServerMethod1" sfwMethodName="btnExecuteBusinessMethod_Click" sfwObjectMethod="btnDebitACHRequest_Click" sfwVisibleRule="IsDebitACHRequestButtonVisible" Text="Debit ACH Request" />
+                <sfwLabel ID="lblIdecTotalAppliedAmountByHeaderID" sfwDataFormat="{0:C}" Visible="False" Width="50px" sfwEntityField="IdecTotalRemittanceApplied" />
+                <sfwButton ID="btnDeleteACH" sfwMethodName="btnExecuteBusinessMethod_Click" sfwObjectMethod="btnDeleteDebitACHRequest_Click" sfwVisibleRule="IsDeleteACHRequestButtonVisible" Text="Delete ACH Debit Request" />
+                <sfwButton ID="btnExecuteServerMethod" sfwMethodName="btn_OpenPDFFromNavigationParam" sfwNavigationParameter="aintEmployerPayrollHeaderId=EmployerPayrollHeaderId" sfwObjectMethod="CreateRemittanceReport" sfwVisibleRule="IsRemittanceReportButtonVisible" Text="Remittance Report" CssClass="hideControl" />
+                <sfwButton ID="btnOpenRemittanceReport" sfwMethodName="btnOpen_Click" Text="Remittance Report" OnClientClick="fnOpenPDFFromNavigationParameter(e);" sfwVisibleRule="IsRemittanceReportButtonVisible" />
+                <sfwGridView AllowPaging="True" AllowSorting="True" ID="grvRetirementContributionByPlan" sfwSelection="One" sfwVisibleRule="Visible Allocation grid if benefit type is Retirement" sfwEntityField="lstRetirementContributionByPlan" sfwGridEntity="entEmployerPayrollHeader">
+                  <Columns>
+                    <TemplateField HeaderText="Plan Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objPlan.PlanName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Total Retirement Contribution Amount" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="IdecTotalReportedRetrContributionByPlan" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Applied Contribution" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="IdecTotalAppliedRetrContributionByPlan" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Outstanding Retirement Balance" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="IdecOutstandingRetirementBalance" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Total RHIC Contribution Amount" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="IdecTotalReportedRHICContributionByPlan" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Applied RHIC" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="IdecTotalAppliedRHICContributionByPlan" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+                <sfwGridView AllowPaging="True" AllowSorting="True" ID="grvInsuranceContributionByPlan" sfwSelection="One" sfwVisibleRule="Visible Allocation grid when benefit type is insurance" sfwEntityField="lstInsuranceContributionByPlan" sfwGridEntity="entEmployerPayrollHeader">
+                  <Columns>
+                    <TemplateField HeaderText="Plan Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objPlan.PlanName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Total Insurance Amount" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="IdecTotalReportedByPlan" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Premium Applied" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="IdecTotalAppliedPremiumByPlan" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Outstanding Insurance Balance" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="IdecOutstandingInsuranceBalance" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+                <sfwGridView AllowPaging="True" AllowSorting="True" ID="grvDeferredCompContributionByPlan" sfwSelection="One" sfwVisibleRule="RULE CHECK BENEFIT TYPE IS DEFF COMP" sfwEntityField="lstDeferredCompContributionByPlan" sfwGridEntity="entEmployerPayrollHeader">
+                  <Columns>
+                    <TemplateField HeaderText="Plan Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objPlan.PlanName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Total Deferred Compensation  Contribution Amount" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="IdecTotalReportedByPlan" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Contribution Applied" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="IdecTotalAppliedContributionByPlan" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Outstanding Deferred Comp Balance" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="IdecOutstandingDeferredCompBalance" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+                <sfwGridView AllowPaging="True" AllowSorting="True" ID="grvPurchaseContributionByPlan" sfwSelection="One" sfwVisibleRule="CheckHeaderTypeIsPurchase" sfwEntityField="lstPurchaseContributionByPlan" sfwGridEntity="entEmployerPayrollHeader">
+                  <Columns>
+                    <TemplateField HeaderText="Plan Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objPlan.PlanName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Employer Payroll Header ID" Visible="False" sfwUseAsSortExpression="True">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="EmployerPayrollHeaderId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Total Service Credit Purchase Amount" ItemStyle.HorizontalAlign="Left">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="IdecTotalReportedByPlan" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Applied Purchase" ItemStyle.HorizontalAlign="Left">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="IdecTotalAppliedPurchaseByPlan" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </items>
+            </sfwTabSheet>
+            <sfwTabSheet HeaderText="Life Insurance Details" ID="tshNewPage" sfwVisibleRule="Visible Allocation grid when benefit type is insurance">
+              <items>
+                <sfwTable ID="tblNewPage1" />
+                <sfwLabel AssociatedControlID="lblIdecTotalBasicPremium" ID="capIdecTotalBasicPremium" Text="Basic : " sfwIsCaption="True" />
+                <sfwLabel ID="lblIdecTotalBasicPremium" sfwDataFormat="{0:C}" sfwEntityField="IdecTotalBasicPremium" />
+                <sfwLabel AssociatedControlID="lblIdecTotalSupplementPremium" ID="capIdecTotalSupplementPremium" Text="Supplemental : " sfwIsCaption="True" />
+                <sfwLabel ID="lblIdecTotalSupplementPremium" sfwDataFormat="{0:C}" sfwEntityField="IdecTotalSupplementPremium" />
+                <sfwLabel AssociatedControlID="lblIdecTotalDependentPremium" ID="capIdecTotalDependentPremium" Text="Dependent Supplemental :" sfwIsCaption="True" />
+                <sfwLabel ID="lblIdecTotalDependentPremium" sfwDataFormat="{0:C}" sfwEntityField="IdecTotalDependentPremium" />
+                <sfwLabel AssociatedControlID="lblIdecTotalSpousePremium" ID="capIdecTotalSpousePremium" Text="Spouse Supplemental : " sfwIsCaption="True" />
+                <sfwLabel ID="lblIdecTotalSpousePremium" sfwDataFormat="{0:C}" sfwEntityField="IdecTotalSpousePremium" />
+              </items>
+            </sfwTabSheet>
+            <sfwTabSheet HeaderText="Errors" ID="tshErrors">
+              <items>
+                <sfwTable ID="tblNewPage" />
+                <sfwGridView AllowPaging="True" AllowSorting="True" ID="grvError" sfwEntityField="InternalErrors" sfwGridEntity="entError">
+                  <Columns>
+                    <TemplateField HeaderText="Message ID" Visible="False" sfwUseAsSortExpression="True">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="MessageId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Message">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="DisplayMessage" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Severity">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="SeverityDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </items>
+            </sfwTabSheet>
+            <sfwTabSheet HeaderText="Error Summary  By Message ID" ID="tshErrorSummarybyMessageID">
+              <items>
+                <sfwTable ID="tblErrorSummarybyMessageID" />
+                <sfwButton ID="btnOpenDetail" sfwActiveForm="wfmESSEmployerPayrollDetailLookup" sfwMethodName="btnOpenLookup_Click" sfwNavigationParameter="employer_payroll_header_id=EmployerPayrollHeaderId;MessageId" sfwRelatedControl="grvError" Text="OpenDetail" Visible="False" />
+                <sfwGridView AllowPaging="True" AllowSorting="True" ID="grvDetailError" sfwSelection="One" sfwEntityField="lstDetailError" sfwGridEntity="entbusErrorSummary">
+                  <Columns>
+                    <TemplateField HeaderText="Message ID">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpenDetail" sfwEntityField="MessageId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText=" Count">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="MessageCount" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Message Description">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="DisplayMessage" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Severity">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="Severity" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </items>
+            </sfwTabSheet>
+            <sfwTabSheet HeaderText="Payroll Detail By Status" ID="tshPayrollDetailbyStatus">
+              <items>
+                <sfwTable ID="tblPayrollDetailbyStatus" />
+                <sfwTextBox ID="txbContactId" Visible="False" sfwEntityField="IintContactid" />
+                <sfwGridView AllowPaging="True" AllowSorting="True" ID="grvStatusSummary" sfwEntityField="lstStatusSummary" sfwGridEntity="entbusStatusSummary">
+                  <Columns>
+                    <TemplateField HeaderText="Status">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpenLookup" sfwEntityField="StatusDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Status Count">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="StatusCount" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Status" Visible="False" sfwUseAsSortExpression="True">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="StatusValue" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+                <sfwButton ID="btnOpenLookup" sfwActiveForm="wfmESSEmployerPayrollDetailLookup" sfwMethodName="btnOpenLookup_Click" sfwNavigationParameter="employer_payroll_header_id=EmployerPayrollHeaderId;epd.status_value=StatusValue;contact_id=IintContactid;org_id=OrgId" Text="Open Lookup" Visible="False" />
+              </items>
+            </sfwTabSheet>
+          </Tabs>
+        </sfwTabContainer>
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlAuditInfo" sfwCaption="Audit Information">
+      <items>
+        <sfwTable ID="tblAuditInfo" />
+        <sfwLabel ID="capCreate" Text="Create : " sfwIsCaption="True" />
+        <sfwLabel ID="lblCreatedBy" sfwEntityField="CreatedBy" />
+        <sfwLabel ID="lblUpdateSeq" sfwTwoWayBinding="True" Visible="False" sfwEntityField="UpdateSeq" />
+        <sfwLabel ID="lblCreatedDate" sfwEntityField="CreatedDate" sfwDataFormat="{0:G}" />
+        <sfwLabel ID="capModify" Text="Modify : " sfwIsCaption="True" />
+        <sfwLabel ID="lblModifiedBy" sfwEntityField="ModifiedBy" />
+        <sfwLabel ID="lblModifiedDate" sfwEntityField="ModifiedDate" sfwDataFormat="{0:G}" />
+      </items>
+    </sfwPanel>
+  </items>
+  <loaddetails>
+    <entityfield ID="objOrganization" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+    <entityfield ID="lstRetirementContributionByPlan" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+    <entityfield ID="lstInsuranceContributionByPlan" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+    <entityfield ID="lstDeferredCompContributionByPlan" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+    <entityfield ID="lstPurchaseContributionByPlan" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+    <entityfield ID="InternalErrors" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+    <entityfield ID="lstDetailError" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+    <entityfield ID="lstStatusSummary" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+  </loaddetails>
+  <ExtraFields />
+</form>

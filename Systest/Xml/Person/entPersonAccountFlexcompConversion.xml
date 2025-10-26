@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entPersonAccountFlexcompConversion" sfwActive="True" sfwStatus="Review" sfwType="BusinessRule" sfwMainCDO="icdoPersonAccountFlexcompConversion" sfwObjectID="busPersonAccountFlexcompConversion" sfwTableName="sgt_person_account_flexcomp_conversion" sfwView="False">
+  <rules>
+    <rule ID="IsMemberNOTEnrolledinGHDVorSuppLife" sfwMessageId="7112" sfwExpression="(this.IsValidProvider() == False)" sfwObjectBased="True" />
+    <rule ID="IsOrgIDNull" sfwMessageId="4000" sfwExpression="(this.icdoPersonAccountFlexcompConversion.org_id == 0)" sfwObjectBased="True" />
+    <rule ID="IsOrgProvider" sfwMessageId="6524" sfwExpression="!(this.icdoPersonAccountFlexcompConversion.org_id == 0) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entPersonAccountFlexcompConversion.IsOrgProvider&quot;, this.icdoPersonAccountFlexcompConversion.org_id) == 0)" sfwObjectBased="True" />
+    <rule ID="IsProviderEditable" sfwExpression="(this.IsProviderEditable() == True)" sfwObjectBased="True" />
+    <rule ID="IsProviderNOTEditable" sfwExpression="!(this.IsProviderEditable() == True)" sfwObjectBased="True" />
+    <rule ID="IsStartDateLessThanPlanEnrollmentDate" sfwMessageId="6625" sfwExpression="!(this.icdoPersonAccountFlexcompConversion.effective_start_date == DateTime.MinValue) &amp;&amp; &#xA;(this.icdoPersonAccountFlexcompConversion.effective_start_date &lt; RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusPersonAccount.icdoPersonAccount.start_date&quot;))" sfwObjectBased="True" />
+    <rule ID="IsStartDateNull" sfwMessageId="4032" sfwExpression="(this.icdoPersonAccountFlexcompConversion.effective_start_date == DateTime.MinValue) &amp;&amp; &#xA;!(this.icdoPersonAccountFlexcompConversion.effective_end_date == DateTime.MinValue)" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="IsProviderEditable" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsProviderNOTEditable" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="IsOrgIDNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsOrgProvider" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsStartDateNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsStartDateLessThanPlanEnrollmentDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMemberNOTEnrolledinGHDVorSuppLife" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <expressionfields />
+  <queries>
+    <query ID="IsOrgProvider" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) from sgt_Org_Plan A inner join sgt_organization B on A.org_id=b.org_id &#xD;&#xA;where B.org_type_value='PRVD' and A.org_id=@Orgid">
+      <parameters>
+        <parameter ID="@Orgid" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="UpdateFlexCompConversionEffectiveEndDate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="update SGT_PERSON_ACCOUNT_FLEXCOMP_CONVERSION &#xD;&#xA;SET EFFECTIVE_END_DATE = @LastDayOfYear,   --Last day of current year&#xD;&#xA;MODIFIED_BY = 'PERSLink Batch'+' '+ convert(nvarchar,@batchscheduleid), &#xD;&#xA;MODIFIED_DATE = GETDATE()  &#xD;&#xA;where (DATEPART(YEAR, EFFECTIVE_START_DATE) = Year(@LastDayOfYear)) &#xD;&#xA;AND (EFFECTIVE_END_DATE IS NULL) &#xD;&#xA;AND PERSON_ACCOUNT_ID=@PERSON_ACCOUNT_ID">
+      <parameters>
+        <parameter ID="@LastDayOfYear" sfwDataType="DateTime" />
+        <parameter ID="@PERSON_ACCOUNT_ID" sfwDataType="int" />
+        <parameter ID="@batchscheduleid" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="UpdateBenefitEnrollmentReportFlag" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql=" UPDATE SGT_PERSON_ACCOUNT_FLEXCOMP_CONVERSION SET IS_ENROLLMENT_REPORT_GENERATED = 'N' &#xD;&#xA; WHERE PERSON_ACCOUNT_FLEX_COMP_CONVERSION_ID = @CONVERSION_ID&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@CONVERSION_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="PersonAccountFlexCompConversionId" sfwType="Column" sfwValue="person_account_flex_comp_conversion_id" sfwIsNull="False" sfwKeyNo="1" sfwIsIdentity="True" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="PersonAccountId" sfwType="Column" sfwValue="person_account_id" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="OrgId" sfwType="Column" sfwValue="org_id" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="EffectiveStartDate" sfwType="Column" sfwValue="effective_start_date" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="EffectiveEndDate" sfwType="Column" sfwValue="effective_end_date" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwIsSequence="False" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwIsSequence="False" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="IsEnrollmentReportGenerated" sfwType="Column" sfwValue="is_enrollment_report_generated" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="1" sfwDefaultValue="N" />
+    <attribute ID="objProvider" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusProvider" />
+    <attribute ID="objPersonAccount" sfwType="Object" sfwEntity="entPersonAccount" sfwValue="ibusPersonAccount" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsPretaxPremium" sfwValue="icdoPersonAccountFlexcompConversion.is_pretax_premium" />
+  </attributes>
+  <objectmethods>
+    <method ID="LoadFlexCompProviders" sfwReturnType="Collection" sfwObjectID="cdoOrganization" sfwEntity="entOrganization" />
+  </objectmethods>
+</entity>

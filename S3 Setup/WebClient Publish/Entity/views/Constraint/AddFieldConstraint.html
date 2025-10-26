@@ -1,0 +1,158 @@
+﻿<div class="full-height">
+    <div class="portlet-body">
+        <div class="form-body">
+            <div class="form-group">
+                <div class="col-xs-6">
+                    <label class="control-label">Attribute Name</label>
+                    <div class="input-group col-xs-12" style="padding-left:0px;padding-right:0px" ng-show="ctrl.isNewMode && !ctrl.autoSave">
+                        <entityfieldelementintellisense isshowproperty="true" isshowcolumns="true" propertyname="'attributeName'" modebinding="ctrl.attributeName" model="ctrl" entityid="ctrl.entityId" onblurcallback="ctrl.onAttributeChanged()" errorprop="ctrl.errors.attributeName"></entityfieldelementintellisense>
+                    </div>
+                    <div class="col-xs-12" style="padding-left:0px;padding-right:0px;overflow:hidden;text-overflow:ellipsis" ng-show="!(ctrl.isNewMode && !ctrl.autoSave)">
+                        <span style="white-space:nowrap" title="{{::attributeName}}">{{::attributeName}}</span>
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                    <label class="control-label">Data Type</label>
+                    <div class="col-xs-12 no-left-padding" style="overflow:hidden;text-overflow:ellipsis">
+                        <span ng-show="ctrl.datatype" ng-bind="ctrl.datatype" style="white-space:nowrap" title="{{ctrl.datatype}}"></span>
+                        <span ng-hide="ctrl.datatype" class="help-block msgfont-11" style="font-style:italic;white-space:nowrap">Data Type</span>
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                    <div>
+                        <label class="control-label">Display Name</label>
+                        <input type="text" class="form-control input-sm" title="{{ctrl.displayName}}" ng-model="ctrl.displayName">
+                    </div>
+                </div>
+                <div class="col-xs-12" style="padding: 2px;margin-top: 10px;background-color: lightBlue;">
+                    <label class="control-label" style="margin:0px;padding:2px;">Message: {{ctrl.selectedConstraint.message}}</label>
+                </div>
+            </div>
+        </div>
+        <div style="height:calc(100% - 50px);min-height:100px;max-height:300px;">
+            <table class="table table-striped table-bordered table-condensed">
+                <thead>
+                    <tr>
+                        <th colspan="9">
+                            <a href="#" class="fright" ng-click="ctrl.deleteConstraint()" title="Delete Selected Constraint">
+                                <i class="fa fa-minus"></i>
+                            </a>
+                            <div class="dropdown fright marg-right-10">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" title="Add Constraint" style="position:relative" ng-click="ctrl.updateHasConstraintFlags();">
+                                    <i class="fa fa-plus"></i>
+                                </a>
+                                <ul class="dropdown-menu pull-left project-menu" role="menu" style="padding:0px;width:476px;left:-470px;box-shadow:3px 3px 5px 1px #aaa !important;border-right-width:0px">
+                                    <li style="margin:0px !important;background-color:white !important" onclick="if (!(event.target && event.target.localName === 'button')) { event.stopPropagation(); }">
+                                        <div style="width: 138px;margin:5px 10px;float:left">
+                                            <input style="margin-top: 7px; margin-right: 5px;" id="chkHasRequiredConstraint" ng-model="ctrl.hasRequiredConstraint" type="checkbox" />
+                                            <label for="chkHasRequiredConstraint" style="margin-top: 2px; vertical-align: middle;">Required Constraint</label>
+                                        </div>
+                                        <div style="width: 138px;margin:5px 10px;float:left" ng-show="ctrl.allowLengthConstraint">
+                                            <input style="margin-top: 7px; margin-right: 5px;" id="chkHasLengthConstraint" ng-model="ctrl.hasLengthConstraint" type="checkbox" />
+                                            <label for="chkHasLengthConstraint" style="margin-top: 2px; vertical-align: middle;">Length Constraint</label>
+                                        </div>
+                                        <div style="width: 138px;margin:5px 10px;float:left" ng-show="ctrl.allowMinConstraint">
+                                            <input style="margin-top: 7px; margin-right: 5px;" id="chkHasMinConstraint" ng-model="ctrl.hasMinConstraint" type="checkbox" />
+                                            <label for="chkHasMinConstraint" style="margin-top: 2px; vertical-align: middle;">Min Constraint</label>
+                                        </div>
+                                        <div style="width: 138px;margin:5px 10px;float:left" ng-show="ctrl.allowMaxConstraint">
+                                            <input style="margin-top: 7px; margin-right: 5px;" id="chkHasMaxConstraint" ng-model="ctrl.hasMaxConstraint" type="checkbox" />
+                                            <label for="chkHasMaxConstraint" style="margin-top: 2px; vertical-align: middle;">Max Constraint</label>
+                                        </div>
+                                        <div style="width: 138px;margin:5px 10px;float:left" ng-show="ctrl.allowCompareConstraint">
+                                            <input style="margin-top: 7px; margin-right: 5px;" id="chkHasCompareConstraint" ng-model="ctrl.hasCompareConstraint" type="checkbox" />
+                                            <label for="chkHasCompareConstraint" style="margin-top: 2px; vertical-align: middle;">Compare Constraint</label>
+                                        </div>
+                                        <hr style="margin:10px 0px;" />
+                                        <button class="btn dialog-btn" title="Update Constraints" ng-click="ctrl.updateConstraints()" style="float:right;margin:5px 10px 10px 10px;">OK</button>
+                                        <button class="btn dialog-btn" ng-click="ctrl.addConstraint('Query')" title="Add Query Constraint" style="float:left;margin:5px 10px 10px 10px;">Query Constraint</button>
+                                        <button class="btn dialog-btn" ng-click="ctrl.addConstraint('Rule')" title="Add Rule Constraint" style="float:left;margin:5px 10px 10px 10px;">Rule Constraint</button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </th>
+                    </tr>
+                    <tr role="heading">
+                        <th width="35px;">Type</th>
+                        <th style="min-width:200px">Query/Rule ID</th>
+                        <th style="width:65px">Operator</th>
+                        <th style="min-width:100px">Value</th>
+                        <th title="Related Attribute Display Name" style="width:80px">
+                            <span style="width:78px;text-overflow:ellipsis;white-space:nowrap;float:left;overflow:hidden">Related Attribute Display Name</span>
+                        </th>
+                        <th style="width:100px">Dependent Fields</th>
+                        <th style="width:65px">Mode</th>
+                        <th>Display Message</th>
+                        <th title="Portal Messages" style="width:30px">
+                            <span style="width:30px;text-overflow:ellipsis;white-space:nowrap;float:left;overflow:hidden">Portal Messages</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="const in ctrl.lstConstraints" ng-click="ctrl.selectConstraint(const)" ng-class="ctrl.selectedConstraint===const?'st-selected':''">
+                        <td width="35px;" ng-bind="const.type"></td>
+                        <td style="min-width:200px">
+                            <div style="width:calc(100% - 51px)" ng-show="::const.type === 'Query'" class="fleft">
+                                <entityqueryintellisense querytype="'ScalarQuery'" selecteditem="const.loadSource" model="const" propertyname="'loadSource'" isinsidedialog="true" onchangecallback="ctrl.onLoadSourceChanged(const)" validate="true" errorprop="const.errors.loadSource" isempty="true"></entityqueryintellisense>
+                            </div>
+                            <div style="width:calc(100% - 51px)" ng-show="::const.type === 'Rule'" class="fleft">
+                                <rule-intellisense entity-id="ctrl.entityId" non-static="false" return-types="['string','int','bool','long','short','double','single','decimal','datetime','float']" selected-rule="const.loadSource" onblurcallback="ctrl.onLoadSourceChanged(const)" model="const" propertyname="'loadSource'" v-validate="true" v-errorprop="const.errors.loadSource" v-allow-empty="false" v-field-name="'Rule ID'"></rule-intellisense>
+                            </div>
+                            <button title="Set {{const.type}} Parameters" ng-show="::(const.type === 'Query' || const.type === 'Rule')" ng-click="ctrl.setParameters(const)" ng-disabled="!const.loadSource" style="border:1px solid #ccc;border-left-width:0px; width: 25px; height: 28px; text-align: center; line-height: 28px; display: inline-block;background-color:white;color:black"><i class="fa fa-chevron-right" style="line-height: 25px;"></i></button>
+                            <div style="border: 1px solid #ccc; border-left-width: 0px; width: 25px; height: 28px; text-align: center; line-height: 28px; margin-left: -3px; vertical-align: top; display: inline-block; background-color: white;" ng-show="::(const.type === 'Rule' || const.type === 'Query')">
+                                <input style="vertical-align:sub" type="checkbox" title="Execute On Change" ng-model="const.executeOnChange" ng-true-value="'True'" ng-false-value="'False'" />
+                            </div>
+                        </td>
+                        <td style="width:65px">
+                            <select ng-show="::(const.type === 'Query' || const.type === 'Rule'  || const.type === 'Compare')" class="form-control input-sm" ng-model="const.operator" ng-options="opr for opr in ctrl.operators"></select>
+                        </td>
+                        <td style="min-width:100px">
+                            <div ng-style="{'width':(const.type === 'Rule' || const.type === 'Query')?'calc(100% - 26px)':'100%'}" class="fleft" ng-show="(const.type === 'Compare' || ((const.type === 'Rule' || const.type === 'Query')  && !const.isConstantValue))">
+                                <entityfieldelementintellisense isshowproperty="true" isshowcolumns="true" propertyname="'value'" modebinding="const.value" model="const" entityid="ctrl.entityId" onblurcallback="ctrl.onRelatedFieldChanged(const)" errorprop="const.errors.value"></entityfieldelementintellisense>
+                            </div>
+                            <div ng-style="{'position':'relative','width':(const.type === 'Rule' || const.type === 'Query')?'calc(100% - 26px)':'100%'}" class="fleft" ng-show="(const.type === 'Min' || const.type === 'Max' || const.type === 'Length' || ((const.type === 'Rule' || const.type === 'Query')  && const.isConstantValue))" style="position:relative">
+                                <span class='info-tooltip dtc-span' ng-if='const.errors && const.errors.value' ng-attr-title='{{const.errors.value}}' style='color:red !important'><i class='fa fa-exclamation-circle' aria-hidden='true'></i></span>
+                                <input class="form-control input-sm" type="text" ng-model="const.value" ng-blur="ctrl.onRelatedFieldChanged(const)" />
+                            </div>
+                            <div style="border: 1px solid #ccc; border-left-width: 0px; width: 25px; height: 28px; text-align: center; line-height: 28px; vertical-align: top; display: inline-block; background-color: white;" ng-show="::(const.type === 'Rule' || const.type === 'Query')">
+                                <input style="vertical-align:sub" type="checkbox" title="Constant Value" ng-model="const.isConstantValue" />
+                            </div>
+                        </td>
+                        <td style="width:80px">
+                            <span style="width:78px;text-overflow:ellipsis;white-space:nowrap;float:left;overflow:hidden" ng-bind="const.relatedDisplayName"></span>
+                        </td>
+                        <td style="width:100px">
+                            <div ng-show="::(const.type === 'Rule' || const.type === 'Query')">
+                                <entityfieldelementintellisense isshowproperty="true" isshowcolumns="true" propertyname="'dependentAttributes'" modebinding="const.dependentAttributes" model="const" entityid="ctrl.entityId"></entityfieldelementintellisense>
+                            </div>
+                        </td>
+                        <td style="width:65px">
+                            <select class="form-control input-sm" ng-model="const.mode" ng-show="::(const.type === 'Rule' || const.type === 'Query')">
+                                <option>New</option>
+                                <option>Update</option>
+                                <option>All</option>
+                            </select>
+                        </td>
+                        <td>
+                            <messageintellisensetemplate messageid='const.messageId' propertyname="'messageId'"
+                                                         model='const' showmessagetext='false' hide-message-text="true"
+                                                         onblurcallback="onPortalMessageChanged(portal)" onchangecallback="ctrl.onMessageIdChanged(const)" messagetextboxclass="full-width fleft" isvalidate="true" errorprop="const.errors.messageId"></messageintellisensetemplate>
+                        </td>
+                        <td style="width:30px">
+                            <button style="padding:2px;width:35px" class="btn dialog-btn" type="button" ng-click="ctrl.setPortalMessages(const)" style="background-color:white">. . .</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="form-actions right">
+        <div class="col-xs-8 text-left">
+            <span class="text-danger" ng-bind="ctrl.errorMessage"> </span><span class="text-danger" ng-if="ctrl.errorMessage"></span>
+        </div>
+        <div class="col-xs-4">
+            <input type="button" value="OK" class="btn dialog-btn-default" ng-click="ctrl.onOKClick()" ng-disabled="ctrl.errorMessage" />
+            <input type="button" value="Cancel" class="btn dialog-btn" ng-click="onCancelClick()" />
+        </div>
+    </div>
+</div>

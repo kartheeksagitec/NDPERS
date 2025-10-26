@@ -1,0 +1,56 @@
+﻿<div class="portlet-body">
+    <div class="form-body">
+        <div class="col-xs-6 margin-top-15">
+            <label class="control-label">Attribute</label>
+            <div class="col-xs-12 no-left-padding">
+                <span ng-bind="model.prefix" class="attribute-text"></span>
+                <div style="position:relative;width:calc(100% - 25px);float:right;">
+                    <span class="info-tooltip dtc-span" ng-if="model.errors.empty_id || model.errors.inValid_id || model.errors.duplicate_id" ng-attr-title="{{model.errors.empty_id || model.errors.inValid_id || model.errors.duplicate_id}}" style=";color:red !important"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                    <input ng-init="setIDPrefix(model,'obj')" type="text"  ng-disabled="IsBaseAppFile && (model.IsBaseAppModel || model.BaseAppModel)" title="{{model.idWithoutPrefix}}" ng-model="model.idWithoutPrefix" ng-change="validateId(model, model.idWithoutPrefix)" class="form-control form-filter input-sm" ng-blur="onIdWithoutPrefixChanged(model, oldModel, IsUpdate)" autofocus />
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-6 margin-top-15" ng-show="objEntity.dictAttributes.sfwObjectID">
+            <label class="control-label">Object Field</label>
+            <div class="col-xs-12 no-left-padding">
+                <!--<span class="info-tooltip" ng-if="model.errors.empty_ObjField" ng-attr-title="{{model.errors.empty_ObjField}}" style="color:red !important"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>-->
+                <span class='info-tooltip' ng-if='model.warnings.sfwValue' ng-attr-title='{{model.warnings.sfwValue}}' style='color:#f0ad4e!important'><i class='fa fa-exclamation-circle' aria-hidden='true'></i></span>
+                <input type="text" ng-show="IsBaseAppFile && (model.IsBaseAppModel || model.BaseAppModel)" disabled ng-model="model.dictAttributes.sfwValue" class="form-control form-filter input-sm" />
+                <objecttreeintellisensetemplate ng-hide="IsBaseAppFile && (model.IsBaseAppModel || model.BaseAppModel)" model="model" objtree="objBusinessObject.ObjTree" objectfield="model.dictAttributes.sfwValue" isloadmethod="false"
+                                                busobject="objEntity.dictAttributes.sfwObjectID" propertyname="'dictAttributes.sfwValue'" onselectioncallback="PopulateRelatedEntity(id, model, oldModel, IsUpdate)"></objecttreeintellisensetemplate>
+            </div>
+        </div>
+        <div class="col-xs-6 margin-top-15">
+            <label class="control-label">Caption</label>
+            <div class="col-xs-12 no-left-padding">
+                <input tabindex="0" type="text"   title="{{model.dictAttributes.sfwCaption}}" ng-model="model.dictAttributes.sfwCaption" class="form-control form-filter input-sm" />
+            </div>
+        </div>
+        <div class="col-xs-6 margin-top-15">
+            <label class="control-label">Entity</label>
+            <div class="col-xs-12 no-left-padding">
+                <span class="info-tooltip dtc-span" ng-if="model.errors.invalid_entity" ng-attr-title="{{model.errors.invalid_entity}}" style="color:red !important"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                <input type="text" ng-show="IsBaseAppFile && (model.IsBaseAppModel || model.BaseAppModel)" disabled ng-model="model.dictAttributes.sfwEntity" class="form-control form-filter input-sm" />
+                <fileintellisensetemplate ng-hide="IsBaseAppFile && (model.IsBaseAppModel || model.BaseAppModel)" insidegrid="true" filename="model.dictAttributes.sfwEntity" filetype="'Entity'" model="model" propertyname="'dictAttributes.sfwEntity'" />
+            </div>
+        </div>
+        <div class="col-xs-6 margin-top-15">
+            <label class="control-label">Description</label>
+            <div class="col-xs-12 no-left-padding">
+                <input type="text"  title="{{model.dictAttributes.Text}}" ng-model="model.dictAttributes.Text" class="form-control form-filter input-sm" ng-trim="false" />
+            </div>
+        </div>
+        <div class="col-xs-6 margin-top-15">
+            <label class="control-label" for="chkIsPrivateAddOneToMany">Private</label>
+            <div class="col-xs-12 no-left-padding">
+                <input id="chkIsPrivateAddOneToMany"  ng-disabled="IsBaseAppFile && (model.IsBaseAppModel || model.BaseAppModel)" type="checkbox" value="Private" ng-model="model.dictAttributes.sfwPrivate" ng-true-value="'True' || 'true'" ng-false-value="'False' || 'false' || ''" style="margin-bottom:11px;" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-actions right">
+    <div class="col-xs-12">
+        <input type="button" value="OK" class="btn dialog-btn-default" ng-click="OkClick()" ng-disabled="model.errors.empty_id || model.errors.inValid_id || model.errors.duplicate_id || model.errors.invalid_entity" />
+        <input type="button" value="Cancel" class="btn dialog-btn" ng-click="onCancelClick()" />
+    </div>
+</div>

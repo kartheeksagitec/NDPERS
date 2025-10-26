@@ -1,0 +1,38 @@
+<form ID="nfmProcessJobServiceRetirementApplication" sfwActive="True" sfwStatus="Valid" sfwType="WorkflowMap" sfwRemoveDeletedActivities="False">
+  <activity sfwDisplayName="Enter Job Service Retirement Application Data" sfwReferenceID="application_reference_id" sfwFirstActivityFlag="True" sfwLastActivityFlag="False">
+    <form sfwMode="new" sfwFormName="wfmRetirementApplicationLookup" sfwFormMode="new">
+      <parameter sfwParameterSource="Criteria Field" sfwParamaterName="member_person_id" sfwFieldName="member_person_id" sfwParameterValue="ibusProcessInstance.icdoProcessInstance.person_id" sfwValueSource="Object Field" sfwDataType="int" />
+    </form>
+    <form sfwMode="update" sfwFormName="wfmRetirementApplicationMaintenance">
+      <parameter sfwParameterSource="FindRetirementDisabilityApplication" sfwParamaterName="aintReferenceID" sfwFieldName="reference_id" sfwParameterValue="application_reference_id" sfwValueSource="Parameter" sfwDataType="int" />
+      <parameter sfwParameterSource="FindRetirementDisabilityApplication" sfwParamaterName="astrBenfitType" sfwFieldName="benfit_type" sfwParameterValue="RETR" sfwValueSource="Constant" sfwDataType="string" />
+    </form>
+  </activity>
+  <activity sfwDisplayName="Approve Job Service Retirement Application Calculation" sfwReferenceID="calculation_reference_id" sfwFirstActivityFlag="False" sfwLastActivityFlag="False">
+    <form sfwMode="new" sfwFormName="wfmRetirementBenefitCalculationFinalMaintenance" sfwFormMode="new" />
+    <form sfwMode="update" sfwFormName="wfmRetirementBenefitCalculationFinalMaintenance">
+      <parameter sfwParameterSource="FindBenefitCalculationFinal" sfwParamaterName="aintBenefitCalculationID" sfwFieldName="benefit_calculation_id" sfwParameterValue="calculation_reference_id" sfwValueSource="Parameter" sfwDataType="int" />
+    </form>
+  </activity>
+  <activity sfwDisplayName="Enter Payee Account Details" sfwReferenceID="payee_account_reference_id" sfwFirstActivityFlag="False" sfwLastActivityFlag="False">
+    <form sfwMode="new" sfwFormName="wfmPayeeAccountLookup" sfwFormMode="new">
+      <parameter sfwParameterSource="Criteria Field" sfwParamaterName="memberperslinkid" sfwFieldName="memberperslinkid" sfwParameterValue="ibusProcessInstance.icdoProcessInstance.person_id" sfwValueSource="Object Field" sfwDataType="int" />
+    </form>
+    <form sfwMode="update" sfwFormName="wfmPayeeAccountMaintenance">
+      <parameter sfwParameterSource="FindPayeeAccount" sfwParamaterName="Aintpayeeaccountid" sfwFieldName="aintpayeeaccountid" sfwParameterValue="payee_account_reference_id" sfwValueSource="Parameter" sfwDataType="int" />
+    </form>
+  </activity>
+  <activity sfwDisplayName="Approve Payee Account" sfwReferenceID="payee_account_reference_id" sfwFirstActivityFlag="False" sfwLastActivityFlag="True">
+    <form sfwMode="new" sfwFormName="wfmPayeeAccountLookup" sfwFormMode="new">
+      <parameter sfwParameterSource="Criteria Field" sfwParamaterName="memberperslinkid" sfwFieldName="memberperslinkid" sfwParameterValue="ibusProcessInstance.icdoProcessInstance.person_id" sfwValueSource="Object Field" sfwDataType="int" />
+    </form>
+    <form sfwMode="update" sfwFormName="wfmPayeeAccountMaintenance">
+      <parameter sfwParameterSource="FindPayeeAccount" sfwParamaterName="Aintpayeeaccountid" sfwFieldName="aintpayeeaccountid" sfwParameterValue="payee_account_reference_id" sfwValueSource="Parameter" sfwDataType="int" />
+    </form>
+  </activity>
+  <ProcessVariables>
+    <ProcessVariable ID="application_reference_id" sfwDataType="int" sfwObjectID="busRetirementDisabilityApplication" sfwObjectField="icdoBenefitApplication.benefit_application_id" />
+    <ProcessVariable ID="calculation_reference_id" sfwObjectID="busRetirementBenefitCalculation" sfwObjectField="icdoBenefitCalculation.benefit_calculation_id" />
+    <ProcessVariable ID="payee_account_reference_id" sfwObjectID="busPayeeAccount" sfwObjectField="icdoPayeeAccount.payee_account_id" />
+  </ProcessVariables>
+</form>

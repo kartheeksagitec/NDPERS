@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entBenefitDroCalculation" sfwMainCDO="icdoBenefitDroCalculation" sfwType="BusinessRule" sfwActive="True" sfwStatus="Review" sfwObjectID="busBenefitDroCalculation" sfwTableName="sgt_benefit_dro_calculation" sfwView="False">
+  <queries>
+    <query ID="UpdateDROCalculation" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="UPDATE BDC&#xD;&#xA; SET payment_status_value='PRCD',&#xD;&#xA; MODIFIED_BY='PERSLink Batch'+' '+ convert(nvarchar,@batchscheduleid),&#xD;&#xA; MODIFIED_DATE = GETDATE(),&#xD;&#xA; UPDATE_SEQ = UPDATE_SEQ+1&#xD;&#xA; from sgt_benefit_dro_Calculation BDC inner join&#xD;&#xA;(&#xD;&#xA; Select PA.dro_Calculation_id from &#xD;&#xA; sgt_payee_Account PA WITH(NOLOCK)   &#xD;&#xA; inner join sgt_payment_history_header PHH WITH(NOLOCK)&#xD;&#xA;    on PA.payee_account_id=phh.payee_account_id and &#xD;&#xA;      phh.payment_schedule_id=@paymentscheduleid&#xD;&#xA; where phh.payee_account_id is not null and pa.dro_calculation_id is not null&#xD;&#xA;) as PBDC &#xD;&#xA;on BDC.dro_calculation_id=PBDC.dro_calculation_id&#xD;&#xA;where isnull(payment_status_value,'') &lt;&gt; 'PRCD'">
+      <parameters>
+        <parameter ID="@paymentscheduleid" sfwDataType="int" />
+        <parameter ID="@batchscheduleid" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="DroCalculationId" sfwType="Column" sfwValue="dro_calculation_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="DroApplicationId" sfwType="Column" sfwValue="dro_application_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PaymentTypeDescription" sfwType="Description" sfwValue="payment_type_description" />
+    <attribute ID="PaymentTypeId" sfwType="Column" sfwValue="payment_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="2452" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PaymentTypeValue" sfwType="Column" sfwValue="payment_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="PaymentStatusDescription" sfwType="Description" sfwValue="payment_status_description" />
+    <attribute ID="PaymentStatusId" sfwType="Column" sfwValue="payment_status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="2451" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PaymentStatusValue" sfwType="Column" sfwValue="payment_status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="BenefitBeginDate" sfwType="Column" sfwValue="benefit_begin_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="MonthlyBenefitAmount" sfwType="Column" sfwValue="monthly_benefit_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="EePreTaxAmount" sfwType="Column" sfwValue="ee_pre_tax_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="EePostTaxAmount" sfwType="Column" sfwValue="ee_post_tax_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="EeErPickupAmount" sfwType="Column" sfwValue="ee_er_pickup_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="ErVestedAmount" sfwType="Column" sfwValue="er_vested_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="InterestAmount" sfwType="Column" sfwValue="interest_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="CapitalGain" sfwType="Column" sfwValue="capital_gain" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="AdditionalInterestAmount" sfwType="Column" sfwValue="additional_interest_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="VerifiedByUser" sfwType="Column" sfwValue="verified_by_user" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="RmdAmount" sfwType="Column" sfwValue="rmd_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="MinimumGuarantee" sfwType="Column" sfwValue="minimum_guarantee" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="StartingNonTaxable" sfwType="Column" sfwValue="starting_non_taxable" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="AdditionalInterest" sfwValue="icdoBenefitDroCalculation.additional_interest" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="MonthlyNontaxableAmount" sfwValue="icdoBenefitDroCalculation.monthly_nontaxable_amount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="MonthlyTaxableAmount" sfwValue="icdoBenefitDroCalculation.monthly_taxable_amount" />
+  </attributes>
+</entity>

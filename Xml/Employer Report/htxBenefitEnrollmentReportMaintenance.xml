@@ -1,0 +1,78 @@
+﻿<form ID="wfmBenefitEnrollmentReportMaintenance" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2003" sfwType="FormLinkMaintenance" sfwTitle="Benefit Enrollment Report Maintenance" version="3.5" sfwEntity="entBenefitEnrollmentReport" sfwTemplate="BenefitEnrollmentReportMaintenance.html" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmBenefitEnrollmentReportLookup" sfwFormObjectType="None" isBasedOnWfm="true" sfwDefaultButtonID="btnSave">
+  <initialload>
+    <callmethods sfwMethodName="LoadGeneratedReports" />
+  </initialload>
+  <items>
+    <sfwTable ID="Main" />
+    <sfwPanel ID="pnlHeader" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblN" />
+        <sfwLiteral ID="ltrlBenefitEnrollmentReport" Text="Benefit Enrollment Report" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnltoolbar" Visible="False">
+      <items>
+        <sfwTable ID="toolbar" />
+        <sfwButton ID="btnSave" sfwMethodName="btnSave_Click" Text="Save" />
+        <sfwButton ID="btnCancel" sfwMethodName="btnCancel_Click" Text="Refresh" />
+        <sfwButton ID="btnPrev" sfwMethodName="btnPrev_Click" Text="Prev" />
+        <sfwButton ID="btnNext" sfwMethodName="btnNext_Click" Text="Next" />
+        <sfwButton ID="btnCorrespondence" sfwMethodName="btnCorrespondence_Click" Text="Correspondence" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlReports" sfwCaption="Benefit Enrollment Report" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblNewPage" />
+        <sfwLiteral ID="ltrMessage" Text="The Benefit Enrollment Report provides you with new benefit enrollments, changes to current benefit enrollments and termination of benefits." />
+        <sfwDropDownList ID="ddlReports">
+          <ListItem Text="Benefit Enrollment/Termination Report" Value="Benefit Enrollment/Termination Report" />
+        </sfwDropDownList>
+        <sfwButton ID="btnGenerate" sfwMessageId="33" sfwMethodName="btnExecuteBusinessMethod_Click" sfwObjectMethod="btnGenerateReport_Click" Text="Generate" sfwVisibleRule="IsPIR9115Enabled" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlMain" sfwCaption="Reports Generated">
+      <items>
+        <sfwTable ID="tblMain" />
+        <sfwButton ID="btnDownload" sfwMethodName="btnDownload_Click" cssClass="hideControl" Text="Generate Download" sfwRelatedControl="grvWSSMessageDetails" sfwNavigationParameter="astrFileName=CorrespondenceLink" sfwObjectMethod="DownloadBenefitEnrollmentReport" sfwExecuteMethodType="ObjectMethod" sfwTriggerPostBack="True" />
+        <sfwGridView AllowPaging="True" AllowSorting="True" ID="grvWSSMessageDetails" sfwEntityField="lstWSSMessageDetails" sfwGridEntity="entWssMessageDetail">
+          <Columns>
+            <TemplateField HeaderText="Message" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objWSSMessageHeader.MessageText" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Created Date" SortExpression="ReportCreatedDate">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="ReportCreatedDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Web Link" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="WebLink" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Report Link">
+              <ItemTemplate>
+                <sfwLabel sfwRelatedControl="btnDownload" sfwLinkable="True" sfwEntityField="IstrReportLink" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Correspondence Link" cssClass="hideControl" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwLinkable="True" sfwEntityField="CorrespondenceLink" cssClass="hideControl" sfwRelatedControl="btnDownload" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Wss Message Detail ID" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="WssMessageDetailId" />
+              </ItemTemplate>
+            </TemplateField>
+          </Columns>
+        </sfwGridView>
+      </items>
+    </sfwPanel>
+  </items>
+  <loaddetails>
+    <entityfield ID="lstWSSMessageDetails" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+  </loaddetails>
+  <ExtraFields />
+</form>

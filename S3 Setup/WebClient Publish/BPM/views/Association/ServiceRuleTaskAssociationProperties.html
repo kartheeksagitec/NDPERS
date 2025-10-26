@@ -1,0 +1,70 @@
+﻿<fieldset ng-disabled="$ctrl.isDisabledforVersioning">
+    <!--if map has no sfwentity attr - it can not be determined to be based on bo/entity-->
+    <div class="col-xs-12 padding-0" ng-show="($ctrl.isDisabledforVersioning && $ctrl.baseType) || !$ctrl.isDisabledforVersioning">
+        <label class="radio-inline">
+            <input type="radio" value="entity" ng-model="$ctrl.baseType" ng-change="$ctrl.onChangebaseType('entity')" name="basetype" undoredodirective model="$ctrl" propertyname="'baseType'" />
+            <span ng-if="!$ctrl.isObjectbased">Entity</span>
+            <span ng-if="$ctrl.isDisabledforVersioning && $ctrl.isObjectbased">Business Object</span>
+        </label>
+        <label class="radio-inline">
+            <input type="radio" value="query" ng-model="$ctrl.baseType" ng-change="$ctrl.onChangebaseType('query')" name="basetype" undoredodirective model="$ctrl" propertyname="'baseType'"/>
+            Scalar Query
+        </label>
+        <!--template for entity-->
+        <div ng-if="$ctrl.baseType == 'entity'">
+            <div class="form-group marg-top-8">
+                <!--for object based bpm-->
+                <div class="form-group">
+                    <label class="control-label marg-bottom-5" ng-if="$ctrl.isDisabledforVersioning && $ctrl.isObjectbased">Business Object</label>
+                    <label class="control-label marg-bottom-5" ng-if='!$ctrl.model.baseChild.dictAttributes.sfwEntity && !$ctrl.isObjectbased'>Entity ID</label>
+                    <label class="control-label marg-bottom-5" ng-if='$ctrl.model.baseChild.dictAttributes.sfwEntity && !$ctrl.isObjectbased'><a ng-click='$ctrl.NavigateToFile($ctrl.model.baseChild.dictAttributes.sfwEntity)'>Entity ID</a></label>
+                    <div ng-if="!$ctrl.isObjectbased">
+                        <fileintellisensetemplate model='$ctrl.model' isdisabled="$ctrl.isDisabledforVersioning" onfilechange="$ctrl.getMapVariableEntityWise($ctrl.model.baseChild.dictAttributes.sfwEntity)" filename="$ctrl.model.baseChild.dictAttributes.sfwEntity" propertyname="'baseChild.dictAttributes.sfwEntity'" filetype="'Entity'"></fileintellisensetemplate>
+                    </div>
+                    <div ng-if="$ctrl.isDisabledforVersioning && $ctrl.isObjectbased">
+                        <span ng-bind="$ctrl.model.baseChild.dictAttributes.type" title="{{$ctrl.model.baseChild.dictAttributes.type}}"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label marg-bottom-5">Initialization Variable</label>
+                    <select class="form-control input-sm" ng-disabled="$ctrl.isDisabledforVersioning" ng-options="x.dictAttributes.id as x.dictAttributes.id for x in $ctrl.mapVariablesModel.Elements | filter :$ctrl.showVariablesByEntity()" 
+                            ng-model="$ctrl.model.lstrInitVariable" 
+                            title="{{$ctrl.model.baseChild.dictAttributes.variable}}" ng-change="$ctrl.onVariableChanged()" undoredodirective model="$ctrl.model.baseChild" propertyname="'variable'" undorelatedfunction="onVariableChanged()">
+                        <option value="">Select a variable</option>
+                    </select>
+                </div>
+            </div>
+            <div ng-show="$ctrl.isBusinessRuleTypeValid">
+                <bpm-initialize-section model="$ctrl.model" is-disabledfor-versioning="$ctrl.isDisabledforVersioning" query-parameters-values="$ctrl.queryParametersvalues" is-disabled-for-versioning="$ctrl.isDisabledForVersioning" callback-function="$ctrl.loadXmlmethods()"></bpm-initialize-section>
+                <div class="form-group marg-top-8">
+                    <span class="dialog-btn" ng-click="$ctrl.setEnterExitActions(true)">Set On Enter Actions</span>
+                </div>
+                <div class="form-group marg-top-8">
+                    <span class="dialog-btn" ng-click="$ctrl.setEnterExitActions(false)">Set On Exit Actions</span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label marg-bottom-5" ng-if="!$ctrl.model.baseChild.ServiceMethodmodel.dictAttributes.sfwObjectMethod">Method</label>
+                    <label class="control-label marg-bottom-5" ng-if='$ctrl.model.baseChild.ServiceMethodmodel.dictAttributes.sfwObjectMethod'>
+                        <a ng-click='$ctrl.selectMethodClick($ctrl.model.baseChild.dictAttributes.sfwEntity,"objectmethods",$ctrl.model.baseChild.ServiceMethodmodel.dictAttributes.sfwObjectMethod)'>Method</a>
+                    </label>
+                    <div ng-if="!$ctrl.isObjectbased">
+                        <entitymethodsintellisense model="$ctrl.model.baseChild.ServiceMethodmodel" entityid="$ctrl.model.baseChild.dictAttributes.sfwEntity"  modelvalue="$ctrl.model.baseChild.ServiceMethodmodel.dictAttributes.sfwObjectMethod" propertyname="'dictAttributes.sfwObjectMethod'"
+                                                  onchangecallback="$ctrl.getServiceMethodparameters()" ></entitymethodsintellisense>
+                    </div>
+                    <div ng-if="$ctrl.isObjectbased && $ctrl.isDisabledForVersioning">
+                        <span ng-bind="$ctrl.model.baseChild.ServiceMethodmodel.dictAttributes.sfwMethodName"></span>
+                    </div>
+                </div>
+                <div class="form-group  marg-top-8" ng-if="$ctrl.model.baseChild.ServiceMethodmodel.dictAttributes.sfwObjectMethod">
+                    <span class="dialog-btn" ng-click="$ctrl.setServiceMethodParameter()">Set Method Parameter</span>
+                </div>
+            </div>
+        </div>
+        <!--template for query-->
+        <div ng-if="$ctrl.baseType == 'query'">
+            <div class="form-group margin-top-15">
+                <span class="dialog-btn" ng-click="$ctrl.setscalarquery()">Set Scalar Queries</span>
+            </div>
+        </div>
+    </div>
+</fieldset>

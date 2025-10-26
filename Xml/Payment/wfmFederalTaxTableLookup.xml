@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<form ID="wfmFederalTaxTableLookup" sfwActive="True" sfwStatus="Valid" sfwRemoteObject="srvPayment" sfwResource="1202 " sfwType="Lookup" sfwTitle="Federal Tax Table Lookup" version="3.5" sfwEntity="entFedStateTaxRate" sfwGridCollection="busFedStateTaxRateLookup.iclbFedStateTaxRate">
+  <initialload>
+    <query ID="cdoFedStateTaxRate" sfwQueryRef="entFedStateTaxRate.FederalLookup" sfwMethodName="LoadFedStateTaxRates" />
+  </initialload>
+  <sfwTable ID="Main">
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlCriteria" sfwCaption="Criteria">
+          <sfwTable CssClass="Table" ID="tblCriteria">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capFedStateTaxId" Text="Federal Tax ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtFedStateTaxId" sfwDataField="fed_state_tax_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="cdoFedStateTaxRate" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capEffectiveDate" Text="Effective Date From : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtEffectiveDate" sfwDataField="effective_date" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="&gt;=" sfwQueryID="cdoFedStateTaxRate" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capMaritalStatusValue" Text="Filing Status : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlMaritalStatusValue" sfwDataField="filing_status_value" sfwOperator="=" sfwLoadType="CodeGroup" sfwLoadSource="7033" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnSearch" sfwMethodName="btnSearch_Click" Text="Search" />
+                <sfwButton ID="btnReset" sfwMethodName="btnReset_Click" Text="Reset" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwButton ID="btnStoreSearch" sfwMethodName="btnStoreUserDefaults_Click" Text="StoreSearch" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlResult" sfwCaption="Search Results">
+          <sfwTable CssClass="Table" ID="tblResult">
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnNew" sfwActiveForm="wfmFederalTaxTableMaintenance" sfwMethodName="btnNew_Click" sfwResource="1211" Text="New" />
+                <sfwButton ID="btnOpen" sfwActiveForm="wfmFederalTaxTableMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="AintStateTaxID=FedStateTaxId" sfwRelatedControl="grvFedStateTax" sfwResource="1211" Text="Open" sfwDisableViewOnly="True" />
+                <sfwButton ID="btnDelete" sfwMethodName="btnDelete_Click" sfwRelatedControl="grvFedStateTax" sfwResource="1211" Text="Delete" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwGridView AllowPaging="True" AllowSorting="True" AutoGenerateColumns="False" ID="grvFedStateTax" sfwSelection="Many" sfwSortExpression="EffectiveDate desc" SortExpressionUpdated="true">
+                  <Columns>
+                    <TemplateField HeaderText="Effective Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwLinkable="True" sfwRelatedControl="btnOpen" sfwEntityField="EffectiveDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Marital Status">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="MaritalStatusDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Minimum Amount" ItemStyle.HorizontalAlign="Right" ItemStyleAlignImportant="True">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="MinimumAmount" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Maximum Amount" ItemStyle.HorizontalAlign="Right" ItemStyleAlignImportant="True">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="MaximumAmount" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Fed State Tax ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="FedStateTaxId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Percentage" ItemStyle.HorizontalAlign="Right" ItemStyleAlignImportant="True">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="Percentage" CssClass="RightAlign" sfwDataFormat="{0:N2}" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Tax Amount" ItemStyle.HorizontalAlign="Right" ItemStyleAlignImportant="True">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="TaxAmount" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+  </sfwTable>
+  <loaddetails />
+</form>

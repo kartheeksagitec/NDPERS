@@ -1,0 +1,107 @@
+﻿<div class="portlet-body">
+    <ul class="nav nav-tabs" id="menu" ng-if="showExtraFieldsTab">
+        <li ng-click="selectNewDetailsDialogTab()" ng-class="SelectedNewRuleDetailsDialogTab=='Details'?'active':''"><a>Details</a></li>
+        <li ng-click="selectNewExtraFieldsDialogTab()" ng-class="SelectedNewRuleDetailsDialogTab=='ExtraFields'?'active':''"><a>Extra Fields</a></li>
+    </ul>
+    <div class="tab-content">
+        <div ng-show="SelectedNewRuleDetailsDialogTab=='Details'">
+            <div class="form-body">
+
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="control-label blocked-element">Name(ID) </label>
+                        <span class="file-prefix">rul</span>
+                        <input type="text" class="form-control input-sm file-suffix" title="{{objRule.RuleID}}" ng-model="objRule.RuleID" />
+
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label">Return Type</label>
+
+                        <select class="form-control input-sm" ng-options="type for type in ReturnValues" title="{{objRule.ReturnType}}" ng-model="objRule.ReturnType">{{type}}</select>
+
+                    </div>
+                    <div class="form-group checkbox-row">
+                        <div class="col-xs-3">
+                            <label class="control-label">Static</label>
+
+                            <input type="checkbox" ng-model="objRule.IsStatic" ng-checked="objRule.IsStatic" class="popup-single-checkbox" />
+
+                        </div>
+                        <div class="col-xs-3">
+                            <label class="control-label">Private</label>
+
+                            <input type="checkbox" ng-model="objRule.IsPrivate" ng-checked="objRule.IsPrivate" class="popup-single-checkbox" />
+
+                        </div>
+
+                        <div class="col-xs-3">
+                            <label class="control-label">Trace</label>
+
+                            <input type="checkbox" ng-model="objRule.Trace" ng-checked="objRule.Trace" class="popup-single-checkbox" />
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-xs-6 no-left-padding" ng-show="objRule.IsStatic">
+                        <label class="control-label">Cache Result</label>
+                        <input type="checkbox" value="Cache Result" ng-model="objRule.CacheResult" ng-checked="objRule.CacheResult" class="popup-single-checkbox" />
+
+                    </div>
+
+                    <div class="form-group" ng-show="objRule.ReturnType == 'Collection' || objRule.ReturnType == 'List' || objRule.ReturnType == 'Object'">
+                        <label class="control-label">Entity Return Type</label>
+
+                        <fileintellisensetemplate insidegrid="true" model='objRule' filename="objRule.EntityReturnType" propertyname="'EntityReturnType'" filetype="'Entity'"></fileintellisensetemplate>
+
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="control-label"> Description</label>
+
+                        <textarea rows="5"  title="{{objRule.Description}}" ng-model="objRule.Description" class="form-control input-sm" style="height:96px !important" />
+
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label">NeoTrack ID</label>
+
+                        <input type="text" class="form-control input-sm" title="{{objRule.NeoTrackID}}" ng-model="objRule.NeoTrackID" />
+
+                    </div>
+
+                    <div class="form-group checkbox-row" ng-show="objRule.RuleType == 'DecisionTable'">
+                        <div class="col-xs-6">
+                            <label class="control-label no-right-margin">Match all condition</label>
+                            <input type="checkbox" ng-model="objRule.IsMatchAllCondition" ng-checked="objRule.IsMatchAllCondition" class="popup-single-checkbox" />
+                        </div>
+                        <div class="col-xs-6">
+
+                            <label class="control-label">Throw Error</label>
+                            <input type="checkbox" value="Cache Result" ng-model="objRule.IsThrowError" ng-checked="objRule.IsThrowError" class="popup-single-checkbox" />
+
+                        </div>
+                      
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <div ng-show="SelectedNewRuleDetailsDialogTab=='ExtraFields'">
+            <extra-field-directive extra-field-model="objRuleExtraFields" is-tab="showExtraFieldsTab" obj-fn="objDirFunctions" form-name="formName"></extra-field-directive>
+
+        </div>
+    </div>
+</div>
+<div class="form-actions">
+    <div class="col-xs-8 text-left">
+        <span class="alert-error-msg">{{ruleErrorMessageForDisplay}}</span>
+    </div>
+    <div class="col-xs-4">
+        <input type="button" class="dialog-btn" value="OK" ng-click="createNewRule()" ng-disabled="validateNewRule()" />
+        <input type="button" class="dialog-btn" value="Cancel" ng-click="closeNewRuleWindow()" />
+    </div>
+</div>

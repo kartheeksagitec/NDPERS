@@ -1,0 +1,79 @@
+﻿<div ng-controller="SetFooterController" class="full-height">
+    <!--<div class="dropout-head">Footer Details <div class="ngdialog-close" style="cursor:pointer" ng-click="onCancelClick()"></div></div>-->
+    <div class="portlet-body">
+        <div class="col-xs-12">
+            <div class="col-xs-4 pull-right">
+                <input type="checkbox" ng-model="IsMVVM" />  Is MVVM
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="form-group">
+                <div ng-show="IsMVVM" class="col-xs-4">
+                    Footer Type :
+                </div>
+                <div ng-show="IsMVVM" class="col-xs-8">
+                    <span ng-bind="footerTemplateLabel.dictAttributes.sfwFooterType" contenteditable="false" class="placeholder td-span-ellipsis" data-placeholder="Footer Type"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-12 ">
+            <div class="form-group">
+                <div ng-show="IsMVVM" class="col-xs-4">
+                    Footer Text :
+                </div>
+                <div ng-show="IsMVVM" class="col-xs-8">
+                    <span ng-bind="footerTemplateLabel.dictAttributes.sfwText" contenteditable="false" class="placeholder td-span-ellipsis" data-placeholder="Footer Text"></span>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-12">
+            <div class="form-group" ng-show="IsMVVM">
+                <div class="pull-right">
+                    <img src="images/Common/Icon_moveup_white.svg" title="Move Up" ng-click="MoveUp()" ng-disabled="isMoveUp()" />
+                    <img src="images/Common/Icon_movedown_white.svg" title="Move Down" ng-click="MoveDown()" ng-disabled="isMoveDown()" />
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="form-group" ng-show="IsMVVM">
+                <table class="table table-condensed table-hover table-fixedheader">
+                    <thead>
+                        <tr>
+                            <th width="30%">Select</th>
+                            <th width="40%">Operation</th>
+                            <th width="30%">Caption</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in lstOperations" ng-class="item==selectedOperation?'selected':''" ng-click="setRowSelection(item)">
+                            <td width="30%"><input type="checkbox" class="checkbox" ng-model="item.isSelect" ng-change="FooterDetailsChange()" /></td>
+                            <td width="40%"><span ng-bind="item.operation"></span></td>
+                            <td width="30%"><input type="text" class="form-control input-sm" title="{{item.caption}}" ng-model="item.caption" ng-change="FooterDetailsChange()" ng-disabled="!item.isSelect" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div ng-show="!IsMVVM" class="col-xs-12">
+                <div class="form-group">
+                    <div class="col-xs-4">Footer Text :</div>
+                    <div class="col-xs-8"><input type="text" class="form-control input-sm" title="{{footerTemplateLabelIsNotMVVM.dictAttributes.sfwText}}" ng-model="footerTemplateLabelIsNotMVVM.dictAttributes.sfwText" ng-disabled="!footerTemplateLabelIsNotMVVM.dictAttributes.sfwEntityField" /></div>
+                </div><div class="form-group">
+                    <div class="col-xs-4">Footer Field :</div>
+                    <div class="col-xs-8">
+                        <div class="textbox-autocomplete-block">
+                            <entityfieldelementintellisense ontextchangecallback="clearFooterText(footerTemplateLabelIsNotMVVM.dictAttributes.sfwEntityField)" modebinding='footerTemplateLabelIsNotMVVM.dictAttributes.sfwEntityField' model='footerTemplateLabelIsNotMVVM' entityid='formEntity' propertyname="'dictAttributes.sfwEntityField'"></entityfieldelementintellisense>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="form-actions">
+        <input type="button" class="btn dialog-btn-default" value="OK" ng-click="onSetFooterSaveClick()" />
+        <input type="button" class="btn dialog-btn" value="Cancel" ng-click="onCancelClick()" />
+    </div>
+</div>

@@ -1,0 +1,93 @@
+﻿<div class="full-height" ng-controller="RetrievalButtonParameterController">
+    <!--<div class="popup-secondary-head">Retrieval Parameters</div>-->
+    <div class="portlet-body">
+        <div class="col-xs-12 form-group">
+            <b>WARNING: Only controls having an ID will be available here for Retrieval Parameters.</b>
+        </div>
+        <div class="col-xs-12">
+            <div class="col-xs-5">
+                <div class="form-group">
+                    <span style="width:82px;display:inline-block"><b>Source Form: </b></span><span style="width: calc(100% - 82px);overflow: hidden;text-overflow: ellipsis;display: inline-block;vertical-align: middle;" title="{{sourceForm}}">{{sourceForm}}</span>
+
+                </div>
+                <div class="form-group">
+                    <input type="checkbox" ng-model="ShowAll.isShowAll" ng-change="ShowAllControls()" />Show All Controls
+                </div>
+
+                <label class="control-label"><b>Source Controls:</b></label>
+
+                <div class="form-group parameter-query-inner-left overflowA">
+                    <!--<ul class="list-unstyled"> col-4-sm-height div-border
+                        <li ng-repeat="lstSourceFields in lstSourceFields" ng-include="'sourceFormFields'" retrievalparameterdraggable dragdata="lstSourceFields.ID"></li>
+                    </ul>-->
+                    <div id='tree_2' class='tree-demo jstree jstree-2 jstree-default jstree-checkbox-selection' role='tree' aria-activedescendant='j2_1'>
+                        <ul class='jstree-container-ul jstree-children jstree-wholerow-ul jstree-no-dots'>
+                            <li ng-repeat="lstSourceFields in lstSourceFields" role='treeitem' aria-expanded='true' id='j2_1' retrievalparameterdraggable dragdata="lstSourceFields.ID" ng-class="lstSourceFields.IsExpanded?'jstree-node jstree-open':'jstree-node jstree-closed'" aria-selected='false' ng-include="'sourceFormFields2'">
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-xs-7">
+
+                <div class="form-group">
+                    <span style="width:82px;display:inline-block"> <b>Target Form: </b></span><span style="width: calc(100% - 82px);overflow: hidden;text-overflow: ellipsis;display: inline-block;vertical-align: middle;" title="{{targetForm}}">{{targetForm}}</span>
+                </div>
+                <div class="form-group">
+                    <b>Parameters:</b>
+                </div>
+                <div class="form-group parameter-query-inner-right target-control-table">
+                    <table class="table table-condensed table-hover table-fixedheader">
+                        <thead>
+                            <tr>
+                                <td>Target Control</td>
+                                <td>Sorce Control</td>
+                                <td>Constant</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="TargetField in lstTargetFields">
+                                <td><span ng-bind="TargetField.ID"></span></td>
+                                <td><input type="text" title="{{TargetField.sourceControl}}" class="form-control input-sm" ng-model="TargetField.sourceControl" retrievalparameterdroppable dropdata="TargetField.sourceControl" /></td>
+                                <td><input type="checkbox" class="checkbox" ng-model="TargetField.isConstant" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="form-actions">
+        <input type="button" class="btn dialog-btn-default" value="OK" ng-click="okClick()" />
+        <input type="button" class="btn dialog-btn-default" value="Cancel" ng-click="RetrievalcloseClick()" />
+    </div>
+</div>
+<script type="text/ng-template" id="sourceFormFields">
+    <table>
+        <tr>
+            <td width="15px">
+                <span ng-class="lstSourceFields.IsExpanded?'file-expanded':'file-collapsed'" ng-click="ExpandCollapsedControl(lstSourceFields)" ng-show="lstSourceFields.Elements.length>0"></span>
+            </td>
+            <td ng-class="selectedControlID==lstSourceFields?'selected':''">{{lstSourceFields.ID}}</td>
+        </tr>
+    </table>
+    <ul class="list-unstyled" ng-if="lstSourceFields.Elements.length > 0" ng-show="lstSourceFields.IsExpanded">
+        <li ng-repeat="lstSourceFields in lstSourceFields.Elements" ng-include="'sourceFormFields'" ng-click="selectControlID(lstSourceFields)" s retrievalparameterdraggable dragdata="lstSourceFields.ID">
+        </li>
+    </ul>
+</script>
+
+<script id="sourceFormFields2" type="text/ng-template">
+
+    <div class="jstree-icon jstree-ocl" ng-click="ExpandCollapsedControl(lstSourceFields)" ng-show="lstSourceFields.Elements.length > 0"></div>
+
+    {{lstSourceFields.ID}}
+    <ul ng-if="lstSourceFields.Elements.length > 0" ng-show="lstSourceFields.IsExpanded" role="group" class="jstree-children">
+        <li ng-repeat="lstSourceFields in lstSourceFields.Elements" ng-include="'sourceFormFields2'" ng-click="selectControlID(lstSourceFields)"  retrievalparameterdraggable dragdata="lstSourceFields.ID"
+            ng-mousedown="selectControlID(lstSourceFields)"
+            role="treeitem" id="j2_2" ng-class="lstSourceFields.Elements.length == 0?'jstree-node  jstree-leaf':lstSourceFields.IsExpanded?'jstree-node jstree-open':'jstree-node jstree-closed'">
+        </li>
+    </ul>
+</script>

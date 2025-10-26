@@ -1,0 +1,187 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entPayeeAccountAchDetail" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoPayeeAccountAchDetail" sfwObjectID="busPayeeAccountAchDetail" sfwTableName="sgt_payee_account_ach_detail">
+  <rules>
+    <rule ID="IsAccountNumberNull" sfwExpression="((this.iblnIsFromMSS == false) &amp;&amp;&#xD;&#xA;(string.IsNullOrEmpty(this.icdoPayeeAccountAchDetail.account_number)))&#xD;&#xA;||&#xD;&#xA;(this.iblnIsFromMSS == true &amp;&amp; (this.IsAccountNumberNullMSS() == true))" sfwMessageId="4602" sfwObjectBased="True" />
+    <rule ID="IsAccountTypeNull" sfwMessageId="4014" sfwExpression="((this.iblnIsFromMSS == false) &amp;&amp;&#xD;&#xA;(string.IsNullOrEmpty(this.icdoPayeeAccountAchDetail.bank_account_type_value)))&#xD;&#xA;||&#xD;&#xA;((this.iblnIsFromMSS == true) &amp;&amp;&#xD;&#xA;(this.IsAccountTypeNotSelectedMSS() == true))" sfwObjectBased="True" />
+    <rule ID="IsAmountenteredGreaterThanBenfitAmount" sfwMessageId="5525" sfwExpression="!(this.icdoPayeeAccountAchDetail.partial_amount == 0.00) &amp;&amp; &#xA;(this.icdoPayeeAccountAchDetail.partial_amount &gt; RFunc.GetValue&lt;Decimal&gt;(this, &quot;ibusPayeeAccount.idecBenefitAmount&quot;))&#xA;" sfwObjectBased="True" />
+    <rule ID="IsAmountOrPercentageEnteredForSecondaryAchInvalid" sfwMessageId="5546" sfwExpression="this.iblnIsFromMSS == false &amp;&amp;&#xD;&#xA;(this.IsPercentageOrAmountInValidForSecondary() == True)" sfwObjectBased="True" />
+    <rule ID="IsBankOrgActive" sfwMessageId="5501" sfwExpression="(this.iblnIsFromMSS == false) &amp;&amp;&#xA;!(string.IsNullOrEmpty(this.icdoPayeeAccountAchDetail.org_code)) &amp;&amp; &#xA;!(RFunc.GetValue&lt;String&gt;(this, &quot;ibusBankOrg.icdoOrganization.status_value&quot;) == &quot;ACTV&quot;)" sfwObjectBased="True" />
+    <rule ID="IsBankOrgInvalid" sfwMessageId="4017" sfwExpression="(this.iblnIsFromMSS == false) &amp;&amp;&#xA;!(string.IsNullOrEmpty(this.icdoPayeeAccountAchDetail.org_code)) &amp;&amp; &#xA;!(RFunc.GetValue&lt;String&gt;(this, &quot;ibusBankOrg.icdoOrganization.org_type_value&quot;) == &quot;BANK&quot;)" sfwObjectBased="True" />
+    <rule ID="IsBankOrgNull" sfwMessageId="1032" sfwExpression="(this.iblnIsFromMSS == false) &amp;&amp;&#xD;&#xA;(string.IsNullOrEmpty(this.icdoPayeeAccountAchDetail.org_code))" sfwObjectBased="True" />
+    <rule ID="IsbothAchAmountAndPercentageNotNull" sfwMessageId="5505" sfwExpression="((this.iblnIsFromMSS == false) &amp;&amp;&#xA;!(this.icdoPayeeAccountAchDetail.percentage_of_net_amount == 0.00) &amp;&amp; &#xA;!(this.icdoPayeeAccountAchDetail.partial_amount == 0.00))&#xA;||&#xA;(this.iblnIsFromMSS == true &amp;&amp;&#xA;this.IsPartialAmountOrPercentageNullMSS() == true)" sfwObjectBased="True" />
+    <rule ID="IsbothAchAmountAndPercentageNull" sfwMessageId="5505" sfwExpression="(this.iblnIsFromMSS == false) &amp;&amp;&#xA;(this.icdoPayeeAccountAchDetail.primary_account_flag == &quot;Y&quot;) &amp;&amp; &#xA;(this.icdoPayeeAccountAchDetail.percentage_of_net_amount == 0.00) &amp;&amp; &#xA;(this.icdoPayeeAccountAchDetail.partial_amount == 0.00)" sfwObjectBased="True" />
+    <rule ID="IsEndDateLessThanStartDate" sfwMessageId="5507" sfwExpression="(this.iblnIsFromMSS == false) &amp;&amp;&#xA;!(this.icdoPayeeAccountAchDetail.ach_start_date == DateTime.MinValue) &amp;&amp; &#xA;!(this.icdoPayeeAccountAchDetail.ach_end_date == DateTime.MinValue) &amp;&amp; &#xA;(this.icdoPayeeAccountAchDetail.ach_end_date &lt; this.icdoPayeeAccountAchDetail.ach_start_date)" sfwObjectBased="True" />
+    <rule ID="IsEndDateValid" sfwMessageId="5510" sfwExpression="(this.iblnIsFromMSS == false) &amp;&amp;&#xA;!(this.icdoPayeeAccountAchDetail.ach_end_date == DateTime.MinValue) &amp;&amp; &#xA;(this.IsEnddateNotValid() == True)" sfwObjectBased="True" />
+    <rule ID="IsPAStatusCPorCLD" sfwMessageId="5655" sfwExpression="(this.IsPayeeAccountStatusCancelPendingOrCancelled() == True)" sfwObjectBased="True" />
+    <rule ID="IsPercentageEnteredAndPrimaryFlagNotChecked" sfwMessageId="5678" sfwExpression="(this.iblnIsFromMSS == false) &amp;&amp;&#xD;&#xA;(this.IsPercentageAndStartDateModifiedForSecondary() == True)" sfwObjectBased="True" />
+    <rule ID="IsPercentageGreaterThan100" sfwMessageId="1023" sfwExpression="(this.iblnIsFromMSS == false &amp;&amp;&#xD;&#xA;(this.icdoPayeeAccountAchDetail.percentage_of_net_amount &gt; 100.00))&#xD;&#xA;||&#xD;&#xA;(this.iblnIsFromMSS == true &amp;&amp;&#xD;&#xA;this.IsPercentageOfNetAmountGreaterThan100() == true)" sfwObjectBased="True" />
+    <rule ID="IsPrimaryAchExist" sfwMessageId="5502" sfwExpression="(this.iblnIsFromMSS == false) &amp;&amp;&#xD;&#xA;(this.IsPrimaryAchAlreadyExist() == True)" sfwObjectBased="True" />
+    <rule ID="IsPrimaryAchNotExist" sfwMessageId="5547" sfwExpression="(this.iblnIsFromMSS == false) &amp;&amp;&#xD;&#xA;(this.IsPrimaryAchNotExist() == True)" sfwObjectBased="True" />
+    <rule ID="IsSecondaryAchAlreadyExist" sfwMessageId="5565" sfwExpression="(this.iblnIsFromMSS == false) &amp;&amp;&#xD;&#xA;(this.IsSecondaryAchAlreadyExist() == True)" sfwObjectBased="True" />
+    <rule ID="IsStartDateLessThanOrEquaToNextBenefitPaymentDate" sfwMessageId="5506" sfwExpression="(this.iblnIsFromMSS == false) &amp;&amp;&#xA;!(this.icdoPayeeAccountAchDetail.ach_start_date == DateTime.MinValue) &amp;&amp; &#xA;(this.IsStartdateNotValid() == True)" sfwObjectBased="True" />
+    <rule ID="IsStartDateNull" sfwMessageId="4032" sfwExpression="(this.iblnIsFromMSS == false) &amp;&amp;&#xD;&#xA;(this.icdoPayeeAccountAchDetail.ach_start_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsStartDatePriorToBenefitBeginDate" sfwMessageId="5549" sfwExpression="(this.iblnIsFromMSS == false) &amp;&amp;&#xA;(this.icdoPayeeAccountAchDetail.payee_account_ach_detail_id == 0) &amp;&amp;&#xA;(this.IsStartDatePriorToBenefitBeginDate() == True)" sfwObjectBased="True" />
+    <rule ID="IsTotalPercentageNot100OrTotalAchAmountNotEqualToBenefitAmount" sfwMessageId="5504" sfwExpression="(this.iblnIsFromMSS == false &amp;&amp;&#xA;!(this.IsPercentageOrAmountInValidForSecondary() == True) &amp;&amp; &#xA;(this.IsTotalAchPercentageOrAmountInvalid() == True))&#xA;||&#xA;(this.iblnIsFromMSS == true &amp;&amp;&#xA;this.IsTotalAchPercentageOrAmountInvalidMSS() == true)" sfwObjectBased="True" />
+    <rule ID="ValidateDeleteIsCurrentRecordAcive" sfwMessageId="5551" sfwExpression="(this.iblnIsFromMSS == false) &amp;&amp;&#xD;&#xA;(this.IsStartDateLessthanNexBenefitPaymentDate() == True)" sfwObjectBased="True" />
+    <rule ID="VisibleAreFieldsNotReadonly" sfwExpression="(this.iblnIsFromMSS == false) &amp;&amp;&#xD;&#xA;!(this.AreFieldsReadOnly() == True)" sfwObjectBased="True" />
+    <rule ID="VisibleAreFieldsReadonly" sfwExpression="(this.iblnIsFromMSS == false) &amp;&amp;&#xD;&#xA;(this.AreFieldsReadOnly() == True)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleIsAchApplicable" sfwExpression="(this.iblnIsFromMSS == false) &amp;&amp;&#xD;&#xA;(this.ibusPayeeAccount.IsAchApplicable() == True)" sfwObjectBased="True" />
+    <rule ID="IsRoutingNumberLenghtLessThan9" sfwExpression="(this.iblnIsFromMSS == true) &amp;&amp;&#xD;&#xA;(((!string.IsNullOrEmpty(this.ibusPayeeAccountACHDeatilSel1.icdoPayeeAccountAchDetailSel1.istrRoutingNumber1)) &amp;&amp; (RFunc.Length(this.ibusPayeeAccountACHDeatilSel1.icdoPayeeAccountAchDetailSel1.istrRoutingNumber1) != 9)) || &#xD;&#xA;((!string.IsNullOrEmpty(this.ibusPayeeAccountACHDeatilSel2.icdoPayeeAccountAchDetailSel2.istrRoutingNumber2)) &amp;&amp; RFunc.Length(this.ibusPayeeAccountACHDeatilSel2.icdoPayeeAccountAchDetailSel2.istrRoutingNumber2) != 9))" sfwMessageId="4058" sfwObjectBased="True" />
+    <rule ID="IsAcknowledegmentNotSelected" sfwExpression="(this.iblnIsFromMSS == true) &amp;&amp;&#xD;&#xA;(this.IsAcknowledgementNotSelected() == false)" sfwMessageId="10002" sfwObjectBased="True" />
+    <rule ID="IsRoutingNumberNull" sfwExpression="(this.iblnIsFromMSS == true) &amp;&amp;&#xD;&#xA;(this.IsRoutingNumberNullMSS() == true)" sfwMessageId="10321" sfwObjectBased="True" />
+    <rule ID="IsTotalPercentageNot100ORTotalACHAmountNotEqualToBenefitAmountMSS" sfwExpression="(this.iblnIsFromMSS == true) &amp;&amp;&#xD;&#xA;(this.IsTotalAchPercentageOrAmountInvalidMSS() == true)" sfwMessageId="5504" sfwObjectBased="True" />
+    <rule ID="IsRoutingNumberNumeric" sfwExpression="(this.iblnIsFromMSS == true) &amp;&amp;&#xD;&#xA;((!string.IsNullOrEmpty(this.ibusPayeeAccountACHDeatilSel1.icdoPayeeAccountAchDetailSel1.istrRoutingNumber1) &amp;&amp; &#xD;&#xA;!RFunc.IsNumeric(this.ibusPayeeAccountACHDeatilSel1.icdoPayeeAccountAchDetailSel1.istrRoutingNumber1))&#xD;&#xA;||&#xD;&#xA;(!string.IsNullOrEmpty(this.ibusPayeeAccountACHDeatilSel2.icdoPayeeAccountAchDetailSel2.istrRoutingNumber2) &amp;&amp; &#xD;&#xA;!RFunc.IsNumeric(this.ibusPayeeAccountACHDeatilSel2.icdoPayeeAccountAchDetailSel2.istrRoutingNumber2)&#xD;&#xA;))" sfwMessageId="4057" sfwObjectBased="True" />
+    <rule ID="VisibleRuleRemainderOfBenefit" sfwExpression="(this.iblnIsFromMSS == true) &amp;&amp;&#xD;&#xA;(this.ibusPayeeAccountACHDeatilSel2.icdoPayeeAccountAchDetailSel2.idecRemainderOfBenefit != 0)" sfwObjectBased="True" />
+    <rule ID="IsPercentageForPrimaryNotEntered" sfwExpression="(this.iblnIsFromMSS == true) &amp;&amp;&#xD;&#xA;(this.IsPercentageOfPrimaryBlank() == true)" sfwMessageId="10330" sfwObjectBased="True" />
+    <rule ID="VisibilityRuleForGenerateOTPButton" sfwExpression="(this.iblnIsFromMSS == true) &amp;&amp;&#xD;&#xA;((this.iblnIsOTPGeneratedSuccessfully == false))" sfwObjectBased="True" />
+    <rule ID="VisibilityRuleForSaveButton" sfwExpression="(this.iblnIsFromMSS == true) &amp;&amp;&#xD;&#xA;((this.iblnIsOTPEnteredVerified == true) ||&#xD;&#xA;(this.IsEmailAddressWaived() == true))" sfwObjectBased="True" />
+    <rule ID="VisibilityRuleForVerifyOTP" sfwExpression="(this.iblnIsFromMSS == true) &amp;&amp;&#xA;((this.iblnIsOTPGeneratedSuccessfully == true) &amp;&amp;&#xA;(this.iblnIsOTPEnteredVerified == false) &amp;&amp;&#xA;(this.IsEmailAddressWaived() == false))" sfwObjectBased="True" />
+    <rule ID="IsBankNameNull" sfwExpression="(this.iblnIsFromMSS == true) &amp;&amp;&#xD;&#xA;(this.IsBankNameNull() == true)&#xD;&#xA;" sfwMessageId="10333" sfwObjectBased="True" />
+    <rule ID="IsActivationCodeInvald" sfwExpression="(this.iblnIsFromMSS == true) &amp;&amp;&#xD;&#xA;(this.IsActivationCodeEnteredValid() == true)&#xD;&#xA;" sfwMessageId="10318" sfwObjectBased="True" />
+    <rule ID="VisibilityRuleIfEmailAddressIsWaived" sfwExpression="(this.iblnIsFromMSS == true) &amp;&amp;&#xD;&#xA;(this.IsEmailAddressWaived() == true)" sfwObjectBased="True" />
+    <rule ID="VisibilityRuleIfEmailAddressIsNotWaived" sfwExpression="(this.iblnIsFromMSS == true) &amp;&amp;&#xD;&#xA;(this.IsEmailAddressWaived() == false)" sfwObjectBased="True" />
+    <rule ID="IsBankNameGreaterThan50Characters" sfwExpression="(this.iblnIsFromMSS == true) &amp;&amp;&#xD;&#xA;(this.IsBankNameLengthGreaterThan50() == true)" sfwMessageId="10337" sfwObjectBased="True" />
+    <rule ID="InVisibilityRuleForVerifyOTP" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="!((this.iblnIsFromMSS == true) &amp;&amp;&#xA;((this.iblnIsOTPGeneratedSuccessfully == true) &amp;&amp;&#xA;(this.iblnIsOTPEnteredVerified == false) &amp;&amp;&#xA;(this.IsEmailAddressWaived() == false)))" />
+    <rule ID="IsACHDetailRecordExistsWithSameStartDate" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.iblnIsFromMSS == true) &amp;&amp;&#xA;(IsACHDetailRecordExistsWithSameStartDate())" sfwMessageId="10454" />
+    <rule ID="IsPAStatusCancelOrSuspendOrCompleteOrProcessed" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.icdoPayeeAccountAchDetail.suppress_warnings_flag != &quot;Y&quot;) &amp;&amp;&#xA;(this.ibusPayeeAccount != null) &amp;&amp;&#xA;(this.ibusPayeeAccount.IsPayeeAccountStatusCancelOrSuspendOrCompleteOrProcessed())" sfwMessageId="10490" />
+    <rule ID="IsDirectDepositAccountSubmitted" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.IsMultipleDirectDepositAccountSubmitted() == True" sfwMessageId="10511" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="VisibleRuleIsAchApplicable" sfwMode="New" sfwStatus="Active" />
+    <item ID="VisibleAreFieldsReadonly" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleAreFieldsNotReadonly" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleRemainderOfBenefit" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsAccountNumberNull" sfwStatus="Active" sfwMode="All" />
+    <item ID="VisibilityRuleForGenerateOTPButton" sfwStatus="Active" sfwMode="All" />
+    <item ID="VisibilityRuleForSaveButton" sfwStatus="Active" sfwMode="All" />
+    <item ID="VisibilityRuleForVerifyOTP" sfwStatus="Active" sfwMode="All" />
+    <item ID="VisibilityRuleIfEmailAddressIsWaived" sfwStatus="Active" sfwMode="All" />
+    <item ID="VisibilityRuleIfEmailAddressIsNotWaived" sfwStatus="Active" sfwMode="All" />
+    <item ID="InVisibilityRuleForVerifyOTP" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="IsBankOrgInvalid" sfwMode="New" sfwStatus="Active" />
+    <item ID="IsStartDateNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsBankOrgNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAccountNumberNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAccountTypeNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsbothAchAmountAndPercentageNotNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsbothAchAmountAndPercentageNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEndDateLessThanStartDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsBankOrgActive" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPrimaryAchExist" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsTotalPercentageNot100OrTotalAchAmountNotEqualToBenefitAmount" sfwMode="New" sfwStatus="Inactive" />
+    <item ID="IsPercentageGreaterThan100" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAmountenteredGreaterThanBenfitAmount" sfwMode="All" sfwStatus="InActive" />
+    <item ID="IsAmountOrPercentageEnteredForSecondaryAchInvalid" sfwMode="All" sfwStatus="Inactive" />
+    <item ID="IsPrimaryAchNotExist" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsStartDatePriorToBenefitBeginDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsSecondaryAchAlreadyExist" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPercentageEnteredAndPrimaryFlagNotChecked" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPAStatusCPorCLD" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsRoutingNumberLenghtLessThan9" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsAcknowledegmentNotSelected" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsRoutingNumberNull" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsTotalPercentageNot100ORTotalACHAmountNotEqualToBenefitAmountMSS" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsRoutingNumberNumeric" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsPercentageForPrimaryNotEntered" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsBankNameNull" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsActivationCodeInvald" sfwStatus="Inactive" sfwMode="All" />
+    <item ID="IsAccountNumberNull" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsBankNameGreaterThan50Characters" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsACHDetailRecordExistsWithSameStartDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPAStatusCancelOrSuspendOrCompleteOrProcessed" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsDirectDepositAccountSubmitted" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete>
+    <item ID="ValidateDeleteIsCurrentRecordAcive" sfwMode="All" sfwStatus="Active" />
+  </validatedelete>
+  <groupslist />
+  <updateablecdo />
+  <commonproperties>
+    <item ID="person_id" sfwObjectField="ibusPayeeAccount.icdoPayeeAccount.payee_perslink_id" sfwBeforeMethodName="LoadPayeeAccount" />
+  </commonproperties>
+  <queries>
+    <query ID="IsBankOrgValid" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select count(*) from sgt_organization where org_id=@orgid">
+      <parameters>
+        <parameter ID="@orgid" />
+      </parameters>
+    </query>
+    <query ID="ACHPreNoteVerificationBatch" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT &#xD;&#xA;'PE' AS [TYPE],&#xD;&#xA;PE.PAYEE_ACCOUNT_ACH_DETAIL_ID AS ACH_DETAIL_ID,&#xD;&#xA;PE.BANK_ACCOUNT_TYPE_VALUE AS TRANSACTION_CODE,&#xD;&#xA;ORG.ROUTING_NO,&#xD;&#xA;PE.ACCOUNT_NUMBER AS ACCOUNT_NO,&#xD;&#xA;PER1.PERSON_ID  AS PERSON_ID,&#xD;&#xA;PER1.LAST_NAME + ', ' + PER1.FIRST_NAME AS PERSON_NAME&#xD;&#xA;FROM SGT_PAYEE_ACCOUNT_ACH_DETAIL PE WITH (NOLOCK)&#xD;&#xA;LEFT JOIN SGT_ORGANIZATION ORG ON ORG.ORG_ID=PE.BANK_ORG_ID&#xD;&#xA;LEFT JOIN SGT_PAYEE_ACCOUNT SPE ON SPE.PAYEE_ACCOUNT_ID=PE.PAYEE_ACCOUNT_ID&#xD;&#xA;LEFT JOIN SGT_PERSON PER1 ON PER1.PERSON_ID=SPE.PAYEE_PERSLINK_ID&#xD;&#xA;WHERE PE.PRE_NOTE_FLAG='Y'&#xD;&#xA;&#xD;&#xA;UNION ALL&#xD;&#xA;&#xD;&#xA;SELECT &#xD;&#xA;'PA' AS [TYPE],&#xD;&#xA;PA.PERSON_ACCOUNT_ACH_DETAIL_ID AS ACH_DETAIL_ID,&#xD;&#xA;PA.BANK_ACCOUNT_TYPE_VALUE AS TRANSACTION_CODE,&#xD;&#xA;ORG.ROUTING_NO,&#xD;&#xA;PA.BANK_ACCOUNT_NUMBER AS ACCOUNT_NO,&#xD;&#xA;PER.PERSON_ID AS PERSON_ID,&#xD;&#xA;PER.LAST_NAME + ', ' + PER.FIRST_NAME AS PERSON_NAME&#xD;&#xA;FROM SGT_PERSON_ACCOUNT_ACH_DETAIL PA WITH (NOLOCK)&#xD;&#xA;LEFT JOIN SGT_ORGANIZATION ORG ON ORG.ORG_ID=PA.BANK_ORG_ID&#xD;&#xA;LEFT JOIN SGT_PERSON_ACCOUNT SPA ON SPA.PERSON_ACCOUNT_ID=PA.PERSON_ACCOUNT_ID&#xD;&#xA;LEFT JOIN SGT_PERSON PER ON PER.PERSON_ID=SPA.PERSON_ID&#xD;&#xA;WHERE PA.PRE_NOTE_FLAG='Y'&#xD;&#xA;&#xD;&#xA;">
+      <parameters />
+    </query>
+    <query ID="LoadACHDetailsForNextPaymentDate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT PACD.* FROM SGT_PAYEE_ACCOUNT_ACH_DETAIL PACD&#xD;&#xA; INNER JOIN (SELECT PA.* FROM SGT_PAYEE_ACCOUNT PA &#xD;&#xA;   INNER JOIN SGT_PAYEE_ACCOUNT_STATUS PAS&#xD;&#xA;       ON PAS.PAYEE_ACCOUNT_ID=PA.PAYEE_ACCOUNT_ID &#xD;&#xA;   INNER JOIN SGS_CODE_VALUE CV WITH(NOLOCK)&#xD;&#xA;     ON PAS.STATUS_ID= CV.CODE_ID AND PAS.STATUS_VALUE = CV.CODE_VALUE&#xD;&#xA;   WHERE PA.BENEFIT_BEGIN_DATE&lt;=@PAYMENTDATE&#xD;&#xA;   AND (CV.DATA2 = 'RECV' OR CV.DATA2 = 'APRD' ) &#xD;&#xA;    AND PAS.PAYEE_ACCOUNT_STATUS_ID  = &#xD;&#xA;    (&#xD;&#xA;     SELECT TOP 1 PAYEE_ACCOUNT_STATUS_ID&#xD;&#xA;       FROM SGT_PAYEE_ACCOUNT_STATUS PAS1 (NOLOCK)&#xD;&#xA;       WHERE PAS1.PAYEE_ACCOUNT_ID = PA.PAYEE_ACCOUNT_ID&#xD;&#xA;       AND PAS1.STATUS_EFFECTIVE_DATE &lt;= @PAYMENTDATE&#xD;&#xA;       ORDER BY PAS1.STATUS_EFFECTIVE_DATE DESC,PAS1.PAYEE_ACCOUNT_STATUS_ID DESC&#xD;&#xA;    )&#xD;&#xA;    )PAYEE ON PAYEE.PAYEE_ACCOUNT_ID=PACD.PAYEE_ACCOUNT_ID&#xD;&#xA;  ">
+      <parameters>
+        <parameter ID="@PAYMENTDATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="IsEmailAddressWaived" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_PERSON PER&#xD;&#xA;INNER JOIN SGT_PAYEE_ACCOUNT PE ON PE.PAYEE_PERSLINK_ID = PER.PERSON_ID&#xD;&#xA;WHERE PE.PAYEE_ACCOUNT_ID = @PAYEE_ACCOUNT_ID&#xD;&#xA;AND (ISNULL(PER.EMAIL_WAIVER_FLAG, 'N') = 'N' &#xD;&#xA;AND PER.EMAIL_ADDRESS IS NOT NULL)&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@PAYEE_ACCOUNT_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="rptDuplicateACHDetailReport" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT&#xA;&#x9; COUNT(SGT_PAYEE_ACCOUNT_ACH_DETAIL.ACCOUNT_NUMBER) AS COUNT,&#xA;&#x9;SGT_PAYEE_ACCOUNT_ACH_DETAIL.ACCOUNT_NUMBER,&#xA;&#x9;SGT_PAYEE_ACCOUNT_ACH_DETAIL.BANK_ORG_ID into #TEMP_ACH &#xA;FROM&#xA;&#x9; SGT_PAYEE_ACCOUNT_ACH_DETAIL &#xA;&#x9;INNER &#xA;&#x9; JOIN SGT_PAYEE_ACCOUNT PA1&#xA;&#x9; ON PA1.PAYEE_ACCOUNT_ID = SGT_PAYEE_ACCOUNT_ACH_DETAIL.PAYEE_ACCOUNT_ID &#xA;WHERE&#xA;&#x9; SGT_PAYEE_ACCOUNT_ACH_DETAIL.ACH_END_DATE IS NULL AND&#xA;&#x9; SGT_PAYEE_ACCOUNT_ACH_DETAIL.PAYEE_ACCOUNT_ID IN (SELECT&#xA;&#x9; PAYEE_ACCOUNT_ID &#xA;FROM&#xA;&#x9; SGT_PAYEE_ACCOUNT_STATUS &#xA;WHERE&#xA;&#x9; STATUS_VALUE IN ('3RDD',&#xA;&#x9;'3RDP',&#xA;&#x9;'3RDR',&#xA;&#x9;'APDS',&#xA;&#x9;'APRD',&#xA;&#x9;'DAPD',&#xA;&#x9;'RAPD',&#xA;&#x9;'RCDS',&#xA;&#x9;'RCDT',&#xA;&#x9;'RCPS',&#xA;&#x9;'RECV') AND&#xA;&#x9; SGT_PAYEE_ACCOUNT_STATUS.PAYEE_ACCOUNT_STATUS_ID =   (SELECT&#xA;&#x9; TOP 1 PAS1.PAYEE_ACCOUNT_STATUS_ID    &#xA;FROM&#xA;&#x9; SGT_PAYEE_ACCOUNT_STATUS PAS1 (NOLOCK)      &#xA;WHERE&#xA;&#x9; PAS1.PAYEE_ACCOUNT_ID = SGT_PAYEE_ACCOUNT_ACH_DETAIL.PAYEE_ACCOUNT_ID    &#xA;&#x9;ORDER BY  PAS1.STATUS_EFFECTIVE_DATE DESC,&#xA;&#x9;PAS1.PAYEE_ACCOUNT_STATUS_ID DESC   )) &#xA;&#x9;GROUP BY  SGT_PAYEE_ACCOUNT_ACH_DETAIL.ACCOUNT_NUMBER,&#xA;&#x9;SGT_PAYEE_ACCOUNT_ACH_DETAIL.BANK_ORG_ID HAVING COUNT(SGT_PAYEE_ACCOUNT_ACH_DETAIL.ACCOUNT_NUMBER) &gt;2 &#xA;&#xA;SELECT&#xA;&#x9; SGT_PAYEE_ACCOUNT.PAYEE_PERSLINK_ID,&#xA;&#x9;SGT_PAYEE_ACCOUNT_ACH_DETAIL.ACCOUNT_NUMBER,&#xA;&#x9;SGT_ORGANIZATION.ROUTING_NO &#xA;FROM&#xA;&#x9; #TEMP_ACH &#xA;&#x9;INNER &#xA;&#x9; JOIN SGT_PAYEE_ACCOUNT_ACH_DETAIL&#xA;&#x9; ON #TEMP_ACH.ACCOUNT_NUMBER = SGT_PAYEE_ACCOUNT_ACH_DETAIL.ACCOUNT_NUMBER &#xA;&#x9;INNER &#xA;&#x9; JOIN SGT_PAYEE_ACCOUNT&#xA;&#x9; ON SGT_PAYEE_ACCOUNT_ACH_DETAIL.PAYEE_ACCOUNT_ID = SGT_PAYEE_ACCOUNT.PAYEE_ACCOUNT_ID &#xA;&#x9;INNER &#xA;&#x9; JOIN SGT_ORGANIZATION&#xA;&#x9; ON SGT_PAYEE_ACCOUNT_ACH_DETAIL.BANK_ORG_ID = SGT_ORGANIZATION.ORG_ID &#xA;WHERE&#xA;&#x9; SGT_PAYEE_ACCOUNT_ACH_DETAIL.ACH_END_DATE IS NULL AND&#xA;&#x9; SGT_PAYEE_ACCOUNT_ACH_DETAIL.PAYEE_ACCOUNT_ID IN (SELECT&#xA;&#x9; PAYEE_ACCOUNT_ID &#xA;FROM&#xA;&#x9; SGT_PAYEE_ACCOUNT_STATUS &#xA;WHERE&#xA;&#x9; STATUS_VALUE IN ('3RDD',&#xA;&#x9;'3RDP',&#xA;&#x9;'3RDR',&#xA;&#x9;'APDS',&#xA;&#x9;'APRD',&#xA;&#x9;'DAPD',&#xA;&#x9;'RAPD',&#xA;&#x9;'RCDS',&#xA;&#x9;'RCDT',&#xA;&#x9;'RCPS',&#xA;&#x9;'RECV') AND&#xA;&#x9; SGT_PAYEE_ACCOUNT_STATUS.PAYEE_ACCOUNT_STATUS_ID =   (SELECT&#xA;&#x9; TOP 1 PAS1.PAYEE_ACCOUNT_STATUS_ID    &#xA;FROM&#xA;&#x9; SGT_PAYEE_ACCOUNT_STATUS PAS1 (NOLOCK)      &#xA;WHERE&#xA;&#x9; PAS1.PAYEE_ACCOUNT_ID = SGT_PAYEE_ACCOUNT_ACH_DETAIL.PAYEE_ACCOUNT_ID    &#xA;&#x9;ORDER BY  PAS1.STATUS_EFFECTIVE_DATE DESC,&#xA;&#x9;PAS1.PAYEE_ACCOUNT_STATUS_ID DESC   )) &#xA;&#x9;ORDER BY  SGT_PAYEE_ACCOUNT_ACH_DETAIL.ACCOUNT_NUMBER,&#xA;&#x9;SGT_PAYEE_ACCOUNT.PAYEE_PERSLINK_ID">
+      <parameters />
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="PayeeAccountAchDetailId" sfwType="Column" sfwValue="payee_account_ach_detail_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PayeeAccountId" sfwType="Column" sfwValue="payee_account_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="BankOrgId" sfwType="Column" sfwValue="bank_org_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="BankAccountTypeDescription" sfwType="Description" sfwValue="bank_account_type_description" />
+    <attribute ID="BankAccountTypeId" sfwType="Column" sfwValue="bank_account_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="211" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="BankAccountTypeValue" sfwType="Column" sfwValue="bank_account_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="AccountNumber" sfwType="Column" sfwValue="account_number" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="20" />
+    <attribute ID="PreNoteFlag" sfwType="Column" sfwValue="pre_note_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="PrimaryAccountFlag" sfwType="Column" sfwValue="primary_account_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="AchStartDate" sfwType="Column" sfwValue="ach_start_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="AchEndDate" sfwType="Column" sfwValue="ach_end_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="PreNoteCompletionDate" sfwType="Column" sfwValue="pre_note_completion_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="PercentageOfNetAmount" sfwType="Column" sfwValue="percentage_of_net_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="6,2" />
+    <attribute ID="PartialAmount" sfwType="Column" sfwValue="partial_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="OldAchForm" sfwType="Column" sfwValue="old_ach_form" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="1" />
+    <attribute ID="AsiSentFlag" sfwType="Column" sfwValue="asi_sent_flag" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="1" />
+    <attribute ID="objPayeeAccount" sfwType="Object" sfwEntity="entPayeeAccount" sfwValue="ibusPayeeAccount" />
+    <attribute sfwDataType="string" sfwType="Property" ID="OrgCode" sfwValue="icdoPayeeAccountAchDetail.org_code" />
+    <attribute ID="objBankOrg" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusBankOrg" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPercentage" sfwValue="istrPercentage" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrAmount" sfwValue="istrAmount" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ScrambledAccountNumber" sfwValue="icdoPayeeAccountAchDetail.scrambled_account_number" />
+    <attribute sfwDataType="bool" sfwType="Property" ID="IsRouitngNumberExists1" sfwValue="iblnRN1Exists" />
+    <attribute sfwDataType="bool" sfwType="Property" ID="IsRouitngNumberExists2" sfwValue="iblnRN2Exists" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrRoutingNumber1" sfwValue="icdoPayeeAccountAchDetailSel1.istrRoutingNumber1" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrRoutingNumber2" sfwValue="icdoPayeeAccountAchDetailSel2.istrRoutingNumber2" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrBankName1" sfwValue="icdoPayeeAccountAchDetailSel1.istrBankName1" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrBankName2" sfwValue="icdoPayeeAccountAchDetailSel2.istrBankName2" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AccountNumber1" sfwValue="icdoPayeeAccountAchDetailSel1.account_number" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AccountNumber2" sfwValue="icdoPayeeAccountAchDetailSel2.account_number" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AccountType1" sfwValue="icdoPayeeAccountAchDetailSel1.bank_account_type_value" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AccountType2" sfwValue="icdoPayeeAccountAchDetailSel2.bank_account_type_value" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IstrPartialAmount" sfwValue="icdoPayeeAccountAchDetailSel1.partial_amount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecRemainderOfBenefit" sfwValue="icdoPayeeAccountAchDetailSel2.idecRemainderOfBenefit" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecPercentageOfNetAmt1" sfwValue="icdoPayeeAccountAchDetailSel1.percentage_of_net_amount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecPercentageOfNetAmt2" sfwValue="icdoPayeeAccountAchDetailSel2.percentage_of_net_amount" />
+    <attribute ID="IblnIsRoutingNumberExist1" sfwDataType="bool" sfwPrivate="False" sfwValue="icdoPayeeAccountAchDetailSel1.iblnIsRouitngNumberExists1" sfwType="Property" />
+    <attribute ID="IblnIsRoutingNumberExist2" sfwDataType="bool" sfwPrivate="False" sfwValue="icdoPayeeAccountAchDetailSel1.iblnIsRouitngNumberExists2" sfwType="Property" />
+    <attribute ID="IblnPartialAmount1" sfwDataType="bool" sfwPrivate="False" sfwValue="icdoPayeeAccountAchDetailSel1.iblnPartialAmount1" sfwType="Property" />
+    <attribute ID="IstrAcknowledgementText" sfwDataType="string" sfwPrivate="False" sfwValue="istrAcknowledgementText" sfwType="Property" />
+    <attribute ID="lstAcknowledgement" sfwType="Collection" sfwValue="iclbACHDetailsAcknowledgementPart1" sfwEntity="entWssAcknowledgement" sfwPrivate="False" />
+    <attribute ID="IstrAcknowledgementFlag" sfwDataType="string" sfwPrivate="False" sfwValue="istrAcknowledgementFlag" sfwType="Property" />
+    <attribute ID="IstrConfirmationText" sfwDataType="string" sfwPrivate="False" sfwValue="istrConfirmationText" sfwType="Property" />
+    <attribute ID="IstrActivationCode" sfwDataType="string" sfwPrivate="False" sfwValue="istrActivationCode" sfwType="Property" />
+    <attribute ID="IblnIsOTPExpired" sfwDataType="bool" sfwPrivate="False" sfwValue="iblnIsOTPExpired" sfwType="Property" />
+    <attribute ID="IblnIsResendClicked" sfwDataType="bool" sfwPrivate="False" sfwValue="iblnIsResendClicked" sfwType="Property" />
+    <attribute ID="IblnIsOTPEnteredVerified" sfwDataType="bool" sfwPrivate="False" sfwValue="iblnIsOTPEnteredVerified" sfwType="Property" />
+    <attribute ID="objPayeeAccountACHDetail1" sfwType="Object" sfwEntity="entPayeeAccountAchDetail" sfwPrivate="False" sfwValue="ibusPayeeAccountACHDeatilSel1" />
+    <attribute ID="objPayeeAccountACHDetail2" sfwType="Object" sfwEntity="entPayeeAccountAchDetail" sfwPrivate="False" sfwValue="ibusPayeeAccountACHDeatilSel2" />
+    <attribute ID="SuppressWarningsFlag" sfwDataType="string" sfwValue="icdoPayeeAccountAchDetail.suppress_warnings_flag" sfwType="Property" />
+  </attributes>
+</entity>

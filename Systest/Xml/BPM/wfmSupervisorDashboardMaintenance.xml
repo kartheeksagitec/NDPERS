@@ -1,0 +1,351 @@
+﻿<form asp="ASPControl" swc="SagitecWebControls" ID="wfmSupervisorDashboardMaintenance" sfwResource="2079" sfwFormObject="busBpmSupervisorBAM" sfwType="Maintenance" sfwTitle="Supervisor Dashboard Maintenance" sfwActive="True" sfwStatus="Review" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmDashboardLookup" sfwFormObjectType="FormObject" sfwEntity="entBpmSupervisor" sfwRemoteObject="srvBPMN">
+  <initialload>
+    <callmethods sfwMethodName="LoadSupervisorDashboardData" />
+  </initialload>
+  <sfwTable>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="SupervisorDashboard" sfwGroupCaption="Supervisor Dashboard Details" sfwCaption="Supervisor Dashboard">
+          <sfwTable ID="tblNewPage3" sfwCaption="New Page">
+            <sfwRow>
+              <sfwColumn CssClass="width-90">
+                <sfwLabel ID="lblUserName" Text="User Name" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn CssClass="width-160">
+                <sfwDropDownList ID="ddlDropDownList" sfwNavigationParameter="USER_ID=IstrUserId" DataValueField="user_id" DataTextField="fullname" sfwLoadType="Query" sfwLoadSource="entUser.GetListOfUsersBySupervisourId" sfwEntityField="IstrSelectedUserId" />
+              </sfwColumn>
+              <sfwColumn CssClass="width-90">
+                <sfwLabel ID="lblDateFrom" Text="Date From: " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn CssClass="width-160">
+                <sfwTextBox ID="txtDateFrom" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="=" sfwEntityField="IdtDateFrom" />
+                <CompareValidator ID="cmvCompareValidator" Operator="LessThanEqual" Type="Date" ControlToValidate="txtDateFrom" ControlToCompare="txtDateTo" ErrorMessage="Date From should be Less Than or Equal to Date To." />
+              </sfwColumn>
+              <sfwColumn CssClass="width-90">
+                <sfwLabel ID="lblDateTo" Text="Date To: " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn CssClass="width-160">
+                <sfwTextBox ID="txtDateTo" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="=" sfwEntityField="IdtDateTo" />
+                <CompareValidator ID="cmvCompareValidator1" Operator="GreaterThanEqual" Type="Date" ControlToValidate="txtDateTo" ControlToCompare="txtDateFrom" ErrorMessage="Date To should be Greater Than or Equal to Date From" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwButton ID="btnExecuteRefreshFromObject" sfwMethodName="btnValidateExecuteBusinessMethod_Click" Text="Load Charts" sfwObjectID="busBpmSupervisorBAM" sfwMessageId="10026" sfwValidateClientJavascript="True" sfwExecuteMethodType="ObjectMethod" sfwObjectMethod="LoadDashboardAndCompletedBPMsData" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn ColumnSpan="7">
+                <sfwTextBox ID="txtIstrUserID" sfwEntityField="IstrUserId" Visible="False" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn ColumnSpan="7" CssClass="InternalDashboard">
+                <sfwTabContainer ID="tctSfwTabContainer">
+                  <Tabs>
+                    <sfwTabSheet ID="tshSelectedUserDashboard" HeaderText="Selected User Dashboard">
+                      <sfwTable>
+                        <sfwRow>
+                          <sfwColumn Height="700px">
+                            <sfwChart ChartName="Selected User Activity Statistics" ShowLegend="true" ID="chrSelectedUserDashboard" ChartType="StackedColumn" Width="500" Height="600px" CategoryAxisRotation="45" sfwLegendColCount="2" sfwEntityField="lstChartSelectedUserDashboardStatistics" sfwGridEntity="entBpmDashboardStatistics">
+                              <Series>
+                                <sfwSeries XValueMember="IstrShortActivityName" YValueMembers="IintOnOfActivityInstancesOnTime" Name="OnTime" ChartType="StackedColumn" YMemberColor="#932ce8" sfwTooltipTableParams="&lt;table class='leftchart' &gt;&lt;tr&gt;&lt;th&gt;&lt;strong&gt; Activity Name &lt;/strong&gt;&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;{IstrActivityName}&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;  On Time :&lt;/td&gt;&lt;td&gt;{IintOnOfActivityInstancesOnTime}&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt; Over Due :&lt;/td&gt;&lt;td&gt;{IintOnOfActivityInstancesOverDue}&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;" swfAddtionalChartColumns="IstrActivityName" />
+                                <sfwSeries Name="Overdue" YValueMembers="IintOnOfActivityInstancesOverDue" XValueMember="IstrShortActivityName" ChartType="StackedColumn" YMemberColor="#333CFF" sfwTooltipTableParams="&lt;table class='leftchart' &gt;&lt;tr&gt;&lt;th&gt;&lt;strong&gt; Activity Name &lt;/strong&gt;&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;{IstrActivityName}&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;  On Time :&lt;/td&gt;&lt;td&gt;{IintOnOfActivityInstancesOnTime}&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt; Over Due :&lt;/td&gt;&lt;td&gt;{IintOnOfActivityInstancesOverDue}&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;" />
+                              </Series>
+                              <ChartAreas>
+                                <sfwChartArea ChartAreaName="User Dashboard">
+                                  <Area3DStyle Enable3D="false" />
+                                </sfwChartArea>
+                              </ChartAreas>
+                            </sfwChart>
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwGridView ID="grvBusBpmDashboardStatistics" AllowPaging="True" AllowSorting="True" sfwEntityField="lstViewSelectedUserDashboardStatistics" sfwGridEntity="entBpmDashboardStatistics">
+                              <Columns>
+                                <TemplateField HeaderText="Activity Name">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="IstrActivityName" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="On Time">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwShowZero="True" sfwEntityField="IintOnOfActivityInstancesOnTime" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Over Due">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwShowZero="True" sfwEntityField="IintOnOfActivityInstancesOverDue" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                              </Columns>
+                            </sfwGridView>
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                      </sfwTable>
+                    </sfwTabSheet>
+                    <sfwTabSheet ID="tshUserActivities" HeaderText="User Activities">
+                      <sfwTable>
+                        <sfwRow>
+                          <sfwColumn Height="600px">
+                            <sfwChart ChartName="Selected User Assigned Work Statistics" ShowLegend="true" ID="chrUserActivities" ChartType="StackedColumn" Width="1000px" Height="500px" CategoryAxisRotation="45" sfwLegendColCount="2" sfwEntityField="lstChartUserWorkStatistics" sfwGridEntity="entBpmUserWorkStatistics">
+                              <Series>
+                                <sfwSeries YValueMembers="IintOnOfActivityInstancesAssigned" XValueMember="IstrShortActivityName" Name="Assigned" ChartType="StackedColumn" YMemberColor="#08a073" sfwTooltipTableParams="&lt;table class='leftchart' &gt;&lt;tr&gt;&lt;th&gt;&lt;strong&gt; Activity Name &lt;/strong&gt;&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;{IstrActivityName}&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt; Assigned Activities :&lt;/td&gt;&lt;td&gt;{IintOnOfActivityInstancesAssigned}&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt; Workpool Activities :&lt;/td&gt;&lt;td&gt;{IintOnOfActivityInstancesInWorkpool}&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;" swfAddtionalChartColumns="IstrActivityName" />
+                                <sfwSeries XValueMember="IstrShortActivityName" Name="Workpool" YValueMembers="IintOnOfActivityInstancesInWorkpool" ChartType="StackedColumn" YMemberColor="#006096" sfwTooltipTableParams="&lt;table class='leftchart' &gt;&lt;tr&gt;&lt;th&gt;&lt;strong&gt; Activity Name &lt;/strong&gt;&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;{IstrActivityName}&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt; Assigned Activities :&lt;/td&gt;&lt;td&gt;{IintOnOfActivityInstancesAssigned}&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt; Workpool Activities :&lt;/td&gt;&lt;td&gt;{IintOnOfActivityInstancesInWorkpool}&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;" swfAddtionalChartColumns="IstrActivityName" />
+                              </Series>
+                              <ChartAreas>
+                                <sfwChartArea ChartAreaName="User Work Statistics">
+                                  <Area3DStyle Enable3D="false" />
+                                </sfwChartArea>
+                              </ChartAreas>
+                            </sfwChart>
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwGridView ID="grvBusBpmUserWorkStatistics" AllowPaging="True" AllowSorting="True" sfwEntityField="lstViewUserWorkStatistics" sfwGridEntity="entBpmUserWorkStatistics">
+                              <Columns>
+                                <TemplateField HeaderText="Activity Name" SortExpression="IstrProcessName" SortExpressionUpdated="true">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="IstrActivityName" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Assigned">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwShowZero="True" sfwEntityField="IintOnOfActivityInstancesAssigned" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Workpool">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwShowZero="True" sfwEntityField="IintOnOfActivityInstancesInWorkpool" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                              </Columns>
+                            </sfwGridView>
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                      </sfwTable>
+                    </sfwTabSheet>
+                    <sfwTabSheet ID="tshActivityCount" HeaderText="Activity Count">
+                      <sfwTable>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwChart ChartName="Active Activity Count of all Users" ShowLegend="true" ID="chrActivityCount" ChartType="Bar" Width="500" Height="400" CategoryAxisRotation="45" sfwEntityField="lstChartUserActivity" sfwGridEntity="entBpmActivityCount">
+                              <Series>
+                                <sfwSeries XValueMember="IstrUserName" YValueMembers="IintActivityCount" Name="Active Work" sfwActiveForm="wfmResourceDashboardMaintenance" ChartType="Bar" YMemberColor="#932ce8" sfwTooltipTableParams="&lt;table class='leftchart' &gt;&lt;tr&gt;&lt;th&gt;&lt;strong&gt; User Name&lt;/strong&gt;&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;{IstrUserName}&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt; Active Activities :&lt;/td&gt;&lt;td&gt;{IintActivityCount}&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;" />
+                              </Series>
+                              <ChartAreas>
+                                <sfwChartArea ChartAreaName="Activity Count">
+                                  <Area3DStyle Enable3D="false" />
+                                </sfwChartArea>
+                              </ChartAreas>
+                            </sfwChart>
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwButton sfwMethodName="btnOpen_Click" Text="Open" ID="btnOpen" sfwRelatedControl="grvBusBpmActivityCount" sfwActiveForm="wfmBpmReassignWorkMaintenance" sfwCustomAttributes="istrUserName" sfwNavigationParameter="aintMaxSearchCount=#100;astrUserId=IstrUserName" Visible="False" OnClientClick="ClearReassignTreeNode()" />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwGridView ID="grvBusBpmActivityCount" AllowPaging="True" AllowSorting="True" sfwEntityField="lstViewUserActivity" sfwGridEntity="entBpmActivityCount">
+                              <Columns>
+                                <TemplateField HeaderText="User Name">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwRelatedControl="btnOpen" sfwLinkable="True" sfwEntityField="IstrUserName" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Activity Count">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="IintActivityCount" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                              </Columns>
+                            </sfwGridView>
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                      </sfwTable>
+                    </sfwTabSheet>
+                    <sfwTabSheet ID="tshOpenBPMs" HeaderText="Open BPMs">
+                      <sfwTable ID="tblTable">
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwGridView AllowPaging="True" AllowSorting="True" AutoGenerateColumns="False" ID="grvOpenBPMs" PageSize="50" sfwEntityField="lstOpenBPMs" sfwGridEntity="entSolBpmActivityInstance" AllowFiltering="True">
+                              <Columns>
+                                <TemplateField HeaderText="ID" Visible="False">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="ActivityInstanceId" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Days outstanding based on the date initiated">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="IstrOutstandingDays" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Role">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="IstrRoleDesc" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Process">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="objBpmProcessInstance.objBpmProcess.Name" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Activity">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="objBpmActivity.Name" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="PERSLink ID">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="objBpmProcessInstance.objBpmCaseInstance.PersonId" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Org Code ID" ItemStyle.HorizontalAlign="Right">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="IstrOrgCode" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Activity Status">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="StatusDescription" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="User">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="CheckedOutUser" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Suspend Date">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="SuspensionStartDate" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Suspension End Date">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="SuspensionEndDate" sfwDataFormat="{0:d}" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Activity Date">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="StartDate" sfwDataFormat="{0:d}" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Process Date">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="objBpmProcessInstance.CreatedDate" sfwDataFormat="{0:d}" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                              </Columns>
+                            </sfwGridView>
+                          </sfwColumn>
+                        </sfwRow>
+                      </sfwTable>
+                    </sfwTabSheet>
+                    <sfwTabSheet ID="tshCompletedBPMs" HeaderText="Completed BPMs">
+                      <sfwTable ID="tblTable1">
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwGridView AllowPaging="True" AllowSorting="True" AutoGenerateColumns="False" ID="grvGridView" PageSize="50" sfwEntityField="lstCompletedBPMs" sfwGridEntity="entSolBpmActivityInstance" AllowFiltering="True">
+                              <Columns>
+                                <TemplateField HeaderText="ID" Visible="False">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="ActivityInstanceId" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Role">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="IstrRoleDesc" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Process">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="objBpmProcessInstance.objBpmProcess.Name" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Activity">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="objBpmActivity.Name" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="PERSLink ID">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="objBpmProcessInstance.objBpmCaseInstance.PersonId" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Org Code ID" ItemStyle.HorizontalAlign="Right">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="IstrOrgCode" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Activity Status">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="StatusDescription" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="User">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="CheckedOutUser" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Activity Date">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="StartDate" sfwDataFormat="{0:d}" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Process Date">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="objBpmProcessInstance.CreatedDate" sfwDataFormat="{0:d}" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Completion Date">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="objBpmProcessInstance.EndDate" sfwDataFormat="{0:d}" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                              </Columns>
+                            </sfwGridView>
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                      </sfwTable>
+                    </sfwTabSheet>
+                  </Tabs>
+                </sfwTabContainer>
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+  </sfwTable>
+  <validatenew />
+  <loaddetails>
+    <entityfield ID="lstChartSelectedUserDashboardStatistics" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstViewSelectedUserDashboardStatistics" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstChartUserWorkStatistics" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstViewUserWorkStatistics" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstChartUserActivity" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstViewUserActivity" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstOpenBPMs" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstCompletedBPMs" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+  </loaddetails>
+</form>

@@ -1,0 +1,178 @@
+﻿<div ng-controller="CreateClientController" class="full-height padding-10">
+    <div class="portlet box blue-hoki yellow full-height padding-10" style="background:none;margin-bottom:0px">
+        <div class="portlet-title">
+            <div class="caption">
+                <i class="fa fa-gift"></i>Client Information
+            </div>
+            <div class="tools">
+                <ul>
+                    <li>
+                        <div class="btn-group pull-right">
+                            <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                <img src="images/Home/icon-user1.png" height="15" class="image-user-info">
+                                <span>
+                                    {{::LoginName}}
+                                </span>
+                                <img src="images/Home/icon-logout-downarr.png" width="10" height="8">
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li ng-if="!$root.IsActiveDirectoryUser">
+                                    <a ng-click="ChangePassword()">
+                                        <i class="icon-key"></i> Change Password
+                                    </a>
+                                </li>
+                                <li>
+                                    <a ng-click="LogoutSession()">
+                                        <i class="icon-key"></i> Log Out
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="portlet-body form" ng-init="selectedClientTab='Client'">
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" ng-class="selectedClientTab=='Client'?'active':''" ng-click="selectedClientTab='Client'">
+                    <a aria-controls="ClientGrid" role="tab" data-toggle="tab">Client</a>
+                </li>
+                <li role="presentation" ng-class="selectedClientTab=='User'?'active':''" ng-click="selectedClientTab='User'">
+                    <a aria-controls="User" role="tab" data-toggle="tab">User</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div role="tabpanel" ng-class="selectedClientTab=='Client'?'tab-pane active':'tab-pane'" >
+                    <form class="form-horizontal" action="#">
+                        <div class="form-body">
+                            <div class="form-group padding-10">
+                                <table class="table table-condensed table-hover table-fixedheader ClientTable ">
+                                    <thead>
+                                        <tr>
+                                            <th width="15%">Client Name</th>
+                                            <th width="10%">SDS Licence Type</th>
+                                            <th width="10%">SAS Licence Type</th>
+                                            <th width="10%">SMS Licence Type</th>
+                                            <th width="10%">Active User Limit</th>
+                                            <th width="10%">Status</th>
+                                            <th width="15%">Start Date</th>
+                                            <th width="15%">End Date</th>
+                                            <th width="5%" style="text-align:right">
+                                                <a title="Add Client"><img src="images/Common/Add_User.png" ng-click="OpenCreateClient(false)" /></a>
+                                                <a title="Delete Client"><img src="images/Common/icon_delete_dark.svg" ng-click="DeleteClient()" ng-disabled="!selectedClient"/></a>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="client in lstClient" ng-class="client==selectedClient?'div-grid-row selected':''" ng-click="selectClientRow(client)">
+                                            <td width="15%"><span ng-bind="client.ClientName"></span></td>
+                                            <td width="10%">
+                                                <span ng-if="client.SDSLicenceType=='S'">Standard</span>
+                                                <span ng-if="client.SDSLicenceType=='A'">Advanced</span>
+                                                <span ng-if="client.SDSLicenceType=='E'">Enterprise</span>
+                                                <span ng-if="client.SDSLicenceType=='N'">None</span>
+                                            </td>
+                                            <td width="10%">
+                                                <span ng-if="client.SASLicenceType=='S'">Standard</span>
+                                                <span ng-if="client.SASLicenceType=='A'">Advanced</span>
+                                                <span ng-if="client.SASLicenceType=='E'">Enterprise</span>
+                                                <span ng-if="client.SASLicenceType=='N'">None</span>
+                                            </td>
+                                            <td width="10%">
+                                                <span ng-if="client.SMSLicenceType=='S'">Standard</span>
+                                                <span ng-if="client.SMSLicenceType=='A'">Advanced</span>
+                                                <span ng-if="client.SMSLicenceType=='E'">Enterprise</span>
+                                                <span ng-if="client.SMSLicenceType=='N'">None</span>
+                                            </td>
+                                            <td width="10%"><span ng-bind="client.ActiveUserLimit"></span></td>
+                                            <td width="10%"><span ng-bind="client.Status"></span></td>
+                                            <td width="15%"><span ng-bind="client.StartDate"></span></td>
+                                            <td width="15%"><span ng-bind="client.EndDate"></span></td>
+                                            <td width="5%" style="text-align:center">
+                                                <a title="Edit"><img src="images/Common/Edit.png" ng-click="OpenCreateClient(true,client)" /></a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div role="tabpanel" ng-class="selectedClientTab=='User'?'tab-pane active':'tab-pane'">
+                    <form class="form-horizontal" action="#">
+                        <div class="form-body">
+                            <div class="form-group padding-10">
+                                <div id="sg-user-details" class="col-xs-7 userinfo-table col-user-right">
+                                <table class="table sws-table">
+                                    <thead>
+                                        <tr>
+                                            <th width="15%"><span class="username-field">User Name</span><input type="text" ng-model="user.userName" class="form-control input-sm username-field-search" placeholder="Search here" /></th>
+                                            <th width="7%">First Name</th>
+                                            <th width="7%">Last Name</th>
+                                            <th width="7%">EmailId</th>
+                                            <th width="4%" style="text-align:center">
+                                                <a title="Add User"><img src="images/Common/Add_User.png" ng-click="openAddUserDialog('newUser')" /></a>
+                                                <a title="Add AD user"><img src="images/Common/Map_User.png" ng-click="showADUsers()" /></a>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="user in lstAllUsers| filter:user.userName" ng-class="user==selectedUser?'div-grid-row selected':''" ng-click="selectUserRow(user)">
+                                            <td width="15%"><span ng-bind="user.UserName"></span></td>
+                                            <td width="7%"><span ng-bind="user.FirstName"></span> </td>
+                                            <td width="7%"><span ng-bind="user.LastName"></span></td>
+                                            <td width="7%"><span ng-bind="user.EmailId"></span> </td>
+                                            <td width="4%" style="text-align:center">
+                                                <a title="Edit"><img src="images/Common/Edit.png" ng-click="openAddUserDialog('updateUser',user)" /></a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                </div>
+                                <div class="col-xs-3 userinfo-table col-user-left">
+                                    <table class="table sws-table">
+                                        <thead>
+                                            <tr>
+                                                <th width="8%">Client Name</th>
+                                                <th width="8%">User Role</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="client in selectedUser.lstClients" ng-class="client==selectedClient && selectedClient.clientName ?'div-grid-row selected':''" ng-click="selectClientRow(client)" ng-show="client.userRole">
+                                                <td width="8%" height="4px">
+                                                    <span ng-bind="client.clientName"></span>
+                                                </td>
+                                                <td width="8%" height="4px">
+                                                    <span ng-bind="client.userRole"></span>
+                                                   
+                                                </td>
+
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-xs-2 userinfo-table col-user-left">
+                                    <table class="table sws-table">
+                                        <thead>
+                                            <tr>
+                                                <th width="100%">Projects</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="project in selectedClient.lstProjects">
+                                                <td width="100%"><span ng-bind="project.ProjectName"></span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,79 @@
+﻿<!--search template for design search-->
+<div class="DesignSearchBox_button" id="btn" title="Search in Design (nodes,attributes and their values)" ng-click="DesignSearch.IsOpen = !DesignSearch.IsOpen" ng-class="{'active': DesignSearch.IsOpen}"
+     ng-style="['RuleConstants','AuditLog','ExecuteQuery','ProjectConfiguration','CustomSettings','SearchFiles','ExcelScenario','VersionBPM','ERDiagram'].indexOf(currentfile.FileType) >= 0?{'left':'5px'}:{}">
+
+</div>
+<div class="DesignSearchBox" ng-show="DesignSearch.IsOpen" ng-class="{'move-to-left': DesignSearch.IsOpen , 'Dynamicheight': DesignSearch.IsOpen , 'height0' : !DesignSearch.IsOpen}">
+
+    <div class="DesignSearchBox_sidebar">
+        <div class="col-xs-12 padding-5 overflowH marg-bot-10" ng-class="{ 'height100P' : DesignSearch.findSearchList , 'height-90' : !DesignSearch.findSearchList }">
+            <!--<div class="col-xs-12 searchQueryBuilderCriteriaHeader">
+                <div class="col-xs-3">Node-Name</div>
+                <div class="col-xs-3">Attribute</div>
+                <div class="col-xs-3">Operator</div>
+                <div class="col-xs-3">Value</div>
+            </div>-->
+            <form class="col-xs-12 no-padding" name="DesignSearchForm">
+                <div class="DesignSearchFilterBox">
+                    <div class="col-xs-12" ng-repeat="DesignSearchObj in DesignSearch.SearchObj">
+                        <span ng-show="DesignSearch.SearchObj.length > 1" title="Remove this filter line" class="add-filter-close" aria-hidden="true" ng-click="queryBuilder.DeletesearchQuerybuilderObj(DesignSearch.SearchObj, DesignSearchObj)"></span>
+                        <div class="col-xs-12 no-padding marg-top-8">
+                            <div class="col-xs-6 no-right-padding">
+                                <div class="control-group" ng-class="queryBuilder.getcssClassInvalidError(DesignSearchForm,'NodeName' + $index)">
+                                    <div class="controls">
+                                        <input class="form-control input-sm marg-bottom-5 no-right-padding" style="height: 24px !important;" name="{{'NodeName' + $index}}" autocomplete="off" ng-pattern="/^[A-Z]+$/i" ng-change="queryBuilder.onchangeQueryBuilder(DesignSearchObj, DesignSearchForm, $index)" placeholder="Node Name" ng-model="DesignSearchObj.NodeName" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 no-right-padding pad-left-5">
+                                <div class="control-group" ng-class="queryBuilder.getcssClassInvalidError(DesignSearchForm,'Attribute' + $index)">
+                                    <div class="controls">
+                                        <input class="form-control input-sm marg-bottom-5" style="height: 24px !important;" name="{{'Attribute' + $index}}" autocomplete="off" ng-pattern="/^[A-Z]+$/i" ng-change="queryBuilder.onchangeQueryBuilder(DesignSearchObj, DesignSearchForm, $index)" placeholder="Attribute Name" ng-model="DesignSearchObj.Attribute" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 no-padding">
+                            <div class="col-xs-6 no-right-padding ">
+                                <div class="control-group" ng-class="queryBuilder.getcssClassInvalidError(DesignSearchForm,'Operator' + $index)">
+                                    <div class="controls">
+                                        <select class="form-control input-sm" name="{{'Operator' + $index}}" style="height: 24px !important;" ng-model="DesignSearchObj.Operator" ng-change="queryBuilder.onchangeOperatorQueryBuilder(DesignSearchObj, DesignSearchForm, $index)" required ng-options="operator.value as operator.name for operator in DesignSearchObj.operatorList">
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 no-right-padding pad-left-5">
+                                <div class="control-group" ng-class="queryBuilder.getcssClassInvalidError(DesignSearchForm,'AttributeValue' + $index)">
+                                    <div class="controls">
+                                        <input class="form-control input-sm" name="{{'AttributeValue' + $index}}" style="height: 24px !important;" autocomplete="off" placeholder="Value" ng-change="queryBuilder.onchangeQueryBuilder(DesignSearchObj, DesignSearchForm, $index)" ng-model="DesignSearchObj.AttributeValue" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 marg-top-7">
+                    <button type="button" class="pull-right" title="Clear the search and close the search panel" ng-click="ClearSearchDesign()">Reset</button>
+                    <button type="button" class="pull-right margin-right-10" title="Search this file with above filter(s)" ng-disabled="DesignSearchForm.$invalid" ng-click="SearchInDesign()">Search</button>
+                    <button type="button" class="pull-right margin-right-10" title="Add a filter line" ng-click="queryBuilder.AddsearchQuerybuilderObj(DesignSearch.SearchObj)">Add Filter</button>
+                </div>
+            </form>
+            <div class="col-xs-12 DesignSearchresultBox" ng-class="{ 'height-60' : DesignSearch.SearchObj.length > 1  }">
+                <ul class="col-xs-12" ng-if="DesignSearch.findSearchList && DesignSearch.findSearchList.length > 0">
+                    <li class="col-xs-12 DesignSearch-list-item marg-bottom-8" ng-class="{'selectedPath': DesignSearch.SelectNodePath == file.FileInfo.SelectNodePath }" ng-repeat="file in DesignSearch.findSearchList" ng-click="selectElement(file)">
+                        <text title="{{file.LineData}}">{{file.LineData | cut:false:65:'...' }} ({{::file.LineNumber}})</text>
+                    </li>
+                </ul>
+                <div class="no-result" ng-if="DesignSearch.findSearchList && DesignSearch.findSearchList.length <= 0">
+                    No records found !
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12" ng-if="!DesignSearch.findSearchList">
+            Tip : Please save the file before searching to navigate to the selected node.
+        </div>
+    </div>
+    <span ng-if="$root.currentopenfile.file == currentfile" ng-init="$parent.initAdvance()">
+    </span>
+</div>

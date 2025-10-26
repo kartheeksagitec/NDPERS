@@ -1,0 +1,359 @@
+﻿<div class="innerWrapper" ng-controller="ConstantsController">
+    <div class="constant-entity-validation full-height" ng-hide="selectedDesignSource">
+        <search-design main-model="constantfilemodel" current-file="currentfile" select-element="selectElement(path)" traverse-model="traverseMainModel(path)" toggle-design="ToggleUIDesginAttribute(items,IsAction)" class="design-search"></search-design>
+        <div class="constant-sidebar-content col-xs-3 no-right-padding">
+            <div class="constant-sidebar-content-holder">
+                <div class="page-sidebar-header">
+
+                    <input class="form-control input-sm constant-searchbox" title="{{ConstantSearchID}}" ng-model="ConstantSearchID" ng-change="onTextChangeinConstant()" ng-keypress="onEnterKeySearch($event)" type="search" placeholder="Search">
+                    <div class="panel-icons">
+                        <i class="fa fa-search" ng-click="FindConstants(ConstantSearchID)" ng-if="CountofConstants == 0" value="Find" title="Search"></i>
+                        <i class="fa fa-arrow-right" ng-click="FindNextConstant()" ng-if="CountofConstants != 0" value="FN" title="Find Next"></i>
+                    </div>
+                </div>
+
+                <div class="page-sidebar-content">
+
+                    <div class="constant-tree-view">
+
+                        <ul class="full-height padding-0">
+                            <li ng-repeat="itm in Groups" tabindex='0' key-up-down-for-tree callbackfn='SelectConstantClick' objproperty="'itm'">
+                                <div class="constant-tree-view-wrap">
+                                    <i ng-if="itm.Elements.length > 0 && itm.Name !='constant'" ng-click="togglebuttonForTreeView(itm)"
+                                       ng-class="itm.IsExpanded?'constants-tree-minus':'constants-tree-plus'"></i>
+                                    <span ng-click='SelectConstantClick(itm,$event)' ng-class="itm.isSelected?'selected':''" ng-bind='itm.dictAttributes.ID' context-menu="menuOptionsForConstant" class="constant-tree-label" />
+                                </div>
+                                <span treeviewconstants items="itm" ng-if='itm.IsExpanded' menuoptionforconstant="menuOptionsForConstant" />
+                            </li>
+                        </ul>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="col-xs-9 entity-content-wrapper  constant-content-wrapper full-height">
+
+            <div class="constant-primary-panel panel-primary full-height scenario-panels">
+
+                <div class="page-heading">
+                    <span ng-bind="SelectedConstant.dictAttributes.ID"></span>
+                </div>
+
+                <div class="constant-panel-content-section col-xs-12 no-padding">
+
+                    <div ng-show="SelectedConstant.Name == 'groups'" class="manage-constant-file-list">
+
+                        <div class="constant-group">
+
+
+                            <div class="form-group no-bottom-margin">
+                                <div class="col-xs-6 no-left-padding">
+                                    <label class="control-label">Group ID</label>
+                                    <input class="form-control input-sm" type="text" title="{{SelectedConstant.dictAttributes.ID}}" ng-model="SelectedConstant.dictAttributes.ID" undoredodirective model="SelectedConstant" ng-change="checkDuplicateId(constantfilemodel)">
+                                </div>
+
+                                <div class="col-xs-6" ng-hide="SelectedConstant.dictAttributes.IsChildGroup == 'True'">
+
+
+                                    <label class="control-label">Group Type</label>
+                                    <div class="col-xs-12">
+                                        <div class="radio-btn-row">
+
+                                            <input type="radio" name="grouptype" ng-model="SelectedConstant.dictAttributes.GroupType" undoredodirective model="SelectedConstant" value="Manual" ng-change="GroupTypeChangeClick()">
+                                            <label>Manual</label>
+
+                                            <input type="radio" name="grouptype" ng-model="SelectedConstant.dictAttributes.GroupType" undoredodirective model="SelectedConstant" value="Query" ng-change="GroupTypeChangeClick()">
+                                            <label>Query</label>
+
+                                            <!--<label class="radio-inline">
+                                            <input type="radio" name="grouptype" ng-model="SelectedConstant.dictAttributes.GroupType" undoredodirective model="SelectedConstant" value="Files" ng-change="GroupTypeChangeClick()">
+                                            <span>Files</span>
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="grouptype" ng-model="SelectedConstant.dictAttributes.GroupType" undoredodirective model="SelectedConstant" value="EntityQueries" ng-change="GroupTypeChangeClick()">
+                                            <span>EntityQueries</span>
+                                        </label>
+
+                                        <input class="dialog-btn-default marg-left-10" type="button" ng-click="LoadFilesList()" value="Load Files" ng-show="SelectedConstant.dictAttributes.GroupType == 'Files' && !IsFilesLoaded" />
+                                        <input class="dialog-btn-default marg-left-10" type="button" ng-click="LoadEntityQueries()" value="Load Entity Queries" ng-show="SelectedConstant.dictAttributes.GroupType == 'EntityQueries' && !IsEntityQueriesLoaded" />-->
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <hr />
+                        <div ng-show="SelectedConstant.dictAttributes.GroupType == 'Query'">
+                            <div class="form-group full-height">
+                                <div class="col-xs-12 no-left-padding">
+                                    <div class="form-group">
+                                        <label class="control-label">Query</label>
+
+                                        <div class="col-xs-12 no-left-padding">
+                                            <textarea class="form-control input-sm constants-query-textarea" ng-model="SelectedConstant.dictAttributes.sfwQuery" undoredodirective model="SelectedConstant"> </textarea>
+                                            <input class="dialog-btn-default" type="button" value="Get Schema" ng-click="GetQuerySchemaClick()">
+                                        </div>
+
+
+
+                                    </div>
+
+
+                                    <div class="col-xs-6 no-left-padding">
+                                        <div class="form-group">
+                                            <label class="control-label">Name Column</label>
+                                            <div class="input-group">
+                                                <input class="form-control input-sm" type="text" title="{{SelectedConstant.dictAttributes.QueryFieldID}}" ng-model="SelectedConstant.dictAttributes.QueryFieldID" undoredodirective model="SelectedConstant" ng-keydown="onQueryFieldKeyDown($event)">
+                                                <span class='input-group-addon button-intellisense' ng-click="showQueryList($event);"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Value Column</label>
+                                            <div class="input-group">
+                                                <input class="form-control input-sm" type="text" title="{{SelectedConstant.dictAttributes.QueryFieldValue}}" ng-model="SelectedConstant.dictAttributes.QueryFieldValue" undoredodirective model="SelectedConstant" ng-keydown="onQueryFieldKeyDown($event)">
+                                                <span class='input-group-addon button-intellisense' ng-click="showQueryList($event);"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xs-6 no-left-padding">
+                                        <div class="form-group">
+                                            <label class="control-label">Description Column</label>
+                                            <div class="input-group">
+                                                <input class="form-control input-sm" type="text" title="{{SelectedConstant.dictAttributes.QueryFieldDescription}}" ng-model="SelectedConstant.dictAttributes.QueryFieldDescription" undoredodirective model="SelectedConstant" ng-keydown="onQueryFieldKeyDown($event)">
+                                                <span class='input-group-addon button-intellisense' ng-click="showQueryList($event);"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Group Name Column</label>
+                                            <div class="input-group">
+                                                <input class="form-control input-sm" type="text" title="{{SelectedConstant.dictAttributes.ClassName}}" ng-model="SelectedConstant.dictAttributes.ClassName" undoredodirective model="SelectedConstant" ng-keydown="onQueryFieldKeyDown($event)">
+                                                <span class='input-group-addon button-intellisense' ng-click="showQueryList($event);"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
+
+
+
+                                    <div class="form-actions" ng-hide="SelectedConstant.dictAttributes.GroupType == 'Manual'">
+
+                                        <div class="col-xs-12 no-left-padding">
+                                            <input class="dialog-btn-default" type="button" value="Import" ng-click="ImportQueryClick()">
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--<div ng-show="SelectedConstant.dictAttributes.GroupType =='Files'" class="full-height">-->
+
+                        <div class="constants-files-list" ng-show="SelectedConstant.dictAttributes.GroupType =='Files'">
+
+                            <div class="page-subheading">
+                                Files List
+                            </div>
+
+
+                            <input class="form-control input-sm marg-bottom-8" type="search" title="{{SearchFileText}}" ng-model="SearchFileText" ng-change="LoadFilesDependingOnText()" placeholder="Search Files Here">
+
+
+
+
+
+                            <div scrolldirectiveforfiles>
+                                <ul class="manage-constant-file-ul">
+                                    <li ng-repeat="file in lstFilesCollection | filter:{Name:SearchFileText}">
+                                        <input type="checkbox" ng-model="file.IsRuleSelected" undoredodirective model="file" />
+                                        {{file.Name}}
+                                    </li>
+                                    <!--<li>
+                                    <input type="checkbox" />
+                                    <label>This is Text</label>
+                                </li>
+                                <li>
+                                    <input type="checkbox" />
+                                    <label>This is Text</label>
+                                </li>
+                                <li>
+                                    <input type="checkbox" />
+                                    <label>This is Text</label>
+                                </li>-->
+
+                                </ul>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="colxs-2 " ng-hide="SelectedConstant.dictAttributes.GroupType == 'Manual'">
+                                    <input type="checkbox" class="marg-right-5" ng-model="IsSelectAll" value="Select All" ng-change="SelectAllFilesClick(IsSelectAll)"><span>Select All</span>
+                                </div>
+
+
+                                <div class="col-xs-12 no-left-padding margin-top-10" ng-hide="SelectedConstant.dictAttributes.GroupType == 'Manual'">
+
+                                    <input class="dialog-btn-default" type="button" value="Import" ng-click="ImportFilesClick()">
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                        <div ng-show="SelectedConstant.dictAttributes.GroupType=='EntityQueries'" class="full-height">
+
+                            <div class="form-body full-height">
+
+                                <div class="form-group marg-bottom-8">
+                                    <label class="col-xs-2 control-label">Entity List</label>
+                                </div>
+
+                                <div class="form-group marg-bottom-8">
+                                    <div class="col-xs-10"> <input class="form-control input-sm" type="search" title="{{SearchEntityQueryText}}" ng-model="SearchEntityQueryText" placeholder="Search Entity Here"></div>
+                                </div>
+
+                                <div class="form-group manage-constant-entity-list">
+
+                                    <ul class="manage-constant-file-ul">
+                                        <li ng-repeat="entityquery in EntityQueryCollection | filter:{Name:SearchEntityQueryText}" style="display:inline">
+                                            <div>
+                                                <i ng-if="entityquery.Childs.length > 0" ng-click="ExpandCollapsedConstant(entityquery)"
+                                                   ng-class="entityquery.IsExpanded?'fa fa-minus':'fa fa-plus'"></i>
+                                                <input type="checkbox" ng-model="entityquery.IsRuleSelected" undoredodirective model="entityquery" />
+                                                <span ng-bind='entityquery.Name' />
+                                            </div>
+
+                                            <ul ng-if="entityquery.Childs.length > 0">
+                                                <li ng-repeat="query in entityquery.Childs" ng-if="entityquery.IsExpanded" style="display:inline">
+                                                    <div>
+                                                        <input type="checkbox" ng-model="query.IsRuleSelected" undoredodirective model="query" />
+                                                        <span ng-bind='query.Name' />
+                                                    </div>
+                                                </li>
+                                            </ul>
+
+                                        </li>
+                                    </ul>
+
+                                </div>
+
+                                <div class="form-group" ng-hide="SelectedConstant.dictAttributes.GroupType == 'Manual'">
+
+                                    <div class="col-xs-11">
+                                        <input class="dialog-btn-default fright" type="button" value="Import" ng-click="ImportEntityQueryClick()">
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div ng-show="SelectedConstant.Name == 'constant'" class="full-height">
+
+                        <div class="form-body">
+                            <div class="col-xs-4 no-left-padding">
+                                <div class="form-group ">
+
+                                    <label class="control-label">ID</label>
+                                    <input class="form-control input-sm" type="text" title="{{SelectedConstant.dictAttributes.ID}}" ng-model="SelectedConstant.dictAttributes.ID" undoredodirective model="SelectedConstant" ng-keyup="checkDuplicateId(objParentGroup)" ng-change="checkDuplicateId(objParentGroup)">
+
+                                </div>
+                            </div>
+
+
+                            <div class="col-xs-4">
+                                <div class="form-group">
+                                    <label class="control-label">Value</label>
+                                    <div style="position:relative">
+                                        <span style="left: -3px;" class="info-tooltip dtc-span" ng-if="SelectedConstant.errors.invalid_data_type_value" ng-attr-title="{{SelectedConstant.errors.invalid_data_type_value }}"><i style="color:red !important;" class="fa fa-exclamation-circle"></i></span>
+                                    </div>
+                                    <input class="form-control input-sm" type="text" title="{{SelectedConstant.dictAttributes.Value}}" ng-model="SelectedConstant.dictAttributes.Value" undoredodirective model="SelectedConstant" ng-disabled="SelectedConstant.ParentGroupType =='Files' || SelectedConstant.ParentGroupType =='EntityQueries'" ng-keyup="validateDataType(SelectedConstant,SelectedConstant.dictAttributes.sfwDataType)" ng-change="validateDataType(SelectedConstant,SelectedConstant.dictAttributes.sfwDataType)">
+
+                                </div>
+                            </div>
+
+                            <div class="col-xs-4">
+                                <div class="form-group">
+                                    <label class="control-label">DataType</label>
+                                    <div style="position:relative">
+                                        <span style="left: -3px;" class="info-tooltip dtc-span" ng-if="SelectedConstant.errors.sfwDataType" ng-attr-title="{{SelectedConstant.errors.sfwDataType }}"><i style="color:red !important;" class="fa fa-exclamation-circle"></i></span>
+                                    </div>
+                                    <select class="form-control input-sm" ng-options="type for type in DataTypes" title="{{SelectedConstant.dictAttributes.sfwDataType}}" ng-model="SelectedConstant.dictAttributes.sfwDataType" undoredodirective model="SelectedConstant" ng-disabled="SelectedConstant.ParentGroupType =='Files' || SelectedConstant.ParentGroupType =='EntityQueries'" ng-change="validateDataType(SelectedConstant,SelectedConstant.dictAttributes.sfwDataType)" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-body constants-items-table-wrapper" ng-show="SelectedConstant.IsShowEffectiveDate">
+
+                            <div class="form-group no-bottom-margin">
+                                <div class="page-subheading">Items</div>
+                                <div class="panel-icons add-remove">
+                                    <a title="Add Effective Date"><img src="images/Common/icon_add_dark.svg" ng-click="AddEffectiveDateClick()" /></a>
+                                    <a title="Delete Effective Date"><img src="images/Common/icon_delete_dark.svg" ng-click="DeleteEffectiveDateClick()" /></a>
+                                </div>
+                            </div>
+
+                            <div class="constants-items-table">
+
+                                <table class="sws-table">
+                                    <thead>
+                                        <tr role="row">
+                                            <th>Effective Date</th>
+                                            <th>Value</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="item in SelectedConstant.Elements" ng-class="item.isSelected?'selected':''" ng-click="currentSelectedRow(item);">
+                                            <td>
+                                                <span style="position:relative">
+                                                    <span style="left: -3px;" class="info-tooltip dtc-span" ng-if="item.errors.sfwEffectiveDate" ng-attr-title="{{item.errors.sfwEffectiveDate }}"><i style="color:red !important;" class="fa fa-exclamation-circle"></i></span>
+                                                </span>
+                                                <input class="form-control input-sm form-control input-sm-inline date-picker" type="text" ng-model="item.dictAttributes.sfwEffectiveDate" ng-change="validateFileData(true,'change')" undoredodirective model="item" />
+                                            </td>
+                                            <td>
+                                                <span style="position:relative">
+                                                    <span style="left: -3px;" class="info-tooltip dtc-span" ng-if="item.errors.invalid_data_type_value" ng-attr-title="{{item.errors.invalid_data_type_value }}"><i style="color:red !important;" class="fa fa-exclamation-circle"></i></span>
+                                                </span>
+                                                <input class="form-control input-sm" type="text" title="{{item.dictAttributes.Value}}" ng-model="item.dictAttributes.Value" undoredodirective model="item" ng-keyup="validateDataType(item,SelectedConstant.dictAttributes.sfwDataType)" ng-change="validateDataType(item,SelectedConstant.dictAttributes.sfwDataType)" />
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div ng-show="selectedDesignSource" class="full-height">
+        <div id="editor_constants" class="ace-editor-div"></div>
+    </div>
+</div>
+

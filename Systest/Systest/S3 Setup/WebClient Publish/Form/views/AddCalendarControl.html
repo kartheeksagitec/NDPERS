@@ -1,0 +1,240 @@
+﻿<div class="portlet-body">
+    <div class="form-body">
+        <div class="form-group">
+            <label class="col-md-3 control-label">ID:</label>
+            <div class="col-md-7">
+                <input type="text" class="form-control input-sm" title="{{objCalendar.dictAttributes.ID}}" ng-model="objCalendar.dictAttributes.ID">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-3 control-label">Entity Field:</label>
+            <div class="col-md-7">
+                <input type="text" class="form-control input-sm" title="{{objCalendar.dictAttributes.sfwEntityField}}" ng-model="objCalendar.dictAttributes.sfwEntityField"
+                       readonly />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-3 control-label">Event Id:</label>
+            <div class="col-md-7">
+                <div class="textbox-autocomplete-block">
+                    <entityfieldelementintellisense modebinding="objCalendar.dictAttributes.sfwEventId" model="objCalendar" entityid="ParentEntityName" propertyname='"dictAttributes.sfwEventId"' errorprop="objCalendar.errors.sfwEventId" validate="true"></entityfieldelementintellisense>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-3 control-label">Event Name:</label>
+            <div class="col-md-7">
+                <div class="textbox-autocomplete-block">
+                    <entityfieldelementintellisense modebinding="objCalendar.dictAttributes.sfwEventName" model="objCalendar" entityid="ParentEntityName" propertyname='"dictAttributes.sfwEventName"' errorprop="objCalendar.errors.sfwEventName" validate="true"></entityfieldelementintellisense>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-3 control-label">Start Date:</label>
+            <div class="col-md-7">
+                <div class="textbox-autocomplete-block">
+                    <entityfieldelementintellisense modebinding="objCalendar.dictAttributes.sfwEventStartDate" model="objCalendar" entityid="ParentEntityName" propertyname='"dictAttributes.sfwEventStartDate"' errorprop="objCalendar.errors.sfwEventStartDate" validate="true"></entityfieldelementintellisense>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-3 control-label">End Date:</label>
+            <div class="col-md-7">
+                <div class="textbox-autocomplete-block">
+                    <entityfieldelementintellisense modebinding="objCalendar.dictAttributes.sfwEventEndDate" model="objCalendar" entityid="ParentEntityName" propertyname='"dictAttributes.sfwEventEndDate"' errorprop="objCalendar.errors.sfwEventEndDate" validate="true"></entityfieldelementintellisense>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group" ng-show="IsAddScheduler">
+            <label class="col-xs-3 control-label">Event Category:</label>
+            <div class="col-md-7">
+                <div class="textbox-autocomplete-block">
+                    <entityfieldelementintellisense modebinding="objCalendar.dictAttributes.sfwEventCategory" model="objCalendar" entityid="ParentEntityName" propertyname='"dictAttributes.sfwEventCategory"' errorprop="objCalendar.errors.sfwEventCategory" validate="true"></entityfieldelementintellisense>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group" ng-show="IsAddScheduler">
+            <table class="table table-bordered table-hover">
+                <tbody>
+                    <tr>
+                        <td style="width:5%">
+                            <input type="button" value=">" ng-click="showParametersForScheduler('New')" ng-disabled="!objCalendar.NewformID" class="dialog-btn" />
+                        </td>
+
+                        <td style="width:5%">
+                            <input type="checkbox" ng-model="objCalendar.isNewSelected" ng-checked="objCalendar.isNewSelected" ng-true-value="'True'" ng-false-value="'False'" class="icheck" ng-change="onChangeSchedulerCheckBox('New')" />
+                        </td>
+
+                        <td style="width:10%">
+                            <label>New</label>
+                        </td>
+
+                        <td style="width:5%">
+                            <label>
+                                ID
+                            </label>
+                        </td>
+                        <td style="width:35%">
+                            <input type="text" title="{{objCalendar.NewbuttonID}}"  ng-model="objCalendar.NewbuttonID" ng-disabled="true" class="form-control input-sm" />
+                        </td>
+                        <td style="width:5%">
+                            <label>
+                                Form
+                            </label>
+                        </td>
+                        <td style="width:35%">
+                            <activeformintellisensetemplate activeformname='objCalendar.NewformID' formtype="'Maintenance,FormLinkMaintenance'" multiactiveformflag='false' canhidesearchactiveformwindow="true"
+                                                            isdisabledinput="objCalendar.isNewSelected!='True'" onactiveformchange="populateParamtersForform(objCalendar.NewformID,'New')" />
+                        </td>
+                    </tr>
+                    <tr ng-if="ShowNewParameters==true">
+                        <td colspan="8">
+                            <div class="grid-tree scr-not">
+
+                                <div class="available-filds-section mar-top4 pull-left">
+                                    <span class="grid-tree-head">Available Fields :</span>
+                                    <ul>
+                                        <li ng-repeat="field in FieldControlCollection" class="common-tree-list">
+                                            <div customattributetreetemplate></div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="data-grid-wrapper available-filds-section pull-right">
+                                    <div class="data-grid">
+                                        <span class="grid-tree-head">Parameter Fields :</span>
+                                        <table class="table table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Type</th>
+                                                    <th>Parameter Field</th>
+                                                    <th>Parameter Value</th>
+                                                    <th>Constant</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="objparam in FormNewParameters track by $index">
+                                                    <td>
+                                                        <span ng-bind="objparam.ParmeterType"></span>
+                                                    </td>
+                                                    <td>
+                                                        <span ng-bind="objparam.ParmeterField"></span>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" title="{{objparam.ParmeterValue}}" ng-model="objparam.ParmeterValue" entitytreefielddroppable dropdata="objparam" fieldname="'ParmeterValue'" class="form-control input-sm" />
+                                                    </td>
+                                                    <td>
+                                                        <input type="checkbox" ng-model="objparam.ParmeterConstant" ng-checked="objparam.ParmeterConstant" ng-true-value="'True'" ng-false-value="'False'" class="icheck" />
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                        </td>
+
+                    </tr>
+
+                    <tr>
+                        <td style="width:5%">
+                            <input type="button" value=">" ng-click="showParametersForScheduler('Open')" ng-disabled="!objCalendar.OpenformID" class="dialog-btn" />
+                        </td>
+
+                        <td style="width:5%">
+                            <input type="checkbox" ng-model="objCalendar.isOpenSelected" ng-checked="objCalendar.isOpenSelected" ng-true-value="'True'" ng-false-value="'False'" class="icheck"
+                                   ng-change="onChangeSchedulerCheckBox('Open')" />
+                        </td>
+
+                        <td style="width:10%">
+                            <label>Open</label>
+                        </td>
+                        <td style="width:5%">
+                            <label>
+                                ID
+                            </label>
+                        </td>
+                        <td style="width:35%">
+                            <input type="text" class="form-control input-sm" title="{{objCalendar.OpenbuttonID}}" ng-model="objCalendar.OpenbuttonID" ng-disabled="true">
+                        </td>
+                        <td style="width:5%">
+                            <label>
+                                Form
+                            </label>
+                        </td>
+                        <td style="width:35%">
+                            <activeformintellisensetemplate activeformname='objCalendar.OpenformID' formtype="'Maintenance'" multiactiveformflag='false' canhidesearchactiveformwindow="true"
+                                                            isdisabledinput="objCalendar.isOpenSelected!='True'" onactiveformchange="populateParamtersForform(objCalendar.OpenformID, 'Open')" />
+                        </td>
+                    </tr>
+                    <tr ng-if="ShowOpenParameters==true">
+                        <td colspan="8">
+                            <div class="grid-tree scr-not">
+                                <div class="available-filds-section mar-top4 pull-left">
+                                    <span class="grid-tree-head">Available Fields :</span>
+                                    <ul>
+                                        <li ng-repeat="field in FieldControlCollection" class="common-tree-list">
+                                            <div customattributetreetemplate></div>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="data-grid-wrapper available-filds-section pull-right">
+                                    <div class="data-grid">
+                                        <span class="grid-tree-head">Parameter Fields :</span>
+                                        <table class="table table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Type</th>
+                                                    <th>Parameter Field</th>
+                                                    <th>Parameter Value</th>
+                                                    <th>Constant</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="objparam in FormOpenParameters track by $index">
+                                                    <td>
+                                                        <span ng-bind="objparam.ParmeterType"></span>
+                                                    </td>
+                                                    <td>
+                                                        <span ng-bind="objparam.ParmeterField"></span>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" title="{{objparam.ParmeterValue}}" ng-model="objparam.ParmeterValue" entitytreefielddroppable dropdata="objparam" fieldname="'ParmeterValue'" class="form-control input-sm" />
+                                                    </td>
+                                                    <td>
+                                                        <input type="checkbox" ng-model="objparam.ParmeterConstant" ng-checked="objparam.ParmeterConstant" ng-true-value="'True'" ng-false-value="'False'" class="icheck" />
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </td>
+                    </tr>
+
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+<div class="form-actions">
+    <div class="col-xs-8 text-left">
+        <span class="alert-error-msg" ng-if="ErrorMessageForDisplay.length>0" ng-bind="ErrorMessageForDisplay"></span>
+    </div>
+    <div class="col-xs-4">
+        <input type="button" class="dialog-btn" value="OK" ng-click="onOkClick()" ng-disabled="ValidateCalendar()" />
+        <input type="button" class="dialog-btn" value="Cancel" ng-click="onCancelClick()" />
+    </div>
+</div>

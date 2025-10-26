@@ -1,0 +1,314 @@
+﻿<entity ID="entDeathNotification" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwErrorTable="sgt_death_notification_error" sfwParentKey="death_notification_id" sfwParentKeyValue="icdoDeathNotification.death_notification_id" sfwMainCDO="icdoDeathNotification" sfwStatusColumn="status_value" sfwObjectID="busDeathNotification" sfwTableName="sgt_death_notification" sfwView="False" sfwParentEntity="entExtendBase">
+  <rules>
+    <rule ID="IsAllBeneficiarieshaveActiveAddress" sfwExpression="(this.IsAllBeneficiarieshaveActiveAddress() == False)" sfwObjectBased="True" />
+    <rule ID="IsAnyBeneficiaryDeathIPorNR" sfwMessageId="1988" sfwExpression="(this.IsAnyBeneficiaryDeathInProgressorNonResponsive() == True)" sfwObjectBased="True" />
+    <rule ID="IsAnyDepndentDeathIPorNR" sfwMessageId="2035" sfwExpression="(this.IsAnyDependentDeathInProgressorNonResponsive() == True)" sfwObjectBased="True" />
+    <rule ID="IsBeneficiaryEstateExistsForDROpayee" sfwMessageId="7719" sfwExpression="(this.IsBeneficiaryEstateExistsForDROpayee() == False)" sfwObjectBased="True" />
+    <rule ID="IsDateOfDeathBeforeDateOfBirth" sfwMessageId="2027" sfwExpression="(this.icdoDeathNotification.date_of_death != DateTime.MinValue) &amp;&amp; &#xA;(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusPerson.icdoPerson.date_of_birth&quot;) &gt; this.icdoDeathNotification.date_of_death)" sfwObjectBased="True" />
+    <rule ID="IsDateOfDeathIsFutureDate" sfwMessageId="1979" sfwExpression="(this.icdoDeathNotification.date_of_death != DateTime.MinValue) &amp;&amp; &#xA;(this.icdoDeathNotification.date_of_death &gt; RFunc.CurrentDate())" sfwObjectBased="True" />
+    <rule ID="IsDateOfDeathNull" sfwMessageId="1996" sfwExpression="(this.icdoDeathNotification.date_of_death == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsDeathNotificationduplicateInNewMode" sfwMessageId="1984" sfwExpression="!(this.icdoDeathNotification.person_id == 0) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entDeathNotification.IsDeathNotificationduplicateInNewMode&quot;, this.icdoDeathNotification.person_id) &gt;= 1)" sfwObjectBased="True" />
+    <rule ID="IsDeathNotificationDuplicateInUpdateMode" sfwMessageId="1984" sfwExpression="!(this.icdoDeathNotification.person_id == 0) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entDeathNotification.IsPersonValid&quot;, this.icdoDeathNotification.person_id) &gt;= 1)" sfwObjectBased="True" />
+    <rule ID="IsFirstAndLastOrPersonIsBlank" sfwMessageId="2019" sfwExpression="(this.icdoDeathNotification.person_id == 0) &amp;&amp; &#xA;((string.IsNullOrEmpty(this.icdoDeathNotification.last_name)) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoDeathNotification.first_name)))" sfwObjectBased="True" />
+    <rule ID="IsFirstNameNotEnteredIfLastNameEntered" sfwMessageId="2018" sfwExpression="(this.icdoDeathNotification.person_id == 0) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoDeathNotification.first_name)) &amp;&amp; &#xA;!(string.IsNullOrEmpty(this.icdoDeathNotification.last_name))" sfwObjectBased="True" />
+    <rule ID="IsFirstPaymentDateIsValid" sfwMessageId="7718" sfwExpression="(this.IsFirstPaymentDateIsValid() == False)" sfwObjectBased="True" />
+    <rule ID="IsNonSatisfiedRecoveryExists" sfwMessageId="7729" sfwExpression="(this.IsNonSatisfiedRecoveryExists() == True)" sfwObjectBased="True" />
+    <rule ID="IsOpenServiceExists" sfwMessageId="1981" sfwExpression="!(this.icdoDeathNotification.person_id == 0) &amp;&amp; &#xA;(this.IsSerPurWithStatusInPayPendAppExistForPerson() == False)" sfwObjectBased="True" />
+    <rule ID="IsPersonEnrolledInLife" sfwMessageId="1986" sfwExpression="!(this.icdoDeathNotification.person_id == 0) &amp;&amp; &#xA;(this.IsDependentEnrolledIfLife() == True)" sfwObjectBased="True" />
+    <rule ID="IsPersonEnrolledInLifeAsSpouse" sfwMessageId="1986" sfwExpression="!(this.icdoDeathNotification.person_id == 0) &amp;&amp; &#xA;(this.IsPersonEnrolledInLifeAsSpouse() == True)" sfwObjectBased="True" />
+    <rule ID="IsValidBeneficiaryExists" sfwMessageId="7717" sfwExpression="(this.icdoDeathNotification.suppress_warnings_flag!= &quot;Y&quot;)&amp;&amp;&#xA;(this.iblnIsNewMode == True) &amp;&amp; &#xA;(this.IsValidBeneficiaryExists() == False)" sfwObjectBased="True" />
+    <rule ID="IsValidPERSLinkIDEntered" sfwMessageId="1026" sfwExpression="!(this.icdoDeathNotification.person_id == 0) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entDeathNotification.IsPersonValid&quot;, this.icdoDeathNotification.person_id) == 0)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForCancelledButton" sfwExpression="!(this.icdoDeathNotification.action_status_value == &quot;CANC&quot;)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForCompletedButton" sfwExpression="(this.icdoDeathNotification.status_value == &quot;VALD&quot;) &amp;&amp; &#xA;!(this.icdoDeathNotification.action_status_value == &quot;COMP&quot;) &amp;&amp; &#xA;!(this.icdoDeathNotification.action_status_value == &quot;ERRN&quot;)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForErroneousButton" sfwExpression="!(this.icdoDeathNotification.action_status_value == &quot;ERRN&quot;) &amp;&amp; &#xA;!(this.icdoDeathNotification.action_status_value == &quot;COMP&quot;)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForInProgressButton" sfwExpression="((this.icdoDeathNotification.action_status_value != &quot;NNRS&quot;) || &#xA;(this.icdoDeathNotification.action_status_value == &quot;NNRS&quot;) || &#xA;(this.icdoDeathNotification.action_status_value == &quot;CANC&quot;))" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForNonResponsiveButton" sfwExpression="!(this.icdoDeathNotification.action_status_value == &quot;NNRS&quot;)" sfwObjectBased="True" />
+    <rule ID="IsDatesAreInsertedForDepeTo" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="this.IsDependentToSpouseEnrolledInLife()" sfwMessageId="10474" />
+    <rule ID="IsPersonEmploymentWithoutEndDate" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.iblnIsPersonEmploymentWithoutEndDate)" sfwMessageId="10476" />
+    <rule ID="IsPersonEmploymentFutureEndDate" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.icdoDeathNotification.suppress_warnings_flag != &quot;Y&quot; ) &amp;&amp;&#xA;(this.iblnIsPersonEmploymentFutureEndDate)" sfwMessageId="10477" />
+    <rule ID="IsDeceasedDependentHaveMedicarePartDEnrolled" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.icdoDeathNotification.suppress_warnings_flag != &quot;Y&quot; ) &amp;&amp;&#xA;(this.IsDeceasedDependentHaveMedicarePartDEnrolled())" sfwMessageId="10478" />
+    <rule ID="IsBeneToSpouseEnrolledInLife" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.IsBeneToSpouseEnrolledInLife()" sfwMessageId="10475" />
+    <rule ID="IsDeathOfDateChange" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="(this.icdoDeathNotification.suppress_warnings_flag != &quot;Y&quot; ) &amp;&amp;&#xA;IsDateOfDateChangedOrStatusToErroneous()" sfwMessageId="10479" />
+    <rule ID="VisibleRuleForGenerateDeathLetterButton" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="(this.icdoDeathNotification.employee_death_batch_letter_sent == &quot;Y&quot; ||&#xA;this.icdoDeathNotification.non_employee_death_batch_flag == &quot;Y&quot; ||&#xA;this.icdoDeathNotification.is_payee_death_letter_sent_flag == &quot;Y&quot;)" />
+    <rule ID="VRIsEndOfLifeDocsReceived" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPerson.icdoPerson.end_of_life_docs&quot;))  == &quot;Y&quot;" />
+    <rule ID="IsMemberHaveAvailableFundInFlex" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="this.iblnIsFlexCompSuspended" sfwMessageId="10503" />
+    <rule ID="IsPASuspendedWithFutureDates" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="(this.IsPASuspendedWithFutureDates())" sfwMessageId="10504" />
+    <rule ID="IsPersonBeneficiaryAddressInValid" sfwRuleType="Validation" sfwObjectBased="False" sfwMessageId="10501" sfwExpression="this.IblnIsPersonBeneficiaryAddressInValid" />
+    <rule ID="IsPersonDependentAddressInvalid" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="this.iblnIsPersonDependentAddressInValid" sfwMessageId="10502" />
+    <rule ID="IsGenerateCorrespondenceButtonVisible" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="(this.lstAllGeneratedCorByPerson.Count == 0)" />
+    <rule ID="IsDateOfDeathEqualToPersonEmploymentEndDate" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.iblnIsDateOfDeathEqualsToEmploymentEndDate" sfwMessageId="10527" />
+  </rules>
+  <delete>
+    <property ID="SoftErrors" sfwMethodName="LoadErrors" />
+  </delete>
+  <checklist />
+  <initialload>
+    <item ID="VisibleRuleForCompletedButton" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForCancelledButton" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForNonResponsiveButton" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForInProgressButton" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForErroneousButton" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForGenerateDeathLetterButton" sfwMode="All" sfwStatus="Active" />
+    <item ID="VRIsEndOfLifeDocsReceived" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsGenerateCorrespondenceButtonVisible" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror>
+    <item ID="IsOpenServiceExists" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPersonEnrolledInLife" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPersonEnrolledInLifeAsSpouse" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAllBeneficiarieshaveActiveAddress" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsFirstPaymentDateIsValid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsValidBeneficiaryExists" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsNonSatisfiedRecoveryExists" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAnyBeneficiaryDeathIPorNR" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAnyDepndentDeathIPorNR" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsDatesAreInsertedForDepeTo" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsBeneToSpouseEnrolledInLife" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMemberHaveAvailableFundInFlex" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPASuspendedWithFutureDates" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPersonBeneficiaryAddressInValid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPersonDependentAddressInvalid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsDateOfDeathEqualToPersonEmploymentEndDate" sfwMode="All" sfwStatus="Active" />
+  </softerror>
+  <harderror>
+    <item ID="IsDateOfDeathIsFutureDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsDateOfDeathNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsFirstAndLastOrPersonIsBlank" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsFirstNameNotEnteredIfLastNameEntered" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsDeathNotificationduplicateInNewMode" sfwMode="New" sfwStatus="Active" />
+    <item ID="IsDateOfDeathBeforeDateOfBirth" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsValidPERSLinkIDEntered" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsBeneficiaryEstateExistsForDROpayee" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPersonEmploymentWithoutEndDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPersonEmploymentFutureEndDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsDeceasedDependentHaveMedicarePartDEnrolled" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsDeathOfDateChange" sfwMode="Update" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties>
+    <item ID="person_id" sfwObjectField="icdoDeathNotification.person_id" />
+  </commonproperties>
+  <expressionfields />
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select * from sgt_death_notification sdn (nolock)&#xD;&#xA;left outer join sgt_person sp (nolock) on sp.person_id = sdn.person_id&#xD;&#xA;order by 1 desc">
+      <parameters />
+    </query>
+    <query ID="IsDeathNotificationDuplicatedInUpdate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) from sgt_death_notification where death_notification_id &lt;&gt; @death_notification_id&#xD;&#xA;and person_id = @person_id ">
+      <parameters>
+        <parameter ID="@death_notification_id" sfwDataType="int" />
+        <parameter ID="@person_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="IsDeathNotificationduplicateInNewMode" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select count(*) from sgt_death_notification WITH(NOLOCK) where person_id = @person_id &#xD;&#xA;and action_status_value not in ('CANC', 'ERRN')">
+      <parameters>
+        <parameter ID="@person_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="IsPersonValid" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select count(*) from sgt_person where person_id = @person_id">
+      <parameters>
+        <parameter ID="@person_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetListOfPersonForAutoRefundBatch" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT DISTINCT(D.PERSON_ID), D.* &#xD;&#xA;FROM SGT_DEATH_NOTIFICATION D&#xD;&#xA;LEFT OUTER JOIN SGT_PERSON_ACCOUNT PA ON PA.PERSON_ID = D.PERSON_ID &#xD;&#xA;WHERE PA.PLAN_PARTICIPATION_STATUS_VALUE IN ('ENL1','SUS2')&#xD;&#xA; AND D.DEATH_CERTIFIED_FLAG = 'Y'  &#xD;&#xA;ORDER BY D.PERSON_ID DESC">
+      <parameters />
+    </query>
+    <query ID="DeleteErrors" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="delete SGT_DEATH_NOTIFICATION_ERROR where DEATH_NOTIFICATION_ID = @DEATH_NOTIFICATION_ID">
+      <parameters>
+        <parameter ID="@DEATH_NOTIFICATION_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="DeathMatchFile" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT &#xD;&#xA; DISTINCT PER.PERSON_ID,PER.SSN, &#xD;&#xA; LEFT(PER.LAST_NAME,13) AS LAST_NAME, LEFT(PER.FIRST_NAME,10) AS FIRST_NAME,&#xD;&#xA; LEFT(PER.MIDDLE_NAME,7) AS MIDDLE_NAME, PER.DATE_OF_BIRTH,&#xD;&#xA; CASE PER.GENDER_VALUE WHEN 'MALE' THEN 'M' WHEN 'FEML' THEN 'F' ELSE '' END AS GENDER_VALUE       &#xD;&#xA;FROM SGT_PERSON PER (NOLOCK)&#xD;&#xA;LEFT OUTER JOIN SGT_PERSON_ACCOUNT ACCT ON ACCT.PERSON_ID = PER.PERSON_ID&#xD;&#xA;LEFT OUTER JOIN SGT_PAYEE_ACCOUNT PA ON PA.PAYEE_PERSLINK_ID = PER.PERSON_ID&#xD;&#xA;LEFT OUTER JOIN SGT_PAYEE_ACCOUNT_STATUS PAS ON PAS.PAYEE_ACCOUNT_ID = PA.PAYEE_ACCOUNT_ID&#xD;&#xA;LEFT OUTER JOIN SGS_CODE_VALUE CV1 ON PAS.STATUS_ID = CV1.CODE_ID AND PAS.STATUS_VALUE = CV1.CODE_VALUE&#xD;&#xA;WHERE PER.DATE_OF_DEATH IS NULL&#xD;&#xA;AND&#xD;&#xA;((ACCT.PLAN_PARTICIPATION_STATUS_VALUE IN ('ENL3','SUS1') AND ACCT.PLAN_ID = 19) OR&#xD;&#xA;(ACCT.PLAN_PARTICIPATION_STATUS_VALUE IN ('ENL2','ENL4') AND ACCT.PLAN_ID IN (8, 9, 12, 13, 14, 15, 16, 17, 18, 22)) OR&#xD;&#xA;(ACCT.PLAN_PARTICIPATION_STATUS_VALUE IN ('ENL1','RTRD','SUS2') AND ACCT.PLAN_ID IN (1,2,3,4,5,6,7,20,23,24,25,26,27,28,29,30) OR&#xD;&#xA;((CV1.DATA2 NOT IN ('CNLD','RPCD','TRMD'))&#xD;&#xA;&#x9;AND &#xD;&#xA;&#x9;PAYEE_ACCOUNT_STATUS_ID = (SELECT TOP 1 PAYEE_ACCOUNT_STATUS_ID FROM SGT_PAYEE_ACCOUNT_STATUS PAS1 (NOLOCK)&#xD;&#xA;        WHERE PAS1.PAYEE_ACCOUNT_ID = PA.PAYEE_ACCOUNT_ID AND PAS1.STATUS_EFFECTIVE_DATE &lt;= GETDATE()&#xD;&#xA;        ORDER BY PAS1.STATUS_EFFECTIVE_DATE DESC, PAS1.PAYEE_ACCOUNT_STATUS_ID DESC)&#xD;&#xA;         )))">
+      <parameters />
+    </query>
+    <query ID="PayeeDeathLetterACOD" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT&#xD;&#xA;'ACOD' AS 'DEATH_TYPE_VALUE',&#xD;&#xA;SDN.*,SPA.*,BEN.*, BENACC.*, DECEASED.*, BENORG.*&#xD;&#xA;FROM SGT_DEATH_NOTIFICATION SDN WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_PERSON DECEASED WITH(NOLOCK) ON DECEASED.PERSON_ID=SDN.PERSON_ID&#xD;&#xA;INNER JOIN SGT_PAYEE_ACCOUNT SPA WITH(NOLOCK) ON SPA.PAYEE_PERSLINK_ID=SDN.PERSON_ID&#xD;&#xA;INNER JOIN SGT_BENEFIT_APPLICATION APP WITH(NOLOCK) ON APP.BENEFIT_APPLICATION_ID=SPA.APPLICATION_ID&#xD;&#xA;INNER JOIN SGT_BENEFIT_APPLICATION_PERSON_ACCOUNT APPACC WITH(NOLOCK) ON APPACC.BENEFIT_APPLICATION_ID=APP.BENEFIT_APPLICATION_ID AND &#xD;&#xA;                  ISNULL(IS_APPLICATION_PERSON_ACCOUNT_FLAG,'Y')='Y'&#xD;&#xA;INNER JOIN SGT_PAYEE_ACCOUNT_STATUS SPASTAT WITH(NOLOCK) ON SPASTAT.PAYEE_ACCOUNT_ID= SPA.PAYEE_ACCOUNT_ID&#xD;&#xA;INNER JOIN SGS_CODE_VALUE COD WITH(NOLOCK) ON COD.CODE_VALUE= SPASTAT.STATUS_VALUE AND COD.CODE_ID=SPASTAT.STATUS_ID&#xD;&#xA;INNER JOIN SGT_PERSON_BENEFICIARY BEN WITH(NOLOCK) ON BEN.PERSON_ID=DECEASED.PERSON_ID&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT_BENEFICIARY BENACC WITH(NOLOCK) ON BENACC.BENEFICIARY_ID=BEN.BENEFICIARY_ID AND BENACC.PERSON_ACCOUNT_ID= APPACC.PERSON_ACCOUNT_ID&#xD;&#xA;LEFT JOIN SGT_PERSON BENPER WITH(NOLOCK) ON BENPER.PERSON_ID=BEN.BENEFICIARY_PERSON_ID&#xD;&#xA;LEFT JOIN SGT_ORGANIZATION BENORG WITH(NOLOCK) ON BENORG.ORG_ID=BEN.BENIFICIARY_ORG_ID&#xD;&#xA;WHERE SPA.BENEFIT_ACCOUNT_TYPE_VALUE IN ('RETR','DISA') AND &#xD;&#xA;SPA.DRO_APPLICATION_ID IS NULL AND &#xD;&#xA;SPASTAT.PAYEE_ACCOUNT_STATUS_ID=(&#xD;&#xA;    SELECT TOP 1 PAYEE_ACCOUNT_STATUS_ID FROM SGT_PAYEE_ACCOUNT_STATUS WITH(NOLOCK)&#xD;&#xA;    WHERE PAYEE_ACCOUNT_ID=SPA.PAYEE_ACCOUNT_ID ORDER BY STATUS_EFFECTIVE_DATE DESC) AND &#xD;&#xA;    COD.DATA2 IN ('RECV','SPND','REVW','APRD','TRMD')&#xD;&#xA;-- SYS PIR ID 2603 Even the Payee account status is terminated, should include in ACOD if the effective date is a future date&#xD;&#xA;AND SPASTAT.STATUS_EFFECTIVE_DATE &gt; = (CASE SPASTAT.STATUS_VALUE WHEN 'TRMD' THEN DECEASED.DATE_OF_DEATH  WHEN 'TRDS' THEN DECEASED.DATE_OF_DEATH ELSE SPASTAT.STATUS_EFFECTIVE_DATE END)&#xD;&#xA;AND EXISTS(SELECT TOP 1 * FROM SGT_PAYMENT_HISTORY_HEADER HIS WITH(NOLOCK) WHERE PAYEE_ACCOUNT_ID=SPA.PAYEE_ACCOUNT_ID) &#xD;&#xA;AND ISNULL(IS_PAYEE_DEATH_LETTER_SENT_FLAG,'N')='N'&#xD;&#xA;AND SDN.ACTION_STATUS_VALUE NOT IN ('ERRN','CANC')&#xD;&#xA;ORDER BY DECEASED.PERSON_ID&#xD;&#xA;">
+      <parameters />
+    </query>
+    <query ID="PayeeDeathLetterFBED" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="--FETCH ANY DECEASED WITH A PAYEE ACCOUNT IN RECEIVING, SUSPENDED, REVIEW OR APPROVED STATUS WHERE AT LEAST ONE PAYMENT HAS BEEN ISSUED.(FIRST BEN DEATH)&#xD;&#xA;SELECT &#xD;&#xA;'FBED' AS 'DEATH_TYPE_VALUE',&#xD;&#xA;SDN.*,SPA.*,BEN.*, BENACC.*, DECEASED.*, BENORG.*&#xD;&#xA;FROM SGT_DEATH_NOTIFICATION SDN WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_PERSON DECEASED WITH(NOLOCK) ON DECEASED.PERSON_ID=SDN.PERSON_ID&#xD;&#xA;INNER JOIN SGT_PAYEE_ACCOUNT SPA WITH(NOLOCK) ON SPA.PAYEE_PERSLINK_ID=SDN.PERSON_ID&#xD;&#xA;INNER JOIN SGT_BENEFIT_APPLICATION APP WITH(NOLOCK) ON APP.BENEFIT_APPLICATION_ID=SPA.APPLICATION_ID&#xD;&#xA;INNER JOIN SGT_PAYEE_ACCOUNT_STATUS SPASTAT WITH(NOLOCK) ON SPASTAT.PAYEE_ACCOUNT_ID= SPA.PAYEE_ACCOUNT_ID&#xD;&#xA;INNER JOIN SGS_CODE_VALUE COD WITH(NOLOCK) ON COD.CODE_VALUE= SPASTAT.STATUS_VALUE AND COD.CODE_ID=SPASTAT.STATUS_ID&#xD;&#xA;INNER JOIN SGT_PERSON_BENEFICIARY BEN WITH(NOLOCK) ON BEN.PERSON_ID=DECEASED.PERSON_ID&#xD;&#xA;INNER JOIN SGT_BENEFIT_APPLICATION_BENEFICIARY BENACC WITH(NOLOCK) ON BENACC.BENEFICIARY_ID=BEN.BENEFICIARY_ID AND APP.BENEFIT_APPLICATION_ID=BENACC.BENEFIT_APPLICATION_ID&#xD;&#xA;LEFT JOIN SGT_PERSON BENPER WITH(NOLOCK) ON BENPER.PERSON_ID=BEN.BENEFICIARY_PERSON_ID&#xD;&#xA;LEFT JOIN SGT_ORGANIZATION BENORG WITH(NOLOCK) ON BENORG.ORG_ID=BEN.BENIFICIARY_ORG_ID&#xD;&#xA;WHERE SPA.BENEFIT_ACCOUNT_TYPE_VALUE IN ('PSTD','DETH') AND &#xD;&#xA;SPA.DRO_APPLICATION_ID IS NULL AND &#xD;&#xA;SPASTAT.PAYEE_ACCOUNT_STATUS_ID=(&#xD;&#xA;    SELECT TOP 1 PAYEE_ACCOUNT_STATUS_ID FROM SGT_PAYEE_ACCOUNT_STATUS WITH(NOLOCK) &#xD;&#xA;    WHERE PAYEE_ACCOUNT_ID=SPA.PAYEE_ACCOUNT_ID ORDER BY STATUS_EFFECTIVE_DATE DESC) AND &#xD;&#xA;COD.DATA2 IN ('RECV','SPND','REVW','APRD') AND &#xD;&#xA;EXISTS(SELECT TOP 1 * FROM SGT_PAYMENT_HISTORY_HEADER HIS WITH(NOLOCK) WHERE PAYEE_ACCOUNT_ID=SPA.PAYEE_ACCOUNT_ID) AND &#xD;&#xA;ISNULL(IS_PAYEE_DEATH_LETTER_SENT_FLAG,'N')='N'&#xD;&#xA;AND SDN.ACTION_STATUS_VALUE NOT IN ('ERRN','CANC')&#xD;&#xA;AND BENEFICIARY_TYPE_VALUE='PRIM'&#xD;&#xA;ORDER BY DECEASED.PERSON_ID&#xD;&#xA;">
+      <parameters />
+    </query>
+    <query ID="PayeeDeathLetterALPD" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="--FETCH ANY DECEASED WITH A PAYEE ACCOUNT IN RECEIVING, SUSPENDED, REVIEW OR APPROVED STATUS WHERE AT LEAST ONE PAYMENT HAS BEEN ISSUED.(ALTERNATE PAYEE DEATH)&#xD;&#xA;SELECT &#xD;&#xA;'ALPD' AS 'DEATH_TYPE_VALUE',&#xD;&#xA;SDN.*,SPA.*,BEN.*, BENACC.*, DECEASED.*, BENORG.*&#xD;&#xA;FROM SGT_DEATH_NOTIFICATION SDN WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_PERSON DECEASED WITH(NOLOCK) ON DECEASED.PERSON_ID=SDN.PERSON_ID&#xD;&#xA;INNER JOIN SGT_PAYEE_ACCOUNT SPA WITH(NOLOCK) ON SPA.PAYEE_PERSLINK_ID=SDN.PERSON_ID&#xD;&#xA;INNER JOIN SGT_BENEFIT_DRO_APPLICATION APP WITH(NOLOCK) ON APP.DRO_APPLICATION_ID=SPA.DRO_APPLICATION_ID&#xD;&#xA;INNER JOIN SGT_PAYEE_ACCOUNT_STATUS SPASTAT WITH(NOLOCK) ON SPASTAT.PAYEE_ACCOUNT_ID= SPA.PAYEE_ACCOUNT_ID&#xD;&#xA;INNER JOIN SGS_CODE_VALUE COD WITH(NOLOCK) ON COD.CODE_VALUE= SPASTAT.STATUS_VALUE AND COD.CODE_ID=SPASTAT.STATUS_ID&#xD;&#xA;INNER JOIN SGT_PERSON_BENEFICIARY BEN WITH(NOLOCK) ON BEN.PERSON_ID=DECEASED.PERSON_ID&#xD;&#xA;INNER JOIN SGT_BENEFIT_APPLICATION_BENEFICIARY BENACC WITH(NOLOCK) ON BENACC.BENEFICIARY_ID=BEN.BENEFICIARY_ID AND APP.DRO_APPLICATION_ID=BENACC.DRO_APPLICATION_ID&#xD;&#xA;LEFT JOIN SGT_PERSON BENPER WITH(NOLOCK) ON BENPER.PERSON_ID=BEN.BENEFICIARY_PERSON_ID&#xD;&#xA;LEFT JOIN SGT_ORGANIZATION BENORG WITH(NOLOCK) ON BENORG.ORG_ID=BEN.BENIFICIARY_ORG_ID&#xD;&#xA;WHERE &#xD;&#xA;SPA.DRO_APPLICATION_ID IS NOT NULL AND &#xD;&#xA;SPASTAT.PAYEE_ACCOUNT_STATUS_ID=(&#xD;&#xA;     SELECT TOP 1 PAYEE_ACCOUNT_STATUS_ID FROM SGT_PAYEE_ACCOUNT_STATUS WITH(NOLOCK)&#xD;&#xA;     WHERE PAYEE_ACCOUNT_ID=SPA.PAYEE_ACCOUNT_ID ORDER BY STATUS_EFFECTIVE_DATE DESC) AND &#xD;&#xA;COD.DATA2 IN ('RECV','SPND','REVW','APRD') AND &#xD;&#xA;EXISTS(SELECT TOP 1 * FROM SGT_PAYMENT_HISTORY_HEADER HIS WITH(NOLOCK) WHERE PAYEE_ACCOUNT_ID=SPA.PAYEE_ACCOUNT_ID) AND &#xD;&#xA;ISNULL(IS_PAYEE_DEATH_LETTER_SENT_FLAG,'N')='N'&#xD;&#xA;AND SDN.ACTION_STATUS_VALUE NOT IN ('ERRN','CANC')&#xD;&#xA;AND BENEFICIARY_TYPE_VALUE='PRIM'&#xD;&#xA;ORDER BY DECEASED.PERSON_ID">
+      <parameters />
+    </query>
+    <query ID="PayeeDeathLetterInsurance" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT &#xD;&#xA;SDN.*,BEN.*, BENACC.*, DECEASED.*, BENORG.*&#xD;&#xA;FROM SGT_DEATH_NOTIFICATION SDN WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_PERSON DECEASED WITH(NOLOCK) ON DECEASED.PERSON_ID=SDN.PERSON_ID&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT ACC WITH(NOLOCK) ON ACC.PERSON_ID=DECEASED.PERSON_ID&#xD;&#xA;INNER JOIN SGT_PLAN PLN WITH(NOLOCK) ON ACC.PLAN_ID=PLN.PLAN_ID&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT_PAYMENT_ELECTION EL WITH(NOLOCK) ON EL.PERSON_ACCOUNT_ID= ACC.PERSON_ACCOUNT_ID&#xD;&#xA;INNER JOIN SGT_PERSON_BENEFICIARY BEN WITH(NOLOCK) ON BEN.PERSON_ID=DECEASED.PERSON_ID&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT_BENEFICIARY BENACC WITH(NOLOCK) ON BENACC.BENEFICIARY_ID=BEN.BENEFICIARY_ID AND BENACC.PERSON_ACCOUNT_ID= ACC.PERSON_ACCOUNT_ID&#xD;&#xA;LEFT JOIN SGT_PERSON BENPER WITH(NOLOCK) ON BENPER.PERSON_ID=BEN.BENEFICIARY_PERSON_ID&#xD;&#xA;LEFT JOIN SGT_ORGANIZATION BENORG WITH(NOLOCK) ON BENORG.ORG_ID=BEN.BENIFICIARY_ORG_ID&#xD;&#xA;WHERE PLN.BENEFIT_TYPE_VALUE='INSR' AND IBS_FLAG='Y'&#xD;&#xA;AND ISNULL(IS_PAYEE_DEATH_LETTER_SENT_FLAG,'N')='N'&#xD;&#xA;AND SDN.ACTION_STATUS_VALUE NOT IN ('ERRN','CANC')&#xD;&#xA;ORDER BY DECEASED.PERSON_ID">
+      <parameters />
+    </query>
+    <query ID="PayeeDeathLetterDeffComp" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="--FETCH ANY DECEASED WITH A DEFERRED COMP OR OTHER 457/403(B) PLAN ACCOUNT IN ENROLLED OR SUSPENDED PLAN PARTICIPATION STATUS&#xD;&#xA;SELECT &#xD;&#xA;SDN.*,BEN.*, BENACC.*, DECEASED.*, BENORG.*&#xD;&#xA;FROM SGT_DEATH_NOTIFICATION SDN WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_PERSON DECEASED WITH(NOLOCK) ON DECEASED.PERSON_ID=SDN.PERSON_ID&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT ACC WITH(NOLOCK) ON ACC.PERSON_ID=DECEASED.PERSON_ID&#xD;&#xA;INNER JOIN SGT_PLAN PLN WITH(NOLOCK) ON ACC.PLAN_ID=PLN.PLAN_ID&#xD;&#xA;INNER JOIN SGT_PERSON_BENEFICIARY BEN WITH(NOLOCK) ON BEN.PERSON_ID=DECEASED.PERSON_ID&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT_BENEFICIARY BENACC WITH(NOLOCK) ON BENACC.BENEFICIARY_ID=BEN.BENEFICIARY_ID AND BENACC.PERSON_ACCOUNT_ID= ACC.PERSON_ACCOUNT_ID&#xD;&#xA;LEFT JOIN SGT_PERSON BENPER WITH(NOLOCK) ON BENPER.PERSON_ID=BEN.BENEFICIARY_PERSON_ID&#xD;&#xA;LEFT JOIN SGT_ORGANIZATION BENORG WITH(NOLOCK) ON BENORG.ORG_ID=BEN.BENIFICIARY_ORG_ID&#xD;&#xA;WHERE PLN.BENEFIT_TYPE_VALUE='DEFF' &#xD;&#xA;AND PLAN_PARTICIPATION_STATUS_VALUE ='ENL3'&#xD;&#xA;AND ISNULL(IS_PAYEE_DEATH_LETTER_SENT_FLAG,'N')='N'&#xD;&#xA;ORDER BY DECEASED.PERSON_ID">
+      <parameters />
+    </query>
+    <query ID="GetCountofRecoveryInApprovedandInprocess" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT&#xA;&#x9; ISNULL(COUNT(ISNULL(PR.PAYMENT_RECOVERY_ID,0)),0) AS TOTALCOUNT &#xA;FROM&#xA;&#x9; SGT_PAYMENT_RECOVERY PR WITH(NOLOCK) &#xA;&#x9; INNER JOIN SGT_PAYEE_ACCOUNT PA WITH(NOLOCK)&#xA;&#x9; ON PA.PAYEE_ACCOUNT_ID  = PR.PAYEE_ACCOUNT_ID AND&#xA;&#x9; PR.STATUS_VALUE IN('INPR',&#x9;'APRD') AND&#xA;&#x9; PA.PAYEE_PERSLINK_ID =  @PAYEEPERSLINKID">
+      <parameters>
+        <parameter ID="@PAYEEPERSLINKID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="DeleteAllCorrRelatedTableData" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="DELETE FROM SGT_COR_DEATH_NOTIFICATION WHERE DEATH_NOTIFICATION_ID = @DEATH_NOTIFICATION_ID&#xD;&#xA;DELETE FROM SGT_COR_RETIREMENT WHERE DEATH_NOTIFICATION_ID = @DEATH_NOTIFICATION_ID&#xD;&#xA;DELETE FROM SGT_COR_INSURANCE WHERE DEATH_NOTIFICATION_ID = @DEATH_NOTIFICATION_ID&#xD;&#xA;DELETE FROM SGT_COR_PAYEE_ACCOUNT WHERE DEATH_NOTIFICATION_ID = @DEATH_NOTIFICATION_ID&#xD;&#xA;DELETE FROM SGT_COR_BENE_DEP WHERE DEATH_NOTIFICATION_ID = @DEATH_NOTIFICATION_ID&#xD;&#xA;DELETE FROM SGT_COR_BENE_DEP_TO WHERE DEATH_NOTIFICATION_ID = @DEATH_NOTIFICATION_ID">
+      <parameters>
+        <parameter ID="@DEATH_NOTIFICATION_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="PayeeDeathLetterACODFromScreen" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT&#xD;&#xA;'ACOD' AS 'DEATH_TYPE_VALUE',&#xD;&#xA;SDN.*,SPA.*,BEN.*, BENACC.*, DECEASED.*, BENORG.*&#xD;&#xA;FROM SGT_DEATH_NOTIFICATION SDN WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_PERSON DECEASED WITH(NOLOCK) ON DECEASED.PERSON_ID=SDN.PERSON_ID&#xD;&#xA;INNER JOIN SGT_PAYEE_ACCOUNT SPA WITH(NOLOCK) ON SPA.PAYEE_PERSLINK_ID=SDN.PERSON_ID&#xD;&#xA;INNER JOIN SGT_BENEFIT_APPLICATION APP WITH(NOLOCK) ON APP.BENEFIT_APPLICATION_ID=SPA.APPLICATION_ID&#xD;&#xA;INNER JOIN SGT_BENEFIT_APPLICATION_PERSON_ACCOUNT APPACC WITH(NOLOCK) ON APPACC.BENEFIT_APPLICATION_ID=APP.BENEFIT_APPLICATION_ID AND &#xD;&#xA;                  ISNULL(IS_APPLICATION_PERSON_ACCOUNT_FLAG,'Y')='Y'&#xD;&#xA;INNER JOIN SGT_PAYEE_ACCOUNT_STATUS SPASTAT WITH(NOLOCK) ON SPASTAT.PAYEE_ACCOUNT_ID= SPA.PAYEE_ACCOUNT_ID&#xD;&#xA;INNER JOIN SGS_CODE_VALUE COD WITH(NOLOCK) ON COD.CODE_VALUE= SPASTAT.STATUS_VALUE AND COD.CODE_ID=SPASTAT.STATUS_ID&#xD;&#xA;INNER JOIN SGT_PERSON_BENEFICIARY BEN WITH(NOLOCK) ON BEN.PERSON_ID=DECEASED.PERSON_ID&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT_BENEFICIARY BENACC WITH(NOLOCK) ON BENACC.BENEFICIARY_ID=BEN.BENEFICIARY_ID AND BENACC.PERSON_ACCOUNT_ID= APPACC.PERSON_ACCOUNT_ID&#xD;&#xA;LEFT JOIN SGT_PERSON BENPER WITH(NOLOCK) ON BENPER.PERSON_ID=BEN.BENEFICIARY_PERSON_ID&#xD;&#xA;LEFT JOIN SGT_ORGANIZATION BENORG WITH(NOLOCK) ON BENORG.ORG_ID=BEN.BENIFICIARY_ORG_ID&#xD;&#xA;WHERE SPA.BENEFIT_ACCOUNT_TYPE_VALUE IN ('RETR','DISA') AND &#xD;&#xA;SPA.DRO_APPLICATION_ID IS NULL AND &#xD;&#xA;SPASTAT.PAYEE_ACCOUNT_STATUS_ID=(&#xD;&#xA;    SELECT TOP 1 PAYEE_ACCOUNT_STATUS_ID FROM SGT_PAYEE_ACCOUNT_STATUS WITH(NOLOCK)&#xD;&#xA;    WHERE PAYEE_ACCOUNT_ID=SPA.PAYEE_ACCOUNT_ID ORDER BY STATUS_EFFECTIVE_DATE DESC) AND &#xD;&#xA;    COD.DATA2 IN ('RECV','SPND','REVW','APRD','TRMD')&#xD;&#xA;-- SYS PIR ID 2603 Even the Payee account status is terminated, should include in ACOD if the effective date is a future date&#xD;&#xA;AND SPASTAT.STATUS_EFFECTIVE_DATE &gt; = (CASE SPASTAT.STATUS_VALUE WHEN 'TRMD' THEN DECEASED.DATE_OF_DEATH  WHEN 'TRDS' THEN DECEASED.DATE_OF_DEATH ELSE SPASTAT.STATUS_EFFECTIVE_DATE END)&#xD;&#xA;AND EXISTS(SELECT TOP 1 * FROM SGT_PAYMENT_HISTORY_HEADER HIS WITH(NOLOCK) WHERE PAYEE_ACCOUNT_ID=SPA.PAYEE_ACCOUNT_ID) &#xD;&#xA;AND ISNULL(IS_PAYEE_DEATH_LETTER_SENT_FLAG,'N')='N'&#xD;&#xA;AND SDN.ACTION_STATUS_VALUE NOT IN ('ERRN','CANC')&#xD;&#xA;AND SDN.PERSON_ID = @PERSON_ID&#xD;&#xA;ORDER BY DECEASED.PERSON_ID">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="PayeeDeathLetterFBEDFromScreen" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="--FETCH ANY DECEASED WITH A PAYEE ACCOUNT IN RECEIVING, SUSPENDED, REVIEW OR APPROVED STATUS WHERE AT LEAST ONE PAYMENT HAS BEEN ISSUED.(FIRST BEN DEATH)&#xD;&#xA;SELECT &#xD;&#xA;'FBED' AS 'DEATH_TYPE_VALUE',&#xD;&#xA;SDN.*,SPA.*,BEN.*, BENACC.*, DECEASED.*, BENORG.*&#xD;&#xA;FROM SGT_DEATH_NOTIFICATION SDN WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_PERSON DECEASED WITH(NOLOCK) ON DECEASED.PERSON_ID=SDN.PERSON_ID&#xD;&#xA;INNER JOIN SGT_PAYEE_ACCOUNT SPA WITH(NOLOCK) ON SPA.PAYEE_PERSLINK_ID=SDN.PERSON_ID&#xD;&#xA;INNER JOIN SGT_BENEFIT_APPLICATION APP WITH(NOLOCK) ON APP.BENEFIT_APPLICATION_ID=SPA.APPLICATION_ID&#xD;&#xA;INNER JOIN SGT_PAYEE_ACCOUNT_STATUS SPASTAT WITH(NOLOCK) ON SPASTAT.PAYEE_ACCOUNT_ID= SPA.PAYEE_ACCOUNT_ID&#xD;&#xA;INNER JOIN SGS_CODE_VALUE COD WITH(NOLOCK) ON COD.CODE_VALUE= SPASTAT.STATUS_VALUE AND COD.CODE_ID=SPASTAT.STATUS_ID&#xD;&#xA;INNER JOIN SGT_PERSON_BENEFICIARY BEN WITH(NOLOCK) ON BEN.PERSON_ID=DECEASED.PERSON_ID&#xD;&#xA;INNER JOIN SGT_BENEFIT_APPLICATION_BENEFICIARY BENACC WITH(NOLOCK) ON BENACC.BENEFICIARY_ID=BEN.BENEFICIARY_ID AND APP.BENEFIT_APPLICATION_ID=BENACC.BENEFIT_APPLICATION_ID&#xD;&#xA;LEFT JOIN SGT_PERSON BENPER WITH(NOLOCK) ON BENPER.PERSON_ID=BEN.BENEFICIARY_PERSON_ID&#xD;&#xA;LEFT JOIN SGT_ORGANIZATION BENORG WITH(NOLOCK) ON BENORG.ORG_ID=BEN.BENIFICIARY_ORG_ID&#xD;&#xA;WHERE SPA.BENEFIT_ACCOUNT_TYPE_VALUE IN ('PSTD','DETH') AND &#xD;&#xA;SPA.DRO_APPLICATION_ID IS NULL AND &#xD;&#xA;SPASTAT.PAYEE_ACCOUNT_STATUS_ID=(&#xD;&#xA;    SELECT TOP 1 PAYEE_ACCOUNT_STATUS_ID FROM SGT_PAYEE_ACCOUNT_STATUS WITH(NOLOCK) &#xD;&#xA;    WHERE PAYEE_ACCOUNT_ID=SPA.PAYEE_ACCOUNT_ID ORDER BY STATUS_EFFECTIVE_DATE DESC) AND &#xD;&#xA;COD.DATA2 IN ('RECV','SPND','REVW','APRD') AND &#xD;&#xA;EXISTS(SELECT TOP 1 * FROM SGT_PAYMENT_HISTORY_HEADER HIS WITH(NOLOCK) WHERE PAYEE_ACCOUNT_ID=SPA.PAYEE_ACCOUNT_ID) AND &#xD;&#xA;ISNULL(IS_PAYEE_DEATH_LETTER_SENT_FLAG,'N')='N'&#xD;&#xA;AND SDN.ACTION_STATUS_VALUE NOT IN ('ERRN','CANC')&#xD;&#xA;AND BENEFICIARY_TYPE_VALUE='PRIM'&#xD;&#xA;AND SDN.PERSON_ID = @PERSON_ID&#xD;&#xA;ORDER BY DECEASED.PERSON_ID">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="PayeeDeathLetterALPDFromScreen" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="--FETCH ANY DECEASED WITH A PAYEE ACCOUNT IN RECEIVING, SUSPENDED, REVIEW OR APPROVED STATUS WHERE AT LEAST ONE PAYMENT HAS BEEN ISSUED.(ALTERNATE PAYEE DEATH)&#xD;&#xA;SELECT &#xD;&#xA;'ALPD' AS 'DEATH_TYPE_VALUE',&#xD;&#xA;SDN.*,SPA.*,BEN.*, BENACC.*, DECEASED.*, BENORG.*&#xD;&#xA;FROM SGT_DEATH_NOTIFICATION SDN WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_PERSON DECEASED WITH(NOLOCK) ON DECEASED.PERSON_ID=SDN.PERSON_ID&#xD;&#xA;INNER JOIN SGT_PAYEE_ACCOUNT SPA WITH(NOLOCK) ON SPA.PAYEE_PERSLINK_ID=SDN.PERSON_ID&#xD;&#xA;INNER JOIN SGT_BENEFIT_DRO_APPLICATION APP WITH(NOLOCK) ON APP.DRO_APPLICATION_ID=SPA.DRO_APPLICATION_ID&#xD;&#xA;INNER JOIN SGT_PAYEE_ACCOUNT_STATUS SPASTAT WITH(NOLOCK) ON SPASTAT.PAYEE_ACCOUNT_ID= SPA.PAYEE_ACCOUNT_ID&#xD;&#xA;INNER JOIN SGS_CODE_VALUE COD WITH(NOLOCK) ON COD.CODE_VALUE= SPASTAT.STATUS_VALUE AND COD.CODE_ID=SPASTAT.STATUS_ID&#xD;&#xA;INNER JOIN SGT_PERSON_BENEFICIARY BEN WITH(NOLOCK) ON BEN.PERSON_ID=DECEASED.PERSON_ID&#xD;&#xA;INNER JOIN SGT_BENEFIT_APPLICATION_BENEFICIARY BENACC WITH(NOLOCK) ON BENACC.BENEFICIARY_ID=BEN.BENEFICIARY_ID AND APP.DRO_APPLICATION_ID=BENACC.DRO_APPLICATION_ID&#xD;&#xA;LEFT JOIN SGT_PERSON BENPER WITH(NOLOCK) ON BENPER.PERSON_ID=BEN.BENEFICIARY_PERSON_ID&#xD;&#xA;LEFT JOIN SGT_ORGANIZATION BENORG WITH(NOLOCK) ON BENORG.ORG_ID=BEN.BENIFICIARY_ORG_ID&#xD;&#xA;WHERE &#xD;&#xA;SPA.DRO_APPLICATION_ID IS NOT NULL AND &#xD;&#xA;SPASTAT.PAYEE_ACCOUNT_STATUS_ID=(&#xD;&#xA;     SELECT TOP 1 PAYEE_ACCOUNT_STATUS_ID FROM SGT_PAYEE_ACCOUNT_STATUS WITH(NOLOCK)&#xD;&#xA;     WHERE PAYEE_ACCOUNT_ID=SPA.PAYEE_ACCOUNT_ID ORDER BY STATUS_EFFECTIVE_DATE DESC) AND &#xD;&#xA;COD.DATA2 IN ('RECV','SPND','REVW','APRD') AND &#xD;&#xA;EXISTS(SELECT TOP 1 * FROM SGT_PAYMENT_HISTORY_HEADER HIS WITH(NOLOCK) WHERE PAYEE_ACCOUNT_ID=SPA.PAYEE_ACCOUNT_ID) AND &#xD;&#xA;ISNULL(IS_PAYEE_DEATH_LETTER_SENT_FLAG,'N')='N'&#xD;&#xA;AND SDN.ACTION_STATUS_VALUE NOT IN ('ERRN','CANC')&#xD;&#xA;AND BENEFICIARY_TYPE_VALUE='PRIM'&#xD;&#xA;AND SDN.PERSON_ID = @PERSON_ID&#xD;&#xA;ORDER BY DECEASED.PERSON_ID">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="PayeeDeathLetterInsuranceFromScreen" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT &#xD;&#xA;SDN.*,BEN.*, BENACC.*, DECEASED.*, BENORG.*&#xD;&#xA;FROM SGT_DEATH_NOTIFICATION SDN WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_PERSON DECEASED WITH(NOLOCK) ON DECEASED.PERSON_ID=SDN.PERSON_ID&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT ACC WITH(NOLOCK) ON ACC.PERSON_ID=DECEASED.PERSON_ID&#xD;&#xA;INNER JOIN SGT_PLAN PLN WITH(NOLOCK) ON ACC.PLAN_ID=PLN.PLAN_ID&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT_PAYMENT_ELECTION EL WITH(NOLOCK) ON EL.PERSON_ACCOUNT_ID= ACC.PERSON_ACCOUNT_ID&#xD;&#xA;INNER JOIN SGT_PERSON_BENEFICIARY BEN WITH(NOLOCK) ON BEN.PERSON_ID=DECEASED.PERSON_ID&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT_BENEFICIARY BENACC WITH(NOLOCK) ON BENACC.BENEFICIARY_ID=BEN.BENEFICIARY_ID AND BENACC.PERSON_ACCOUNT_ID= ACC.PERSON_ACCOUNT_ID&#xD;&#xA;LEFT JOIN SGT_PERSON BENPER WITH(NOLOCK) ON BENPER.PERSON_ID=BEN.BENEFICIARY_PERSON_ID&#xD;&#xA;LEFT JOIN SGT_ORGANIZATION BENORG WITH(NOLOCK) ON BENORG.ORG_ID=BEN.BENIFICIARY_ORG_ID&#xD;&#xA;WHERE PLN.BENEFIT_TYPE_VALUE='INSR' AND IBS_FLAG='Y'&#xD;&#xA;AND ISNULL(IS_PAYEE_DEATH_LETTER_SENT_FLAG,'N')='N'&#xD;&#xA;AND SDN.ACTION_STATUS_VALUE NOT IN ('ERRN','CANC')&#xD;&#xA;AND SDN.PERSON_ID = @PERSON_ID&#xD;&#xA;ORDER BY DECEASED.PERSON_ID">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="IsWorkFlowCreateLifeInsuranceClaims" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT SUM(PA) FROM &#xD;&#xA;(&#xD;&#xA;&#x9;SELECT &#xD;&#xA;&#x9;&#x9;   COUNT(*) AS PA&#xD;&#xA;&#x9;FROM &#xD;&#xA;&#x9;&#x9;   SGT_PERSON_ACCOUNT_LIFE_HISTORY PALH WITH(NOLOCK) &#xD;&#xA;&#x9;&#x9;   INNER JOIN SGT_PERSON_ACCOUNT A WITH(NOLOCK) ON PALH.PERSON_ACCOUNT_ID = A.PERSON_ACCOUNT_ID&#xD;&#xA;&#x9;WHERE &#xD;&#xA;&#x9;&#x9;   A.PERSON_ID = @DECEASEDPERSONID AND&#xD;&#xA;&#x9;&#x9;   PALH.PLAN_PARTICIPATION_STATUS_VALUE = 'ENL2' AND &#xD;&#xA;&#x9;&#x9;   @DATEOFDEATH BETWEEN PALH.EFFECTIVE_START_DATE AND ISNULL(PALH.EFFECTIVE_END_DATE,'01/01/2900') &#xD;&#xA;&#x9;&#x9;   AND PALH.EFFECTIVE_START_DATE &lt;&gt; CASE WHEN PALH.EFFECTIVE_END_DATE IS NOT NULL THEN PALH.EFFECTIVE_END_DATE ELSE '01/01/2900' END&#xD;&#xA;&#xD;&#xA;&#x9;UNION ALL&#xD;&#xA;&#xD;&#xA;&#x9;SELECT &#xD;&#xA;&#x9;&#x9;   COUNT(*) AS PA&#xD;&#xA;&#x9;FROM&#x9;SGT_PERSON_CONTACT PC  WITH(NOLOCK) &#x9;&#x9;&#xD;&#xA;&#x9;&#x9;   INNER JOIN SGT_PERSON_ACCOUNT A WITH(NOLOCK) ON PC.PERSON_ID = A.PERSON_ID AND A.PLAN_ID = 13 AND PC.RELATIONSHIP_VALUE = 'SPOU' --AND PC.STATUS_VALUE = 'ACT' &#xD;&#xA;&#x9;&#x9;   INNER JOIN SGT_PERSON_ACCOUNT_LIFE_HISTORY PALH WITH(NOLOCK) ON PALH.PERSON_ACCOUNT_ID = A.PERSON_ACCOUNT_ID  &#xD;&#xA;&#x9;WHERE &#xD;&#xA;&#x9;&#x9;   PC.CONTACT_PERSON_ID = @DECEASEDPERSONID AND&#xD;&#xA;&#x9;&#x9;   PALH.PLAN_PARTICIPATION_STATUS_VALUE = 'ENL2' AND COVERAGE_AMOUNT &gt; 0 AND LEVEL_OF_COVERAGE_VALUE = 'SPSL' AND&#xD;&#xA;&#x9;&#x9;   @DATEOFDEATH BETWEEN PALH.EFFECTIVE_START_DATE AND ISNULL(PALH.EFFECTIVE_END_DATE,'01/01/2900') &#xD;&#xA;&#x9;&#x9;   AND PALH.EFFECTIVE_START_DATE &lt;&gt; CASE WHEN PALH.EFFECTIVE_END_DATE IS NOT NULL THEN PALH.EFFECTIVE_END_DATE ELSE '01/01/2900' END&#xD;&#xA;)TEMP">
+      <parameters>
+        <parameter ID="@DECEASEDPERSONID" sfwDataType="int" />
+        <parameter ID="@DATEOFDEATH" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="LoadCertifiedDeathNotification" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="DECLARE @lintDays INT = 0, @SYSMGMTDATE DATE&#xA;SELECT @lintDays = DATA1 FROM SGS_CODE_VALUE WHERE CODE_ID=52 AND CODE_VALUE = 'BRDY'&#xA;&#xA;SELECT @SYSMGMTDATE = BATCH_DATE FROM SGS_SYSTEM_MANAGEMENT&#xA;&#xA;--print @lintDays&#xA;SELECT * FROM SGT_DEATH_NOTIFICATION DN WITH(NOLOCK) &#xA;INNER JOIN SGT_PERSON SP WITH(NOLOCK) ON DN.PERSON_ID = SP.PERSON_ID&#xA;WHERE DEATH_CERTIFIED_FLAG = 'Y'  AND SP.MARITAL_STATUS_VALUE = 'MRID'&#xA;AND DATEADD(day, @lintDays, DN.DATE_OF_DEATH_CERTIFIED_ON) &lt;= @SYSMGMTDATE">
+      <parameters />
+    </query>
+    <query ID="LoadAlternativePayeeAccounts" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT&#xA;&#x9; * &#xA;FROM&#xA;&#x9; SGT_PAYEE_ACCOUNT &#xA;WHERE&#xA;&#x9; PAYEE_PERSLINK_ID = @DECEASEDPERSONID AND&#xA;&#x9; DRO_APPLICATION_ID IS NOT NULL">
+      <parameters>
+        <parameter ID="@DECEASEDPERSONID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadDependent" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT&#xA;&#x9; count(distinct SPD.DEPENDENT_PERSLINK_ID) &#xA;FROM&#xA;&#x9; SGT_PERSON_DEPENDENT SPD WITH(NOLOCK)  &#xA;&#x9;INNER &#xA;&#x9; JOIN SGT_PERSON_ACCOUNT_DEPENDENT SPAD WITH(NOLOCK) &#xA;&#x9; ON SPAD.PERSON_DEPENDENT_ID = SPD.PERSON_DEPENDENT_ID &#xA;WHERE&#xA;&#x9; (@DATEOFDEATH BETWEEN SPAD.START_DATE AND&#xA;&#x9; ISNULL(SPAD.END_DATE,&#xA;&#x9;'01/01/2900' )OR  SPAD.START_DATE &gt; @DATEOFDEATH ) AND&#xA;&#x9; SPD.PERSON_ID = @PERSONID">
+      <parameters>
+        <parameter ID="@DATEOFDEATH" sfwDataType="DateTime" />
+        <parameter ID="@PERSONID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="DeathNotificationId" sfwType="Column" sfwValue="death_notification_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PersonId" sfwType="Column" sfwValue="person_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="LastName" sfwType="Column" sfwValue="last_name" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="FirstName" sfwType="Column" sfwValue="first_name" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="DateOfDeath" sfwType="Column" sfwValue="date_of_death" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="DeathCertifiedFlag" sfwType="Column" sfwValue="death_certified_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="DateOfDeathCertifiedOn" sfwType="Column" sfwValue="date_of_death_certified_on" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="LifeClaimPaymentDate" sfwType="Column" sfwValue="life_claim_payment_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="LifeClaimPaymentAmount" sfwType="Column" sfwValue="life_claim_payment_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="ActionStatusDescription" sfwType="Description" sfwValue="action_status_description" />
+    <attribute ID="ActionStatusId" sfwType="Column" sfwValue="action_status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="2321" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ActionStatusValue" sfwType="Column" sfwValue="action_status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="StatusDescription" sfwType="Description" sfwValue="status_description" />
+    <attribute ID="StatusId" sfwType="Column" sfwValue="status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="2322" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusValue" sfwType="Column" sfwValue="status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="SuppressWarningsFlag" sfwType="Column" sfwValue="suppress_warnings_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="SuppressWarningsBy" sfwType="Column" sfwValue="suppress_warnings_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="SuppressWarningsDate" sfwType="Column" sfwValue="suppress_warnings_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="WorkflowInitiatedFlag" sfwType="Column" sfwValue="workflow_initiated_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="NonEmployeeDeathBatchFlag" sfwType="Column" sfwValue="non_employee_death_batch_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="IsPayeeDeathLetterSentFlag" sfwType="Column" sfwValue="is_payee_death_letter_sent_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="EmployeeDeathBatchLetterSent" sfwType="Column" sfwValue="employee_death_batch_letter_sent" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="objPerson" sfwType="Object" sfwEntity="entPerson" sfwValue="ibusPerson" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrEstateOrgCodeID" sfwValue="istrEstateOrgCodeID" />
+    <attribute sfwType="Collection" sfwEntity="entBenefitRhicCombine" ID="lstAllRHICombine" sfwValue="iclbAllRHICombine" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrRealtionship" sfwValue="istrRealtionship" />
+    <attribute ID="objPersonToBeneficiary" sfwType="Object" sfwEntity="entPersonBeneficiary" sfwValue="ibusPersonToBeneficiary" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrMemberIsSpouseSupplementalLifeInsurance" sfwValue="istrMemberIsSpouseSupplementalLifeInsurance" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrMemberEnrolledInDefComp" sfwValue="istrMemberEnrolledInDefComp" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrMemberIsDependentSupplementalLifeInsurance" sfwValue="istrMemberIsDependentSupplementalLifeInsurance" />
+    <attribute ID="objDeceasedPayeeAccount" sfwType="Object" sfwEntity="entPayeeAccount" sfwValue="ibusDeceasedPayeeAccount" />
+    <attribute ID="objEmployeeDeathBeneAddress" sfwType="Object" sfwEntity="entPersonAddress" sfwValue="ibusEmployeeDeathBeneAddress" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrRetirementAccountVisibility" sfwValue="istrRetirementAccountVisibility" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecLifeInsurancePolicyValue" sfwValue="idecLifeInsurancePolicyValue" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecDentalPremiumAmount" sfwValue="idecDentalPremiumAmount" />
+    <attribute sfwDataType="string" sfwType="Property" ID="LatestHealthHistoryEndDate" sfwValue="LatestHealthHistoryEndDate" />
+    <attribute sfwDataType="string" sfwType="Property" ID="FirstDayofNextMonthToDOD" sfwValue="FirstDayofNextMonthToDOD" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecMonthlyGrossBenefitAmount" sfwValue="idecMonthlyGrossBenefitAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecHealthPremiumAmount" sfwValue="idecHealthPremiumAmount" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsACODandBeneSpouse" sfwValue="IsACODandBeneSpouse" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsPayeeAgeLessThan18" sfwValue="IsPayeeAgeLessThan18" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsBeneSpouse" sfwValue="IsBeneSpouse" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsPayeeEnrolledAsBeneinLife" sfwValue="IsPayeeEnrolledAsBeneinLife" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsDeceasedDCRetired" sfwValue="IsDeceasedDCRetired" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsFBEDTermCertainEndDatePastDate" sfwValue="IsFBEDTermCertainEndDatePastDate" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsLifeAPTermEndDatePastDate" sfwValue="IsLifeAPTermEndDatePastDate" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsLifeTermALPD" sfwValue="IsLifeTermALPD" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsMemberOnlyInLTC" sfwValue="IsMemberOnlyInLTC" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsMemberandSpouseInLTC" sfwValue="IsMemberandSpouseInLTC" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsMemberandSpouseNOTInLTC" sfwValue="IsMemberandSpouseNOTInLTC" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsMemberinDC" sfwValue="IsMemberinDC" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsMemberinDCandSpouseLessthan65" sfwValue="IsMemberinDCandSpouseLessthan65" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsMemberinDCandSpouseBeneficiary" sfwValue="IsMemberinDCandSpouseBeneficiary" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsMemberInDental" sfwValue="IsMemberInDental" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsMemberInDentalAndSpouse" sfwValue="IsMemberInDentalAndSpouse" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsMemberInDentalAndNotDependent" sfwValue="IsMemberInDentalAndNotDependent" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsMemberInHealthAndNoSpouse" sfwValue="IsMemberInHealthAndNoSpouse" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsMemberInLifeandNotIBS" sfwValue="IsMemberInLifeandNotIBS" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsMemberinMedicare" sfwValue="IsMemberinMedicare" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsMemberInVisionAndNoSpouse" sfwValue="IsMemberInVisionAndNoSpouse" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsMemberInVision" sfwValue="IsMemberInVision" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsMemberNOTinHealthandSpouseGreaterThan65" sfwValue="IsMemberNOTinHealthandSpouseGreaterThan65" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsMemberInDeferredComp" sfwValue="IsMemberInDeferredComp" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsNoHealthPlanEnrolled" sfwValue="IsNoHealthPlanEnrolled" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsPriorJudge" sfwValue="IsPriorJudge" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsPriorService" sfwValue="IsPriorService" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsRHICOptionReduced" sfwValue="IsRHICOptionReduced" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsPayeeRelationEstateorTrust" sfwValue="IsPayeeRelationEstateorTrust" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsRemainingMGExistsALPD" sfwValue="IsRemainingMGExistsALPD" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsRetrDisaOrJSDisa" sfwValue="IsRetrDisaOrJSDisa" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsRetrDisaSingleRemMGexists" sfwValue="IsRetrDisaSingleRemMGexists" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsRetrDisaSingleRemMGnotExistsOrJS" sfwValue="IsRetrDisaSingleRemMGnotExistsOrJS" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsRetrDisaTermEndDatePastDate" sfwValue="IsRetrDisaTermEndDatePastDate" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsACODSingleOrStraightLife" sfwValue="IsACODSingleOrStraightLife" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsSpouseAgeGreaterThan65" sfwValue="IsSpouseAgeGreaterThan65" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsSpouseOnlyInLTC" sfwValue="IsSpouseOnlyInLTC" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsSpouseMedicareClaimNumberExists" sfwValue="IsSpouseMedicareClaimNumberExists" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsACODTermCertainOption" sfwValue="IsACODTermCertainOption" />
+    <attribute sfwDataType="string" sfwType="Property" ID="MemberDateofDeathPlus31Days" sfwValue="MemberDateofDeathPlus31Days" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecMonthlyBenefitPaymentAmount" sfwValue="idecMonthlyBenefitPaymentAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecNonTaxableMonthlyBenefitPaymentAmount" sfwValue="idecNonTaxableMonthlyBenefitPaymentAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecMedicarePremiumAmount" sfwValue="idecMedicarePremiumAmount" />
+    <attribute sfwDataType="string" sfwType="Property" ID="PayeeRelationship" sfwValue="PayeeRelationship" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecTaxableMonthlyBenefitPaymentAmount" sfwValue="idecTaxableMonthlyBenefitPaymentAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecTaxableMonthlyBenefitPaymentAmount10Percent" sfwValue="idecTaxableMonthlyBenefitPaymentAmount10Percent" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecTaxableMonthlyBenefitPaymentAmount20Percent" sfwValue="idecTaxableMonthlyBenefitPaymentAmount20Percent" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecTotalLifeCoverageAmount" sfwValue="idecTotalLifeCoverageAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecVisionPremiumAmount" sfwValue="idecVisionPremiumAmount" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsLTCVisible" sfwValue="IsLTCVisible" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsInsuranceOnly" sfwValue="IsInsuranceOnly" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsMemberInVisionAndSpouse" sfwValue="IsMemberInVisionAndSpouse" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecMonthlyGrossPercentPaymentAmount" sfwValue="idecMonthlyGrossPercentPaymentAmount" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsBeneSpouseEligibleForHealth" sfwValue="IsBeneSpouseEligibleForHealth" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecLifePercentage" sfwValue="idecLifePercentage" />
+    <attribute sfwType="Property" ID="SoftErrors" sfwValue="ibusSoftErrors" />
+    <attribute ID="Person_Account_Id" sfwDataType="int" sfwPrivate="False" sfwValue="ibusPersonAccountForLife.icdoPersonAccount.person_account_id" sfwType="Property" />
+    <attribute ID="lblnIsDatesAreInsertedForDepeTo" sfwDataType="bool" sfwPrivate="False" sfwValue="iblnIsDatesAreInsertedForDepeTo" sfwType="Property" />
+    <attribute ID="lstAllLatestRHICombine" sfwType="Collection" sfwValue="iclbAllLatestRHICombine" sfwEntity="entBenefitRhicCombine" sfwPrivate="False" />
+    <attribute ID="IintCountOfOpenEmployment" sfwDataType="int" sfwPrivate="False" sfwValue="iintCountOfOpenEmployment" sfwType="Property" />
+    <attribute ID="IblnIsPersonDependentAddressInValid" sfwDataType="bool" sfwPrivate="False" sfwValue="iblnIsPersonDependentAddressInValid" sfwType="Property" />
+    <attribute ID="IblnIsPersonBeneficiaryAddressInValid" sfwDataType="bool" sfwPrivate="False" sfwValue="iblnIsPersonBeneficiaryAddressInValid" sfwType="Property" />
+    <attribute sfwType="Collection" sfwEntity="entCorTracking" ID="lstAllGeneratedCorByPerson" sfwValue="iclbAllGeneratedCorByPerson" />
+  </attributes>
+  <objectmethods>
+    <method ID="btnNonResponsiveClicked" sfwReturnType="ArrayList" />
+    <method ID="btnCompleteClicked" sfwReturnType="ArrayList" />
+    <method ID="btnCancelClicked" sfwReturnType="ArrayList" />
+    <method ID="btnInProgressClicked" sfwReturnType="ArrayList" />
+    <method ID="btnErroneousClicked" sfwReturnType="ArrayList" />
+    <method ID="LoadErrors" sfwReturnType="Void" />
+    <method ID="btnReadyToGenerateCorrespodenceClicked" />
+    <method ID="GenerateDeathCorrespondences" sfwReturnType="ArrayList" />
+  </objectmethods>
+  <constraint />
+  <methods />
+  <lifecycle />
+  <ExtraFields />
+</entity>

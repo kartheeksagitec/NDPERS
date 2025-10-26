@@ -1,0 +1,686 @@
+﻿<div ng-controller="BPMNController" class="innerWrapper">
+    <div class="col-xs-12 full-height" ng-hide="selectedDesignSource">
+        <div class="inner-container full-height">
+            <div class="form-area-header">
+                <ul class="nav nav-tabs" ng-if="BPMNModel.Type != 'BPMTemplate'">
+                    <li ng-class="activeTab=='MAP'?'active':''" ng-click="setActiveTab('MAP')"><a>Map</a></li>
+                    <li ng-class="activeTab=='VARIABLES'?'active':''" ng-click="setActiveTab('VARIABLES')"><a>Variables</a></li>
+                    <!--<li ng-class="activeTab=='ASSOCIATION'?'active':''" ng-click="setActiveTab('ASSOCIATION')">
+                        <a>
+                            Association
+                        </a>
+                    </li>-->
+                    <!--<li ng-class="activeTab=='PERFORMERS'?'active':''" ng-click="setActiveTab('PERFORMERS')">
+                        <a>
+                            Performers
+                        </a>
+                    </li>-->
+                    <li ng-class="activeTab=='EXECUTION'?'active':''" ng-click="setActiveTab('EXECUTION')">
+                        <a>
+                            Execution
+                        </a>
+                    </li>
+                    <li ng-class="activeTab=='RULES'?'active':''" ng-click="setActiveTab('RULES')">
+                        <a>
+                            Rules
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="tab-content" ng-class="BPMNModel.Type == 'BPMTemplate'?'bpm-tab-content-template':'bpm-tab-content'">
+                <div ng-show="activeTab=='MAP'" class="full-height">
+                    <div class="content-container">
+                        <div class="toolbox-sidebar" ng-show="!selectedDesignSource && IsToolsDivCollapsed">
+                            <div class="toolbox-sidebardiv" ng-click="toggleSideBar()">
+
+                            </div>
+                        </div>
+                        <div class="toolbox-wrapper form-toolbox" ng-show="!selectedDesignSource && !IsToolsDivCollapsed">
+                            <span class="toolbox-close-icon" ng-click="toggleSideBar()"> </span>
+                            <div class="toolbox toolbox-form" ng-init="ActiveTabForBPM='Toolbox'">
+                                <ul class="nav nav-tabs">
+                                    <li ng-class="ActiveTabForBPM=='Toolbox'?'active':''" ng-click="OnSelectLeftBPMTab('Toolbox')">
+                                        <a data-toggle="tab" aria-expanded="true">
+                                            Toolbox
+                                        </a>
+                                    </li>
+                                    <li ng-show="selectedShape" ng-class="ActiveTabForBPM=='Properties'?'active':''" ng-click="OnSelectLeftBPMTab('Properties')">
+                                        <a data-toggle="tab" aria-expanded="false">
+                                            Properties
+                                        </a>
+                                    </li>
+                                    <li ng-show="isVersionsLoaded" ng-class="ActiveTabForBPM=='Versions'?'active':''" ng-click="OnSelectLeftBPMTab('Versions')">
+                                        <a data-toggle="tab" aria-expanded="false">
+                                            Versions
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content no-padding">
+                                    <div ng-class="ActiveTabForBPM=='Toolbox'?'tab-pane fade active in':'tab-pane fade'" ng-show="ActiveTabForBPM=='Toolbox'" onselectstart="return false">
+                                        <div class="toolbox toolbox-form">
+                                            <div class="toolbox-items">
+                                                <div class="toolbox-items-heading">
+                                                    Basic
+                                                </div>
+                                                <div class="toolbox-items-left">
+                                                    <div ng-mousedown="setDraggableElement('Pool')" draggable="true" title="Pool" class="toolbox-items-wrapper" knowtion-id="8.1.1.1">
+                                                        <img class="image-icon-tools" src="images/BPM/Pool.svg" />
+                                                        <span>Pool</span>
+                                                    </div>
+                                                </div>
+                                                <div class="toolbox-items-right">
+                                                    <div ng-mousedown="setDraggableElement('Lane')" draggable="true" title="Lane" class="toolbox-items-wrapper" knowtion-id="8.1.1.2">
+                                                        <img class="image-icon-tools" src="images/BPM/Lane.svg" />
+                                                        <span>Lane</span>
+                                                    </div>
+                                                </div>
+                                                <div class="toolbox-items-left">
+                                                    <div ng-mousedown="setDraggableElement('Start Event')" draggable="true" title="Start Event" class="toolbox-items-wrapper" knowtion-id="8.1.1.3">
+                                                        <img class="image-icon-tools" src="images/BPM/Start_event.svg" />
+                                                        <span>Start Event</span>
+                                                    </div>
+                                                </div>
+                                                <div class="toolbox-items-right">
+                                                    <div ng-mousedown="setDraggableElement('End Event')" draggable="true" title="End Event" class="toolbox-items-wrapper" knowtion-id="8.1.1.4">
+                                                        <img class="image-icon-tools" src="images/BPM/End_event.svg" />
+                                                        <span>End Event</span>
+                                                    </div>
+                                                </div>
+                                                <div class="toolbox-items-left">
+                                                    <div ng-mousedown="setDraggableElement('Intermediate Catch Event')" draggable="true" title="Intermediate Catch Event" class="toolbox-items-wrapper" knowtion-id="8.1.1.5">
+                                                        <img class="image-icon-tools" src="images/BPM/Intermediate_catch_event.svg" />
+                                                        <span>Intermediate Catch Event</span>
+                                                    </div>
+                                                </div>
+                                                <div class="toolbox-items-right">
+                                                    <div ng-mousedown="setDraggableElement('Exclusive Gateway')" draggable="true" title="Exclusive Gateway" class="toolbox-items-wrapper" knowtion-id="8.1.1.6">
+                                                        <img class="image-icon-tools" src="images/BPM/Exclusive_gateway.svg" />
+                                                        <span>Exclusive Gateway</span>
+                                                    </div>
+                                                </div>
+                                                <div class="toolbox-items-left">
+                                                    <div ng-mousedown="setDraggableElement('Inclusive Gateway')" draggable="true" title="Inclusive Gateway" class="toolbox-items-wrapper" knowtion-id="8.1.1.7">
+                                                        <img class="image-icon-tools" src="images/BPM/Inclusive_gateway.svg" />
+                                                        <span>Inclusive Gateway</span>
+                                                    </div>
+                                                </div>
+                                                <div class="toolbox-items-right">
+                                                    <div ng-mousedown="setDraggableElement('Parallel Gateway')" draggable="true" title="Parallel Gateway" class="toolbox-items-wrapper" knowtion-id="8.1.1.8">
+                                                        <img class="image-icon-tools" src="images/BPM/Parallel_gateway.svg" />
+                                                        <span>Parallel Gateway</span>
+                                                    </div>
+                                                </div>
+                                                <div class="toolbox-items-left">
+                                                    <div ng-mousedown="setDraggableElement('Event Gateway')" draggable="true" title="Event Gateway" class="toolbox-items-wrapper" knowtion-id="8.1.1.9">
+                                                        <img class="image-icon-tools" src="images/BPM/Event_gateway.svg" />
+                                                        <span>Event Gateway</span>
+                                                    </div>
+                                                </div>
+                                                <div class="toolbox-items-right">
+                                                    <div ng-mousedown="setDraggableElement('Task')" draggable="true" title="Task" class="toolbox-items-wrapper" knowtion-id="8.1.1.10">
+                                                        <img class="image-icon-tools" src="images/BPM/Task.svg" />
+                                                        <span>Task</span>
+                                                    </div>
+                                                </div>
+                                                <!--<div class="toolbox-items-left">
+                                                    <div ng-mousedown="setDraggableElement('Manual Task')" draggable="true" title="Manual Task" class="toolbox-items-wrapper">
+                                                        <img class="image-icon-tools" src="images/BPM/Manual_task.svg" />
+                                                        <span>Manual Task</span>
+                                                    </div>
+                                                </div>-->
+                                                <div class="toolbox-items-left">
+                                                    <div ng-mousedown="setDraggableElement('Business Rule Task')" draggable="true" title="Business Rule Task" class="toolbox-items-wrapper" knowtion-id="8.1.1.11">
+                                                        <img class="image-icon-tools" src="images/BPM/Business_rule_task.svg" />
+                                                        <span>Business Rule Task</span>
+                                                    </div>
+                                                </div>
+                                                <div class="toolbox-items-right">
+                                                    <div ng-mousedown="setDraggableElement('User Task')" draggable="true" title="User Task" class="toolbox-items-wrapper" knowtion-id="8.1.1.12">
+                                                        <img class="image-icon-tools" src="images/BPM/User_task.svg" />
+                                                        <span>User Task</span>
+                                                    </div>
+                                                </div>
+                                                <div class="toolbox-items-left">
+                                                    <div ng-mousedown="setDraggableElement('Service Task')" draggable="true" title="Service Task" class="toolbox-items-wrapper" knowtion-id="8.1.1.13">
+                                                        <img class="image-icon-tools" src="images/BPM/Service_task.svg" />
+                                                        <span>Service Task</span>
+                                                    </div>
+                                                </div>
+                                                <div class="toolbox-items-right">
+                                                    <div ng-mousedown="setDraggableElement('Text Annotation')" draggable="true" title="Text Annotation" class="toolbox-items-wrapper" knowtion-id="8.1.1.14">
+                                                        <img class="image-icon-tools" src="images/BPM/Text_annotation.svg" />
+                                                        <span>Text Annotation</span>
+                                                    </div>
+                                                </div>
+                                                <!--<div class="toolbox-items-right">
+                                                    <div ng-mousedown="setDraggableElement('Data object')" draggable="true" title="Data object" class="toolbox-items-wrapper">
+                                                        <img class="image-icon-tools" src="images/BPM/Data_object.svg" />
+                                                        <span>Data object</span>
+                                                    </div>
+                                                </div>-->
+                                                <!--<div class="toolbox-items-right">
+                                                    <div ng-mousedown="setDraggableElement('Data Store')" draggable="true" title="Data Store" class="toolbox-items-wrapper">
+                                                        <img class="image-icon-tools" src="images/BPM/Data_storage.svg" />
+                                                        <span>Data Store</span>
+                                                    </div>
+                                                </div>-->
+                                                <div class="toolbox-items-left">
+                                                    <div ng-mousedown="setDraggableElement('Non Initiating Message')" draggable="true" title="Non Initiating Message" class="toolbox-items-wrapper" knowtion-id="8.1.1.15">
+                                                        <img class="image-icon-tools" src="images/BPM/Non_Initiating_message.svg" />
+                                                        <span>Non Initiating Message</span>
+                                                    </div>
+                                                </div>
+                                                <div class="toolbox-items-right">
+                                                    <div ng-mousedown="setDraggableElement('Initiating Message')" draggable="true" title="Initiating Message" class="toolbox-items-wrapper" knowtion-id="8.1.1.16">
+                                                        <img class="image-icon-tools" src="images/BPM/Initiating_message.svg" />
+                                                        <span>Initiating Message</span>
+                                                    </div>
+                                                </div>
+                                                <div class="toolbox-items-right" ng-if="false">
+                                                    <div ng-mousedown="setDraggableElement('SubProcess')" draggable="true" title="SubProcess" class="toolbox-items-wrapper" knowtion-id="8.1.1.19">
+                                                        <img class="image-icon-tools" src="images/BPM/Sub_process.svg" />
+                                                        <span>SubProcess</span>
+                                                    </div>
+                                                </div>
+                                                <div class="toolbox-items-left">
+                                                    <div ng-mousedown="setDraggableElement('Calling Process')" draggable="true" title="Calling Process" class="toolbox-items-wrapper" knowtion-id="8.1.1.17">
+                                                        <img class="image-icon-tools" src="images/BPM/Calling_process.svg" />
+                                                        <span>Calling Process</span>
+                                                    </div>
+                                                </div>
+                                                <div class="toolbox-items-right">
+                                                    <div ng-mousedown="setDraggableElement('Pointer')" draggable="true" title="SubProcess" class="toolbox-items-wrapper" knowtion-id="8.1.1.18">
+                                                        <img class="image-icon-tools" src="images/BPM/pointer.svg" />
+                                                        <span>Pointer</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div ng-class="ActiveTabForBPM=='Properties'?'tab-pane fade active in':'tab-pane fade'" ng-show="selectedShape">
+                                        <div class="control-common-properties" id="dvcommonProperties">
+                                            <div class="common-properties-header">
+                                                <h3>
+                                                    {{selectedShape.ShapeModel.Name}}
+                                                </h3>
+                                            </div>
+                                            <div class="common-properties-content">
+                                                <div class="common-properties-content-inner common-properties-secondary-tabs-wrapper">
+                                                    <ul class="nav nav-tabs common-properties-secondary-tabs">
+                                                        <li role="presentation" class="active">
+                                                            <a data-toggle="tab" data-target="#GeneralControlproperties-{{currentfile.FileName}}" knowtion-id="8.1.2.1">
+                                                                General
+                                                            </a>
+                                                        </li>
+                                                        <li role="presentation" ng-show="BPMNModel.Type!= 'BPMTemplate'">
+                                                            <a data-toggle="tab" data-target="#ConfiguredControlproperties-{{currentfile.FileName}}" ng-click="IsConfiguredOpen=true;" knowtion-id="8.1.2.2">
+                                                                Configure
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                    <div class="tab-content" id="MainParentPanelCommonProp{{currentfile.FileName}}">
+                                                        <div id="GeneralControlproperties-{{currentfile.FileName}}" class="tab-pane fade in active">
+                                                            <form class="form-horizontaL general-prop-table">
+                                                                <div class="form-body padding-10">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label marg-bottom-5">ID</label>
+                                                                        <input type="text" class="form-control input-sm " title="{{selectedShape.ShapeId}}" ng-model="selectedShape.ShapeId" disabled />
+                                                                    </div>
+                                                                    <div class="form-group" ng-hide="selectedShape.ShapeModel.Name == 'textAnnotation' && selectedShape.ShapeModel.dictAttributes.name == undefined">
+                                                                        <label class="control-label marg-bottom-5">Name</label>
+                                                                        <input type="text" class="form-control input-sm " title="{{selectedShape.ShapeModel.dictAttributes.name}}" ng-model="selectedShape.ShapeModel.dictAttributes.name" ng-change="onChangeofText()" ng-disabled="isdisabled" undoredodirective model="selectedShape.ShapeModel" />
+                                                                    </div>
+                                                                    <div class="form-group mar-top4 marg-bottom-8" ng-if="selectedShape.ShapeModel.isSynchronousModel">
+                                                                        <label class="checkbox-inline">
+                                                                            <input type="checkbox" ng-true-value="'True'" ng-false-value="'False'" ng-model="selectedShape.ShapeModel.isSynchronousModel.Value" undoredodirective model="selectedShape.ShapeModel.isSynchronousModel" />
+                                                                            <span class="control-label">Synchronous</span>
+                                                                        </label>
+                                                                    </div>
+                                                                    <!--for showing properties depending on the selected shape-->
+                                                                    <bpm-usertask-shape-map-properties ng-if="selectedElementID && selectedShape.ShapeModel.Name.toLowerCase() == 'usertask'" model="selectedShape.ShapeModel" mapvariablesmodel="mapVariablesModel"></bpm-usertask-shape-map-properties>
+                                                                    <bpm-process-shape-map-properties ng-if="selectedElementID && selectedShape.ShapeModel.Name.toLowerCase() == 'participant'" model="selectedShape.ProcessModel" process-types="ProcessTypes" mapvariablesmodel="mapVariablesModel"></bpm-process-shape-map-properties>
+                                                                    <bpm-callactivity-shape-map-properties ng-if="selectedElementID && selectedShape.ShapeModel.Name.toLowerCase() == 'callactivity'" model="selectedShape.ShapeModel" set-calledelementparameters="SetCalledElementParameters(mapName, extensionElementModel)"></bpm-callactivity-shape-map-properties>
+                                                                    <bpm-intermediate-catch-event-map-properties ng-if="selectedElementID && selectedShape.ShapeModel.Name.toLowerCase() == 'intermediatecatchevent'" model="selectedShape.ShapeModel" mapvariablesmodel="mapVariablesModel" selectedelemforresize="selectedElemForResize" processtypes="ProcessTypes"></bpm-intermediate-catch-event-map-properties>
+                                                                    <bpm-messageflow-map-properties ng-if="selectedElementID && selectedShape.ShapeModel.Name.toLowerCase() == 'messageflow'" model="selectedShape.ShapeModel" doc-types="docTypes"></bpm-messageflow-map-properties>
+                                                                    <bpm-text-annotation-properties ng-if="selectedElementID && selectedShape.ShapeModel.Name.toLowerCase() == 'textannotation'" shape-model="selectedShape.ShapeModel" on-change-text="onChangeofText()"></bpm-text-annotation-properties>
+
+                                                                    <!--Currently we are showing inclusive gateway properties only if it is a converging gateway. In future if something else would be required for non-converging inclusive gate way then we will have to change the ng-if condition.-->
+                                                                    <bpm-inclusive-gateway-properties ng-if="selectedElementID && selectedShape.ShapeModel.Name.toLowerCase() == 'inclusivegateway' && selectedShape.ShapeModel.dictAttributes.gatewayDirection.toLowerCase() == 'converging'" shape-model="selectedShape.ShapeModel" get-diverging-gateways-callback="getDivergingGateWays()"></bpm-inclusive-gateway-properties>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        <div id="ConfiguredControlproperties-{{currentfile.FileName}}" ng-if="BPMNModel.Type!= 'BPMTemplate'" class="tab-pane fade">
+                                                            <form class="form-horizontaL general-prop-table padding-10" ng-if="IsConfiguredOpen">
+                                                                <bpm-business-rule-task-association-properties ng-if="selectedElementID && selectedShape.ShapeModel && selectedShape.ShapeModel.Name.toLowerCase() == 'businessruletask'" shape-model="selectedShape.ShapeModel" query-parameters-values="queryParametersValues"></bpm-business-rule-task-association-properties>
+                                                                <bpm-user-task-association-properties ng-if="selectedElementID && selectedShape.ShapeModel && selectedShape.ShapeModel.Name.toLowerCase() == 'usertask'" shape-model="selectedShape.ShapeModel" query-parameters-values="queryParametersValues"></bpm-user-task-association-properties>
+                                                                <bpm-callactivity-shape-association-properties ng-if="selectedElementID && selectedShape.ShapeModel.Name.toLowerCase() == 'callactivity'" model="selectedShape.ShapeModel" query-parametersvalues="queryParametersValues" set-calledelementparameters="SetCalledElementParameters(mapName, extensionElementModel)" on-value-source-changed="onValueSourceChanged(param)" check-and-update-param-child-models="checkAndUpdateParamChildModels(param,fromUndoRedoBlock)" set-param-entity-value="setParamEntityValue(parentScope, param)"></bpm-callactivity-shape-association-properties>
+                                                                <bpm-servicerule-shape-association-properties ng-if="selectedElementID && selectedShape.ShapeModel.Name.toLowerCase() == 'servicetask'" shape-model="selectedShape.ShapeModel" map-variables-model="mapVariablesModel" on-value-source-changed="onValueSourceChanged(param)" is-disabledfor-versioning="IsDisabledforVersioning" query-parameterallowed-values="queryParameterallowedValues" query-parametersvalues="queryParametersValues" check-and-update-param-child-models="checkAndUpdateParamChildModels(param, fromUndoRedoBlock)" set-param-entity-value="setParamEntityValue(parentScope, param)"></bpm-servicerule-shape-association-properties>
+                                                                <bpm-sequenceflow-shape-association-properties ng-if="selectedElementID && selectedShape.ShapeModel.Name.toLowerCase() == 'sequenceflow' && selectedShape.ShapeModel.Elements.length > 0" model="selectedShape.ShapeModel" set-query-param="getQueryParam_dialog(mapObj)" is-disabledfor-versioning="IsDisabledforVersioning" query-parameterallowed-values="queryParameterallowedValues" query-parametersvalues="queryParametersValues" operators-list="operatorsList"></bpm-sequenceflow-shape-association-properties>
+                                                                <bpm-lane-performers-properties ng-if="selectedElementID && selectedShape.ShapeModel && selectedShape.ShapeModel.Name.toLowerCase() == 'lane'" isdisabledforversioning="IsDisabledforVersioning" shape-model="selectedShape.ShapeModel" user-roles="UserRoles"></bpm-lane-performers-properties>
+                                                                <bpm-lane-performers-properties ng-if="selectedElementID && selectedShape.ShapeModel && selectedShape.ShapeModel.Name.toLowerCase() == 'participant'" isdisabledforversioning="IsDisabledforVersioning" shape-model="selectedShape.ShapeModel" user-roles="UserRoles"></bpm-lane-performers-properties>
+                                                                <bpm-user-task-performers-properties ng-if="selectedElementID && selectedShape.ShapeModel && selectedShape.ShapeModel.Name.toLowerCase() == 'usertask'" isdisabledforversioning="IsDisabledforVersioning" shape-model="selectedShape.ShapeModel" user-roles="UserRoles" targetsitelist="TargetSiteList" lst-bpmn-related-code-values="lstBPMNRelatedCodeValues" mapvariablesmodel="mapVariablesModel"></bpm-user-task-performers-properties>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="overflowA" ng-class="ActiveTabForBPM=='Versions'?'tab-pane fade active in':'tab-pane fade'" ng-if="isVersionsLoaded">
+                                        <table class="table bpm-version-table col-xs-12" ng-if="versionList && versionList.length > 0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Version</th>
+                                                    <th>CaseID</th>
+                                                    <th>Effective Date</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="cursorP" ng-repeat="version in versionList" ng-dblclick="openVersionedFile(version)" ng-class="{'disabledlink greyOutbckg': !version.IsMapExist }">
+                                                    <td>{{version.Version}}</td>
+                                                    <td>{{version.CaseID}}</td>
+                                                    <td>{{version.EffectiveDate | date }}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div class="text-center" ng-if="versionList && versionList.length <= 0" style="font-size: 1.5em;margin-top: 25px;">
+                                            No records found !
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-class="IsToolsDivCollapsed?'form-area-expanded normal-box-shaddow overflowA':'form-area normal-box-shaddow overflowA'" ng-show="!selectedDesignSource" tabindex="0" onkeydown="onKeyDownInSVG(event)">
+                            <div ng-show="(lstMultipleSelectedShapes.length &&  lstMultipleSelectedShapes.length>1 && IsMapEditable)" style="height:auto;width:25px;position:absolute;top:200px;border:solid;border-color:aqua">
+                                <img style="padding-top:3px;padding-bottom:3px" ng-click="OnLeftAlignClick()" title="Align Left" src="images/BPM/bpmalignleft.png" />
+                                <img style="padding-top:3px;padding-bottom:3px" ng-click="OnRightAlignClick()" title="Align Right" src="images/BPM/bpmalignright.png" />
+                                <img style="padding-top:3px;padding-bottom:3px" ng-click="OnTopAlignClick()" ng-show="isShowTopandBottomAlignButtons" title="Align Top" src="images/BPM/bpmaligntop.png" />
+                                <img style="padding-top:3px;padding-bottom:3px" ng-click="OnBottomAlignClick()" ng-show="isShowTopandBottomAlignButtons" title="Align Bottom" src="images/BPM/bpmalignbottom.png" />
+                                <img style="padding-top:3px;padding-bottom:3px" ng-click="OnMakeSameWidthClick()" title="Make Same Width" src="images/BPM/bpmmakesamewidth.png" />
+                                <img style="padding-top:3px;padding-bottom:3px" ng-click="OnMakeSameHeightClick()" title="Make Same Height" src="images/BPM/bpmmakesameheight.png" />
+                                <img style="padding-top:3px;padding-bottom:3px" ng-click="OnMakeSameSizeClick()" title="Make Same Size" src="images/BPM/bpmmakesamesize.png" />
+                                <img style="padding-top:3px;padding-bottom:3px" ng-click="OnCenterVerticallyClick()" title="Center Vertically" src="images/BPM/bpmcentervertically.png" />
+                                <img style="padding-top:3px;padding-bottom:3px" ng-click="OnCenterHorizontallyClick()" ng-show="isShowTopandBottomAlignButtons" title="Center Horizontally" src="images/BPM/bpmcenterhorizontally.png" />
+                                <img style="padding-top:3px;padding-bottom:3px" ng-click="OnDistributeHorizontalClick()" title="Distribute Horizontal" src="images/BPM/bpmdistributehorizontal.png" />
+                                <img style="padding-top:3px;padding-bottom:3px" ng-click="OnDistributeVerticalClick()" ng-show="isShowTopandBottomAlignButtons" title="Distribute Vertical" src="images/BPM/bpmdistributevertical.png" />
+                            </div>
+                            <div onselectstart="return false" ng-class="DraggableElement != null ?'cursorCrossHair':''">
+                                <svg id="mySVG" style="background:white" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                    <defs>
+                                        <linearGradient id="task" x1="0.5" y1="0" x2="0.5" y2="1">
+                                            <stop offset="0" style="stop-color:#f7ce98;stop-opacity:1" />
+                                            <stop offset="1" style="stop-color:#f7ce98;stop-opacity:1" />
+                                        </linearGradient>
+                                        <linearGradient id="start" x1="0" y1="0" x2="0.5" y2="1">
+                                            <stop offset="0" style="stop-color:#0b800e;stop-opacity:1" />
+                                            <stop offset="1" style="stop-color:#18bf18;stop-opacity:1" />
+                                        </linearGradient>
+                                        <linearGradient id="end" x1="0" y1="0" x2="0.5" y2="1">
+                                            <stop offset="0" style="stop-color:#9b1d1d;stop-opacity:1" />
+                                            <stop offset="1" style="stop-color:#ea3c3c;stop-opacity:1" />
+                                        </linearGradient>
+                                        <!--<radialGradient id="start" cx="0.713" cy="0.256" r="0.737" fx="0.713" fy="0.256">
+                                            <stop offset="0" style="stop-color:#0b800e;stop-opacity:1" />
+                                            <stop offset="1" style="stop-color:#18bf18;stop-opacity:1" />
+                                        </radialGradient>
+                                        <radialGradient id="end" cx="0.713" cy="0.256" r="0.737" fx="0.713" fy="0.256">
+                                            <stop offset="0" style="stop-color:#9b1d1d;stop-opacity:1" />
+                                            <stop offset="1" style="stop-color:#ea3c3c;stop-opacity:1" />
+                                        </radialGradient>-->
+                                        <linearGradient id="exclusive" x1="0.5" y1="0" x2="0.5" y2="1">
+                                            <stop offset="0" style="stop-color:#f7ede1;stop-opacity:1" />
+                                            <stop offset="1" style="stop-color:#f7ede1;stop-opacity:1" />
+                                        </linearGradient>
+                                        <linearGradient id="intermediate" cx="0.713" cy="0.256" r="0.737" fx="0.713" fy="0.256">
+                                            <stop offset="0" style="stop-color:#f7ce98;stop-opacity:1" />
+                                            <stop offset="1" style="stop-color:#f7ce98;stop-opacity:1" />
+                                        </linearGradient>
+                                        <linearGradient id="headerRect" x1="0" y1="0.5" x2="1" y2="0.5">
+                                            <stop offset="0" style="stop-color:#f7ce98;stop-opacity:1" />
+                                            <stop offset="0.5" style="stop-color:#f7ce98;stop-opacity:1" />
+                                            <stop offset="1" style="stop-color:#f7ce98;stop-opacity:1" />
+                                        </linearGradient>
+                                        <linearGradient id="selectionRect" x1="0.5" y1="0" x2="0.5" y2="1">
+                                            <stop offset="0" style="stop-color:#e0d5c8;stop-opacity:1" />
+                                            <stop offset="1" style="stop-color:#e0d5c8;stop-opacity:1" />
+                                        </linearGradient>
+                                        <!--<linearGradient id="selectionRect" x1="0.5" y1="0" x2="0.5" y2="1">
+                                            <stop offset="0" style="stop-color:#f7ede1;stop-opacity:1" />
+                                            <stop offset="0.3" style="stop-color:#f7ede1;stop-opacity:1" />
+                                            <stop offset="0.7" style="stop-color:#f7ede1;stop-opacity:1" />
+                                            <stop offset="1" style="stop-color:#f7ede1;stop-opacity:1" />
+                                        </linearGradient>-->
+
+                                        <filter id="rectshadow">
+                                            <feOffset result="offOut" in="SourceAlpha" dx="2" dy="2" />
+                                            <feGaussianBlur result="blurOut" in="offOut" stdDeviation="4" />
+                                            <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+                                        </filter>
+
+                                        <filter id="circleShadow">
+                                            <feGaussianBlur in="SourceAlpha" stdDeviation="1" />
+                                            <feOffset dx="2" dy="2" />
+                                            <feMerge>
+                                                <feMergeNode />
+                                                <feMergeNode in="SourceGraphic" />
+                                            </feMerge>
+                                        </filter>
+
+                                        <marker id="arrow" markerWidth="10" markerHeight="10" refX="10" refY="3" orient="auto" markerUnits="strokeWidth">
+                                            <path d="M0,0 L0,6 L9,3 z" fill="#3a3a3a" />
+                                        </marker>
+                                    </defs>
+                                </svg>
+                            </div>
+
+                            <!--<div id="crowbar-workspace" style="display:none">
+                            </div>-->
+                        </div>
+                        <!--<div ng-class="activeTab=='MAP'?'':'full-height overflowA '">
+                        </div>-->
+                    </div>
+
+                </div>
+                <div class="full-height bpm-execution-wrapper" ng-show="activeTab =='EXECUTION'">
+                    <div class="full-height" id="fileType">
+                        <div class="form-group">
+                            <div class="col-xs-6 text-ellipsis">
+                                <label class="col-xs-2">Case Version No:</label>
+                                <div class="col-xs-6">
+                                    <common-intellisense collection="BPMExceutionTabDetails.CaseVersionList" change-callback="onChangeCaseVersion()" display-property-name="'Version'" propertyname="'CaseVersionID'" selected-property-name="'Version'" selected-item="BPMExceutionTabDetails.CaseVersionID" model="BPMExceutionTabDetails"></common-intellisense>
+                                </div>
+                                <input type="button" class="dialog-btn-default" ng-click="RefreshCaseVesrsion()" value="Refresh" />
+                            </div>
+
+                            <div class="col-xs-6">
+                                <input class="dialog-btn-default fright" ng-click="OpenExecutedBPM('Normal')" type="button" value="Open Map" />
+                                <input class="dialog-btn-default fright" ng-click="OpenExecutedBPM('Demo')" ng-if="false" type="button" value="Demo Mode" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="dashboard-panel-text">Case Instances</label>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-4 text-ellipsis">
+                                <label class="col-xs-3">Person ID:</label>
+                                <div class="col-xs-9">
+                                    <common-intellisense collection="BPMExceutionTabDetails.lstPersonId" is-reset="true" propertyname="'PersonID'" selected-item="BPMExceutionTabDetails.PersonID" model="BPMExceutionTabDetails"></common-intellisense>
+                                </div>
+                            </div>
+                            <div class="col-xs-4 text-ellipsis">
+                                <label class="col-xs-3">Org ID:</label>
+                                <div class="col-xs-9">
+                                    <common-intellisense collection="BPMExceutionTabDetails.lstOrgID" is-reset="true" propertyname="'OrgID'" selected-item="BPMExceutionTabDetails.OrgID" model="BPMExceutionTabDetails"></common-intellisense>
+                                </div>
+                            </div>
+                            <div class="col-xs-4 text-ellipsis">
+                                <label class="col-xs-3">Status:</label>
+                                <div class="col-xs-9">
+                                    <common-intellisense collection="BPMExceutionTabDetails.lstStatusValue" is-reset="true" propertyname="'Status'" selected-item="BPMExceutionTabDetails.Status" model="BPMExceutionTabDetails"></common-intellisense>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-4 text-ellipsis">
+                                <label class="col-md-3 control-label">From :</label>
+                                <div class="col-md-9">
+                                    <div class="input-group date date-picker">
+                                        <input type="text" ng-model="BPMExceutionTabDetails.FromDate" class="form-control input-sm">
+                                        <span class="input-group-btn">
+                                            <button class="btn white-bg" type="button">
+                                                <i class="fa fa-calendar">
+                                                </i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4 text-ellipsis">
+                                <label class="col-md-3 control-label">To :</label>
+                                <div class="col-md-9">
+                                    <div class="input-group date date-picker">
+                                        <input type="text" ng-model="BPMExceutionTabDetails.ToDate" class="form-control input-sm">
+                                        <span class="input-group-btn">
+                                            <button class="btn white-bg" type="button">
+                                                <i class="fa fa-calendar">
+                                                </i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4 text-ellipsis">
+                                <input type="button" value="Search" ng-click="onSearchCaseInstancesClick()" class="dialog-btn-default" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="dashboard-panel-text">Results<span class="badge"></span></label>
+                        </div>
+                        <div class="bpm-execution-wrapper-table">
+                            <table class="sws-table">
+                                <thead>
+                                    <tr>
+                                        <th width="16%">
+                                            <a href="#">
+                                                Case ID
+                                            </a>
+                                        </th>
+                                        <th width="16%">
+                                            <a href="#">
+                                                Case Instance ID
+                                            </a>
+                                        </th>
+                                        <th width="17%">
+                                            <a href="#">
+                                                Person ID
+                                            </a>
+                                        </th>
+                                        <th width="17%">
+                                            <a href="#">
+                                                Org ID
+                                            </a>
+                                        </th>
+                                        <th width="17%">
+                                            <a href="#">
+                                                Status
+                                            </a>
+                                        </th>
+                                        <th width="17%">
+                                            <a href="#">
+                                                Created Date
+                                            </a>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="caseInstance in BPMExceutionTabDetails.lstInstances" ng-click="SelectCaseResult(caseInstance)" ng-dblclick="OpenExecutedBPM('Normal')" ng-class="(caseInstance == selectedCaseInstance)?'selected':''">
+                                        <td width="16%">{{caseInstance.caseId}}</td>
+                                        <td width="16%">{{caseInstance.caseInstanceId}}</td>
+                                        <td width="17%">{{caseInstance.PersonId}}</td>
+                                        <td width="17%">{{caseInstance.OrgId }}</td>
+                                        <td width="17%">{{caseInstance.statusValue}}</td>
+                                        <td width="17%">{{caseInstance.CreatedDate}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="full-height" ng-show="activeTab=='VARIABLES'">
+
+                    <div class="normal-content-wrapper bpm-variables-wrapper">
+                        <div class="normal-content-wrapper-header">
+
+                            <div class="panel-icons">
+                                <a ng-click="addVariable()">
+                                    <img src="images/Common/icon_add_dark.svg">
+                                </a>
+                                <a ng-click="deleteVariable()" ng-disabled="!canDeleteVariable()">
+                                    <img src="images/Common/icon_delete_dark.svg">
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="bpm-variables-table-wrapper">
+                            <table class="sws-table" id="sample_editable_1" role="grid" aria-describedby="sample_editable_1_info">
+                                <thead>
+                                    <tr role="row">
+                                        <th class="sorting_asc" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="ID activate to sort column ascending" aria-sort="ascending" style="width: 224px;">
+                                            ID
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="Data Type activate to sort column ascending" style="width: 281px;">
+                                            Data Type
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="Entity activate to sort column ascending" style="width: 281px;">
+                                            Entity
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="Type activate to sort column ascending" style="width: 281px;">
+                                            Type
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="Default Value Type activate to sort column ascending" style="width: 281px;">
+                                            Default Value Type
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="Default Value activate to sort column ascending" style="width: 281px;">
+                                            Default Value
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="Code Group activate to sort column ascending" style="width: 281px;">
+                                            Code Group
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="Is Required activate to sort column ascending" style="width: 281px;">
+                                            Is Required
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="Query ID activate to sort column ascending" style="width: 281px;">
+                                            Query ID
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="Query Parameters activate to sort column ascending" style="width: 281px;">
+                                            Query Parameters
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" style="width: 50px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="variable in mapVariablesModel.Elements" role="row" ng-class="selectedVariable==variable?'selected':($index%2==0?'even':'odd')" ng-click="selectVariable(variable)" ng-dblclick="setVariableEditable(variable)" ng-keypress="checkAndSetVariableReadOnly($event,variable)" tabindex="{{$index}}" key-up-down-with-element callbackfn="selectVariable" objproperty="'variable'">
+                                        <td style="width:20%">
+                                            <span ng-if="!(variable.isEditable && variable.isMandatory)" title="{{variable.dictAttributes.id}}" ng-bind="variable.dictAttributes.id" />
+                                            <input ng-if="(variable.isEditable && variable.isMandatory)" class="form-control form-filter input-sm" type="text" ng-model="variable.dictAttributes.id" ng-blur="validateVariable(variable)" undoredodirective model='variable' />
+                                        </td>
+                                        <td style="width:5%">
+                                            <span ng-if="!(variable.isEditable && variable.isMandatory)" title="{{variable.dictAttributes.dataType}}" ng-bind="variable.dictAttributes.dataType"></span>
+                                            <select ng-if="(variable.isEditable && variable.isMandatory)" class="form-control form-filter input-sm" ng-options="x for x in datatypes" ng-change="changeMapType(variable)" title="{{variable.dictAttributes.dataType}}" ng-model="variable.dictAttributes.dataType" undoredodirective model='variable'></select>
+                                        </td>
+                                        <td style="width:15%">
+                                            <span ng-if="!(variable.isEditable && variable.isMandatory)" title="{{variable.dictAttributes.sfwEntity}}" ng-bind="variable.dictAttributes.sfwEntity"></span>
+                                            <img ng-if="!variable.isEditable && variable.dictAttributes.sfwEntity" src="images/Entity/Entity_navigation.svg" ng-click="openEntityClick(variable.dictAttributes.sfwEntity)" class="pull-right" />
+                                            <div ng-if="(variable.isEditable && variable.isMandatory)">
+                                                <fileintellisensetemplate model='variable' filename="variable.dictAttributes.sfwEntity" propertyname="'dictAttributes.sfwEntity'" filetype="'Entity'" isdisabled="variable.dictAttributes.dataType != 'Object'" showentbase="true"></fileintellisensetemplate>
+                                            </div>
+                                        </td>
+                                        <td style="width:5%">
+                                            <span ng-if="!(variable.isEditable && variable.isMandatory)" title="{{variable.dictAttributes.type}}" ng-bind="variable.dictAttributes.type"></span>
+                                            <select ng-if="(variable.isEditable && variable.isMandatory)" class="form-control form-filter input-sm" ng-options="x for x in types" title="{{variable.dictAttributes.type}}" ng-model="variable.dictAttributes.type" undoredodirective model='variable'></select>
+                                        </td>
+                                        <td style="width:10%">
+                                            <span ng-if="!variable.isEditable" title="{{variable.dictAttributes.sfwDefaultValueType}}" ng-bind="variable.dictAttributes.sfwDefaultValueType"></span>
+                                            <select ng-if="variable.isEditable" class="form-control form-filter input-sm" ng-options="x for x in dvtypes" undoredodirective model='variable' ng-change="changeMapdvType(variable)" title="{{variable.dictAttributes.sfwDefaultValueType}}" ng-model="variable.dictAttributes.sfwDefaultValueType" ng-disabled="variable.dictAttributes.dataType == 'Object'">
+                                                <option value=""></option>
+                                            </select>
+                                        </td>
+                                        <td style="width:10%">
+                                            <span ng-if="!variable.isEditable" title="{{variable.dictAttributes.sfwDefaultValue}}" ng-bind="variable.dictAttributes.sfwDefaultValue"></span>
+                                            <input ng-if="variable.isEditable" class="form-control form-filter input-sm" type="text" title="{{variable.dictAttributes.sfwDefaultValue}}" ng-model="variable.dictAttributes.sfwDefaultValue" undoredodirective model='variable' ng-disabled="variable.dictAttributes.dataType == 'Object' || variable.dictAttributes.sfwDefaultValueType != 'Constant'" />
+                                        </td>
+                                        <td style="width:10%">
+                                            <span ng-if="!variable.isEditable" title="{{variable.dictAttributes.sfwCodeID}}" ng-bind="variable.dictAttributes.sfwCodeID"></span>
+                                            <input ng-if="variable.isEditable" disabled class="form-control form-filter input-sm" type="text" title="{{variable.dictAttributes.sfwCodeID}}" ng-model="variable.dictAttributes.sfwCodeID" undoredodirective model='variable' ng-show="variable.dictAttributes.dataType == 'Object' || variable.dictAttributes.sfwDefaultValueType != 'CodeGroup'" />
+                                            <div class="full-height full-width no-margin no-padding" ng-if="variable.isEditable" ng-hide="variable.dictAttributes.dataType == 'Object' || variable.dictAttributes.sfwDefaultValueType != 'CodeGroup'">
+                                                <codegroupintellisensetemplate insidegrid="true" codegrouptextboxclass="full-width" codegroupid='variable.dictAttributes.sfwCodeID' propertyname="'dictAttributes.sfwCodeID'" model='variable' showcodegrouptext='false'></codegroupintellisensetemplate>
+                                            </div>
+                                        </td>
+                                        <td style="width:5%">
+                                            <span ng-if="!variable.isEditable" title="{{variable.dictAttributes.sfwRequired}}" ng-bind="variable.dictAttributes.sfwRequired"></span>
+                                            <select ng-if="variable.isEditable" class="form-control form-filter input-sm" ng-options="x for x in Requiredtypes" title="{{variable.dictAttributes.sfwRequired}}" ng-model="variable.dictAttributes.sfwRequired" undoredodirective model='variable'></select>
+                                        </td>
+                                        <td style="width:15%">
+                                            <span ng-if="!variable.isEditable" title="{{variable.dictAttributes.sfwQueryID}}" ng-bind="variable.dictAttributes.sfwQueryID"></span>
+                                            <div ng-if="variable.isEditable">
+                                                <entityqueryintellisense selecteditem="variable.dictAttributes.sfwQueryID" disableflag="(variable.dictAttributes.dataType == 'Object') || !(variable.dictAttributes.sfwDefaultValueType == 'Query')" model="variable" propertyname="'dictAttributes.sfwQueryID'" parametermodel="variable.dictAttributes.sfwQueryParameters" showsearchbutton="true" isbpm="false" parameterallowedvalues="queryParameterallowedValues"></entityqueryintellisense>
+                                            </div>
+                                        </td>
+                                        <td style="width:15%">
+                                            <span ng-if="!variable.isEditable" title="{{variable.dictAttributes.sfwQueryParameters}}" ng-bind="variable.dictAttributes.sfwQueryParameters"></span>
+                                            <div ng-if="variable.isEditable" class="input-group">
+                                                <input class="form-control form-filter input-sm" type="text" undoredodirective model='variable' ng-model="variable.dictAttributes.sfwQueryParameters" title="{{variable.dictAttributes.sfwQueryParameters}}" disabled />
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-sm default" ng-click="getQueryParam_dialog(variable.dictAttributes)" ng-disabled="!(variable.dictAttributes.sfwQueryParameters)" style="padding: 2px 5px;">
+                                                        <i class="fa fa-chevron-right"></i>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td style="width:5%">
+                                            <i ng-if="variable.isEditable" class="fa fa-close" style='cursor:pointer' ng-click="setVariableReadOnly(variable)"></i>
+                                            <i ng-if="!variable.isEditable" class="fa fa-edit" style='cursor:pointer' ng-click="setVariableEditable(variable)"></i>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="full-height" ng-show="activeTab=='RULES'">
+
+                    <div class="normal-content-wrapper bpm-variables-wrapper">
+                        <div class="bpm-variables-table-wrapper">
+                            <table class="sws-table" id="sample_editable_1" role="grid" aria-describedby="sample_editable_1_info">
+                                <thead>
+                                    <tr role="row">
+                                        <th class="sorting_asc" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="ID activate to sort column ascending" aria-sort="ascending" style="width: 224px;">
+                                            Rule Name
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="Data Type activate to sort column ascending" style="width: 281px;">
+                                            Description
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="Entity activate to sort column ascending" style="width: 281px;">
+                                            Entity
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="Type activate to sort column ascending" style="width: 281px;">
+                                            Navigate
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="rule in rules" role="row" ng-class="selectedRule==rule?'selected':($index%2==0?'even':'odd')" ng-click="selectVariable(variable)" tabindex="{{$index}}" key-up-down-with-element>
+                                        <td style="width:20%">
+                                            <span title="{{rule.RuleName}}" ng-bind="rule.RuleName" ng-class="rule.Exists?'bold':''" />
+                                        </td>
+                                        <td style="width:5%">
+                                            <span title="{{rule.Description}}" ng-bind="rule.Description" />
+                                        </td>
+                                        <td style="width:15%">
+                                            <span title="{{rule.Entity}}" ng-bind="rule.Entity" />
+                                        </td>
+                                        <td style="width:5%">
+                                            <a title="Add Rule" ng-show="!rule.Exists" ng-click="createRule(rule)">
+                                                <img src="images/Common/icon_add_dark.svg">
+                                            </a>
+                                            <a title="Edit Rule" ng-show="rule.Exists" ng-click="navigateToFileService.NavigateToFile(rule.RuleName, '', '')" style="color:inherit;margin-left:2px;">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-show="selectedDesignSource" class="full-height">
+        <div id="editor_{{currentfile.FileName}}" class="ace-editor-div"></div>
+    </div>
+</div>

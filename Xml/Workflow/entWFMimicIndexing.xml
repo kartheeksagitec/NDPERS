@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entWFMimicIndexing" sfwMainCDO="icdoWorkflowRequest" sfwType="BusinessRule" sfwActive="True" sfwStatus="Review" sfwObjectID="busWFMimicIndexing">
+  <attributes>
+    <attribute sfwDataType="int" sfwType="Property" ID="IintPersonId" sfwValue="iintPersonId" />
+    <attribute ID="objPerson" sfwType="Object" sfwEntity="entPerson" sfwValue="ibusPerson" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrOrgCodeId" sfwValue="istrOrgCodeId" />
+    <attribute ID="objOrganization" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusOrganization" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrDocumentCode" sfwValue="istrDocumentCode" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrFilenetDocType" sfwValue="istrFilenetDocType" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrImageDocCategory" sfwValue="istrImageDocCategory" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrImageFileName" sfwValue="istrImageFileName" />
+  </attributes>
+  <objectmethods>
+    <method ID="ProcessMimicIndexing" sfwReturnType="ArrayList" />
+    <method ID="ReloadHandButtonData" sfwReturnType="ArrayList" />
+  </objectmethods>
+  <queries>
+    <query ID="RetrivePersonName" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select CONCAT(FIRST_NAME,' ',MIDDLE_NAME,' ',LAST_NAME) as FullName from sgt_person where PERSON_ID=@PERSON_ID">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+      </parameters>
+      <mappedcolumns>
+        <column ID="fullname" sfwEntityField="objPerson.FullName" />
+      </mappedcolumns>
+    </query>
+    <query ID="RetriveOrgName" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select ORG_NAME from sgt_organization where ORG_CODE=@ORG_CODE">
+      <parameters>
+        <parameter ID="@ORG_CODE" sfwDataType="int" />
+      </parameters>
+      <mappedcolumns>
+        <column ID="org_name" sfwEntityField="objOrganization.OrgName" />
+      </mappedcolumns>
+    </query>
+  </queries>
+</entity>

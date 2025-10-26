@@ -1,0 +1,60 @@
+﻿<div ng-controller="AddCodeGroupController">
+    <div class="portlet-body" style="overflow:hidden;">
+        <div class="col-xs-12">
+            <div class="col-xs-9">
+                <input type="checkbox" ng-model="IsSelectAll" ng-change="SelectAllCheckBoxChange()"/>Select All
+                <input type="checkbox" ng-model="IsEntity" ng-change="FileTypeCheckBoxChange()" />Entity
+                <input type="checkbox" ng-model="IsForm" ng-change="FileTypeCheckBoxChange()"/>Form
+                <input type="checkbox" ng-model="IsHtmlForm" ng-change="FileTypeCheckBoxChange()"/>HtmlForm
+                <input type="checkbox" ng-model="IsCorrespondence" ng-change="FileTypeCheckBoxChange()"/>Correspondence
+                <input type="checkbox" ng-model="IsReport" ng-change="FileTypeCheckBoxChange()"/> Report
+                <input type="checkbox" ng-model="IsFile" ng-change="FileTypeCheckBoxChange()" /> File
+            </div>
+            <div class="col-xs-3">
+                <input type="button" class="dialog-btn-default" value="Get Invalid Code Group" ng-click="GetInvalidCodeGroup()" />
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <table width="100%" class="table table-condensed table-fixedheader" style="margin-bottom:0px!important">
+                <thead>
+                    <tr>
+                        <th width="25%">File Name</th>
+                        <th width="15%">File Type</th>
+                        <th width="35%">Control ID</th>
+                        <th width="25%">Code Group</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="invalidCodeGroup in lstInvalidCodeGroups|orderBy:'FileType'">
+                        <td width="25%">{{invalidCodeGroup.FileName}}</td>
+                        <td width="15%">{{invalidCodeGroup.FileType}}</td>
+                        <td width="60%" colspan="2">
+                            <table width="100%">
+                                <tbody width="100%">
+                                    <tr ng-repeat="control in invalidCodeGroup.ControlList">
+                                        <td width="60%"><span ng-bind="control.ControlID"></span></td>
+                                        <td width="40%">
+                                            <codegroupintellisensetemplate  codegrouptextboxclass="col-xs-12" codegroupid='control.CodeID' showcodegrouptext='false' propertyname="'CodeID'" model="control" is-dialog="true"></codegroupintellisensetemplate>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                       
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="form-actions">
+        <div class="col-xs-8 text-left">
+            <span>
+                WARNING:Make sure that all files to be saved are Checked Out/Writable before proceeding.
+            </span>
+        </div>
+        <div class="col-xs-4">
+            <input type="button" class="btn dialog-btn-default" ng-click="checkAndCloseFilesAndSaveCodeGroups()" value="Save" />
+            <input type="button" class="btn dialog-btn-default" value="Cancel" ng-click="CloseAddCodeGroupDialog()" />
+        </div>
+    </div>
+</div>

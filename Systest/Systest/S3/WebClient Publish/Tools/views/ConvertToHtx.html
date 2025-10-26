@@ -1,0 +1,102 @@
+﻿<div ng-controller="ConvertToHtxController">
+    <div class="portlet-body">
+        <div class="form-group">
+            <div class="col-xs-3">
+                <input type="checkbox" ng-model="IsMaintenance" ng-change="changeFileList()" />Maintenance
+                <input type="checkbox" ng-model="IsLookup" ng-change="changeFileList()" />Lookup
+                <input type="checkbox" ng-model="IsWizard" ng-change="changeFileList()" />Wizard
+            </div>
+            <div class="col-xs-4">
+                <div class="col-xs-3">
+                    <label>File Name: </label>
+                </div>
+                <div class="col-xs-9">
+                    <input type="text" class="form-control input-sm" ng-model="SearchText" placeholder="Enter Text" />
+                </div>
+            </div>
+            <div class="col-xs-4">
+                <div class="col-xs-2">
+                    <label> Location:</label>
+                </div>
+                <div class="col-xs-10">
+                    <locationintellisensetemplate hide-create-button="true" locationname="location"></locationintellisensetemplate>
+                </div>
+            </div>
+            <div class="col-xs-1">
+                <input type="button" class="dialog-btn-default" value="Search" ng-click="SearchFormList()"/>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <table class="table table-condensed table-fixedheader">
+                <thead>
+                    <tr>
+                        <th width="2%">
+                            <input type="checkbox" ng-model="selectAll" ng-change="checkAllFiles(selectAll)" />
+                        </th>
+                        <th width="25%">
+                            <a href="#" ng-click="orderByField='File.FileName'; reverseSort = !reverseSort">
+                                File Name
+                                <span ng-show="orderByField == 'File.FileName'">
+                                    <span ng-show="reverseSort"><i class="fa fa-caret-up"></i></span>
+                                    <span ng-show="!reverseSort"><i class="fa fa-caret-down"></i></span>
+                                </span>
+                            </a>
+                        </th>
+                        <th width="10%">
+                            <a href="#" ng-click="orderByField='File.FileType'; reverseSort = !reverseSort">
+                                File Type
+                                <span ng-show="orderByField == 'File.FileType'">
+                                    <span ng-show="reverseSort"><i class="fa fa-caret-up"></i></span>
+                                    <span ng-show="!reverseSort"><i class="fa fa-caret-down"></i></span>
+                                </span>
+                            </a>
+                        </th>
+                        <th width="18%">
+                            <a href="#" ng-click="orderByField='File.Location'; reverseSort = !reverseSort">
+                                Location
+                                <span ng-show="orderByField == 'File.Location'">
+                                    <span ng-show="reverseSort"><i class="fa fa-caret-up"></i></span>
+                                    <span ng-show="!reverseSort"><i class="fa fa-caret-down"></i></span>
+                                </span>
+                            </a>
+                        </th>
+                        <th width="36%">
+                            <a href="#" ng-click="orderByField='Status'; reverseSort = !reverseSort">
+                                Status
+                                <span ng-show="orderByField == 'Status'">
+                                    <span ng-show="reverseSort"><i class="fa fa-caret-up"></i></span>
+                                    <span ng-show="!reverseSort"><i class="fa fa-caret-down"></i></span>
+                                </span>
+                            </a>
+                            
+                        </th>
+                        <th width="9%">
+                            <a href="#" ng-click="orderByField='File.Size'; reverseSort = !reverseSort">
+                                Size
+                                <span ng-show="orderByField == 'File.Size'">
+                                    <span ng-show="reverseSort"><i class="fa fa-caret-up"></i></span>
+                                    <span ng-show="!reverseSort"><i class="fa fa-caret-down"></i></span>
+                                </span>
+                            </a>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody ng-scrolldown callback="OnFormScroll()" ngpausescroll="IsProcessing" ngscrollheight="15">
+                    <tr ng-repeat="item in lstWfmFiles| limitTo:noRecordDisplayed | orderBy:orderByField:reverseSort" tabindex="{{$index}}" ng-mousedown="selectCurrentRow(item);" ng-class="getClass(item)" key-up-down-with-element callbackfn="selectCurrentRow" objproperty="'item'">
+                        <td width="2%"><input type="checkbox" ng-model="item.IsSelected" ng-disabled="item.Status=='Completed'" /></td>
+                        <td width="25%">{{item.File.FileName}}</td>
+                        <td width="10%">{{item.File.FileType}}</td>
+                        <td width="18%">{{item.File.Location}}</td>
+                        <td width="36%">{{item.Status}}</td>
+                        <td width="9%">{{item.File.Size | filesize }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="form-actions right">
+        <input type="button" class="dialog-btn-default"  ng-disabled="IsConverting" value="Convert" ng-click="convertToHtxClick()" />
+        <input type="button" class="dialog-btn-default" ng-disabled="!IsConverting" value="Cancel" ng-click="CancelConvertion()" />
+        <input type="button" class="dialog-btn-default" ng-disabled="IsConverting" value="Close" ng-click="CloseDialog()" />
+    </div>
+</div>

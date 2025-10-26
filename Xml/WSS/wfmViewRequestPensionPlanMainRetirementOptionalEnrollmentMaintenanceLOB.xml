@@ -1,0 +1,456 @@
+﻿<form ID="wfmViewRequestPensionPlanMainRetirementOptionalEnrollmentMaintenanceLOB" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2026" sfwType="Maintenance" sfwTitle="View Request Pension Plan Main Retirement Optional Enrollment Maintenance" version="3.5" sfwEntity="entWssPersonAccountEnrollmentRequest">
+  <initialload>
+    <callmethods sfwMethodName="FindViewRequestPensionPlanMainOptionalEnrollment" />
+  </initialload>
+  <sfwTable ID="Main">
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnltoolbar">
+          <sfwTable ID="toolbar">
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnCancel" sfwMethodName="btnCancel_Click" Text="Refresh" />
+                <sfwButton ID="btnPrev" sfwMethodName="btnPrev_Click" Text="Prev" />
+                <sfwButton ID="btnNext" sfwMethodName="btnNext_Click" Text="Next" />
+                <sfwButton ID="btnPostClick" OnClientClick="return confirm('Saving these changes will automatically update your account.')" sfwMessageId="10010" sfwMethodName="btnValidateExecuteBusinessMethod_Click" sfwObjectMethod="btnRetirementOptionalPost_Click" sfwVisibleRule="VisibleRulePostAndReject" Text="Post" />
+                <sfwButton ID="btnRejectClick" OnClientClick="return confirm('Saving these changes will automatically update your account.')" sfwMessageId="10011" sfwMethodName="btnValidateExecuteBusinessMethod_Click" sfwObjectMethod="btnReject_Click" sfwVisibleRule="VisibleRulePostAndReject" Text="Reject" />
+                <sfwButton ID="btnIgnoreButton" OnClientClick="return confirm('Saving these changes will automatically update your account.')" sfwMessageId="10203" sfwMethodName="btnValidateExecuteBusinessMethod_Click" sfwObjectMethod="btnIgnore_Click" sfwVisibleRule="ReadOnlyRule" Text="Ignore" />
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlNewPage" sfwCaption="Member Details">
+          <sfwTable CssClass="Table" ID="tblNewPage">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capPersonNameWithPrefixAndSuffix" Text="Member Name : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblPersonNameWithPrefixAndSuffix" sfwEntityField="objPerson.PersonNameWithPrefixAndSuffix" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capPersonId" Text="PERSLink ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLinkButton ID="btnPersonId" sfwActiveForm="wfmPersonMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintpersonid=objPerson.PersonId" sfwEntityField="objPerson.PersonId" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capOrgName" Text="Employer Name : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblOrgName" sfwEntityField="objPersonEmploymentDetail.objPersonEmployment.objOrganization.OrgName" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capPlanName" Text="Plan Name : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblPlanName" Visible="False" sfwEntityField="objPlan.PlanName" />
+                <sfwLabel ID="lblMssPlanName" sfwEntityField="objPlan.MssPlanName" />
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlReason" sfwCaption="Rejection Reason">
+          <sfwTable CssClass="Table" ID="tblReason">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capComments" Text="Reason : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn ColumnSpan="2" Width="2000">
+                <sfwTextBox ID="txtComments" TextMode="MultiLine" sfwEntityField="RejectionReason" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capStatusDescription" Text="Status : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblStatusDescription" sfwEntityField="StatusDescription" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlMain" sfwCaption="DB Optional Enrollment">
+          <sfwTable CssClass="Table" ID="tblMain">
+            <sfwRow>
+              <sfwColumn Width="1200">
+                <sfwPanel ID="pnlEnrollment" sfwCaption="Enrollment" sfwCollapsible="False" sfwVisibleRule="IsAcknowledgementCFlagChecked">
+                  <sfwTable CssClass="Table" ID="tblNewPage2">
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwPanel GroupingText="&lt;b&gt;Acknowledgment&lt;/b&gt;" ID="pnlAcknowledgment" sfwCollapsible="False">
+                          <sfwTable CssClass="Table" ID="tblNewPage9">
+                            <sfwRow>
+                              <sfwColumn />
+                            </sfwRow>
+                            <sfwRow>
+                              <sfwColumn>
+                                <sfwGridView AutoGenerateColumns="False" ID="grvEEAcknowledgement" ShowHeader="False" sfwEntityField="lstEEAcknowledgement">
+                                  <Columns>
+                                    <TemplateField HeaderText="Acknowledgement ID" SortExpression="acknowledgement_id" Visible="False">
+                                      <ItemTemplate>
+                                        <sfwLabel sfwEntityField="AcknowledgementId" />
+                                      </ItemTemplate>
+                                    </TemplateField>
+                                    <TemplateField HeaderText="Acknowledgement Text" SortExpression="acknowledgement_text">
+                                      <ItemTemplate>
+                                        <sfwLabel sfwEntityField="AcknowledgementText" sfwRenderType="RichText" />
+                                      </ItemTemplate>
+                                    </TemplateField>
+                                  </Columns>
+                                </sfwGridView>
+                              </sfwColumn>
+                            </sfwRow>
+                          </sfwTable>
+                        </sfwPanel>
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn />
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwPanel GroupingText="&lt;b&gt;Enrollment&lt;/b&gt;" ID="pnlEnrollmentOptional" sfwCollapsible="False">
+                          <sfwTable CssClass="Table" ID="tblNewPage8">
+                            <sfwRow>
+                              <sfwColumn CssClass="AlignLeft">
+                                <sfwGridView AutoGenerateColumns="False" ID="grvDBO1" ShowHeader="False" sfwEntityField="lstDBO1">
+                                  <Columns>
+                                    <TemplateField HeaderText="Acknowledgement Text" SortExpression="acknowledgement_text">
+                                      <ItemTemplate>
+                                        <sfwLabel sfwEntityField="AcknowledgementText" />
+                                      </ItemTemplate>
+                                    </TemplateField>
+                                  </Columns>
+                                </sfwGridView>
+                                <sfwLabel ID="lblEffectiveDate" sfwVisibleRule="VisibilityRuleAcknowledgementEnrollmentTypeDBOptional" Text="I elect to begin participating in the system effective " sfwIsCaption="True" />
+                                <sfwLabel ID="lblTextBox" sfwEntityField="AcknolwedgementPartCDate" />
+                              </sfwColumn>
+                            </sfwRow>
+                          </sfwTable>
+                        </sfwPanel>
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn />
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwPanel GroupingText="&lt;b&gt;Member Additional Percentage Election&lt;/b&gt;" ID="pnlMemberAdditionalPercentageElection" sfwCaption="Member Additional Percentage Election" sfwCollapsible="False" sfwVisibleRule="VSIsAdditionalSelectionValuesAvailable">
+                          <sfwTable CssClass="Table" ID="tblMemberAdditionalPercentageElection">
+                            <sfwRow>
+                              <sfwColumn ColumnSpan="4" CssClass="AlignLeft">
+                                <sfwLabel ID="capMemberAdditionalPercentageElection" Text="Member Additional Percentage Election : " sfwIsCaption="True" />
+                                <sfwLabel ID="lblMemberAdditionalPercentageElection" sfwEntityField="AddlEEContributionPercentTemp" sfwDataFormat="{0:#0.00'%}" />
+                                <sfwLabel ID="lblAddlContributionPercentageZero" sfwVisibleRule="VRADECAmount" sfwDataFormat="{0:#0.00'%}" Text="0.00%" />
+                              </sfwColumn>
+                            </sfwRow>
+                          </sfwTable>
+                        </sfwPanel>
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwPanel GroupingText="&lt;b&gt;Dual Membership&lt;/b&gt;" ID="pnlDualMembership" sfwCaption="Dual Membership" sfwCollapsible="False" sfwVisibleRule="VSIsPlanNotDC">
+                          <sfwTable CssClass="Table" ID="tblNewPage3">
+                            <sfwRow>
+                              <sfwColumn ColumnSpan="4" CssClass="AlignLeft">
+                                <sfwLabel ID="capIsEnrolledInTffrFlag" Text="Are you a member of North Dakota Teachers Fund for Retirement (NDTFFR)? " sfwIsCaption="True" />
+                                <sfwLabel ID="lblLabel" sfwEntityField="IstrDualMemberTFFR" />
+                              </sfwColumn>
+                            </sfwRow>
+                            <sfwRow>
+                              <sfwColumn>
+                                <sfwPanel ID="pnlTRRF" sfwCollapsible="False" sfwVisibleRule="VisibilityRuleForDualMemberTFFR">
+                                  <sfwTable CssClass="Table" ID="tblNewPage6">
+                                    <sfwRow>
+                                      <sfwColumn>
+                                        <sfwLabel ID="capEmployerName" Text="Employer Name : " sfwIsCaption="True" />
+                                      </sfwColumn>
+                                      <sfwColumn>
+                                        <sfwLabel ID="lblEmployerName" sfwEntityField="EmployerName" />
+                                      </sfwColumn>
+                                      <sfwColumn />
+                                      <sfwColumn />
+                                      <sfwColumn />
+                                    </sfwRow>
+                                    <sfwRow>
+                                      <sfwColumn>
+                                        <sfwLabel ID="capEffectiveFromDate" Text="Effective From Date : " sfwIsCaption="True" />
+                                      </sfwColumn>
+                                      <sfwColumn>
+                                        <sfwLabel ID="lblEffectiveFromDate" sfwDataFormat="{0:d}" sfwEntityField="EffectiveFromDate" />
+                                      </sfwColumn>
+                                      <sfwColumn Width="10%" />
+                                      <sfwColumn>
+                                        <sfwLabel ID="capEffectiveToDate" Text="Effective To Date : " sfwIsCaption="True" />
+                                      </sfwColumn>
+                                      <sfwColumn>
+                                        <sfwLabel ID="lblEffectiveToDate" sfwDataFormat="{0:d}" sfwEntityField="EffectiveToDate" />
+                                      </sfwColumn>
+                                    </sfwRow>
+                                  </sfwTable>
+                                </sfwPanel>
+                              </sfwColumn>
+                            </sfwRow>
+                            <sfwRow>
+                              <sfwColumn />
+                            </sfwRow>
+                            <sfwRow>
+                              <sfwColumn ColumnSpan="4" CssClass="AlignLeft">
+                                <sfwLabel ID="capIsEnrolledInTiaaCrefFlag" sfwWrap="True" Text="Are you a member of Teachers Insurance &amp; Annuity Association College Retirement Equities Fund (TIAA-CREF)-Coverage through the ND University System? " sfwIsCaption="True" />
+                                <sfwLabel ID="lblTIAACREF" sfwEntityField="IstrDualMemberTIAACREF" />
+                              </sfwColumn>
+                            </sfwRow>
+                            <sfwRow>
+                              <sfwColumn>
+                                <sfwPanel ID="pnlTIAACREF" sfwCollapsible="False" sfwVisibleRule="VisibilityRuleForDualMemberlTIAACREF">
+                                  <sfwTable CssClass="Table" ID="tblNewPage7">
+                                    <sfwRow>
+                                      <sfwColumn>
+                                        <sfwLabel ID="lblLabel9" Text="Employer Name : " sfwIsCaption="True" />
+                                      </sfwColumn>
+                                      <sfwColumn>
+                                        <sfwLabel ID="lblEmployerName1" sfwEntityField="EmployerName1" />
+                                      </sfwColumn>
+                                      <sfwColumn Width="10%" />
+                                      <sfwColumn />
+                                      <sfwColumn />
+                                    </sfwRow>
+                                    <sfwRow>
+                                      <sfwColumn>
+                                        <sfwLabel ID="lblLabel8" Text="Effective From Date : " sfwIsCaption="True" />
+                                      </sfwColumn>
+                                      <sfwColumn>
+                                        <sfwLabel ID="lblEffectiveFromDate1" sfwDataFormat="{0:d}" sfwEntityField="EffectiveFromDate1" />
+                                      </sfwColumn>
+                                      <sfwColumn />
+                                      <sfwColumn>
+                                        <sfwLabel ID="lblLabel1" Text="Effective To Date : " sfwIsCaption="True" />
+                                      </sfwColumn>
+                                      <sfwColumn>
+                                        <sfwLabel ID="lblEffectiveToDate1" sfwDataFormat="{0:d}" sfwEntityField="EffectiveToDate1" />
+                                      </sfwColumn>
+                                    </sfwRow>
+                                  </sfwTable>
+                                </sfwPanel>
+                              </sfwColumn>
+                            </sfwRow>
+                          </sfwTable>
+                        </sfwPanel>
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn CssClass="Alignleft">
+                        <sfwLabel ID="lbldate" Text="I elect to begin participation in the North Dakota Public Employees Retirement System effective :  " Visible="False" sfwIsCaption="True" />
+                        <sfwLabel ID="lblDateOfChange" sfwDataFormat="{0:d}" Visible="False" sfwEntityField="DateOfChange" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn />
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwPanel GroupingText="&lt;b&gt;Important Notices&lt;/b&gt;" ID="pnlImpNotices" sfwCaption="&lt;b&gt;Important Notices&lt;/b&gt;" sfwCollapsible="False" sfwVisibleRule="VisibleRuleForPartCNotices">
+                          <sfwTable CssClass="Table" ID="tblNewPage4">
+                            <sfwRow>
+                              <sfwColumn ColumnSpan="4" CssClass="AlignLeft">
+                                <sfwGridView AutoGenerateColumns="False" ID="grvDBO5" sfwVisibleRule="IsJobClassCareerAndtechEdCertifiedTeacher" ShowHeader="False" sfwEntityField="lstDBO5">
+                                  <Columns>
+                                    <TemplateField HeaderText="Acknowledgement Text" SortExpression="acknowledgement_text">
+                                      <ItemTemplate>
+                                        <sfwLabel sfwEntityField="AcknowledgementText" />
+                                      </ItemTemplate>
+                                    </TemplateField>
+                                  </Columns>
+                                </sfwGridView>
+                              </sfwColumn>
+                              <sfwColumn>
+                                <sfwButton ID="btnPdfCorrespondenceClick1" sfwDownloadFileName="pdfSFN-52727" sfwMethodName="btnCancel_Click" sfwVisibleRule="IsJobClassCareerAndtechEdCertifiedTeacher" Text="SFN - 52727" OnClientClick="DownLoadPDF()" sfwCustomAttributes="ReportName=SFN-52727.pdf" />
+                              </sfwColumn>
+                              <sfwColumn />
+                              <sfwColumn />
+                            </sfwRow>
+                            <sfwRow>
+                              <sfwColumn ColumnSpan="4" CssClass="AlignLeft">
+                                <sfwGridView AutoGenerateColumns="False" ID="grvDBO7" sfwVisibleRule="IsJobClassDeptOfPublicInstructionCertifiedTeacher" ShowHeader="False" sfwEntityField="lstDBO7">
+                                  <Columns>
+                                    <TemplateField HeaderText="Acknowledgement Text" SortExpression="acknowledgement_text">
+                                      <ItemTemplate>
+                                        <sfwLabel sfwEntityField="AcknowledgementText" />
+                                      </ItemTemplate>
+                                    </TemplateField>
+                                  </Columns>
+                                </sfwGridView>
+                              </sfwColumn>
+                              <sfwColumn>
+                                <sfwButton ID="btnLinkButton" sfwMethodName="btnCancel_Click" sfwVisibleRule="IsJobClassDeptOfPublicInstructionCertifiedTeacher" Text="SFN - 52727" OnClientClick="DownLoadPDF()" sfwCustomAttributes="ReportName=SFN-52727.pdf" />
+                              </sfwColumn>
+                              <sfwColumn />
+                              <sfwColumn />
+                            </sfwRow>
+                          </sfwTable>
+                        </sfwPanel>
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn />
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwPanel GroupingText="&lt;b&gt;Member Authorization&lt;/b&gt;" ID="pnlMembeAuth" sfwCaption="&lt;b&gt;Member Authorization&lt;/b&gt;" sfwCollapsible="False">
+                          <sfwTable CssClass="Table" ID="tblNewPage5">
+                            <sfwRow>
+                              <sfwColumn ColumnSpan="5" CssClass="AlignLeft">
+                                <sfwGridView AutoGenerateColumns="False" ID="grvDBO8" ShowHeader="False" sfwEntityField="lstDBO8">
+                                  <Columns>
+                                    <TemplateField HeaderText="Acknowledgement Text" SortExpression="acknowledgement_text">
+                                      <ItemTemplate>
+                                        <sfwLabel sfwEntityField="AcknowledgementText" sfwRenderType="RichText" />
+                                      </ItemTemplate>
+                                    </TemplateField>
+                                  </Columns>
+                                </sfwGridView>
+                              </sfwColumn>
+                            </sfwRow>
+                            <sfwRow>
+                              <sfwColumn CssClass="AlignLeft">
+                                <sfwButton ID="btnPdfCorrespondenceClick2" sfwDownloadFileName="pdfSFN-02560" sfwMethodName="btnCancel_Click" Text="SFN-2560 Designation of Beneficiary" OnClientClick="DownLoadPDF()" sfwCustomAttributes="ReportName=SFN-2560.pdf" />
+                              </sfwColumn>
+                            </sfwRow>
+                            <sfwRow>
+                              <sfwColumn CssClass="AlignLeft" ColumnSpan="5">
+                                <sfwGridView AutoGenerateColumns="False" ID="grvDBO10" ShowHeader="False" sfwEntityField="lstDBO10">
+                                  <Columns>
+                                    <TemplateField HeaderText="Acknowledgement Text" SortExpression="acknowledgement_text">
+                                      <ItemTemplate>
+                                        <sfwLabel sfwEntityField="AcknowledgementText" sfwRenderType="RichText" />
+                                      </ItemTemplate>
+                                    </TemplateField>
+                                  </Columns>
+                                </sfwGridView>
+                              </sfwColumn>
+                            </sfwRow>
+                          </sfwTable>
+                        </sfwPanel>
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn />
+                    </sfwRow>
+                  </sfwTable>
+                </sfwPanel>
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn Width="800">
+                <sfwPanel GroupingText="&lt;b&gt;Waiving&lt;/b&gt;" ID="pnlWaived" sfwCaption="Waiving" sfwCollapsible="False" sfwVisibleRule="IsAcknowledgementPartDSelected">
+                  <sfwTable CssClass="Table" ID="tblNewPage1">
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwCheckBox ID="chkAcknolwedgementPartDFlag" sfwDefaultValue="N" sfwTwoWayBinding="False" sfwEntityField="AcknolwedgementPartDFlag" />
+                        <sfwLabel ID="lblLabel3" sfwEntityField="IstrWaive" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn CssClass="AlignLeft" ColumnSpan="2">
+                        <sfwGridView AutoGenerateColumns="False" ID="grvDBOS3" ShowHeader="False" sfwEntityField="lstDBO3">
+                          <Columns>
+                            <TemplateField HeaderText="Acknowledgement Text" SortExpression="acknowledgement_text">
+                              <ItemTemplate>
+                                <sfwLabel sfwEntityField="AcknowledgementText" />
+                              </ItemTemplate>
+                            </TemplateField>
+                          </Columns>
+                        </sfwGridView>
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn CssClass="AlignLeft">
+                        <sfwGridView AutoGenerateColumns="False" ID="grvGridView" ShowHeader="False" sfwEntityField="lstDBO4">
+                          <Columns>
+                            <TemplateField HeaderText="Acknowledgement Text" SortExpression="acknowledgement_text">
+                              <ItemTemplate>
+                                <sfwLabel sfwEntityField="AcknowledgementText" />
+                              </ItemTemplate>
+                            </TemplateField>
+                          </Columns>
+                        </sfwGridView>
+                        <sfwLabel ID="lblPlanWaivedDate" sfwDataFormat="{0:d}" Visible="False" sfwEntityField="AcknolwedgementPartDDate" />
+                      </sfwColumn>
+                    </sfwRow>
+                  </sfwTable>
+                </sfwPanel>
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="lblPersonIdOptional" Visible="False" sfwEntityField="PersonId" />
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlAuditInfo" sfwCaption="Audit Information">
+          <sfwTable CssClass="Table" ID="tblAuditInfo">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capCreate" Text="Create : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblCreatedBy" sfwEntityField="CreatedBy" />
+                <sfwLabel ID="lblUpdateSeq" sfwTwoWayBinding="True" Visible="False" sfwEntityField="UpdateSeq" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblCreatedDate" sfwEntityField="CreatedDate" sfwDataFormat="{0:G}" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capModify" Text="Modify : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblModifiedBy" sfwEntityField="ModifiedBy" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblModifiedDate" sfwEntityField="ModifiedDate" sfwDataFormat="{0:G}" />
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+  </sfwTable>
+  <loaddetails>
+    <entityfield ID="objPerson" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+    <entityfield ID="objPersonEmploymentDetail.objPersonEmployment.objOrganization" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+    <entityfield ID="objPlan" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+    <entityfield ID="lstEEAcknowledgement" sfwUpdateAutoLoad="True" sfwNewAutoLoad="True" />
+    <entityfield ID="lstDBO1" sfwUpdateAutoLoad="True" sfwNewAutoLoad="True" />
+    <entityfield ID="lstDBO5" sfwUpdateAutoLoad="True" sfwNewAutoLoad="True" />
+    <entityfield ID="lstDBO7" sfwUpdateAutoLoad="True" sfwNewAutoLoad="True" />
+    <entityfield ID="lstDBO8" sfwUpdateAutoLoad="True" sfwNewAutoLoad="True" />
+    <entityfield ID="lstDBO10" sfwUpdateAutoLoad="True" sfwNewAutoLoad="True" />
+    <entityfield ID="lstDBO3" sfwUpdateAutoLoad="True" sfwNewAutoLoad="True" />
+    <entityfield ID="lstDBO4" sfwUpdateAutoLoad="True" sfwNewAutoLoad="True" />
+  </loaddetails>
+</form>

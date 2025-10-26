@@ -1,0 +1,99 @@
+﻿<div class="portlet-body">
+    <div class="form-body">
+
+        <div class="col-xs-12">
+
+            <div newbuttoncommonproptemplate></div>
+
+            <div class="form-group" ng-show="sfxControl.dictAttributes.sfwMethodName == 'btnNew_Click' || (sfxControl.dictAttributes.sfwMethodName == 'btnOpen_Click' && !objNewButtonActiveForm.objRelatedGrid)">
+                <div class="col-xs-2">Related Control:</div>
+                <div class="col-xs-10">
+                    <select ng-options="ctrl for ctrl in objNewButtonActiveForm.lstRelatedControl" ng-model="sfxControl.dictAttributes.sfwRelatedControl"
+                            ng-change="objNewButtonActiveForm.onRelatedControlChanged()" class="form-control input-sm"></select>
+                </div>
+            </div>
+            <div class="form-group" ng-show="sfxControl.dictAttributes.sfwMethodName == 'btnNewUpdate_Click'">
+                <div class="col-xs-2">Active Form:</div>
+                <div class="col-xs-10">
+                    <activeformintellisensetemplate activeformname='objNewButtonActiveForm.StrActiveForm' model='objNewButtonActiveForm' formmodel='formodel' propertyname='"StrActiveForm"' formtype="'Maintenance,Lookup,Wizard,FormLinkMaintenance,FormLinkLookup,FormLinkWizard'" multiactiveformflag='false' />
+                </div>
+            </div>
+            <div class="form-group" ng-show="sfxControl.dictAttributes.sfwMethodName != 'btnNewUpdate_Click'">
+                <div class="col-xs-2">Active Forms:</div>
+                <div class="col-xs-10">
+                    <input type="radio" ng-model="objNewButtonActiveForm.ActiveFormType" name="rdbActiveFormType" value="SingleForm" ng-change="objNewButtonActiveForm.objActiveFormTypeChange()" /> <label>Single Form</label>
+                    <input type="radio" ng-model="objNewButtonActiveForm.ActiveFormType" name="rdbActiveFormType" value="MultipleForm" ng-change="objNewButtonActiveForm.objActiveFormTypeChange()" /> <label> Multiple Form</label>
+                </div>
+            </div>
+            <div ng-show="objNewButtonActiveForm.ActiveFormType=='SingleForm' && sfxControl.dictAttributes.sfwMethodName != 'btnNewUpdate_Click'" class="form-group">
+                <div class="col-xs-2">Form Name:</div>
+                <div class="col-xs-10">
+                    <div class="input-group">
+                        <activeformintellisensetemplate ng-show="sfxControl.dictAttributes.sfwMethodName == 'btnNew_Click'" activeformname='objNewButtonActiveForm.StrActiveForm' model='objNewButtonActiveForm' formmodel='formodel' propertyname='"StrActiveForm"' formtype="'Maintenance,Wizard,FormLinkMaintenance,FormLinkWizard'" multiactiveformflag='false' />
+
+
+                        <activeformintellisensetemplate ng-show="sfxControl.dictAttributes.sfwMethodName != 'btnNew_Click'" activeformname='objNewButtonActiveForm.StrActiveForm' model='objNewButtonActiveForm' formmodel='formodel' propertyname='"StrActiveForm"' formtype="'Maintenance,Lookup,Wizard,FormLinkMaintenance,FormLinkLookup,FormLinkWizard'" multiactiveformflag='false' />
+                    </div>
+                </div>
+            </div>
+            <div ng-show="objNewButtonActiveForm.ActiveFormType=='MultipleForm' && sfxControl.dictAttributes.sfwMethodName != 'btnNew_Click'" class="form-group">
+                <div class="col-xs-2">Entity Field:</div>
+                <div class="col-xs-10"><select class="form-control input-sm" ng-options="field for field in objNewButtonActiveForm.lstFields" title="{{objNewButtonActiveForm.StrEntityField}}" ng-model="objNewButtonActiveForm.StrEntityField" ng-change="objNewButtonActiveForm.onEntityFieldChange()"></select></div>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div ng-show="objNewButtonActiveForm.ActiveFormType=='MultipleForm'" class="panel panel-custom">
+                <div class="panel-heading">
+                    <div class="pull-left"><b>Active Forms</b></div>
+                    <div class="panel-icons">
+                        <a><img src="images/Common/icon_add_dark.svg" ng-click="objNewButtonActiveForm.OnAddExpressionClick();" /></a>
+                        <a><img src="images/Common/icon_delete_dark.svg" ng-click="objNewButtonActiveForm.OnDeleteExpressionClick();" /></a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-condensed table-fixedheader">
+                        <thead>
+                            <tr>
+                                <th width="50%">Field Value</th>
+                                <th width="50%">Active Form</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="coll in objNewButtonActiveForm.ActiveFormCollection" ng-click="objNewButtonActiveForm.SelectedExpression=coll"
+                                ng-class="coll == objNewButtonActiveForm.SelectedExpression?'selected':''">
+                                <td width="50%">
+                                    <select ng-options='value for value in objNewButtonActiveForm.alCodeVal' title="{{coll.FieldValue}}" ng-model='coll.FieldValue' ng-if="IsValue"  class="form-control input-sm" />
+                                    <input type='text' title="{{coll.FieldValue}}" ng-model='coll.FieldValue' ng-if="!IsValue"  class="form-control input-sm" />
+                                    <!--<div class='select-editable'>
+                                        <select ng-options='value for value in objNewButtonActiveForm.alCodeVal' title="{{coll.FieldValue}}" ng-model='coll.FieldValue' />
+                                        <input type='text' title="{{coll.FieldValue}}" ng-model='coll.FieldValue' />
+                                    </div>-->
+                                </td>
+                                <td width="50%">
+                                    <div class="input-group">
+                                        <activeformintellisensetemplate ng-show="sfxControl.dictAttributes.sfwMethodName == 'btnNew_Click'" activeformname='coll.ActiveForm' isupdatefromexternalprop="true" model='coll' propertyname='"ActiveForm"' formtype="'Maintenance,Wizard,FormLinkMaintenance,FormLinkWizard'" multiactiveformflag='false' />
+                                        
+                                        <activeformintellisensetemplate ng-show="sfxControl.dictAttributes.sfwMethodName != 'btnNew_Click'" activeformname='coll.ActiveForm' isupdatefromexternalprop="true" model='coll' propertyname='"ActiveForm"' formtype="'Maintenance,Lookup,Wizard,FormLinkMaintenance,FormLinkLookup,FormLinkWizard'" multiactiveformflag='false' />
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-actions">
+    <div class="col-xs-6 text-left">
+        <span class="alert-error-msg" ng-if="objNewButtonActiveForm.ErrorMessageForDisplay.length>0" ng-bind="objNewButtonActiveForm.ErrorMessageForDisplay"></span>
+    </div>
+    <div class="col-xs-6">
+        <input type="button" class="dialog-btn" value="Cancel" ng-click="CloseWizardClick()" />
+        <input type="button" class="dialog-btn" wz-previous="onPrevious()" value="Back" disabled="disabled" />
+        <input type="button" class="dialog-btn" wz-next="onNext()" value="Next" ng-disabled="objNewButtonActiveForm.IsNextDisable()" ng-click="objNewButtonActiveForm.OnNextClick()" />
+        <input type="button" class="dialog-btn" wz-finish value="Finish" ng-click="onFinishButtonWizardClick()" disabled="disabled" />
+    </div>
+</div>
+
+

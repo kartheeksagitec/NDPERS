@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entHealthPremiumReportBatchRequest" sfwActive="True" sfwStatus="Review" sfwType="BusinessRule" sfwMainCDO="icdoHealthPremiumReportBatchRequest" sfwReadOnlyRule="RuleIsStatusProcessed" sfwObjectID="busHealthPremiumReportBatchRequest" sfwTableName="sgt_health_premium_report_batch_request" sfwView="False">
+  <rules>
+    <rule ID="RuleIsStatusProcessed" sfwExpression="(this.icdoHealthPremiumReportBatchRequest.status_value == &quot;PRSD&quot;)" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="RuleIsStatusProcessed" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror />
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_HEALTH_PREMIUM_REPORT_BATCH_REQUEST WITH(NOLOCK)">
+      <parameters />
+    </query>
+    <query ID="LoadActiveEnrollments" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="--ACTIVE MEMBERS&#xD;&#xA;SELECT PA.*,PER.*,P.*,PE.*,PED.*,ORG.*,PAG.*,PAPE.* &#xD;&#xA;FROM &#xD;&#xA;(&#xD;&#xA; SELECT PED.*,PAED.PERSON_ACCOUNT_ID ,&#xD;&#xA;  ROW_NUMBER() OVER (PARTITION BY PAED.PERSON_ACCOUNT_ID ORDER BY &#xD;&#xA;  ISNULL(PED.END_DATE,'01/01/2900') DESC,ISNULL(PE.END_DATE,'01/01/2900') DESC,&#xD;&#xA;  PED.START_DATE DESC , PE.START_DATE DESC,  PED.PERSON_EMPLOYMENT_DTL_ID DESC ) &#xD;&#xA;  AS ROWRANK  &#xD;&#xA; FROM SGT_PERSON_ACCOUNT_EMPLOYMENT_DETAIL PAED(NOLOCK)&#xD;&#xA; INNER JOIN SGT_PERSON_EMPLOYMENT_DETAIL PED(NOLOCK) ON PAED.PERSON_EMPLOYMENT_DTL_ID = PED.PERSON_EMPLOYMENT_DTL_ID&#xD;&#xA; INNER JOIN SGT_PERSON_EMPLOYMENT PE(NOLOCK) ON PE.PERSON_EMPLOYMENT_ID = PED.PERSON_EMPLOYMENT_ID&#xD;&#xA; WHERE @HISTORY_DATE BETWEEN PED.START_DATE AND &#xD;&#xA; DATEADD(M,1,ISNULL(PED.END_DATE,'01/01/2900')) AND &#xD;&#xA; @HISTORY_DATE BETWEEN LEFT(CONVERT(CHAR(8),DATEADD(M,1, PE.START_DATE), 111),8) + '01'  AND DATEADD(M,1,ISNULL(PE.END_DATE,'01/01/2900')) AND &#xD;&#xA; PAED.ELECTION_VALUE = 'ENLD'&#xD;&#xA; &#xD;&#xA;) AS PED&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT PA(NOLOCK) ON PA.PERSON_ACCOUNT_ID = PED.PERSON_ACCOUNT_ID AND PED.ROWRANK = 1&#xD;&#xA;INNER JOIN SGT_PERSON_EMPLOYMENT PE ON PED.PERSON_EMPLOYMENT_ID = PE.PERSON_EMPLOYMENT_ID&#xD;&#xA;INNER JOIN SGT_ORGANIZATION ORG(NOLOCK) ON ORG.ORG_ID = PE.ORG_ID&#xD;&#xA;INNER JOIN SGT_PLAN P(NOLOCK) ON P.PLAN_ID = PA.PLAN_ID&#xD;&#xA;INNER JOIN SGT_PERSON PER(NOLOCK) ON PER.PERSON_ID = PA.PERSON_ID&#xD;&#xA;LEFT JOIN &#xD;&#xA;(&#xD;&#xA; SELECT PAG.* FROM SGT_PERSON_ACCOUNT_GHDV PAG(NOLOCK) &#xD;&#xA; INNER JOIN SGT_PERSON_ACCOUNT_GHDV_HISTORY PAGH WITH(NOLOCK) ON PAG.PERSON_ACCOUNT_GHDV_ID = PAGH.PERSON_ACCOUNT_GHDV_ID&#xD;&#xA;   WHERE PAGH.PLAN_PARTICIPATION_STATUS_VALUE = 'ENL2' AND&#xD;&#xA;   (PAGH.HEALTH_INSURANCE_TYPE_VALUE IS NULL OR PAGH.HEALTH_INSURANCE_TYPE_VALUE NOT IN('RT09','RT12')) AND &#xD;&#xA;   PAGH.COBRA_TYPE_VALUE IS NULL AND &#xD;&#xA;   @HISTORY_DATE BETWEEN PAGH.START_DATE AND ISNULL(PAGH.END_DATE,'01/01/2900') AND &#xD;&#xA;   PAGH.START_DATE &lt;&gt; CASE WHEN PAGH.END_DATE IS NOT NULL THEN PAGH.END_DATE ELSE '01/01/2900' END AND &#xD;&#xA;   (@HEALTH_INSURANCE_TYPE = '' OR PAGH.HEALTH_INSURANCE_TYPE_VALUE = @HEALTH_INSURANCE_TYPE) AND &#xD;&#xA;   @HISTORY_DATE BETWEEN PAGH.START_DATE AND ISNULL(PAGH.END_DATE,'01/01/2900') AND&#xD;&#xA;  (@COVERAGE_CODE = '' OR PAGH.COVERAGE_CODE = @COVERAGE_CODE)&#xD;&#xA;) PAG ON PAG.PERSON_ACCOUNT_ID = PA.PERSON_ACCOUNT_ID&#xD;&#xA;LEFT JOIN SGT_PERSON_ACCOUNT_PAYMENT_ELECTION PAPE WITH (NOLOCK) ON PA.PERSON_ACCOUNT_ID = PAPE.PERSON_ACCOUNT_ID &#xD;&#xA;WHERE P.PLAN_ID = 12 AND &#xD;&#xA;(PA.START_DATE &gt;= @START_DATE) AND&#xD;&#xA;(ISNULL(PA.END_DATE,'01/01/2900') &lt;= @END_DATE) AND&#xD;&#xA;PAG.PERSON_ACCOUNT_ID IS NOT NULL AND &#xD;&#xA;(@PERSON_ID = 0 OR PA.PERSON_ID = @PERSON_ID)  AND&#xD;&#xA;(@ORG_ID = 0 OR PE.ORG_ID=@ORG_ID)">
+      <parameters>
+        <parameter ID="@HISTORY_DATE" sfwDataType="DateTime" />
+        <parameter ID="@HEALTH_INSURANCE_TYPE" sfwDataType="string" />
+        <parameter ID="@START_DATE" sfwDataType="DateTime" />
+        <parameter ID="@END_DATE" sfwDataType="DateTime" />
+        <parameter ID="@COVERAGE_CODE" sfwDataType="string" />
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadRGroupMembers" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="--RGROUP MEMBERS&#xD;&#xA;SELECT PA.*,P.*,PL.*,PAG.*,ORG.*,PAPE.*&#xD;&#xA;FROM SGT_PERSON_ACCOUNT PA WITH (NOLOCK) &#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT_PAYMENT_ELECTION PAPE WITH (NOLOCK) ON PA.PERSON_ACCOUNT_ID = PAPE.PERSON_ACCOUNT_ID &#xD;&#xA;INNER JOIN SGT_PERSON P WITH (NOLOCK) ON PA.PERSON_ID= P.PERSON_ID &#xD;&#xA;INNER JOIN SGT_PLAN PL  WITH (NOLOCK) ON PA.PLAN_ID = PL.PLAN_ID&#xD;&#xA;LEFT JOIN SGT_ORGANIZATION ORG ON ORG.ORG_ID=PAPE.IBS_ORG_ID&#xD;&#xA;LEFT JOIN &#xD;&#xA;(&#xD;&#xA; SELECT PAG.* FROM SGT_PERSON_ACCOUNT_GHDV PAG(NOLOCK) &#xD;&#xA; INNER JOIN SGT_PERSON_ACCOUNT_GHDV_HISTORY PAGH WITH(NOLOCK) ON PAG.PERSON_ACCOUNT_GHDV_ID = PAGH.PERSON_ACCOUNT_GHDV_ID&#xD;&#xA;   WHERE PAGH.PLAN_PARTICIPATION_STATUS_VALUE = 'ENL2' AND  &#xD;&#xA;   (@HEALTH_INSURANCE_TYPE = '' OR PAGH.HEALTH_INSURANCE_TYPE_VALUE = @HEALTH_INSURANCE_TYPE) AND&#xD;&#xA;   (@COVERAGE_CODE = '' OR PAGH.COVERAGE_CODE = @COVERAGE_CODE) AND&#xD;&#xA;   @HISTORY_DATE BETWEEN PAGH.START_DATE AND ISNULL(PAGH.END_DATE,'01/01/2900') AND &#xD;&#xA;   PAGH.START_DATE &lt;&gt; CASE WHEN PAGH.END_DATE IS NOT NULL THEN PAGH.END_DATE ELSE '01/01/2900' END&#xD;&#xA;) PAG ON PAG.PERSON_ACCOUNT_ID = PA.PERSON_ACCOUNT_ID&#xD;&#xA;WHERE PL.PLAN_ID=12 AND &#xD;&#xA;(IBS_ORG_ID IS NOT NULL OR IBS_SUPPLEMENTAL_ORG_ID IS NOT NULL) AND &#xD;&#xA;PAPE.IBS_EFFECTIVE_DATE &lt;= @HISTORY_DATE AND &#xD;&#xA;PAG.PERSON_ACCOUNT_ID IS NOT NULL  AND &#xD;&#xA;(PA.START_DATE &gt;= @START_DATE) AND&#xD;&#xA;(ISNULL(PA.END_DATE,'01/01/2900') &lt;= @END_DATE) AND&#xD;&#xA;(@PERSON_ID = 0 OR PA.PERSON_ID = @PERSON_ID)  AND&#xD;&#xA;(@ORG_ID = 0 OR PAPE.IBS_ORG_ID=@ORG_ID)">
+      <parameters>
+        <parameter ID="@HEALTH_INSURANCE_TYPE" sfwDataType="string" />
+        <parameter ID="@COVERAGE_CODE" sfwDataType="string" />
+        <parameter ID="@START_DATE" sfwDataType="DateTime" />
+        <parameter ID="@END_DATE" sfwDataType="DateTime" />
+        <parameter ID="@HISTORY_DATE" sfwDataType="DateTime" />
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadIBSMembers" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="--IBS Members&#xD;&#xA;SELECT PA.*,P.*,PL.*,PAG.*,PAPE.*&#xD;&#xA;FROM SGT_PERSON_ACCOUNT PA WITH (NOLOCK) &#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT_PAYMENT_ELECTION PAPE WITH (NOLOCK) ON PA.PERSON_ACCOUNT_ID = PAPE.PERSON_ACCOUNT_ID &#xD;&#xA;INNER JOIN SGT_PERSON P WITH (NOLOCK) ON PA.PERSON_ID= P.PERSON_ID &#xD;&#xA;INNER JOIN SGT_PLAN PL  WITH (NOLOCK) ON PA.PLAN_ID = PL.PLAN_ID&#xD;&#xA;LEFT JOIN &#xD;&#xA;(&#xD;&#xA; SELECT PAG.* FROM SGT_PERSON_ACCOUNT_GHDV PAG(NOLOCK) &#xD;&#xA; INNER JOIN SGT_PERSON_ACCOUNT_GHDV_HISTORY PAGH WITH(NOLOCK) ON PAG.PERSON_ACCOUNT_GHDV_ID = PAGH.PERSON_ACCOUNT_GHDV_ID&#xD;&#xA; WHERE PAGH.PLAN_PARTICIPATION_STATUS_VALUE = 'ENL2' AND &#xD;&#xA;   (PAGH.HEALTH_INSURANCE_TYPE_VALUE IN ('RT09','RT12') OR PAGH.COBRA_TYPE_VALUE IS NOT NULL) AND &#xD;&#xA;   (@HEALTH_INSURANCE_TYPE = '' OR PAGH.HEALTH_INSURANCE_TYPE_VALUE = @HEALTH_INSURANCE_TYPE) AND&#xD;&#xA;   (@COVERAGE_CODE = '' OR PAGH.COVERAGE_CODE = @COVERAGE_CODE) AND&#xD;&#xA;      @HISTORY_DATE BETWEEN PAGH.START_DATE AND ISNULL(PAGH.END_DATE,'01/01/2900') AND &#xD;&#xA;   PAGH.START_DATE &lt;&gt; CASE WHEN PAGH.END_DATE IS NOT NULL THEN PAGH.END_DATE ELSE '01/01/2900' END&#xD;&#xA;) PAG ON PAG.PERSON_ACCOUNT_ID = PA.PERSON_ACCOUNT_ID&#xD;&#xA;WHERE PL.PLAN_ID=12 AND &#xD;&#xA;(PA.START_DATE &gt;= @START_DATE) AND&#xD;&#xA;(ISNULL(PA.END_DATE,'01/01/2900') &lt;= @END_DATE) AND&#xD;&#xA;IBS_FLAG = 'Y' AND &#xD;&#xA;(IBS_ORG_ID IS NULL OR (IBS_ORG_ID IS NOT NULL AND ISNULL(COBRA_EMPR_SHARE,0) &gt; 0 AND ISNULL(COBRA_EMPR_SHARE,0) &lt; 100)) AND &#xD;&#xA;PAPE.IBS_EFFECTIVE_DATE &lt;= @HISTORY_DATE AND &#xD;&#xA;(@PERSON_ID = 0 OR PA.PERSON_ID = @PERSON_ID)  AND&#xD;&#xA;PAG.PERSON_ACCOUNT_ID IS NOT NULL ">
+      <parameters>
+        <parameter ID="@HEALTH_INSURANCE_TYPE" sfwDataType="string" />
+        <parameter ID="@COVERAGE_CODE" sfwDataType="string" />
+        <parameter ID="@START_DATE" sfwDataType="DateTime" />
+        <parameter ID="@END_DATE" sfwDataType="DateTime" />
+        <parameter ID="@HISTORY_DATE" sfwDataType="DateTime" />
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadAllIBSHistory" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="-- I AM TAKING ALL THE HISTORY RECORDS HERE SINCE WE NEED TO GET THE HEALTH PARTICIPATION DATE FOR RETIREE BY&#xD;&#xA;-- WALKING THRU ALL THE HISTORY. SO, WE MUST LOAD ALL THE HISTORY.&#xD;&#xA;SELECT PAGH.*&#xD;&#xA;FROM SGT_PERSON_ACCOUNT PA WITH (NOLOCK) &#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT_PAYMENT_ELECTION PAPE WITH (NOLOCK) ON PA.PERSON_ACCOUNT_ID = PAPE.PERSON_ACCOUNT_ID &#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT_GHDV PAG(NOLOCK) ON PAG.PERSON_ACCOUNT_ID = PA.PERSON_ACCOUNT_ID&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT_GHDV_HISTORY PAGH(NOLOCK) ON PAGH.PERSON_ACCOUNT_GHDV_ID = PAG.PERSON_ACCOUNT_GHDV_ID&#xD;&#xA;WHERE PA.PLAN_ID =12 AND &#xD;&#xA;PAGH.START_DATE  &lt;= @BATCHDATE AND --IGNORE FUTURE DATED ENTRIES&#xD;&#xA;PAGH.START_DATE &lt;&gt; ISNULL(PAGH.END_DATE,'01/01/2900') AND --IGNORE SAME DATED HISTORY RECORDS  &#xD;&#xA;(IBS_FLAG = 'Y' OR IBS_SUPPLEMENTAL_FLAG = 'Y') AND &#xD;&#xA;((PA.PLAN_ID =12 AND &#xD;&#xA;(IBS_ORG_ID IS NULL OR (PA.PLAN_ID IN (9,12) AND IBS_ORG_ID IS NOT NULL AND ISNULL(COBRA_EMPR_SHARE,0) &gt; 0 AND ISNULL(COBRA_EMPR_SHARE,0) &lt; 100)) AND &#xD;&#xA;IBS_SUPPLEMENTAL_ORG_ID IS NULL) OR (PA.PLAN_ID = 13))&#xD;&#xA;ORDER BY ISNULL(PAGH.END_DATE,'2900-01-01') DESC,&#xD;&#xA;PAGH.START_DATE DESC,PAGH.PERSON_ACCOUNT_GHDV_HISTORY_ID DESC">
+      <parameters>
+        <parameter ID="@BATCHDATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="LoadAllActiveMembersHistory" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT PAGH.* FROM SGT_PERSON_ACCOUNT_EMPLOYMENT_DETAIL PAED(NOLOCK)&#xD;&#xA;INNER JOIN SGT_PERSON_EMPLOYMENT_DETAIL PED(NOLOCK) ON PAED.PERSON_EMPLOYMENT_DTL_ID = PED.PERSON_EMPLOYMENT_DTL_ID&#xD;&#xA;INNER JOIN SGT_PERSON_EMPLOYMENT PE(NOLOCK) ON PE.PERSON_EMPLOYMENT_ID = PED.PERSON_EMPLOYMENT_ID&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT PA(NOLOCK) ON PA.PERSON_ACCOUNT_ID = PAED.PERSON_ACCOUNT_ID&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT_GHDV PAG(NOLOCK) ON PAG.PERSON_ACCOUNT_ID = PA.PERSON_ACCOUNT_ID&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT_GHDV_HISTORY PAGH(NOLOCK) ON PAGH.PERSON_ACCOUNT_GHDV_ID = PAG.PERSON_ACCOUNT_GHDV_ID&#xD;&#xA;WHERE PAED.ELECTION_VALUE = 'ENLD' AND&#xD;&#xA;PAGH.PLAN_PARTICIPATION_STATUS_VALUE = 'ENL2'&#xD;&#xA;AND (PAGH.DENTAL_INSURANCE_TYPE_VALUE IS NULL OR PAGH.DENTAL_INSURANCE_TYPE_VALUE &lt;&gt; 'RT16')&#xD;&#xA;AND (PAGH.HEALTH_INSURANCE_TYPE_VALUE IS NULL OR PAGH.HEALTH_INSURANCE_TYPE_VALUE NOT IN('RT09','RT12'))&#xD;&#xA;AND (PAGH.VISION_INSURANCE_TYPE_VALUE IS NULL OR PAGH.VISION_INSURANCE_TYPE_VALUE &lt;&gt; 'RETR')&#xD;&#xA;AND PAGH.COBRA_TYPE_VALUE IS NULL AND&#xD;&#xA;@PAYROLLPAIDDATE BETWEEN PAGH.START_DATE AND ISNULL(PAGH.END_DATE,'01/01/2900') AND&#xD;&#xA;PAGH.START_DATE &lt;&gt; ISNULL(PAGH.END_DATE,'01/01/2900') AND --IGNORE SAME DATED HISTORY RECORDS&#xD;&#xA;@PAYROLLPAIDDATE BETWEEN PED.START_DATE AND ISNULL(PED.END_DATE,'01/01/2900') AND&#xD;&#xA;@PAYROLLPAIDDATE BETWEEN PE.START_DATE AND ISNULL(PE.END_DATE,'01/01/2900') AND&#xD;&#xA;PAED.PLAN_ID =12&#xD;&#xA;ORDER BY PAGH.PERSON_ACCOUNT_GHDV_HISTORY_ID DESC">
+      <parameters>
+        <parameter ID="@PAYROLLPAIDDATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="LoadOrgPlanForHealth" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_ORG_PLAN WITH(NOLOCK) WHERE PLAN_ID=12">
+      <parameters />
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="BatchRequestId" sfwType="Column" sfwValue="batch_request_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PerslinkId" sfwType="Column" sfwValue="perslink_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="OrgId" sfwType="Column" sfwValue="org_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="HealthInsuranceTypeDescription" sfwType="Description" sfwValue="health_insurance_type_description" />
+    <attribute ID="HealthInsuranceTypeId" sfwType="Column" sfwValue="health_insurance_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="345" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="HealthInsuranceTypeValue" sfwType="Column" sfwValue="health_insurance_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="CoverageCode" sfwType="Column" sfwValue="coverage_code" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="PlanStartDate" sfwType="Column" sfwValue="plan_start_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="PlanEndDate" sfwType="Column" sfwValue="plan_end_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="HistoryDate" sfwType="Column" sfwValue="history_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="StatusDescription" sfwType="Description" sfwValue="status_description" />
+    <attribute ID="StatusId" sfwType="Column" sfwValue="status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="1506" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusValue" sfwType="Column" sfwValue="status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="RateStructureCode" sfwType="Column" sfwValue="rate_structure_code" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrOrgCode" sfwValue="istrOrgCode" />
+  </attributes>
+</entity>

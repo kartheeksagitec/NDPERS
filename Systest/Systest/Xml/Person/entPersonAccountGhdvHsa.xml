@@ -1,0 +1,79 @@
+﻿<entity ID="entPersonAccountGhdvHsa" sfwView="False" sfwActive="True" sfwMainCDO="icdoPersonAccountGhdvHsa" sfwType="EntityRule" sfwStatus="Review" sfwTableName="sgt_person_account_ghdv_hsa" sfwObjectID="busPersonAccountGhdvHsa" sfwDataObjectID="doPersonAccountGhdvHsa">
+  <attributes>
+    <attribute sfwValue="person_account_ghdv_hsa_id" sfwType="Column" sfwKeyNo="1" sfwIsIdentity="True" sfwDataType="int" sfwDBDataType="int" sfwIsNull="False" ID="PersonAccountGhdvHsaId" sfwCaption="ID" />
+    <attribute sfwValue="person_account_ghdv_id" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="True" ID="PersonAccountGhdvId" sfwCaption="Person Account Ghdv Id" />
+    <attribute sfwValue="person_account_id" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="True" ID="PersonAccountId" sfwCaption="Person Account Id" />
+    <attribute sfwValue="contribution_start_date" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="datetime" sfwDBDataType="datetime" sfwIsNull="True" ID="ContributionStartDate" sfwCaption="Contribution Start Date" />
+    <attribute sfwValue="contribution_end_date" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="datetime" sfwDBDataType="datetime" sfwIsNull="True" ID="ContributionEndDate" sfwCaption="Contribution End Date" />
+    <attribute sfwValue="contribution_amount" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,2" sfwIsNull="True" ID="ContributionAmount" sfwCaption="Contribution Amount" />
+    <attribute sfwValue="created_by" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="50" sfwIsNull="True" ID="CreatedBy" sfwCaption="Created By" />
+    <attribute sfwValue="created_date" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="datetime" sfwDBDataType="datetime" sfwIsNull="True" ID="CreatedDate" sfwCaption="Created Date" />
+    <attribute sfwValue="modified_by" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="50" sfwIsNull="True" ID="ModifiedBy" sfwCaption="Modified By" />
+    <attribute sfwValue="modified_date" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="datetime" sfwDBDataType="datetime" sfwIsNull="True" ID="ModifiedDate" sfwCaption="Modified Date" />
+    <attribute sfwValue="update_seq" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="True" ID="UpdateSeq" sfwCaption="Update Seq" />
+    <attribute ID="lstrAcknowledgementText" sfwDataType="string" sfwPrivate="False" sfwValue="istrAcknowledgementText" sfwType="Property" />
+    <attribute ID="lstPersonAccountGhdvhsa" sfwType="Collection" sfwValue="iclbPersonAccountGhdvHsaDetail" sfwEntity="entPersonAccountGhdvHsa" sfwPrivate="False" />
+    <attribute ID="lintPersonAccountId" sfwDataType="int" sfwPrivate="False" sfwValue="iintPersonAccountId" sfwType="Property" />
+    <attribute ID="lintPersonAccountGhdvId" sfwDataType="int" sfwPrivate="False" sfwValue="iintPersonAccountGhdvId" sfwType="Property" />
+    <attribute ID="objPersonAccountGhdv" sfwType="Object" sfwEntity="entPersonAccountGhdv" sfwPrivate="False" sfwValue="ibusPersonAccountGHDV" />
+    <attribute ID="lstrMSSAcknowledge" sfwDataType="string" sfwPrivate="False" sfwValue="istrMSSAcknowledge" sfwType="Property" />
+    <attribute ID="lstrConfirmationTextForHSA" sfwDataType="string" sfwPrivate="False" sfwValue="istrConfirmationTextForHSA" sfwType="Property" />
+  </attributes>
+  <ExtraFields />
+  <queries>
+    <query ID="LoadPersonAccountGHDVHSA" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_PERSON_ACCOUNT_GHDV_HSA WITH(NOLOCK)&#xD;&#xA;WHERE PERSON_ACCOUNT_GHDV_ID  = @PERSON_ACCOUNT_GHDV_ID&#xD;&#xA;ORDER BY PERSON_ACCOUNT_GHDV_HSA_ID DESC">
+      <parameters>
+        <parameter ID="@PERSON_ACCOUNT_GHDV_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <constraint />
+  <rules>
+    <rule ID="RuleIsContributionAmounttAndStartDateEnteredViceVersa" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.icdoPersonAccountGhdvHsa.contribution_start_date == RFunc.MinDateTime())" sfwMessageId="10382" />
+    <rule ID="RuleIsContributionStartDateIsFirstDayOfMonth" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.IsContributionStartDateIsFirstDayOfMonth()" sfwMessageId="10377" />
+    <rule ID="RuleontributionDateOverlaps" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.IsDateOverlap()" sfwMessageId="10378" />
+    <rule ID="ContributionStartDateCannotBeEarlier" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.IsContributionStartDateEarlierToHighDeductibleHealthPlanStartDate()" sfwMessageId="10373" />
+    <rule ID="RuleIsHSAPreTaxAgreementOnFile" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.IsHSAPreTaxAgreementOnFile()" sfwMessageId="10372" />
+    <rule ID="RuleIsContributionStartDatePriorToHSAEffectiveDate" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.IsContributionStartDatePriorToHSAEffectiveDate()" sfwMessageId="10380" />
+    <rule ID="RuleIsHsaExistsWIthoutEndDate" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.IsHsaExistsWIthoutEndDate()" sfwMessageId="10379" />
+    <rule ID="ContributionAmountIsNegative" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.icdoPersonAccountGhdvHsa.contribution_amount &lt; 0" sfwMessageId="5583" />
+    <rule ID="RuleEndDateCannotBeLess" sfwRuleType="Validation" sfwObjectBased="True" sfwMessageId="5017" sfwExpression="(this.icdoPersonAccountGhdvHsa.CONTRIBUTION_END_DATE  != DateTime.MinValue) &amp;&amp;&#xA;(this.icdoPersonAccountGhdvHsa.CONTRIBUTION_START_DATE &gt; this.icdoPersonAccountGhdvHsa.CONTRIBUTION_END_DATE)" />
+    <rule ID="IsContributionStartDateIsPastDate" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.iblnIsFromMSS) &amp;&amp;&#xA;(this.icdoPersonAccountGhdvHsa.CONTRIBUTION_Start_DATE != RFunc.MinDateTime()) &amp;&amp;&#xA;(this.icdoPersonAccountGhdvHsa.CONTRIBUTION_Start_DATE &lt; RFunc.CurrentDate())" sfwMessageId="10375" />
+    <rule ID="IsMSSAcknowledgeFlagSelected" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="((this.iblnIsFromMSSForACK) &amp;&amp;&#xA;(this.istrMSSAcknowledge != &quot;Y&quot;))" sfwMessageId="10013" />
+    <rule ID="RuleIsContributionAmountExceeds" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.IsContributionAmountExceedsExpectedAmount()" sfwMessageId="10381" sfwMessageParameters="idecMaxContibutionamount" />
+    <rule ID="VRAfterSaveVisiblePanels" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.iblnIsSaveClick" />
+    <rule ID="VRAfterSaveHidePanels" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="!this.iblnIsSaveClick" />
+    <rule ID="IsStartDatePriorToExsitingRecord" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.IsStartDatePriorToExsitingRecord() == True)" sfwMessageId="10097" />
+    <rule ID="RuleIsHDHPWithoutHSA" sfwRuleType="Validation" sfwObjectBased="True" sfwMessageId="10493" sfwExpression="this.IsANNEEnrollInHDHPWithoutHSA()" />
+    <rule ID="IsHDHPEnrolledForEffectiveDate" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="this.IsHDHPEnrolledForEffectiveDate()" sfwMessageId="10510" />
+  </rules>
+  <initialload>
+    <item ID="VRAfterSaveVisiblePanels" sfwMode="All" sfwStatus="Active" />
+    <item ID="VRAfterSaveHidePanels" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="RuleIsContributionAmounttAndStartDateEnteredViceVersa" sfwMode="All" sfwStatus="Active" />
+    <item ID="RuleIsContributionStartDateIsFirstDayOfMonth" sfwMode="All" sfwStatus="Active" />
+    <item ID="RuleontributionDateOverlaps" sfwMode="All" sfwStatus="Active" />
+    <item ID="ContributionStartDateCannotBeEarlier" sfwMode="All" sfwStatus="Active" />
+    <item ID="RuleIsContributionStartDatePriorToHSAEffectiveDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="RuleIsHSAPreTaxAgreementOnFile" sfwMode="All" sfwStatus="Active" />
+    <item ID="ContributionAmountIsNegative" sfwMode="All" sfwStatus="Active" />
+    <item ID="RuleIsHsaExistsWIthoutEndDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="RuleEndDateCannotBeLess" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsContributionStartDateIsPastDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMSSAcknowledgeFlagSelected" sfwMode="All" sfwStatus="Active" />
+    <item ID="RuleIsContributionAmountExceeds" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsStartDatePriorToExsitingRecord" sfwMode="All" sfwStatus="Active" />
+    <item ID="RuleIsHDHPWithoutHSA" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsHDHPEnrolledForEffectiveDate" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <delete />
+  <groupslist />
+  <checklist />
+  <methods />
+  <lifecycle />
+  <objectmethods />
+</entity>

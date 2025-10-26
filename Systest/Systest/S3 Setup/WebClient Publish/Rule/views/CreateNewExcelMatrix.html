@@ -1,0 +1,164 @@
+﻿<div class="portlet-body scroll-not">
+    <div class="form-body">
+        <div class="top-form-section">
+            <div class="form-group">
+                <h4 class="col-xs-9">Import Excel Matrix/ Import Excel</h4>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <input type="radio" ng-model="objExcelMatrixDetails.SelectedMatrix" value="ImportExcelMatrix" name="rbexcelfileType" /> ImportExcelMatrix
+                    <input type="radio" style="margin-left:40px" ng-model="objExcelMatrixDetails.SelectedMatrix" value="ImportExcel" name="rbexcelfileType" /> Import Excel
+                </div>
+            </div>
+            <div class="form-group" ng-show="objExcelMatrixDetails.SelectedMatrix == 'ImportExcel'">
+                <div class="col-xs-8">
+                    <!--As the simple model binding was not working for these radio buttons, added ng-click.-->
+                    <input type="radio" checked="checked" name="div21" ng-click="onSelectedTableChanged('DecisionTable')" />Decision Table
+                    <input type="radio" name="div21" style="margin-left:40px" ng-click="onSelectedTableChanged('ExcelMatrix')" />Excel Matrix
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-3">Import From :</label>
+                <div class="col-xs-8">
+                    <input type="radio" checked="checked" ng-model="objExcelMatrixDetails.SelectedFile" value="ExcelFile" name="div22" /> ExcelFile
+                    <input type="radio" name="div22" style="margin-left:40px" ng-model="objExcelMatrixDetails.SelectedFile" value="Query" />Query
+                </div>
+            </div>
+            <div class="form-group">
+                <label ng-show="objExcelMatrixDetails.SelectedFile=='Query'" class="col-xs-3">Query :</label>
+                <label ng-show="objExcelMatrixDetails.SelectedFile=='ExcelFile'" class="col-xs-3">Excel File Name :</label>
+                <div class="col-xs-6">
+                    <input type="text" class="form-control input-sm" ng-show="objExcelMatrixDetails.SelectedFile=='ExcelFile'" title="{{objExcelMatrixDetails.ExcelFilePath}}" ng-model="objExcelMatrixDetails.ExcelFilePath" ng-readonly="true" />
+                    <input type="text" class="form-control input-sm" ng-show="objExcelMatrixDetails.SelectedFile=='Query'" title="{{objExcelMatrixDetails.ExcelSelectedQuery}}" ng-model="objExcelMatrixDetails.ExcelSelectedQuery" ng-readonly="true" />
+
+                </div>
+                <div class="col-xs-1 mar-rgt-10">
+                    <input type="button" class="dialog-btn-default" ng-show="objExcelMatrixDetails.SelectedFile=='Query'" value="Search" ng-click="OnSearchClickInCreateExcelMatrix()" />
+                    <input type="button" class="dialog-btn-default" ng-show="objExcelMatrixDetails.SelectedFile=='ExcelFile'" value="Search" ng-click="selectFile('S')" />
+                </div>
+                <div class="col-xs-1">
+                    <input type="button" class="dialog-btn-default" value="Load" ng-click="LoadDataFromtheExcelFileAndQuery()" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-xs-3">NeoTrackID :</label>
+                <div class="col-xs-6">
+                    <input class="form-control input-sm" type="text" title="{{objExcelMatrixDetails.ExcelNeoTrackID}}" ng-model="objExcelMatrixDetails.ExcelNeoTrackID" />
+                </div>
+            </div>
+
+            <div class="form-group" ng-show="(objExcelMatrixDetails.SelectedMatrix=='ImportExcelMatrix' || objExcelMatrixDetails.SelectedTable != 'Decisiontable')">
+                <label class="col-xs-3">Precision :</label>
+                <div class="col-xs-6">
+                    <input class="form-control input-sm" type="text" title="{{objExcelMatrixDetails.Precision}}" ng-model="objExcelMatrixDetails.Precision" />
+                </div>
+            </div>
+
+            <div class="form-group" ng-show="(objExcelMatrixDetails.SelectedMatrix=='ImportExcelMatrix' || objExcelMatrixDetails.SelectedTable != 'Decisiontable')">
+                <label class="col-xs-3">Delimeter :</label>
+                <div class="col-xs-6">
+                    <input class="form-control input-sm" type="text" title="{{objExcelMatrixDetails.Delimiter}}" ng-model="objExcelMatrixDetails.Delimiter" />
+                </div>
+            </div>
+        </div>
+        <div class="form-group table-section new-rule-table">
+            <div ng-if="(objExcelMatrixDetails.SelectedMatrix=='ImportExcelMatrix')" class="inner-form-group">
+                <div class="portlet-body">
+                    <div class="table-scrollable adjust-input">
+                        <table id="sample_editable_1" class="table table-striped table-hover table-bordered dataTable no-footer" role="grid" aria-describedby="sample_editable_1_info">
+                            <thead>
+                                <tr role="row">
+                                    <th aria-controls="sample_editable_1" rowspan="1" colspan="1" ng-show="objExcelMatrixDetails.SelectedFile == 'ExcelFile'">Sheet Name</th>
+                                    <th aria-controls="sample_editable_1" rowspan="1" colspan="1">New File Name</th>
+                                    <th aria-controls="sample_editable_1" rowspan="1" colspan="1">Effective Date</th>
+                                    <th aria-controls="sample_editable_1" rowspan="1" colspan="1">Data Starting Cell</th>
+                                    <th aria-controls="sample_editable_1" rowspan="1" colspan="1">Row Parameter</th>
+                                    <th aria-controls="sample_editable_1" rowspan="1" colspan="1">Column Parameter</th>
+                                    <th aria-controls="sample_editable_1" rowspan="1" colspan="1">Return Type</th>
+                                    <th aria-controls="sample_editable_1" rowspan="1" colspan="1">Default OutPut value</th>
+                                    <th aria-controls="sample_editable_1" rowspan="1" colspan="1">Reset</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr role="row" ng-repeat="data in lstLoadedExcelData">
+                                    <td ng-show="objExcelMatrixDetails.SelectedFile == 'ExcelFile'"><label>{{data.SheetName}}</label></td>
+                                    <td>
+                                        <span ng-attr-title="{{data.ExcelMatrixNameError}}" style="color:darkred;font-weight:bold" class="dtc-span" ng-show="data.ExcelMatrixNameError && data.ExcelMatrixNameError.length>0"> !  </span>
+                                        <span class="excelmatrixspan">rul</span>
+                                        <input type="text" class="form-control input-sm dtc-normal-input" style="margin-left:5px;width:75%!important" title="{{data.ExcelMatrixName}}" ng-model="data.ExcelMatrixName" ng-keydown="OnKeyDowninExcelMatrixFileName($event)" ng-change="onExcelMatrixNameChanged(data)" />
+                                    </td>
+                                    <td>
+                                        <span ng-attr-title="{{data.ExcelMatrixEffectiveDateError}}" style="color:darkred;font-weight:bold" class="dtc-span" ng-show="data.ExcelMatrixEffectiveDateError && data.ExcelMatrixEffectiveDateError.length>0"> !  </span>
+                                        <input class="form-control input-sm dtc-normal-input " datepicker ng-disabled="!data.isReturnTypeDisable" ng-model="data.EffectiveDate" ng-change="onExcelMatrixEffectiveDateChanged(data)" />
+                                    </td>
+                                    <td>
+                                        <input class="form-control input-sm dtc-input" type="text" title="{{data.DataStartCellVal}}" ng-model="data.DataStartCellVal" ng-readonly="true" />
+                                        <input class="dialog-btn-default dtc-btn" style="margin-left:2px" type="button" ng-click="onDataStartingCellClick(data)" value="...." />
+                                    </td>
+                                    <td>
+                                        <input class="form-control input-sm dtc-input" type="text" title="{{getRowParameter(data)}}" value="{{getRowParameter(data)}}" ng-readonly="true" />
+                                        <input class="dialog-btn-default dtc-btn" type="button" style="margin-left:1px" ng-disabled="data.isReturnTypeDisable" value="...." ng-click="OnAddOrEditParameter('RowParameter',data)" />
+                                    </td>
+                                    <td>
+                                        <input class="form-control input-sm dtc-input" type="text" title="{{getColumnParameter(data)}}" value="{{getColumnParameter(data)}}" ng-readonly="true" />
+                                        <input class="dialog-btn-default dtc-btn" type="button" style="margin-left:2px" ng-disabled="data.isReturnTypeDisable" value="...." ng-click="OnAddOrEditParameter('ColumnParameter',data)" />
+                                    </td>
+                                    <td>
+                                        <span ng-if="!(data.ReturnType && data.ReturnType.trim().length>0)" class="dtc-span" style="color:darkred;font-weight:bold" title="Datatype cannot be empty."> ! </span>
+                                        <select class="form-control input-sm dtc-normal-input" ng-disabled="data.isReturnTypeDisable" ng-options="type for type in ReturnTypes" ng-model="data.ReturnType" />
+                                    </td>
+                                    <td>
+                                        <input class="form-control input-sm" title="{{data.DefaultOutputValue}}" ng-model="data.DefaultOutputValue" />
+                                    </td>
+                                    <td>
+                                        <input class="dialog-btn-default" type="button" value="Reset" ng-click="ResetData(data)" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div ng-if="(objExcelMatrixDetails.SelectedMatrix=='ImportExcel')">
+                <div class="portlet-body">
+                    <div class="table-scrollable adjust-input">
+                        <table id="sample_editable_1" class="table table-striped table-hover table-bordered dataTable no-footer" role="grid" aria-describedby="sample_editable_1_info">
+                            <thead>
+                                <tr role="row">
+                                    <th aria-controls="sample_editable_1" rowspan="1" colspan="1" ng-show="objExcelMatrixDetails.SelectedFile=='ExcelFile'">Sheet Name</th>
+                                    <th aria-controls="sample_editable_1" rowspan="1" colspan="1">File Name</th>
+                                    <th aria-controls="sample_editable_1" rowspan="1" colspan="1">Effective Date</th>
+                                    <th aria-controls="sample_editable_1" rowspan="1" colspan="1">Set value</th>
+                                    <th aria-controls="sample_editable_1" rowspan="1" colspan="1">Reset</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="data in lstimportExcelFileData">
+                                    <td ng-show="objExcelMatrixDetails.SelectedFile == 'ExcelFile'"><label>{{data.SheetName}}</label></td>
+                                    <td>
+                                        <span ng-attr-title="{{data.ExcelMatrixNameError}}" class="span-width5" ng-show="data.ExcelMatrixNameError && data.ExcelMatrixNameError.length>0"> !  </span>
+                                        <span class="excelmatrixspan">rul</span>
+                                        <input type="text" class="form-control input-sm dtc-normal-input" style="margin-left:5px;width:75%!important" title="{{data.ExcelMatrixName}}" ng-model="data.ExcelMatrixName" ng-keydown="OnKeyDowninExcelMatrixFileName($event)" ng-change="onExcelMatrixNameChanged(data)" />
+                                    </td>
+                                    <td>
+                                        <span ng-attr-title="{{data.ExcelMatrixEffectiveDateError}}" style="color:darkred;font-weight:bold" ng-show="data.ExcelMatrixEffectiveDateError && data.ExcelMatrixEffectiveDateError.length>0"> !  </span>
+                                        <input datepicker class="form-control input-sm" ng-model="data.EffectiveDate" ng-disabled="!data.isReturnTypeDisable" ng-change="onExcelMatrixEffectiveDateChanged(data)" />
+                                    </td>
+                                    <td><input type="button" class="dialog-btn-default" ng-click="onSetValueClick(data)" value="...." /></td>
+                                    <td><input type="button" class="dialog-btn-default" value="Reset" ng-click="ResetDataForSetValues(data)" /></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="form-actions">
+    <input type="button" class="dialog-btn-default" value="OK" ng-click="createNewExcelMatrix()" />
+    <input type="button" class="dialog-btn-default" value="Cancel" ng-click="closeNewRuleWindow()" />
+</div>

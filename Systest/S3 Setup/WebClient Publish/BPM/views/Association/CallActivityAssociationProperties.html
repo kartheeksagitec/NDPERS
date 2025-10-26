@@ -1,0 +1,33 @@
+﻿<fieldset ng-disabled="$ctrl.isDisabledforVersioning">
+    <div class="marg-top-8">
+        <div class="bpm-container-title">
+            <span>Parameters</span>
+            <div class="bpmn-right" ng-if="!$ctrl.isDisabledforVersioning">
+                <i class="fa fa-refresh color-light2" ng-click="$ctrl.refreshParameters()" style="cursor:pointer" />
+            </div>
+        </div>
+        <div class="form-group padding-top-10" ng-repeat="param in $ctrl.objParameterModel.Elements">
+            <div class="col-xs-5">
+                <label style="word-wrap:break-word;" class="control-label">{{param.dictAttributes.sfwParamaterName}} [{{param.dictAttributes.sfwDataType}},{{param.dictAttributes.sfwDirection}}]</label>
+            </div>
+            <div class="col-xs-7">
+                <select class="form-control form-filter input-sm" ng-options="x for x in $ctrl.queryParametersvalues" ng-model="param.dictAttributes.sfwParameterValue"
+                         ng-show="param.dictAttributes.sfwValueSource == 'Parameter'" undoredodirective model="param" ></select>
+                <input ng-disabled="$ctrl.isDisabledforVersioning" class="form-control form-filter input-sm" type="text" undoredodirective model="param" 
+                       ng-model="param.dictAttributes.sfwParameterValue" ng-show="param.dictAttributes.sfwValueSource == 'Constant' && param.dictAttributes.sfwDataType != 'Object' && param.dictAttributes.sfwDataType != 'BusinessObject'" />
+                <div class="input-group" ng-show="param.dictAttributes.sfwValueSource == 'Constant' && (param.dictAttributes.sfwDataType == 'Object' || param.dictAttributes.sfwDataType == 'BusinessObject')">
+                    <input ng-if="param.dictAttributes.sfwDataType == 'Object'" class="form-control form-filter input-sm" type="text"
+                            ng-model="param.valueModel.businessObjectModel.dictAttributes.sfwEntity" disabled />
+                    <span ng-if="param.dictAttributes.sfwDataType == 'BusinessObject'" ng-bind="param.valueModel.businessObjectModel.dictAttributes.type"></span>
+                    <span ng-if="!$ctrl.isDisabledforVersioning" title="set XML method" class='input-group-addon input-sm' ng-click="$ctrl.setVParamEntityValue(param)">
+                        <i class="fa fa-chevron-right"></i>
+                    </span>
+                </div>
+                <input type="checkbox" ng-true-value="'Constant'" ng-false-value="'Parameter'" ng-model="param.dictAttributes.sfwValueSource"
+                        ng-disabled="param.dictAttributes.sfwDirection == 'out' || $ctrl.isDisabledforVersioning" 
+                       ng-change="$ctrl.onValueSourceChanged({ param : param})" undoredodirective model="param" />
+                Is Constant
+            </div>
+        </div>
+    </div>
+</fieldset>

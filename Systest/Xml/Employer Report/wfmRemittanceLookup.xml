@@ -1,0 +1,354 @@
+﻿<form ID="wfmRemittanceLookup" sfwActive="True" sfwStatus="Valid" sfwRemoteObject="srvEmployerReport" sfwResource="1007" sfwType="Lookup" sfwTitle="Remittance Lookup" version="3.5" sfwMaxCount="5000" sfwEntity="entRemittance" sfwGridCollection="busRemittanceLookup.icolRemittance">
+  <initialload>
+    <query ID="cdoRemittance" sfwQueryRef="entRemittance.Lookup" sfwMethodName="LoadRemittances" />
+    <query ID="LookupOrgCode" sfwQueryRef="entRemittance.LookupOrgCode" />
+    <query ID="cdoRemittance" sfwQueryRef="entRemittance.LookupBenefitType" />
+  </initialload>
+  <sfwTable ID="Main">
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlCriteria" sfwCaption="Criteria" CssClass="ContainerPanel auto-width-panel">
+          <sfwTable CssClass="Table" ID="tblCriteria">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capPerslinkId" Text="PERSLink ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtPerslinkId" sfwDataField="r.person_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="cdoRemittance" />
+                <sfwImageButton ID="btnRetrievePerslinkID" ImageAlign="AbsMiddle" ImageUrl="~/Image/Lookup.jpg" sfwActiveForm="wfmPersonLookup" sfwMethodName="btnRetrieve_Click" sfwRelatedControl="txtPerslinkId" sfwSelectedIndex="PersonId" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblorg_id" Text="Org Code ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtOrgCode" sfwDataField="org_code" sfwOperator="=" sfwQueryID="LookupOrgCode" />
+                <sfwImageButton ID="btnRetrieveOrg" ImageAlign="AbsMiddle" ImageUrl="~/Image/Lookup.jpg" sfwActiveForm="wfmOrganizationLookup" sfwMethodName="btnRetrieve_Click" sfwRelatedControl="txtOrgCode" sfwSelectedIndex="OrgCode" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capDepositTapeId" Text="Deposit Tape ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtDepositTapeId" sfwDataField="sd.deposit_tape_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="cdoRemittance" />
+                <sfwImageButton ID="btnRetrieveDepositTape" ImageAlign="AbsMiddle" ImageUrl="~/Image/Lookup.jpg" sfwActiveForm="wfmDepositTapeLookup" sfwMethodName="btnRetrieve_Click" sfwRelatedControl="txtDepositTapeId" sfwSelectedIndex="DepositTapeId" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel AssociatedControlID="ddlDepositMethodValue" ID="capDepositMethodValue" Text="Deposit Method : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwMultiSelectDropDownList DataTextField="description" DataValueField="code_value" ID="ddlDepositMethodValue" sfwDataField="deposit_method_value" sfwOperator="in" sfwQueryID="cdoRemittance" sfwLoadType="CodeGroup" sfwLoadSource="1501" sfwSelectAll="True" sfwSelectionToDisplay="6" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capDepositDateFrom" Text="Deposit Date From : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtDepositDateFrom" sfwDataField="convert(datetime, convert(varchar(10), sd.deposit_date, 101))" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="between" sfwQueryID="cdoRemittance" sfwRelatedControl="txtDepositDateTo" />
+                <CompareValidator ControlToValidate="txtDepositDateFrom" ErrorMessage="Deposit Date From must be in mm/dd/yyyy format." ID="cmpreDepositDateFrom" Operator="DataTypeCheck" Text="*" Type="Date" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capDepositDateTo" Text="Deposit Date To : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtDepositDateTo" sfwDataField="convert(datetime, convert(varchar(10), sd.deposit_date, 101))" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="between" sfwQueryID="cdoRemittance" sfwRelatedControl="txtDepositDateFrom" />
+                <CompareValidator ControlToValidate="txtDepositDateTo" ErrorMessage="Deposit Date To must be in mm/dd/yyyy format." ID="valdepositDateTo" Operator="DataTypeCheck" Text="*" Type="Date" />
+                <CompareValidator ControlToCompare="txtDepositDateFrom" ControlToValidate="txtDepositDateTo" ErrorMessage="Deposit date To cannot be less than Deposit Date From." ID="valDepositDateRange" Operator="GreaterThanEqual" Text="*" Type="Date" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capPaymentDateFrom" Text="Payment Date From : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtPaymentDateFrom" sfwDataField="CONVERT(VARCHAR(10), sd.payment_date, 101)" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="between" sfwQueryID="cdoRemittance" sfwRelatedControl="txtPaymentDateTo" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capPaymentDateTo" Text="Payment Date To: " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtPaymentDateTo" sfwDataField="CONVERT(VARCHAR(10), sd.payment_date, 101)" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="between" sfwQueryID="cdoRemittance" sfwRelatedControl="txtPaymentDateFrom" />
+                <CompareValidator ControlToCompare="txtPaymentDateFrom" ControlToValidate="txtPaymentDateTo" ErrorMessage="Payment date To cannot be less than Payment Date From." ID="valPaymentDateRange" Operator="GreaterThanEqual" Text="*" Type="Date" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="lblremittance_amountFrom" Text="Amount From : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txt_remittance_amountFrom" sfwDataField="remittance_amount" sfwDataType="Decimal" sfwOperator="between" sfwQueryID="cdoRemittance" sfwRelatedControl="txt_remittance_amountTo" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblremittance_amountTo" Text="Amount To : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txt_remittance_amountTo" sfwDataField="remittance_amount" sfwDataType="Decimal" sfwOperator="between" sfwQueryID="cdoRemittance" sfwRelatedControl="txt_remittance_amountFrom" />
+                <CompareValidator ControlToCompare="txt_remittance_amountFrom" ControlToValidate="txt_remittance_amountTo" ErrorMessage="Amount To cannot be less than Amount From." ID="valAmountRange" Operator="GreaterThanEqual" Text="*" Type="Currency" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="lbldeposit_id" Text="Deposit ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txt_deposit_id" sfwDataField="sd.deposit_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="cdoRemittance" />
+                <sfwImageButton ID="btnRetrieveDeposit" ImageAlign="AbsMiddle" ImageUrl="~/Image/Lookup.jpg" sfwActiveForm="wfmDepositLookup" sfwMethodName="btnRetrieve_Click" sfwRelatedControl="txt_deposit_id" sfwSelectedIndex="objDepositTape.DepositTapeId" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capReferenceNo" Text="Reference No : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtReferenceNo" sfwDataField="sd.reference_no" sfwOperator="like" sfwQueryID="cdoRemittance" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capStatusValue" Text="Deposit Status : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwMultiSelectDropDownList ID="ddlStatusValue" sfwDataField="sd.status_value" sfwOperator="in" sfwQueryID="cdoRemittance" sfwLoadType="CodeGroup" sfwLoadSource="1500" sfwSelectAll="True" sfwSelectionToDisplay="6" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblremittance_type_value" Text="Remittance Type : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn CssClass="DropdownContext">
+                <sfwMultiSelectDropDownList DataTextField="description" DataValueField="remittance_type_value" ID="ddl_remittance_type_value" sfwDataField="remittance_type_value" sfwOperator="in" sfwQueryID="cdoRemittance" sfwLoadType="Query" sfwLoadSource="entRemitTypeBankAcctCrossref.Lookup" sfwSelectAll="True" CssClass="DropdownContext" sfwSelectionToDisplay="6" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capPlanId" Text="Plan : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn CssClass="DropdownContext">
+                <sfwMultiSelectDropDownList DataTextField="plan_name" DataValueField="plan_id" ID="ddlPlanId" sfwDataField="plan_id" sfwOperator="in" sfwQueryID="cdoRemittance" sfwLoadType="Query" sfwLoadSource="entPlan.Lookup" sfwSelectAll="True" CssClass="DropdownContext" sfwSelectionToDisplay="6" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblRemittanceStatus" Text="Remittance Allocation Status :" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlAllocationStatus" sfwDataField="allocation_status" sfwOperator="=" sfwQueryID="cdoRemittance" sfwLoadType="CodeGroup" sfwLoadSource="1310" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capDepositSourceValue" Text="Deposit Source : " AssociatedControlID="ddlDepositSourceValue" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwMultiSelectDropDownList ID="ddlDepositSourceValue" sfwDataField="deposit_source_value" sfwQueryID="cdoRemittance" sfwLoadType="CodeGroup" sfwOperator="in" sfwLoadSource="1211" DataTextField="description" DataValueField="code_value" sfwSelectAll="True" sfwSelectionToDisplay="6" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capRefundStatusValue" Text="Refund Status : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwMultiSelectDropDownList ID="ddlRefundStatusValue" sfwDataField="refund_status_value" sfwOperator="in" sfwQueryID="cdoRemittance" sfwLoadType="CodeGroup" sfwLoadSource="2510" sfwSelectAll="True" sfwSelectionToDisplay="6" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capBankAccountValue" Text="Bank Account : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlBankAccountValue" sfwDataField="bank_account_value" sfwOperator="=" sfwQueryID="cdoRemittance" sfwLoadType="CodeGroup" sfwLoadSource="1201" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capRemittanceId" Text="Remittance ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtRemittanceId" sfwDataField="remittance_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="cdoRemittance" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capBenefitTypeValue" Text="Benefit Type : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlBenefitTypeValue" sfwDataField="benefit_type_value" sfwOperator="=" sfwQueryID="cdoRemittance" sfwLoadType="CodeGroup" sfwLoadSource="250" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnSearch" sfwMethodName="btnSearch_Click" Text="Search" />
+                <sfwButton ID="btnReset" sfwMethodName="btnReset_Click" Text="Reset" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwButton ID="btnStoreSearch" sfwMethodName="btnStoreUserDefaults_Click" Text="StoreSearch" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlResult" sfwCaption="Search Results">
+          <sfwTable CssClass="Table" ID="tblResult">
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnOpen" sfwActiveForm="wfmRemittanceMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintremittanceid=RemittanceId" sfwRelatedControl="dgrResult" Text="Open" sfwDisableViewOnly="True" />
+                <sfwButton ID="btnDelete" sfwMethodName="btnDelete_Click" sfwRelatedControl="dgrResult" Text="Delete" />
+                <sfwButton ID="btnExportExcel" sfwMethodName="btnColumnsToExport_Click" sfwRelatedControl="dgrResult" Text="Export To Excel" />
+                <sfwLinkButton ID="btnOrgId" sfwActiveForm="wfmOrganizationMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintorgid=OrgId" sfwRelatedControl="dgrResult" Visible="False" />
+                <sfwLinkButton ID="btnPerslinkId" sfwActiveForm="wfmPersonMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintpersonid=PersonId" sfwRelatedControl="dgrResult" Visible="False" />
+                <sfwButton ID="btnDepositId" sfwActiveForm="wfmDepositMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintdepositid=DepositId" sfwRelatedControl="dgrResult" Text="Deposit" Visible="False" />
+                <sfwButton ID="btnOpenDepositTape" sfwActiveForm="wfmDepositTapeMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintdeposittapeid=objDeposit.DepositTapeId" sfwRelatedControl="dgrResult" Text="Open" Visible="False" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwGridView AllowPaging="True" AllowSorting="True" ID="dgrResult" sfwSelection="Many">
+                  <Columns>
+                    <TemplateField HeaderText="Deposit Tape ID" SortExpression="IdecDepositTapeIDRemittanceID" ItemStyle.HorizontalAlign="Right" SortExpressionUpdated="true">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpenDepositTape" sfwEntityField="objDeposit.DepositTapeId" CssClass="ItemRightAlign" Font.Underline="True" sfwShowZero="True" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Deposit Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="objDeposit.DepositDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Deposit ID" SortExpression="IdecDepositIDRemittanceID" ItemStyle.HorizontalAlign="Right" SortExpressionUpdated="true">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwRelatedControl="btnDepositId" sfwEntityField="DepositId" CssClass="ItemRightAlign" Font.Underline="True" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Remittance ID" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpen" sfwEntityField="RemittanceId" CssClass="ItemRightAlign" Font.Underline="True" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Org Code ID" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOrgId" sfwEntityField="objOrganization.OrgCode" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Org Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objOrganization.OrgName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Org Code ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOrgId" sfwEntityField="LstrOrgCodeID" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="PERSLink ID" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwRelatedControl="btnPerslinkId" sfwEntityField="PersonId" CssClass="ItemRightAlign" Font.Underline="True" sfwShowZero="True" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Person Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="IstrRemittancePersonName" sfwShowZero="True" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Plan Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objPlan.PlanName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Remittance Type">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="RemittanceTypeDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Remittance Allocation Status">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="AllocationStatusDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Deposit Status">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objDeposit.StatusDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Deposit Total" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="objDeposit.DepositAmount" CssClass="ItemRightAlign" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Remittance Amount" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="RemittanceAmount" CssClass="ItemRightAlign" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Allocated Amount" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="LdclAppliedAmount" CssClass="ItemRightAlign" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Balance Amount" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="LdclBalanceAmount" CssClass="ItemRightAlign" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Org ID" Visible="False" sfwShowInExportToExcel="True">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="OrgId" sfwShowZero="True" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Bank Account">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objDepositTape.BankAccountDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Refund Status">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="RefundStatusDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Deposit Method">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objDepositTape.DepositMethodDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Deposit Source">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objDeposit.DepositSourceDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Benefit Type">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objPlan.BenefitTypeDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+  </sfwTable>
+  <loaddetails />
+</form>

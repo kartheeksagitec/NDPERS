@@ -1,0 +1,21 @@
+﻿<div class="portlet-body">
+    <input class="form-control input-sm" type="text" title="{{filterText}}" ng-model="filterText" placeholder="Search">
+    <loading-box class="dashboard-panel-content" lazymodel="reUsableBpm">
+        <ul style="list-style:none" class="marg-top-8">
+            <li ng-repeat="element in reUsableBpm | filter: { BpmName : filterText }">
+                <i ng-class="element.isCollapsed? 'fa fa-plus-square-o':'fa fa-minus-square-o'" ng-click="element.isCollapsed=!element.isCollapsed" style="cursor:pointer"></i>
+                <span ng-bind="element.BpmName"></span>
+                <ul class="marg-left-20" ng-hide="element.isCollapsed" style="list-style:none">
+                    <li ng-class="(element.BpmName + '.' + process.ProcessID == selectedProcessName) ?'selected' : ''" ng-repeat="process in element.Processes" ng-click="selectProcess(element,process)">
+                        <span ng-if="process.Text && process.Text.trim().length>0" ng-bind="process.Text"></span>
+                        <span ng-if="!(process.Text && process.Text.trim().length>0)" style="font-style:italic;color:#777">[BLANK]</span> - <span ng-bind="process.ProcessID"></span>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </loading-box>        
+</div>
+<div class="form-actions">
+    <input type="button" class="dialog-btn-default" value="OK" ng-click="onOKClick()" />
+    <input type="button" class="dialog-btn" value="Cancel" ng-click="closeDialog()" />
+</div>

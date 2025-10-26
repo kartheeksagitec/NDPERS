@@ -1,0 +1,215 @@
+﻿<div ng-controller="AdminController" class="full-height padding-10">
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a data-toggle="tab" data-target="#admin-clients">Clients</a>
+        </li>
+        <li>
+            <a data-toggle="tab" ng-click="getUserInfo()" data-target="#admin-users">Users</a>
+        </li>
+    </ul>
+    <div class="tab-content" style="height:calc(100% - 20px)">
+        <div class="tab-pane fade in active full-height" id="admin-clients">
+            <div class="col-xs-12" style="height:50%">
+                <table class="table table-striped table-bordered table-condensed" id="grid-clients" st-table="cloneClients" st-safe-src="ilstClients" st-table-item-row="Client" role="grid">
+                    <thead>
+                        <tr st-operation-row st-operation-allowed="add,update,delete" st-operation-add-object="iobjNewClient" st-operation-on-select-callback="selectClient(record)" st-operation-before-delete-callback="deleteClient(updatedobject)" st-operation-delete-trigger="manual" st-operation-before-add-callback="saveClient(newobject, stId)" st-operation-after-add-callback="selectClient(newobject)" st-operation-add-trigger="manual" st-operation-before-update-callback="saveClient(updatedobject, stId, IsUpdate)" st-operation-after-update-callback="selectClient(updatedobject)" st-operation-update-trigger="manual" st-operation-add-template="Admin/views/AddEditClient.html">
+                            <th colspan="16">
+                                <i title="Delete Selected Client" class="fa cursor-on-hover fa-minus marg-left-10 fright" st-operation="delete" ng-disabled="!iobjSelectedClient" />
+                                <i title="Add New Client" class="fa fa-plus cursor-on-hover marg-left-10 fright" st-operation="add" />
+                            </th>
+                        </tr>
+                        <tr role="heading">
+                            <th st-sort="Name">Client Name</th>
+                            <th st-sort="SDSLicenseType">SDS License Type</th>
+                            <th st-sort="SASLicenseType">SAS License Type</th>
+                            <th st-sort="SMSLicenseType">SMS License Type</th>
+                            <th st-sort="ActiveUserLimit">Active User Limit</th>
+                            <th st-sort="Status">Status</th>
+                            <th st-sort="StartDate">Start Date</th>
+                            <th st-sort="EndDate">End Date</th>
+                            <th>Action</th>
+                        </tr>
+                        <tr role="search">
+                            <th colspan="16"><input st-search="" class="form-control" placeholder="search with client name, License type , status etc..." type="text" /></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr tabindex="{{$index}}" role="row" st-select-row="client" ng-repeat="client in cloneClients">
+                            <td>{{client.ClientName}}</td>
+                            <td>{{client.SDSLicenseType=="S" ? 'Standard' :client.SDSLicenseType=="A" ? 'Advanced':client.SDSLicenseType=="E" ? 'Enterprise' :'None'}}</td>
+                            <td>{{client.SASLicenseType=="S" ? 'Standard' :client.SASLicenseType=="A" ? 'Advanced':client.SASLicenseType=="E" ? 'Enterprise' :'None'}}</td>
+                            <td>{{client.SMSLicenseType=="S" ? 'Standard' :client.SMSLicenseType=="A" ? 'Advanced':client.SMSLicenseType=="E" ? 'Enterprise' :'None'}}</td>
+                            <td>{{client.ActiveUserLimit}}</td>
+                            <td>{{client.Status}}</td>
+                            <td>{{client.StartDate | date:'MM-dd-yyyy'}}</td>
+                            <td>{{client.EndDate | date:'MM-dd-yyyy'}}</td>
+                            <td><a st-operation="update"><i class="glyphicon glyphicon-pencil"></i></a></td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="16" class="text-center">
+                                <div st-pagination="" st-items-by-page="6" st-displayed-pages="5" st-template="common/views/pagination-grid.html"></div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="col-xs-12" style="height:50%">
+                <div class="col-xs-5 full-height">
+                    <table class="table table-striped table-bordered table-condensed" id="grid-domains" st-table="domains" st-safe-src="iobjSelectedClient.Domains" st-table-item-row="Domain" role="grid">
+                        <thead>
+                            <tr st-operation-row st-operation-allowed="add" st-operation-add-object="iobjNewDomain" st-operation-add-template="Admin/views/AddEditDomain.html">
+                                <th colspan="16">
+                                    <i title="Delete Selected Domain" class="fa fa-minus marg-left-10 fright" ng-click="deleteDomain()" ng-disabled="(!iobjSelectedClient.Domains) || (iobjSelectedClient.Domains && iobjSelectedClient.Domains.indexOf(iobjSelectedDomain) == -1 )" />
+                                    <i title="Add New Domain" class="fa fa-plus marg-left-10 fright" st-operation="add" ng-click="addDomain()" ng-disabled="!iobjSelectedClient" />
+                                </th>
+                            </tr>
+                            <tr role="heading">
+                                <th width="30%" st-sort="DomainName">Domain Name</th>
+                                <th width="60%" st-sort="LDAPPath">LDAP Path</th>
+                            </tr>
+                            <tr role="search">
+                                <th colspan="16"><input st-search="" class="form-control" placeholder="search with Domain name, LDAP Path" type="text" /></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr tabindex="{{$index}}" role="row" st-select-row="domain" ng-repeat="domain in domains" ng-click="selectDomain(domain)">
+                                <td>{{domain.DomainName}}</td>
+                                <td>{{domain.LDAPPath}}</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="16" class="text-center">
+                                    <div st-pagination="" st-items-by-page="6" st-displayed-pages="5" st-template="common/views/pagination-grid.html"></div>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="col-xs-7 full-height">
+                    <user-type-list client-id="iobjSelectedClient.ClientID" user-types="iobjSelectedClient.UserTypes" is-refresh-required="isRefreshRequired" is-admin-mapping="true" />
+                    <!--<table class="table table-striped table-bordered table-condensed" id="grid-users" st-table="usertypes" st-safe-src="iobjSelectedClient.UserTypes" st-table-item-row="User" role="grid">
+                        <thead>
+                            <tr st-operation-row st-operation-allowed="update" st-operation-add-template="Admin/views/AddEditDBUser.html">
+                                <th colspan="16">
+                                    <i title="Remove the selected user from owner list." class="fa fa-minus marg-left-10 fright" ng-click="unmapUser()" ng-disabled="!iobjSelectedUser" />
+                                    <i title="Add an existing AD user as owner for the selected client." class="fa fa-plus marg-left-10 fright" ng-click="mapADUsers()" ng-disabled="!iobjSelectedClient"/>
+                                    <i title="Add an existing user as owners for the selected client." class="fa fa-plus marg-left-10 fright" ng-click="mapUsers()" ng-disabled="!iobjSelectedClient"/>
+                                </th>
+                            </tr>
+                            <tr role="heading">
+                                <th st-sort="User.UserName">Username</th>
+                                <th st-sort="User.FirstName">First Name</th>
+                                <th st-sort="User.LastName">Last Name</th>
+                                <th st-sort="User.EmailID">Email</th>
+                                <th st-sort="User.DomainName">Domain Name</th>
+                                <th>Action</th>
+                            </tr>
+                            <tr role="search">
+                                <th colspan="16"><input st-search="" class="form-control" placeholder="search with client name, License type , status etc..." type="text" /></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr tabindex="{{$index}}" role="row" st-select-row="usertype" ng-repeat="usertype in usertypes" ng-click="selectUser(usertype)">
+                                <td>{{usertype.User.UserName}}</td>
+                                <td>{{usertype.User.FirstName}}</td>
+                                <td>{{usertype.User.LastName}}</td>
+                                <td>{{usertype.User.EmailID}}</td>
+                                <td>{{usertype.User.DomainName}}</td>
+                                <td><a st-operation="update"><i class="glyphicon glyphicon-pencil"></i></a></td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="16" class="text-center">
+                                    <div st-pagination="" st-items-by-page="12" st-displayed-pages="5" st-template="common/views/pagination-grid.html"></div>
+                                </td>
+                            </tr>
+                        </tfoot>
+
+                    </table>-->
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade full-height" id="admin-users">
+            <div class="col-xs-7 full-height">
+                <table class="table table-striped table-bordered table-condensed" role="grid" st-table="cloneUsers" st-safe-src="ilstAllUsers">
+                    <thead>
+                        <tr st-operation-row st-operation-on-select-callback="selectUserTabUser(record)">
+                            <th colspan="16">
+                                <i title="Add User" class="fa fa-plus marg-left-10 fright" ng-click="addUserTabNewUser()" />
+                                <!--<i title="Add AD user" class="fa fa-plus marg-left-10 fright" ng-click="showADUsers()" />-->
+                            </th>
+                        </tr>
+                        <tr role="heading">
+                            <th width="20%" st-sort="UserName">User Name</th>
+                            <th width="20%" st-sort="FirstName">First Name</th>
+                            <th width="20%" st-sort="LastName">Last Name</th>
+                            <th width="20%" st-sort="EmailID">EmailId</th>
+                            <th width="20%">Status</th>
+                        </tr>
+                        <tr role="search">
+                            <th colspan="16"><input st-search="" class="form-control" placeholder="search with User Name, First Name , Last Name etc..." type="text" /></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr tabindex="{{$index}}" role="row" ng-repeat="user in cloneUsers" st-select-row="user">
+                            <td style="width: 20%;max-width: 0;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;" title="{{user.UserName}}">{{user.UserName}}</td>
+                            <td style="width: 20%;max-width: 0;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;" title="{{user.FirstName}}">{{user.FirstName}} </td>
+                            <td style="width: 20%;max-width: 0;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;" title="{{user.LastName}}">{{user.LastName}}</td>
+                            <td style="width: 20%;max-width: 0;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;" title="{{user.EmailID}}">{{user.EmailID}}</td>
+                            <td style="width: 20%;max-width: 0;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;" ng-if="!user.IsActive" title="Send Activation Mail"> <a ng-click="reSendActivationMailForUser(user)">Send Activation Mail</a> </td>
+                            <td style="width: 20%;max-width: 0;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;" ng-if="user.IsActive" title="Activated">Activated</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="16" class="text-center">
+                                <div st-pagination="" st-items-by-page="12" st-displayed-pages="5" st-template="common/views/pagination-grid.html"></div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="col-xs-5 full-height">
+                <div class="col-xs-7">
+                    <table class="table table-striped table-bordered table-condensed" role="grid" st-table="cloneUserClient" st-safe-src="iobjUserTabSelectedUser.Clients">
+                        <thead>
+                            <tr role="heading">
+                                <th st-sort="ClientName">Client Name</th>
+                                <th st-sort="UserTypes[0].UserType">User Role</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr tabindex="{{$index}}" role="row" ng-repeat="userClient in cloneUserClient" st-select-row="userClient" ng-click="selectUserTablClient(userClient)">
+                                <td>
+                                    <span ng-bind="userClient.ClientName"></span>
+                                </td>
+                                <td>
+                                    <span ng-bind="userClient.UserTypes[0].UserType"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-xs-5 overflowA" style="height: calc(100% - 20px);">
+                    <table class="table table-striped table-bordered table-condensed" role="grid" st-table-temp>
+                        <thead>
+                            <tr role="heading">
+                                <th>Projects</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr tabindex="{{$index}}" role="row" ng-repeat="userProject in iobjUserTabSelectedClient.Projects | orderBy : 'ProjectName'">
+                                <td><span ng-bind="userProject.ProjectName"></span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

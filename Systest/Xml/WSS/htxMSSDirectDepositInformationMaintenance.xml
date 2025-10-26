@@ -1,0 +1,107 @@
+﻿<form ID="wfmMSSDirectDepositInformationMaintenance" sfwType="FormLinkMaintenance" sfwTitle="Direct Deposit Information Maintenance" sfwActive="True" sfwStatus="Review" sfwAspNetCaching="False" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2001" sfwEntity="entPayeeAccountAchDetail" sfwTemplate="MSSDirectDepositInformationMaintenance.html" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmMSSDirectDepositInformationLookup" sfwFormObjectType="None" isBasedOnWfm="true" sfwDefaultButtonID="btnCertify">
+  <initialload>
+    <callmethods sfwMethodName="NewMSSPayeeAccountAchDetail" />
+  </initialload>
+  <items>
+    <sfwPanel ID="pnlHeading" sfwGroupCaption="DirectDepositInformation Details" sfwCollapsible="False" sfwVisibleRule="VisibilityRuleIfEmailAddressIsNotWaived">
+      <items>
+        <sfwTable ID="tblMain" />
+        <sfwLiteral Text="Direct Deposit Information" ID="ltrLiteral" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlDirectDeposit" sfwCollapsible="False" sfwVisibleRule="VisibilityRuleIfEmailAddressIsNotWaived">
+      <items>
+        <sfwTable ID="tblNewPage" />
+        <sfwPanel ID="pnlNewPanel" sfwCaption="Direct Deposit" sfwVisibleRule="InVisibilityRuleForVerifyOTP">
+          <items>
+            <sfwTable ID="tblNewPage1" />
+            <sfwLabel ID="lblLabel9" Text="Selection 1 " sfwIsCaption="True" />
+            <sfwLabel ID="lblLabel10" Text="Selection 2" sfwIsCaption="True" />
+            <sfwLabel ID="lblLabel" Text=" Routing Number :" sfwIsCaption="True" />
+            <sfwTextBox ID="txtRoutingNumber1" sfwAfterRetrievalScriptMethod="PopulateBankNameIfRoutingNoExists1" sfwRetrievalMethod="GetBankNameByRoutingNumber1" sfwParameters="AintRoutingNumber1=txtRoutingNumber1" sfwRetrievalControls="lblBankName1=icdoOrganization.org_name;lblRoutingNumberExists1=icdoOrganization.iblnIsRouitngNumberExists1" sfwEntityField="objPayeeAccountACHDetail1.IstrRoutingNumber1" sfwValidationRules="IsRoutingNumberLenghtLessThan9;IsRoutingNumberNull;IsRoutingNumberNumeric" />
+            <sfwTextBox ID="txtRoutingNumber2" sfwAfterRetrievalScriptMethod="PopulateBankNameIfRoutingNoExists2" sfwParameters="AintRoutingNumber2=txtRoutingNumber2" sfwRetrievalControls="lblBankName2=icdoOrganization.org_name;lblRoutingNumberExists2=icdoOrganization.iblnIsRouitngNumberExists2" sfwRetrievalMethod="GetBankNameByRoutingNumber2" sfwEntityField="objPayeeAccountACHDetail2.IstrRoutingNumber2" />
+            <sfwLabel ID="lblLabel13" Text="If you split your deposit to multiple accounts please enter either a Flat Amount or Percentage. When entering a Percentage the total&lt;/br&gt; has to equal 100% or you may enter a Flat Amount on one of the accounts and the remaining benefit payment will be depositedto the &lt;/br&gt; second. For example, if you enter $250 on the first account, any remaining will be deposited to the second account." sfwIsCaption="True" />
+            <sfwLabel ID="lblLabel1" Text=" Bank Name :" sfwIsCaption="True" />
+            <sfwLabel ID="lblBankName1" sfwEntityField="objPayeeAccountACHDetail1.IstrBankName1" sfwClientVisibility="controllist:lblRoutingNumberExists1#True:lblRoutingNumberExists1;" />
+            <sfwTextBox ID="txtBankName1" sfwEntityField="objPayeeAccountACHDetail1.IstrBankName1" sfwClientVisibility="controllist:lblRoutingNumberExists2#False:lblRoutingNumberExists2;" sfwValidationRules="IsBankNameNull;IsBankNameGreaterThan50Characters" />
+            <sfwLabel ID="lblRNExists1" sfwEntityField="IsRouitngNumberExists1" CssClass="hideControl" />
+            <sfwLabel ID="lblBankName2" sfwEntityField="objPayeeAccountACHDetail2.IstrBankName2" />
+            <sfwTextBox ID="txtBankName2" sfwEntityField="objPayeeAccountACHDetail2.IstrBankName2" />
+            <sfwLabel ID="lblRNExists2" sfwEntityField="IsRouitngNumberExists2" CssClass="hideControl" />
+            <sfwLabel ID="lblNote1122" Text="Note : If this bank name does not match your bank’s name, please contact NDPERS." sfwIsCaption="True" />
+            <br />
+            <sfwLabel ID="lblLabel3" Text=" Account Number :" sfwIsCaption="True" />
+            <sfwTextBox ID="txtTextBox4" sfwEntityField="objPayeeAccountACHDetail1.AccountNumber1" sfwValidationRules="IsAccountNumberNull" />
+            <sfwTextBox ID="txtTextBox9" sfwEntityField="objPayeeAccountACHDetail2.AccountNumber2" />
+            <sfwLabel ID="lblLabel4" Text=" Account Type :" sfwIsCaption="True" />
+            <sfwDropDownList ID="ddlDropDownList" sfwLoadType="CodeGroup" sfwLoadSource="211" sfwEntityField="objPayeeAccountACHDetail1.AccountType1" sfwValidationRules="IsAccountTypeNull" />
+            <sfwDropDownList ID="ddlDropDownList1" sfwLoadType="CodeGroup" sfwLoadSource="211" sfwEntityField="objPayeeAccountACHDetail2.AccountType2" />
+            <sfwLabel ID="lblLabel8" Text="Percentage :" sfwIsCaption="True" />
+            <sfwTextBox ID="txtTextBox6" sfwDefaultValue="100" sfwDataFormat="{0:#0.00'%}" sfwEntityField="objPayeeAccountACHDetail1.IdecPercentageOfNetAmt1" />
+            <sfwLabel ID="lblRemainderOfBenefit" sfwVisibleRule="VisibleRuleRemainderOfBenefit" sfwDataFormat="{0:C}" sfwEntityField="objPayeeAccountACHDetail2.IdecRemainderOfBenefit" />
+            <sfwLabel ID="lblLabel7" Text="OR" sfwIsCaption="True" />
+            <sfwLabel ID="lblLabel6" Text="Flat Amount :" sfwIsCaption="True" />
+            <sfwTextBox ID="txtPartialAmount1" sfwDataFormat="{0:C}" sfwAfterRetrievalScriptMethod="CheckIfPartialAmountOfPrimaryEntered" sfwRetrievalMethod="GetPartialAmountSel1" sfwParameters="AidecPartialAmount1=txtPartialAmount1" sfwRetrievalControls="lblPartialAmount1=iblnPartialAmount1" sfwEntityField="objPayeeAccountACHDetail1.IstrPartialAmount" />
+            <sfwTextBox ID="txtPercentage2" sfwDataFormat="{0:#0.00'%}" sfwEntityField="objPayeeAccountACHDetail2.IdecPercentageOfNetAmt2" />
+            <br />
+            <sfwLabel ID="lblRoutingNumberExists1" sfwEntityField="objPayeeAccountACHDetail1.IblnIsRoutingNumberExist1" />
+            <sfwLabel ID="lblRoutingNumberExists2" sfwEntityField="objPayeeAccountACHDetail2.IblnIsRoutingNumberExist2" />
+            <sfwLabel ID="lblPartialAmount1" sfwEntityField="objPayeeAccountACHDetail1.IblnPartialAmount1" />
+            <sfwLabel ID="lblPersonId" sfwEntityField="objPayeeAccount.objMember.PersonId" CssClass="hideControl" />
+            <sfwLabel ID="lblLabel2" sfwEntityField="objPayeeAccount.PayeeAccountId" CssClass="hideControl" />
+          </items>
+        </sfwPanel>
+        <sfwLabel ID="lblPayeePerslinkID" sfwEntityField="objPayeeAccount.PayeePerslinkId" CssClass="hideControl" />
+        <sfwPanel ID="pnlNewPanel1" sfwCaption="Authorization" sfwVisibleRule="InVisibilityRuleForVerifyOTP">
+          <items>
+            <sfwTable ID="tblNewPage2" />
+            <br />
+            <sfwLabel ID="lblLabel5" sfwEntityField="IstrAcknowledgementText" CssClass="Ack-style" />
+            <br />
+            <sfwGridView ID="grvGridView1" AllowPaging="True" sfwObjectID="busPayeeAccountAchDetail.iclbACHDetailsAcknowledgementPart1" sfwEntityField="lstAcknowledgement" CssClass="GridColumnHide">
+              <Columns>
+                <TemplateField HeaderText="Acknowledgement Text" SortExpression="acknowledgement_text">
+                  <ItemTemplate>
+                    <sfwLabel sfwDataField="acknowledgement_text" sfwEntityField="AcknowledgementText" sfwRenderType="RichText" />
+                  </ItemTemplate>
+                </TemplateField>
+              </Columns>
+            </sfwGridView>
+            <br />
+            <sfwCheckBox ID="chkCheckAuth" sfwDefaultValue="N" sfwEntityField="IstrAcknowledgementFlag" sfwValidationRules="IsAcknowledegmentNotSelected" />
+            <sfwLabel ID="lblLabel12" sfwEntityField="IstrConfirmationText" sfwRenderType="RichText" />
+            <br />
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlNewPanel2" sfwCaption="Activation" sfwVisibleRule="VisibilityRuleForVerifyOTP">
+          <items>
+            <sfwTable ID="tblNewPage3" />
+            <sfwLabel ID="lblActivationCodeLabel" Text="An activation code has been sent to your email address. You need to enter the activation code to save the changes to your account. The activation code is only valid for 30 minutes. In case it has expired,&lt;/br&gt; please click Resend Activation Code. If you did not receive an email, make sure your correct email address is entered in Personal Profile by clicking the Cancel button." sfwIsCaption="True" />
+            <br />
+            <sfwLabel ID="lblLabel14" Text="Activation Code :  " sfwIsCaption="True" />
+            <sfwTextBox ID="txtActivationCode" sfwEntityField="IstrActivationCode" sfwValidationRules="IsActivationCodeInvald" />
+            <sfwButton ID="btnVerify" sfwMethodName="btnValidateExecuteBusinessMethod_Click" Text="Save my changes" sfwObjectMethod="btnVertifyOTP_Click" sfwNavigationParameter="AstrActivationCode=IstrActivationCode" sfwExecuteAfterSuccess="btnRefreshData12" CssClass="hideControl" Visible="False" />
+            <sfwButton ID="btnRefreshData12" sfwMethodName="btnOpen_Click" OnClientClick="fnRedirectPayeeAccounts()" sfwActiveForm="wfmMSSPayeeAccountsMaintenance" sfwNavigationParameter="aintPayeeAccountId=objPayeeAccount.PayeeAccountId" />
+            <sfwButton ID="btnResend" sfwMethodName="btnValidateExecuteBusinessMethod_Click" Text="Resend Activation Code" sfwObjectMethod="btnResendOTP_Click" />
+            <sfwLabel ID="lblOTPExpired" sfwEntityField="IblnIsOTPExpired" CssClass="hideControl" />
+            <sfwLabel ID="lblIsResendClicked" sfwEntityField="IblnIsResendClicked" CssClass="hideControl" />
+            <sfwButton ID="btnVerifyCancel" sfwMethodName="btnBack_Click" Text="Cancel" CssClass="hideControl" />
+            <sfwButton sfwMethodName="btnOpen_Click" Text="Cancel" ID="btnOpenMSSProfile" sfwActiveForm="wfmMSSProfileMaintenance" sfwNavigationParameter="aintPersonID=objPayeeAccount.objMember.PersonId" />
+          </items>
+        </sfwPanel>
+        <sfwLabel ID="lblIsOTPVerified" sfwEntityField="IblnIsOTPEnteredVerified" CssClass="hideControl" />
+        <sfwButton ID="btnCertify" sfwMethodName="btnValidateExecuteBusinessMethod_Click" Text="Save" sfwVisibleRule="VisibilityRuleForGenerateOTPButton" sfwObjectMethod="btnGenerateOTP_Click" />
+        <sfwButton ID="btnButton2" sfwMethodName="btnBack_Click" sfwRelatedControl="dgrResult" Text="Cancel" sfwVisibleRule="VisibilityRuleForGenerateOTPButton" CssClass="hideControl" />
+        <sfwButton sfwMethodName="btnOpen_Click" Text="Cancel" ID="btnOpenPayeeAccounts" sfwActiveForm="wfmMSSPayeeAccountsMaintenance" sfwVisibleRule="VisibilityRuleForGenerateOTPButton" sfwNavigationParameter="aintPayeeAccountId=objPayeeAccount.PayeeAccountId" OnClientClick="fnRemoveCurrentForm(e);" />
+      </items>
+    </sfwPanel>
+  </items>
+  <loaddetails>
+    <entityfield ID="objPayeeAccountACHDetail1" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objPayeeAccountACHDetail2" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objPayeeAccount.objMember" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objPayeeAccount" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstAcknowledgement" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+  </loaddetails>
+  <ExtraFields />
+</form>

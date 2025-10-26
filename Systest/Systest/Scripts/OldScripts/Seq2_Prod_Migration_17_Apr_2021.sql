@@ -1,0 +1,62 @@
+
+/********************Purpose: PIR 23741 New Template for org maint ER Outstanding Balance******************************
+*********************Created By: Abhijeet Malwadkar********************************
+*********************Comments: New Template for org maint ER Outstanding Balance *****************/
+IF NOT EXISTS (SELECT * FROM [dbo].[SGS_COR_TEMPLATES] WHERE TEMPLATE_NAME = 'ORG-2052')
+INSERT INTO [dbo].[SGS_COR_TEMPLATES] ([TEMPLATE_NAME], [TEMPLATE_DESC], [TEMPLATE_GROUP_ID], [TEMPLATE_GROUP_VALUE], [ACTIVE_FLAG], [DESTINATION_ID], [DESTINATION_VALUE], 
+[ASSOCIATED_FORMS], [FILTER_OBJECT_ID], [FILTER_OBJECT_FIELD], [FILTER_OBJECT_VALUE], [CONTACT_ROLE_ID], [CONTACT_ROLE_VALUE], [BATCH_FLAG], [ONLINE_FLAG], [AUTO_PRINT_FLAG], [PRINTER_NAME_ID], 
+[PRINTER_NAME_VALUE], [CREATED_BY], [CREATED_DATE], [MODIFIED_BY], [MODIFIED_DATE], [UPDATE_SEQ],
+IMAGE_DOC_CATEGORY_ID,IMAGE_DOC_CATEGORY_VALUE,FILENET_DOCUMENT_TYPE_ID,FILENET_DOCUMENT_TYPE_VALUE,DOCUMENT_CODE) 
+VALUES ( 'ORG-2052', 'ER Outstanding Balance', '19', 'ORGN', 'Y', '601', NULL, 
+'wfmOrganizationMaintenance;', NULL, NULL, NULL, 
+'515',NULL, 'N', 'Y', 'N', '44', NULL, 'PIR 23741', GETDATE(), 'PIR 23741', GETDATE(), '0',
+603,'ORGN',604,'CORR','1520')
+GO
+
+
+/********************Purpose: 23691	Add new activity to ‘Process Life Insurance Claim' WFL process******************************
+*********************Created By: Vidya Fulsoundar********************************
+*********************Comments: 23691	Add new activity to ‘Process Life Insurance Claim' WFL process *****************/
+DECLARE @MAXID INT
+IF NOT EXISTS (SELECT 1 FROM [dbo].[SGW_ACTIVITY] WHERE PROCESS_ID=251 and NAME = 'Process Claim Received') 
+BEGIN
+    SELECT @MAXID = MAX(ACTIVITY_ID) + 1  FROM [SGW_ACTIVITY]
+    INSERT INTO [SGW_ACTIVITY] (ACTIVITY_ID,PROCESS_ID,NAME,DISPLAY_NAME,STANDARD_TIME_IN_MINUTES,ROLE_ID,SUPERVISOR_ROLE_ID,SORT_ORDER,IS_DELETED_FLAG,CREATED_BY,CREATED_DATE,MODIFIED_BY,MODIFIED_DATE,UPDATE_SEQ)
+    VALUES(@MAXID,251,'Process Claim Received','Process Claim Received',300,209,148,1,NULL,'PIR 23691',GETDATE(),'PIR 23691',GETDATE(),0)
+END
+GO
+
+ 
+
+IF EXISTS (SELECT 1 FROM [dbo].[SGW_ACTIVITY] WHERE PROCESS_ID=251 and NAME = 'Forward Life Insurance Claim' and isnull(SORT_ORDER,0) <> 2) 
+BEGIN
+    UPDATE [SGW_ACTIVITY] SET SORT_ORDER = 2 WHERE PROCESS_ID=251 and NAME = 'Forward Life Insurance Claim'
+END
+GO
+IF EXISTS (SELECT 1 FROM [dbo].[SGW_ACTIVITY] WHERE PROCESS_ID=251 and NAME = 'Enter Insurance Check Data' and isnull(SORT_ORDER,0) <> 3) 
+BEGIN
+    UPDATE [SGW_ACTIVITY] SET SORT_ORDER = 3 WHERE PROCESS_ID=251 and NAME = 'Enter Insurance Check Data'
+END
+GO
+
+
+
+
+/*Data_Change_PIR_23527 */
+/********************Purpose: Supp Amount Limit******************************
+*********************Created By: Saylee P********************************
+*********************Comments: *****************/
+
+IF NOT EXISTS (SELECT 1 FROM [dbo].[SGS_CODE] WHERE CODE_ID = 7020) 
+BEGIN
+INSERT INTO SGS_CODE (CODE_ID,DESCRIPTION,DATA1_CAPTION,DATA1_TYPE,DATA2_CAPTION,DATA2_TYPE,DATA3_CAPTION,DATA3_TYPE,FIRST_LOOKUP_ITEM,FIRST_MAINTENANCE_ITEM,COMMENTS,LEGACY_CODE_ID,CREATED_BY,CREATED_DATE,MODIFIED_BY,MODIFIED_DATE,UPDATE_SEQ)
+VALUES(7020,'IRS Supplemental Coverage Amount limit','Supplemental Amount','deci','Effective Date','date',NULL,NULL,'All',NULL,NULL,NULL,'PIR 23527',GETDATE(),'PIR 23527',GETDATE(),0)
+END
+GO 
+
+IF NOT EXISTS (SELECT 1 FROM [dbo].[SGS_CODE_VALUE] WHERE CODE_ID = 7020 AND CODE_VALUE='SCAL') 
+BEGIN
+INSERT INTO SGS_CODE_VALUE (CODE_ID,CODE_VALUE,DESCRIPTION,DATA1,DATA2,DATA3,COMMENTS,START_DATE,END_DATE,CODE_VALUE_ORDER,LEGACY_CODE_ID,CREATED_BY,CREATED_DATE,MODIFIED_BY,MODIFIED_DATE,UPDATE_SEQ)
+VALUES(7020,'SCAL','Supplemental Coverage Amount Limit','50000','01/01/1900',NULL,NULL,NULL,NULL,NULL,NULL,'PIR 23527',GETDATE(),'PIR 23527',GETDATE(),0)
+END
+GO

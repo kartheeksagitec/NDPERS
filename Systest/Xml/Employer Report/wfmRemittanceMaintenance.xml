@@ -1,0 +1,500 @@
+﻿<form ID="wfmRemittanceMaintenance" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvEmployerReport" sfwResource="1007" sfwType="Maintenance" sfwTitle="Remittance Maintenance" version="3.5" sfwEntity="entRemittance">
+  <initialload>
+    <callmethods sfwMode="New" sfwMethodName="NewRemittance" />
+    <callmethods sfwMode="Update" sfwMethodName="FindRemittance" />
+  </initialload>
+  <sfwTable ID="Main">
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnltoolbar">
+          <sfwTable ID="toolbar">
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnSave" sfwMethodName="btnSave_Click" sfwNavigationParameter="Aintremittanceid=RemittanceId" Text="Save" />
+                <sfwButton ID="btnSaveNew" sfwMethodName="btnSaveNew_Click" Text="Save New" sfwNavigationParameter="AintDepositID=objDeposit.DepositId" />
+                <sfwButton ID="btnCancel" sfwMethodName="btnCancel_Click" Text="Refresh" />
+                <sfwButton ID="btnPrev" sfwMethodName="btnPrev_Click" Text="Prev" />
+                <sfwButton ID="btnNext" sfwMethodName="btnNext_Click" Text="Next" />
+                <sfwButton ID="btnOpen" sfwActiveForm="wfmRemittanceRefundAmountMaintenance" sfwMethodName="btnOpen_Click" sfwMode="Update" sfwNavigationParameter="aintRemittanceId=RemittanceId" Text="Update Refund Amount" sfwVisibleRule="VisibleRuleIsRemittanceStatusInvalidated" sfwDisableViewOnly="True" />
+                <sfwButton ID="btnAllocateNegDeposit" sfwMethodName="btnValidateExecuteBusinessMethod_Click" sfwObjectMethod="btnAllocateNegativeDeposit_Click" sfwRefreshFromObject="True" sfwResource="1020" sfwSecurityLevel="2" sfwVisibleRule="VisibleRuleAllocateNegativeDeposit" Text="Allocate Negative Deposit" />
+                <sfwButton ID="btnCorrespondence" sfwMethodName="btnCorrespondence_Click" Text="Correspondence" Visible="False" />
+                <sfwButton ID="btnCancelRefund" OnClientClick="return confirm('“Are you sure you want to apply the Deposit?” when the ‘Deposit’ is changed to ‘INVALIDATED.’')" sfwMethodName="btnExecuteBusinessMethod_Click" sfwMode="Update" sfwObjectMethod="btnCancelRefund_Click" sfwSecurityLevel="3" Text="Cancel Refund" sfwResource="2088" sfwVisibleRule="IsCancelRefundButtonVisible" />
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlDepositDetails" sfwCaption="Deposit Details" CssClass="ContainerPanel auto-width-panel">
+          <sfwTable CssClass="Table" ID="tblDepositDetails">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capDepositTapeId" Text="Deposit Tape ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLinkButton ID="lblDepositTapeId" sfwActiveForm="wfmDepositTapeMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintdeposittapeid=objDepositTape.DepositTapeId" sfwEntityField="objDepositTape.DepositTapeId" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capDepositId" Text="Deposit ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLinkButton ID="lblDepositId" sfwActiveForm="wfmDepositMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintdepositid=objDeposit.DepositId" sfwEntityField="objDeposit.DepositId" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capDepositAmount" Text="Deposit Amount : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblDepositAmount" sfwDataFormat="{0:C}" sfwEntityField="objDeposit.DepositAmount" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capPerslinkId" Text="PERSLink ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLinkButton ID="lblPerslinkId" sfwActiveForm="wfmPersonMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintpersonid=objDeposit.PersonId" sfwEntityField="objDeposit.PersonId" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblPersonName" Text="Person Name :" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblLabel" sfwEntityField="IstrPersonName" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capLdclTotalRemittanceAmount" Text="Total Remittances : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblLdclTotalRemittanceAmount" sfwDataFormat="{0:C}" sfwEntityField="LdclTotalRemittanceAmount" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capOrgId" Text="Org Code ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLinkButton ID="btnLinkButton" sfwActiveForm="wfmOrganizationMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintorgid=OrgId" sfwEntityField="objDeposit.IstrOrgCode" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblOrgName" Text="Org Name :" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblIstrOrgName" sfwEntityField="IstrOrgName" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblOrgId" Visible="False" sfwEntityField="OrgId" />
+              </sfwColumn>
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capDepositDate" Text="Deposit Date : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblDepositDate" sfwDataFormat="{0:d}" sfwEntityField="objDeposit.DepositDate" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capStatusDescription" Text="Status : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblStatusDescription" sfwEntityField="objDeposit.StatusDescription" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel AssociatedControlID="lblDepositMethodDescription" ID="capDepositMethodDescription" Text="Deposit Method : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblDepositMethodDescription" sfwEntityField="objDepositTape.DepositMethodDescription" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capDepositSourceValue" Text="Deposit Source : " AssociatedControlID="lblDepositSourceValue" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblDepositSourceValue" sfwEntityField="objDeposit.DepositSourceDescription" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capLstrBenfitTypeValue" Text="Benefit Type : " AssociatedControlID="lblLstrBenfitTypeValue" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblLstrBenfitTypeValue" sfwEntityField="objPlan.BenefitTypeDescription" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlMain" sfwCaption="Remittance Details" CssClass="ContainerPanel remittance-details">
+          <sfwTable CssClass="Table" ID="tblMain">
+            <sfwRow>
+              <sfwColumn />
+              <sfwColumn />
+              <sfwColumn>
+                <sfwLabel AssociatedControlID="chkIstrSuppressWarnings" ID="capIstrSuppressWarnings" Text="Suppress Warnings : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwCheckBox ID="chkIstrSuppressWarnings" sfwEntityField="IstrSuppressWarnings" sfwDefaultValue="N" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capPerslinkI" Text="PERSLink ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn Width="250px" CssClass="DisplayInlineBlock">
+                <sfwTextBox ID="lblPerslinkI" sfwEntityField="PersonId" sfwVisibleRule="Rule Check Save Button Visibility" />
+                <sfwImageButton ID="btnRetrieve" ImageAlign="AbsMiddle" ImageUrl="~/Image/Lookup.jpg" sfwActiveForm="wfmPersonLookup" sfwMethodName="btnRetrieve_Click" sfwRelatedControl="lblPerslinkI" sfwSelectedIndex="PersonId" sfwVisibleRule="Rule Check Save Button Visibility" />
+                <sfwLabel ID="lblPersonID" sfwEntityField="PersonId" sfwVisibleRule="Rule-CheckSaveButtonVisibilityFalse" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblPersonNam" Text="Person Name :" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblstrPersonName" sfwEntityField="IstrRemittancePersonName" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capOrgI" Text="Org Code ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn Width="250px" CssClass="DisplayInlineBlock">
+                <sfwTextBox ID="lblLstrOrgCodeID1" sfwEntityField="IstrOrgCodeID" sfwVisibleRule="Rule Check Save Button Visibility" />
+                <sfwImageButton ID="btnRetrieve1" ImageAlign="AbsMiddle" ImageUrl="~/Image/Lookup.jpg" sfwActiveForm="wfmOrganizationLookup" sfwMethodName="btnRetrieve_Click" sfwRelatedControl="lblLstrOrgCodeID1" sfwSelectedIndex="OrgCode" sfwVisibleRule="Rule Check Save Button Visibility" />
+                <sfwLabel ID="lblOrgID1" sfwEntityField="IstrOrgCodeID" sfwVisibleRule="Rule-CheckSaveButtonVisibilityFalse" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblOrgNam" Text="Org Name :" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lbstrOrgName" sfwEntityField="IstrRemittanceOrgName" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel AssociatedControlID="txtNotes" ID="capNotes" Text="Notes : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn RowSpan="3">
+                <sfwTextBox ID="txtNotes" Rows="5" TextMode="MultiLine" Width="250px" sfwEntityField="Notes" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capRemittanceId" Text="Remittance ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblRemittanceId" sfwEntityField="RemittanceId" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel BackColor="White" BorderColor="White" ForeColor="Red" ID="lblRemittanceType" SkinID="ReqInformation" Text="*" sfwIsCaption="True" />
+                <sfwLabel ID="capRemittanceTypeValue" Text="Remittance Type : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn Width="200">
+                <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlRemittanceTypeValue" sfwVisibleRule="Rule Check Save Button Visibility" sfwLoadType="Method" sfwLoadSource="GetRemittanceType" sfwEntityField="RemittanceTypeValue" />
+                <sfwLabel ID="lblRemittanceTypeDescription" sfwVisibleRule="Rule-CheckSaveButtonVisibilityFalse" sfwEntityField="RemittanceTypeDescription" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel BackColor="White" BorderColor="White" ForeColor="Red" ID="lblRemittanceAmount" SkinID="ReqInformation" Text="*" sfwIsCaption="True" />
+                <sfwLabel ID="capRemittanceAmount" Text="Remittance Amount : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtRemittanceAmount" sfwDataFormat="{0:C}" sfwVisibleRule="Rule Check Save Button Visibility" sfwEntityField="RemittanceAmount" />
+                <sfwLabel ID="lblRemittanceAmount1" sfwDataFormat="{0:C}" sfwVisibleRule="Rule-CheckSaveButtonVisibilityFalse" sfwEntityField="RemittanceAmount" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capPlanId" Text="Plan : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn Width="200">
+                <sfwDropDownList DataTextField="plan_name" DataValueField="plan_id" ID="ddlPlanId" sfwVisibleRule="Rule Check Save Button Visibility" sfwLoadType="Method" sfwLoadSource="GetPlan" sfwEntityField="PlanId" />
+                <sfwLabel ID="lblPlanName" sfwVisibleRule="Rule-CheckSaveButtonVisibilityFalse" sfwEntityField="objPlan.PlanName" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capStatusDescription1" Text="Status : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblStatusDescription1" sfwEntityField="objDeposit.StatusDescription" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capIdecRefundAmount" Text="Refund Amount : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblIdecRefundAmount" sfwDataFormat="{0:C}" sfwEntityField="IdecRefundAmount" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capRefundStatusDescription" Text="Refund Status : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblRefundStatusDescription" sfwEntityField="RefundStatusDescription" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel AssociatedControlID="txtAllocatedNegativeDepositAmount" ID="capAllocatedNegativeDepositAmount" sfwResource="1020" sfwVisibleRule="VisibleRuleAllocateNegativeDeposit" Text="Allocated Negative Deposit Amount : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtAllocatedNegativeDepositAmount" sfwDataFormat="{0:C}" sfwResource="1020" sfwVisibleRule="VisibleRuleAllocateNegativeDeposit" sfwEntityField="AllocatedNegativeDepositAmount" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnServerSideRefresh" sfwMethodName="btnValidateExecuteBusinessMethod_Click" sfwObjectMethod="ReloadHandButtonData" SkinID="ServerSideRefresh" Text="Execute Refresh From Object" CssClass="hideControl" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn>
+                <sfwLabel ID="lblOrgI" Visible="False" sfwEntityField="OrgId" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn />
+              <sfwColumn />
+              <sfwColumn />
+              <sfwColumn />
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn />
+              <sfwColumn />
+              <sfwColumn />
+              <sfwColumn />
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlRRD" sfwCaption="Review Remittance Distribution">
+          <sfwTable CssClass="Table" ID="tblRRD">
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnOpenPayrollHdr" sfwActiveForm="wfmEmployerPayrollHeaderMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintemployerpayrollheaderid=PayrollHeaderID" sfwRelatedControl="grvRevRemittance" Text="Open" Visible="False" />
+                <sfwButton ID="btnOpenSeminarID" sfwRelatedControl="grvRevRemittance" Text="OpenSeminarID" Visible="False" />
+                <sfwButton ID="btnOpenAgreementID" sfwRelatedControl="grvRevRemittance" Text="OpenAgreementID" Visible="False" />
+                <sfwButton ID="btnOpenPymtReceivableID" sfwActiveForm="wfmServicePurchaseHeaderMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintservicepurchaseheaderid=PymtReceivableID" sfwRelatedControl="grvRevRemittance" Text="Open" Visible="False" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwGridView AllowPaging="True" AllowSorting="True" AutoGenerateColumns="False" ID="grvRevRemittance" sfwSelection="Many" sfwEntityField="lstRevRemittance" sfwGridEntity="entcdoReviewRemittanceDistribution">
+                  <Columns>
+                    <TemplateField HeaderText="Payroll Header ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="PayrollHeaderID" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Payroll Header ID" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpenPayrollHdr" sfwEntityField="LstrPayrollHeaderID" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Seminar ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="SeminarID" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Seminar ID">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwEntityField="LstrSeminarID" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Agreement ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="AgreementID" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Agreement ID">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwEntityField="LstrAgreementID" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Payment Receivable ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="PymtReceivableID" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Payment Receivable ID">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpenPymtReceivableID" sfwEntityField="LstrPymtReceivableID" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Reported Amount" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="ReportedAmount" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Allocated Amount" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="AppliedAmount" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlOtherRemittances" sfwCaption="Other Remittances">
+          <sfwTable CssClass="Table" ID="tblOtherRemittances">
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnOpenDepositTape" sfwActiveForm="wfmDepositTapeMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintdeposittapeid=objDepositTape.DepositTapeId" sfwRelatedControl="grvRemittance" Text="Open" Visible="False" />
+                <sfwButton ID="btnOpenDeposit" sfwActiveForm="wfmDepositMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintdepositid=objDeposit.DepositId" sfwRelatedControl="grvRemittance" Text="Open" Visible="False" />
+                <sfwButton ID="btnOpenRemittances" sfwActiveForm="wfmRemittanceMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintremittanceid=RemittanceId" sfwRelatedControl="grvRemittance" Text="Open" Visible="False" />
+                <sfwButton ID="btnOpenPerson" sfwActiveForm="wfmPersonMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintpersonid=PersonId" sfwRelatedControl="grvRemittance" Text="Open" Visible="False" />
+                <sfwButton ID="btnOpenOrg" sfwActiveForm="wfmOrganizationMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintorgid=OrgId" sfwRelatedControl="grvRemittance" Text="Open" Visible="False" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwGridView AllowPaging="True" AllowSorting="True" AutoGenerateColumns="False" ID="grvRemittance" sfwSelection="Many" sfwEntityField="objDeposit.lstRemittance" sfwGridEntity="entRemittance">
+                  <Columns>
+                    <TemplateField HeaderText="Deposit Tape ID" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpenDepositTape" sfwEntityField="objDeposit.DepositTapeId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Deposit ID" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpenDeposit" sfwEntityField="DepositId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Remittance ID" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpenRemittances" sfwEntityField="RemittanceId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Perslink ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objDeposit.PersonId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Perslink ID" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpenPerson" sfwEntityField="IstrPERSLinkID" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Org Code ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpenOrg" sfwEntityField="LstrOrgCodeID" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Org Code ID" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objOrganization.OrgCode" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Plan Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objPlan.PlanName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Remittance Type">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="RemittanceTypeDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Remittance Amount" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="RemittanceAmount" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Allocated Amount" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="LdclAppliedAmount" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Balance Amount" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="LdclBalanceAmount" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Org ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="OrgId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Person ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="PersonId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlAuditInfo" sfwCaption="Audit Information">
+          <sfwTable CssClass="Table" ID="tblAuditInfo">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capCreate" Text="Create : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblCreatedBy" sfwEntityField="CreatedBy" />
+                <sfwLabel ID="lblUpdateSeq" sfwTwoWayBinding="True" Visible="False" sfwEntityField="UpdateSeq" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblCreatedDate" sfwEntityField="CreatedDate" sfwDataFormat="{0:G}" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capModify" Text="Modify : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblModifiedBy" sfwEntityField="ModifiedBy" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblModifiedDate" sfwEntityField="ModifiedDate" sfwDataFormat="{0:G}" />
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+  </sfwTable>
+  <loaddetails>
+    <entityfield ID="objDepositTape" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objDeposit" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstRevRemittance" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objDeposit.lstRemittance" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+  </loaddetails>
+</form>

@@ -1,0 +1,29 @@
+﻿<div>
+    <div unselectable="on" class="padding-2" ng-class="field.IsRecordSelected?'selected':''" ng-mousedown="selectField(field, $event)" ng-show="!field.IsMainEntity" ng-disabled="field.IsDisabled">
+        <div ng-class="field.IsExpanded?'fa fa-minus':'fa fa-plus'" class="fleft" ng-click="ExpandCollapsedEntityField(field,$event)" ng-show="field.DataType == 'Object' || field.DataType == 'List' || field.DataType == 'Collection' || field.IsMainEntity"></div>
+        <input type="checkbox" ng-model="field.IsSelected" ng-show="isShowcheckBox(field)" ng-true-value="'True'" ng-false-value="'False'" ng-checked="field.IsSelected" />
+        <div class="object-tree-img">
+            <img ng-show="field.DataType == 'int'" src="images/Form/icon-integer.png" />
+            <img ng-show="field.DataType == 'bool'" src="images/Form/icon-boolean.png" />
+            <img ng-show="field.DataType == 'Collection' || field.DataType == 'List' || field.DataType == 'CDOCollection'" src="images/Form/icon-collection.png" />
+            <img ng-show="field.DataType == 'datetime'" src="images/Form/icon-datetime.png" />
+            <img ng-show="field.DataType == 'decimal'" src="images/Form/icon-decimal.png" />
+            <img ng-show="field.DataType == 'double'" src="images/Form/icon-double.png" />
+            <img ng-show="field.DataType == 'float'" src="images/Form/icon-float.png" />
+            <img ng-show="field.DataType == 'string'" src="images/Form/icon-string.png" />
+            <img ng-show="field.DataType == 'Object'" src="images/Form/icon-object.png" />
+        </div>
+
+        <span draggable="true" entitytreefielddraggable dragdata="field.ID" dragobject="field" ng-mousedown="selectField(field, $event)" ng-click='selectField(field, $event)'>{{field.ID}}</span>
+    </div>
+    <ul class="form-entity-tree" ng-show="field.IsExpanded">
+        <li ng-repeat='field in field.Attributes' entityobjectchildtreetemplate
+            ng-dblclick='loadNextLevel(field, $event)' 
+            ng-if="(isonetooneshow && field.DataType=='Object') || (isattributeshow && !(field.DataType=='Object' || field.DataType=='Collection' || field.DataType=='CDOCollection' || field.DataType=='List')) || (isonetomanyshow && (field.DataType=='Collection' || field.DataType=='List' || field.DataType=='CDOCollection'))">
+
+        </li>
+      
+        <!--li ng-repeat='field in field.XmlMethods' entityobjectchildtreetemplate ng-if="isxmlmethodparamshow"
+            role="treeitem" id="j2_2" class="jstree-node  jstree-leaf" aria-selected="false"></li>-->
+    </ul>
+</div>

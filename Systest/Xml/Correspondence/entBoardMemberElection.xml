@@ -1,0 +1,87 @@
+﻿<entity ID="entBoardMemberElection" sfwView="False" sfwActive="True" sfwMainCDO="icdoBoardMemberElection" sfwType="EntityRule" sfwStatus="Review" sfwTableName="sgt_board_member_election" sfwObjectID="busBoardMemberElection" sfwDataObjectID="doBoardMemberElection" CreateWithClass="True">
+  <attributes>
+    <attribute sfwValue="election_id" sfwType="Column" sfwKeyNo="1" sfwIsIdentity="True" sfwDataType="int" sfwDBDataType="int" sfwIsNull="False" ID="ElectionId" sfwCaption="ID" />
+    <attribute sfwValue="start_date" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="date" sfwDBDataType="date" sfwIsNull="True" ID="StartDate" sfwCaption="Start Date" />
+    <attribute sfwValue="end_date" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="date" sfwDBDataType="date" sfwIsNull="True" ID="EndDate" sfwCaption="End Date" />
+    <attribute sfwValue="term_start_date" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="date" sfwDBDataType="date" sfwIsNull="True" ID="TermStartDate" sfwCaption="Term Start Date" />
+    <attribute sfwValue="term_end_date" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="date" sfwDBDataType="date" sfwIsNull="True" ID="TermEndDate" sfwCaption="Term End Date" />
+    <attribute sfwValue="audience_id" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="True" ID="AudienceId" sfwCaption="Audience" sfwCodeID="7008" />
+    <attribute sfwValue="audience_value" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="4" sfwIsNull="True" ID="AudienceValue" sfwCaption="Audience" />
+    <attribute sfwValue="allowed_votes_per_person" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="tinyint" sfwDBDataType="tinyint" sfwIsNull="True" ID="AllowedVotesPerPerson" sfwCaption="Allowed Votes Per Person" />
+    <attribute sfwValue="created_by" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="50" sfwIsNull="True" ID="CreatedBy" sfwCaption="Created By" />
+    <attribute sfwValue="created_date" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="datetime" sfwDBDataType="datetime" sfwIsNull="True" ID="CreatedDate" sfwCaption="Created Date" />
+    <attribute sfwValue="modified_by" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="50" sfwIsNull="True" ID="ModifiedBy" sfwCaption="Modified By" />
+    <attribute sfwValue="modified_date" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="datetime" sfwDBDataType="datetime" sfwIsNull="True" ID="ModifiedDate" sfwCaption="Modified Date" />
+    <attribute sfwValue="update_seq" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="True" ID="UpdateSeq" sfwCaption="Update Seq" />
+    <attribute sfwType="Description" ID="AudienceDescription" sfwCaption="Audience" sfwValue="audience_description" />
+    <attribute ID="lstBoardMemberElectionCandidates" sfwType="Collection" sfwValue="iclbbusBoardMemberElectionCandidates" sfwEntity="entBoardMemberElectionCandidate" sfwPrivate="False" />
+    <attribute ID="iintNoOfVotesCast" sfwDataType="int" sfwPrivate="False" sfwValue="iintNoOfVotesCast" sfwType="Property" />
+  </attributes>
+  <ExtraFields />
+  <queries>
+    <query ID="IsElectionEndDateGreaterThanSysMgmtDate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="DECLARE @SYSMGMTDATE DATE&#xA;SELECT @SYSMGMTDATE = BATCH_DATE FROM SGS_SYSTEM_MANAGEMENT&#xA;&#xA;SELECT &#xA;&#x9;COUNT(*) AS IS_VISIBLE&#xA;FROM &#xA;&#x9;SGT_BOARD_MEMBER_ELECTION&#xA;WHERE&#xA;&#x9;ELECTION_ID = @ELECTIONID AND&#xA;&#x9;END_DATE IS NOT NULL AND&#xA;&#x9;@SYSMGMTDATE &gt;= END_DATE">
+      <parameters>
+        <parameter ID="@ELECTIONID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="ElectionLookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT &#xA;&#x9;*,&#xA;&#x9;(SELECT COUNT(*) as iintNoOfVotesCast FROM SGT_BOARD_MEMBER_VOTE V WITH(NOLOCK) WHERE V.ELECTION_ID = E. ELECTION_ID) as iintNoOfVotesCast&#xA;FROM &#xA;SGT_BOARD_MEMBER_ELECTION E WITH(NOLOCK)">
+      <parameters />
+      <mappedcolumns>
+        <column ID="iintnoofvotescast" sfwEntityField="iintNoOfVotesCast" />
+      </mappedcolumns>
+    </query>
+    <query ID="LoadBoardMemberElectionCandidatesInRandomOrder" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT &#xA;&#x9;* &#xA;FROM &#xA;&#x9;SGT_BOARD_MEMBER_ELECTION_CANDIDATE &#xA;WHERE &#xA;&#x9;ELECTION_ID = @ELECTIONID&#xA;ORDER BY&#xA;&#x9;NEWID()">
+      <parameters>
+        <parameter ID="@ELECTIONID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="BoardMemberElectionIndividualVotesCast" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT&#xA;VOTE_CAST_TIME,&#xA;CASE WHEN V.CANDIDATE_NAME IS NULL THEN C.CANDIDATE_NAME ELSE V.CANDIDATE_NAME END AS CANDIDATE_NAME&#xA;FROM&#xA;SGT_BOARD_MEMBER_VOTE V WITH(NOLOCK)&#xA;LEFT JOIN&#xA;SGT_BOARD_MEMBER_ELECTION_CANDIDATE C WITH(NOLOCK) ON C.ELECTION_ID = V.ELECTION_ID AND V.CANDIDATE_ID = C.CANDIDATE_ID&#xA;WHERE&#xA;V.ELECTION_ID = @ELECTION_ID">
+      <parameters>
+        <parameter ID="@ELECTION_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="BoardMemberElectionOrderedSummaryGrid" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT&#xA;COUNT(V.BOARD_MEMBER_VOTE_ID) AS VOTES_CAST,&#xA;CASE WHEN V.CANDIDATE_NAME IS NULL THEN C.CANDIDATE_NAME ELSE V.CANDIDATE_NAME END AS CANDIDATE_NAME&#xA;FROM&#xA;SGT_BOARD_MEMBER_VOTE V WITH(NOLOCK)&#xA;LEFT JOIN&#xA;SGT_BOARD_MEMBER_ELECTION_CANDIDATE C WITH(NOLOCK) ON C.ELECTION_ID = V.ELECTION_ID AND V.CANDIDATE_ID = C.CANDIDATE_ID&#xA;WHERE&#xA;V.ELECTION_ID = @ELECTION_ID&#xA;GROUP BY&#xA;CASE WHEN V.CANDIDATE_NAME IS NULL THEN C.CANDIDATE_NAME ELSE V.CANDIDATE_NAME END&#xA;ORDER BY&#xA;COUNT(V.BOARD_MEMBER_VOTE_ID) DESC, CASE WHEN V.CANDIDATE_NAME IS NULL THEN C.CANDIDATE_NAME ELSE V.CANDIDATE_NAME END ASC">
+      <parameters>
+        <parameter ID="@ELECTION_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="BoardMemberElectionReportHeader" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT &#xA;    ELECTION_ID, CONVERT(VARCHAR, TERM_START_DATE, 110) AS TERM_START_DATE, CONVERT(VARCHAR, TERM_END_DATE, 110) AS TERM_END_DATE,&#xA;&#x9;--ELECTION_ID, TERM_START_DATE, TERM_END_DATE,&#xA;&#x9;CASE &#xA;&#x9;&#x9;WHEN AUDIENCE_VALUE LIKE ('RETR') THEN 'Retiree'&#xA;&#x9;&#x9;WHEN AUDIENCE_VALUE LIKE ('ACTV') THEN 'Active'&#xA;&#x9;ELSE ''&#xA;&#x9;END AS DESCRIPTION,&#xA;&#x9;CV.DESCRIPTION AS AUDIENCE&#xA;FROM SGT_BOARD_MEMBER_ELECTION BME&#xA;LEFT JOIN SGS_CODE_VALUE CV ON CV.CODE_ID = BME.AUDIENCE_ID AND CV.CODE_VALUE = BME.AUDIENCE_VALUE&#xA;WHERE ELECTION_ID = @ELECTION_ID">
+      <parameters>
+        <parameter ID="@ELECTION_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <constraint />
+  <rules>
+    <rule ID="Visible Rule - Is Election Results Report Visible" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entBoardMemberElection.IsElectionEndDateGreaterThanSysMgmtDate&quot;, this.icdoBoardMemberElection.election_id) &gt; 0)" />
+    <rule ID="Rule - Is Number Of Votes Greater Than Zero" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.icdoBoardMemberElection.allowed_votes_per_person &lt;= 0" sfwMessageId="10439" />
+    <rule ID="Rule - Election Start Date Is Required" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.icdoBoardMemberElection.start_date == null || &#xA;this.icdoBoardMemberElection.start_date == DateTime.MinValue" sfwMessageId="119" />
+    <rule ID="Rule - End Date Is Required" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.icdoBoardMemberElection.end_date == null || &#xA;this.icdoBoardMemberElection.end_date == DateTime.MinValue" sfwMessageId="5553" />
+    <rule ID="Rule - Audience Is Required" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="string.IsNullOrEmpty(this.icdoBoardMemberElection.audience_value)" sfwMessageId="10446" />
+    <rule ID="Rule - Term Start Date Is Required" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.icdoBoardMemberElection.term_start_date == null || &#xA;this.icdoBoardMemberElection.term_start_date == DateTime.MinValue" sfwMessageId="10447" />
+    <rule ID="Rule - Term End Date Is Required" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.icdoBoardMemberElection.term_end_date == null || &#xA;this.icdoBoardMemberElection.term_end_date == DateTime.MinValue" sfwMessageId="10448" />
+  </rules>
+  <initialload>
+    <item ID="Visible Rule - Is Election Results Report Visible" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="Rule - Is Number Of Votes Greater Than Zero" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - Election Start Date Is Required" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - End Date Is Required" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - Audience Is Required" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - Term Start Date Is Required" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - Term End Date Is Required" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <delete />
+  <groupslist />
+  <checklist />
+  <methods>
+    <method ID="LoadBoardMemberElectionCandidates" sfwDescription="Load Candidates Belonging To An Election" sfwMethodType="Load" sfwMode="Update">
+      <item ID="LoadBoardMemberElectionCandidates" />
+    </method>
+  </methods>
+  <lifecycle />
+  <objectmethods />
+</entity>

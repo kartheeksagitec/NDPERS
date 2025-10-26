@@ -1,0 +1,50 @@
+﻿<div class="portlet-body">
+    <div class="form-body">
+        <div class="col-xs-6">
+            <div class="form-group ">
+                <label class="control-label ">File Name</label>
+                <input type="text" title="{{bpmDetails.bpmModel.FileID}}" ng-model="bpmDetails.bpmModel.FileID" class="form-control input-sm" ng-change="bpmDetails.isValidBpmDetails()" />
+
+            </div>
+            <div class="form-group ">
+                <label class="control-label">File Title</label>
+                <input type="text" title="{{bpmDetails.bpmModel.Title}}" ng-model="bpmDetails.bpmModel.Title" class="form-control input-sm" />
+
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="form-group" ng-hide="objNewItems.SelectedOption =='BPMTemplate'">
+                <label class="control-label">Template</label>
+                <div class='input-group'>
+                    <input id="creatbpmtemplateinput" type="text" title="{{bpmDetails.bpmModel.Template}}" ng-model="bpmDetails.bpmModel.Template" class="form-control input-sm" ng-keydown="bpmDetails.onTemplateKeyDown($event)" ng-change="bpmDetails.isValidBpmDetails()" />
+                    <span class='input-group-addon button-intellisense' ng-click='bpmDetails.showTemplateIntellisenseList($event)'></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label"> Path</label>
+                <locationintellisensetemplate  ng-hide="objNewItems.SelectedOption =='BPMTemplate'" locationchanged="bpmDetails.isValidBpmDetails()" locationname="bpmDetails.bpmModel.Location" model="bpmDetails.bpmModel" validate="true" errorprop="bpmDetails.bpmModel.errors.invalid_path"></locationintellisensetemplate>
+                <span ng-show="objNewItems.SelectedOption =='BPMTemplate'" ng-bind="bpmDetails.bpmModel.Location"></span>
+             
+            </div>
+        </div>
+
+    
+     
+
+    </div>
+</div>
+<div class="form-actions">
+    <div class="col-xs-6 text-left">
+        <span class="alert-error-msg" ng-if="bpmDetails.ErrorMessageForDisplay.length>0">{{bpmDetails.ErrorMessageForDisplay}}</span>
+    </div>
+    <div class="col-xs-6">
+
+        <input type="button" class="dialog-btn" value="Cancel" ng-click="CloseWizardClick()" />
+        <input type="button" class="dialog-btn" wz-previous="onPrevious()" disabled="disabled" value="Back" />
+        <input class="dialog-btn" type="button" value="Next" wz-next="onNext()" ng-if="!showExtraFieldsTab" disabled="disabled" />
+        <input class="dialog-btn" type="button" value="Next" wz-next="onNext()" ng-if="showExtraFieldsTab" ng-disabled="!bpmDetails.isBpmDetailsValid" />
+        <input class="dialog-btn" type="button" wz-finish value="Finish" ng-if="showExtraFieldsTab" disabled="disabled" />
+        <input class="dialog-btn" type="button" wz-finish value="Finish" ng-if="!showExtraFieldsTab" ng-disabled="!bpmDetails.isBpmDetailsValid" />
+    </div>
+</div>

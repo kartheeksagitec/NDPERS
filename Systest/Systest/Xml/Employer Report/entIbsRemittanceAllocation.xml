@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entIbsRemittanceAllocation" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoIbsRemittanceAllocation" sfwObjectID="busIbsRemittanceAllocation" sfwTableName="sgt_ibs_remittance_allocation" sfwView="False">
+  <rules />
+  <delete />
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror />
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <queries>
+    <query ID="GetIBSRemittanceAllocationAmount" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT A.*,B.* FROM SGT_REMITTANCE A &#xD;&#xA;INNER JOIN SGT_DEPOSIT B ON A.DEPOSIT_ID=B.DEPOSIT_ID&#xD;&#xA;LEFT JOIN SGT_DEPOSIT_TAPE TAP ON B.DEPOSIT_TAPE_ID = TAP.DEPOSIT_TAPE_ID&#xD;&#xA;LEFT OUTER JOIN (&#xD;&#xA;SELECT REMITTANCE_ID, ISNULL(SUM(ISNULL(ALLOCATED_AMOUNT,0)),0) AS IRA_ALLOCATED_AMOUNT FROM SGT_IBS_REMITTANCE_ALLOCATION IRA &#xD;&#xA;GROUP BY REMITTANCE_ID&#xD;&#xA;) AS IRA ON IRA.REMITTANCE_ID = A.REMITTANCE_ID&#xD;&#xA;WHERE A.REMITTANCE_TYPE_VALUE='IBSD' AND B.STATUS_VALUE='APLD' &#xD;&#xA;AND (TAP.DEPOSIT_DATE IS NULL OR TAP.DEPOSIT_DATE &lt;= GETDATE())&#xD;&#xA;AND A.REMITTANCE_AMOUNT - ISNULL(IRA.IRA_ALLOCATED_AMOUNT,0) - ISNULL(ALLOCATED_NEGATIVE_DEPOSIT_AMOUNT,0) -&#xD;&#xA;   (&#xD;&#xA;    CASE WHEN REFUND_STATUS_VALUE = 'PRCD' THEN &#xD;&#xA;     CASE WHEN ISNULL(OVERRIDDEN_REFUND_AMOUNT,0) &gt; 0  &#xD;&#xA;       THEN ISNULL(OVERRIDDEN_REFUND_AMOUNT,0) &#xD;&#xA;       ELSE ISNULL(COMPUTED_REFUND_AMOUNT,0) &#xD;&#xA;     END&#xD;&#xA;    ELSE 0 END&#xD;&#xA;   ) &gt; 0  -- removed allocated remittances&#xD;&#xA;ORDER BY A.REMITTANCE_ID,A.PLAN_ID">
+      <parameters>
+        <parameter ID="@BATCHDATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="LoadMembersForARBatch" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select C.person_id&#xD;&#xA;from SGT_PERSON_ACCOUNT A inner join&#xD;&#xA;SGT_PERSON_ACCOUNT_PAYMENT_ELECTION B on a.PERSON_ACCOUNT_ID=b.PERSON_ACCOUNT_ID inner join&#xD;&#xA;SGT_PERSON C on A.person_id=C.person_id inner join sgt_plan D on A.plan_id=D.plan_id&#xD;&#xA;where D.benefit_type_value='INSR'&#xD;&#xA;and (A.END_DATE IS NULL OR A.END_DATE &gt;= getDate())&#xD;&#xA;and A.plan_id in (12,13,16,17) and (IBS_FLAG='Y' or IBS_SUPPLEMENTAL_FLAG='Y')&#xD;&#xA;group by C.person_id">
+      <parameters />
+    </query>
+    <query ID="CheckWhetherIBSAccount" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select * from SGT_PERSON_ACCOUNT_PAYMENT_ELECTION where person_account_id=@personaccountid and (ibs_flag='Y' or ibs_supplemental_flag='Y')">
+      <parameters>
+        <parameter ID="@personaccountid" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetPaymentsDone" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="DECLARE @MAXRUNDATE DATETIME&#xD;&#xA;SELECT @MAXRUNDATE = MAX(RUN_DATE) FROM SGT_IBS_HEADER WITH(NOLOCK) &#xD;&#xA;WHERE REPORT_TYPE_VALUE = 'REG' AND REPORT_STATUS_VALUE = 'PSTD'&#xD;&#xA;&#xD;&#xA;SELECT  ISNULL(SUM(ALLOCATED_AMOUNT),0) AS PAYMENTS_MADE&#xD;&#xA;FROM   SGT_IBS_REMITTANCE_ALLOCATION ALLOC WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_REMITTANCE REM WITH(NOLOCK)&#xD;&#xA; ON   ALLOC.REMITTANCE_ID = REM.REMITTANCE_ID&#xD;&#xA;WHERE   REM.PERSON_ID = @PERSONID&#xD;&#xA; AND  ALLOC.CREATED_DATE &gt;= @MAXRUNDATE&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@PERSONID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetIBSRemittanceAllocationForPerson" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT A.*,B.*  FROM SGT_REMITTANCE A &#xD;&#xA;INNER JOIN SGT_DEPOSIT B ON A.DEPOSIT_ID=B.DEPOSIT_ID&#xD;&#xA;LEFT JOIN SGT_DEPOSIT_TAPE TAP ON B.DEPOSIT_TAPE_ID = TAP.DEPOSIT_TAPE_ID&#xD;&#xA;WHERE A.REMITTANCE_TYPE_VALUE='IBSD' AND B.STATUS_VALUE='APLD' &#xD;&#xA;AND (TAP.DEPOSIT_DATE IS NULL OR TAP.DEPOSIT_DATE &lt;= @BATCHDATE)&#xD;&#xA;AND A.PERSON_ID = @PERSONID&#xD;&#xA;ORDER BY A.REMITTANCE_ID,A.PLAN_ID">
+      <parameters>
+        <parameter ID="@BATCHDATE" sfwDataType="DateTime" />
+        <parameter ID="@PERSONID" sfwDataType="string" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="IbsRemittanceAllocationId" sfwType="Column" sfwValue="ibs_remittance_allocation_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="RemittanceId" sfwType="Column" sfwValue="remittance_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AllocatedAmount" sfwType="Column" sfwValue="allocated_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="IbsAllocationStatusDescription" sfwType="Description" sfwValue="ibs_allocation_status_description" />
+    <attribute ID="IbsAllocationStatusId" sfwType="Column" sfwValue="ibs_allocation_status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="1705" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="IbsAllocationStatusValue" sfwType="Column" sfwValue="ibs_allocation_status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="PersonAccountId" sfwType="Column" sfwValue="person_account_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="EffectiveDate" sfwType="Column" sfwValue="effective_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+  </attributes>
+</entity>

@@ -1,0 +1,68 @@
+﻿<form ID="wfmMSSInboxMaintenance" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2001" sfwType="FormLinkMaintenance" sfwTitle="Inbox" version="3.5" sfwEntity="entMSSHome" sfwTemplate="MSSInboxMaintenance.html" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmMSSInboxLookup" sfwFormObjectType="None" isBasedOnWfm="true">
+  <initialload>
+    <callmethods sfwMethodName="LoadMSSMessageDetails" />
+  </initialload>
+  <items>
+    <sfwTable ID="Main" />
+    <sfwPanel ID="pnlHeading" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblHeading" />
+        <sfwLiteral Text="Inbox" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlMain" sfwCaption="Inbox">
+      <items>
+        <sfwTable ID="tblMain" />
+        <sfwButton ID="btnClearMessage" sfwMethodName="btnExecuteBusinessMethodSelectRows_Click" sfwNavigationParameter="WssMessageDetailId" sfwObjectMethod="btnClearMessage_Click" sfwRelatedControl="grvWSSMessageDetails" Text="Clear" sfwMessageNoRowSelected="Please select a message to clear" />
+        <sfwButton sfwMethodName="btnOpen_Click" Text="Open" ID="btnOpen" sfwRelatedControl="grvWSSMessageDetails" sfwActiveForm="wfmWSSContactTicketDetailMaintenance" sfwNavigationParameter="aintContactTicketId=objWSSMessageHeader.lstrContactTicketId" Visible="False" />
+        <sfwButton ID="btnDownload" sfwMethodName="btnDownload_Click" Text="Generate Download" sfwRelatedControl="grvWSSMessageDetails" sfwNavigationParameter="astrFileName=CorrespondenceLink" sfwObjectMethod="DownloadBenefitEnrollmentReport" sfwExecuteMethodType="ObjectMethod" sfwTriggerPostBack="True" />
+<sfwGridView AllowPaging="True" AllowSorting="True" ID="grvWSSMessageDetails" sfwEmptyTableRowText="You have no messages" sfwSelection="Many" sfwSortExpression="WssMessageDetailId desc" sfwEntityField="lstWSSMessageDetails" sfwGridEntity="entWssMessageDetail">
+          <Columns>
+            <TemplateField HeaderText="Message">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objWSSMessageHeader.DisplayMessage" />
+                <sfwLabel sfwLinkable="True" sfwEntityField="objWSSMessageHeader.lstrContactTicketId" sfwRelatedControl="btnOpen" />
+                <sfwLabel sfwEntityField="objWSSMessageHeader.lstrEndText" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Priority" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objWSSMessageHeader.PriorityDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Created Date">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="CreatedDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Link" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwBalloonTooltip="icdoWssMessageDetail.web_link" sfwBalloonTooltipHyperLinks="icdoWssMessageDetail.web_link" sfwEntityField="WebLink" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Downloads">
+              <ItemTemplate>
+                <sfwLabel sfwRelatedControl="btnDownload" sfwLinkable="True" sfwEntityField="IstrCorrespondenceLink" />
+				<sfwLabel Text="None" sfwVisibleRule="VRIsCorrLinkEmpty" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Correspondence" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwLinkable="True" sfwRelatedControl="btnExecutePassSelectedRows" sfwEntityField="CorrespondenceLink" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Wss Message Detail ID" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="WssMessageDetailId" />
+              </ItemTemplate>
+            </TemplateField>
+          </Columns>
+        </sfwGridView>
+		<sfwImageButton ID="btnPopUpIcon" ImageUrl="~/Image/PopUpBlocker.png" sfwMethodName="btnOpen_Click" />
+      </items>
+    </sfwPanel>
+  </items>
+  <loaddetails>
+    <entityfield ID="lstWSSMessageDetails" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+  </loaddetails>
+</form>

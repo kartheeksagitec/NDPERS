@@ -1,0 +1,182 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entPersonAccountDeferredComp" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwErrorTable="sgt_person_account_error" sfwParentKey="person_account_id" sfwParentKeyValue="icdoPersonAccountDeferredComp.person_account_id" sfwMainCDO="icdoPersonAccount" sfwStatusColumn="status_value" sfwObjectID="busPersonAccountDeferredComp" sfwTableName="sgt_person_account_deferred_comp" sfwParentEntity="entPersonAccount">
+  <rules>
+    <rule ID="IsCatchupEndDateLesstahnCatchupstartdate" sfwMessageId="6631" sfwExpression="!(this.icdoPersonAccountDeferredComp.catch_up_start_date == DateTime.MinValue) &amp;&amp; &#xA;!(this.icdoPersonAccountDeferredComp.catch_up_end_date == DateTime.MinValue) &amp;&amp; &#xA;(this.icdoPersonAccountDeferredComp.catch_up_end_date &lt; this.icdoPersonAccountDeferredComp.catch_up_start_date)" sfwObjectBased="True" />
+    <rule ID="IsCatchUpStartDateLessThanStartdate" sfwMessageId="6619" sfwExpression="!(this.icdoPersonAccount.start_date == DateTime.MinValue) &amp;&amp; &#xA;!(this.icdoPersonAccountDeferredComp.catch_up_start_date == DateTime.MinValue) &amp;&amp; &#xA;(this.icdoPersonAccountDeferredComp.catch_up_start_date &lt; this.icdoPersonAccount.start_date)" sfwObjectBased="True" />
+    <rule ID="IsDeminimusFlagCheckedAndDeductionsNotZero" sfwMessageId="6608" sfwExpression="(this.icdoPersonAccountDeferredComp.de_minimus_distribution_flag == &quot;Y&quot;) &amp;&amp; &#xA;(this.IsSumOfDeductionsZeroForPast24Months() == True)" sfwObjectBased="True" />
+    <rule ID="IsDeminimusOptionUsedBefore" sfwMessageId="6609" sfwExpression="(this.icdoPersonAccountDeferredComp.de_minimus_distribution_flag == &quot;Y&quot;) &amp;&amp; &#xA;(this.CheckDeMinimusOptionUsedBefore() == True)" sfwObjectBased="True" />
+    <rule ID="IsEmploymentEndaDateisNullAndPlanParticipationStatusWithdrawn" sfwMessageId="6626" sfwExpression="(!(this.icdoPersonAccountDeferredComp.de_minimus_distribution_flag == &quot;Y&quot;) &amp;&amp; &#xA;!(this.icdoPersonAccountDeferredComp.hardship_withdrawal_flag == &quot;Y&quot;)) &amp;&amp; &#xA;(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusPersonEmploymentDetail.ibusPersonEmployment.icdoPersonEmployment.end_date&quot;) == DateTime.MinValue) &amp;&amp; &#xA;(this.icdoPersonAccount.plan_participation_status_value == &quot;WTN2&quot;)" sfwObjectBased="True" />
+    <rule ID="IsflagCheckedAndHardshipWithdrawalDateNotentered" sfwMessageId="6586" sfwExpression="(this.icdoPersonAccountDeferredComp.hardship_withdrawal_flag == &quot;Y&quot;) &amp;&amp; &#xA;(this.icdoPersonAccountDeferredComp.hardship_withdrawal_effective_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsHardshipWithdrawalDateenteredAndflagNotChecked" sfwMessageId="6587" sfwExpression="!(this.icdoPersonAccountDeferredComp.hardship_withdrawal_effective_date == DateTime.MinValue) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoPersonAccountDeferredComp.hardship_withdrawal_flag) || this.icdoPersonAccountDeferredComp.hardship_withdrawal_flag == &quot;N&quot;)" sfwObjectBased="True" />
+    <rule ID="IsHistoryChangeDateLessThanLastChangeDate" sfwMessageId="5026" sfwExpression="(this.IsHistoryEntryRequired == True) &amp;&amp; &#xA;!(this.ibusHistory.icdoPersonAccountDeferredCompHistory.person_account_deferred_comp_history_id == 0) &amp;&amp; &#xA;!(this.istrAllowOverlapHistory == &quot;Y&quot;) &amp;&amp; &#xA;(this.icdoPersonAccount.history_change_date &lt; RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusHistory.icdoPersonAccountDeferredCompHistory.start_date&quot;))" sfwObjectBased="True" />
+    <rule ID="IsRTWPayeeStatusReceiving" sfwMessageId="7695" sfwExpression="(this.IsRTWPayeeStatusReceiving() == True)" sfwObjectBased="True" />
+    <rule ID="IsStartDateNotFirstOfMonth" sfwMessageId="6506" sfwExpression="(this.IsStartDateNotFirstOfMonth() == True)" sfwObjectBased="True" />
+    <rule ID="IsStatusWithDrawn" sfwMessageId="6627" sfwExpression="(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusPersonEmploymentDetail.ibusPersonEmployment.icdoPersonEmployment.end_date&quot;) == DateTime.MinValue) &amp;&amp; &#xA;(!(this.icdoPersonAccountDeferredComp.de_minimus_distribution_flag == &quot;Y&quot;) &amp;&amp; &#xA;!(this.icdoPersonAccountDeferredComp.hardship_withdrawal_flag == &quot;Y&quot;)) &amp;&amp; &#xA;(this.icdoPersonAccount.plan_participation_status_value == &quot;WTN2&quot;)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForMutualFundFlag" sfwExpression="(this.istrIsMutualFundFlagRequired == &quot;Y&quot;)" sfwObjectBased="True" />
+    <rule ID="IsMoreThanOneEnrolledInOverlapHistory" sfwExpression="(this.istrAllowOverlapHistory == &quot;Y&quot;) &amp;&amp; &#xD;&#xA;(this.IsMoreThanOneEnrolledInOverlapHistory() == True)" sfwMessageId="7132" sfwObjectBased="True" />
+    <rule ID="IsStartDatePriortoEnrollmentEffeDate" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(!(this.icdoPersonAccount.history_change_date == DateTime.MinValue) &amp;&amp; &#xA;(this.icdoPersonAccount.plan_participation_status_value == &quot;ENL3&quot;) &amp;&amp;(this.IsStartDatePriortoEnrollmentEffeDate()))" sfwMessageId="10457" />
+    <rule ID="VRIsEmploymentLinkedWithDC25Plan" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.IsEmploymentLinkedWithDC25Plan" />
+    <rule ID="VisibleRuleForOverlap" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.IsResourceForOverlap == True)" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="VisibleRuleForMutualFundFlag" sfwMode="All" sfwStatus="Active" />
+    <item ID="VRIsEmploymentLinkedWithDC25Plan" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForOverlap" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror>
+    <item ID="IsRTWPayeeStatusReceiving" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEmploymentEndaDateisNullAndPlanParticipationStatusWithdrawn" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsStatusWithDrawn" sfwMode="All" sfwStatus="Active" />
+  </softerror>
+  <harderror>
+    <item ID="IsStartDateNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPersonAgeLessThan18" sfwMode="New" sfwStatus="Active" />
+    <item ID="IsPlanParticipationStatusNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEnnrollmentDateNotValidFor457" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsHardshipWithdrawalDateenteredAndflagNotChecked" sfwMode="Update" sfwStatus="Active" />
+    <item ID="IsflagCheckedAndHardshipWithdrawalDateNotentered" sfwMode="Update" sfwStatus="Active" />
+    <item ID="IsDeminimusFlagCheckedAndDeductionsNotZero" sfwMode="Update" sfwStatus="Active" />
+    <item ID="IsDeminimusOptionUsedBefore" sfwMode="Update" sfwStatus="Active" />
+    <item ID="IsCatchUpStartDateLessThanStartdate" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsCatchupEndDateLesstahnCatchupstartdate" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsHistoryChangeDateRequired" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsHistoryChangeDateLessThanLastChangeDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="CheckOrgPlanValidForPersonAccountStartDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMoreThanOneEnrolledInOverlapHistory" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsStartDatePriortoEnrollmentEffeDate" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <expressionfields />
+  <queries>
+    <query ID="LatestHistoryRecord" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select top 1 * from sgt_person_account_deferred_comp_history &#xD;&#xA;where person_account_id =@personaccountid order by ISNULL(END_DATE, '2900-01-01') DESC, START_DATE desc,&#xD;&#xA;PERSON_ACCOUNT_DEFERRED_COMP_HISTORY_ID desc">
+      <parameters>
+        <parameter ID="@personaccountid" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="ContrbutionSummaryCYTD" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="&#xD;&#xA;Select isnull(sum(PAY_PERIOD_CONTRIBUTION_AMOUNT),0) as PAY_PERIOD_CONTRIBUTION_AMOUNT&#xD;&#xA;From dbo.SGT_PERSON_ACCOUNT_DEFERRED_COMP_CONTRIBUTION&#xD;&#xA;Where PAY_PERIOD_START_DATE &gt;= @StartDate and PAY_PERIOD_END_DATE &lt;= @EndDate and &#xD;&#xA;PERSON_ACCOUNT_ID= @PersonAccountID">
+      <parameters>
+        <parameter ID="@StartDate" sfwDataType="DateTime" />
+        <parameter ID="@EndDate" sfwDataType="DateTime" />
+        <parameter ID="@PersonAccountID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="ContrbutionSummaryLTD" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select isnull(sum(PAY_PERIOD_CONTRIBUTION_AMOUNT),0) as PAY_PERIOD_CONTRIBUTION_AMOUNT&#xD;&#xA;From dbo.SGT_PERSON_ACCOUNT_DEFERRED_COMP_CONTRIBUTION&#xD;&#xA;Where PERSON_ACCOUNT_ID=@PersonAccountID">
+      <parameters>
+        <parameter ID="@PersonAccountID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="SumOfDeductionsForPast24Months" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="&#xD;&#xA;select isnull(Sum(PAY_PERIOD_CONTRIBUTION_AMOUNT),0) from SGT_PERSON_ACCOUNT_DEFERRED_COMP_CONTRIBUTION &#xD;&#xA;where PERSON_ACCOUNT_ID=@PERSONACCOUNTID and EFFECTIVE_DATE BETWEEN @STARTDATE  AND @ENDDATE">
+      <parameters>
+        <parameter ID="@STARTDATE" sfwDataType="DateTime" />
+        <parameter ID="@ENDDATE" sfwDataType="DateTime" />
+        <parameter ID="@PERSONACCOUNTID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="Approaching457ContributionLimit" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_PERSON_ACCOUNT SPA WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_PLAN PLN WITH(NOLOCK) ON PLN.PLAN_ID=SPA.PLAN_ID&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT_DEFERRED_COMP DEFCOMP WITH(NOLOCK) ON DEFCOMP.PERSON_ACCOUNT_ID=SPA.PERSON_ACCOUNT_ID&#xD;&#xA;INNER JOIN SGT_PERSON PER WITH(NOLOCK) ON SPA.PERSON_ID = PER.PERSON_ID&#xD;&#xA;WHERE&#xD;&#xA;SPA.PLAN_ID=19 AND&#xD;&#xA;SPA.PLAN_PARTICIPATION_STATUS_VALUE='ENL3' AND&#xD;&#xA;SPA.END_DATE IS NULL">
+      <parameters />
+    </query>
+    <query ID="rpt3YrCatchUpEnding" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="DECLARE @FirstOfMonth        DATETIME&#xD;&#xA;DECLARE @LastOfMonth        DATETIME&#xD;&#xA;set @FirstOfMonth = CAST(YEAR(DATEADD(month, 3, @batch_run_date)) AS VARCHAR(4)) + '/' + &#xD;&#xA;                   CAST(MONTH(DATEADD(month, 3, @batch_run_date)) AS VARCHAR(2)) + '/01'&#xD;&#xA;set @LastOfMonth = DATEADD(DD, -1, DATEADD(M, 1, @FirstOfMonth))&#xD;&#xA;Select B.person_id,C.first_name+' '+ ISNULL(C.middle_name,'')+' '+C.last_name as membername,A.catch_up_end_date&#xD;&#xA;from sgt_person_account_deferred_comp A &#xD;&#xA;inner join sgt_person_account B on A.person_account_id=B.Person_account_id&#xD;&#xA;inner join sgt_person C on B.Person_id=C.Person_id &#xD;&#xA;where B.plan_id=19 and A.catch_up_end_date is not null and b.plan_participation_status_value='ENL3' and &#xD;&#xA;A.catch_up_end_date between @FirstOfMonth and @LastOfMonth&#xD;&#xA;order by C.last_name">
+      <parameters>
+        <parameter ID="@batch_run_date" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="ContrbutionSummaryByPayCheckDate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="&#xD;&#xA;Select *&#xD;&#xA;From dbo.SGT_PERSON_ACCOUNT_DEFERRED_COMP_CONTRIBUTION&#xD;&#xA;Where PERSON_ACCOUNT_ID= @PersonAccountID and PAID_DATE &gt;= @StartDate and PAID_DATE &lt;= @EndDate &#xD;&#xA;Order by PAID_DATE desc">
+      <parameters>
+        <parameter ID="@PersonAccountID" sfwDataType="int" />
+        <parameter ID="@EndDate" sfwDataType="DateTime" />
+        <parameter ID="@StartDate" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="fleFidelity457EnrollmentOut" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="WITH PARENT(PERSON_ACCOUNT_ID,&#xD;&#xA;   MUTUAL_FUND_WINDOW_FLAG,&#xD;&#xA;   PAYMENT_STATUS_VALUE,&#xD;&#xA;   PROVIDER_ORG_PLAN_ID,&#xD;&#xA;   ROWRANK &#xD;&#xA;  )&#xD;&#xA;AS&#xD;&#xA;(&#xD;&#xA; SELECT  DP.PERSON_ACCOUNT_ID,&#xD;&#xA;   DP.MUTUAL_FUND_WINDOW_FLAG,&#xD;&#xA;   DP.PAYMENT_STATUS_VALUE,&#xD;&#xA;   DP.PROVIDER_ORG_PLAN_ID,&#xD;&#xA;   ROW_NUMBER() OVER (PARTITION BY DP.PERSON_ACCOUNT_ID &#xD;&#xA;    ORDER BY DP.PERSON_ACCOUNT_ID,&#xD;&#xA;    DP.START_DATE DESC,ISNULL(DP.END_DATE,'01/01/2900') DESC ) &#xD;&#xA;   AS ROWRANK &#xD;&#xA; FROM SGT_PERSON_ACCOUNT_DEFERRED_COMP_PROVIDER DP&#xD;&#xA; INNER JOIN&#xD;&#xA;    (&#xD;&#xA;    SELECT ORG_PLAN_ID FROM SGT_ORG_PLAN D &#xD;&#xA;     INNER JOIN SGT_ORGANIZATION O&#xD;&#xA;      ON O.ORG_ID = D.ORG_ID&#xD;&#xA;     INNER JOIN &#xD;&#xA;      (&#xD;&#xA;       SELECT DATA1 FROM SGS_CODE_VALUE &#xD;&#xA;        WHERE CODE_ID=52 AND CODE_VALUE='FPRO' &#xD;&#xA;      ) CV ON O.ORG_CODE = CV.DATA1&#xD;&#xA;    WHERE PLAN_ID=19 &#xD;&#xA;     AND D.PARTICIPATION_END_DATE IS NULL &#xD;&#xA;    ) O ON O.ORG_PLAN_ID = DP.PROVIDER_ORG_PLAN_ID&#xD;&#xA; WHERE  ISNULL(DP.PAYMENT_STATUS_VALUE,'')  &lt;&gt; 'CLOS' &#xD;&#xA;)  &#xD;&#xA; &#xD;&#xA;SELECT A.*,B.*,P.*,&#xD;&#xA; C.MUTUAL_FUND_WINDOW_FLAG,&#xD;&#xA; B.UPDATE_SEQ AS UPDATE_SEQ_FOR_DEFE_COMP &#xD;&#xA;FROM SGT_PERSON_ACCOUNT A &#xD;&#xA; INNER JOIN SGT_PERSON_ACCOUNT_DEFERRED_COMP B &#xD;&#xA; ON A.PERSON_ACCOUNT_ID=B.PERSON_ACCOUNT_ID &#xD;&#xA; INNER JOIN &#xD;&#xA;  (&#xD;&#xA;   SELECT PERSON_ACCOUNT_ID,MUTUAL_FUND_WINDOW_FLAG FROM PARENT WHERE ROWRANK = 1 &#xD;&#xA;  ) C ON B.PERSON_ACCOUNT_ID= C.PERSON_ACCOUNT_ID  &#xD;&#xA;INNER JOIN SGT_PERSON P ON P.PERSON_ID = A.PERSON_ID&#xD;&#xA;WHERE A.PLAN_ID=19 ">
+      <parameters />
+    </query>
+    <query ID="UpdateFidelity457FileSentFlag" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="UPDATE SGT_PERSON_ACCOUNT_DEFERRED_COMP&#xD;&#xA;SET FILE_457_SENT_FLAG='Y'&#xD;&#xA;WHERE PERSON_ACCOUNT_ID IN&#xD;&#xA;(SELECT B.PERSON_ACCOUNT_ID FROM SGT_PERSON_ACCOUNT A &#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT_DEFERRED_COMP B ON A.PERSON_ACCOUNT_ID=B.PERSON_ACCOUNT_ID &#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT_DEFERRED_COMP_PROVIDER C ON B.PERSON_ACCOUNT_ID= C.PERSON_ACCOUNT_ID&#xD;&#xA;INNER JOIN SGT_PERSON P ON P.PERSON_ID = A.PERSON_ID&#xD;&#xA;WHERE A.PLAN_ID=19 AND (B.FILE_457_SENT_FLAG IS NULL OR  B.FILE_457_SENT_FLAG='N')&#xD;&#xA;AND C.PROVIDER_ORG_PLAN_ID =(&#xD;&#xA;SELECT ORG_PLAN_ID FROM SGT_ORG_PLAN D WHERE PLAN_ID=19 AND D.PARTICIPATION_END_DATE IS NULL AND ORG_ID=(&#xD;&#xA;SELECT ORG_ID FROM SGT_ORGANIZATION WHERE ORG_CODE=(&#xD;&#xA;SELECT DATA1 FROM SGS_CODE_VALUE WHERE CODE_ID=52 AND CODE_VALUE='FPRO')))&#xD;&#xA;AND GETDATE() BETWEEN C.START_DATE AND ISNULL(C.END_DATE,'12/31/9999'))&#xD;&#xA;AND C.START_DATE &lt;&gt; ISNULL(C.END_DATE,'99991231')">
+      <parameters />
+    </query>
+    <query ID="LoadDefCompTransferDetails" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select&#xD;&#xA;CAST(p2.person_id as varchar(50))+' '+ISNULL(p2.last_name,'') +', '+ ISNULL(p2.first_name,'')+' '+ISNULL(p2.middle_name,'') as istrFromPersonName,&#xD;&#xA;CAST(p1.person_id as varchar(50))+' '+ISNULL(p1.last_name,'') +', '+ ISNULL(p1.first_name,'')+' '+ISNULL(p1.middle_name,'') as istrToPersonName,&#xD;&#xA;tr.*&#xD;&#xA; from SGT_PERSON_ACCOUNT_DEFERRED_COMP_TRANSFER tr WITH(NOLOCK) &#xD;&#xA;inner join sgt_person_account pa1 WITH(NOLOCK) on pa1.person_account_id = tr.to_person_account_id&#xD;&#xA;inner join sgt_person p1 WITH(NOLOCK) on p1.person_id = pa1.person_id&#xD;&#xA;inner join sgt_person_account pa2 WITH(NOLOCK) on pa2.person_account_id = tr.from_person_account_id&#xD;&#xA;inner join sgt_person p2 WITH(NOLOCK) on p2.person_id = pa2.person_id&#xD;&#xA;where (tr.to_person_account_id =  @personAccountId&#xD;&#xA;or tr.from_person_account_id = @personAccountId) ">
+      <parameters>
+        <parameter ID="@personAccountId" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="PersonAccountId" sfwType="Column" sfwValue="person_account_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="CatchUpStartDate" sfwType="Column" sfwValue="catch_up_start_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="CatchUpEndDate" sfwType="Column" sfwValue="catch_up_end_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="Limit457Description" sfwType="Description" sfwValue="limit_457_description" />
+    <attribute ID="Limit457Id" sfwType="Column" sfwValue="limit_457_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="334" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="Limit457Value" sfwType="Column" sfwValue="limit_457_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="HardshipWithdrawalFlag" sfwType="Column" sfwValue="hardship_withdrawal_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="HardshipWithdrawalEffectiveDate" sfwType="Column" sfwValue="hardship_withdrawal_effective_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="DeMinimusDistributionFlag" sfwType="Column" sfwValue="de_minimus_distribution_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="File457SentFlag" sfwType="Column" sfwValue="file_457_sent_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="objPerson" sfwType="Object" sfwEntity="entPerson" sfwValue="ibusPerson" />
+    <attribute ID="objPlan" sfwType="Object" sfwEntity="entPlan" sfwValue="ibusPlan" />
+    <attribute sfwDataType="string" sfwType="Property" ID="PlanParticipationStatusDescription" sfwValue="icdoPersonAccount.plan_participation_status_description" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="StartDate" sfwValue="icdoPersonAccount.start_date" />
+    <attribute sfwType="Collection" sfwEntity="entPersonAccountDeferredCompContribution" ID="lstDeferredCompContribution" sfwValue="iclbDeferredCompContribution" />
+    <attribute sfwDataType="int" sfwType="Property" ID="PersonAccountId1" sfwValue="icdoPersonAccountDeferredComp.person_account_id" />
+    <attribute sfwDataType="string" sfwType="Property" ID="StatusDescription" sfwValue="icdoPersonAccount.status_description" />
+    <attribute sfwDataType="string" sfwType="Property" ID="SuppressWarningsFlag" sfwValue="icdoPersonAccount.suppress_warnings_flag" />
+    <attribute sfwDataType="string" sfwType="Property" ID="PlanParticipationStatusValue" sfwValue="icdoPersonAccount.plan_participation_status_value" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="HistoryChangeDate" sfwValue="icdoPersonAccount.history_change_date" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrAllowOverlapHistory" sfwValue="istrAllowOverlapHistory" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="CatchUpStartDate1" sfwValue="icdoPersonAccountDeferredComp.catch_up_start_date" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="CatchUpEndDate1" sfwValue="icdoPersonAccountDeferredComp.catch_up_end_date" />
+    <attribute sfwDataType="string" sfwType="Property" ID="Limit457Description1" sfwValue="icdoPersonAccountDeferredComp.limit_457_description" />
+    <attribute sfwDataType="string" sfwType="Property" ID="HardshipWithdrawalFlag1" sfwValue="icdoPersonAccountDeferredComp.hardship_withdrawal_flag" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="HardshipWithdrawalEffectiveDate1" sfwValue="icdoPersonAccountDeferredComp.hardship_withdrawal_effective_date" />
+    <attribute sfwDataType="string" sfwType="Property" ID="DeMinimusDistributionFlag1" sfwValue="icdoPersonAccountDeferredComp.de_minimus_distribution_flag" />
+    <attribute sfwDataType="string" sfwType="Property" ID="SuppressWarningsBy" sfwValue="icdoPersonAccount.suppress_warnings_by" />
+    <attribute sfwDataType="int" sfwType="Property" ID="PersonEmploymentDtlId" sfwValue="icdoPersonAccount.person_employment_dtl_id" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsCYTD" sfwValue="IsCYTD" />
+    <attribute ID="objPersonEmploymentDetail" sfwType="Object" sfwEntity="entPersonEmploymentDetail" sfwValue="ibusPersonEmploymentDetail" />
+    <attribute sfwType="Collection" sfwEntity="entPersonAccountDeferredCompProvider" ID="lstPersonAccountDeferredCompProvider" sfwValue="icolPersonAccountDeferredCompProvider" />
+    <attribute ID="objOrgPlan" sfwType="Object" sfwEntity="entOrgPlan" sfwValue="ibusOrgPlan" />
+    <attribute sfwType="Collection" sfwEntity="entPersonAccountDeferredCompHistory" ID="lstPADeferredCompHistory" sfwValue="icolPADeferredCompHistory" />
+    <attribute sfwDataType="string" sfwType="Property" ID="Limit457ContributionCytd" sfwValue="Limit_457_Contribution_Cytd" />
+    <attribute sfwDataType="string" sfwType="Property" ID="Limit457ContributionLtd" sfwValue="Limit_457_Contribution_Ltd" />
+    <attribute sfwType="Collection" sfwEntity="entPersonEmploymentDetail" ID="lstEmploymentDetail" sfwValue="iclbEmploymentDetail" />
+    <attribute sfwType="Collection" sfwEntity="entPersonAccountDeferredCompTransfer" ID="lstPersonAccountDeferredCompTransfer" sfwValue="iclbPersonAccountDeferredCompTransfer" />
+    <attribute sfwDataType="string" sfwType="Property" ID="CreatedBy1" sfwValue="icdoPersonAccountDeferredComp.created_by" />
+    <attribute sfwDataType="int" sfwType="Property" ID="UpdateSeq1" sfwValue="icdoPersonAccountDeferredComp.update_seq" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="CreatedDate1" sfwValue="icdoPersonAccountDeferredComp.created_date" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ModifiedBy1" sfwValue="icdoPersonAccountDeferredComp.modified_by" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="ModifiedDate1" sfwValue="icdoPersonAccountDeferredComp.modified_date" />
+    <attribute sfwDataType="int" sfwType="Property" ID="PlanId" sfwValue="icdoPersonAccount.plan_id" />
+    <attribute sfwDataType="string" sfwType="Property" ID="EmployerName" sfwValue="icdoPersonAccount.EmployerName" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="EndDate" sfwValue="icdoPersonAccount.end_date" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecCurrentPayPeriodAmount" sfwValue="idecCurrentPayPeriodAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecPayPeriodAmountCytd" sfwValue="idecPayPeriodAmountCytd" />
+    <attribute ID="objPersonAccount" sfwType="Object" sfwEntity="entPersonAccount" sfwValue="ibusPersonAccount" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrIsMonthlyBatch" sfwValue="istrIsMonthlyBatch" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrRMDEligibleMonth" sfwValue="istrRMDEligibleMonth" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IdteNextYearToRMD" sfwValue="idteNextYearToRMD" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IintRMDEligibleYear" sfwValue="iintRMDEligibleYear" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrImage" sfwValue="istrImage" />
+    <attribute sfwType="Collection" sfwEntity="entPersonAccountDeferredCompProvider" ID="lstPADefCompProviders" sfwValue="iclbPADefCompProviders" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="Ldcl457ContributionLimit" sfwValue="ldcl457ContributionLimit" />
+    <attribute sfwDataType="string" sfwType="Property" ID="LstrCurrentYear" sfwValue="lstrCurrentYear" />
+    <attribute sfwDataType="string" sfwType="Property" ID="Limit457Value1" sfwValue="icdoPersonAccountDeferredComp.limit_457_value" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrIsCatchUpDateOverlapsCurrentDate" sfwValue="istrIsCatchUpDateOverlapsCurrentDate" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IintCurrentYearPlus1Yr" sfwValue="iintCurrentYearPlus1Yr" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecAnnualLimitAmount" sfwValue="idecAnnualLimitAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="Idec50PlusLimitAmount" sfwValue="idec50PlusLimitAmount" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrNRDMonthYear" sfwValue="istrNRDMonthYear" />
+    <attribute ID="lintCYTDID" sfwDataType="int" sfwPrivate="False" sfwValue="CYTDID" sfwType="Property" />
+    <attribute ID="lintLTDID" sfwDataType="int" sfwPrivate="False" sfwValue="LTDID" sfwType="Property" />
+  </attributes>
+  <objectmethods>
+    <method ID="LoadParticipationStatusByBenefitType" sfwReturnType="Collection" sfwObjectID="cdoCodeValue" sfwEntity="entPostRetirementDeathApplication" />
+  </objectmethods>
+</entity>

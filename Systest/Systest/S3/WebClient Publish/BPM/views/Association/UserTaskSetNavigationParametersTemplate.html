@@ -1,0 +1,65 @@
+﻿<div class="portlet-body">
+    <div class="col-xs-4 full-height" ng-show="formType == 'lookup' && !IsDisabledforVersioning">
+        <div class="bpm-container full-height">
+            <div class="bpm-container-title">
+                <span>Criteria Fields</span>
+            </div>
+            <div class="bpm-container-body">
+                <ul style="list-style:none">
+                    <li ng-repeat="field in criteriaFields" >
+                        <span draggable="true" ondragstart="onCriteriaFieldDrag(event)" ng-class="field == selectedCriteriaField?'selected':''" ng-mousedown="selectCriteriaField(field)">{{field.name}}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div ng-class="formType == 'lookup' && !IsDisabledforVersioning ?'full-height col-xs-8':'full-height col-xs-12'">
+        <div class="bpm-container full-height">
+            <div class="bpm-container-title">
+                <span>Parameters</span>
+                <div class="bpmn-right pad-left-5">
+                    <i class="fa fa-refresh" ng-click="setActiveFormData()" title="Refresh Parameters"></i>
+                </div>
+                <div class="bpmn-right" ng-if="!IsDisabledforVersioning">
+                    <i class="fa fa-minus color-light2" ng-click="deleteParameter()" ng-disabled="!canDeleteParameter()" style="cursor:pointer"/>
+                </div>
+            </div>
+            <div class="bpm-container-body" ondragover="onCriteriaFieldDragOver(event)" ondrop="onCriteriaFieldDrop(event)" style="height:calc(100% - 43px) !important">
+                <div class="table-scrollable full-height">
+                    <fieldset ng-disabled="IsDisabledforVersioning">
+                        <table class="table table-striped table-hover table-bordered dataTable no-footer" role="grid">
+                            <thead>
+                                <tr>
+                                    <th>Parameter Name</th>
+                                    <th>Value Source</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr role="row" ng-repeat="parameter in parameters" ng-click="selectParameter(parameter)" ng-class="parameter == selectedParameter?'selected':''">
+                                    <td><span ng-bind="parameter.name"></span></td>
+                                    <td>
+                                        <select class="form-control form-filter input-sm" title="{{parameter.source}}" ng-model="parameter.source" ng-change="parameter.value=''">
+                                            <option>Constant</option>
+                                            <option>Parameter</option>
+                                            <option>Global Parameter</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input class="form-control form-filter input-sm" ng-disabled="IsDisabledforVersioning" type="text" title="{{parameter.value}}" ng-model="parameter.value" ng-show="parameter.source == 'Constant'" />
+                                        <select class="form-control form-filter input-sm" ng-show="parameter.source == 'Parameter'" ng-options="variable.dictAttributes.id as variable.dictAttributes.id for variable in variables" title="{{parameter.value}}" ng-model="parameter.value" ></select>
+                                        <select class="form-control form-filter input-sm" ng-show="parameter.source == 'Global Parameter'" ng-options="globalparameter.dictAttributes.ID as globalparameter.dictAttributes.ID for globalparameter in lstGlobalParameters" title="{{parameter.value}}" ng-model="parameter.value"></select>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </fieldset>                   
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-actions">
+    <input type="button" class="dialog-btn-default" value="OK" ng-click="onSaveClick()"  ng-if="!IsDisabledforVersioning" />
+    <input type="button" class="dialog-btn" value="Cancel" ng-click="onCancelClick()" />
+</div>

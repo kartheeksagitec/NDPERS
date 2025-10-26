@@ -1,0 +1,36 @@
+﻿<div class="full-height form-body">
+    <div ng-repeat="obj in lstDisplayEntity" ng-show="obj.IsVisible" class="entity-tree-path tree-path-height">
+        <div ng-bind="obj.strDisplayName" title="{{obj.strDisplayName}}"></div>
+    </div>
+
+    <div ng-class="lstDisplayEntity.length > 1?'col-xs-12 form-group tree-top-height':'col-xs-12 form-group entity-tree-top'" id='tree_2' ng-repeat="objEntity in lstEntities" ng-show="objEntity.IsVisible">
+
+        <div class="toolbox-entity-search">
+            <input type="text" ng-model="objEntityFilter.EntityTreeFilter" ng-change="sortList(objEntity,objEntityFilter.EntityTreeFilter)" class="form-control input-sm" placeholder="search here.." />
+            <img src="images/Common/uparrow.png" title="Navigate back" ng-click="Navigatetoprevlist()" ng-hide="showonlycolumns||showcolumndescription" />
+            <i class="fa fa-refresh" title="Refresh Attributes" ng-click="onRefreshAttributes()"></i>
+        </div>
+
+        <div ng-bind="objEntity.strEntityId" title="{{objEntity.strEntityId}}" class="entity-tree-list-input" ng-class="(isallownavigation === undefined || isallownavigation === true)?'entity-tree-navigation':''" ng-click="NavigateToEntity(objEntity.strEntityId)"></div>
+
+        <div class="form-group  form-entity-list-maintenance" entitytreescroll>
+            <ul class="table-list-tree">
+                <li ng-mousedown="selectField(field, $event)" ng-class="field.IsRecordSelected?'selected':''" ng-dblclick="LoadNextLevelEntityField(field,$event)" ng-repeat='field in objEntity.SortedAttributes| limitTo:objEntityFilter.LimitCount' id='j2_1' ng-if="showonlycollection? ((field.DataType == 'Collection') || (field.DataType == 'List')) : showonlyobject ? (field.DataType == 'Object') : showonlycolumns ? (field.Type == 'Column'): showcolumndescription ? (field.Type == 'Column' || field.Type == 'Description'):(showonlycollection!=undefined && !showonlycollection)? ((field.DataType != 'Collection') && (field.DataType != 'List')) :true" draggable="true" ondragstart="onEntityTreeDragStart(event)" drag-id="{{field.ID}}" drag-object="{{field}}" drag-boolparenttype="{{isParentFieldCollection}}" drag-display-name="{{objEntityFilter.DisplayPath}}" drag-datatype="{{field.DataType}}" drag-fieldtype="''" drag-fieldquery="">
+                    <div class="table-list-cell">
+                        <input type="checkbox" ng-model="field.IsSelected" ng-if="ischeckboxvisible" checkboxdirective attributefield="field" lstdisplayentity="lstdisplayentity" lstselectedmultiplelevelfield="lstselectedmultiplelevelfield" ng-disabled="field.DataType.toLowerCase() == 'object' || field.IsDisabled || field.IsReadOnly" ng-show="(field.DataType != 'Collection') && (field.DataType != 'List') && (field.DataType != 'CDOCollection')" ng-true-value="'True'" ng-false-value="'False'" ng-checked="field.IsSelected" ng-change="AddIntoSelectedList(field)" />
+                    </div>
+                    <div class="table-list-cell">
+                        <span class="datatype-iconproperties datatype-icon-{{field.DataType | lowercase}}"></span>
+                    </div>
+                    <div class="table-list-cell">
+                        <span ng-bind="field.ID" ng-hide="showvalueofcolumn"></span>
+                    </div>
+                    <div class="table-list-cell">
+                        <span ng-bind="field.Value" ng-show="showvalueofcolumn"></span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+

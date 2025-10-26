@@ -1,0 +1,42 @@
+﻿CREATE TABLE [dbo].[SGW_BPM_REQUEST] (
+    [REQUEST_ID]                 INT              IDENTITY (1, 1) NOT NULL,
+    [PERSON_ID]                  INT              NULL,
+    [ORG_ID]                     INT              NULL,
+    [PROCESS_ID]                 INT              NULL,
+    [REFERENCE_ID]               BIGINT           NULL,
+    [SOURCE_ID]                  INT              NOT NULL,
+    [SOURCE_VALUE]               VARCHAR (4)      NULL,
+    [STATUS_ID]                  INT              NOT NULL,
+    [STATUS_VALUE]               VARCHAR (4)      NULL,
+    [CREATED_BY]                 VARCHAR (50)     NOT NULL,
+    [CREATED_DATE]               DATETIME         NOT NULL,
+    [MODIFIED_BY]                VARCHAR (50)     NOT NULL,
+    [MODIFIED_DATE]              DATETIME         NOT NULL,
+    [UPDATE_SEQ]                 INT              NULL,
+    [CASE_INSTANCE_ID]           INT              NULL,
+    [BPM_MESSAGE_FLOW_ID]        VARCHAR (50)     NULL,
+    [DOC_TYPE]                   VARCHAR (50)     NULL,
+    [ECM_GUID]                   VARCHAR(MAX) NULL,
+    [MACHINE_NAME]               NVARCHAR (MAX)   NULL,
+    [PRIORITY_CODE_ID]           INT              NULL,
+    [PRIORITY_CODE_VALUE]        VARCHAR (4)      NULL,
+    [PARENT_CASE_INSTANCE_ID]    INT              NULL,
+    [PARENT_PROCESS_INSTANCE_ID] INT              NULL,
+	[DOC_CLASS]					[dbo].[UDT_DESC] NULL,
+	[REASON_ID]					[dbo].[UDT_CODE_ID] NULL,
+	[REASON_VALUE]				[dbo].[UDT_CODE_VALUE] NULL,
+	[DOCUMENT_TITLE]			[dbo].[UDT_DESC] NULL,
+	[SCAN_DT]					[dbo].[UDT_DATETIME] NULL,
+	[PARENT_REQUEST_ID]			INT					NULL,
+	[COMMENTS]					VARCHAR (4000)		NULL,
+	[TRACKING_ID]				INT NULL,
+	[ERROR_MESSAGE]				VARCHAR (500)       NULL,
+	[RETRY_COUNT]				INT                 NULL,
+	[SERVER_NAME]				VARCHAR (50)		NULL,
+	[PROCESSED_BY_MACHINE]		VARCHAR (50)		NULL
+    CONSTRAINT [PK_SGW_BPM_REQUEST_REQUEST_ID] PRIMARY KEY CLUSTERED ([REQUEST_ID] ASC),
+    CONSTRAINT [FK_SGW_BPM_REQUEST_PROCESS_ID_SGW_BPM_PROCESS_PROCESS_ID] FOREIGN KEY ([PROCESS_ID]) REFERENCES [dbo].[SGW_BPM_PROCESS] ([PROCESS_ID])
+);
+
+
+

@@ -1,0 +1,174 @@
+﻿<div class="portlet-body">
+    <div class="form-body">
+        <div class="form-group">
+            <div class="col-xs-6" ng-if="objFile.dictAttributes.sfwType=='Inbound'">
+                <label class="control-label">Bind Header</label>
+                <div class="col-xs-12">
+                    <input type="checkbox" ng-model="model.dictAttributes.sfwBindHeader" ng-checked="model.dictAttributes.sfwBindHeader" ng-true-value="'True'" ng-change="model.dictAttributes.sfwEntityField=''" ng-false-value="'False'" ng-disabled="model.dictAttributes.sfwEntityField=='Filler'" />
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <label class="control-label">Description</label>
+                <div class="col-xs-12 no-left-padding">
+                    <input class="form-control input-sm" ondrop="return false" type="text" title="{{model.dictAttributes.sfwDescription}}" ng-model="model.dictAttributes.sfwDescription" />
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+
+            <div class="col-xs-6" ng-if="objFile.dictAttributes.sfwType=='Inbound' && model.dictAttributes.sfwEntityField=='Filler'">
+                <label class="control-label">Entity Field</label>
+                <input class="form-control input-sm" type="text" ng-model="model.dictAttributes.sfwEntityField" readonly />
+            </div>
+            <div class="col-xs-6" ng-if="objFile.dictAttributes.sfwType=='Inbound' && model.dictAttributes.sfwEntityField!='Filler'">
+                <label class="control-label">Entity Field</label>
+                <entityattributeintellisense type="'Column,Object,Property'" isloadinheritedobjects="true" modebinding="model.dictAttributes.sfwEntityField" entityid="(model.dictAttributes.sfwBindHeader == 'True')?selectedCurrentRecord.dictAttributes.sfwHeaderEntity : selectedCurrentRecord.dictAttributes.sfwDetailEntity " propertyname="'dictAttributes.sfwEntityField'"></entityattributeintellisense>
+            </div>
+            <div class="col-xs-6">
+                <label class="control-label">Length</label>
+                <input type="text" title="{{model.dictAttributes.sfwLength}}" ng-model="model.dictAttributes.sfwLength" class="form-control form-filter input-sm" ng-keypress="validateLength($event)" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-6">
+                <label class="control-label">Data Format</label>
+                <select class="form-control input-sm" ng-options="x for x in dataformats" ng-model="model.dictAttributes.sfwDataFormat"></select>
+            </div>
+
+            <div class="col-xs-6">
+                <label class="control-label">Code ID</label>
+                <input type="text" title="{{model.dictAttributes.sfwLength}}" ng-model="model.dictAttributes.sfwCodeID" class="form-control form-filter input-sm" ng-keypress="validateLength($event)" />
+            </div>
+        </div>
+        <div class="form-group" ng-if="objFile.dictAttributes.sfwType !='Inbound'">
+            <div class="col-xs-6" ng-if="model.dictAttributes.sfwObjectField=='Filler'">
+                <label class="control-label">Object Field</label>
+                <input class="form-control input-sm" type="text" ng-model="model.dictAttributes.sfwObjectField" readonly />
+            </div>
+            <div class="col-xs-6" ng-if="model.dictAttributes.sfwObjectField!='Filler'">
+                <label class="control-label">Object Field</label>
+                <objecttreeintellisensetemplate insidegrid="true" isshowcollection="false" objtree="objBusinessObject.ObjTree" objectfield="model.dictAttributes.sfwObjectField " propertyname="'dictAttributes.sfwObjectField'" isloadmethod="false" isxmlmethod="false" allowdrop="true"
+                                                busobject="BusObjectName" parentmodel="selectedCurrentRecord"></objecttreeintellisensetemplate>
+            </div>
+            <div class="col-xs-6">
+                <label class="control-label">Data Format</label>
+                <common-intellisense collection="outBoundDataFormats" selected-item="model.dictAttributes.sfwDataFormat" propertyname="'dictAttributes.sfwDataFormat'"></common-intellisense>
+
+            </div>
+        </div>
+        <div class="form-group" ng-if="objFile.dictAttributes.sfwType!='Inbound'">
+            <div class="col-xs-6">
+                <label class="control-label"> Remove Decimal</label>
+                <input type="checkbox" ng-model="model.dictAttributes.sfwRemoveDecimal" ng-checked="model.dictAttributes.sfwRemoveDecimal" ng-true-value="'True'" ng-false-value="'False'" />
+            </div>
+            <div class="col-xs-6">
+                <label class="control-label"> Constant</label>
+                <input class="form-control input-sm" type="text" title="{{model.dictAttributes.sfwConstant}}" ng-model="model.dictAttributes.sfwConstant" />
+            </div>
+        </div>
+        <div class="form-group" ng-if="objFile.dictAttributes.sfwType!='Inbound'">
+            <div class="col-xs-6">
+                <label class="control-label"> Remove Decimal</label>
+                <input type="checkbox" ng-model="model.dictAttributes.sfwRemoveDecimal" ng-checked="model.dictAttributes.sfwRemoveDecimal" ng-true-value="'True'" ng-false-value="'False'" />
+            </div>
+            <div class="col-xs-6">
+                <label class="control-label"> Constant</label>
+                <input class="form-control input-sm" type="text" title="{{model.dictAttributes.sfwConstant}}" ng-model="model.dictAttributes.sfwConstant" />
+            </div>
+        </div>
+
+        <div class="form-group" ng-if="objFile.dictAttributes.sfwType=='Inbound'">
+            <div class="col-xs-6">
+                <label class="control-label"> Min Value</label>
+                <input class="form-control input-sm" type="text" title="{{model.dictAttributes.sfwMinValue}}" ng-model="model.dictAttributes.sfwMinValue" onkeypress="onlyAllowedNumbers(event)" />
+            </div>
+
+            <div class="col-xs-6">
+                <label class="control-label"> Max Value</label>
+                <input type="text" class="form-control input-sm" title="{{model.dictAttributes.sfwMaxValue}}" ng-model="model.dictAttributes.sfwMaxValue" onkeypress="onlyAllowedNumbers(event)" />
+
+            </div>
+
+        </div>
+
+
+        <div class="form-group" ng-if="objFile.dictAttributes.sfwType=='Inbound'">
+            <div class="col-xs-6">
+                <label class="control-label"> Max Length</label>
+                <input type="text" class="form-control input-sm" title="{{model.dictAttributes.sfwMaxLength}}" ng-model="model.dictAttributes.sfwMaxLength" onkeypress="onlyAllowedNumbers(event)" />
+            </div>
+            <div class="col-xs-6">
+                <label class="control-label"> Data Type</label>
+                <select class="form-control input-sm" ng-options="x for x in datatypes" title="{{model.dictAttributes.sfwDataType}}" ng-model="model.dictAttributes.sfwDataType" ng-change="model.dictAttributes.sfwSum = 'False'"></select>
+
+            </div>
+            <div class="col-xs-6" ng-show="objFile.IsChildOfInboundFileBase">
+                <label class="control-label"> Total Name</label>
+                <input type="text" class="form-control input-sm" title="{{model.dictAttributes.sfwTotalName}}" ng-model="model.dictAttributes.sfwTotalName" />
+
+            </div>
+
+        </div>
+
+        <div class="form-group" ng-if="objFile.dictAttributes.sfwType=='Inbound'">
+            <div class="col-xs-6">
+                <label class="control-label"> Is Required</label>
+                <div class="col-xs-12">
+                    <input type="checkbox" class="input-detail-checkbox" ng-model="model.dictAttributes.sfwRequired" ng-checked="model.dictAttributes.sfwRequired" ng-true-value="'True'" ng-false-value="'False'" />
+                </div>
+            </div>
+
+            <div class="col-xs-6" ng-show="objFile.IsChildOfInboundFileBase">
+                <label class="control-label"> Sum</label>
+                <input type="checkbox" ng-model="model.dictAttributes.sfwSum" ng-checked="model.dictAttributes.sfwSum" ng-true-value="'True'" ng-disabled="model.dictAttributes.sfwDataType != 'Numeric'" ng-false-value="'False'" />
+
+            </div>
+
+        </div>
+
+        <div ng-if="objFile.dictAttributes.sfwType=='Inbound'" class="form-group">
+            <messageintellisensetemplate messageid='model.dictAttributes.sfwDataFormatMessage' showvertical="true"
+                                         model='model' messagetext="'Data Format Message'" showmessagetext='true'
+                                         newDisplayMessage="openDisplayMessage" newSeverityValue="openSeverityValue" messagelabelclass="control-label" isinsidedialog="true" messagetextboxclass="col-xs-12"></messageintellisensetemplate>
+
+        </div>
+        <div class="form-group" ng-if="objFile.dictAttributes.sfwType=='Inbound'">
+            <messageintellisensetemplate messageid='model.dictAttributes.sfwRequiredMessage' showvertical="true"
+                                         model='model' messagetext="'Required Message'" showmessagetext='true'
+                                         newDisplayMessage="openDisplayMessage" newSeverityValue="openSeverityValue" messagelabelclass="control-label" isinsidedialog="true" messagetextboxclass="col-xs-12"></messageintellisensetemplate>
+
+        </div>
+        <div class="form-group" ng-if="objFile.dictAttributes.sfwType=='Inbound'">
+            <messageintellisensetemplate messageid='model.dictAttributes.sfwRangeMessage' showvertical="true"
+                                         model='model' messagetext="'Range Message'" showmessagetext='true'
+                                         newDisplayMessage="openDisplayMessage" newSeverityValue="openSeverityValue" messagelabelclass="control-label" isinsidedialog="true" messagetextboxclass="col-xs-12"></messageintellisensetemplate>
+        </div>
+
+        <div class="form-group" ng-if="objFile.dictAttributes.sfwType=='Inbound'">
+            <messageintellisensetemplate messageid='model.dictAttributes.sfwDataTypeMessage' showvertical="true"
+                                         model='model' messagetext="'Data Type Message'" showmessagetext='true'
+                                         newDisplayMessage="openDisplayMessage" newSeverityValue="openSeverityValue" messagelabelclass="control-label" isinsidedialog="true" messagetextboxclass="col-xs-12"></messageintellisensetemplate>
+
+        </div>
+
+        <div class="form-group" ng-if="objFile.dictAttributes.sfwType=='Inbound'">
+            <messageintellisensetemplate messageid='model.dictAttributes.sfwCodeMessage' showvertical="true"
+                                         model='model' messagetext="'Code Message'" showmessagetext='true'
+                                         newDisplayMessage="openDisplayMessage" newSeverityValue="openSeverityValue" messagelabelclass="control-label" isinsidedialog="true" messagetextboxclass="col-xs-12"></messageintellisensetemplate>
+        </div>
+
+        <div class="form-group" ng-if="objFile.dictAttributes.sfwType!='Inbound'">
+            <div class="col-xs-6">
+                <label class="control-label"> Padding Character</label>
+                <select class="form-control input-sm" ng-options="x for x in outboundPaddingchars" type="text" title="{{model.dictAttributes.sfwPaddingCharacter}}" ng-model="model.dictAttributes.sfwPaddingCharacter" />
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="form-actions right">
+    <div class="col-xs-12">
+        <input type="button" value="OK" class="btn dialog-btn-default" ng-click="OkClick()" />
+        <input type="button" value="Cancel" class="btn dialog-btn" ng-click="onCancelClick()" />
+    </div>
+</div>

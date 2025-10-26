@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entPersonAccountLtcOption" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoPersonAccountLtcOption" sfwObjectID="busPersonAccountLtcOption" sfwTableName="sgt_person_account_ltc_option" sfwView="False">
+  <rules>
+    <rule ID="IsMemberOptionStartDateEditable" sfwExpression="(this.IsMemberGridStartDateEditable() == True)" sfwObjectBased="True" />
+    <rule ID="IsSpouseOptionStartDateEditable" sfwExpression="(this.IsSpouseGridStartDateEditable() == True)" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="IsMemberOptionStartDateEditable" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsSpouseOptionStartDateEditable" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror />
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <queries>
+    <query ID="LoadLtcOptionNewSpouse" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select cast(row_number() over(order by LEVEL_OF_COVERAGE_VALUE) as int) as person_account_ltc_option_id,person_account_id,plan_option_status_id,plan_option_status_value,&#xD;&#xA;338 as ltc_relationship_id,'SPSE' as ltc_relationship_value,ltc_insurance_type_id,ltc_insurance_type_value,&#xD;&#xA;code_id AS Level_of_Coverage_id,code_value AS level_of_coverage_value,effective_start_date,effective_end_date,&#xD;&#xA;person_id,b.created_by,b.created_date,b.modified_by,b.modified_date,b.update_seq&#xD;&#xA;from sgs_code_value  a left outer join dbo.SGT_PERSON_ACCOUNT_LTC_OPTION  b &#xD;&#xA;on a.code_id = LEVEL_OF_COVERAGE_ID and person_account_id = @personaccountid&#xD;&#xA;and a.code_value = LEVEL_OF_COVERAGE_VALUE and ltc_relationship_value='SPSE'&#xD;&#xA;where code_id = 408 and data1 = 15 ">
+      <parameters>
+        <parameter ID="@personaccountid" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadLtcOptionUpdateMember" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select person_account_ltc_option_id,person_account_id,plan_option_status_id,plan_option_status_value,&#xD;&#xA;ltc_relationship_id,ltc_relationship_value,ltc_insurance_type_id,ltc_insurance_type_value,&#xD;&#xA;Level_of_Coverage_id,level_of_coverage_value,effective_start_date,effective_end_date,&#xD;&#xA;person_id,b.created_by,b.created_date,b.modified_by,b.modified_date,b.update_seq&#xD;&#xA;from sgs_code_value  a left outer join dbo.SGT_PERSON_ACCOUNT_LTC_OPTION  b &#xD;&#xA;on a.code_id = LEVEL_OF_COVERAGE_ID and person_account_id = @PersonAccountID&#xD;&#xA;and a.code_value = LEVEL_OF_COVERAGE_VALUE and ltc_relationship_value='MEBR'&#xD;&#xA;where code_id = 408 and data1 = 15 ">
+      <parameters>
+        <parameter ID="@PersonAccountID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetLtcRateProviderOrgPlanID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select * from sgt_org_plan where plan_id=@planid and &#xD;&#xA;org_id in (Select provider_org_id from sgt_Org_plan_provider where Org_plan_id=@Orgplanid)">
+      <parameters>
+        <parameter ID="@planid" sfwDataType="int" />
+        <parameter ID="@Orgplanid" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetLtcRate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from dbo.SGT_ORG_PLAN_LTC_RATE &#xD;&#xA;where ltc_insurance_type_value = @lit and level_of_coverage_value = @loc&#xD;&#xA;and @age between min_age_yrs and max_age_yrs and  org_plan_id in (&#xD;&#xA;Select A.org_plan_id from sgt_org_plan A inner join&#xD;&#xA;sgt_organization B on a.org_id=b.org_id&#xD;&#xA;where b.org_type_value='PRVD' and a.plan_id=@plan_id)">
+      <parameters>
+        <parameter ID="@lit" sfwDataType="string" />
+        <parameter ID="@loc" sfwDataType="string" />
+        <parameter ID="@age" sfwDataType="int" />
+        <parameter ID="@plan_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadLtcOptionNewMember" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select cast(row_number() over(order by LEVEL_OF_COVERAGE_VALUE) as int) as person_account_ltc_option_id,person_account_id,plan_option_status_id,plan_option_status_value,&#xD;&#xA;338 as ltc_relationship_id,'MEBR' as ltc_relationship_value,ltc_insurance_type_id,ltc_insurance_type_value,&#xD;&#xA;code_id AS Level_of_Coverage_id,code_value AS level_of_coverage_value,effective_start_date,effective_end_date,&#xD;&#xA;person_id,b.created_by,b.created_date,b.modified_by,b.modified_date,b.update_seq&#xD;&#xA;from sgs_code_value  a left outer join dbo.SGT_PERSON_ACCOUNT_LTC_OPTION  b &#xD;&#xA;on a.code_id = LEVEL_OF_COVERAGE_ID and person_account_id =@personaccountid&#xD;&#xA;and a.code_value = LEVEL_OF_COVERAGE_VALUE and ltc_relationship_value='MEBR'&#xD;&#xA;where code_id = 408 and data1 = 15  ">
+      <parameters>
+        <parameter ID="@personaccountid" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadLtcOptionUpdateSpouse" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select person_account_ltc_option_id,person_account_id,plan_option_status_id,plan_option_status_value,&#xD;&#xA;ltc_relationship_id,ltc_relationship_value,ltc_insurance_type_id,ltc_insurance_type_value,&#xD;&#xA;Level_of_Coverage_id,level_of_coverage_value,effective_start_date,effective_end_date,&#xD;&#xA;person_id,b.created_by,b.created_date,b.modified_by,b.modified_date,b.update_seq&#xD;&#xA;from sgs_code_value  a left outer join dbo.SGT_PERSON_ACCOUNT_LTC_OPTION  b &#xD;&#xA;on a.code_id = LEVEL_OF_COVERAGE_ID and person_account_id = @PersonAccountID&#xD;&#xA;and a.code_value = LEVEL_OF_COVERAGE_VALUE and ltc_relationship_value='SPSE'&#xD;&#xA;where code_id = 408 and data1 = 15">
+      <parameters>
+        <parameter ID="@PersonAccountID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetLtcPremiumAmount" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select top 1 premium_amt from dbo.SGT_ORG_PLAN_LTC_RATE &#xD;&#xA;where ltc_insurance_type_value = @lit and level_of_coverage_value = @loc&#xD;&#xA;and @age between min_age_yrs and max_age_yrs and  org_plan_id =@orgplanid&#xD;&#xA;and effective_date&lt;=@effective_date order by effective_date desc">
+      <parameters>
+        <parameter ID="@lit" sfwDataType="string" />
+        <parameter ID="@loc" sfwDataType="string" />
+        <parameter ID="@age" sfwDataType="string" />
+        <parameter ID="@orgplanid" sfwDataType="string" />
+        <parameter ID="@effective_date" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="LoadEnrolledMemberCoverages" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select person_account_ltc_option_id,person_account_id,plan_option_status_id,plan_option_status_value,&#xD;&#xA;ltc_relationship_id,ltc_relationship_value,ltc_insurance_type_id,ltc_insurance_type_value,&#xD;&#xA;Level_of_Coverage_id,level_of_coverage_value,effective_start_date,effective_end_date,&#xD;&#xA;person_id from dbo.SGT_PERSON_ACCOUNT_LTC_OPTION  where person_account_id = @PersonAccountID&#xD;&#xA;and ltc_relationship_value='MEBR' and  plan_option_status_value = 'ENLD'">
+      <parameters>
+        <parameter ID="@PersonAccountID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadEnrolledSpouseCoverages" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select person_account_ltc_option_id,person_account_id,plan_option_status_id,plan_option_status_value,&#xD;&#xA;ltc_relationship_id,ltc_relationship_value,ltc_insurance_type_id,ltc_insurance_type_value,&#xD;&#xA;Level_of_Coverage_id,level_of_coverage_value,effective_start_date,effective_end_date,&#xD;&#xA;person_id from dbo.SGT_PERSON_ACCOUNT_LTC_OPTION  where person_account_id = @PersonAccountID&#xD;&#xA;and ltc_relationship_value='SPSE' and plan_option_status_value = 'ENLD'">
+      <parameters>
+        <parameter ID="@PersonAccountID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="PersonAccountLtcOptionId" sfwType="Column" sfwValue="person_account_ltc_option_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PersonAccountId" sfwType="Column" sfwValue="person_account_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PlanOptionStatusDescription" sfwType="Description" sfwValue="plan_option_status_description" />
+    <attribute ID="PlanOptionStatusId" sfwType="Column" sfwValue="plan_option_status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="340" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PlanOptionStatusValue" sfwType="Column" sfwValue="plan_option_status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="LtcRelationshipDescription" sfwType="Description" sfwValue="ltc_relationship_description" />
+    <attribute ID="LtcRelationshipId" sfwType="Column" sfwValue="ltc_relationship_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="338" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="LtcRelationshipValue" sfwType="Column" sfwValue="ltc_relationship_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="LtcInsuranceTypeDescription" sfwType="Description" sfwValue="ltc_insurance_type_description" />
+    <attribute ID="LtcInsuranceTypeId" sfwType="Column" sfwValue="ltc_insurance_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="339" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="LtcInsuranceTypeValue" sfwType="Column" sfwValue="ltc_insurance_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="LevelOfCoverageDescription" sfwType="Description" sfwValue="level_of_coverage_description" />
+    <attribute ID="LevelOfCoverageId" sfwType="Column" sfwValue="level_of_coverage_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="408" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="LevelOfCoverageValue" sfwType="Column" sfwValue="level_of_coverage_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="EffectiveStartDate" sfwType="Column" sfwValue="effective_start_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="EffectiveEndDate" sfwType="Column" sfwValue="effective_end_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="PersonId" sfwType="Column" sfwValue="person_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PeopleSoftFileSentFlag" sfwType="Column" sfwValue="people_soft_file_sent_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecMonthlyPremium" sfwValue="idecMonthlyPremium" />
+  </attributes>
+</entity>

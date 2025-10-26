@@ -1,0 +1,97 @@
+﻿<div class="portlet-body">
+
+    <div class="form-body">
+
+        <div class="form-group">
+            <label class="control-label"> MainTable: </label>
+            <label class="control-label" ng-bind="objEntityDetail.TableName"></label>
+        </div>
+    </div>
+
+    <div class="create-object-container col-xs-12">
+
+        <div class="col-xs-5 full-height">
+            <div class="panel panel-primary full-height" style="margin-bottom:0px;">
+                <div class="panel-heading">
+                    Table
+                </div>
+                <div class="panel-body">
+                    <ul style="margin-bottom:0px;">
+                        <li ng-repeat="table in objOneToMany.ChildTableCollection" ng-click="SelectChildTableClick(table)" ng-class="SetClassForOneToMany(table,objOneToMany.SelectedChildTable)">
+                            <span ng-bind="table.TableName"></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-1 add-btn-adjust">
+            <div class="form-group">
+                <input type="button" class="dialog-btn" value="Add" ng-click="OnAddChildTable()" />
+            </div>
+        </div>
+
+        <div class="col-xs-6 full-height">
+            <div class="panel panel-primary full-height" style="margin-bottom:0px;">
+                <div class="panel-heading">
+                    One To Many
+                    <div class="fright">
+                        <a ><img ng-click="DeleteChildTableRowClick()" src="images/Common/icon_delete_dark.svg" /></a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="table-scrollable">
+                        <table class="table table-striped table-hover table-bordered dataTable no-footer" role="grid">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Property Name
+                                    </th>
+                                    <th>
+                                        Table Name
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="oneToMany in objEntityDetail.OneToManySelectedTableCollection" ng-if="oneToMany.isFromTable" ng-click="SelectOneToManyChildTable(oneToMany, $event)" ng-class="objOneToMany.SelectedOneToManyTable == oneToMany?'selected':''">
+                                    <td>
+
+                                        <div class="form-group">
+                                            <span class="col-xs-2 padding-0 marg-top-5">iclb </span>
+                                            <div class="col-xs-10 padding-0"><input class="form-control form-filter input-sm ng-pristine ng-untouched ng-valid ng-empty" type="text" title="{{oneToMany.ObjectName}}" ng-model="oneToMany.ObjectName"></div>
+                                        </div>
+                                    </td>
+
+
+                                    <td>
+
+                                        <div class="form-group">
+                                            <span class="col-xs-12 marg-top-5 tbl-name-length" ng-bind="oneToMany.TableName" title="{{oneToMany.TableName}}"></span>
+                                        </div>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+</div>
+
+<div class="form-actions">
+    <div class="col-xs-6 text-left">
+        <span class="alert-error-msg" ng-if="objOneToMany.ErrorMessageForDisplay.length>0">{{objOneToMany.ErrorMessageForDisplay}}</span>
+    </div>
+    <div class="col-xs-6">
+        <input class="dialog-btn" type="button" value="Cancel" ng-click="CloseWizardClick()" />
+        <input class="dialog-btn" type="button" wz-previous="onPrevious()" value="Back" />
+        <input class="dialog-btn" type="button" wz-next="UpdateOnNextFromOneToMany();onNext()" value="Next" />
+        <input class="dialog-btn" type="button" wz-finish value="Finish" disabled="disabled" />
+    </div>
+</div>

@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entIbsCheckEntryHeader" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoIbsCheckEntryHeader" sfwObjectID="busIbsCheckEntryHeader" sfwTableName="sgt_ibs_check_entry_header" sfwView="False">
+  <rules>
+    <rule ID="IsDepositDateEntered" sfwMessageId="4177" sfwExpression="(this.icdoIbsCheckEntryHeader.deposit_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsDepositTotalNotValid" sfwMessageId="4179" sfwExpression="(this.IsTotalAmountNotValid() == True)" sfwObjectBased="True" />
+    <rule ID="IsDepositTotalRequired" sfwMessageId="4178" sfwExpression="(this.icdoIbsCheckEntryHeader.deposit_total == 0.0)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleSubmitButton" sfwExpression="!(this.icdoIbsCheckEntryHeader.deposit_tape_id &gt; 0)" sfwObjectBased="True" />
+  </rules>
+  <delete>
+    <property ID="lstIbsCheckEntryDetail" sfwMethodName="LoadIbsCheckEntryDetail" />
+  </delete>
+  <checklist />
+  <initialload>
+    <item ID="VisibleRuleSubmitButton" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="IsDepositDateEntered" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsDepositTotalRequired" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsDepositTotalNotValid" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_IBS_CHECK_ENTRY_HEADER WITH(NOLOCK)&#xD;&#xA;ORDER BY CREATED_DATE DESC">
+      <parameters />
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="IbsCheckEntryHeaderId" sfwType="Column" sfwValue="ibs_check_entry_header_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="DepositDate" sfwType="Column" sfwValue="deposit_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="DepositMethodDescription" sfwType="Description" sfwValue="deposit_method_description" />
+    <attribute ID="DepositMethodId" sfwType="Column" sfwValue="deposit_method_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="1501" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="DepositMethodValue" sfwType="Column" sfwValue="deposit_method_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="DepositTapeId" sfwType="Column" sfwValue="deposit_tape_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusDescription" sfwType="Description" sfwValue="status_description" />
+    <attribute ID="StatusId" sfwType="Column" sfwValue="status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="1507" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusValue" sfwType="Column" sfwValue="status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="DepositTotal" sfwType="Column" sfwValue="deposit_total" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecTotalAmountFromDetail" sfwValue="icdoIbsCheckEntryHeader.idecTotalAmountFromDetail" />
+    <attribute sfwType="Collection" sfwEntity="entIbsCheckEntryDetail" ID="lstIbsCheckEntryDetailFromQuery" sfwValue="iclbIbsCheckEntryDetailFromQuery" />
+    <attribute sfwType="Collection" sfwEntity="entIbsCheckEntryDetail" ID="lstIbsCheckEntryDetail" sfwValue="iclbIbsCheckEntryDetail" />
+  </attributes>
+  <objectmethods>
+    <method ID="btnSubmit_Click" sfwReturnType="ArrayList" />
+    <method ID="LoadIbsCheckEntryDetail" sfwReturnType="Void" />
+  </objectmethods>
+</entity>

@@ -1,0 +1,70 @@
+﻿<form ID="wfmMSSAddressMaintenance" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2001" sfwType="FormLinkMaintenance" sfwTitle="Address Maintenance" version="3.5" sfwEntity="entPersonAddress" sfwTemplate="MSSAddressMaintenance.html" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmMSSAddressLookup" sfwFormObjectType="None" isBasedOnWfm="true" sfwDefaultButtonID="btnSave">
+  <initialload>
+    <callmethods sfwMode="New" sfwMethodName="NewMSSPersonAddress" />
+    <callmethods sfwMode="Update" sfwMethodName="FindMSSPersonAddress" />
+  </initialload>
+  <items>
+    <sfwTable ID="Main" />
+    <sfwPanel ID="pnltoolbar">
+      <items>
+        <sfwTable ID="toolbar" />
+        <sfwImageButton ID="btnBack" ImageAlign="AbsMiddle" ImageUrl="~/Images/back.gif" sfwMethodName="btnBack_Click" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlHeading" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblHeading" />
+        <sfwLiteral Text="Add New Address" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlMain" sfwCaption="Person Address Details">
+      <items>
+        <sfwTable ID="tblMain" />
+        <sfwLabel ID="capAddrTypeValue" Text="Type : " Visible="False" sfwIsCaption="True" />
+        <sfwDropDownList ID="ddlAddrStatusValue" sfwDefaultValue="PERM" Visible="False" sfwLoadType="CodeGroup" sfwLoadSource="305" sfwEntityField="AddressTypeValue" />
+        <sfwLabel ID="capPeoplesoftFlag" Text="From Peoplesoft : " Visible="False" sfwIsCaption="True" />
+        <sfwCheckBox ID="chkPeoplesoftFlag" sfwDefaultValue="N" sfwTwoWayBinding="False" Visible="False" sfwEntityField="PeoplesoftFlag" />
+        <sfwLabel ID="capAddrLine1" Text="Address Line 1 : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtAddrLine1" Width="200px" sfwEntityField="AddrLine1" sfwValidationRules="RULE CHECK ADDRESS LINE 1 IS NULL" />
+        <sfwLabel ID="lblAddr1Mand" SkinID="ReqInformation" Text="&amp;nbsp;*" sfwIsCaption="True" />
+        <sfwLabel ID="capAddrCity" Text="City : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtAddrCity" sfwEntityField="AddrCity" sfwValidationRules="RULE CHECK CITY IS NULL" />
+        <sfwLabel ID="lblAddCityMand" SkinID="ReqInformation" Text="&amp;nbsp;*" sfwIsCaption="True" />
+        <sfwLabel ID="capAddrLine2" Text="Address Line 2 : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtAddrLine2" Width="200px" sfwEntityField="AddrLine2" />
+        <sfwLabel ID="capAddrStateValue" Text="State : " sfwIsCaption="True" />
+        <sfwDropDownList ID="ddlAddrStateValue" sfwDefaultValue="ND" sfwLoadType="CodeGroup" sfwLoadSource="150" sfwEntityField="AddrStateValue" sfwValidationRules="RULE CHECK STATE IS BLANK" />
+        <sfwLabel ID="lblStateMand" SkinID="ReqInformation" Text="&amp;nbsp;*" sfwIsCaption="True" />
+        <sfwLabel ID="capAddrCountyValue" sfwMode="Update" sfwVisibleRule="Visible County if State is North Dakota" Text="County : " sfwIsCaption="True" />
+        <sfwLabel ID="lblIstrCounty" sfwVisibleRule="Visible County if State is North Dakota" sfwEntityField="IstrCounty" />
+        <sfwLabel ID="capAddrCountryValue" Text="Country : " sfwIsCaption="True" />
+        <sfwDropDownList ID="ddlAddrCountryValue" sfwDefaultValue="0001" sfwLoadType="CodeGroup" sfwLoadSource="151" sfwEntityField="AddrCountryValue" sfwValidationRules="RULE CHECK COUNTRY IS NOT US;RuleCheckInvalidForeignAddress" />
+        <sfwLabel SkinID="ReqInformation" Text="*&amp;nbsp;" Visible="False" sfwIsCaption="True" />
+        <sfwLabel ID="capAddrZipCode" Text="Zip Code : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtAddrZipCode" Width="50px" sfwEntityField="AddrZipCode" sfwValidationRules="RULE CHECK ZIP CODE IS NULL;RULE CHECK ZIP CODE IS NOT NUMERIC" />
+        <sfwTextBox ID="txtAddrZip4Code" Width="40px" sfwEntityField="AddrZip4Code" />
+        <sfwLabel ID="lblZipCodeMand" SkinID="ReqInformation" Text="&amp;nbsp;*" sfwIsCaption="True" />
+        <sfwLabel ID="capForeignProvince" Text="Foreign Province : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtForeignProvince" sfwEntityField="ForeignProvince" />
+        <sfwLabel ID="capForeignPostalCode" Text="Foreign Postal Code : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtForeignPostalCode" sfwEntityField="ForeignPostalCode" />
+        <sfwLabel ID="capStartDate" Text="When do you want NDPERS&lt;br/&gt;to start using this address?   " sfwIsCaption="True" />
+        <sfwTextBox ID="txtStartDate" sfwDataFormat="{0:d}" sfwEntityField="StartDate" sfwValidationRules="RULE CHECK START DATE IS NOT NULL;RULE CHECK OVERLAP DATE;RULE CHECK IF START DATE IS PAST DATE NEW;IsStartDateInValidForAddressType" />
+        <sfwLabel SkinID="ReqInformation" Text="&amp;nbsp;*" sfwIsCaption="True" />
+        <sfwLabel ID="lblLabel" Text="(Date cannot be in the past)" sfwIsCaption="True" />
+        <sfwLabel ID="capIstrSuppressWarning" sfwVisibleRule="VisibleRuleIgnoreWarning" Text="Ignore the warning &amp; update your address ?" sfwIsCaption="True" />
+        <sfwRadioButtonList ID="rblRadioButtonList" RepeatDirection="Horizontal" sfwDefaultValue="N" sfwLoadType="Items" sfwEntityField="IstrSuppressWarning">
+          <ListItem Text="Yes" Value="Y" />
+          <ListItem Text="No" Value="N" />
+        </sfwRadioButtonList>
+        <sfwLabel ID="lblPersonAddressId" sfwEntityField="PersonAddressId" CssClass="hideControl" />
+        <sfwLabel ID="capEndDate" Text="End Date : " Visible="False" sfwIsCaption="True" />
+        <sfwTextBox ID="txtEndDate" sfwDataFormat="{0:d}" Visible="False" sfwEntityField="EndDate" />
+        <sfwButton ID="btnSave" sfwMethodName="btnSave_Click" sfwNavigationParameter="aintPersonAddressID=PersonAddressId" Text="Save" sfwMessageId="10396" />
+        <sfwButton ID="btnCancel" sfwMethodName="btnCancel_Click" Text="Cancel" />
+      </items>
+    </sfwPanel>
+  </items>
+  <loaddetails />
+  <ExtraFields />
+</form>

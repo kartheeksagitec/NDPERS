@@ -1,0 +1,602 @@
+﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage<dynamic>" %>
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head id="Head1" runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+        <asp:ContentPlaceHolder ID="TitleContent" runat="server" />
+    </title>
+    <link href="<%: Url.Content("~/favicon.ico")%>" rel="shortcut icon" type="image/x-icon" />
+    <link rel="stylesheet" href="<%=System.Web.Optimization.BundleTable.Bundles.ResolveBundleUrl("~/bundles/FMStyle")%>" type="text/css" />
+    <link rel="stylesheet" href="<%=System.Web.Optimization.BundleTable.Bundles.ResolveBundleUrl("~/bundles/AppCSS")%>" type="text/css" />
+    <link rel="stylesheet" linkUserCssTheme="true" href="<%= System.Web.Optimization.BundleTable.Bundles.ResolveBundleUrl ("~/bundles/AppSideCSS")%>" type="text/css" /> 
+
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
+     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link href="~/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css" />
+    <!-- END GLOBAL MANDATORY STYLES -->
+    <!-- BEGIN THEME STYLES -->
+    <link rel="stylesheet" type="text/css" href="~/assets/plugins/bootstrap-toastr/toastr.min.css" />    
+    <link href="~/assets/css/style-responsive.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/plugins.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/custom.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/layout.css" rel="stylesheet" />
+    <link href="~/Styles/neoGrid.min.css" rel="stylesheet" />
+    <link href="~/Styles/kendo.common.min.css" rel="stylesheet" />
+    <link href="~/Styles/jquery-ui.min.css" rel="stylesheet" />
+    
+
+    <meta name="viewport" content="width=device-width" />
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        #page-loader, #Custom-loader {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 99999;
+            width: 100%;
+            height: 100%;
+            padding-top: 25px;
+            display: none;
+            background: rgba(0,0,0,.3);
+        }
+
+        /* default style */
+        .selectnav {
+            display: none;
+        }
+
+        /* small screen */
+        @media screen and (max-width: 900px) {
+            .js #MenuUl {
+                display: none;
+            }
+
+            .js .selectnav {
+                display: block;
+            }
+        }
+
+        .placeholder {
+            opacity: 0.4;
+            border: 1px dashed #a6a6a6;
+        }
+    </style>
+</head>
+<body class="page-header-fixed page-sidebar-fixed page-slideout-body page-slideout-body-collaped">
+    <%= Html.AntiForgeryToken() %>
+    <input id="antiForgeryToken" type="hidden" value="<%: Model.AntiForgeryToken %>" />
+    <div id="dropDiv">
+        <table style="height: 100%; width: 100%; z-index: 300">
+            <tr>
+                <td id="dropLeft" class="dropTd">
+                    <h2>Open on left</h2>
+                </td>
+                <td id="dropRight" class="dropTd">
+                    <h2>Open on right</h2>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="pnlLoading" style="z-index: 9999; height: 100%; width: 100%; position: absolute;">
+        <div style="vertical-align: middle; text-align: center; font-size: x-large; color: green">
+            <span>Please wait, initial page is loading...
+            </span>
+        </div>
+    </div>    
+
+    <!-- BEGIN CONTAINER -->
+    <div id="MainSplitter" style="height: 100%; border: 0; opacity: 0;">
+        <!-- BEGIN HEADER -->
+        <div id="header">
+             <div class="header-topstrip">
+                    <div class="col-md-6 col-xs-8">
+                        <a target="_blank" href="https://www.nd.gov/"><img src="<%:Url.Content("~/Images/northdakota-logo.png")%>" class="img-responsive" /></a>  
+                    </div>
+                
+                    <div class="col-md-6 col-xs-4 text-right">
+                        <a target="_blank" href="https://www.ndtourism.com/"><img src="<%:Url.Content("~/Images/northlogo.png")%>" /></a>                       
+
+                    </div>
+                </div>
+            <!-- BEGIN TOP NAVIGATION BAR -->
+            <div class="headerWrap">
+               
+                <!-- BEGIN LOGO -->
+                <div class="main-logo">
+                <a id="logo" class="logo">
+                    <img src="<%:Url.Content("~/Images/logo.png")%>" alt="logo" class="img-responsive desktop-logo">
+                    <span class="mob-logo"> <img src="<%:Url.Content("~/Images/mob-logo.png")%>"></span>
+                </a>
+                    </div>
+                <div class="portal-head">
+                     
+                     <div class="col-md-8 col-xs-6 mob-hidden">                        
+                        <span class="welcome-text">
+                            <% if ((Model.iobjSessionData["IsRetiree"] != null && Model.iobjSessionData["IsRetiree"] == true))
+                            { %>
+                                 Welcome to the PERSLink Member Self Service (MSS) website. MSS is a secure website where you can view your retirement payment account details, other NDPERS plans, insurance coverage & other details.
+                               <%} %>
+                        <% else {  %>
+                                  Welcome to the PERSLink Member Self Service (MSS). MSS is a secure website where you can view and update your NDPERS benefit plans and personal profile. If applicable, you can also perform retirement and service purchase benefit estimates.
+                        <%} %>
+                        </span>
+                  </div>
+
+                    <div class="col-md-4 col-xs-6 mob-menus">
+                        <ul class="sagi-nav">
+                            <% if ((Model.iobjSessionData["IsRetiree"] != null && Model.iobjSessionData["IsRetiree"] == true) || Convert.ToBoolean(Model.iobjSessionData["EnrolledInCOBRA"]))
+                            { %>
+                            <li><a id="lnkMssHome" title="Go to Home" formname="wfmMSSRetireeHomeMaintenance" href="#" class="home-icon active"></a></li>
+                        <%} %>
+                        <% else {  %>
+                            <% if (Convert.ToString(Model.iobjSessionData["MSSAccessValue"]) == "LMAC" || Convert.ToString(Model.iobjSessionData["MSSAccessValue"]) == string.Empty)
+                                { %>
+                                    <li><a id="lnkMssHome" title="Go to Home" formname="wfmMSSHomeLimited" href="#" class="home-icon active"></a></li>
+                                <%} %>
+                            <% else {  %>
+                                    <li><a id="lnkMssHome" title="Go to Home" formname="wfmMSSActiveMemberHomeMaintenance" href="#" class="home-icon active"></a></li>
+                            <%} %>
+                        
+                        <%} %>
+                            <li><a id="lnkMssForms" title="MSS Forms" formname="wfmMSSFormsNDPERSMaintenance" class="note-icon"></a></li>
+                                <li><a id="lnkContactUs" title="Contact Us" formname="wfmMSSContactNDPERSMaintenance" class="phone-icon"></a></li>
+                                <% if (Model.iobjSessionData["IsMemberBothRetireeAndActive"] != null && Model.iobjSessionData["IsMemberBothRetireeAndActive"] == true)
+                                { %>
+                                    <li><a id="lnkSwitchMemberAccount" title="Switch a different Account" onclick="localStorage.clear(); sessionStorage.clear();" href="<%= Url.Content("~/Account/wfmMSSSwitchMemberAccount") %>" class="acc-icon"></a></li>                            
+                                <%} %>
+                            <% if (Model.iobjSessionData["IsExternalUser"] != null && Model.iobjSessionData["IsExternalUser"] != true)
+                                { %>
+                                    <li><a id="lnkSwitchMember" title="Switch to a different Member" onclick="localStorage.clear(); sessionStorage.clear();" href="<%= Url.Content("~/Account/wfmMSSSwitchMember") %>" class="user-icon"></a></li>
+                            <%} %>                                                          
+                                 <li><a title="Previous" onclick="nsEvents.btn_GoPreviousPage();" class="back-icon"></a></li>
+                                <li><a id="lnkLogout" href="#" title="Click this button to logoff from NDPERS Member Portal" onclick="javascript:confirmation();" class="logoff-icon"></a></li>
+                            </ul>
+                    </div>
+
+
+                </div>
+                <!-- END LOGO -->
+                <!-- BEGIN RESPONSIVE MENU TOGGLER -->
+                <a href="javascript:;" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <img src="<%:Url.Content("~/assets/img/menu-toggler.png")%>" alt="" />
+                </a>
+                <!-- END RESPONSIVE MENU TOGGLER -->
+                <!-- BEGIN TOP NAVIGATION MENU -->
+
+                <div class="top-menu" style="display:none">
+                    <ul class="pull-right">
+                        <li id="NotificationBar" class="dropdown" data-bind="visible: DirtyFormListVisibile">
+                            <a title="Unsaved Forms" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                <i class="fa fa-warning"></i>
+                                <span class="badge red" id="DirtyFormCount" data-bind="text: DirtyFormCount"></span>
+                            </a>
+                            <ul class="dropdown-menu extended notification">
+                                <li>
+                                    <p>
+                                        You have <span data-bind="text: DirtyFormCount"></span>unsaved forms
+                                    </p>
+                                </li>
+                                <li>
+                                    <ul id="DirtyFormList" class="dropdown-menu-list scroller" data-bind="html: DirtyFormList" >
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- END DirtyForm DROPDOWN -->
+
+                        
+                        <li><a id="lnkPrevious" title="Previous" onclick="javascript:nsEvents.btn_GoPreviousPage();" class="header-prev"></a></li>
+
+                        <li>
+                            <div class="user-account" id="btnWelComeDivCollapseExpand">
+                                Welcome, <%= Html.Encode(Model.iobjSessionData["MSSDisplayName"])%>
+                            </div>
+                        </li>
+
+                    </ul>
+                </div>
+
+
+                <!-- END TOP NAVIGATION MENU -->
+            </div>
+            <!-- END TOP NAVIGATION BAR -->
+        </div>
+        <!-- END HEADER -->
+        <div class="clearfix">
+        </div>
+
+        <!-- BEGIN CONTENT -->
+        <div class="page-container">
+            <!-- BEGIN SIDEBAR -->
+               <%if (Model.iobjSessionData["Landing_Page"] != "wfmMSSHomeLimited"){ %>
+            <div class="page-sidebar-wrapper">
+                <div>                               
+                   <div class="page-slideout-left-wrapper toggle-menu-container">
+                       <div id="divHeaderSlideoutMenuContainer" <%--class="toggle-menu-container"--%>>
+                           <div class="toggle-menu-inner-content">
+                               <div class="cssmenu CssSlideoutCenterLeftMenu">
+                                   <ul>
+                                       <li class="active" id="ActiveMember">
+                                           <a href="javascript:;" class="nav-link nav-toggle alerts-img">
+                                               <i></i>
+                                               <span class="title">Alerts & Messages</span>
+
+                                           </a>
+                                           <ul class="sub-menu">
+                                               <li class="menuItem">
+                                                    <input id="PersonID" type="hidden" value="<%: Model.ReferenceID%>"/>  
+                                                <%--   <%if (Convert.ToInt32(Model.iobjSessionData["MessageCount"] ?? 0)>0)
+                                                       { %>--%>
+                                                   <a id="HLMSSMessageBoard" href="#" formname="wfmMSSInboxMaintenance" class="nav-link ">You have 
+                                                <%= Model.iobjSessionData["MessageCount"] == null ? "0" : Convert.ToString(Model.iobjSessionData["MessageCount"])%> messages 
+                                                 </a>
+                                                   <img id="imgNewMsg" src="<%:Url.Content("~/images/new.svg")%>">                                                  
+                                               </li>
+                                           </ul>
+                                       </li>
+                                   </ul>
+                               </div>
+                               <div id="cssmenu" class="cssmenu CssSlideoutCenterLeftMenu">
+                               </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+             <%}%>
+            <!-- END SIDEBAR -->
+            <!-- BEGIN CONTENT -->
+            <div class="page-content-wrapper">
+
+                <div class="row page-header-wrap">
+                                    
+                                       <%-- <h3 id="FormTitle" class="page-title"></h3>--%>
+                                  <span id="btnHeaderSlideoutMenuDivCollapseExpand" class="menu-toggle web-view-head"></span>
+                                    <div id="crumDiv" class="crumDiv">
+                                        
+                                        <div class="s-freezed-crumtoolbar-Container">
+                                            <div class="s-freezed-crum-toolbar-wrapper">
+                                                <div class="s-crumDivContainer">
+                                                    <div id="crumDiv" class="crumDiv"></div>
+                                                </div>
+                                                <div class="s-freezed-button-toolbar" id="divFreezedButtonToolbar">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                    <div class="div_TestTemplate">
+                        <span>
+                        <% if ((Model.iobjSessionData["Region_value"] != null && Convert.ToString(Model.iobjSessionData["Region_value"]) == "PROD"))
+                        { %>
+                                     
+                        <%} %> 
+                        <% else {  if (Model.iobjSessionData["Region_value"] != null)
+                                { %>
+                            
+                            <label class="span_TestTemplate"><b>TEST ENVIRONMENT</b></label>
+                        <% } } %>
+                        </span>
+                    </div>
+                                 
+                    <div class="userinfo-welcome">
+                        Member ID:<b> <%= Html.Encode(Model.iobjSessionData["PersonID"])%></b> 
+                        <span class="divider">|</span>
+                        Welcome,<b> <%= Html.Encode(Model.iobjSessionData["MSSDisplayName"])%></b>
+                   
+                       
+                    </div>
+
+                                </div>
+
+                <div class="page-content">
+                    <!-- BEGIN PAGE CONTENT-->
+                   
+                        <div class="col-md-12">
+                            <div id="navTreeTriger" style="display: none" class="trigger left navigation LeftPanel_IconNavigator navigator"></div>
+                            <div id="SlideOutTree" style="display: none" class="panel left">
+                                <div class="navDiv">
+                                    <div style="padding: 10px;" id="TabsTree"></div>
+                                </div>
+                            </div>
+                            <div id="CenterSplitter">
+                                <!-- BEGIN STYLE CUSTOMIZER -->
+                               
+                                <!-- END STYLE CUSTOMIZER -->
+                                <!-- BEGIN PAGE HEADER-->
+                                
+                                <!-- END PAGE HEADER-->
+
+                                <%--<div id="GlobalMessageDiv"></div>--%>
+                                <div id="ContentSplitter" role="group">
+                                    <%--<div id="RptHolder" role="group" style="display: none">
+                                        <div id="wfmReportClient_RptDiv"></div>
+                                        <iframe id="ReportFrame" height="500px" width="100%"></iframe>
+                                    </div>--%>
+                                </div>
+                            </div>
+                        </div>
+                   
+                </div>
+                <!-- END PAGE CONTENT-->
+            </div>
+        </div>
+        <!-- END CONTENT -->
+
+        <!-- BEGIN FOOTER -->
+        <div id="footerMSS" class="footerMSS">
+            <table width="100%" border="0">
+                <tr>
+                    <td style="height: 25px; vertical-align: middle" align="center">
+                        <div align="center">
+                            <a class="footertxt" href="<%=Page.ResolveUrl("~/DisclaimerMaintenance.html")%>" onclick="javascript:void window.open(this.href,'_blank','width=650,height=600,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');
+                                return false;">Privacy Policy & Disclaimer  | SAGITEC © <%= DateTime.Now.Year%></a>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- END FOOTER -->
+    </div>
+    <!-- END CONTAINER -->
+
+    <div id="errorWindow">
+    </div>
+
+    <div id="DisplayMessageBoxtext" style="display: none; width: auto !important">
+        <div id="DisplayMessageBox1">
+            <table style="width: 100%; height: 100%;">            
+
+                <tr>
+                    <td> <%if (Model.iobjSessionData["PopUpMessageForCertify"] != null) { %>
+                            <%=Convert.ToString(Model.iobjSessionData["PopUpMessageForCertify"])%>
+                         <%}%>
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;             
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button id="btnContinue1" class="k-button" onclick="ns.arrDialog['DisplayMessageBoxtext'].close();">Review my information</button>
+                        <button id="btnContinue12" class="k-button" onclick="ns.arrDialog['DisplayMessageBoxtext'].close();">Cancel</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div id="page-loader" style="display: none;" class="preloader">
+        <table width="100%" height="100%">
+            <tr>
+                <td style="vertical-align: middle; text-align: center">
+                    <img alt="loader" src='<%:Url.Content("~/images/301.gif")%>'>
+                </td>
+            </tr>
+
+        </table>
+    </div>
+    
+    <div id="Custom-loader" style="display: none;" class="preloader">
+        <table width="100%" height="100%">
+            <tr>
+                <td style="vertical-align: middle; text-align: center">
+                    <img alt="loader" src='<%:Url.Content("~/images/301.gif")%>'>
+                </td>
+            </tr>
+
+        </table>
+    </div>
+
+    <div style="display: none;" id='DivExportWindow'>
+        <div id="ExptColumnsMessage">Select the columns to be exported from the following list:</div>
+        <div id="DivExportCols"></div>
+        <button id="clickExcel">Download As Excel</button>
+    </div>
+
+    <div id="ToolTipDiv" class="tooltip configpanel"></div>
+
+    <div id="EditCorrDiv" style="display: none">
+        <div>
+            <input type="button" value="Save" onclick="javascript: SaveCorrespondence(); return false;">
+            <input type="button" value="Close" onclick="javascript: CloseCorrespondence(); return false;">
+            <input type="button" value="Print" onclick="javascript: PrintCorrespondence(); return false;">
+        </div>
+        <div>
+            <object height="700" width="1200" id="ControlWordExcelObj" classid="clsid:98BAE912-0171-4c9c-A4EC-FD5969E92D08">
+            </object>
+        </div>
+    </div>
+
+    <div id="SessionExpired" style="display: none">
+        <div id="ExpiredMessage">
+            <table style="width: 100%; height: 100%;">
+                <tr>
+                    <td>Your session will timeout in <span id="spnRemainTimeSec"></span> second(s), please click a "Continue Session" button or navigate to another page to refresh your session before it expires.                       
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;               
+                    </td>
+                </tr>
+                <tr>
+                    <td>Do you want to Continue Session?                       
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;             
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+
+                        <button id="btnContinue" class="k-button" onclick="ns.refreshSession();">Continue Session</button>
+                        <button id="btnLogout" class="k-button" onclick="ns.logoutSesssion();">Logout</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+        <div id="OpenPopupSuccess" style="display: none">
+        <div id="OpenPopupSuccessMsg">
+            <table style="width: 100%; height: 100%;">
+                <tr>
+                    <td>Thank you for casting your vote.</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;               
+                    </td>
+                </tr>
+                <tr>
+                    <td>Visit the NDPERS website to learn more about the NDPERS Board or subscribe to receive monthly Board books.</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;             
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button id="btnReturnToHomePage" class="k-button" onclick="nsUserFunctions.ReturnToHomePage();">Return Home</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <%if (Model.iobjSessionData != null && Model.iobjSessionData["WindowName"] != null)
+        { %>
+                 <input type="hidden" id="LoginWindowName" name="LoginWindowName" value="<%: Model.iobjSessionData["WindowName"].ToString()%>" />
+    <% }
+        else
+        { %>
+                 <input type="hidden" id="<%:"LoginWindowName"%>" name="LoginWindowName" />
+    <% } %>
+
+     <form id="wfmLogin" runat="server">
+        <asp:HiddenField runat="server" ID="hfldLoginWindowName" />
+    </form>
+    <input type="hidden" id="SiteName" value="<%=new Uri(Request.Url.ToString()).GetLeftPart(UriPartial.Authority)%>" />    
+    <input type="hidden" id="LandingPage" value="<%=Model.iobjSessionData["InitialPage"].ToString()%>" />
+    <input type="hidden" id="MemberID" value="<%=Model.iobjSessionData["PersonID"] == null ? "0" : Convert.ToString(Model.iobjSessionData["PersonID"]) %>" />
+    <%if (Model.iobjSessionData["IsRetiree"] != null) { %>
+    <input type="hidden" id="IsRetiree" value="<%=Model.iobjSessionData["IsRetiree"].ToString()%>" />
+    <%}%>
+
+     <%if (Model.iobjSessionData["IsExternalUser"] != null) { %>
+    <input type="hidden" id="IsExternalUser" value="<%=Model.iobjSessionData["IsExternalUser"].ToString()%>" />
+    <%}%>
+
+     <%if (Model.iobjSessionData.idictParams["PersonCertify"] != null) { %>
+    <input type="hidden" id="PersonCertify" value="<%=Model.iobjSessionData.idictParams["PersonCertify"].ToString()%>" />
+    <%}%>
+    <%if (Model.iobjSessionData["EMAILWAIVERFLAG"] != null) { %>
+    <input type="hidden" id="IsEmailFlagWaiver" value="<%=Model.iobjSessionData["EMAILWAIVERFLAG"].ToString()%>" />
+    <%}%>
+   <input type="hidden" id="lblGlobalPlanId" />
+   <input type="hidden" id="lblGlobalPayeeAccStatus" />
+   <input type="hidden" id="lblGlobalPayeeAccountId" />
+   <input type="hidden" id="lblGlobalBenefitAccountType" />
+    <input type="hidden" id="lblGloablEnrolledInCOBRA" value="<%=Model.iobjSessionData["EnrolledInCOBRA"].ToString()%>" />
+    <script id="treeview-template" type="text/kendo-ui-template"><span class="FormNode" LinkedTo="#:item.divID#">#:item.title#</span><a onclick='javascript: if(nsEvents != undefined && nsEvents.OnDeleteNodeClick != undefined) { nsEvents.OnDeleteNodeClick(this); }  else { OnDeleteNodeClick(this); }' class='delete-link'></a></script>
+
+    <input type="hidden" id="hflCurrentForm" />
+
+    <div class="FilterBox" style="display: none;">
+        <div class="row">Filter value(s) that:</div>
+        <div class="row">
+            <select id='selectFilterOptions1'></select>
+        </div>
+        <div class="row">
+            <input type='text' id='filterBox1' />
+        </div>
+        <div class="row">
+            <label for="rdoAnd">
+                <input name="FilterCondition" value="and" type="radio" id="rdoAnd" />
+                And
+            </label>
+            /
+            <label for="rdoOr">
+                <input name="FilterCondition" value="or" type="radio" id="rdoOr" />
+                Or
+            </label>
+        </div>
+        <div class="row">
+            <select id='selectFilterOptions2'></select>
+        </div>
+        <div class="row">
+            <input type='text' id='filterBox2' />
+        </div>
+        <div class="row">
+            <input type='button' id='btnFilter' class="s-grid-btnFilter" value='Filter' />
+            <input type='button' id='btnClearFilter' class="s-grid-btnClearFilter" value='Clear' />
+        </div>
+
+    </div>    
+
+    <div class="s-grid-settings-overlay" style="display: none;">
+        <div class="s-grid-settings-box" style="display: none;">
+            <h3>Settings <span class="s-grid-settings-box-close" title="Close"></span>
+            </h3>
+            <div class="s-grid-setting-content">
+                <div class="s-grid-setting-row s-grid-settings-sortmode">
+                    <div class="captiondiv">
+                        Sort Mode:
+                    </div>
+                    <div class="inputdiv">
+                        <div>
+                            <select class="s-grid-settings-sortmode-dropdown" id="ddlNeoGridSettingsSortMode"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="s-grid-setting-row s-grid-settings-pagesize">
+                    <div class="captiondiv">
+                        Page Size:
+                    </div>
+                    <div class="inputdiv">
+                        <div>
+                            <select class="s-grid-settings-pagesize-dropdown" id="ddlNeoGridSettingsPageSize"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="s-grid-setting-columns-row">
+                    <div class="captiondiv" title="Drag & drop the columns to rearrange.">
+                        Columns (Drag & drop to rearrange)
+                    </div>
+                    <div class="inputdiv">
+                        <div class="s-grid-settings-columns-div">
+                            <div class="s-grid-settings-columns" id="spnNeoGridHideColumns">
+                                <ul id="ulNeoGridSettingsColumns" class="s-grid-settings-columns-ul">
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="s-grid-settings-footer">
+                <input type="button" id="bntNeoGridSettingsApply" title="Apply settings" value="Apply" class="s-grid-settings-box-apply button" />
+                <input type="button" id="bntNeoGridSettingsOriginal" title="Reset settings to the original state" value="Reset & Apply" class="s-grid-settings-box-original button" />
+            </div>
+        </div>
+    </div>
+    <script>
+        window.name = "";
+    </script>
+    <script src="<%=System.Web.Optimization.BundleTable.Bundles.ResolveBundleUrl("~/bundles/FMLibScript")%>" type="text/javascript"></script>
+    <script src="<%=System.Web.Optimization.BundleTable.Bundles.ResolveBundleUrl("~/bundles/FMScript")%>" type="text/javascript"></script>
+    <script src="<%=System.Web.Optimization.BundleTable.Bundles.ResolveBundleUrl("~/bundles/AppSideJS")%>" type="text/javascript"></script>
+</body>
+</html>

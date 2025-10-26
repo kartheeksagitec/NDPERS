@@ -1,0 +1,80 @@
+﻿<entity ID="entWssAcknowledgement" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoWssAcknowledgement" sfwObjectID="busWssAcknowledgement" sfwTableName="sgt_wss_acknowledgement" sfwView="False" sfwDataObjectID="doWssAcknowledgement">
+  <rules>
+    <rule ID="IsTempWizardSummaryCheckBoxReadonly" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="true" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror />
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <expressionfields />
+  <queries>
+    <query ID="SelectAck" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT  A.* FROM SGT_WSS_ACKNOWLEDGEMENT A WITH(NOLOCK)&#xD;&#xA;INNER JOIN &#xD;&#xA;(&#xD;&#xA; SELECT MAX(EFFECTIVE_DATE) EFFECTIVE_DATE &#xD;&#xA;  FROM SGT_WSS_ACKNOWLEDGEMENT WITH(NOLOCK)&#xD;&#xA;  WHERE SCREEN_STEP_VALUE = @SCREEN_STEP_VALUE &#xD;&#xA;   AND EFFECTIVE_DATE &lt;= @EFFECTIVE_DATE&#xD;&#xA;) CURR ON A.EFFECTIVE_DATE = CURR.EFFECTIVE_DATE&#xD;&#xA;WHERE SCREEN_STEP_VALUE = @SCREEN_STEP_VALUE&#xD;&#xA;ORDER BY DISPLAY_SEQUENCE">
+      <parameters>
+        <parameter ID="@EFFECTIVE_DATE" sfwDataType="DateTime" />
+        <parameter ID="@SCREEN_STEP_VALUE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="SelectSpecificAckforView" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_WSS_ACKNOWLEDGEMENT &#xD;&#xA;WHERE ACKNOWLEDGEMENT_ID=@ACKNOWLEDGEMENT_ID">
+      <parameters>
+        <parameter ID="@ACKNOWLEDGEMENT_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="DeffComp" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT TOP 1 * FROM SGT_WSS_PERSON_ACCOUNT_DEFERRED_COMP WITH(NOLOCK) &#xD;&#xA;WHERE TARGET_PERSON_ACCOUNT_ID=@TARGET_PERSON_ACCOUNT_ID&#xD;&#xA;ORDER BY 1 DESC">
+      <parameters>
+        <parameter ID="@TARGET_PERSON_ACCOUNT_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetProviderDetails" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_WSS_PERSON_ACCOUNT_DEFERRED_COMP_PROVIDER A WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_WSS_PERSON_ACCOUNT_DEFERRED_COMP B WITH(NOLOCK)&#xD;&#xA;ON A.WSS_PERSON_ACCOUNT_DEFERRED_COMP_ID=B.WSS_PERSON_ACCOUNT_DEFERRED_COMP_ID&#xD;&#xA;WHERE WSS_PERSON_ACCOUNT_ENROLLMENT_REQUEST_ID=@WSS_PERSON_ACCOUNT_ENROLLMENT_REQUEST_ID">
+      <parameters>
+        <parameter ID="@WSS_PERSON_ACCOUNT_ENROLLMENT_REQUEST_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_WSS_ACKNOWLEDGEMENT a WITH(NOLOCK) &#xD;&#xA;order by ACKNOWLEDGEMENT_ID">
+      <parameters />
+    </query>
+    <query ID="PersonAccDefCompProvider" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT TOP 1 * FROM SGT_PERSON_ACCOUNT_DEFERRED_COMP_PROVIDER WITH(NOLOCK) WHERE PERSON_ACCOUNT_ID=@PERSONACCOUNTID ORDER BY 1 DESC">
+      <parameters>
+        <parameter ID="@PERSONACCOUNTID" />
+      </parameters>
+    </query>
+    <query ID="DefCompProviderForAck" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT a.COMPANY_NAME as ProviderName,e.ORG_NAME as EmployerName,A.START_DATE as StartDate,A.END_DATE as EndDate,&#xD;&#xA;a.PER_PAY_PERIOD_CONTRIBUTION_AMT as AmtPerPayPeriod,d.REPORT_FREQUENCY_VALUE as ReportFrequency, A.update_existing_provider as IsUpdateExistingProvider  &#xD;&#xA;FROM SGT_WSS_PERSON_ACCOUNT_DEFERRED_COMP_PROVIDER A WITH(NOLOCK)&#xD;&#xA; INNER JOIN SGT_WSS_PERSON_ACCOUNT_DEFERRED_COMP B WITH(NOLOCK)&#xD;&#xA; ON A.WSS_PERSON_ACCOUNT_DEFERRED_COMP_ID = B.WSS_PERSON_ACCOUNT_DEFERRED_COMP_ID&#xD;&#xA;  inner join SGT_PERSON_EMPLOYMENT c WITH(NOLOCK)&#xD;&#xA;  on A.PERSON_EMPLOYMENT_ID = c.PERSON_EMPLOYMENT_ID&#xD;&#xA;   inner join SGT_ORG_PLAN d WITH(NOLOCK)&#xD;&#xA;   on c.ORG_ID = d.ORG_ID and d.PLAN_ID = 19&#xD;&#xA;    inner join sgt_organization e WITH(NOLOCK)&#xD;&#xA;    on c.ORG_ID = e.ORG_ID&#xD;&#xA;WHERE WSS_PERSON_ACCOUNT_ENROLLMENT_REQUEST_ID = @WSSENROLLMENTREQUESTID">
+      <parameters>
+        <parameter ID="@WSSENROLLMENTREQUESTID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="SelectACHAck" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT&#xA;&#x9;  A.ACKNOWLEDGEMENT_TEXT &#xA;FROM&#xA;&#x9; SGT_WSS_ACKNOWLEDGEMENT A WITH(NOLOCK)  &#xA;WHERE&#xA;&#x9; A.SCREEN_STEP_VALUE = @SCREEN_STEP_VALUE AND&#xA;&#x9; A.EFFECTIVE_DATE &lt;= @EFFECTIVE_DATE AND&#xA;&#x9; A.DISPLAY_SEQUENCE  = @DISPLAY_SEQUENCE &#xA;&#x9; ORDER BY A.EFFECTIVE_DATE DESC">
+      <parameters>
+        <parameter ID="@SCREEN_STEP_VALUE" sfwDataType="string" />
+        <parameter ID="@EFFECTIVE_DATE" sfwDataType="DateTime" />
+        <parameter ID="@DISPLAY_SEQUENCE" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="AcknowledgementId" sfwType="Column" sfwValue="acknowledgement_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="EffectiveDate" sfwType="Column" sfwValue="effective_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ScreenStepDescription" sfwType="Description" sfwValue="screen_step_description" />
+    <attribute ID="ScreenStepId" sfwType="Column" sfwValue="screen_step_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ScreenStepValue" sfwType="Column" sfwValue="screen_step_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="DisplaySequence" sfwType="Column" sfwValue="display_sequence" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AcknowledgementText" sfwType="Column" sfwValue="acknowledgement_text" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="MAX" />
+    <attribute ID="ShowCheckBoxFlag" sfwType="Column" sfwValue="show_check_box_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="is_acknowledgement_selected" sfwDataType="string" sfwPrivate="False" sfwValue="icdoWssAcknowledgement.is_acknowledgement_selected" sfwType="Property" />
+    <attribute ID="lstEEAcknowledgement1" sfwType="Collection" sfwValue="iclbEEAcknowledgement" sfwEntity="entWssAcknowledgement" sfwPrivate="False" />
+  </attributes>
+  <constraint />
+  <methods />
+  <lifecycle />
+  <objectmethods />
+  <ExtraFields />
+</entity>

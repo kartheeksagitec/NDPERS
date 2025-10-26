@@ -1,0 +1,81 @@
+﻿<form ID="wfmMSSPaymentHistoryLookup" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2001" sfwType="FormLinkLookup" sfwTitle="Payment History Lookup" version="3.5" sfwEntity="entPaymentHistoryHeader" sfwGridCollection="busMSSPaymentHistoryLookup.iclbPaymentHistoryHeader" sfwTemplate="MSSPaymentHistoryLookup.html" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmMSSPaymentHistoryLookup" isBasedOnWfm="true">
+  <initialload>
+    <query ID="cdoPaymentHistoryHeader" sfwQueryRef="entPaymentHistoryHeader.Lookup" sfwMethodName="LoadPaymentHistoryHeaders" />
+    <query ID="LookupSubquery" sfwQueryRef="entPaymentHistoryHeader.LookupSubquery" />
+  </initialload>
+  <items>
+    <sfwTable ID="Main" />
+    <sfwPanel ID="pnlCriteria" sfwCaption="Criteria">
+      <items>
+        <sfwTable ID="tblCriteria" />
+        <sfwLabel ID="capPhhPayeeAccountId" Text="Payee Account ID : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtPhhPayeeAccountId" sfwDataField="phh.payee_account_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="cdoPaymentHistoryHeader" />
+        <sfwLabel ID="capPhhPaymentDateFrom" Text="Payment Date From : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtPhhPaymentDateFrom" sfwDataField="phh.payment_date" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="between" sfwQueryID="cdoPaymentHistoryHeader" sfwRelatedControl="txtPhhPaymentDateTo" />
+        <CompareValidator ID="valPhhPaymentDateFrom" />
+        <sfwLabel ID="capPhhPaymentDateTo" Text="Payment Date To : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtPhhPaymentDateTo" sfwDataField="phh.payment_date" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="between" sfwQueryID="cdoPaymentHistoryHeader" sfwRelatedControl="txtPhhPaymentDateFrom" />
+        <CompareValidator ID="valPhhPaymentDateTo" />
+        <CompareValidator ID="valPhhPaymentDateRange" />
+        <sfwButton ID="btnSearch" sfwMethodName="btnSearch_Click" Text="Search" Visible="False" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlResult" sfwCaption="Search Results">
+      <items>
+        <sfwTable ID="tblResult" />
+        <sfwButton ID="btnOpen" sfwActiveForm="wfmMSSPaymentHistoryMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="aintPayeePaymentHistoryId=PaymentHistoryHeaderId" sfwRelatedControl="dgrResult" Text="Open" Visible="False" />
+        <sfwButton ID="btnSearch1" sfwMethodName="btnSearch_Click" Text="Search" />
+        <sfwGridView AllowPaging="True" AllowSorting="True" ID="dgrResult">
+          <Columns>
+            <TemplateField HeaderText="Payment ID">
+              <ItemTemplate>
+                <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpen" sfwEntityField="PaymentHistoryHeaderId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Mss Plan Name">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objPlan.MssPlanName" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Plan">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objPlan.PlanName" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Payee Account ID">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="PayeeAccountId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="PERSLink ID">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="PersonId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Org Code">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objOrganization.OrgCode" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Payment Date">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="PaymentDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Status">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="StatusDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Gross Amount" ItemStyle.HorizontalAlign="Right">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="GrossAmount" />
+              </ItemTemplate>
+            </TemplateField>
+          </Columns>
+        </sfwGridView>
+      </items>
+    </sfwPanel>
+  </items>
+  <loaddetails />
+</form>

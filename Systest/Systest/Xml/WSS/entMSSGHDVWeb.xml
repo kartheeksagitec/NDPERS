@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entMSSGHDVWeb" sfwActive="True" sfwStatus="Review" sfwType="BusinessRule" sfwMainCDO="icdoPersonAccountGhdv" sfwObjectID="busMSSGHDVWeb" sfwParentEntity="entPersonAccountGhdv">
+  <rules>
+    <rule ID="IsEnrollmentRequestIdExists" sfwExpression="(this.iintEnrollmentRequestId != 0) &amp;&amp; &#xA;(this.SetVisibilityForUpdatePersonAccountButton() == True) &amp;&amp; &#xA;(this.iblnIsEnrollmentRequestRejectedOrPending == True)" sfwObjectBased="True" />
+    <rule ID="IsEnrollmentRequestIdNotExists" sfwExpression="!(this.iintEnrollmentRequestId != 0) &amp;&amp; &#xA;(this.SetVisibilityForUpdatePersonAccountButton() == True)" sfwObjectBased="True" />
+    <rule ID="IsReasonValueAnnualEnrollment" sfwExpression="(this.icdoPersonAccountGhdv.reason_value == &quot;ANNE&quot;)" sfwObjectBased="True" />
+    <rule ID="IsSSNMissingForanyDependent" sfwExpression="(this.IsSSNMissingForAnyDependents() == True)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleIsFlexCompPlanNotAvailable" sfwExpression="!(this.IsFlexCompPlanNotAvailable() == True) &amp;&amp; &#xA;!(RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusPlan.icdoPlan.plan_id&quot;) == RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusPerson.iintPlanIdGroupHealth&quot;))" sfwObjectBased="True" />
+    <rule ID="VisibilityForManageHDHPButton" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusPlan.icdoPlan.plan_id&quot;) == RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusPerson.iintPlanIdGroupHealth&quot;)) &amp;&amp;&#xA;this.IsMemberHasHDHPPlan()" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="IsIBSNotCheckedWhenOrgToBillEntered" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsCoverageCodeVisible" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsLevelofCoverageVisible" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsIBSFlagSelected" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEnrollmentRequestIdExists" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEnrollmentRequestIdNotExists" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPlanVision" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPlanDental" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPlanGroupHealth" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPlanDentalOrVision" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsSSNMissingForanyDependent" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsReasonValueAnnualEnrollment" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleIsFlexCompPlanNotAvailable" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibilityForManageHDHPButton" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror />
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <expressionfields />
+  <attributes>
+    <attribute sfwDataType="int" sfwType="Property" ID="PersonAccountGhdvId" sfwValue="icdoPersonAccountGhdv.person_account_ghdv_id" />
+    <attribute sfwDataType="string" sfwType="Property" ID="LevelOfCoverageDescription" sfwValue="icdoPersonAccountGhdv.level_of_coverage_description" />
+    <attribute sfwType="Collection" sfwEntity="entPersonDependent" ID="lstMSSPersonDependent" sfwValue="iclbMSSPersonDependent" />
+    <attribute sfwType="Collection" sfwEntity="entPersonAccountInsuranceContribution" ID="lstMSSInsurancePremiumDetails" sfwValue="iclbMSSInsurancePremiumDetails" />
+    <attribute ID="objPlan" sfwType="Object" sfwEntity="entPlan" sfwValue="ibusPlan" />
+    <attribute sfwDataType="string" sfwType="Property" ID="PlanParticipationStatusDescription" sfwValue="icdoPersonAccount.plan_participation_status_description" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="HistoryChangeDate" sfwValue="icdoPersonAccount.history_change_date" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="EndDate" sfwValue="icdoPersonAccount.end_date" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrCoverageCode" sfwValue="istrCoverageCode" />
+    <attribute ID="objProvider" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusProvider" />
+    <attribute sfwDataType="string" sfwType="Property" ID="TypeOfCoverageForMss" sfwValue="icdoPersonAccountGhdv.type_of_coverage_for_mss" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPremiumFlag" sfwValue="istrPremiumFlag" />
+    <attribute sfwDataType="int" sfwType="Property" ID="PersonEmploymentDtlId" sfwValue="icdoPersonAccount.person_employment_dtl_id" />
+    <attribute sfwDataType="int" sfwType="Property" ID="PersonId" sfwValue="icdoPersonAccount.person_id" />
+    <attribute sfwDataType="int" sfwType="Property" ID="PlanId" sfwValue="icdoPersonAccount.plan_id" />
+    <attribute sfwType="Collection" sfwEntity="entPersonAccountGhdvHistory" ID="lstMSSHistory" sfwValue="iclbMSSHistory" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPlanParticipation" sfwValue="istrPlanParticipation" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="IstrStartDate" sfwValue="istrStartDate" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="IstrEndDate" sfwValue="istrEndDate" />
+    <attribute ID="objPaymentElection" sfwType="Object" sfwEntity="entPersonAccountPaymentElection" sfwValue="ibusPaymentElection" />
+    <attribute sfwType="Collection" sfwEntity="entPersonAccountAchDetail" ID="lstPersonAccountAchDetail" sfwValue="iclbPersonAccountAchDetail" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IintEnrollmentRequestId" sfwValue="iintEnrollmentRequestId" />
+    <attribute ID="IblnEnrollInHealthAsTemporary" sfwDataType="bool" sfwPrivate="False" sfwValue="iblnEnrollInHealthAsTemporary" sfwType="Property" />
+  </attributes>
+</entity>

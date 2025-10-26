@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<form ID="wfmMergeEmployerHeaderLookup" sfwActive="True" sfwStatus="Valid" sfwRemoteObject="srvOrganization" sfwResource="300 " sfwType="Lookup" sfwTitle="Merge Employer Header Lookup" version="3.5" sfwEntity="entMergeEmployerHeader" sfwGridCollection="busMergeEmployerHeaderLookup.iclbMergeEmployerHeader">
+  <initialload>
+    <query ID="cdoMergeEmployerHeader" sfwQueryRef="entMergeEmployerHeader.Lookup" sfwMethodName="LoadMergeEmployerHeaders" />
+    <query ID="LookupSubQuery1" sfwQueryRef="entMergeEmployerHeader.LookupSubQuery1" />
+    <query ID="LookupSubquery2" sfwQueryRef="entMergeEmployerHeader.LookupSubquery2" />
+  </initialload>
+  <sfwTable ID="Main">
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlCriteria" sfwCaption="Criteria">
+          <sfwTable CssClass="Table" ID="tblCriteria">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capFromEmployerId" Text="From Employer ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtOrgCode" sfwDataField="org_code" sfwOperator="=" sfwQueryID="LookupSubQuery1" />
+                <sfwImageButton ID="btnRetrieve" ImageAlign="AbsMiddle" ImageUrl="~/Image/Lookup.jpg" sfwActiveForm="wfmOrganizationLookup" sfwMethodName="btnRetrieve_Click" sfwRelatedControl="txtOrgCode" sfwSelectedIndex="OrgCode" Text="Retrieve" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capToEmployerId" Text="To Employer ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtOrgCode1" sfwDataField="org_code" sfwOperator="=" sfwQueryID="LookupSubquery2" />
+                <sfwImageButton ID="btnRetrieve1" ImageAlign="AbsMiddle" ImageUrl="~/Image/Lookup.jpg" sfwActiveForm="wfmOrganizationLookup" sfwMethodName="btnRetrieve_Click" sfwRelatedControl="txtOrgCode1" sfwSelectedIndex="OrgCode" Text="Retrieve1" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capEffectiveDate" Text="Effective Date : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtEffectiveDate" sfwDataField="convert(datetime, convert(varchar(10), effective_date, 101))" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="=" sfwQueryID="cdoMergeEmployerHeader" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capMergeStatusValue" Text="Merge Status : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlMergeStatusValue" sfwDataField="merge_status_value" sfwOperator="like" sfwQueryID="cdoMergeEmployerHeader" sfwLoadType="CodeGroup" sfwLoadSource="414" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capStatusValue" Text="Status : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlStatusValue" sfwDataField="status_value" sfwOperator="like" sfwQueryID="cdoMergeEmployerHeader" sfwLoadType="CodeGroup" sfwLoadSource="336" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnSearch" sfwMethodName="btnSearch_Click" Text="Search" />
+                <sfwButton ID="btnReset" sfwMethodName="btnReset_Click" Text="Reset" />
+                <sfwButton ID="btnStoreSearch" sfwMethodName="btnStoreUserDefaults_Click" Text="StoreSearch" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlResult" sfwCaption="Search Results">
+          <sfwTable CssClass="Table" ID="tblResult">
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnNew" sfwActiveForm="wfmMergeEmployerHeaderMaintenance" sfwMethodName="btnNew_Click" Text="New" />
+                <sfwButton ID="btnOpen" sfwActiveForm="wfmMergeEmployerHeaderMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintmergeemployerheaderid=MergeEmployerHeaderId" sfwRelatedControl="dgrResult" Text="Open" sfwDisableViewOnly="True" />
+                <sfwButton ID="btnDelete" sfwMethodName="btnDelete_Click" sfwRelatedControl="dgrResult" Text="Delete" />
+                <sfwButton ID="btnExportExcel" sfwMethodName="btnColumnsToExport_Click" sfwRelatedControl="dgrResult" Text="ExportExcel" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwGridView AllowPaging="True" AllowSorting="True" ID="dgrResult" sfwSelection="Many">
+                  <Columns>
+                    <TemplateField HeaderText="Header ID">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpen" sfwEntityField="MergeEmployerHeaderId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="From Employer Org Code">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objFromEmployer.OrgCode" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="From Employer Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objFromEmployer.OrgName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="To Employer Org Code">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objToEmployer.OrgCode" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="To Employer Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objToEmployer.OrgName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Merge Status">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="MergeStatusDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Status">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="StatusDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+  </sfwTable>
+  <loaddetails />
+</form>

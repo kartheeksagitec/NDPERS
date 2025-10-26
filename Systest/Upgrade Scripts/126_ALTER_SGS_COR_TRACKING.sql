@@ -1,0 +1,6 @@
+IF COL_LENGTH('SGS_COR_TRACKING', 'activity_instance_id') IS NULL
+BEGIN
+ALTER TABLE SGS_COR_TRACKING
+ADD activity_instance_id int NULL
+END
+GO

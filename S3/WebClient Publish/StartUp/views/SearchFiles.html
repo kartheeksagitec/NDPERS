@@ -1,0 +1,321 @@
+﻿<div class="innerWrapper" ng-controller="SearchFilesController">
+    <div id="searchContainer" advance-search-wrapper class="page-container full-height">
+        <div class="page-wrapper full-height">
+            <div class="entity-tabs-section">
+                <div class="primary-tab-header">
+                    <ul class="nav nav-tabs">
+                        <li class="active entity-home-link">
+                            <a data-toggle="tab" data-target="#advancesearch-maintab" aria-expanded="true">Advance Search</a>
+                        </li>
+                        <li class="entity-attributes-link">
+                            <a data-toggle="tab" data-target="#advancesearch-extrafieldtab" aria-expanded="true">Custom Search</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="tab-content entity-tabs-section-content">
+                    <div class="entity-dashboard-container tab-pane fade in active full-height" id="advancesearch-maintab">
+                        <div class="form-body full-height">
+                            <div class="col-xs-4 no-padding full-height adv-search-files-left-panel">
+                                <form name="DesignSearchForm" class="adv-search-files-left-panel-form">
+                                    <div class="panel-group" id="mainSearchParentPanel">
+                                        <div class="panel panel-default adv-search-files-accordian-icons">
+                                            <div class="panel-heading" ng-click="togglePanel('mainSearchCommonCriteriaPanel')" data-toggle="collapse" data-target="#mainSearchCommonCriteriaPanel">
+                                                <label class="no-margin accordian-heading">Criteria</label>
+                                                <span class="glyphicon pull-right" ng-class="lstactiveSearchPanelIDs.indexOf('mainSearchCommonCriteriaPanel') >= 0 ? 'glyphicon-minus' : 'glyphicon-plus'"></span>
+                                            </div>
+                                            <div class="panel-collapse collapse in" id="mainSearchCommonCriteriaPanel">
+                                                <div class="panel-body">
+                                                    <div class="col-xs-12">
+                                                        <div class="form-group">
+                                                            <div class="col-xs-4 padding-0">
+                                                                <label class="control-label">File Name</label>
+                                                            </div>
+                                                            <div class="col-xs-8 padding-0">
+                                                                <input type="text" autofocus autocomplete="off" class="form-control input-sm" id="fileName" ng-model="searchCriteria.fileName" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12">
+                                                        <div class="form-group">
+                                                            <div class="col-xs-4 padding-0">
+                                                                <label class="control-label">Containing Text</label>
+                                                            </div>
+                                                            <div class="col-xs-8 padding-0">
+                                                                <input type="text" class="form-control input-sm" autocomplete="off" ng-model="searchCriteria.containingText" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12">
+                                                        <div class="form-group">
+                                                            <div class="col-xs-4 padding-0">
+                                                                <label class="control-label">Location</label>
+                                                            </div>
+                                                            <div class="col-xs-8 padding-0">
+                                                                <div class='input-group'>
+                                                                    <input type="text" class="form-control input-sm" placeholder="Type here..." ng-model="searchCriteria.location" ng-keydown="getFolderPathIntellisense($event)">
+                                                                    <span class='input-group-addon button-intellisense' ng-click="getFolderPathIntellisense($event)"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12">
+                                                        <div class="col-xs-6 padding-0">
+                                                            <div class="form-group">
+                                                                <label><input type="radio" name="date" ng-model="selectedDate.typeOfDate" value="create" ng-click="SelectDateType()">Created Date</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6 padding-0">
+                                                            <div class="form-group">
+                                                                <label><input type="radio" name="date" ng-model="selectedDate.typeOfDate" value="modified" ng-click="SelectDateType()">Modified Date</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="col-xs-6">
+                                                            <label class="control-label">From</label>
+                                                            <div class="input-group date date-picker" ng-class="selectedDate.typeOfDate?'':'disabledlink'">
+                                                                <input type="text" class="form-control input-sm" readonly ng-model="searchCriteria.fromDate">
+                                                                <span class="input-group-btn">
+                                                                    <button class="btn default no-bg-color" type="button" style="padding: 2px 14px;">
+                                                                        <i class="fa fa-calendar"></i>
+                                                                    </button>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <label class="control-label">To</label>
+                                                            <div class="input-group date date-picker" ng-class="selectedDate.typeOfDate?'':'disabledlink'">
+                                                                <input type="text" class="form-control input-sm" readonly ng-model="searchCriteria.toDate">
+                                                                <span class="input-group-btn">
+                                                                    <button class="btn default  no-bg-color" type="button" style="padding: 2px 14px;">
+                                                                        <i class="fa fa-calendar"></i>
+                                                                    </button>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="panel panel-default adv-search-files-accordian-icons">
+                                            <div class="panel-heading" ng-click="togglePanel('mainSearchFiletypeCriteriaPanel')" data-toggle="collapse" data-target="#mainSearchFiletypeCriteriaPanel">
+                                                <label class="no-margin accordian-heading">File Types</label>
+                                                <span class="glyphicon pull-right" ng-class="lstactiveSearchPanelIDs.indexOf('mainSearchFiletypeCriteriaPanel') >= 0 ? 'glyphicon-minus' : 'glyphicon-plus'"></span>
+                                                <label title="Select All" class="checkbox-inline pull-right mar-rgt-10 marg-top-2"><input class="marg-top-0" type="checkbox" select-all-toggle ng-click="SelectAllFiles(lstFileTypes, searchCriteria.fileType, $event)">Select All</label>
+                                            </div>
+                                            <div class="panel-body collapse" id="mainSearchFiletypeCriteriaPanel">
+                                                <div class="col-xs-6 padding-0 marg-bottom-5" ng-repeat="fileObj in lstFileTypes">
+                                                    <label title="{{fileObj.name}}" class="checkbox-inline"><input class="marg-top-2" type="checkbox" ng-change="onchangecheckboxlst(lstFileTypes, searchCriteria.fileType, fileObj)" ng-model="fileObj.selected">{{fileObj.name}}</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="panel panel-default adv-search-files-accordian-icons" ng-if="$root.IsTFSConfigured">
+                                            <div class="panel-heading" ng-click="togglePanel('mainSearchTfsCriteriaPanel')" data-toggle="collapse" data-target="#mainSearchTfsCriteriaPanel">
+                                                <label class="no-margin accordian-heading">TFS Status</label>
+                                                <span class="glyphicon pull-right" ng-class="lstactiveSearchPanelIDs.indexOf('mainSearchTfsCriteriaPanel') >= 0 ? 'glyphicon-minus' : 'glyphicon-plus'"></span>
+                                                <label title="Select All" class="checkbox-inline pull-right mar-rgt-10 marg-top-2"><input class="marg-top-0" select-all-toggle type="checkbox" ng-click="SelectAllFiles(lstTfsStatus, searchCriteria.TfsStatus, $event)">Select All</label>
+                                            </div>
+                                            <div class="panel-body collapse" id="mainSearchTfsCriteriaPanel">
+                                                <div class="col-xs-6 padding-0 marg-bottom-5" ng-repeat="objTfsStatus in lstTfsStatus">
+                                                    <label title="{{objTfsStatus.name}}" class="checkbox-inline"><input class="marg-top-2" type="checkbox" ng-change="onchangecheckboxlst(lstTfsStatus, searchCriteria.TfsStatus, objTfsStatus)" ng-model="objTfsStatus.selected">{{objTfsStatus.name}}</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="panel panel-default adv-search-files-accordian-icons">
+                                            <div class="panel-heading" ng-click="togglePanel('mainSearchQueryCriteriaPanel')" data-toggle="collapse" data-target="#mainSearchQueryCriteriaPanel">
+                                                <label class="no-margin accordian-heading">Filters</label>
+                                                <span class="glyphicon pull-right" ng-class="lstactiveSearchPanelIDs.indexOf('mainSearchQueryCriteriaPanel') >= 0 ? 'glyphicon-minus' : 'glyphicon-plus'"></span>
+                                            </div>
+                                            <div class="panel-body collapse" id="mainSearchQueryCriteriaPanel">
+                                                <div class="col-xs-12 searchQueryBuilderCriteriaHeader text-center no-padding" ng-show="searchCriteria.QuerySearchList.length > 0">
+                                                    <div class="col-xs-3 no-padding">Node-Name</div>
+                                                    <div class="col-xs-3 no-padding">Attribute</div>
+                                                    <div class="col-xs-3 no-padding">Operator</div>
+                                                    <div class="col-xs-3 no-padding">Value</div>
+                                                </div>
+                                                <div class="col-xs-12 marg-bottom-5 no-padding" ng-repeat="DesignSearchObj in searchCriteria.QuerySearchList">
+                                                    <span ng-show="searchCriteria.QuerySearchList.length > 0" title="Remove this filter line" style="position:absolute;left:-10px;" class="file-close fa fa-close" aria-hidden="true" ng-click="queryBuilder.DeletesearchQuerybuilderObj(searchCriteria.QuerySearchList, DesignSearchObj)"></span>
+                                                    <div class="col-xs-12 no-padding marg-bottom-8">
+                                                        <div class="col-xs-3">
+                                                            <div class="control-group" ng-class="queryBuilder.getcssClassInvalidError(DesignSearchForm,'NodeName' + $index)">
+                                                                <div class="controls">
+                                                                    <input class="form-control input-sm" name="{{'NodeName' + $index}}" autocomplete="off" ng-pattern="/^[A-Z]+$/i" ng-change="queryBuilder.onchangeQueryBuilder(DesignSearchObj, DesignSearchForm, $index)" placeholder="Node Name" ng-model="DesignSearchObj.NodeName" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-3">
+                                                            <div class="control-group" ng-class="queryBuilder.getcssClassInvalidError(DesignSearchForm,'Attribute' + $index)">
+                                                                <div class="controls">
+                                                                    <input class="form-control input-sm" name="{{'Attribute' + $index}}" autocomplete="off" ng-pattern="/^[A-Z]+$/i" ng-change="queryBuilder.onchangeQueryBuilder(DesignSearchObj, DesignSearchForm, $index)" placeholder="Attribute Name" ng-model="DesignSearchObj.Attribute" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-3">
+                                                            <div class="control-group" ng-class="queryBuilder.getcssClassInvalidError(DesignSearchForm,'Operator' + $index)">
+                                                                <div class="controls">
+                                                                    <select class="form-control input-sm" name="{{'Operator' + $index}}" ng-model="DesignSearchObj.Operator" ng-change="queryBuilder.onchangeOperatorQueryBuilder(DesignSearchObj, DesignSearchForm, $index)" required ng-options="operator.value as operator.name for operator in DesignSearchObj.operatorList">
+                                                                        <option value=""></option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-3">
+                                                            <div class="control-group" ng-class="queryBuilder.getcssClassInvalidError(DesignSearchForm,'AttributeValue' + $index)">
+                                                                <div class="controls">
+                                                                    <input class="form-control input-sm" name="{{'AttributeValue' + $index}}" autocomplete="off" placeholder="Value" ng-change="queryBuilder.onchangeQueryBuilder(DesignSearchObj, DesignSearchForm, $index)" ng-model="DesignSearchObj.AttributeValue" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 marg-top-7">
+                                                    <button class="btn-primary margin-right-10 padding-3" title="Add a filter line" ng-click="queryBuilder.AddsearchQuerybuilderObj(searchCriteria.QuerySearchList)">Add Filter</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="form-group text-right adv-search-files-left-panel-btn col-md-12">
+                                    <button type="button" ng-disabled="DesignSearchForm.$invalid" ng-click="GetAllFilesInfo();">Search</button>
+                                    <button type="button" ng-disabled="DesignSearchForm.$invalid" ng-click="GetAllFilesInfo(true);">Search & Export Results</button>
+                                    <button type="button" ng-click="InitAdvanceSearch()">Clear</button>
+                                </div>
+                            </div>
+                            <div class="col-xs-8 no-right-padding full-height adv-search-files-content-wrapper">
+                                <div class="adv-search-files-content">
+                                    <div class="page-heading">
+                                        Results<span class="badge marg-left-10" ng-show="ResultantFiles.length > 0" ng-bind="ResultantFiles.length"></span>
+                                    </div>
+                                    <div class="property-table">
+                                        <table class="table table-striped table-bordered table-condensed" role="grid" st-table="display_records" st-safe-src="ResultantFiles">
+                                            <thead st-operation-row st-select-row-dblclick="advanceSearchOpenfile(record)" st-select-row-enter-keyclick="advanceSearchOpenfile(record)">
+                                                <tr role="row">
+                                                    <th st-sort="FileName" st-sort-default="true">File Name</th>
+                                                    <th st-sort="FileType">File Type</th>
+                                                    <th st-sort="Location">Location</th>
+                                                    <th st-sort="Size">Size</th>
+                                                    <th st-sort="DateCreated">Date Created</th>
+                                                    <th st-sort="DateModified">Date Modified</th>
+                                                </tr>
+                                                <tr>
+                                                    <th colspan="6"><input st-search="" class="form-control" placeholder="search with file name, file type , location etc..." type="search" /></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr tabindex="{{$index}}" role="row" st-select-row="file" ng-repeat="file in display_records" context-menu="$root.menuOptionsForFileList">
+                                                    <td>{{file.FileName}}</td>
+                                                    <td>{{file.FileType}}</td>
+                                                    <td>{{file.Location}}</td>
+                                                    <td>{{file.Size | filesize }}</td>
+                                                    <td>{{file.DateCreated | date:'MM-dd-yyyy HH:mm:ss a'}}</td>
+                                                    <td>{{file.DateModified | date:'MM-dd-yyyy HH:mm:ss a'}}</td>
+                                                </tr>
+                                                <tr ng-if="display_records && display_records.length <= 0">
+                                                    <td width="100%" colspan="6">
+                                                        <div class="text-center" style="font-size: 2em;margin-top: 25%;">
+                                                            No records found !
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="6" class="text-center">
+                                                        <div st-pagination="" st-items-by-page="15" st-displayed-pages="5" st-template="common/views/pagination-grid.html"></div>
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="entity-dashboard-container tab-pane fade full-height" id="advancesearch-extrafieldtab">
+                        <div class="form-body full-height">
+                            <div class="col-xs-4 no-padding full-height adv-search-files-left-panel">
+                                <div class="col-xs-12 no-left-padding">
+                                    <div class="form-group marg-bot-10">
+                                        <div class="col-xs-4 padding-0">
+                                            <label class="control-label">
+                                                File Type
+                                            </label>
+                                        </div>
+                                        <div class="col-xs-8 padding-0">
+                                            <select class="form-control input-sm" ng-model="SelectedFileType" ng-change="onFileTypeChange(SelectedFileType)">
+                                                <option value="Entity">Entity</option>
+                                                <option value="Form">Form</option>
+                                                <option value="HTML">HTML</option>
+                                                <option value="Correspondence">Correspondence</option>
+                                                <option value="Rule">Rule</option>
+                                                <option value="Scenario">Scenario</option>
+                                                <option value="Report">Report</option>
+                                                <option value="File">File</option>
+                                                <option value="BPM">BPMN</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 no-left-padding search-files-custom-search">
+                                    <extra-field-directive is-file-creation="false" extra-field-model="objEntityExtraFields" form-name="SelectedFileType" is-tab="false" obj-fn="objDirFunctions"></extra-field-directive>
+                                </div>
+                                <div class="form-group text-right adv-search-files-left-panel-btn col-xs-12">
+                                    <button type="button" ng-click="searchExtraFields()">Search</button>
+                                    <button type="button" ng-click="clearExtraFieldsList()">Clear</button>
+                                </div>
+                            </div>
+                            <div class="col-xs-8 no-right-padding full-height adv-search-files-content-wrapper">
+                                <div class="adv-search-files-content">
+                                    <div class="page-heading">
+                                        Results<span class="badge marg-left-10" ng-show="ResultantExtraFieldFiles.length > 0" ng-bind="ResultantExtraFieldFiles.length"></span>
+                                    </div>
+                                    <div class="property-table">
+                                        <table class="table table-striped table-bordered table-condensed" role="grid" st-table="display_records_extraFields_search" st-safe-src="ResultantExtraFieldFiles">
+                                            <thead st-operation-row st-select-row-dblclick="advanceSearchOpenfile(record)" st-select-row-enter-keyclick="advanceSearchOpenfile(record)">
+                                                <tr role="row">
+                                                    <th st-sort="FileName" st-sort-default="true">File Name</th>
+                                                    <th st-sort="FileType">File Type</th>
+                                                    <th st-sort="Location">Location</th>
+                                                    <th st-sort="Size">Size</th>
+                                                    <th st-sort="DateCreated">Date Created</th>
+                                                    <th st-sort="DateModified">Date Modified</th>
+                                                </tr>
+                                                <tr>
+                                                    <th colspan="6"><input st-search="" class="form-control" placeholder="search with file name, file type , location etc..." type="search" /></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr tabindex="{{$index}}" role="row" st-select-row="file" ng-repeat="file in display_records_extraFields_search" context-menu="$root.menuOptionsForFileList">
+                                                    <td>{{file.FileName}}</td>
+                                                    <td>{{file.FileType}}</td>
+                                                    <td>{{file.Location}}</td>
+                                                    <td>{{file.Size | filesize }}</td>
+                                                    <td>{{file.DateCreated | date:'MM-dd-yyyy HH:mm:ss a'}}</td>
+                                                    <td>{{file.DateModified | date:'MM-dd-yyyy HH:mm:ss a'}}</td>
+                                                </tr>
+                                                <tr ng-if="display_records_extraFields_search && display_records_extraFields_search.length <= 0">
+                                                    <td width="100%" colspan="6">
+                                                        <div class="text-center" style="font-size: 2em;margin-top: 25%;">
+                                                            No records found !
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="6" class="text-center">
+                                                        <div st-pagination="" st-items-by-page="15" st-displayed-pages="5" st-template="common/views/pagination-grid.html"></div>
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

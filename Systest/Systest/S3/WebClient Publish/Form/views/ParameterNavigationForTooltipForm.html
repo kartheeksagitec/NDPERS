@@ -1,0 +1,94 @@
+﻿<!--<script id="parameterNavigationTree" type="text/ng-template">
+    <table>
+        <tr>
+            <td width="15px">
+                <span ng-class="field.IsExpanded?'file-expanded':'file-collapsed'" ng-click="ExpandCollapsedControl(field, $event)" ng-show="field.Items.length>0"></span>
+            </td>
+            <td><input type="checkbox" ng-model="field.IsSelected" ng-show="field.IsCheckBoxVisible" /></td>
+            <td><span ng-bind="field.Text"></span></td>
+        </tr>
+    </table>
+    <ul class="list-unstyled" ng-if="field.Items.length > 0" ng-show="field.IsExpanded">
+        <li ng-repeat="field in field.Items" parameterdraggable dragdata="field.Text" ng-include="'parameterNavigationTree'" ng-click="SelectFieldClick(field, $event)" ng-class="SetFieldClass(field)">
+        </li>
+    </ul>
+
+</script>-->
+
+
+<script id="parameterNavigationTree2" type="text/ng-template">
+    <div class="jstree-icon jstree-ocl" ng-click="ExpandCollapsedControl(field,$event)" ng-show="field && field.Elements.length>0"></div>
+    {{field.ID}}
+    <ul ng-if="field && field.Elements.length > 0" ng-show="field && field.IsExpanded" role="group" class="jstree-children list-unstyled">
+        <li ng-repeat="field in field.Elements" parameterdraggable dragdata="field.ID" ng-include="'parameterNavigationTree2'" ng-click="SelectFieldClick(field, $event)"
+            ng-mousedown="SelectFieldClick(field, $event)"
+            role="treeitem" id="j2_2" ng-class="field.Elements.length == 0?'jstree-node  jstree-leaf':field.IsExpanded?'jstree-node jstree-open':'jstree-node jstree-closed'">
+        </li>
+    </ul>
+</script>
+
+
+<div ng-controller="TooltipNavigationParameterController" class="full-height">
+    <div class="portlet-body" id='Scope_{{$id}}'>
+        <div class="col-xs-6 parameter-query-left">
+            <div class="col-xs-12 column-inner-align span-extended-name">
+                <label>Source Form :&nbsp; </label>
+                <span  title="{{formobject.dictAttributes.ID}}" ng-bind="formobject.dictAttributes.ID"></span>
+            </div>
+            <div class="col-xs-12 column-inner-align" ng-if="SelectedObject.Name!='sfwSeries'">
+                <label>Available Fields:</label>
+            </div>
+            <div class="col-xs-12 column-inner-align" ng-if="SelectedObject.Name!='sfwSeries'" ng-hide="isFormLink || blnIsCorr || blnIsReport">
+                <input type="checkbox" ng-model="SelectedObject.IsShowAllControl" ng-change="showAllControlChange($event)" />&nbsp; <label class="control-label" ng-hide="isFormLink">Show All Controls</label>
+            </div>
+
+            <div class="col-xs-12 parameter-query-inner-left" ng-if="SelectedObject.Name!='sfwSeries'" style="overflow:auto">
+
+                <div id='tree_2' class='tree-demo jstree jstree-2 jstree-default jstree-checkbox-selection' role='tree' aria-activedescendant='j2_1'>
+                    <ul class='jstree-container-ul jstree-children jstree-wholerow-ul jstree-no-dots' ng-if="EntityFieldCollection.length>0">
+                        <li ng-repeat="field in EntityFieldCollection" role='treeitem' aria-expanded='true' id='j2_1' ng-class="field.IsExpanded?'jstree-node jstree-open':'jstree-node jstree-closed'" aria-selected='false' ng-include="'parameterNavigationTree2'">
+                        </li>
+                    </ul>
+                </div>
+            </div>
+          
+            <div class="col-xs-12 parameter-query-inner-left" style="height:347px!important" ng-if="SelectedObject.Name=='sfwSeries'">
+                <newentityobjecttreetemplate ischeckboxvisible="false" iscollectionnextlevelload="false" lstdisplayentity="SelectedObject.LstDisplayedEntities" selectedentityobjecttreefields="SelectedObject.SelectedEntityObjectTreeFields" entityname="ParentEntityName" selectedfield="SelectedObject.selectedobjecttreefield"></newentityobjecttreetemplate>
+            </div>
+        </div>
+        <div class="col-xs-6 parameter-query-right">
+            
+            <div class="col-xs-12 column-inner-align span-extended-name">
+                <label ng-bind="TargetFormCaption"></label> <span title="TargetForm" ng-bind="TargetForm"></span>
+            </div>
+            <div class="col-xs-12 column-inner-align">
+                <label>Parameters:</label>
+            </div>
+            <div class="col-xs-12 parameter-query-inner-right">
+               
+
+                <table id="XmlParameterCollection" ng-if="XmlParameterCollection.length > 0" class="table table-condensed table-hover table-fixedheader">
+                    <thead>
+                        <tr>
+                            <th width="40%">Parameter Field</th>
+                            <th width="40%">Parameter Value</th>
+                            <th width="20%">Constant</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="param in XmlParameterCollection" ng-if="XmlParameterCollection.length>0">
+
+                            <td width="40%"><span ng-bind="param.ParameterField"></span></td>
+                            <td width="40%" parameterdroppable dropdata="param.ParameterValue"><input type="text" class="form-control input-sm" title="{{param.ParameterValue}}" ng-model="param.ParameterValue" parameterdroppable dropdata="param.ParameterValue" /></td>
+                            <td width="20%"><input type="checkbox" ng-model="param.Constants" /></td>
+                        </tr>
+                    <tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="form-actions">
+        <input type="button" class="btn dialog-btn-default" value="OK" ng-click="onOkClick()" />
+        <input type="button" class="btn dialog-btn" value="Cancel" ng-click="onCancelClick()" />
+    </div>
+</div>

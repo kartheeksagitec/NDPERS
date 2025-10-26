@@ -1,0 +1,511 @@
+﻿<div ng-controller="CorrespondenceController" class="innerWrapper file-page">
+    <search-design main-model="objCorrespondenceDetails" ng-hide="selectedDesignSource" current-file="currentfile" select-element="selectElement(path)" traverse-model="traverseMainModel(path)" toggle-design="ToggleUIDesginAttribute(items, IsAction)" class="design-search"></search-design>
+
+    <div class="tab-content correspondence-tab-content" ng-hide="selectedDesignSource">
+        <div class="toolbox-wrapper correspondence-toolbar">
+            <div class="toolbox toolbox-form" ng-init="ActiveTabForCorr='Entity'">
+
+                <ul class="nav nav-tabs">
+                    <li ng-class="ActiveTabForCorr=='Items'?'active':''" ng-click="ActiveTabForCorr='Items'" ng-show="SelectedCorrespondenceTab=='UserFields'" knowtion-id="5.6">
+                        <a data-toggle="tab" aria-expanded="true">
+                            Items
+                        </a>
+                    </li>
+                    <li ng-class="ActiveTabForCorr=='Entity'?'active':''" ng-click="ActiveTabForCorr='Entity'" ng-hide="SelectedCorrespondenceTab=='UserFields'" knowtion-id="5.7">
+                        <a data-toggle="tab" aria-expanded="false">
+                            Entity
+                        </a>
+                    </li>
+                    <li ng-class="ActiveTabForCorr=='Properties'?'active':''" ng-click="ActiveTabForCorr='Properties'" ng-show="SelectedCorrespondenceTab=='UserFields'" knowtion-id="5.8">
+                        <a data-toggle="tab" aria-expanded="false">
+                            Properties
+                        </a>
+                    </li>
+                    <li ng-class="ActiveTabForCorr=='Toolbox'?'active':''" ng-click="ActiveTabForCorr='Toolbox'" ng-show="SelectedCorrespondenceTab=='UserFields'" knowtion-id="5.9">
+                        <a data-toggle="tab" aria-expanded="true">
+                            Toolbox
+                        </a>
+                    </li>
+                    <li ng-class="ActiveTabForCorr=='SubTests'?'active':''" ng-click="ActiveTabForCorr='SubTests'" ng-show="SelectedCorrespondenceTab=='Tests'" knowtion-id="5.10">
+                        <a data-toggle="tab" aria-expanded="true">
+                            Tests
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+
+
+                    <div class="page-sidebar full-height full-width " ng-class="ActiveTabForCorr=='Items'?'tab-pane fade active in':'tab-pane fade'" ng-show="SelectedCorrespondenceTab=='UserFields' && ActiveTabForCorr=='Items'">
+
+                        <div class="form-group">
+                            <input class="form-control input-sm marg-top-5" type="text" placeholder="Search" title="{{objQueryBookmarksID}}" ng-model="objQueryBookmarksID">
+                        </div>
+
+                        <div class="query-value">
+
+                            <ul class="page-sidebar-menu">
+                                <li ng-repeat="obj in objQueryBookMarks.Elements | filter:{dictAttributes:{ID:objQueryBookmarksID}} " ng-click="SelectedQueryClick(obj)" ng-class="{'active':obj==selectedQueryBookMark, 'bckgGrey' : obj.isAdvanceSearched, 'bckgGreen' : (obj.isAdvanceSearched && obj==selectedQueryBookMark)}">
+                                    <input type="checkbox" ng-model="obj.IsSelected" />
+                                    <span title="{{obj.dictAttributes.ID}}" ng-bind="obj.dictAttributes.ID"></span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="query-bottom-form">
+
+                            <div class="form-group">
+                                <div class="col-xs-5 align-right control-label">Data Type</div>
+                                <div class="col-xs-7">
+                                    <select ng-options="datatype.key as datatype.value for datatype in UserDataFielddatatypes" title="{{selectedQueryBookMark.dictAttributes.sfwDataType}}" ng-model="selectedQueryBookMark.dictAttributes.sfwDataType" class="form-control input-sm"></select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-xs-5 align-right control-label">Value Seperator</div>
+
+                                <div class="col-xs-7">
+                                    <select class="form-control input-sm" title="{{selectedQueryBookMark.dictAttributes.sfwValueSeparator}}" ng-model="selectedQueryBookMark.dictAttributes.sfwValueSeparator" ng-options="x for x in ValueSeparators"></select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-floating-table form-floating-table-correspondence">
+
+                            <div ng-click="OnAddControlClick('sfwTextBox')" title="TextBox">
+                                <img class="image-icon-tools" src="images/Form/icon-textbox.svg">
+                            </div>
+
+                            <div ng-click="OnAddControlClick('sfwDropDownList')" title="DropDown">
+                                <img class="image-icon-tools" src="images/Form/icon-form-dropdown.svg">
+                            </div>
+
+                            <div ng-click="OnAddControlClick('sfwRadioButton')" title="RadioButton">
+                                <img class="image-icon-tools" src="images/Form/icon-radio.svg">
+                            </div>
+
+                            <div ng-click="OnAddControlClick('sfwCheckBox')" title="CheckBox">
+                                <img class="image-icon-tools" src="images/Form/icon-checkbox.svg">
+                            </div>
+
+                            <div ng-click="OnAddControlClick('sfwCheckBoxList')" title="CheckBoxList">
+                                <img class="image-icon-tools" src="images/Form/icon-checkboxlist.svg">
+                            </div>
+
+                            <div ng-click="OnAddControlClick('sfwMultiSelectDropDownList')" title="MultiSelectDropDownList">
+                                <img class="image-icon-tools" src="images/Form/icon-dropdown.svg">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div ng-class="ActiveTabForCorr=='Properties'?'tab-pane fade active in':'tab-pane fade'" ng-show="SelectedCorrespondenceTab=='UserFields' && ActiveTabForCorr=='Properties'">
+                        <div class="common-properties-content correspondence-object-tree" ng-if="objCorrespondenceDetails.IsCommonPropertiesOpen">
+                            <div>
+                                <div class="common-properties-header form-common-properties-header">
+                                    <span>{{objCorrespondenceDetails.SelectedControl.Name}} - </span>
+                                    <span ng-show="objCorrespondenceDetails.SelectedControl.dictAttributes.ID" title="{{objCorrespondenceDetails.SelectedControl.dictAttributes.ID}}">{{objCorrespondenceDetails.SelectedControl.dictAttributes.ID}}</span>
+                                    <span class="blank-id-text" ng-hide="objCorrespondenceDetails.SelectedControl.dictAttributes.ID">[BLANK]</span>
+
+                                </div>
+                                <commonpropertiesdirective model="objCorrespondenceDetails.SelectedControl" parent="objQueryForm" formobject="objCorrespondenceDetails" currentpanel="objQueryForm" entity-tree-name="entityTreeName"></commonpropertiesdirective>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div ng-class="ActiveTabForCorr=='Toolbox'?'tab-pane fade active in':'tab-pane fade'" ng-show="SelectedCorrespondenceTab=='UserFields' && ActiveTabForCorr=='Toolbox'" onselectstart="return false;">
+
+                        <div class="toolbox-items" ng-mousedown="ClearSelectFields()" ng-if="objCorrespondenceDetails">
+                            <div class="toolbox-items-heading">
+                                Basic
+                            </div>
+                            <div ng-repeat="control in lstControl | controlbyFormtype : 'toolbox' : 'basic' : objCorrespondenceDetails | orderBy : 'Name'" class="col-xs-6 no-padding toolbox-items-wrapper" formcontroldraggable dragdata="control.method" title="{{control.method}}">
+                                <img class="image-icon-tools" ng-src="{{control.icon}}" />
+                                <span>{{control.Name | cut:false:18:'...'}}</span>
+                            </div>
+                            <div class="toolbox-items-heading">
+                                Advanced
+                            </div>
+                            <div ng-repeat="control in lstControl | controlbyFormtype : 'toolbox' : 'advanced' : objCorrespondenceDetails | orderBy : 'Name'" class="col-xs-6 no-padding toolbox-items-wrapper" formcontroldraggable dragdata="control.method" title="{{control.method}}">
+                                <img class="image-icon-tools" ng-src="{{control.icon}}" />
+                                <span>{{control.Name | cut:false:18:'...'}}</span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div ng-class="ActiveTabForCorr=='Entity'?'tab-pane fade active in':'tab-pane fade'" ng-show="ActiveTabForCorr=='Entity'">
+
+                        <div class="col-xs-2 correspondence-object-tree" id="correspondancetree" ng-if="objCorrespondenceDetails.dictAttributes.sfwEntity">
+                            <newentityobjecttreetemplate ischeckboxvisible="false" lstdisplayentity="objCorrespondenceDetails.LstDisplayedEntities" iscollectionnextlevelload="false" selectedentityobjecttreefields="SelectedEntityObjectTreeFields" entityname="entityTreeName" selectedfield="objCorrespondenceDetails.SelecetdField"></newentityobjecttreetemplate>
+                        </div>
+
+                    </div>
+
+                    <div ng-class="ActiveTabForCorr=='SubTests'?'tab-pane fade active in':'tab-pane fade'" ng-show="ActiveTabForCorr=='SubTests'">
+                        <div class="panel-icons">
+                            <a title="Delete Test Step" class="pull-left">
+                                <img src="images/Common/icon_delete_dark.svg" ng-click="DeleteCorrespondenceTest()" ng-disabled="!SetSelectedTest" />
+                            </a>
+                            <a title="Add New Test Step" class="pull-left">
+                                <img src="images/Common/icon_add_dark.svg" ng-click="AddCorrespondenceTest()" />
+                            </a>
+                        </div>
+                        <div class="page-sidebar pad-5 test-left-panel full-width tab-pane fade active in overflowA query-value">
+                            <ul class="page-sidebar-menu">
+                                <li ng-repeat="item in objCorrespondenceTests.Elements" ng-click="onTestClick(item)" ng-class="SetSelectedTest==item?'active':''">
+                                    <span>{{item.dictAttributes.ID}}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="correspondence-content col-xs-9 no-left-padding">
+
+            <div class="col-xs-12 no-padding">
+                <ul class="nav nav-tabs" ng-hide="selectedDesignSource" ng-init="SelectedCorrespondenceTab='DataFields'">
+                    <li knowtion-id="5.1" ng-class="SelectedCorrespondenceTab=='DataFields'?'active':''" ng-click="selectDataFieldsTab();entityTreeName=objCorrespondenceDetails.dictAttributes.sfwEntity;">
+                        <a data-toggle="tab">Data Fields</a>
+                    </li>
+                    <li knowtion-id="5.2" ng-class="SelectedCorrespondenceTab=='Tables'?'active':''" ng-click="selectTablesTab();entityTreeName=objCorrespondenceDetails.dictAttributes.sfwEntity;">
+                        <a data-toggle="tab">Tables</a>
+                    </li>
+                    <li knowtion-id="5.3" ng-class="SelectedCorrespondenceTab=='UserFields'?'active':''" ng-click="selectUserFieldsTab();entityTreeName=objCorrespondenceDetails.dictAttributes.sfwEntity;">
+                        <a data-toggle="tab">User Fields</a>
+                    </li>
+                    <li knowtion-id="5.4" ng-class="SelectedCorrespondenceTab=='Templates'?'active':''" ng-click="selectTemplatesTab();entityTreeName=objCorrespondenceDetails.dictAttributes.sfwEntity;">
+                        <a data-toggle="tab">Templates</a>
+                    </li>
+                    <li knowtion-id="5.2" ng-class="SelectedCorrespondenceTab=='RepeaterControl'?'active':''" ng-click="selectRepeaterControlTab();entityTreeName=objCorrespondenceDetails.dictAttributes.sfwEntity;">
+                        <a data-toggle="tab">Repeater Control</a>
+                    </li>
+                    <li knowtion-id="5.4" ng-class="SelectedCorrespondenceTab=='VisibleRule'?'active':''" ng-click="selectRuleTab();entityTreeName=objCorrespondenceDetails.dictAttributes.sfwEntity;">
+                        <a data-toggle="tab">Visible Rule</a>
+                    </li>
+                    <li knowtion-id="5.5" ng-class="SelectedCorrespondenceTab=='Hyperlink'?'active':''" ng-click="selectHyperlinkTab();entityTreeName=objCorrespondenceDetails.dictAttributes.sfwEntity;">
+                        <a data-toggle="tab">Hyperlink</a>
+                    </li>
+                    <li knowtion-id="5.6" ng-class="SelectedCorrespondenceTab=='Tests'?'active':''" ng-click="selectTestsTab()">
+                        <a data-toggle="tab">Tests</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="panel panel-primary correspondence-panel full-height" ng-show="SelectedCorrespondenceTab=='DataFields' && selectedFieldBookMark!=undefined" id="correspondence-FieldBookMark-tab-content">
+
+                <table class="sws-table">
+                    <thead>
+                        <tr>
+                            <th>Bookmark ID</th>
+                            <th>Entity Field</th>
+                            <th>Rule ID</th>
+                            <th>Entity Method</th>
+                            <th>Data Format</th>
+                            <th>Data Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="objfield in objFieldBookMarks.Elements | filter:{dictAttributes:{ID:objFieldBookMarksID}}" ng-click="SelectedFieldBookMarkClick(objfield)" ng-class="{'selected':objfield==selectedFieldBookMark, 'bckgGrey' : objfield.isAdvanceSearched, 'bckgGreen' : (objfield.isAdvanceSearched && objfield==selectedFieldBookMark)}">
+                            <td><span ng-bind="objfield.dictAttributes.ID"></span></td>
+                            <td>
+                                <entityfieldelementintellisense modebinding="objfield.dictAttributes.sfwEntityField" model="objfield" entityid="objCorrespondenceDetails.dictAttributes.sfwEntity" propertyname="'dictAttributes.sfwEntityField'" errorprop="objfield.errors.sfwEntityField" validate="true" />
+                            </td>
+                            <td>
+                                <input type="text" ondrop="return false" class="form-control input-sm" title="{{objfield.dictAttributes.sfwRuleID}}" ng-model="objfield.dictAttributes.sfwRuleID" undoredodirective model="objfield" />
+
+                            </td>
+                            <td>
+                                <xmlmethodintellisensetemplate iscorrespondancexmlmethod="true" model="objfield" objectfield="objfield.dictAttributes.sfwXmlMethod" propertyname="'dictAttributes.sfwXmlMethod'"
+                                                               entityid="objCorrespondenceDetails.dictAttributes.sfwEntity"></xmlmethodintellisensetemplate>
+                            <td>
+                                <common-intellisense collection="dataformats" selected-item="objfield.dictAttributes.sfwDataFormat" model="objfield" propertyname="'dictAttributes.sfwDataFormat'"></common-intellisense>
+                                <!--<select class="form-control input-sm" ng-options="x for x in dataformats" title="{{objfield.dictAttributes.sfwDataFormat}}" ng-model="objfield.dictAttributes.sfwDataFormat" undoredodirective model="objfield"></select>-->
+                            </td>
+                            <td>
+                                <select class="form-control input-sm" ng-options="datatype.CodeID as datatype.CodeValue for datatype in datatypes" title="{{objfield.dictAttributes.sfwDataType}}" ng-model="objfield.dictAttributes.sfwDataType" undoredodirective model="objfield"></select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div class="panel panel-primary correspondence-panel marg-bottom-0 full-height corr-tables" ng-show="SelectedCorrespondenceTab=='Tables' && selectedTableBookMark!=undefined" id="correspondence-TableBookMark-tab-content">
+                <correspondencetabletemplate change-callback="onchangeEnitityTableBookmark(entity)" selected-sfw-column="selectedSfwColumn" ng-repeat="objtable in objTableBookMarks.Elements | filter:{dictAttributes:{ID:objTableBookMarksID}} " ng-init="objtable.IsExpanded=false" items="objtable" entity-tree-name="entityTreeName" objcorrespondence="objCorrespondenceDetails"></correspondencetabletemplate>
+            </div>
+
+            <div class="panel panel-primary correspondence-panel marg-bottom-0 full-height corr-tables" ng-show="SelectedCorrespondenceTab=='RepeaterControl' && selectedRepeaterBookMark!=undefined" id="correspondence-RepeaterControlBookMark-tab-content">
+                <correspondencerepeatercontroltemplate change-callback="onchangeEnitityTableBookmark(entity)" selected-sfw-column="selectedSfwColumn"
+                                                       ng-repeat="objtable in objRepeaterBookMarks.Elements | filter:{dictAttributes:{ID:objTableBookMarksID}} "
+                                                       ng-init="objtable.IsExpanded=false" items="objtable" entity-tree-name="entityTreeName"
+                                                       objcorrespondence="objCorrespondenceDetails"></correspondencerepeatercontroltemplate>
+            </div>
+
+            <div class="panel panel-primary correspondence-panel full-height" ng-show="SelectedCorrespondenceTab=='Templates' && selectedTemplateBookMark!=undefined" id="correspondence-TemplateBookMark-tab-content">
+                <table class="sws-table">
+                    <thead>
+
+                        <tr>
+                            <th>Bookmark ID</th>
+                            <th>Object Type</th>
+                            <th>Entity Field</th>
+                            <th>Template Name</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="objchildtemp in objChildTemplateBookmarks.Elements | filter: {dictAttributes:{ID:objChildTemplateBookmarksID}}" ng-click="SelectedTemplateClick(objchildtemp)" ng-class="{'selected':objchildtemp==selectedTemplateBookMark, 'bckgGrey' : objchildtemp.isAdvanceSearched, 'bckgGreen' : (objchildtemp.isAdvanceSearched && objchildtemp==selectedTemplateBookMark)}">
+                            <td><span ng-bind="objchildtemp.dictAttributes.ID"></span></td>
+                            <td>
+                                <select class="form-control input-sm" ng-options="x for x in templatetypes" ng-model="objchildtemp.dictAttributes.sfwChildTemplateType" undoredodirective model="objchildtemp" ng-change="IsGroupChange(objchildtemp.dictAttributes.sfwChildTemplateType)"></select>
+
+                            </td>
+                            <td>
+                                <entityfieldelementintellisense ng-show="objchildtemp.dictAttributes.sfwChildTemplateType == 'Entity'" modebinding="objchildtemp.dictAttributes.sfwEntityField" model="objchildtemp" entityid="objCorrespondenceDetails.dictAttributes.sfwEntity"
+                                                                propertyname="'dictAttributes.sfwEntityField'" isshowonetoone="true" onblurcallback="onTemplateEntityChange()"
+                                                                ontextchangecallback="onTemplateEntityChange()" errorprop="objchildtemp.errors.sfwEntityField" validate="true"></entityfieldelementintellisense>
+
+                                <entityfieldelementintellisense ng-show="objchildtemp.dictAttributes.sfwChildTemplateType == 'Collection'" modebinding="objchildtemp.dictAttributes.sfwEntityField" model="objchildtemp" entityid="objCorrespondenceDetails.dictAttributes.sfwEntity"
+                                                                propertyname="'dictAttributes.sfwEntityField'" isshowonetoone="true"
+                                                                isshowonetomany="true"
+                                                                ontextchangecallback="onTemplateEntityChange()" onblurcallback="onTemplateEntityChange()" errorprop="objchildtemp.errors.sfwEntityField" validate="true"></entityfieldelementintellisense>
+
+
+                            </td>
+                            <td>
+                                <div class='input-group'>
+                                    <span class="info-tooltip dtc-span" ng-if="objchildtemp.errors.sfwTemplateName" ng-attr-title="{{objchildtemp.errors.sfwTemplateName}}" style="color:red !important"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                                    <input type="text" class="form-control input-sm" title="{{objchildtemp.dictAttributes.sfwTemplateName}}" ng-model="objchildtemp.dictAttributes.sfwTemplateName"
+                                           undoredodirective model="objchildtemp" ng-keydown="onActionKeyDownForTemplates($event)" ng-change="validateTemplateName(objchildtemp,'edit')" ng-keyup="validateTemplateName(objchildtemp,'edit')" />
+                                    <span class="input-group-addon button-intellisense" ng-click="showTemplateNameList($event)"></span>
+                                </div>
+                            </td>
+                            <td><button ng-click="NavigateToTemplate(objchildtemp.dictAttributes.sfwTemplateName)">>></button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="form-area-editable correspondence-panel panel-primary" context-menu="UserFieldMenuOptions" ng-show="SelectedCorrespondenceTab=='UserFields'" id="correspondence-QueryBookMark-tab-content">
+                <base-control-view ng-repeat='objChild in objQueryForm.Elements' formodel='objCorrespondenceDetails' model='objChild' objparent='objQueryForm' ng-click='selectControl(objChild, $event)' ng-if="objChild.Name=='sfwTable'">
+                </base-control-view>
+            </div>
+
+            <div class="panel panel-primary correspondence-panel full-height" ng-show="SelectedCorrespondenceTab=='VisibleRule' && selectedRuleBookMark!=undefined" id="correspondence-RuleBookMark-tab-content">
+
+                <table class="sws-table">
+                    <thead>
+                        <tr>
+                            <th width="30%">Bookmark ID</th>
+
+                            <th width="70%">Rule ID</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="objfield in objRuleBookmarks.Elements | filter:{dictAttributes:{ID:objRuleBookMarksID}}" ng-click="SelectedRuleBookMarkClick(objfield)" ng-class="{'selected':objfield==selectedRuleBookMark, 'bckgGrey' : objfield.isAdvanceSearched, 'bckgGreen' : (objfield.isAdvanceSearched && objfield==selectedRuleBookMark)}">
+                            <td width="30%"><span ng-bind="objfield.dictAttributes.ID"></span></td>
+
+                            <td width="70%">
+                                <visibleruleintellisensetemplate isnavigationlink="true" resourcelabelclass="no-width" resourcetextboxclass="col-xs-12 no-left-padding" model='objfield' sfwvisiblerule='objfield.dictAttributes.sfwRuleID' formmodel='objCorrespondenceDetails' entityid="objCorrespondenceDetails.dictAttributes.sfwEntity" propertyname="'dictAttributes.sfwRuleID'"></visibleruleintellisensetemplate>
+
+                            </td>
+
+
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div class="panel panel-primary correspondence-panel full-height" ng-show="SelectedCorrespondenceTab=='Hyperlink' && selectedHyperlinkBookmark!=undefined" id="correspondence-HyperlinkBookmarks-tab-content">
+
+                <table class="sws-table">
+                    <thead>
+                        <tr>
+                            <th width="20%">Bookmark ID</th>
+                            <th width="20%">Display Field Type</th>
+                            <th width="20%">Display Field</th>
+                            <th width="20%">Address Field Type</th>
+                            <th width="20%">Address Field</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="objfield in objHyperlinkBookmarks.Elements | filter:{dictAttributes:{ID:objRuleBookMarksID}}" ng-click="selectHyperlinkBookmark(objfield)" ng-class="{'selected':objfield==selectedHyperlinkBookmark, 'bckgGrey' : objfield.isAdvanceSearched, 'bckgGreen' : (objfield.isAdvanceSearched && objfield==selectedHyperlinkBookmark)}">
+                            <td width="20%"><span ng-bind="objfield.dictAttributes.ID"></span></td>
+                            <td width="20%">
+                                <select class="form-control input-sm" ng-model="objfield.dictAttributes.sfwDisplayFieldType">
+                                    <option value="EntityField">Entity Attribute</option>
+                                    <option value="Constant">Constant</option>
+                                    <option value="XmlMethod">Xml Method</option>
+                                    <option value="Rule">Rule</option>
+                                    <option value="GlobalParameter">Global Parameter</option>
+                                </select>
+                            </td>
+                            <td width="20%">
+                                <div style="width:100%" ng-show="objfield.dictAttributes.sfwDisplayFieldType === 'EntityField'">
+                                    <entityfieldelementintellisense modebinding="objfield.dictAttributes.sfwDisplayField" model="objfield" entityid="objCorrespondenceDetails.dictAttributes.sfwEntity" propertyname="'dictAttributes.sfwDisplayField'" errorprop="objfield.errors.sfwDisplayField" validate="true" />
+                                </div>
+                                <div style="width:100%" ng-show="objfield.dictAttributes.sfwDisplayFieldType === 'Constant'">
+                                    <input type="text" class="form-control input-sm" ng-model="objfield.dictAttributes.sfwDisplayField" undoredodirective model="objfield" propertyname="'dictAttributes.sfwDisplayField'" errorprop="objfield.errors.sfwDisplayField" validate="true" />
+                                </div>
+                                <div style="width:100%" ng-show="objfield.dictAttributes.sfwDisplayFieldType === 'XmlMethod'">
+                                    <xmlmethodintellisensetemplate iscorrespondancexmlmethod="true" model="objfield" objectfield="objfield.dictAttributes.sfwDisplayField" propertyname="'dictAttributes.sfwDisplayField'"
+                                                                   entityid="objCorrespondenceDetails.dictAttributes.sfwEntity"></xmlmethodintellisensetemplate>
+                                </div>
+                                <div style="width:100%" ng-show="objfield.dictAttributes.sfwDisplayFieldType === 'Rule'">
+                                    <rule-intellisense entity-id="objCorrespondenceDetails.dictAttributes.sfwEntity" non-static="false" selected-rule="objfield.dictAttributes.sfwDisplayField" model="objfield" propertyname="'dictAttributes.sfwDisplayField'" v-validate="true" v-errorprop="const.errors.sfwDisplayField" v-allow-empty="true" v-field-name="'Rule ID'"></rule-intellisense>
+                                </div>
+                                <div style="width:100%" ng-show="objfield.dictAttributes.sfwDisplayFieldType === 'GlobalParameter'">
+                                    <common-intellisense collection="ilstGlobalParameters" selected-item="objfield.dictAttributes.sfwDisplayField" model="objfield" propertyname="'dictAttributes.sfwDisplayField'"></common-intellisense>
+                                </div>
+                            </td>
+                            <td width="20%">
+                                <select class="form-control input-sm" ng-model="objfield.dictAttributes.sfwAddressFieldType">
+                                    <option value="EntityField">Entity Attribute</option>
+                                    <option value="Constant">Constant</option>
+                                    <option value="XmlMethod">Xml Method</option>
+                                    <option value="Rule">Rule</option>
+                                    <option value="GlobalValue">Global Parameter</option>
+                                </select>
+                            </td>
+                            <td width="20%">
+                                <div style="width:100%" ng-show="objfield.dictAttributes.sfwAddressFieldType === 'EntityField'">
+                                    <entityfieldelementintellisense modebinding="objfield.dictAttributes.sfwAddressField" model="objfield" entityid="objCorrespondenceDetails.dictAttributes.sfwEntity" propertyname="'dictAttributes.sfwAddressField'" errorprop="objfield.errors.sfwAddressField" validate="true" />
+                                </div>
+                                <div style="width:100%" ng-show="objfield.dictAttributes.sfwAddressFieldType === 'Constant'">
+                                    <input type="text" class="form-control input-sm" ng-model="objfield.dictAttributes.sfwAddressField" undoredodirective model="objfield" propertyname="'dictAttributes.sfwAddressField'" errorprop="objfield.errors.sfwAddressField" validate="true" />
+                                </div>
+                                <div style="width:100%" ng-show="objfield.dictAttributes.sfwAddressFieldType === 'XmlMethod'">
+                                    <xmlmethodintellisensetemplate iscorrespondancexmlmethod="true" model="objfield" objectfield="objfield.dictAttributes.sfwAddressField" propertyname="'dictAttributes.sfwAddressField'"
+                                                                   entityid="objCorrespondenceDetails.dictAttributes.sfwEntity"></xmlmethodintellisensetemplate>
+                                </div>
+                                <div style="width:100%" ng-show="objfield.dictAttributes.sfwAddressFieldType === 'Rule'">
+                                    <rule-intellisense entity-id="objCorrespondenceDetails.dictAttributes.sfwEntity" non-static="false" selected-rule="objfield.dictAttributes.sfwAddressField" model="objfield" propertyname="'dictAttributes.sfwAddressField'" v-validate="true" v-errorprop="const.errors.sfwAddressField" v-allow-empty="true" v-field-name="'Rule ID'"></rule-intellisense>
+                                </div>
+                                <div style="width:100%" ng-show="objfield.dictAttributes.sfwAddressFieldType === 'GlobalParameter'">
+                                    <common-intellisense collection="ilstGlobalParameters" selected-item="objfield.dictAttributes.sfwAddressField" model="objfield" propertyname="'dictAttributes.sfwAddressField'"></common-intellisense>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div class="panel panel-primary correspondence-panel full-height" ng-show="SelectedCorrespondenceTab=='Tests'">
+                <div class="page-heading ng-binding" ng-show="SetSelectedTest" style="font-size:16px;margin-bottom:10px;">
+                    <span>{{SetSelectedTest.dictAttributes.ID}}</span>
+                    <span style="margin-left:10px;margin-right:10px;">|</span>
+                    <span>{{SetSelectedTest.dictAttributes.sfwIsObjectBased === 'True'?'Object Based':'Static'}}</span>
+                    <input type="button" value="Run" class="btn-test-run" ng-click="onRunClick()" ng-disabled="!SetSelectedTest" />
+                </div>
+                <div class="corr-run-test" ng-show="SetSelectedTest" style="display:flex;flex-flow:column;">
+                    <div ng-if="SetSelectedTest.dictAttributes.sfwIsObjectBased === 'True'">
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                <label class="control-label">Load Source</label>
+                                <select class="form-control" ng-model="SetSelectedTest.dictAttributes.sfwLoadSource" ng-change="updateTestParameters()">
+                                    <option value="form">Form</option>
+                                    <option value="xmlmethod">Xml Method</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="form-group no-bottom-margin" ng-show="SetSelectedTest.dictAttributes.sfwLoadSource === 'form'">
+                                <label class="control-label">Associated Form</label>
+                                <common-intellisense collection="ilstAssociatedForms" change-callback="updateTestParameters()" selected-item="SetSelectedTest.dictAttributes.sfwAssociatedFormName" model="SetSelectedTest" propertyname="'dictAttributes.sfwAssociatedFormName'"></common-intellisense>
+                            </div>
+                            <div class="form-group no-bottom-margin" ng-show="SetSelectedTest.dictAttributes.sfwLoadSource === 'xmlmethod'">
+                                <label class="control-label">ID</label>
+                                <common-intellisense collection="ilstXmlMethods" change-callback="updateTestParameters()" selected-item="SetSelectedTest.dictAttributes.sfwXmlMethod" model="SetSelectedTest" propertyname="'dictAttributes.sfwXmlMethod'"></common-intellisense>
+                            </div>
+                            <span style="color:red;display:inline-block;height:16px;">{{istrObjectBasedTestError}}</span>
+                        </div>
+                    </div>
+                    <div style="font-size:14px;font-weight:bold;padding:5px;" ng-if="SetSelectedTest.dictAttributes.sfwIsObjectBased === 'True'">Parameters  <span ng-click="updateTestParameters()" style="margin-left:10px;cursor:pointer;"><i class="fa fa-refresh"></i></span></div>
+                    <div style="max-height:30%;overflow:auto;border:1px solid #8e8e8e;padding:5px;flex:0 0 auto" ng-if="SetSelectedTest.dictAttributes.sfwIsObjectBased === 'True'">
+                        <table class="sws-table">
+                            <thead>
+                                <tr>
+                                    <th>Parameter ID</th>
+                                    <th>Parameter Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-if="objfield.Name === 'parameter'" ng-repeat="objfield in SetSelectedTest.Elements">
+                                    <td><span ng-bind="objfield.dictAttributes.ID"></span></td>
+                                    <td>
+                                        <input type="text" class="form-control input-sm" title="{{objfield.dictAttributes.sfwValue}}" ng-model="objfield.dictAttributes.sfwValue" undoredodirective model="objfield" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <hr ng-if="SetSelectedTest.dictAttributes.sfwIsObjectBased === 'True'" />
+                    <div style="font-size:14px;font-weight:bold;padding:5px;padding-top:0px;">{{SetSelectedTest.dictAttributes.sfwIsObjectBased === 'True'?'User Fields':'Bookmarks'}}</div>
+                    <div style="flex:1 1 auto;overflow:auto;border:1px solid #8e8e8e;padding:5px;">
+                        <table class="sws-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Type</th>
+                                    <th>Input Values</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-if="objfield.Name !== 'parameter'" ng-repeat="objfield in SetSelectedTest.Elements" ng-click="onInputClick(objfield)" ng-class="SetSelectedInput==objfield?'selected':''">
+                                    <td><span ng-bind="objfield.dictAttributes.ID"></span></td>
+                                    <td><span ng-bind="objfield.dictAttributes.sfwDataType"></span></td>
+                                    <td>
+                                        <div ng-if="!objfield.controlName">
+                                            <input type="text" class="form-control input-sm" title="{{objfield.dictAttributes.Value}}" ng-model="objfield.dictAttributes.Value" undoredodirective model="objfield" ng-show="objfield.dictAttributes.sfwBookmarkType=='Field' || objfield.dictAttributes.sfwBookmarkType=='Query'" />
+                                        </div>
+                                        <div ng-if="objfield.dictAttributes.sfwBookmarkType=='Hyperlink'">
+                                            <div style="width:50%;float:left;">
+                                                <input type="text" placeholder="Hyperlink Url" class="form-control input-sm" title="{{objfield.dictAttributes.Value}}" ng-model="objfield.dictAttributes.Value" undoredodirective model="objfield"/>
+                                            </div>
+                                            <div style="width:50%;float:left;">
+                                                <input type="text" placeholder="Display Text" class="form-control input-sm" title="{{objfield.dictAttributes.sfwDisplayText}}" ng-model="objfield.dictAttributes.sfwDisplayText" undoredodirective model="objfield" />
+                                            </div>
+                                        </div>
+                                        <div ng-if="!objfield.controlName &&  objfield.dictAttributes.sfwBookmarkType=='Rule'">
+                                            <select class="form-control input-sm" ng-model="objfield.dictAttributes.Value" title="{{objfield.dictAttributes.Value}}" undoredodirective model="objfield">
+                                                <option value=""></option>
+                                                <option value="True">True</option>
+                                                <option value="False">False</option>
+                                            </select>
+                                        </div>
+                                        <div ng-if="objfield.controlName">
+                                            <input type="text" class="form-control input-sm" title="{{objfield.dictAttributes.Value}}" ng-model="objfield.dictAttributes.Value" undoredodirective model="objfield"
+                                                   ng-show="objfield.controlName =='sfwTextBox' || objfield.controlName=='sfwRadioButton' " />
+                                        </div>
+                                        <div ng-if="objfield.LoadType ==='Items' || objfield.LoadType ==='CodeGroup'">
+                                            <select class="form-control input-sm" ng-options="x.dictAttributes.Value as x.dictAttributes.Text for x in objfield.lstItems" ng-model="objfield.dictAttributes.Value"
+                                                    title="{{objfield.dictAttributes.Value}}" undoredodirective model="objfield" ng-show="objfield.controlName=='sfwDropDownList' || objfield.controlName=='sfwCheckBoxList'|| objfield.controlName=='sfwRadioButtonList' || objfield.controlName=='sfwMultiSelectDropDownList' "></select>
+                                        </div>
+                                        <div ng-if="objfield.LoadType !=='Items' && objfield.LoadType !=='CodeGroup'">
+                                            <input type="text" class="form-control input-sm" title="{{objfield.dictAttributes.Value}}" ng-model="objfield.dictAttributes.Value" undoredodirective model="objfield"
+                                                   ng-show="objfield.controlName=='sfwDropDownList' || objfield.controlName=='sfwCheckBoxList'|| objfield.controlName=='sfwRadioButtonList'" />
+                                        </div>
+                                        <input type="checkbox" ng-model="objfield.dictAttributes.Value" undoredodirective model="objfield" ng-show="objfield.controlName=='sfwCheckBox'" ng-true-value="'True'"
+                                               ng-false-value="'False'" />
+                                        <img src="images/Common/icon_add_dark.svg" ng-show="objfield.dictAttributes.sfwDataType=='Collection' || objfield.dictAttributes.sfwDataType=='Entity'" ng-click="onAddItems(objfield)" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div ng-show="selectedDesignSource" class="full-height">
+        <div id="editor_{{currentfile.FileName}}" class="ace-editor-div"></div>
+    </div>
+
+    <addrowsandcolumnstotable></addrowsandcolumnstotable>
+</div>

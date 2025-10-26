@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entWssMessageDetail" sfwMainCDO="icdoWssMessageDetail" sfwType="BusinessRule" sfwActive="True" sfwStatus="Review" sfwObjectID="busWssMessageDetail" sfwTableName="sgt_wss_message_detail" sfwView="False">
+  <queries>
+    <query ID="LoadTop100" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT TOP 100 *&#xD;&#xA;FROM SGT_WSS_MESSAGE_DETAIL WITH(NOLOCK)&#xD;&#xA;WHERE WSS_MESSAGE_ID = @MESSAGEID">
+      <parameters>
+        <parameter ID="@MESSAGEID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LookUp" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_WSS_MESSAGE_DETAIL WITH(NOLOCK)">
+      <parameters />
+    </query>
+    <query ID="LoadClearedMessageWithCorrespondenceLink" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_WSS_MESSAGE_DETAIL WITH(NOLOCK)&#xD;&#xA;WHERE CORRESPONDENCE_LINK IS NOT NULL AND &#xD;&#xA;CLEAR_MESSAGE_FLAG = 'Y' AND&#xD;&#xA;REPORT_CREATED_DATE IS NULL">
+      <parameters />
+    </query>
+    <query ID="LoadPersonForEmailNotification" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT DISTINCT&#xD;&#xA;&#x9;D.PERSON_ID AS PERSON_ID&#xD;&#xA;&#x9;,P.EMAIL_ADDRESS AS EMAIL_ADDRESS&#xD;&#xA;&#x9;,D.WSS_MESSAGE_DETAIL_ID AS WSS_MESSAGE_DETAIL_ID&#xD;&#xA;&#x9;,P.FIRST_NAME  AS first_name&#xD;&#xA;&#x9;, p.LAST_NAME AS Last_Name&#xD;&#xA;FROM &#xD;&#xA;&#x9;SGT_WSS_MESSAGE_DETAIL D WITH(NOLOCK)&#xD;&#xA;JOIN SGT_PERSON P WITH(NOLOCK) ON D.PERSON_ID = P.PERSON_ID AND ISNULL(P.EMAIL_WAIVER_FLAG, 'N') = 'N' AND P.EMAIL_ADDRESS IS NOT NULL and D.CLEAR_MESSAGE_FLAG = 'N'&#xD;&#xA;JOIN SGT_WSS_MESSAGE_HEADER H WITH(NOLOCK) ON H.WSS_MESSAGE_ID = D.WSS_MESSAGE_ID AND ISNULL(D.MSS_EMAIL_SENT_FLAG, 'N') = 'N' AND H.AUDIENCE_VALUE = 'MEMB'&#xD;&#xA;order by D.PERSON_ID DESC">
+      <parameters />
+    </query>
+    <query ID="UpdateEmailSentFlag" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="UPDATE SGT_WSS_MESSAGE_DETAIL SET MSS_EMAIL_SENT_FLAG ='Y' , MODIFIED_BY='PERSLink Batch'+' '+ convert(nvarchar,@batchscheduleid), MODIFIED_DATE= GETDATE() &#xD;&#xA;WHERE WSS_MESSAGE_DETAIL_ID = @WSS_MESSAGE_DETAIL_ID">
+      <parameters>
+        <parameter ID="@WSS_MESSAGE_DETAIL_ID" sfwDataType="int" />
+        <parameter ID="@batchscheduleid" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="InsertActiveMemberWSSBatch" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="INSERT INTO SGT_WSS_MESSAGE_DETAIL&#xD;&#xA;( &#xD;&#xA;PERSON_ID,&#xD;&#xA;WSS_MESSAGE_ID,&#xD;&#xA;ORG_ID,&#xD;&#xA;CLEAR_MESSAGE_FLAG,&#xD;&#xA; CREATED_BY, &#xD;&#xA; CREATED_DATE,&#xD;&#xA;  MODIFIED_BY, &#xD;&#xA;  MODIFIED_DATE,&#xD;&#xA;   UPDATE_SEQ&#xD;&#xA;)&#xD;&#xA;&#xD;&#xA;SELECT &#xD;&#xA;DISTINCT PE.PERSON_ID,&#xD;&#xA;  @WSS_MESSAGE_ID,&#xD;&#xA; PE.ORG_ID,&#xD;&#xA; 'N' AS CLEAR_MESSAGE_FLAG,&#xD;&#xA;'PERSLink Batch'+' '+ convert(nvarchar,@batchscheduleid) CREATED_BY,&#xD;&#xA;@TODAYDATE CREATED_DATE,&#xD;&#xA;'PERSLink Batch'+' '+ convert(nvarchar,@batchscheduleid) MODIFIED_BY,&#xD;&#xA;@TODAYDATE MODIFIED_DATE,&#xD;&#xA;0 UPDATE_SEQ &#xD;&#xA; FROM &#xD;&#xA; SGT_PERSON_EMPLOYMENT PE WITH (NOLOCK)  &#xD;&#xA;INNER JOIN SGT_PERSON_EMPLOYMENT_DETAIL PED WITH (NOLOCK) ON PE.PERSON_EMPLOYMENT_ID = PED.PERSON_EMPLOYMENT_ID&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT_EMPLOYMENT_DETAIL PAED WITH (NOLOCK) ON PAED.PERSON_EMPLOYMENT_DTL_ID = PED.PERSON_EMPLOYMENT_DTL_ID&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT PA WITH (NOLOCK) ON PA.PERSON_ACCOUNT_ID = PAED.PERSON_ACCOUNT_ID&#xD;&#xA;WHERE  &#xD;&#xA; ISNULL(PAED.PLAN_ID,'') = CASE WHEN @PLAN_ID = 0 THEN  ISNULL(PAED.PLAN_ID,'') ELSE @PLAN_ID END&#xD;&#xA; AND &#xD;&#xA;ISNULL(PED.JOB_CLASS_VALUE,'') =  CASE WHEN @JOB_CLASS_VALUE = '' THEN ISNULL(PED.JOB_CLASS_VALUE,'') ELSE @JOB_CLASS_VALUE END&#xD;&#xA;  AND &#xD;&#xA; ISNULL(PED.TYPE_VALUE,'')  = CASE WHEN @TYPE_VALUE ='' THEN  ISNULL(PED.TYPE_VALUE,'') ELSE  @TYPE_VALUE END  &#xD;&#xA;  AND &#xD;&#xA; PED.END_DATE IS NULL AND PE.END_DATE IS NULL AND &#xD;&#xA;PA.PLAN_PARTICIPATION_STATUS_VALUE  IN ('ENL1','ENL2','ENL3','ENL4')&#xD;&#xA;AND PAED.ELECTION_VALUE = 'ENLD'">
+      <parameters>
+        <parameter ID="@WSS_MESSAGE_ID" sfwDataType="int" />
+        <parameter ID="@TODAYDATE" sfwDataType="DateTime" />
+        <parameter ID="@PLAN_ID" sfwDataType="int" />
+        <parameter ID="@JOB_CLASS_VALUE" sfwDataType="string" />
+        <parameter ID="@TYPE_VALUE" sfwDataType="string" />
+        <parameter ID="@batchscheduleid" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="InsertForRetireInWSSBatch" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="INSERT INTO SGT_WSS_MESSAGE_DETAIL&#xD;&#xA;( &#xD;&#xA;PERSON_ID,&#xD;&#xA;WSS_MESSAGE_ID,&#xD;&#xA;CLEAR_MESSAGE_FLAG,&#xD;&#xA; CREATED_BY, &#xD;&#xA; CREATED_DATE,&#xD;&#xA;  MODIFIED_BY, &#xD;&#xA;  MODIFIED_DATE,&#xD;&#xA;   UPDATE_SEQ&#xD;&#xA;)&#xD;&#xA;&#xD;&#xA;SELECT &#xD;&#xA;DISTINCT PA.PAYEE_PERSLINK_ID, &#xD;&#xA;@WSS_MESSAGE_ID AS WSS_MESSAGE_ID, &#xD;&#xA; 'N' AS CLEAR_MESSAGE_FLAG,&#xD;&#xA;'PERSLink Batch'+' '+ convert(nvarchar,@batchscheduleid) CREATED_BY,&#xD;&#xA;@TODAYDATE CREATED_DATE,&#xD;&#xA;'PERSLink Batch'+' '+ convert(nvarchar,@batchscheduleid) MODIFIED_BY,&#xD;&#xA;@TODAYDATE MODIFIED_DATE,&#xD;&#xA;0 UPDATE_SEQ &#xD;&#xA;FROM  &#xD;&#xA;&#x9;SGT_PAYEE_ACCOUNT PA WITH (NOLOCK)&#xD;&#xA;INNER JOIN &#xD;&#xA;&#x9;SGT_BENEFIT_APPLICATION BA WITH (NOLOCK) ON BA.BENEFIT_APPLICATION_ID = PA.APPLICATION_ID&#xD;&#xA;INNER JOIN &#xD;&#xA;&#x9;SGT_PAYEE_ACCOUNT_STATUS PAS WITH (NOLOCK) ON PA.PAYEE_ACCOUNT_ID = PAS.PAYEE_ACCOUNT_ID&#xD;&#xA;INNER JOIN &#xD;&#xA;&#x9;SGS_CODE_VALUE CV WITH (NOLOCK) ON PAS.STATUS_ID= CV.CODE_ID AND PAS.STATUS_VALUE = CV.CODE_VALUE&#xD;&#xA;WHERE &#xD;&#xA;&#x9;CV.DATA2 = 'RECV' AND  &#xD;&#xA;&#x9;ISNULL(BA.BENEFIT_ACCOUNT_TYPE_VALUE,'') = CASE WHEN @BENEFIT_ACCOUNT_TYPE_VALUE = '' THEN ISNULL(BA.BENEFIT_ACCOUNT_TYPE_VALUE,'') ELSE @BENEFIT_ACCOUNT_TYPE_VALUE END AND&#xD;&#xA;&#x9;ISNULL(BA.BENEFIT_OPTION_VALUE,'') = CASE WHEN @BENEFIT_OPTION_VALUE = '' THEN ISNULL(BA.BENEFIT_OPTION_VALUE,'') ELSE @BENEFIT_OPTION_VALUE END AND &#xD;&#xA;&#x9;ISNULL(BA.PLAN_ID,'') = @PLAN_ID AND &#xD;&#xA;&#x9;PA.BENEFIT_BEGIN_DATE &gt;=   @BENEFIT_BEGIN_DATE AND  &#xD;&#xA;&#x9;(PA.BENEFIT_END_DATE IS NULL OR PA.BENEFIT_END_DATE &lt;= @BENEFIT_END_DATE) AND&#xD;&#xA;&#x9;PAS.PAYEE_ACCOUNT_STATUS_ID  = &#xD;&#xA;   (SELECT TOP 1 PAS1.PAYEE_ACCOUNT_STATUS_ID&#xD;&#xA;    FROM SGT_PAYEE_ACCOUNT_STATUS PAS1 (NOLOCK)  &#xD;&#xA;    WHERE PAS1.PAYEE_ACCOUNT_ID = PA.PAYEE_ACCOUNT_ID&#xD;&#xA;    ORDER BY PAS1.STATUS_EFFECTIVE_DATE DESC,PAS1.PAYEE_ACCOUNT_STATUS_ID DESC&#xD;&#xA;   ) &#xD;&#xA;  &#xD;&#xA;UNION   &#xD;&#xA;   &#xD;&#xA;SELECT &#xD;&#xA; DISTINCT PAA.PERSON_ID, &#xD;&#xA;@WSS_MESSAGE_ID AS WSS_MESSAGE_ID, &#xD;&#xA; 'N' AS CLEAR_MESSAGE_FLAG,&#xD;&#xA;'PERSLink Batch'+' '+ convert(nvarchar,@batchscheduleid) CREATED_BY, &#xD;&#xA;@TODAYDATE CREATED_DATE,&#xD;&#xA;'PERSLink Batch'+' '+ convert(nvarchar,@batchscheduleid) MODIFIED_BY,&#xD;&#xA;@TODAYDATE MODIFIED_DATE,&#xD;&#xA;0 UPDATE_SEQ &#xD;&#xA;&#xD;&#xA;FROM&#xD;&#xA;&#x9;SGT_PERSON_ACCOUNT PAA  WITH (NOLOCK)&#xD;&#xA;INNER JOIN &#x9; &#xD;&#xA;&#x9;SGT_PERSON_ACCOUNT_LIFE  PAL ON PAA.PERSON_ACCOUNT_ID = PAL.PERSON_ACCOUNT_ID&#xD;&#xA;INNER JOIN  &#xD;&#xA;&#x9;SGT_PERSON_ACCOUNT_LIFE_HISTORY   PALH ON PAL.PERSON_ACCOUNT_ID = PALH.PERSON_ACCOUNT_ID&#x9; &#xD;&#xA;&#x9;&#x9;AND PALH.LEVEL_OF_COVERAGE_VALUE ='BASC'  &#xD;&#xA;&#x9;&#x9;AND PAA.PLAN_PARTICIPATION_STATUS_VALUE  = 'ENL2'&#xD;&#xA;&#x9;&#x9;AND PAL.LIFE_INSURANCE_TYPE_VALUE = 'REME'&#xD;&#xA;&#x9;&#x9;AND PALH.EFFECTIVE_END_DATE IS NULL &#xD;&#xA;&#x9;&#x9;AND ISNULL(PAA.PLAN_ID,'') = CASE WHEN @PLAN_ID = 13 THEN PAA.PLAN_ID END&#xD;&#xA;&#xD;&#xA;UNION &#xD;&#xA; &#xD;&#xA;SELECT&#xD;&#xA; DISTINCT PAA.PERSON_ID, &#xD;&#xA;@WSS_MESSAGE_ID AS WSS_MESSAGE_ID, &#xD;&#xA; 'N' AS CLEAR_MESSAGE_FLAG,&#xD;&#xA;'PERSLink Batch'+' '+ convert(nvarchar,@batchscheduleid) CREATED_BY,&#xD;&#xA;@TODAYDATE CREATED_DATE,&#xD;&#xA;'PERSLink Batch'+' '+ convert(nvarchar,@batchscheduleid) MODIFIED_BY,&#xD;&#xA;@TODAYDATE MODIFIED_DATE,&#xD;&#xA;0 UPDATE_SEQ &#xD;&#xA;FROM &#xD;&#xA;&#x9;SGT_PERSON_ACCOUNT PAA  WITH (NOLOCK)&#xD;&#xA;INNER JOIN  &#xD;&#xA;&#x9;SGT_PERSON_ACCOUNT_GHDV PAG  WITH (NOLOCK) ON PAA.PERSON_ACCOUNT_ID = PAG.PERSON_ACCOUNT_ID&#xD;&#xA;INNER JOIN&#xD;&#xA;&#x9;SGT_PERSON_ACCOUNT_GHDV_HISTORY PAGH ON PAG.PERSON_ACCOUNT_GHDV_ID = PAGH.PERSON_ACCOUNT_GHDV_ID AND PAGH.END_DATE IS NULL&#xD;&#xA;WHERE &#xD;&#xA;&#x9;(PAG.HEALTH_INSURANCE_TYPE_VALUE = 'RT12' OR PAG.DENTAL_INSURANCE_TYPE_VALUE ='RT16' OR PAG.VISION_INSURANCE_TYPE_VALUE ='RETR' OR PAGH.COBRA_TYPE_VALUE IS NOT NULL) &#xD;&#xA;&#x9;AND PAA.PLAN_PARTICIPATION_STATUS_VALUE   = 'ENL2'&#x9;&#xD;&#xA;&#x9;AND ISNULL(PAA.PLAN_ID,'') = @PLAN_ID&#xD;&#xA;&#x9;&#xD;&#xA;UNION &#xD;&#xA;&#xD;&#xA;  SELECT &#xD;&#xA; DISTINCT  PAA.PERSON_ID, &#xD;&#xA;@WSS_MESSAGE_ID AS WSS_MESSAGE_ID, &#xD;&#xA; 'N' AS CLEAR_MESSAGE_FLAG,&#xD;&#xA;'PERSLink Batch'+' '+ convert(nvarchar,@batchscheduleid) CREATED_BY,&#xD;&#xA;@TODAYDATE CREATED_DATE,&#xD;&#xA;'PERSLink Batch'+' '+ convert(nvarchar,@batchscheduleid) MODIFIED_BY,&#xD;&#xA;@TODAYDATE MODIFIED_DATE,&#xD;&#xA;0 UPDATE_SEQ &#xD;&#xA;&#xD;&#xA; FROM &#xD;&#xA;&#x9;SGT_PERSON_ACCOUNT PAA  WITH (NOLOCK)&#xD;&#xA;INNER JOIN  &#xD;&#xA;&#x9;SGT_PERSON_ACCOUNT_MEDICARE_PART_D_HISTORY PAM WITH (NOLOCK) ON PAA.PERSON_ID= PAM.PERSON_ID&#xD;&#xA;WHERE  &#xD;&#xA;&#x9;PAM.END_DATE IS NULL AND PAA.PLAN_PARTICIPATION_STATUS_VALUE  IN ('ENL2')&#xD;&#xA;&#x9;AND ISNULL(PAA.PLAN_ID,'') = @PLAN_ID">
+      <parameters>
+        <parameter ID="@WSS_MESSAGE_ID" sfwDataType="int" />
+        <parameter ID="@TODAYDATE" sfwDataType="string" />
+        <parameter ID="@BENEFIT_ACCOUNT_TYPE_VALUE" sfwDataType="string" />
+        <parameter ID="@BENEFIT_OPTION_VALUE" sfwDataType="string" />
+        <parameter ID="@PLAN_ID" sfwDataType="int" />
+        <parameter ID="@BENEFIT_BEGIN_DATE" sfwDataType="DateTime" />
+        <parameter ID="@BENEFIT_END_DATE" sfwDataType="DateTime" />
+        <parameter ID="@batchscheduleid" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="InsertForEmployerInWSSBatch" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="INSERT INTO SGT_WSS_MESSAGE_DETAIL&#xD;&#xA;( CONTACT_ID,&#xD;&#xA;WSS_MESSAGE_ID,&#xD;&#xA;ORG_ID,&#xD;&#xA;CLEAR_MESSAGE_FLAG,&#xD;&#xA; CREATED_BY, &#xD;&#xA; CREATED_DATE,&#xD;&#xA;  MODIFIED_BY, &#xD;&#xA;  MODIFIED_DATE,&#xD;&#xA;   UPDATE_SEQ&#xD;&#xA;)&#xD;&#xA;&#xD;&#xA;SELECT  &#xD;&#xA;DISTINCT OC.CONTACT_ID,&#xD;&#xA;  @WSS_MESSAGE_ID AS WSS_MESSAGE_ID, &#xD;&#xA; O.ORG_ID,&#xD;&#xA; 'N' AS CLEAR_MESSAGE_FLAG,&#xD;&#xA;'PERSLink Batch'+' '+ convert(nvarchar,@batchscheduleid) CREATED_BY,&#xD;&#xA;@TODAYDATE CREATED_DATE,&#xD;&#xA;'PERSLink Batch'+' '+ convert(nvarchar,@batchscheduleid) MODIFIED_BY,&#xD;&#xA;@TODAYDATE MODIFIED_DATE,&#xD;&#xA;0 UPDATE_SEQ &#xD;&#xA;FROM&#xD;&#xA;&#x9;SGT_ORGANIZATION O WITH(NOLOCK)&#xD;&#xA;INNER JOIN&#xD;&#xA;&#x9;SGT_ORG_PLAN OP WITH(NOLOCK) ON OP.ORG_ID = O.ORG_ID AND O.STATUS_VALUE = 'ACTV' AND OP.PARTICIPATION_END_DATE IS NULL AND OP.PLAN_ID = CASE WHEN @PLAN_ID = 0 THEN OP.PLAN_ID ELSE @PLAN_ID END&#xD;&#xA;INNER JOIN&#xD;&#xA;&#x9;SGT_ORG_CONTACT OC WITH(NOLOCK) ON OC.ORG_ID = O.ORG_ID AND OC.STATUS_VALUE = 'ACTV'&#xD;&#xA;INNER JOIN&#xD;&#xA;&#x9;SGT_ORG_CONTACT_ROLE OCR WITH(NOLOCK) ON OCR.ORG_CONTACT_ID = OC.ORG_CONTACT_ID&#xD;&#xA;WHERE &#xD;&#xA;&#x9;ISNULL(O.EMP_CATEGORY_VALUE,'') = CASE WHEN @EMP_CATEGORY_VALUE ='' THEN ISNULL(O.EMP_CATEGORY_VALUE,'') ELSE @EMP_CATEGORY_VALUE END AND&#xD;&#xA;&#x9;ISNULL(O.CENTRAL_PAYROLL_FLAG,'') = CASE WHEN @CENTRAL_PAYROLL_FLAG ='' THEN ISNULL(O.CENTRAL_PAYROLL_FLAG,'')  ELSE @CENTRAL_PAYROLL_FLAG END AND&#xD;&#xA;&#x9;ISNULL(OCR.CONTACT_ROLE_VALUE,'') =  CASE WHEN @CONTACT_ROLE_VALUE ='' THEN ISNULL(OCR.CONTACT_ROLE_VALUE,'') ELSE @CONTACT_ROLE_VALUE END AND&#xD;&#xA;&#x9;ISNULL(O.ORG_ID,0) = CASE WHEN @ORG_ID = 0 THEN ISNULL(O.ORG_ID,'') ELSE @ORG_ID END AND&#xD;&#xA;&#x9;ISNULL(O.PEOPLESOFT_ORG_GROUP_VALUE, '') = CASE WHEN @PEOPLESOFT_ORG_GROUP_VALUE ='' THEN ISNULL(O.PEOPLESOFT_ORG_GROUP_VALUE, '') ELSE @PEOPLESOFT_ORG_GROUP_VALUE END">
+      <parameters>
+        <parameter ID="@WSS_MESSAGE_ID" sfwDataType="int" />
+        <parameter ID="@TODAYDATE" sfwDataType="DateTime" />
+        <parameter ID="@PLAN_ID" sfwDataType="int" />
+        <parameter ID="@EMP_CATEGORY_VALUE" sfwDataType="string" />
+        <parameter ID="@CENTRAL_PAYROLL_FLAG" sfwDataType="string" />
+        <parameter ID="@CONTACT_ROLE_VALUE" sfwDataType="string" />
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+        <parameter ID="@PEOPLESOFT_ORG_GROUP_VALUE" sfwDataType="string" />
+        <parameter ID="@batchscheduleid" sfwDataType="int" />
+      </parameters>
+    </query>
+	<query ID="LoadEmployerForEmailNotification" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT DISTINCT&#xA;     D.CONTACT_ID AS CONTACT_ID &#xA;&#x9;,C.EMAIL_ADDRESS AS EMAIL_ADDRESS&#xA;&#x9;,D.WSS_MESSAGE_DETAIL_ID AS WSS_MESSAGE_DETAIL_ID&#xA;&#x9;,C.FIRST_NAME  AS FIRST_NAME&#xA;&#x9;,C.LAST_NAME AS LAST_NAME&#xA;FROM &#xA;&#x9;SGT_WSS_MESSAGE_DETAIL D WITH(NOLOCK)&#xA;JOIN SGT_CONTACT C WITH(NOLOCK) ON D.CONTACT_ID = C.CONTACT_ID AND  C.EMAIL_ADDRESS IS NOT NULL and D.CLEAR_MESSAGE_FLAG = 'N'&#xA;JOIN SGT_WSS_MESSAGE_HEADER H WITH(NOLOCK) ON H.WSS_MESSAGE_ID = D.WSS_MESSAGE_ID AND ISNULL(D.ESS_EMAIL_SENT_FLAG,'N') = 'N'&#xA;AND H.PRIORITY_VALUE='URGE' AND H.AUDIENCE_VALUE = 'EMPL'&#xA;order by D.CONTACT_ID DESC">
+      <parameters />
+    </query>
+    <query ID="UpdateESSEmailSentFlag" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="UPDATE SGT_WSS_MESSAGE_DETAIL SET ESS_EMAIL_SENT_FLAG ='Y' , MODIFIED_BY='PERSLink Batch'+' '+ convert(nvarchar,@batchscheduleid), MODIFIED_DATE= GETDATE() &#xA;WHERE WSS_MESSAGE_DETAIL_ID = @WSS_MESSAGE_DETAIL_ID">
+      <parameters>
+        <parameter ID="@WSS_MESSAGE_DETAIL_ID" sfwDataType="int" />
+        <parameter ID="@batchscheduleid" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="WssMessageDetailId" sfwType="Column" sfwValue="wss_message_detail_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="WssMessageId" sfwType="Column" sfwValue="wss_message_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PersonId" sfwType="Column" sfwValue="person_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="OrgId" sfwType="Column" sfwValue="org_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ContactId" sfwType="Column" sfwValue="contact_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="WebLink" sfwType="Column" sfwValue="web_link" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="200" />
+    <attribute ID="CorrespondenceLink" sfwType="Column" sfwValue="correspondence_link" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="200" />
+    <attribute ID="ClearMessageFlag" sfwType="Column" sfwValue="clear_message_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="TrackingId" sfwType="Column" sfwValue="tracking_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="TemplateName" sfwType="Column" sfwValue="template_name" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ReportCreatedDate" sfwType="Column" sfwValue="report_created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute sfwValue="mss_email_sent_flag" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="char" sfwLength="1" sfwIsNull="True" ID="MssEmailSentFlag" sfwCaption="Mss Email Sent Flag" />
+    <attribute ID="objWSSMessageHeader" sfwType="Object" sfwEntity="entWssMessageHeader" sfwValue="ibusWSSMessageHeader" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrReportLink" sfwValue="icdoWssMessageDetail.istrReportLink" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrCorrespondenceLink" sfwValue="icdoWssMessageDetail.istrCorrespondenceLink" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrReportName" sfwValue="icdoWssMessageDetail.istrReportName" />
+    <attribute ID="objOrganization" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusOrganization" />
+    <attribute ID="objPerson" sfwType="Object" sfwEntity="entPerson" sfwValue="ibusPerson" />
+    <attribute sfwValue="ess_email_sent_flag" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="1" sfwIsNull="True" ID="EssEmailSentFlag" sfwCaption="Ess Email Sent Flag" />
+    <attribute ID="IstrReportNameText" sfwDataType="string" sfwPrivate="False" sfwValue="icdoWssMessageDetail.istrReportNameText" sfwType="Property" />
+    <attribute ID="IstrReportNameHidden" sfwDataType="string" sfwPrivate="False" sfwValue="icdoWssMessageDetail.istrReportNameHidden" sfwType="Property" />
+    <attribute ID="IstrPDF" sfwDataType="string" sfwPrivate="False" sfwValue="icdoWssMessageDetail.istrPDF" sfwType="Property" />
+    <attribute ID="IstrCSV" sfwDataType="string" sfwPrivate="False" sfwValue="icdoWssMessageDetail.istrCSV" sfwType="Property" />
+  </attributes>
+  <constraint />
+  <rules>
+    <rule ID="IsRquestForNewEmployee" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="(this.IsRquestForNewEmployee())" />
+    <rule ID="IsRequestForChangeEmployee" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="!(this.IsRquestForNewEmployee())" />
+    <rule ID="VRIsCorrLinkEmpty" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="String.isNullOrEmpty(this.IstrCorrespondenceLink)" />
+    <rule ID="VRShowDownloadLinks" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="this.IstrReportName != &quot;Benefit Enrollment Report&quot; &amp;&amp;&#xA;this.IstrReportName != &quot;Payroll Reporting&quot; &amp;&amp;&#xA;this.IstrReportName != &quot;Retirement Contributions - Audit Confirmation&quot;" />
+  </rules>
+  <initialload>
+    <item ID="IsRquestForNewEmployee" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsRequestForChangeEmployee" sfwMode="All" sfwStatus="Active" />
+    <item ID="VRIsCorrLinkEmpty" sfwMode="All" sfwStatus="Active" />
+    <item ID="VRShowDownloadLinks" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror />
+  <validatedelete />
+  <delete />
+  <groupslist />
+  <checklist />
+  <methods />
+  <lifecycle />
+  <objectmethods />
+  <ExtraFields />
+</entity>

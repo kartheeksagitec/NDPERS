@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entAppointmentSchedule" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvCallCenter" sfwType="BusinessRule" sfwMainCDO="icdoAppointmentSchedule" sfwObjectID="busAppointmentSchedule" sfwTableName="sgt_appointment_schedule" sfwView="False">
+  <rules />
+  <delete />
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror />
+  <validatedelete />
+  <updateablecdo />
+  <queries>
+    <query ID="rptAppointments" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select c.last_name+','+c.first_name as Counselor,b.person_id as PersonID,b.contact_ticket_id as TicketID,a.appointment_date as AppointmentDate,cv3.description as StartTime,cv4.description as EndTime,cv2.description as AppointmentType &#xD;&#xA;from sgt_appointment_schedule a inner join  sgt_contact_ticket b on a.contact_ticket_id=b.contact_ticket_id&#xD;&#xA;inner join sgs_user c on a.counselor_user_id=c.user_serial_id&#xD;&#xA;inner join sgs_code_value cv2 on cv2.code_id=a.appointment_type_id and cv2.code_value=a.appointment_type_value&#xD;&#xA;inner join sgs_code_value cv3 on cv3.code_id=a.start_time_id and cv3.code_value=a.start_time_value&#xD;&#xA;inner join sgs_code_value cv4 on cv4.code_id=a.end_time_id and cv4.code_value=a.end_time_value&#xD;&#xA;where (a.appointment_date between @start_date and @end_date) and &#xD;&#xA;(&#xD;&#xA;  (@ddlAppointmentType &lt;&gt; '' AND a.appointment_type_value=@ddlAppointmentType)&#xD;&#xA;  OR&#xD;&#xA;  (@ddlAppointmentType= '')&#xD;&#xA;)&#xD;&#xA;AND &#xD;&#xA;(&#xD;&#xA;  (@ddlCounselor !='' AND a.counselor_user_id=@ddlCounselor)&#xD;&#xA;  OR&#xD;&#xA;  (@ddlCounselor = '')&#xD;&#xA;)">
+      <parameters>
+        <parameter ID="@start_date" sfwDataType="DateTime" />
+        <parameter ID="@end_date" sfwDataType="DateTime" />
+        <parameter ID="@ddlAppointmentType" sfwDataType="string" />
+        <parameter ID="@ddlCounselor" sfwDataType="string" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="AppointmentScheduleId" sfwType="Column" sfwValue="appointment_schedule_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ContactTicketId" sfwType="Column" sfwValue="contact_ticket_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AppointmentName" sfwType="Column" sfwValue="appointment_name" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="200" />
+    <attribute ID="AppointmentTypeDescription" sfwType="Description" sfwValue="appointment_type_description" />
+    <attribute ID="AppointmentTypeId" sfwType="Column" sfwValue="appointment_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="1007" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AppointmentTypeValue" sfwType="Column" sfwValue="appointment_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="CounselorUserId" sfwType="Column" sfwValue="counselor_user_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AppointmentDate" sfwType="Column" sfwValue="appointment_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="StartTimeDescription" sfwType="Description" sfwValue="start_time_description" />
+    <attribute ID="StartTimeId" sfwType="Column" sfwValue="start_time_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="1009" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StartTimeValue" sfwType="Column" sfwValue="start_time_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="EndTimeDescription" sfwType="Description" sfwValue="end_time_description" />
+    <attribute ID="EndTimeId" sfwType="Column" sfwValue="end_time_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="1010" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="EndTimeValue" sfwType="Column" sfwValue="end_time_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="AppointmentCancelFlag" sfwType="Column" sfwValue="appointment_cancel_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="Notes" sfwType="Column" sfwValue="notes" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1000" />
+    <attribute ID="MeetingRequestUid" sfwType="Column" sfwValue="meeting_request_uid" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="TimeOfDayDescription" sfwType="Description" sfwValue="time_of_day_description" />
+    <attribute ID="TimeOfDayId" sfwType="Column" sfwValue="time_of_day_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="5006" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="TimeOfDayValue" sfwType="Column" sfwValue="time_of_day_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="RequestedDateFrom" sfwType="Column" sfwValue="requested_date_from" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="RequestedDateTo" sfwType="Column" sfwValue="requested_date_to" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute sfwValue="no_appointment_necessary" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="1" sfwIsNull="True" ID="NoAppointmentNecessary" sfwCaption="No Appointment Necessary" />
+  </attributes>
+</entity>

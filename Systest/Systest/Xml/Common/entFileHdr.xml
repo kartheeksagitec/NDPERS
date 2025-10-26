@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entFileHdr" sfwObjectID="busFileHdr" sfwTableName="sgs_file_hdr" sfwMainCDO="icdoFileHdr">
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * &#xD;&#xA;  from sgs_file_hdr &#xD;&#xA; order by file_hdr_id desc&#xD;&#xA;&#xD;&#xA;">
+      <parameters />
+    </query>
+    <query ID="CountByFileId" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*)&#xD;&#xA;  from sgs_file_hdr&#xD;&#xA; where file_id = @file_id&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@file_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="MaxIDforFileID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select max(file_hdr_id) from sgs_file_hdr&#xD;&#xA;where file_id = @file_id&#xD;&#xA;&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@file_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="CountByFileIdReferenceIdDate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*)&#xD;&#xA;  from sgs_file_hdr&#xD;&#xA; where file_id = @file_id&#xD;&#xA;and reference_id = @reference_id&#xD;&#xA;and created_date &gt;= @created_date&#xD;&#xA;and status_value != 'IGNR'">
+      <parameters>
+        <parameter ID="@file_id" sfwDataType="int" />
+        <parameter ID="@reference_id" sfwDataType="int" />
+        <parameter ID="@created_date" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="SetIGNRStatusForFileIdRefeIfandDate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="update sgs_file_hdr&#xD;&#xA;set status_value = 'IGNR'&#xD;&#xA; where file_id = @file_id&#xD;&#xA;and reference_id = @reference_id&#xD;&#xA;and created_date &gt;= @created_date&#xD;&#xA;and status_value != 'IGNR'">
+      <parameters>
+        <parameter ID="@file_id" sfwDataType="int" />
+        <parameter ID="@reference_id" sfwDataType="int" />
+        <parameter ID="@created_date" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="LoadACHAndCheckFileHdrInfo" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from sgs_file_hdr (nolock) where file_id in (68,69) and processed_date&gt;=@processdate">
+      <parameters>
+        <parameter ID="@processdate" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="LoadDCTransferFileInfo" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from sgs_file_hdr (nolock) where file_id in (67,68,69) and processed_date&gt;=@processdate">
+      <parameters>
+        <parameter ID="@processdate" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="ESSLookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT DISTINCT * FROM (&#xD;&#xA;SELECT DISTINCT&#xD;&#xA; (SELECT DATA1 from SGS_CODE_VALUE where CODE_ID=27 and CODE_VALUE=FH.[STATUS_VALUE]) as COMMENTS&#xD;&#xA; ,FH.[FILE_HDR_ID]&#xD;&#xA; ,FH.[MAILBOX_FILE_NAME]&#xD;&#xA; ,FH.[PROCESSED_FILE_NAME]&#xD;&#xA; ,FH.[PROCESSED_DATE]&#xD;&#xA; ,FH.[FILE_ID]&#xD;&#xA; ,FH.[REFERENCE_ID]&#xD;&#xA; ,FH.[STATUS_ID]&#xD;&#xA; ,FH.[STATUS_VALUE]&#xD;&#xA; ,FH.[NO_OF_ROWS]&#xD;&#xA; ,FH.[CYCLE_NO]&#xD;&#xA; ,FH.[ERROR_MESSAGE]&#xD;&#xA; ,FH.[CREATED_BY]&#xD;&#xA; ,FH.[CREATED_DATE]&#xD;&#xA; ,FH.[MODIFIED_BY]&#xD;&#xA; ,FH.[MODIFIED_DATE]&#xD;&#xA; ,FH.[UPDATE_SEQ]&#xD;&#xA; ,OCR.ORG_ID,OCR.CONTACT_ID FROM &#xD;&#xA;  SGS_FILE_HDR FH &#xD;&#xA; INNER JOIN SGS_CODE_VALUE &#xD;&#xA;  ON CODE_ID = 3504 AND FILE_ID = DATA1&#xD;&#xA; INNER JOIN SGT_PLAN P &#xD;&#xA;  ON P.BENEFIT_TYPE_VALUE = DATA2&#xD;&#xA; INNER JOIN&#xD;&#xA;  (&#xD;&#xA;   SELECT OC.ORG_ID,OC.CONTACT_ID,OC.PLAN_ID,OCR.CONTACT_ROLE_VALUE FROM SGT_ORG_CONTACT OC&#xD;&#xA;    INNER JOIN SGT_ORG_CONTACT_ROLE OCR &#xD;&#xA;     ON OC.ORG_CONTACT_ID = OCR.ORG_CONTACT_ID     &#xD;&#xA;  ) AS OCR&#xD;&#xA;  ON P.PLAN_ID = CASE WHEN OCR.CONTACT_ROLE_VALUE = 'PAAG' THEN P.PLAN_ID &#xD;&#xA;    ELSE OCR.PLAN_ID END&#xD;&#xA; INNER JOIN SGT_ORG_PLAN OP ON&#xD;&#xA;  OCR.ORG_ID = OP.ORG_ID and OP.PLAN_ID = &#xD;&#xA;    CASE WHEN OCR.CONTACT_ROLE_VALUE = 'PAAG' THEN OP.PLAN_ID &#xD;&#xA;    ELSE OCR.PLAN_ID END &#xD;&#xA;) OCR order by OCR.FILE_HDR_ID desc">
+      <parameters />
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="FileHdrId" sfwType="Column" sfwValue="file_hdr_id" sfwKeyNo="1" sfwIsSequence="False" sfwSequenceName="seq_file_hdr_id" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="MailboxFileName" sfwType="Column" sfwValue="mailbox_file_name" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="255" />
+    <attribute ID="ProcessedFileName" sfwType="Column" sfwValue="processed_file_name" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="255" />
+    <attribute ID="ProcessedDate" sfwType="Column" sfwValue="processed_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="FileId" sfwType="Column" sfwValue="file_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ReferenceId" sfwType="Column" sfwValue="reference_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusDescription" sfwType="Description" sfwValue="status_description" />
+    <attribute ID="StatusId" sfwType="Column" sfwValue="status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="27" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusValue" sfwType="Column" sfwValue="status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="NoOfRows" sfwType="Column" sfwValue="no_of_rows" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="CycleNo" sfwType="Column" sfwValue="cycle_no" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="Comments" sfwType="Column" sfwValue="comments" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="255" />
+    <attribute ID="ErrorMessage" sfwType="Column" sfwValue="error_message" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4096" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="objFile" sfwType="Object" sfwEntity="entFile" sfwValue="ibusFile" />
+    <attribute sfwType="Collection" sfwEntity="entbusStatusSummary" ID="lstStatusSummary" sfwValue="iclbStatusSummary" />
+  </attributes>
+</entity>

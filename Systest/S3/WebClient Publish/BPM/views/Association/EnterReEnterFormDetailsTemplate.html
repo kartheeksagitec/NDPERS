@@ -1,0 +1,118 @@
+﻿<div id="ScopeId_{{$id}}" class="padding-10">
+    <div class="form-group">
+        <label class="control-label margin-bottom-5">
+            <label ng-if='!$ctrl.model.dictAttributes.sfwFormName.trim()'>Associated Form </label>
+            <label ng-if='$ctrl.model.dictAttributes.sfwFormName.trim()'><a ng-click='$ctrl.NavigateToForm($ctrl.model.dictAttributes.sfwFormName)'>Associated Forms</a></label>
+        </label>
+        <div class='input-group full-width' ng-disabled="IsDisabledforVersioning">
+            <label class="radio-inline">
+                <input type="radio" ng-model="$ctrl.model.SelectActiveFormType" value="Single" ng-change="$ctrl.onChangeActiveForm()" undoredodirective model="$ctrl.model"
+                       propertyname="'SelectActiveFormType'" />
+                Single
+            </label>
+            <label class="radio-inline">
+                <input type="radio" ng-model="$ctrl.model.SelectActiveFormType" value="Multiple" ng-change="$ctrl.onChangeActiveForm()" undoredodirective model="$ctrl.model"
+                       propertyname="'SelectActiveFormType'" />
+                Multiple
+            </label>
+        </div>
+        <div class='input-group full-width' ng-show="$ctrl.model.SelectActiveFormType == 'Single'" ng-disabled="IsDisabledforVersioning">
+            <input title="{{$ctrl.model.dictAttributes.sfwFormName}} - {{$ctrl.model.dictAttributes.FormTitle}}" ng-disabled="$ctrl.IsDisabledforVersioning" type="text"
+                   class="form-control input-sm text-autocomplete" ng-model="$ctrl.model.dictAttributes.sfwFormName" ng-change="$ctrl.onFormNameChanged()" ng-keydown="$ctrl.onFormNameKeyDown($event)"
+                   undoredodirective model="$ctrl.model" propertyname="'dictAttributes.sfwFormName'" />
+            <span class='input-group-addon button-intellisense' ng-disabled="$ctrl.IsDisabledforVersioning" ng-click='$ctrl.showFormNameIntellisenseList($event)'></span>
+            <span ng-show='$ctrl.model.dictAttributes.sfwFormName' title="set Navigation Parameters" class='input-group-addon input-sm' ng-click="$ctrl.setNavigationParameters()">
+                <i class="fa fa-chevron-right"></i>
+            </span>
+        </div>
+        <div class="input-group full-width" ng-show="$ctrl.model.SelectActiveFormType == 'Multiple'" ng-disabled="IsDisabledforVersioning">
+            <input title="{{$ctrl.model.dictAttributes.sfwFormName}}" ng-disabled="true" type="text" class="form-control input-sm text-autocomplete"
+                   ng-model="$ctrl.model.dictAttributes.sfwFormName" ng-change="$ctrl.onFormNameChanged()" undoredodirective model="$ctrl.model" propertyname="'dictAttributes.sfwFormName'" />
+            <span class='input-group-addon btn-search-multiple-popup' ng-disabled="$ctrl.IsDisabledforVersioning" ng-click='$ctrl.onAddMultipleActiveFormClick($event)'></span>
+            <span ng-show='$ctrl.model.dictAttributes.sfwFormName' title="set Navigation Parameters" class='input-group-addon input-sm' ng-click="$ctrl.setNavigationParameters()">
+                <i class="fa fa-chevron-right"></i>
+            </span>
+        </div>
+    </div>
+    <div class="form-group" ng-show="$ctrl.model.SelectActiveFormType == 'Multiple'">
+        <label class="control-label margin-bottom-5">Variable Name </label>
+        <div class='input-group full-width'>
+            <span ng-if="IsDisabledforVersioning" title="{{$ctrl.model.dictAttributes.sfwVariableName}}" ng-bind="$ctrl.model.dictAttributes.sfwVariableName"></span>
+            <select class="form-control" ng-show="!$ctrl.IsDisabledforVersioning" ng-options="x for x in $ctrl.parent.queryParametersValues" undoredodirective model="$ctrl.model"
+                    ng-model="$ctrl.model.dictAttributes.sfwVariableName" propertyname="'dictAttributes.sfwVariableName'">
+                <option></option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label margin-bottom-5" ng-if='!$ctrl.model.dictAttributes.sfwFocusControlID.trim()'>Focus Control ID </label>
+        <label class="control-label margin-bottom-5" ng-if='$ctrl.model.dictAttributes.sfwFocusControlID.trim()'><a ng-click='$ctrl.NavigateToFormControl($ctrl.model.dictAttributes.sfwFocusControlID,$ctrl.model.dictAttributes.sfwFormName)'>Focus Control ID  :</a></label>
+        <div class='input-group full-width'>
+            <input class="form-control input-sm" type="text" title="{{$ctrl.model.dictAttributes.sfwFocusControlID}}" ng-model="$ctrl.model.dictAttributes.sfwFocusControlID" disabled />
+            <span ng-show='$ctrl.model.dictAttributes.sfwFormName' ng-hide="$ctrl.IsDisabledforVersioning" class='input-group-addon input-sm' ng-click="$ctrl.setFocusControlID()">
+                <i class="fa fa-chevron-right"></i>
+            </span>
+        </div>
+    </div>
+    <div class="form-group" ng-show="!$ctrl.approvalactivity && $ctrl.formType == 'maintenance' &&$ctrl.model.SelectActiveFormType != 'Multiple'">
+        <label class="control-label margin-bottom-5" ng-if='!$ctrl.model.dictAttributes.sfwBpmSubmitButtonVisibleRule.trim()'>Submit Button Visible Rule </label>
+        <label class="control-label margin-bottom-5" ng-if='$ctrl.model.dictAttributes.sfwBpmSubmitButtonVisibleRule.trim()'><a ng-click='$ctrl.NavigateToVisibleRule($ctrl.model.dictAttributes.sfwBpmSubmitButtonVisibleRule)'>Submit Button Visible Rule :</a></label>
+        <div class='input-group full-width'>
+            <input class="form-control input-sm text-autocomplete" ng-disabled="$ctrl.IsDisabledforVersioning" undoredodirective model="$ctrl.model" type="text"
+                   title="{{$ctrl.model.dictAttributes.sfwBpmSubmitButtonVisibleRule}}" ng-model="$ctrl.model.dictAttributes.sfwBpmSubmitButtonVisibleRule" ng-keydown="$ctrl.onVisibleRuleKeyDown($event)"
+                   propertyname="'dictAttributes.sfwBpmSubmitButtonVisibleRule'" />
+            <span class='input-group-addon button-intellisense' ng-hide="$ctrl.IsDisabledforVersioning" ng-click='$ctrl.showVisibleRuleIntellisenseList($event)'></span>
+        </div>
+    </div>
+    <div class="input-group full-width" ng-show="!$ctrl.approvalactivity && $ctrl.model.SelectActiveFormType == 'Multiple' && $ctrl.formType == 'maintenance'" ng-disabled="IsDisabledforVersioning">
+        <label class="control-label margin-bottom-5">Submit Button Visible Rule </label>
+        <div class='input-group full-width'>
+            <input title="{{$ctrl.model.dictAttributes.sfwBpmSubmitButtonVisibleRule}}" ng-disabled="$ctrl.IsDisabledforVersioning" type="text" class="form-control input-sm text-autocomplete"
+                   ng-model="$ctrl.model.dictAttributes.sfwBpmSubmitButtonVisibleRule" undoredodirective model="$ctrl.model" propertyname="'dictAttributes.sfwBpmSubmitButtonVisibleRule'" />
+            <span title="set Visible Rules" class='input-group-addon input-sm' ng-click="$ctrl.setVisibleRulesForMultipleForms('sfwBpmSubmitButtonVisibleRule')">
+                <i class="fa fa-chevron-right"></i>
+            </span>
+        </div>
+    </div>
+    <div class="form-group" ng-show="$ctrl.approvalactivity && $ctrl.formType == 'maintenance'&&$ctrl.model.SelectActiveFormType != 'Multiple'">
+        <label class="control-label margin-bottom-5" ng-if='!$ctrl.model.dictAttributes.sfwBpmApproveButtonVisibleRule.trim()'>Approve Button Visible Rule </label>
+        <label class="control-label margin-bottom-5" ng-if='$ctrl.model.dictAttributes.sfwBpmApproveButtonVisibleRule.trim()'><a ng-click='$ctrl.NavigateToVisibleRule($ctrl.model.dictAttributes.sfwBpmApproveButtonVisibleRule)'>Approve Button Visible Rule :</a></label>
+        <div class='input-group full-width'>
+            <input class="form-control input-sm text-autocomplete" type="text" ng-disabled="$ctrl.IsDisabledforVersioning" title="{{$ctrl.model.dictAttributes.sfwBpmApproveButtonVisibleRule}}"
+                   ng-model="$ctrl.model.dictAttributes.sfwBpmApproveButtonVisibleRule" ng-keydown="$ctrl.onVisibleRuleKeyDown($event)" undoredodirective model="model" propertyname="'dictAttributes.sfwBpmApproveButtonVisibleRule'" />
+            <span class='input-group-addon button-intellisense' ng-hide="$ctrl.IsDisabledforVersioning" ng-click='$ctrl.showVisibleRuleIntellisenseList($event)'></span>
+        </div>
+    </div>
+    <div class="input-group full-width" ng-show="$ctrl.approvalactivity && $ctrl.model.SelectActiveFormType == 'Multiple' && $ctrl.formType == 'maintenance'" ng-disabled="IsDisabledforVersioning">
+        <label class="control-label margin-bottom-5">Approve Button Visible Rule  </label>
+        <div class='input-group full-width'>
+            <input title="{{$ctrl.model.dictAttributes.sfwBpmApproveButtonVisibleRule}}" ng-disabled="$ctrl.IsDisabledforVersioning" type="text" class="form-control input-sm text-autocomplete"
+                   ng-model="$ctrl.model.dictAttributes.sfwBpmApproveButtonVisibleRule" undoredodirective model="$ctrl.model" propertyname="'dictAttributes.sfwBpmApproveButtonVisibleRule'" />
+            <span title="set Visible Rules" class='input-group-addon input-sm' ng-click="$ctrl.setVisibleRulesForMultipleForms('sfwBpmApproveButtonVisibleRule')">
+                <i class="fa fa-chevron-right"></i>
+            </span>
+        </div>
+    </div>
+    <div class="form-group" ng-show="$ctrl.approvalactivity && $ctrl.formType == 'maintenance'&&$ctrl.model.SelectActiveFormType != 'Multiple'">
+        <label class="control-label margin-bottom-5" ng-if='!$ctrl.model.dictAttributes.sfwBpmRejectButtonVisibleRule.trim()'> Reject Button Visible Rule </label>
+        <label class="control-label margin-bottom-5" ng-if='$ctrl.model.dictAttributes.sfwBpmRejectButtonVisibleRule.trim()'><a ng-click='$ctrl.NavigateToVisibleRule($ctrl.model.dictAttributes.sfwBpmRejectButtonVisibleRule)'> Reject Button Visible Rule :</a></label>
+        <div class='input-group full-width'>
+            <input class="form-control input-sm text-autocomplete" ng-disabled="$ctrl.IsDisabledforVersioning" type="text" title="{{$ctrl.model.dictAttributes.sfwBpmRejectButtonVisibleRule}}"
+                   ng-model="$ctrl.model.dictAttributes.sfwBpmRejectButtonVisibleRule" ng-keydown="$ctrl.onVisibleRuleKeyDown($event)" undoredodirective model="model" propertyname="'dictAttributes.sfwBpmRejectButtonVisibleRule'" />
+            <span class='input-group-addon button-intellisense' ng-hide="$ctrl.IsDisabledforVersioning" ng-click='$ctrl.showVisibleRuleIntellisenseList($event)'></span>
+        </div>
+    </div>
+    <div class="input-group full-width" ng-show="$ctrl.approvalactivity && $ctrl.model.SelectActiveFormType == 'Multiple' && $ctrl.formType == 'maintenance'" ng-disabled="IsDisabledforVersioning">
+        <label class="control-label margin-bottom-5">Reject Button Visible Rule </label>
+        <div class='input-group full-width'>
+            <input title="{{$ctrl.model.dictAttributes.sfwBpmRejectButtonVisibleRule}}" ng-disabled="$ctrl.IsDisabledforVersioning" type="text" class="form-control input-sm text-autocomplete"
+                   ng-model="$ctrl.model.dictAttributes.sfwBpmRejectButtonVisibleRule" undoredodirective model="$ctrl.model" propertyname="'dictAttributes.sfwBpmRejectButtonVisibleRule'" />
+            <span title="set Visible Rules" class='input-group-addon input-sm' ng-click="$ctrl.setVisibleRulesForMultipleForms('sfwBpmRejectButtonVisibleRule')">
+                <i class="fa fa-chevron-right"></i>
+            </span>
+        </div>
+    </div>
+    <div class="form-group marg-top-8" ng-if="($ctrl.model && $ctrl.model.dictAttributes.sfwMode && $ctrl.model.dictAttributes.sfwMode.toLowerCase() == 'update')">
+        <span class="dialog-btn-default" ng-click="$ctrl.setTaskActions()" ng-hide="!($ctrl.model && $ctrl.model.dictAttributes.sfwFormName && $ctrl.model.dictAttributes.sfwFormName.trim().length > 0)">Set Task Actions</span>
+    </div>
+</div>

@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entWssPersonDependent" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoWssPersonDependent" sfwObjectID="busWssPersonDependent" sfwTableName="sgt_wss_person_dependent" sfwView="False" sfwParentEntity="entPersonDependent">
+  <rules>
+    <rule ID="IsDateofBirthBlank" sfwMessageId="153" sfwExpression="(this.icdoWssPersonDependent.date_of_birth == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsFirstNameBlank" sfwMessageId="150" sfwExpression="(string.IsNullOrEmpty(this.icdoWssPersonDependent.first_name))" sfwObjectBased="True" />
+    <rule ID="IsGenderBlank" sfwMessageId="1003" sfwExpression="(string.IsNullOrEmpty(this.icdoWssPersonDependent.gender_value))" sfwObjectBased="True" />
+    <rule ID="IsLastNameBlank" sfwMessageId="4021" sfwExpression="(string.IsNullOrEmpty(this.icdoWssPersonDependent.last_name))" sfwObjectBased="True" />
+    <rule ID="IsMaritalStatusNull" sfwMessageId="1004" sfwExpression="(string.IsNullOrEmpty(this.icdoWssPersonDependent.marital_status_value))" sfwObjectBased="True" />
+    <rule ID="IsMedicareClaimNoNOTValid" sfwMessageId="10065" sfwExpression="(!string.IsNullOrEmpty(this.icdoWssPersonDependent.medicare_claim_no)) &amp;&amp; &#xA;(this.icdoWssPersonDependent.medicare_claim_no &gt; &quot;Legnth(11)&quot;)" sfwObjectBased="True" />
+    <rule ID="IsMedicareDateNotFirstofDay" sfwMessageId="10070" sfwExpression="(this.IsMedicareEffectiveDateFirstDayOfMonth() == False)" sfwObjectBased="True" />
+    <rule ID="IsSSNNull" sfwMessageId="152" sfwExpression="(string.IsNullOrEmpty(this.icdoWssPersonDependent.ssn))" sfwObjectBased="True" />
+    <rule ID="IsRelationshipValidPerCoverage" sfwMessageId="10094" sfwExpression="(this.IsValidRelationshipPerCoverage() == False)" sfwObjectBased="True" />
+    <rule ID="IsDependentAgeGreaterThan26" sfwMessageId="7055" sfwExpression="(this.IsDependentAgeGreaterThan26() == True)" sfwObjectBased="True" />
+    <rule ID="Rule Is ExSpouse Enrolled In GHDV" sfwMessage="Exspouse cannot be enrolled in GHDV" sfwExpression="(this.IsExSpouseSelectedForEnrollingInGHDV() == True)" sfwObjectBased="True" />
+    <rule ID="IsDuplicatePerson" sfwRuleType="Validation" sfwExpression="((this.iblnFromPortal==True) &amp;&amp; (this.IsDuplicatePerson()== true))" sfwMessageId="10220" sfwObjectBased="True" />
+    <rule ID="IsInvalidSSN" sfwRuleType="Validation" sfwMessageId="8570" sfwExpression="((this.iblnFromPortal==True) &amp;&amp; (this.IsInvalidSSN()== true))" sfwObjectBased="True" />
+    <rule ID="IsEnrolledInHealth" sfwRuleType="Validation" sfwExpression="(((this.icdoWssPersonDependent.iblnIsHealthEnrltAsCobra &amp;&amp; this.icdoWssPersonDependent.is_health_enrolled_already &gt; 0) || (this.icdoWssPersonDependent.iblnIsHealthEnrltAsRetiree)) &amp;&amp; this.icdoWssPersonDependent.iblnHealthCovEnrollFamily)" sfwObjectBased="True" />
+    <rule ID="IsEnrolledInDental" sfwRuleType="Validation" sfwExpression="(((this.icdoWssPersonDependent.iblnIsDentalEnrltAsCobra &amp;&amp; this.icdoWssPersonDependent.is_dental_enrolled_already &gt; 0) || (this.icdoWssPersonDependent.iblnIsDentalEnrltAsRetiree)) &amp;&amp; this.icdoWssPersonDependent.iblnDentalCovEnrollFamily || this.icdoWssPersonDependent.iblnDentalCovEnrollIndSpouse || this.icdoWssPersonDependent.iblnDentalCovEnrollIndChild)" sfwObjectBased="True" />
+    <rule ID="IsEnrolledInVision" sfwRuleType="Validation" sfwExpression="(((this.icdoWssPersonDependent.iblnIsVisionEnrltAsCobra &amp;&amp; this.icdoWssPersonDependent.is_vision_enrolled_already &gt; 0) || (this.icdoWssPersonDependent.iblnIsVisionEnrltAsRetiree)) &amp;&amp; this.icdoWssPersonDependent.iblnVisionCovEnrollFamily || this.icdoWssPersonDependent.iblnVisionCovEnrollIndSpouse || this.icdoWssPersonDependent.iblnVisionCovEnrollIndChild)" sfwObjectBased="True" />
+    <rule ID="IsDepEnrolledInHealth" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.icdoWssPersonDependent.is_health_enrolled == &quot;Y&quot;" />
+    <rule ID="IsDepEnrolledInDental" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.icdoWssPersonDependent.is_dental_enrolled == &quot;Y&quot;" />
+    <rule ID="IsDepEnrolledInVision" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.icdoWssPersonDependent.is_vision_enrolled == &quot;Y&quot;" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="IsEnrolledInHealth" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsEnrolledInDental" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsEnrolledInVision" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsDepEnrolledInHealth" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsDepEnrolledInDental" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsDepEnrolledInVision" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="IsMaritalStatusNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsRelationshipNOTEntered" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsGenderBlank" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsFirstNameBlank" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsLastNameBlank" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsSSNNull" sfwMode="All" sfwStatus="Inactive" />
+    <item ID="IsDateofBirthBlank" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsRelationshipMarriedSelected" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsDependentSpouseNOToppositeSex" sfwMode="All" sfwStatus="Inactive" />
+    <item ID="IsDependentPersonAlreadyinSamePlan" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsDependentRelationMarried" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsDependentSpouseAddedMaritialStatusNOTMarried" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsDuplicateSpouseExistsForPerson" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMedicareClaimNoNOTValid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMedicareDateNotFirstofDay" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsRelationshipValidPerCoverage" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsDependentAgeGreaterThan26" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Is ExSpouse Enrolled In GHDV" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsInvalidSSN" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsDuplicatePerson" sfwStatus="Active" sfwMode="All" />
+  </harderror>
+  <validatedelete />
+  <groupslist />
+  <aliaslist />
+  <updateablecdo />
+  <commonproperties />
+  <logicalrulelist />
+  <expressionfields />
+  <queries />
+  <attributes>
+    <attribute ID="WssPersonDependentId" sfwType="Column" sfwValue="wss_person_dependent_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="WssPersonAccountEnrollmentRequestId" sfwType="Column" sfwValue="wss_person_account_enrollment_request_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="TargetPersonDependentId" sfwType="Column" sfwValue="target_person_dependent_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="FirstName" sfwType="Column" sfwValue="first_name" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="LastName" sfwType="Column" sfwValue="last_name" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="MiddleName" sfwType="Column" sfwValue="middle_name" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="DateOfBirth" sfwType="Column" sfwValue="date_of_birth" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="Ssn" sfwType="Column" sfwValue="ssn" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="9" />
+    <attribute ID="RelationshipDescription" sfwType="Description" sfwValue="relationship_description" />
+    <attribute ID="RelationshipId" sfwType="Column" sfwValue="relationship_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="321" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="RelationshipValue" sfwType="Column" sfwValue="relationship_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="GenderDescription" sfwType="Description" sfwValue="gender_description" />
+    <attribute ID="GenderId" sfwType="Column" sfwValue="gender_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="300" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="GenderValue" sfwType="Column" sfwValue="gender_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="FullTimeStudentFlag" sfwType="Column" sfwValue="full_time_student_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="MaritalStatusDescription" sfwType="Description" sfwValue="marital_status_description" />
+    <attribute ID="MaritalStatusId" sfwType="Column" sfwValue="marital_status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="306" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="MaritalStatusValue" sfwType="Column" sfwValue="marital_status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="EffectiveStartDate" sfwType="Column" sfwValue="effective_start_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="EffectiveEndDate" sfwType="Column" sfwValue="effective_end_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="MedicareClaimNo" sfwType="Column" sfwValue="medicare_claim_no" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="MedicarePartAEffectiveDate" sfwType="Column" sfwValue="medicare_part_a_effective_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="MedicarePartBEffectiveDate" sfwType="Column" sfwValue="medicare_part_b_effective_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="CurrentPlanEnrollmentOptionDescription" sfwType="Description" sfwValue="current_plan_enrollment_option_description" />
+    <attribute ID="CurrentPlanEnrollmentOptionId" sfwType="Column" sfwValue="current_plan_enrollment_option_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="340" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="CurrentPlanEnrollmentOptionValue" sfwType="Column" sfwValue="current_plan_enrollment_option_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute sfwDataType="string" sfwType="Property" ID="LastFourDigitsOfSSN" sfwValue="icdoWssPersonDependent.LastFourDigitsOfSSN" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrDependentName" sfwValue="icdoWssPersonDependent.istrDependentName" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IintPersonID" sfwValue="icdoWssPersonDependent.iintPersonID" />
+    <attribute sfwDataType="string" sfwType="Property" ID="LevelOfCoverageValue" sfwValue="icdoWssPersonDependent.level_of_coverage_value" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsHealthEnrolled" sfwValue="icdoWssPersonDependent.is_health_enrolled" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsDentalEnrolled" sfwValue="icdoWssPersonDependent.is_dental_enrolled" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsVisionEnrolled" sfwValue="icdoWssPersonDependent.is_vision_enrolled" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IintDependentPersonId" sfwValue="icdoWssPersonDependent.iintDependentPersonId" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrDependantFullName" sfwValue="icdoWssPersonDependent.FullName" />
+  </attributes>
+  <constraint />
+  <methods />
+  <lifecycle />
+  <objectmethods />
+  <ExtraFields />
+</entity>

@@ -1,0 +1,130 @@
+﻿<div class="col-xs-12 dashboard-Wrapper height100P" ng-controller="DashboardController">
+    <div class="col-xs-10 height100P">
+        <!-- chart row -->
+        <div class="col-xs-12 dashboard-left-lg-child dashboard-left-lg-child-md-child">
+            <div class="col-xs-12 no-padding height100P">
+                <div class="dashboard-panel-header"><label class="dashboard-panel-text">Types</label></div>
+                <div class="col-xs-12 no-padding file-type-wrapper">
+                    <div class="col-xs-8 no-padding height100P">
+                        <div class="chart-wrapper dashboard-panel-content" id="mainChart">
+                        </div>
+                    </div>
+                    <loading-box class="legendWrapper" lazymodel="dashboardData.LegendData">
+                        <div ng-if="dashboardData.LegendData">
+                            <div class="col-xs-6 pad-left-5" style="border-right: 2px solid #e5e5e5;">
+                                <div class="col-xs-12 no-padding font-size-xs" ng-repeat="legend in dashboardData.LegendData | filter:{ ParentName : 'Entity' } ">
+                                    <span class="home-fileType-icon home-fileType-{{::legend.Key}}-icon"></span>
+                                    <span class="recent-files-link">{{::legend.Name}}</span>
+                                    <span>({{legend.Count}})</span>
+                                </div>
+                                <div class="legendheader">Rule</div>
+                                <div class="col-xs-12 no-padding font-size-xs" ng-repeat="legend in dashboardData.LegendData | filter:{ ParentName : 'Rule' } ">
+                                    <span class="home-fileType-icon home-fileType-{{::legend.Key}}-icon"></span>
+                                    <span class="recent-files-link">{{::legend.Name}}</span>
+                                    <span>({{legend.Count}})</span>
+                                </div>
+                                <div class="legendheader">Scenario</div>
+                                <div class="col-xs-12 no-padding font-size-xs" ng-repeat="legend in dashboardData.LegendData | filter:{ ParentName : 'Scenario' } ">
+                                    <span class="home-fileType-icon home-fileType-{{::legend.Key}}-icon"></span>
+                                    <span class="recent-files-link">{{::legend.Name}}</span>
+                                    <span>({{legend.Count}})</span>
+                                </div>
+                                <div class="legendheader">Other</div>
+                                <div class="col-xs-12 no-padding font-size-xs" ng-repeat="legend in dashboardData.LegendData | filter:{ ParentName : 'Other' } ">
+                                    <span class="home-fileType-icon home-fileType-{{::legend.Key}}-icon"></span>
+                                    <span class="recent-files-link">{{::legend.Name}}</span>
+                                    <span>({{legend.Count}})</span>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 pad-left-5">
+                                <div class="legendheader">Form</div>
+                                <div class="col-xs-12 no-padding font-size-xs" ng-repeat="legend in dashboardData.LegendData | filter:{ ParentName : 'Form' } : true ">
+                                    <span class="home-fileType-icon home-fileType-{{::legend.Key}}-icon"></span>
+                                    <span class="recent-files-link">{{::legend.Name}}</span>
+                                    <span>({{legend.Count}})</span>
+                                </div>
+                                <div class="legendheader">Html Form</div>
+                                <div class="col-xs-12 no-padding font-size-xs" ng-repeat="legend in dashboardData.LegendData | filter:{ ParentName : 'Html Form' } ">
+                                    <span class="home-fileType-icon home-fileType-{{::legend.Key}}-icon"></span>
+                                    <span class="recent-files-link">{{::legend.Name}}</span>
+                                    <span>({{legend.Count}})</span>
+                                </div>
+                                <div class="legendheader" ng-if="!$root.IsWorkFlowMap">BPMN</div>
+                                <div class="col-xs-12 no-padding font-size-xs" ng-repeat="legend in dashboardData.LegendData | filter:{ ParentName : 'BPMN' } " ng-if="!IsWorkFlowMap">
+                                    <span class="home-fileType-icon home-fileType-{{::legend.Key}}-icon"></span>
+                                    <span class="recent-files-link">{{::legend.Name}}</span>
+                                    <span>({{legend.Count}})</span>
+                                </div>
+
+                                <div class="legendheader" ng-if="$root.IsWorkFlowMap">Workflow Map</div>
+                                <div class="col-xs-12 no-padding font-size-xs" ng-repeat="legend in dashboardData.LegendData | filter:{ ParentName : 'Workflow' } " ng-if="IsWorkFlowMap">
+                                    <span class="home-fileType-icon home-fileType-{{::legend.Key}}-icon"></span>
+                                    <span class="recent-files-link">{{::legend.Name}}</span>
+                                    <span>({{legend.Count}})</span>
+                                </div>
+                            </div>
+                        </div>
+                    </loading-box>
+                </div>
+            </div>
+        </div>
+        <!-- TFS row  -->
+        <div class="col-xs-12 dashboard-left-lg-child dashboard-left-lg-child-md-xs-child">
+            <div class="col-xs-4 no-padding height100P">
+                <div class="dashboard-panel-header"><label class="dashboard-panel-text">TFS</label></div>
+                <div ng-show="$root.IsTFSConfigured" class="chart-wrapper dashboard-panel-content" id="TfsChart">
+                </div>
+                <div ng-show="!$root.IsTFSConfigured" class="dashboard-panel-content">
+                    <strong class="left-slider-list-norecord-view">TFS is not Configured</strong>
+                </div>
+            </div>
+            <div class="col-xs-4 paddingR0 height100P">
+                <div class="dashboard-panel-header"><label class="dashboard-panel-text">Pinned Files</label></div>
+                <loading-box class="dashboard-panel-content dashboard-recent-files-content" lazymodel="objFiles">
+                    <ul class="dashboard-files-list" ng-if="objFiles.pinnedFiles && objFiles.pinnedFiles.length > 0">
+                        <li class="dashboard-files-list-item" ng-repeat="file in objFiles.pinnedFiles">
+                            <span class="home-fileType-icon home-fileType-{{file.FileType}}-icon" aria-hidden="true"></span>
+                            <span title="{{file.FileType + ' : ' + file.FileName + ($root.IsTFSConfigured ? '(' + file.TFSState +')' : '')}}" ng-bind="file.FileName | cut:true:30:'...'" ng-click="$root.openFile(file);" class="recent-files-link"></span>
+                            <span class="fa fa-thumb-tack pinned-files-icon" ng-click="unPinUserFile(file)"></span>
+                        </li>
+                    </ul>
+                </loading-box>
+            </div>
+            <div class="col-xs-4 paddingR0 height100P">
+                <div class="dashboard-panel-header"><label class="dashboard-panel-text">Latest Features</label></div>
+                <div class="dashboard-panel-content">
+                    <ul class="dashboard-files-list">
+                        <li class="dashboard-files-list-item dashboard-files-list-item-border-left">
+                            <p>Property Highlighter</p>
+                            <div>A lightweight view of a form, highlighting controls which have important properties set.</div>
+                        </li>
+                        <li class="dashboard-files-list-item dashboard-files-list-item-border-left">
+                            <p>User Management</p>
+                            <div>Concept of Clients introduced. Roles like Owner, Developer & Viewer added.</div>
+                        </li>
+                        <li class="dashboard-files-list-item dashboard-files-list-item-border-left">
+                            <p>Query Builder Search (Find in Design)</p>
+                            <div>Search and highlight controls in design by building query on names, attributes and values.</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- recent files  -->
+    <div class="col-xs-2 paddingL0 height100P">
+        <div class="dashboard-panel-header"><label class="dashboard-panel-text">Recent Files</label></div>
+        <loading-box class="dashboard-panel-content dashboard-recent-files-content" lazymodel="objFiles">
+            <ul class="dashboard-files-list" ng-if="objFiles.recentFiles && objFiles.recentFiles.length > 0">
+                <li class="dashboard-files-list-item" ng-repeat="file in objFiles.recentFiles" context-menu="$root.menuOptionsForFileList"
+                    ng-init="title=file.FileType + ' : ' + file.FileName + ($root.IsTFSConfigured ? '(' + file.TFSState +')' : '')">
+                    <span class="home-fileType-icon home-fileType-{{::file.FileType}}-icon" aria-hidden="true"></span>
+                    <span title="{{::title}}" ng-bind="::file.FileName | cut:true:30:'...'" ng-click="$root.openFile(file);" class="recent-files-link"></span>
+                </li>
+            </ul>
+        </loading-box>
+    </div>
+</div>
+<!--<script>
+    $(document).ready(hideBuildResults());
+</script>-->

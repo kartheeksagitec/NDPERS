@@ -1,0 +1,60 @@
+﻿<entity ID="entPersonTffrTiaaService" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoPersonTffrTiaaService" sfwObjectID="busPersonTffrTiaaService" sfwTableName="sgt_person_tffr_tiaa_service" sfwView="False" sfwDataObjectID="doPersonTffrTiaaService">
+  <rules>
+    <rule ID="AllFieldsareNul" sfwMessageId="6670" sfwExpression="(this.icdoPersonTffrTiaaService.tffr_service == 0) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoPersonTffrTiaaService.tffr_service_status_value)) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoPersonTffrTiaaService.tiaa_service_status_value)) &amp;&amp; &#xA;(this.icdoPersonTffrTiaaService.tiaa_service == 0)" sfwObjectBased="True" />
+    <rule ID="IsServiceCreditAmountLessThan0" sfwMessageId="6671" sfwExpression="(!(this.icdoPersonTffrTiaaService.tiaa_service == 0) &amp;&amp; &#xA;(this.icdoPersonTffrTiaaService.tiaa_service &lt; 0)) || &#xA;(!(this.icdoPersonTffrTiaaService.tffr_service == 0) &amp;&amp; &#xA;(this.icdoPersonTffrTiaaService.tffr_service &lt; 0))" sfwObjectBased="True" />
+    <rule ID="IsTFFRServiceNullAndStatusEntered" sfwMessageId="6672" sfwExpression="(!(string.IsNullOrEmpty(this.icdoPersonTffrTiaaService.tffr_service_status_value)) &amp;&amp; &#xA;(this.icdoPersonTffrTiaaService.tffr_service == 0))" sfwObjectBased="True" />
+    <rule ID="IsTFFRStatusNullAndServiceEntered" sfwMessageId="6672" sfwExpression="((string.IsNullOrEmpty(this.icdoPersonTffrTiaaService.tffr_service_status_value)) &amp;&amp; &#xA;!(this.icdoPersonTffrTiaaService.tffr_service == 0))" sfwObjectBased="True" />
+    <rule ID="IsTIAAServiceEnteredAndStatusNull" sfwMessageId="6673" sfwExpression="((string.IsNullOrEmpty(this.icdoPersonTffrTiaaService.tiaa_service_status_value)) &amp;&amp; &#xA;!(this.icdoPersonTffrTiaaService.tiaa_service == 0))" sfwObjectBased="True" />
+    <rule ID="IsTIAAServiceNullAndStatusEntered" sfwMessageId="6673" sfwExpression="((this.icdoPersonTffrTiaaService.tiaa_service == 0) &amp;&amp; &#xA;!(string.IsNullOrEmpty(this.icdoPersonTffrTiaaService.tiaa_service_status_value)))" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror>
+    <item ID="IsTIAAServiceNullAndStatusEntered" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsTIAAServiceEnteredAndStatusNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsTFFRServiceNullAndStatusEntered" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsTFFRStatusNullAndServiceEntered" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsServiceCreditAmountLessThan0" sfwMode="All" sfwStatus="Active" />
+    <item ID="AllFieldsareNul" sfwMode="New" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties>
+    <item ID="person_id" sfwObjectField="icdoPersonTffrTiaaService.person_id" />
+  </commonproperties>
+  <expressionfields />
+  <queries>
+    <query ID="GetMemberTFFRdual" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from SGT_PERSON_TFFR_TIAA_SERVICE &#xD;&#xA;where PERSON_ID=@PERSON_ID and ISNULL(TFFR_SERVICE,0)&gt;0">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="TffrTiaaServiceId" sfwType="Column" sfwValue="tffr_tiaa_service_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PersonId" sfwType="Column" sfwValue="person_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="TffrService" sfwType="Column" sfwValue="tffr_service" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="TffrServiceStatusDescription" sfwType="Description" sfwValue="tffr_service_status_description" />
+    <attribute ID="TffrServiceStatusId" sfwType="Column" sfwValue="tffr_service_status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="359" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="TffrServiceStatusValue" sfwType="Column" sfwValue="tffr_service_status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="TiaaService" sfwType="Column" sfwValue="tiaa_service" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="TiaaServiceStatusDescription" sfwType="Description" sfwValue="tiaa_service_status_description" />
+    <attribute ID="TiaaServiceStatusId" sfwType="Column" sfwValue="tiaa_service_status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="359" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="TiaaServiceStatusValue" sfwType="Column" sfwValue="tiaa_service_status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="objPerson" sfwType="Object" sfwEntity="entPerson" sfwValue="ibusPerson" />
+    <attribute sfwValue="comment" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="500" sfwIsNull="True" ID="Comment" sfwCaption="Comment" />
+  </attributes>
+  <constraint />
+  <methods />
+  <lifecycle />
+  <objectmethods />
+  <ExtraFields />
+</entity>

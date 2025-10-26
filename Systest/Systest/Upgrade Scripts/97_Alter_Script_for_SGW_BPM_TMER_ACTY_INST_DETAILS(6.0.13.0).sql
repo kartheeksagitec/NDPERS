@@ -1,0 +1,40 @@
+------------------------------------------------------------------------------------------------------------------------ 
+--Created By	:	Rashmi Deepak
+--Created On	:	14th September 2020
+--Description	:	Adding audit columns in  SGW_BPM_TMER_ACTY_INST_DETAILS
+------------------------------------------------------------------------------------------------------------------------ 
+
+IF COL_LENGTH('dbo.SGW_BPM_TMER_ACTY_INST_DETAILS', 'CREATED_BY') IS NULL
+BEGIN
+ALTER TABLE SGW_BPM_TMER_ACTY_INST_DETAILS
+ADD CREATED_BY varchar(50) NOT NULL DEFAULT 'BPM Service'
+END
+GO
+
+IF COL_LENGTH('dbo.SGW_BPM_TMER_ACTY_INST_DETAILS', 'CREATED_DATE') IS NULL
+BEGIN
+ALTER TABLE SGW_BPM_TMER_ACTY_INST_DETAILS
+ADD CREATED_DATE datetime NOT NULL DEFAULT getdate()
+END
+GO
+
+IF COL_LENGTH('dbo.SGW_BPM_TMER_ACTY_INST_DETAILS', 'MODIFIED_BY') IS NULL
+BEGIN
+ALTER TABLE SGW_BPM_TMER_ACTY_INST_DETAILS
+ADD MODIFIED_BY varchar(50) NOT NULL DEFAULT 'BPM Service'
+END
+GO
+
+IF COL_LENGTH('dbo.SGW_BPM_TMER_ACTY_INST_DETAILS', 'MODIFIED_DATE') IS NULL
+BEGIN
+ALTER TABLE SGW_BPM_TMER_ACTY_INST_DETAILS
+ADD MODIFIED_DATE datetime NOT NULL DEFAULT getdate()
+END
+GO
+
+IF COL_LENGTH('dbo.SGW_BPM_TMER_ACTY_INST_DETAILS', 'UPDATE_SEQ') IS NULL
+BEGIN
+ALTER TABLE SGW_BPM_TMER_ACTY_INST_DETAILS
+ADD UPDATE_SEQ int NOT NULL DEFAULT 0
+END
+GO

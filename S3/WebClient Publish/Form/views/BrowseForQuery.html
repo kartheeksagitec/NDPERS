@@ -1,0 +1,224 @@
+﻿<div class="full-height" ng-controller="BrowseForQueryController">
+    <!--<div class="popup-secondary-head"> Browse for Query <div class="ngdialog-close"></div></div>-->
+    <div class="portlet-body">
+        <div class="col-xs-12">
+            <ul class="nav nav-tabs">
+                <li ng-class="tab==1?'active':''"> <a ng-click="setTab(1)">Browse</a></li>
+                <li ng-class="tab==2?'active':''"><a ng-click="setTab(2)">Tables</a></li>
+            </ul>
+        </div>
+
+        <div ng-show="isSet(1)" id="divBrowse">
+
+            <div class="col-xs-12">
+                <div class="form-group browse-for-query-form">
+
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <div class="col-xs-3 padding-0">
+                                <label class="control-label">File Name</label>
+                            </div>
+                            <div class="col-xs-8">
+                                <!--<input class="form-control input-sm" type="text" name="file name" title="{{EntityID}}" ng-model="EntityID" />-->
+                                <filter-list collection="lstEntity" change-callback="selectedEntityClick(obj,true)" propertyname="'ID'" slide-left="true" css-class="col-xs-12"></filter-list>
+                            </div>
+
+                        </div>
+
+                        <div class="browse-query-panel">
+
+                            <div class="col-xs-12 padding-0 browse-query-panel-head">
+                                <label class="control-label">File Name</label>
+                                <div class="divider"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="browse-for-query-sub-form" id="divBrowseEntity" key-scroll>
+                                    <ul class="list-unstyled">
+                                        <li ng-repeat="obj in lstEntity" ng-click="selectedEntityClick(obj)" ng-class="{'selected':obj==selectedCurrentEntity}"
+                                            id="{{obj.ID}}" tabindex="{{$index}}" key-up-down-with-element callbackfn="selectedEntityClick" objproperty="'obj'">
+                                            <span ng-bind="obj.ID">
+
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <input type="checkbox" name="show all files" ng-model="blnShowAllFilesForBrowse" ng-change="ShowAllFilesForBrowseClick(blnShowAllFilesForBrowse)" />
+                            <label>Show All Files</label>
+                        </div>
+
+
+
+                    </div>
+
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <div class="col-xs-3 padding-0">
+                                <label class="control-label">Query Name</label>
+                            </div>
+                            <div class="col-xs-8">
+                                <!--<input class="form-control input-sm" type="text" name="file name" title="{{QueryID}}" ng-model="QueryID" />-->
+                                <filter-list collection="selectedCurrentEntity.Queries" change-callback="selectedQueryClick(obj,true)" propertyname="'ID'" skip-prop="'IsVisible'" skip-value="false" slide-left="true" css-class="col-xs-12"></filter-list>
+                            </div>
+                        </div>
+
+                        <div class="browse-query-panel">
+
+                            <div class="col-xs-12 padding-0 browse-query-panel-head">
+                                <label class="control-label">Query</label>
+                                <div class="divider"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="browse-for-query-sub-form">
+                                    <ul class="list-unstyled">
+                                        <li ng-repeat="obj in selectedCurrentEntity.Queries" ng-click="selectedQueryClick(obj)" ng-class="{'selected':obj==selectedCurrentQuery}" ng-if="obj.IsVisible"
+                                            id="{{selectedCurrentEntity.ID}}_{{obj.ID}}" tabindex="{{$index}}" key-up-down-with-element callbackfn="selectedQueryClick" objproperty="'obj'">
+                                            <span ng-bind="obj.ID">
+
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+                <!----------form-footer---------->
+            </div>
+
+            <div class="form-group">
+                <div class="col-xs-6">
+                    <span>Number of Files: {{lstEntity.length}}</span>
+                </div>
+                <div class="col-xs-6">
+                    <span>Number of Queries: {{queryCount}}</span>
+                </div>
+            </div>
+
+            <div class="col-xs-12">
+                <label class="control-label">Query</label>
+            </div>
+
+            <div class="col-xs-12">
+                <textarea cols="126" rows="4" class="col-xs-12" title="{{selectedCurrentQuery.SqlQuery}}" ng-model="selectedCurrentQuery.SqlQuery" readonly></textarea>
+            </div>
+
+            <div class="form-group"></div>
+            <div class="col-xs-12 browse-query-table">
+                <table class="table table-hover table-bordered dataTable no-footer">
+                    <thead>
+                        <tr>
+                            <th width="33%">Parameter</th>
+                            <th width="33%">Type</th>
+                            <th ng-if="IsBPM" width="33%">Values</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="obj in selectedCurrentQuery.Parameters" ng-if="selectedCurrentQuery.Parameters.length>0 && selectedCurrentQuery.SqlQuery" ng-click="selectedParameterClick(obj)" ng-class="{'selected':obj==selectedCurrentParameter}">
+                            <td width="33%"><span ng-bind="obj.ID"></span></td>
+                            <td width="33%"><span ng-bind="obj.DataType"></span></td>
+                            <td ng-if="IsBPM" width="33%">
+                                <select class="form-control form-filter input-sm" ng-options="x for x in queryValues" title="{{obj.Value}}" ng-model="obj.Value">
+                                    <option value=""></option>
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div ng-show="isSet(2)" id="divTable">
+            <div class="col-xs-12">
+                <div class="form-group browse-for-query-form">
+                    <div class="col-xs-12 padding-0">
+                        <div class="form-group">
+                            <div class="col-xs-2 padding-0"> <label class="control-label">Table Name</label></div>
+                            <div class="col-xs-6">  <input type="text" class="form-control input-sm" name="Form Six" ng-model="TableName" /> </div>
+                            <div class="col-xs-3">
+                                <span class="input-group-btn">
+                                    <button" class="btn btn-default" type="button" name="Search" ng-click="getTableList(TableName)">Search</button">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="browse-query-panel">
+
+                        <div class="padding-0 browse-query-panel-head">
+                            <label class="control-label">File Name</label>
+                            <div class="divider"></div>
+                        </div>
+
+                        <div class="col-xs-12">
+                            <div class="form-group browse-for-query-sub-form">
+                                <ul class="list-unstyled">
+                                    <li ng-repeat="obj in lstEntityQuery" tabindex="{{$index}}" key-up-down-with-element callbackfn="selectTableClick" objproperty="'obj'" ng-click="selectTableClick(obj)" ng-class="{'selected':obj==selectedCurrentQuery}">{{obj.ID}}</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <span>Number of Files: {{lstEntityQuery.length}}</span>
+                </div>
+
+            </div>
+
+            <div class="col-xs-12">
+                <label class="control-label">Query</label>
+            </div>
+
+            <div class="col-xs-12">
+                <textarea cols="126" rows="4" class="col-xs-12" title="{{selectedCurrentQuery.SqlQuery}}" ng-model="selectedCurrentQuery.SqlQuery" readonly></textarea>
+            </div>
+
+            <div class="form-group"></div>
+            <div class="col-xs-12 browse-query-table">
+                <table class="table table-hover table-bordered dataTable no-footer">
+                    <thead>
+                        <tr>
+                            <th width="33%">Parameter</th>
+                            <th width="33%">Type</th>
+                            <th ng-if="IsBPM" width="33%">Values</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="obj in selectedCurrentQuery.Parameters" ng-if="selectedCurrentQuery.Parameters.length>0 && selectedCurrentQuery.SqlQuery" ng-click="selectedParameterClick(obj)" ng-class="{'selected':obj==selectedCurrentParameter}">
+                            <td width="33%"><span ng-bind="obj.ID"></span></td>
+                            <td width="33%"><span ng-bind="obj.DataType"></span></td>
+                            <td ng-if="IsBPM" width="33%">
+                                <select ng-options="x for x in queryValues" title="{{obj.Value}}" ng-model="obj.Value">
+                                    <option value=""></option>
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="form-actions">
+        <div class="col-xs-8 text-left">
+            <span class="alert-error-msg" ng-bind="ErrorMessageForDisplay"></span>
+        </div>
+        <div class="col-xs-4">
+            <input type="button" class="btn dialog-btn-default" value="OK" ng-click="okClick()" ng-disabled="ValidateDataAll()" />
+            <input type="button" class="btn dialog-btn" value="Cancel" ng-click="closeClick()" />
+        </div>
+    </div>
+</div>

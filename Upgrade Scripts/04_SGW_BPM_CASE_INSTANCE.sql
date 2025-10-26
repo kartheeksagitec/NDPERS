@@ -1,0 +1,26 @@
+﻿CREATE TABLE [dbo].[SGW_BPM_CASE_INSTANCE] (
+    [CASE_INSTANCE_ID]    INT            IDENTITY (1, 1) NOT NULL,
+    [CASE_ID]             INT            NOT NULL,
+    [PERSON_ID]           INT            NOT NULL,
+    [ORG_ID]              INT            NOT NULL,
+    [REFERENCE_ID]        BIGINT         NULL,
+    [REQUEST_ID]          INT            NULL,
+    [CREATED_BY]          VARCHAR (50)   NOT NULL,
+    [CREATED_DATE]        DATETIME       NOT NULL,
+    [MODIFIED_BY]         VARCHAR (50)   NOT NULL,
+    [MODIFIED_DATE]       DATETIME       NOT NULL,
+    [UPDATE_SEQ]          INT            NULL,
+    [STATUS_ID]           INT            NOT NULL,
+    [STATUS_VALUE]        VARCHAR (4)    NULL,
+    [PRIORITY_CODE_ID]    INT            NULL,
+    [PRIORITY_CODE_VALUE] VARCHAR (4)    NULL,
+    [CASE_OWNER]          VARCHAR (100)  NULL,
+    [TERMINATION_REASON]  VARCHAR (1000) NULL,
+    CONSTRAINT [PK_SGW_BPM_CASE_INSTANCE_CASE_INSTANCE_ID] PRIMARY KEY CLUSTERED ([CASE_INSTANCE_ID] ASC),
+    CONSTRAINT [FK_SGW_BPM_CASE_INSTANCE_CASE_ID_SGW_BPM_CASE_CASE_ID] FOREIGN KEY ([CASE_ID]) REFERENCES [dbo].[SGW_BPM_CASE] ([CASE_ID])
+);
+
+
+
+
+

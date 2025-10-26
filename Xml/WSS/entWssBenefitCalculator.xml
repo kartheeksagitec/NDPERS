@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entWssBenefitCalculator" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoWssBenefitCalculator" sfwObjectID="busWssBenefitCalculator" sfwTableName="sgt_wss_benefit_calculator" sfwView="False">
+  <rules>
+    <rule ID="IsDCTextVisible" sfwExpression="(this.IsDCTextVisible() == True)" sfwObjectBased="True" />
+    <rule ID="IsEstimateNotForDC" sfwExpression="!(this.icdoWssBenefitCalculator.plan_id == 7 ||&#xA;this.icdoWssBenefitCalculator.plan_id == 28  ||&#xA;this.icdoWssBenefitCalculator.plan_id == 30)" sfwObjectBased="True" />
+    <rule ID="IsPersonEligibleForEarly" sfwExpression="(this.iblnIsPersonEligibleForEarly == True)" sfwObjectBased="True" />
+    <rule ID="IsQDROstatusQualified" sfwExpression="(this.IsStatusQualified() == True)" sfwObjectBased="True" />
+    <rule ID="VisbilityOfServicePurchaseAmortizationLink" sfwExpression="(this.icdoWssBenefitCalculator.additional_serivce_purchase_selected == &quot;Y&quot;) || &#xA;(this.icdoWssBenefitCalculator.unused_service_purchase_selected == &quot;Y&quot;)" sfwObjectBased="True" />
+    <rule ID="VisibiilityIsNotDCMember" sfwExpression="!(this.IsDCMember() == True)" sfwObjectBased="True" />
+    <rule ID="VisibilityIsDCMember" sfwExpression="(this.IsDCMember() == True)" sfwObjectBased="True" />
+    <rule ID="IsPreRetirementDeathCalc" sfwExpression="(this.icdoWssBenefitCalculator.is_pre_retirement_death_flag == &quot;Y&quot;)" sfwObjectBased="True" />
+    <rule ID="IsNOTPreRetirementDeathCalc" sfwExpression="!(this.icdoWssBenefitCalculator.is_pre_retirement_death_flag == &quot;Y&quot;)" sfwObjectBased="True" />
+    <rule ID="VisibilityUnUsedSickLeave" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="!(this.IsDCMember() == True) &amp;&amp; (this.ibusUnusedServicePurchaseHeader.ibusPrimaryServicePurchaseDetail.icdoServicePurchaseDetail.total_time_to_purchase &gt; 0)" />
+    <rule ID="VisibilityOtherServices" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.ibusRetirementBenefitCalculation.icdoBenefitCalculation.idecCredited_Vsc_From_File_For_OtherPlans &gt;0)" />
+    <rule ID="VisibilityServicePurchase" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="!(this.IsDCMember() == True) &amp;&amp; (this.ibusConsolidatedServicePurchaseHeader.ibusPrimaryServicePurchaseDetail.icdoServicePurchaseDetail.RoundedTotalTimeOfPurchaseExcludeFreeService &gt; 0)" />
+    <rule ID="VisibilityTffrTiaaServiceCredit" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="this.TffrTiaaServiceCredit&gt;0" />
+    <rule ID="VisibilityBenefitIsReduced" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.ibusRetirementBenefitCalculation.icdoBenefitCalculation.retirement_date &lt; this.ibusRetirementBenefitCalculation.icdoBenefitCalculation.normal_retirement_date" />
+    <rule ID="VisibilityIsRuleMet" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="(!string.IsNullOrEmpty(this.ibusRetirementBenefitCalculation.icdoBenefitCalculation.rule_indicator_value))" />
+    <rule ID="VisibilityIsRuleNotMet" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="string.IsNullOrEmpty(this.ibusRetirementBenefitCalculation.icdoBenefitCalculation.rule_indicator_value)" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="VisbilityOfServicePurchaseAmortizationLink" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPersonEligibleForEarly" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsQDROstatusQualified" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibiilityIsNotDCMember" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibilityIsDCMember" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEstimateNotForDC" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsDCTextVisible" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPreRetirementDeathCalc" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsNOTPreRetirementDeathCalc" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibilityUnUsedSickLeave" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibilityOtherServices" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibilityServicePurchase" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibilityTffrTiaaServiceCredit" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibilityBenefitIsReduced" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibilityIsRuleMet" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibilityIsRuleNotMet" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror />
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <expressionfields />
+  <queries>
+    <query ID="LoadBenefitEstimates" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_BENEFIT_CALCULATION BENCALC WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_WSS_BENEFIT_CALCULATOR WEBCALC WITH(NOLOCK) ON WEBCALC.BENEFIT_CALCULATION_ID = BENCALC.BENEFIT_CALCULATION_ID&#xD;&#xA;WHERE BENCALC.PERSON_ID = @PERSON_ID&#xD;&#xA;AND BENCALC.CREATED_DATE &gt;= DATEADD(D,-30,GETDATE())">
+      <parameters>
+        <parameter ID="@PERSON_ID" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="WssBenefitCalculatorId" sfwType="Column" sfwValue="wss_benefit_calculator_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PlanId" sfwType="Column" sfwValue="plan_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="BenefitCalculationId" sfwType="Column" sfwValue="benefit_calculation_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="UnusedSickLeaveServicePurchaseHeaderId" sfwType="Column" sfwValue="unused_sick_leave_service_purchase_header_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ConsolidatedServicePurchaseHeaderId" sfwType="Column" sfwValue="consolidated_service_purchase_header_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="IsDisability" sfwType="Column" sfwValue="is_disability" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="DownPayments" sfwType="Column" sfwValue="down_payments" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="NumberOfPayments" sfwType="Column" sfwValue="number_of_payments" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PaymentAmount" sfwType="Column" sfwValue="payment_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="ReducedBenefitFlag" sfwType="Column" sfwValue="reduced_benefit_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="IsUnusedSickLeavePurchaseFlag" sfwType="Column" sfwValue="is_unused_sick_leave_purchase_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="IsAdditionalServiceMonthsFlag" sfwType="Column" sfwValue="is_additional_service_months_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="IsTffrTiaaServiceFlag" sfwType="Column" sfwValue="is_tffr_tiaa_service_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="TffrTiaaServiceCredit" sfwType="Column" sfwValue="tffr_tiaa_service_credit" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="SpouseDateOfBirth" sfwType="Column" sfwValue="spouse_date_of_birth" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="EstimatedServicePurchaseTypeDescription" sfwType="Description" sfwValue="estimated_service_purchase_type_description" />
+    <attribute ID="EstimatedServicePurchaseTypeId" sfwType="Column" sfwValue="estimated_service_purchase_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="6008" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="EstimatedServicePurchaseTypeValue" sfwType="Column" sfwValue="estimated_service_purchase_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="IsEstimateAddedFlag" sfwType="Column" sfwValue="is_estimate_added_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="PaymentFrequencyDescription" sfwType="Description" sfwValue="payment_frequency_description" />
+    <attribute ID="PaymentFrequencyId" sfwType="Column" sfwValue="payment_frequency_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="330" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PaymentFrequencyValue" sfwType="Column" sfwValue="payment_frequency_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="IsPreRetirementDeathFlag" sfwType="Column" sfwValue="is_pre_retirement_death_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="objRetirementBenefitCalculation" sfwType="Object" sfwEntity="entRetirementBenefitCalculation" sfwValue="ibusRetirementBenefitCalculation" />
+    <attribute ID="objPlan" sfwType="Object" sfwEntity="entPlan" sfwValue="ibusPlan" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="LdtSpouseDateOfBirth" sfwValue="ldtSpouseDateOfBirth" />
+    <attribute ID="objUnusedServicePurchaseHeader" sfwType="Object" sfwEntity="entServicePurchaseHeader" sfwValue="ibusUnusedServicePurchaseHeader" />
+    <attribute ID="objConsolidatedServicePurchaseHeader" sfwType="Object" sfwEntity="entServicePurchaseHeader" sfwValue="ibusConsolidatedServicePurchaseHeader" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecEstimatedSCForVesting" sfwValue="idecEstimatedSCForVesting" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecEstimatedSCYearlyForVesting" sfwValue="idecEstimatedSCYearlyForVesting" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IdecEstimatedSCYearlyForBenCalFormatted" sfwValue="idecEstimatedSCYearlyForBenCal_formatted" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IdecServiceAgeFormatted" sfwValue="idecServiceAge_formatted" />
+    <attribute sfwDataType="string" sfwType="Property" ID="UnusedServicePurchaseSelected" sfwValue="icdoWssBenefitCalculator.unused_service_purchase_selected" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AdditionalSerivcePurchaseSelected" sfwValue="icdoWssBenefitCalculator.additional_serivce_purchase_selected" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecLastSalary" sfwValue="idecLastSalary" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecEstimatedYearlyLastSalary" sfwValue="idecEstimatedYearlyLastSalary" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecProjectedYearlySalary" sfwValue="idecProjectedYearlySalary" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="IdtDateLevelIncomeEffective" sfwValue="idtDateLevelIncomeEffective" />
+    <attribute ID="objPerson" sfwType="Object" sfwEntity="entPerson" sfwPrivate="False" sfwValue="ibusMember" />
+    <attribute ID="IdecEstimatedSCYearlyForVestingformatted" sfwDataType="string" sfwPrivate="False" sfwValue="idecEstimatedSCYearlyForVesting_formatted" sfwType="Property" />
+    <attribute ID="ldecTotalVestingServiceCredit" sfwDataType="decimal" sfwPrivate="False" sfwValue="idecTotalVestingServiceCredit" sfwType="Property" />
+    <attribute ID="benefit_tier_description_display" sfwDataType="string" sfwPrivate="False" sfwValue="benefit_tier_description_display" sfwType="Property" />
+  </attributes>
+</entity>

@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entPayeeAccountDeductionRefund" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoPayeeAccountDeductionRefund" sfwObjectID="busPayeeAccountDeductionRefund" sfwTableName="sgt_payee_account_deduction_refund" sfwView="False">
+  <rules>
+    <rule ID="IsDeductionRefundAllowedToDelete" sfwMessageId="6411" sfwExpression="(this.AreFieldsReadOnly() == True)" sfwObjectBased="True" />
+    <rule ID="IsEndDateInvalid" sfwMessageId="5510" sfwExpression="(this.IsEnddateNotValid() == True)" sfwObjectBased="True" />
+    <rule ID="IsEndDateNull" sfwMessageId="5553" sfwExpression="(this.icdoPayeeAccountDeductionRefund.end_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsStartDateInvalid" sfwMessageId="5506" sfwExpression="(this.IsStartdateNotValid() == True)" sfwObjectBased="True" />
+    <rule ID="IsStartDateNull" sfwMessageId="4032" sfwExpression="(this.icdoPayeeAccountDeductionRefund.start_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleFieldsNotReadOnly" sfwExpression="(this.AreFieldsReadOnly() != True)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleFieldsReadOnly" sfwExpression="(this.AreFieldsReadOnly() == True)" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="VisibleRuleFieldsReadOnly" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleFieldsNotReadOnly" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="IsStartDateNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsStartDateInvalid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEndDateNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEndDateInvalid" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete>
+    <item ID="IsDeductionRefundAllowedToDelete" sfwMode="All" sfwStatus="Active" />
+  </validatedelete>
+  <groupslist />
+  <updateablecdo />
+  <commonproperties>
+    <item ID="person_id" sfwObjectField="ibusPayeeAccount.icdoPayeeAccount.payee_perslink_id" sfwBeforeMethodName="LoadibusPayeeAccount" />
+  </commonproperties>
+  <queries>
+    <query ID="LoadDeductionRefundItems" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select * from SGT_PAYMENT_ITEM_TYPE b (NOLOCK) left join &#xD;&#xA;SGT_PAYEE_ACCOUNT_DEDUCTION_REFUND_ITEM a (nolock)&#xD;&#xA;on a.payment_item_type_id=b.payment_item_type_id &#xD;&#xA;where DEDUCTION_VALUE='UPDT' and ITEM_TYPE_DIRECTION =1&#xD;&#xA;">
+      <parameters />
+    </query>
+    <query ID="UpdateDeductionRefundEndDateForRegularPayment" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="UPDATE PAPIT SET PAPIT.END_DATE=@PAYMENTDATE,&#xD;&#xA;    PAPIT.MODIFIED_DATE=GETDATE(),&#xD;&#xA;    PAPIT.MODIFIED_BY='PERSLink Batch'+' '+ convert(nvarchar,@batchscheduleid),&#xD;&#xA;    PAPIT.UPDATE_SEQ = PAPIT.UPDATE_SEQ+1&#xD;&#xA;FROM SGT_PAYEE_ACCOUNT_PAYMENT_ITEM_TYPE PAPIT &#xD;&#xA;INNER JOIN SGT_PAYEE_ACCOUNT_DEDUCTION_REFUND PADR&#xD;&#xA; ON PAPIT.PAYEE_ACCOUNT_PAYMENT_ITEM_TYPE_ID=PADR.PAYEE_ACCOUNT_PAYMENT_ITEM_TYPE_ID&#xD;&#xA;INNER JOIN SGT_PAYMENT_ITEM_TYPE PIT &#xD;&#xA; ON PIT.PAYMENT_ITEM_TYPE_ID=PADR.PAYMENT_ITEM_TYPE_ID&#xD;&#xA;INNER JOIN SGT_PAYMENT_HISTORY_HEADER PHH&#xD;&#xA; ON PHH.PAYEE_ACCOUNT_ID=PAPIT.PAYEE_ACCOUNT_ID&#xD;&#xA;INNER JOIN SGT_PAYMENT_HISTORY_DETAIL PHD&#xD;&#xA; ON PHH.PAYMENT_HISTORY_HEADER_ID=PHD.PAYMENT_HISTORY_HEADER_ID &#xD;&#xA; AND PHD.PAYMENT_ITEM_TYPE_ID = PAPIT.PAYMENT_ITEM_TYPE_ID&#xD;&#xA;WHERE PHH.PAYMENT_SCHEDULE_ID=@PAYMENTSCHEDULEID&#xD;&#xA;AND PADR.PAYMENT_OPTION_VALUE='RGLR'&#xD;&#xA;&#xD;&#xA;UPDATE PADR SET PADR.END_DATE=@PAYMENTDATE,&#xD;&#xA;    PADR.MODIFIED_DATE=GETDATE(),&#xD;&#xA;    PADR.MODIFIED_BY='PERSLink Batch'+' '+ convert(nvarchar,@batchscheduleid),&#xD;&#xA;    PADR.UPDATE_SEQ = PADR.UPDATE_SEQ+1&#xD;&#xA;FROM SGT_PAYEE_ACCOUNT_DEDUCTION_REFUND PADR&#xD;&#xA;INNER JOIN SGT_PAYEE_ACCOUNT_PAYMENT_ITEM_TYPE PAPIT &#xD;&#xA; ON PAPIT.PAYEE_ACCOUNT_PAYMENT_ITEM_TYPE_ID=PADR.PAYEE_ACCOUNT_PAYMENT_ITEM_TYPE_ID&#xD;&#xA;INNER JOIN SGT_PAYMENT_ITEM_TYPE PIT &#xD;&#xA; ON PIT.PAYMENT_ITEM_TYPE_ID=PADR.PAYMENT_ITEM_TYPE_ID&#xD;&#xA;INNER JOIN SGT_PAYMENT_HISTORY_HEADER PHH&#xD;&#xA; ON PHH.PAYEE_ACCOUNT_ID=PAPIT.PAYEE_ACCOUNT_ID&#xD;&#xA;INNER JOIN SGT_PAYMENT_HISTORY_DETAIL PHD&#xD;&#xA; ON PHH.PAYMENT_HISTORY_HEADER_ID=PHD.PAYMENT_HISTORY_HEADER_ID&#xD;&#xA; AND PHD.PAYMENT_ITEM_TYPE_ID = PAPIT.PAYMENT_ITEM_TYPE_ID&#xD;&#xA;WHERE PHH.PAYMENT_SCHEDULE_ID=@PAYMENTSCHEDULEID&#xD;&#xA;AND PADR.PAYMENT_OPTION_VALUE='RGLR'">
+      <parameters>
+        <parameter ID="@PAYMENTDATE" sfwDataType="DateTime" />
+        <parameter ID="@PAYMENTSCHEDULEID" sfwDataType="int" />
+        <parameter ID="@batchscheduleid" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="UpdateDeductionRefundEndDateForSpecialPayment" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="UPDATE PAPIT SET PAPIT.END_DATE=@PAYMENTDATE,&#xD;&#xA;    PAPIT.MODIFIED_DATE=GETDATE(),&#xD;&#xA;    PAPIT.MODIFIED_BY='PERSLink Batch'+' '+ convert(nvarchar,@batchscheduleid),&#xD;&#xA;    PAPIT.UPDATE_SEQ = PAPIT.UPDATE_SEQ+1&#xD;&#xA;FROM SGT_PAYEE_ACCOUNT_PAYMENT_ITEM_TYPE PAPIT &#xD;&#xA;INNER JOIN SGT_PAYEE_ACCOUNT_DEDUCTION_REFUND PADR&#xD;&#xA; ON PAPIT.PAYEE_ACCOUNT_PAYMENT_ITEM_TYPE_ID=PADR.PAYEE_ACCOUNT_PAYMENT_ITEM_TYPE_ID&#xD;&#xA;INNER JOIN SGT_PAYMENT_ITEM_TYPE PIT &#xD;&#xA; ON PIT.PAYMENT_ITEM_TYPE_ID=PADR.PAYMENT_ITEM_TYPE_ID&#xD;&#xA;INNER JOIN SGT_PAYMENT_HISTORY_HEADER PHH&#xD;&#xA; ON PHH.PAYEE_ACCOUNT_ID=PAPIT.PAYEE_ACCOUNT_ID&#xD;&#xA;INNER JOIN SGT_PAYMENT_HISTORY_DETAIL PHD&#xD;&#xA; ON PHH.PAYMENT_HISTORY_HEADER_ID=PHD.PAYMENT_HISTORY_HEADER_ID&#xD;&#xA; AND PHD.PAYMENT_ITEM_TYPE_ID = PAPIT.PAYMENT_ITEM_TYPE_ID&#xD;&#xA;WHERE PHH.PAYMENT_SCHEDULE_ID=@PAYMENTSCHEDULEID&#xD;&#xA;AND PADR.PAYMENT_OPTION_VALUE='SPCL'&#xD;&#xA;&#xD;&#xA;UPDATE PADR SET PADR.END_DATE=@PAYMENTDATE,&#xD;&#xA;    PADR.MODIFIED_DATE=GETDATE(),&#xD;&#xA;    PADR.MODIFIED_BY='PERSLink Batch'+' '+ convert(nvarchar,@batchscheduleid),&#xD;&#xA;    PADR.UPDATE_SEQ = PADR.UPDATE_SEQ+1&#xD;&#xA;FROM SGT_PAYEE_ACCOUNT_DEDUCTION_REFUND PADR&#xD;&#xA;INNER JOIN SGT_PAYEE_ACCOUNT_PAYMENT_ITEM_TYPE PAPIT &#xD;&#xA; ON PAPIT.PAYEE_ACCOUNT_PAYMENT_ITEM_TYPE_ID=PADR.PAYEE_ACCOUNT_PAYMENT_ITEM_TYPE_ID&#xD;&#xA;INNER JOIN SGT_PAYMENT_ITEM_TYPE PIT &#xD;&#xA; ON PIT.PAYMENT_ITEM_TYPE_ID=PADR.PAYMENT_ITEM_TYPE_ID&#xD;&#xA;INNER JOIN SGT_PAYMENT_HISTORY_HEADER PHH&#xD;&#xA; ON PHH.PAYEE_ACCOUNT_ID=PAPIT.PAYEE_ACCOUNT_ID&#xD;&#xA;INNER JOIN SGT_PAYMENT_HISTORY_DETAIL PHD&#xD;&#xA; ON PHH.PAYMENT_HISTORY_HEADER_ID=PHD.PAYMENT_HISTORY_HEADER_ID&#xD;&#xA; AND PHD.PAYMENT_ITEM_TYPE_ID = PAPIT.PAYMENT_ITEM_TYPE_ID&#xD;&#xA;WHERE PHH.PAYMENT_SCHEDULE_ID=@PAYMENTSCHEDULEID&#xD;&#xA;AND PADR.PAYMENT_OPTION_VALUE='SPCL'">
+      <parameters>
+        <parameter ID="@PAYMENTDATE" sfwDataType="DateTime" />
+        <parameter ID="@PAYMENTSCHEDULEID" sfwDataType="int" />
+        <parameter ID="@batchscheduleid" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="UpdateDeductionPaymentHistoryDetails" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="UPDATE A SET PAYMENT_HISTORY_HEADER_ID = B.PAYMENT_HISTORY_HEADER_ID,A.MODIFIED_DATE = GETDATE(),A.MODIFIED_BY ='PERSLink Batch'+' '+ convert(nvarchar,@batchscheduleid),A.UPDATE_SEQ = A.UPDATE_SEQ+1&#xD;&#xA;FROM SGT_PAYEE_ACCOUNT_DEDUCTION_REFUND A&#xD;&#xA;INNER JOIN &#xD;&#xA;( SELECT PHH.PAYEE_ACCOUNT_ID,PHH.PAYMENT_HISTORY_HEADER_ID&#xD;&#xA; FROM SGT_PAYEE_ACCOUNT PA&#xD;&#xA; INNER JOIN SGT_PAYMENT_HISTORY_HEADER PHH&#xD;&#xA; ON PHH.PAYEE_ACCOUNT_ID = PA.PAYEE_ACCOUNT_ID&#xD;&#xA; INNER JOIN SGT_PAYEE_ACCOUNT_DEDUCTION_REFUND DED&#xD;&#xA; ON PHH.PAYEE_ACCOUNT_ID = DED.PAYEE_ACCOUNT_ID &#xD;&#xA; AND DED.PAYMENT_OPTION_VALUE = @PAYMENTOPTION AND DED.PAYMENT_HISTORY_HEADER_ID IS NULL&#xD;&#xA; WHERE PHH.PAYMENT_SCHEDULE_ID = @PAYMENTSCHEDULEID&#xD;&#xA; AND PA.BENEFIT_ACCOUNT_TYPE_VALUE &lt;&gt; 'RFND'&#xD;&#xA;)B&#xD;&#xA;ON A.PAYEE_ACCOUNT_ID = B.PAYEE_ACCOUNT_ID">
+      <parameters>
+        <parameter ID="@PAYMENTOPTION" sfwDataType="string" />
+        <parameter ID="@PAYMENTSCHEDULEID" sfwDataType="int" />
+        <parameter ID="@batchscheduleid" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="PayeeAccountDeductionRefundId" sfwType="Column" sfwValue="payee_account_deduction_refund_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PayeeAccountId" sfwType="Column" sfwValue="payee_account_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StartDate" sfwType="Column" sfwValue="start_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="EndDate" sfwType="Column" sfwValue="end_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="PaymentOptionDescription" sfwType="Description" sfwValue="payment_option_description" />
+    <attribute ID="PaymentOptionId" sfwType="Column" sfwValue="payment_option_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="2506" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PaymentOptionValue" sfwType="Column" sfwValue="payment_option_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="PaymentItemTypeId" sfwType="Column" sfwValue="payment_item_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PayeeAccountPaymentItemTypeId" sfwType="Column" sfwValue="payee_account_payment_item_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="Amount" sfwType="Column" sfwValue="amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" sfwRequired="False" />
+    <attribute ID="VendorOrgId" sfwType="Column" sfwValue="vendor_org_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AccountNumber" sfwType="Column" sfwValue="account_number" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="20" sfwRequired="False" />
+    <attribute ID="PaymentHistoryHeaderId" sfwType="Column" sfwValue="payment_history_header_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+  </attributes>
+</entity>

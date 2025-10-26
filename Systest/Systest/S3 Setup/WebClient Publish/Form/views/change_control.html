@@ -1,0 +1,101 @@
+﻿<div class="full-height">
+    <div class="portlet-body">
+        <div class="col-xs-12 well well-sm">
+            <label class="radio-inline">
+                <input type="radio" name="controlType" value="basic" ng-model="controltype" ng-show="config.actionType == 'changecontrol'"/>Controls
+            </label>
+            <label class="radio-inline" ng-show="formType != 'Tooltip' && formType != 'Correspondence' && formType != 'Report' && config.actionType == 'changecontrol'">
+                <input type="radio" name="controlType" value="sfwButton" ng-model="controltype"/>Button
+            </label>
+            <label class="radio-inline" ng-show="formType != 'Tooltip' && formType != 'Correspondence' && formType != 'Report' && config.actionType == 'changecontrol'">
+                <input type="radio" name="controlType" value="sfwLinkButton" ng-model="controltype"/>Link Button
+            </label>
+            <label class="radio-inline" ng-show="formType != 'Tooltip' && formType != 'Correspondence' && formType != 'Report' && config.actionType == 'changecontrol'">
+                <input type="radio" name="controlType" value="sfwImageButton" ng-model="controltype"/>Image Button
+            </label>
+            <label class="radio-inline" ng-show="formType != 'Tooltip' && formType != 'Correspondence' && formType != 'Report' && config.actionType == 'changecontrol'">
+                <input type="radio" name="controlType" value="customButton" ng-model="controltype"/>Custom Button
+            </label>
+        </div>
+        <div class="form-group" ng-hide="controltype=='customButton'">
+            <div class="col-xs-2">
+                <label class="control-label">Search </label>
+            </div>
+            <div class="col-xs-6">
+                <input type="text" class="form-control input-sm" ng-model="controlName" />
+            </div>
+        </div>
+        <div class="form-group" ng-if="controltype=='basic'">
+            <table class="table table-condensed table-hover table-fixedheader">
+                <thead>
+                    <tr>
+                        <th width="100%">Control Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="control in lstControls | filter:{Name:controlName} | controlbyFormtype : config.actionType : 'basic' : config.formModel | orderBy : 'Name'" ng-dblclick="onOkButton(control)" ng-mousedown="selectControlClick(control)" ng-class="selectedControl.control == control?'selected-control':''">
+                        <td width="7%">
+                            <img ng-src="{{control.icon}}" />
+                        </td>
+                        <td width="93%">
+                            <span ng-bind="control.Name"></span>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="control in lstControls | filter:{Name:controlName} | controlbyFormtype : config.actionType : 'advanced' : config.formModel | orderBy : 'Name'" ng-dblclick="onOkButton(control)" ng-mousedown="selectControlClick(control)" ng-class="selectedControl.control == control?'selected-control':''">
+                        <td width="7%">
+                            <img ng-src="{{control.icon}}" />
+                        </td>
+                        <td width="93%">
+                            <span ng-bind="control.Name"></span>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="control in lstControls | filter:{Name:controlName} | controlbyFormtype : config.actionType : 'html' : config.formModel | orderBy : 'Name'" ng-dblclick="onOkButton(control)" ng-mousedown="selectControlClick(control)" ng-class="selectedControl.control == control?'selected-control':''">
+                        <td width="7%">
+                            <img ng-src="{{control.icon}}" />
+                        </td>
+                        <td width="93%">
+                            <span ng-bind="control.Name"></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="form-group" ng-if="(controltype=='sfwButton' || controltype=='sfwLinkButton' || controltype=='sfwImageButton') && formType != 'Tooltip' ">
+            <table class="table table-condensed table-hover table-fixedheader">
+                <thead>
+                    <tr>
+                        <th width="50%">Description</th>
+                        <th width="50%">Method Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="button in lstButtons | filter:controlName" ng-dblclick="onOkButton(button)" ng-mousedown="selectControlClick(button)" ng-class="selectedControl.control == button?'selected-control':''">
+                        <td width="50%">
+                            <span ng-bind="button.Description"></span>
+                        </td>
+                        <td width="50%">
+                            <span ng-bind="button.Method"></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="form-group" ng-if="controltype=='customButton'">
+            <div class="col-xs-3">
+                <label class="control-label"> Method Name</label>
+            </div>
+            <div class="col-xs-6">
+                <input type="text" class="col-xs-10 form-control" ng-model="customButton.methodName" />
+            </div>
+        </div>
+    </div>
+    <div class="form-actions">
+        <div class="col-xs-8 text-left">
+            <span class="alert-error-msg" ng-if="errorMessage.length>0">{{errorMessage}}</span>
+        </div>
+        <div class="col-xs-4">
+            <input type="button" class="btn dialog-btn-default" value="OK" ng-disabled="disableOkBtn()" ng-click="onOkButton(selectedControl.control)" />
+            <input type="button" class="btn dialog-btn-default" value="Cancel" ng-click="closeDialog()" />
+        </div>
+    </div>
+</div>

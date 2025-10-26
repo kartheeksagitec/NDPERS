@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entSecurity" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvAdmin" sfwType="BusinessRule" sfwMainCDO="icdoSecurity" sfwObjectID="busSecurity" sfwTableName="sgs_security">
+  <rules />
+  <delete />
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror />
+  <validatedelete />
+  <updateablecdo />
+  <queries>
+    <query ID="ByUser" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select resource_description, resource_type_id, resource_type_value, &#xD;&#xA;       security_id, max(security_value) as security_value &#xD;&#xA;  from sgs_user a, &#xD;&#xA;       sgs_user_roles b, &#xD;&#xA;       sgs_roles c, &#xD;&#xA;       sgs_resources d, &#xD;&#xA;       sgs_security e&#xD;&#xA; where a.user_serial_id = @user_serial_id&#xD;&#xA;   and a.user_serial_id = b.user_serial_id &#xD;&#xA;   and b.role_id = c.role_id&#xD;&#xA;   and b.role_id = e.role_id&#xD;&#xA;   and d.resource_id = e.resource_id&#xD;&#xA;   and ((b.effective_start_DATE is null) or (b.effective_start_date&lt;=convert(dateTime,convert(char,getdate(),103),103)))&#xD;&#xA;   and ((b.effective_end_DATE is null) or (b.effective_end_date&gt;=convert(dateTime,convert(char,getdate(),103),103)))&#xD;&#xA;group by resource_description, resource_type_id, resource_type_value, security_id &#xD;&#xA; order by resource_description">
+      <parameters>
+        <parameter ID="@user_serial_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="ByResource" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select a.role_id, a.update_seq, resource_id, role_description, security_id, security_value &#xD;&#xA;  from sgs_security a,&#xD;&#xA;       sgs_roles b &#xD;&#xA; where a.role_id = b.role_id&#xD;&#xA;   and resource_id = @resource_id&#xD;&#xA; order by role_description&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@resource_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="ByRole" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select a.resource_id, a.role_id, a.update_seq, &#xD;&#xA;       resource_description, resource_type_id, resource_type_value, security_id, security_value &#xD;&#xA;  from sgs_security a,&#xD;&#xA;       sgs_resources b &#xD;&#xA; where a.resource_id = b.resource_id&#xD;&#xA;   and role_id = @role_id&#xD;&#xA; order by  security_value desc&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@role_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="ByUserByResource" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select max(security_value) as security_value &#xD;&#xA;  from sgs_user a, &#xD;&#xA;       sgs_user_roles b, &#xD;&#xA;       sgs_resources d, &#xD;&#xA;       sgs_security e&#xD;&#xA; where a.user_serial_id = @user_serial_id&#xD;&#xA;   and d.resource_id    = @resource_id&#xD;&#xA;   and a.user_serial_id = b.user_serial_id &#xD;&#xA;   and b.role_id = e.role_id&#xD;&#xA;   and d.resource_id = e.resource_id">
+      <parameters>
+        <parameter ID="@user_serial_id" sfwDataType="int" />
+        <parameter ID="@resource_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="rptRRSecurity" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select a.role_id, role_description, b.resource_id, resource_description, &#xD;&#xA;       d.description Resource_Type, c.security_value, e.description as Permission &#xD;&#xA;from  sgs_roles a, sgs_resources b, sgs_security c, &#xD;&#xA;      sgs_code_value d, sgs_code_value e&#xD;&#xA;where   a.role_id = c.role_id&#xD;&#xA;    and b.resource_id = c.resource_id&#xD;&#xA;    and d.code_id = b.resource_type_id&#xD;&#xA;    and d.code_value = b.resource_type_value&#xD;&#xA;    and e.code_id = c.security_id&#xD;&#xA;    and e.code_value = cast(c.security_value as varchar)&#xD;&#xA;    and c.security_value &gt; @sec_val&#xD;&#xA;order by role_id,  resource_id">
+      <parameters>
+        <parameter ID="@sec_val" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="rptUserRRSecurity" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select   a.first_name, a.last_name, c.role_id, role_description, &#xD;&#xA;         d.resource_description, e.security_value, f.description&#xD;&#xA;from sgs_user a, sgs_user_roles b, sgs_roles c, sgs_resources d,  &#xD;&#xA;     sgs_security e, sgs_code_value f&#xD;&#xA;where  a.user_serial_id = b.user_serial_id &#xD;&#xA;   and b.role_id = c.role_id&#xD;&#xA;   and e.role_id = c.role_id&#xD;&#xA;   and e.resource_id = d.resource_id&#xD;&#xA;   and  e.security_value &gt; 0&#xD;&#xA;   and  CONVERT(varchar, e.security_value) = f.code_value&#xD;&#xA;   and f.code_id = e.security_id&#xD;&#xA;order by a.first_name, a.last_name, c.role_id,e.role_id, d.resource_description">
+      <parameters />
+    </query>
+    <query ID="InitializeSecurity" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="insert into sgs_security&#xD;&#xA;select role_id, resource_id, 11, 0, a.created_by, {fn now()}, a.modified_by, {fn now()}, 0&#xD;&#xA;  from sgs_roles a, sgs_resources b&#xD;&#xA; where not exists (select role_id &#xD;&#xA;                     from sgs_security c&#xD;&#xA;                    where a.role_id = c.role_id&#xD;&#xA;                      and b.resource_id = c.resource_id)">
+      <parameters />
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="RoleId" sfwType="Column" sfwValue="role_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ResourceId" sfwType="Column" sfwValue="resource_id" sfwKeyNo="2" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="SecurityDescription" sfwType="Description" sfwValue="security_description" />
+    <attribute ID="SecurityId" sfwType="Column" sfwValue="security_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="11" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="SecurityValue" sfwType="Column" sfwValue="security_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="objResources" sfwType="Object" sfwEntity="entResources" sfwValue="ibusResources" />
+    <attribute ID="objRoles" sfwType="Object" sfwEntity="entRoles" sfwValue="ibusRoles" />
+  </attributes>
+</entity>

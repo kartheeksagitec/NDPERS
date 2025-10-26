@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entPayment1099rRequest" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoPayment1099rRequest" sfwReadOnlyRule="ReadOnlyRule" sfwObjectID="busPayment1099rRequest" sfwTableName="sgt_payment_1099r_request" sfwView="False">
+  <rules>
+    <rule ID="IsAnnual1099rRequestInvalid" sfwMessageId="6901" sfwExpression="!(this.icdoPayment1099rRequest.request_type_value == &quot;MNTB&quot;) &amp;&amp; &#xA;(this.IsAnnual1099rBatchRequestNotValid() == True)" sfwObjectBased="True" />
+    <rule ID="IsMonthly1099rRequestInvalid" sfwMessage="Monthly1099r Batch request for the entered year and month already exists" sfwExpression="(this.icdoPayment1099rRequest.request_type_value == &quot;MNTB&quot;) &amp;&amp; &#xA;(this.IsMonthly1099rBatchRequestNotValid() == True)" sfwObjectBased="True" />
+    <rule ID="IsTaxMonthEntered" sfwMessage="Tax Month is Required." sfwExpression="(this.icdoPayment1099rRequest.request_type_value == &quot;MNTB&quot;) &amp;&amp; &#xA;(this.icdoPayment1099rRequest.tax_month == 0)" sfwObjectBased="True" />
+    <rule ID="ReadOnlyRule" sfwExpression="(this.icdoPayment1099rRequest.status_value == &quot;APRD&quot;) || &#xA;(this.icdoPayment1099rRequest.status_value == &quot;CNLD&quot;) || &#xA;(this.icdoPayment1099rRequest.status_value == &quot;PRSD&quot;)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForCancelButton" sfwExpression="(this.icdoPayment1099rRequest.status_value == &quot;PEND&quot;) &amp;&amp; &#xA;(this.icdoPayment1099rRequest.created_by != RFunc.GetValue&lt;String&gt;(this, &quot;iobjPassInfo.istrUserID&quot;))" sfwObjectBased="True" />
+    <rule ID="VIsibleRuleForCancelButtonMonthlyRequest" sfwExpression="(this.icdoPayment1099rRequest.status_value == &quot;PEND&quot;) &amp;&amp; &#xA;(this.icdoPayment1099rRequest.created_by == RFunc.GetValue&lt;String&gt;(this, &quot;iobjPassInfo.istrUserID&quot;))" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForNewButton" sfwExpression="(this.icdoPayment1099rRequest.status_value == &quot;PEND&quot;) &amp;&amp; &#xA;(this.icdoPayment1099rRequest.created_by != RFunc.GetValue&lt;String&gt;(this, &quot;iobjPassInfo.istrUserID&quot;))" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForNewButtonMonthlyRequest" sfwExpression="(this.icdoPayment1099rRequest.status_value == &quot;PEND&quot;) &amp;&amp; &#xA;(this.icdoPayment1099rRequest.created_by == RFunc.GetValue&lt;String&gt;(this, &quot;iobjPassInfo.istrUserID&quot;))" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForSaveButton" sfwExpression="!(this.icdoPayment1099rRequest.status_value == &quot;APRD&quot;) &amp;&amp; &#xA;!(this.icdoPayment1099rRequest.status_value == &quot;CNLD&quot;) &amp;&amp; &#xA;!(this.icdoPayment1099rRequest.status_value == &quot;PRSD&quot;)" sfwObjectBased="True" />
+    <rule ID="Is1099RBatchRequestYearRequired" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.icdoPayment1099rRequest.tax_year == 0)" sfwMessage="1099R Year Is Required." />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="VisibleRuleForSaveButton" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForCancelButton" sfwMode="All" sfwStatus="Active" />
+    <item ID="ReadOnlyRule" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForNewButton" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForNewButtonMonthlyRequest" sfwMode="All" sfwStatus="Active" />
+    <item ID="VIsibleRuleForCancelButtonMonthlyRequest" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="IsAnnual1099rRequestInvalid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsTaxMonthEntered" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMonthly1099rRequestInvalid" sfwMode="All" sfwStatus="Active" />
+    <item ID="Is1099RBatchRequestYearRequired" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <expressionfields />
+  <queries>
+    <query ID="LookUp" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_PAYMENT_1099R_REQUEST WITH(NOLOCK)&#xD;&#xA;WHERE REQUEST_TYPE_VALUE &lt;&gt; 'CORR' and REQUEST_TYPE_VALUE &lt;&gt; 'MNTB'">
+      <parameters />
+    </query>
+    <query ID="LookUp_Monthly" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_PAYMENT_1099R_REQUEST WITH(NOLOCK)&#xD;&#xA;where REQUEST_TYPE_VALUE = 'MNTB'">
+      <parameters />
+    </query>
+    <query ID="LoadPayment1099RRequest" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT &#xD;&#xA;&#x9;* &#xD;&#xA;FROM SGT_PAYMENT_1099R_REQUEST&#xD;&#xA;WHERE &#xD;&#xA;&#x9;REQUEST_TYPE_VALUE = 'ANNB' AND &#xD;&#xA;&#x9;ISNULL(CREATED_IRS_FILE, 'N') = 'N'&#xD;&#xA;ORDER BY TAX_YEAR DESC">
+      <parameters />
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="RequestId" sfwType="Column" sfwValue="request_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="TaxYear" sfwType="Column" sfwValue="tax_year" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusDescription" sfwType="Description" sfwValue="status_description" />
+    <attribute ID="StatusId" sfwType="Column" sfwValue="status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="3101" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusValue" sfwType="Column" sfwValue="status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="RequestTypeDescription" sfwType="Description" sfwValue="request_type_description" />
+    <attribute ID="RequestTypeId" sfwType="Column" sfwValue="request_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="3102" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="RequestTypeValue" sfwType="Column" sfwValue="request_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="ProcessDate" sfwType="Column" sfwValue="process_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="20" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="20" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="TaxMonth" sfwType="Column" sfwValue="tax_month" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="BulkInsert1099rDataFlag" sfwType="Column" sfwValue="bulk_insert_1099r_data_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="Created1099rDetailsReport" sfwType="Column" sfwValue="created_1099r_details_report" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="CreatedIrsFile" sfwType="Column" sfwValue="created_irs_file" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="Created945Report" sfwType="Column" sfwValue="created_945_report" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+  </attributes>
+  <objectmethods>
+    <method ID="btn_New_Click" sfwReturnType="ArrayList" />
+    <method ID="btn_Cancel_Click" sfwReturnType="ArrayList" />
+  </objectmethods>
+</entity>

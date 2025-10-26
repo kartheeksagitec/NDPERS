@@ -1,0 +1,1070 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<form ID="wfmTaxWithholdingInformationMaintenance" sfwActive="True" sfwStatus="Valid" sfwRemoteObject="srvPayment" sfwResource="1204 " sfwType="Maintenance" sfwTitle="Tax Withholding Information Maintenance" version="3.5" sfwEntity="entPayeeAccountTaxWithholding">
+  <initialload>
+    <callmethods sfwMode="New" sfwMethodName="NewPayeeAccountTaxWithholding" />
+    <callmethods sfwMode="Update" sfwMethodName="FindPayeeAccountTaxWithholding" />
+  </initialload>
+  <sfwTable ID="Main">
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnltoolbar">
+          <sfwTable ID="toolbar">
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnSave" sfwMethodName="btnNoChangesSave_Click" sfwNavigationParameter="Aintpayeeaccounttaxwithholdingid=PayeeAccountTaxWithholdingId" Text="Calculate &amp; Save" />
+                <sfwButton ID="btnCancel" sfwMethodName="btnCancel_Click" Text="Refresh" />
+                <sfwButton ID="btnPrev" sfwMethodName="btnPrev_Click" Text="Prev" />
+                <sfwButton ID="btnNext" sfwMethodName="btnNext_Click" Text="Next" />
+                <sfwButton ID="btnCorrespondence" sfwMethodName="btnCorrespondence_Click" Text="Correspondence" />
+                <sfwButton ID="btnCalculate" sfwMethodName="btnValidateExecuteBusinessMethod_Click" sfwObjectMethod="btnCalculateTax" Text="Calculate Tax" />
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlPayeeAccountInfo" sfwCaption="Payee Account Information">
+          <sfwTable CssClass="Table" ID="tblTaxWHI">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capMemberName" Text="Member : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLinkButton ID="btnMemberName" sfwActiveForm="wfmPersonMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintpersonid=objPayeeAccount.objMember.PersonId" sfwEntityField="objPayeeAccount.objMember.MemberName" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capPayeeName" Text="Payee : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLinkButton ID="btnPayeeName" sfwActiveForm="wfmPersonMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintpersonid=objPayeeAccount.objPayee.PersonId" sfwEntityField="objPayeeAccount.objPayee.PayeeName" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capPayeeAccountId" Text="Payee Account ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblPayeeAccountId" sfwEntityField="objPayeeAccount.PayeeAccountId" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capBenefitBeginDate" Text="Benefit Begin Date : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblBenefitBeginDate" sfwDataFormat="{0:d}" sfwEntityField="objPayeeAccount.BenefitBeginDate" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capBenefitAccountTypeDescription" Text="Benefit Type : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblBenefitAccountTypeDescription" sfwEntityField="objPayeeAccount.BenefitAccountTypeDescription" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capBenefitAccountSubTypeDescription" Text="Benefit Sub Type : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblBenefitAccountSubTypeDescription" sfwEntityField="objPayeeAccount.BenefitAccountSubTypeDescription" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capIdecBenefitAmount" Text="Benefit Amount : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblIdecBenefitAmount" sfwDataFormat="{0:C}" sfwEntityField="objPayeeAccount.IdecBenefitAmount" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="CapTotalTaxableAmt" Text="Total Taxable Amount :" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblTotalTaxableAmt" sfwDataFormat="{0:C}" sfwEntityField="objPayeeAccount.IdecTotalTaxableAmount" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capTaxWithHoldingCurrentAddress" Text="Current Address : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn ColumnSpan="3">
+                <sfwLabel ID="lblTaxWithHoldingCurrentAddress" sfwWrap="True" sfwEntityField="objPayeeAccount.objMember.objPersonCurrentAddress.AddrDescription" />
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlMonthlyBenefit" sfwCaption="Monthly Benefit" sfwVisibleRule="VisibleRuleIsBenefitDistributionTypeMonthlyBenefit">
+          <sfwTable CssClass="Table" ID="tblMonthlyBenefit">
+            <sfwRow>
+              <sfwColumn />
+              <sfwColumn />
+              <sfwColumn>
+                <sfwLabel ID="capSuppressWarningsFlag" Text="Suppress Warnings : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwCheckBox ID="chkMonthlybenefitSuppressWarning" sfwEntityField="MonthlybenefitSuppressWarning" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capStateMaritalStatusValue" Text="Marital Status : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlStateMaritalStatusValue" sfwVisibleRule="VisibleAreFieldsNotReadonly" sfwLoadType="Query" sfwLoadSource="entFedStateTaxRate.LoadMaritalStatusForPaymentTaxRates" sfwEntityField="MaritalStatusValue" />
+                <sfwLabel ID="lblMaritalStatusDescription" sfwVisibleRule="VisibleAreFieldsReadonly" sfwEntityField="MaritalStatusDescription" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capTaxOptionValue2" Text="Tax Option : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlMonthlyBenefitTaxOption" sfwVisibleRule="VisibleAreFieldsNotReadonly" sfwLoadType="Method" sfwLoadSource="LoadTaxOptionBasedOnTaxIdentifier" sfwEntityField="MonthlyBenefitTaxOption" />
+                <sfwLabel ID="lblTaxOptionDescription" sfwVisibleRule="VisibleAreFieldsReadonly" sfwEntityField="TaxOptionDescription" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capStateTaxAllowance" Text="Tax Allowance : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtNoOfTaxAllowance" sfwDataType="Numeric" sfwVisibleRule="VisibleAreFieldsNotReadonly" sfwEntityField="NoOfTaxAllowance" />
+                <sfwLabel ID="lblNoOfTaxAllowance" sfwVisibleRule="VisibleAreFieldsReadonly" sfwEntityField="NoOfTaxAllowance" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capAdditionalStateTaxAmount" Text="Additional Tax Amount : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtAdditionalStateTaxAmount" sfwDataFormat="{0:C}" sfwVisibleRule="VisibleAreFieldsNotReadonly" sfwEntityField="AdditionalTaxAmount" />
+                <sfwLabel ID="lblAdditionalTaxAmount" sfwDataFormat="{0:C}" sfwVisibleRule="VisibleAreFieldsReadonly" sfwEntityField="AdditionalTaxAmount" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="lblreq1" SkinID="ReqInformation" Text="*" sfwIsCaption="True" />
+                <sfwLabel ID="capOldStartDate" Text="Start Date : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtOldStartDate" sfwDataFormat="{0:d}" sfwVisibleRule="VisibleAreFieldsNotReadonly" sfwEntityField="StartDate" />
+                <sfwLabel ID="lblStartDate" sfwDataFormat="{0:d}" sfwVisibleRule="VisibleAreFieldsReadonly" sfwEntityField="StartDate" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capEndDate" Text="End Date : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtEndDate" sfwDataFormat="{0:d}" sfwEntityField="EndDate" />
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlW4PWithholding" sfwCaption="Monthly Benefit" sfwVisibleRule="VisibleRuleIsMonthlyBenefitForNewFDSTTax">
+          <sfwTable ID="tblW4PNewPage">
+            <sfwRow>
+              <sfwColumn ColumnSpan="2" VerticalAlign="Top" Width="50%">
+                <sfwPanel ID="pnlWithholdingDetails" sfwCaption="Withholding Type - Federal" BorderColor="Black" BorderStyle="Solid" Font.Bold="True" sfwCollapsible="False" GroupingText="Withholding Type - Federal">
+                  <sfwTable ID="tblNewPage3">
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capStartDate" Text="Start Date : " AssociatedControlID="txtStartDate" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwTextBox ID="txtStartDate" sfwDataFormat="{0:d}" sfwEntityField="StartDate" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="lblEndDateMNBF" Text="End Date:" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwTextBox ID="txtTextBoxEndDateMNBF" sfwEntityField="EndDate" sfwDataFormat="{0:d}" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capMaritalStatusValue" Text="Filing Status : " AssociatedControlID="ddlMaritalStatusValue" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwDropDownList ID="ddlMaritalStatusValue" sfwLoadType="CodeGroup" sfwLoadSource="7033" DataTextField="description" DataValueField="code_value" Width="160px" sfwEntityField="FilingStatusValue" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capDoNotWithholdFlag" Text="Do Not Withhold : " AssociatedControlID="chkDoNotWithholdFlag" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwCheckBox ID="chkDoNotWithholdFlag" sfwEntityField="NoFedWithholding" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn />
+                      <sfwColumn />
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn ColumnSpan="3">
+                        <sfwLiteral ID="ltrLiteral" sfwMode="All" Text="Step 2 - Income from a Job or Multiple Pensions/Annuities" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capAnnualTaxablePaymentAmt" Text="(b)(i)Total Taxable Annual Payable Amount : " AssociatedControlID="txtAnnualTaxablePaymentAmt" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwTextBox ID="txtAnnualTaxablePaymentAmt" sfwDataFormat="{0:C}" sfwEntityField="TwoBI" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capPensionAnnuityAmt" Text="(b)(ii)Another Pension or Annuity Amount : " AssociatedControlID="txtPensionAnnuityAmt" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwTextBox ID="txtPensionAnnuityAmt" sfwDataFormat="{0:C}" sfwEntityField="TwoBIi" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capTotalTaxablePensionAmount" Text="(b)(iii) Total : " AssociatedControlID="txtTotalTaxablePensionAmount" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwTextBox ID="txtTotalTaxablePensionAmount" sfwEntityField="TwoBIii" sfwDataFormat="{0:C}" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn />
+                      <sfwColumn />
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn ColumnSpan="3">
+                        <sfwLiteral ID="ltrLiteral1" sfwMode="All" Text="Step 3 - Claim Dependent and Other Credits" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capQualifyingChildrenAmt" Text="Qualifying Children Amt : " AssociatedControlID="txtQualifyingChildrenAmt" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwTextBox ID="txtQualifyingChildrenAmt" sfwDataFormat="{0:C}" sfwEntityField="Three1" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capOtherDependentsAmt" Text="Other Dependents Amt : " AssociatedControlID="txtOtherDependentsAmt" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwTextBox ID="txtOtherDependentsAmt" sfwDataFormat="{0:C}" sfwEntityField="Three2" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capForeignEducationTaxCreditAmt" Text="Foreign Education Tax Credit Amt : " AssociatedControlID="txtForeignEducationTaxCreditAmt" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwTextBox ID="txtForeignEducationTaxCreditAmt" sfwDataFormat="{0:C}" sfwEntityField="Three3" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capTotalClaimDependentAmount" Text="Total : " AssociatedControlID="txtTotalClaimDependentAmount" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwTextBox ID="txtTotalClaimDependentAmount" sfwEntityField="ThreeTotal" sfwDataFormat="{0:C}" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn />
+                      <sfwColumn />
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn ColumnSpan="3">
+                        <sfwLiteral ID="ltrLiteral2" sfwMode="All" Text="Step 4 - Other Adjustments : " />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capOtherIncomeAmt" Text="(a) Other Income : " AssociatedControlID="txtOtherIncomeAmt" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwTextBox ID="txtOtherIncomeAmt" sfwDataFormat="{0:C}" sfwEntityField="FourA" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capOtherEducationAmt" Text="(b) Deductions : " AssociatedControlID="txtOtherDeductionAmt" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwTextBox ID="txtOtherDeductionAmt" sfwDataFormat="{0:C}" sfwEntityField="FourB" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capAdditionalWithholdingAmt" Text="(c) Extra Withholding : " AssociatedControlID="txtAdditionalWithholdingAmt" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwTextBox ID="txtAdditionalWithholdingAmt" sfwDataFormat="{0:C}" sfwEntityField="FourC" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capW4pTaxWithholdingIdId" Text="W4P Tax Withholding ID : " AssociatedControlID="lblW4pTaxWithholdingIdId" sfwIsCaption="True" Visible="False" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblW4pTaxWithholdingIdId" sfwEntityField="PayeeAccountTaxWithholdingId" CssClass="hideControl" />
+                      </sfwColumn>
+                    </sfwRow>
+                  </sfwTable>
+                </sfwPanel>
+              </sfwColumn>
+              <sfwColumn ColumnSpan="2" VerticalAlign="Top" Width="50%">
+                <sfwPanel ID="pnlW4PCalculationResults" sfwCaption="W4P Calculation Steps" Font.Bold="True" sfwCollapsible="False" GroupingText="W4P Calculation Steps">
+                  <sfwTable ID="tblNewPage1">
+                    <sfwRow>
+                      <sfwColumn />
+                      <sfwColumn />
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLiteral ID="ltrLiteral3" sfwMode="All" Text="Step 1 - Adjusted Annual Payment Amount" />
+                      </sfwColumn>
+                      <sfwColumn />
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn />
+                      <sfwColumn />
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capCurrentBenefitAmt" Text="1a - Benefit Amount : " AssociatedControlID="lblCurrentBenefitAmt" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblCurrentBenefitAmt" sfwDataFormat="{0:C2}" sfwTwoWayBinding="True" sfwEntityField="objPayeeAccount.ldecTotalTaxableAmountForVariableTax" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capNoOfPeriods" Text="1b - No of Periods : " AssociatedControlID="lblNoOfPeriods" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblNoOfPeriods" sfwEntityField="noofperiods" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capAnnualBenefitAmt" Text="1c - Annual Benefit Amount : " AssociatedControlID="lblAnnualBenefitAmt" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblAnnualBenefitAmt" sfwDataFormat="{0:C2}" sfwEntityField="annualbenefitamt" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn />
+                      <sfwColumn />
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capOtherIncomeAmt1" Text="1d - Step 4(a) Other Income Amount : " AssociatedControlID="lblOtherIncomeAmt" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblOtherIncomeAmt" sfwDataFormat="{0:C2}" sfwEntityField="FourA" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capNetBenefitAmt" Text="1e - Computed 1c + 1d : " AssociatedControlID="lblNetBenefitAmt" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblNetBenefitAmt" sfwDataFormat="{0:C2}" sfwEntityField="netbenefitamt" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capOtherDeductionAmt" Text="1f - Step 4(b) Deduction Amount : " AssociatedControlID="lblOtherDeductionAmt" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblOtherDeductionAmt" sfwDataFormat="{0:C2}" sfwEntityField="FourB" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capTaxPayerDeductionAmt" Text="1g - Tax Payer Deduction : " AssociatedControlID="lblTaxPayerDeductionAmt" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblTaxPayerDeductionAmt" sfwDataFormat="{0:C2}" sfwEntityField="taxpayerdeductionamt" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capNetDeductionAmt" Text="1h - Computed 1f + 1g : " AssociatedControlID="lblNetDeductionAmt" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblNetDeductionAmt" sfwDataFormat="{0:C2}" sfwEntityField="netdeductionamt" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capAdjAnnualBenefitAmt" Text="1i - Adjusted Benefit 1e - 1h : " AssociatedControlID="lblAdjAnnualBenefitAmt" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblAdjAnnualBenefitAmt" sfwDataFormat="{0:C2}" sfwEntityField="postdedbenefitamt" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capPostDedBenefitAmt" Text="1l - Adjusted Annual Benefit : " AssociatedControlID="lblPostDedBenefitAmt" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblPostDedBenefitAmt" sfwDataFormat="{0:C2}" sfwEntityField="adjannualbenefitamt" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn />
+                      <sfwColumn />
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLiteral ID="ltrLiteral4" sfwMode="All" Text="Step 2 - Tentative Annual Withholding Amount" />
+                      </sfwColumn>
+                      <sfwColumn />
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLiteral ID="ltrLiteral5" sfwMode="All" Text="Part I" />
+                      </sfwColumn>
+                      <sfwColumn />
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn />
+                      <sfwColumn />
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capTotalIncomeAndPensionAmount" Text="2a - Total Amount from W4P 2(b)(iii) : " AssociatedControlID="lblTotalIncomeAndPensionAmount" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblTotalIncomeAndPensionAmount" sfwDataFormat="{0:C2}" sfwEntityField="TwoBIii" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capTaxPayerDeductionAmt1" Text="2b - Tax Payer Deduction Amount : " AssociatedControlID="lblTaxPayerDeductionAmt1" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblTaxPayerDeductionAmt1" sfwDataFormat="{0:C2}" sfwEntityField="taxpayerdeductionamt" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capAdjustedTaxableIncomeTaxRateAmount" Text="2c - Computed Benefit 2a - 2b : " AssociatedControlID="lblAdjustedTaxableIncomeTaxRateAmount" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblAdjustedTaxableIncomeTaxRateAmount" sfwDataFormat="{0:C2}" sfwEntityField="step2ccomputednetamt" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capAdjustedTaxableIncomeTaxRateAmount1" Text="2d - Taxable Income Amount : " AssociatedControlID="lblAdjustedTaxableIncomeTaxRateAmount1" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblAdjustedTaxableIncomeTaxRateAmount1" sfwDataFormat="{0:C2}" sfwEntityField="adjustedtaxableincometaxrateamount" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capExceedingTaxAmt" Text="2e - Exceeding Tax  : " AssociatedControlID="lblExceedingTaxAmt" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblExceedingTaxAmt" sfwDataFormat="{0:C2}" sfwEntityField="exceedingtaxamt" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capTentativeTaxAmt" Text="2f - Tentative Tax : " AssociatedControlID="lblTentativeTaxAmt" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblTentativeTaxAmt" sfwDataFormat="{0:C2}" sfwEntityField="tentativetaxamt" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capTaxPercentage" Text="2g - Tax Percentage : " AssociatedControlID="lblTaxPercentage" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblTaxPercentage" sfwEntityField="taxpercentage" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capCalcTaxableAmt" Text="2h - Calc Taxable Amount (2d - 2e) : " AssociatedControlID="lblCalcTaxableAmt" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblCalcTaxableAmt" sfwDataFormat="{0:C2}" sfwEntityField="calctaxableamt" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capCalcTaxablePercAmt" Text="2i - Calc Taxable Percentage Amount : " AssociatedControlID="lblCalcTaxablePercAmt" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblCalcTaxablePercAmt" sfwDataFormat="(0:C}" sfwEntityField="calctaxablepercamt" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capTentativeAnnualWithholdAmt" Text="2j - Tentative Annual Withholding Amount : " AssociatedControlID="lblTentativeAnnualWithholdAmt" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblTentativeAnnualWithholdAmt" sfwDataFormat="{0:C2}" sfwEntityField="tentativeannualwithholdamt" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn />
+                      <sfwColumn />
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLiteral ID="ltrLiteral6" sfwMode="All" Text="Part II" />
+                      </sfwColumn>
+                      <sfwColumn />
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn />
+                      <sfwColumn />
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capPart2TotalIncomeAndPensionAmt" Text="2k - W4P Step 2(b)(iii) Amount : " AssociatedControlID="lblPart2TotalIncomeAndPensionAmt" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblPart2TotalIncomeAndPensionAmt" sfwDataFormat="{0:C2}" sfwEntityField="TwoBIii" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capPostDedBenefitAmt1" Text="2l - Adjusted Annual Payment Amount : " AssociatedControlID="lblPostDedBenefitAmt1" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblPostDedBenefitAmt1" sfwDataFormat="{0:C2}" sfwEntityField="postdedbenefitamt" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capStep2kComputedPartiiAmt" Text="2m - Computed Amount 2k + 2l : " AssociatedControlID="lblStep2kComputedPartiiAmt" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblStep2kComputedPartiiAmt" sfwDataFormat="{0:C}" sfwEntityField="step2kcomputedpartiiamt" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capPart2ExceedingTaxAmount" Text="2n - Exceeding Tax Amount : " AssociatedControlID="lblPart2ExceedingTaxAmount" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblPart2ExceedingTaxAmount" sfwDataFormat="{0:C}" sfwEntityField="part2exceedingtaxamt" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capPart2TentativeTaxAmount" Text="2o - Tentative Tax : " AssociatedControlID="lblPart2TentativeTaxAmount" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblPart2TentativeTaxAmount" sfwDataFormat="{0:C2}" sfwEntityField="part2tentativetaxamt" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capPart2TaxPercentage" Text="2p - Tax Percentage : " AssociatedControlID="lblPart2TaxPercentage" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblPart2TaxPercentage" sfwEntityField="part2taxpercentage" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capPart2CalcTaxableAmt" Text="2q - Computed Amount 2m - 2n : " AssociatedControlID="lblPart2CalcTaxableAmt" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblPart2CalcTaxableAmt" sfwDataFormat="{0:C}" sfwEntityField="part2calctaxableamt" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capPart2CalcTaxablePercAmt" Text="2r - Calc Taxable Percentage Amount : " AssociatedControlID="lblPart2CalcTaxablePercAmt" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblPart2CalcTaxablePercAmt" sfwDataFormat="{0:C}" sfwEntityField="part2calctaxablepercamt" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capPart2TentativeAnnualWithholdAmt" Text="2s - Computed Amount 2o + 2r: " AssociatedControlID="lblPart2TentativeAnnualWithholdAmt" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblPart2TentativeAnnualWithholdAmt" sfwDataFormat="{0:C}" sfwEntityField="part2tentativeannualwithholdamt" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capPart2ComputedTentativeAnnualWithholdAmt" Text="2t - Computed Amount 2s - 2j : " AssociatedControlID="lblPart2ComputedTentativeAnnualWithholdAmt" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblPart2ComputedTentativeAnnualWithholdAmt" sfwDataFormat="{0:C2}" sfwEntityField="part2comptentativeannualwithholdamt" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn />
+                      <sfwColumn />
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLiteral ID="ltrLiteral9" sfwMode="All" Text="Part III" />
+                      </sfwColumn>
+                      <sfwColumn />
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn />
+                      <sfwColumn />
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capFinalTentativeAnnualWithholdingAmount" Text="2u - Tentative Annual Withholding Amount : " AssociatedControlID="lblFinalTentativeAnnualWithholdingAmount" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblFinalTentativeAnnualWithholdingAmount" sfwDataFormat="{0:C}" sfwEntityField="finaltentativeannualwithholdamt" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn />
+                      <sfwColumn />
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLiteral ID="ltrLiteral7" sfwMode="All" Text="Step 3 - Account for Tax Credits" />
+                      </sfwColumn>
+                      <sfwColumn />
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn />
+                      <sfwColumn />
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capTotalClaimDependentAmount1" Text="3a - Total Deduction Amount : " AssociatedControlID="lblTotalClaimDependentAmount1" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblTotalClaimDependentAmount1" sfwDataFormat="{0:C}" sfwEntityField="ThreeTotal" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capTaxableCreditAmt" Text="3b - Taxable Credit Amount : " AssociatedControlID="lblTaxableCreditAmt" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblTaxableCreditAmt" sfwDataFormat="{0:C2}" sfwEntityField="taxablecreditamt" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn />
+                      <sfwColumn />
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLiteral ID="ltrLiteral8" sfwMode="All" Text="Step 4 - Final Withholding Amount" />
+                      </sfwColumn>
+                      <sfwColumn />
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn />
+                      <sfwColumn />
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capCalcWithholdAmt" Text="4a - Calculated Withhold Amount : " AssociatedControlID="lblCalcWithholdAmt" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblCalcWithholdAmt" sfwDataFormat="{0:C}" sfwEntityField="calcwithholdamt" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capAddiWithholdAmt" Text="4b - Additional Withholding Amount : " AssociatedControlID="lblAddiWithholdAmt" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblAddiWithholdAmt" sfwDataFormat="{0:C}" sfwEntityField="AdditionalWithHoldingAmt" />
+                      </sfwColumn>
+                    </sfwRow>
+                    <sfwRow>
+                      <sfwColumn>
+                        <sfwLabel ID="capFedTaxAmt" Text="4C - Fed Tax Amount : " AssociatedControlID="lblFedTaxAmt" sfwIsCaption="True" />
+                      </sfwColumn>
+                      <sfwColumn>
+                        <sfwLabel ID="lblFedTaxAmt" sfwDataFormat="{0:C}" sfwEntityField="fedtaxamt" />
+                      </sfwColumn>
+                    </sfwRow>
+                  </sfwTable>
+                </sfwPanel>
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlNewPage" sfwCaption="PLSO" sfwVisibleRule="VisibleRuleIsBenefitDistributionTypePLSO" Visible="False">
+          <sfwTable CssClass="Table" ID="tblNewPage">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capTaxOption1" Text="Tax Option : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlPlsoTaxOption" sfwLoadType="Method" sfwLoadSource="LoadPLSOTaxOptionBasedOnTaxIdentifier" sfwEntityField="PlsoTaxOption" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capSuppressWarningsFlag1" Text="Suppress Warnings : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwCheckBox ID="chkPlsoSupressWarning" sfwEntityField="PlsoSupressWarning" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn />
+              <sfwColumn />
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlRefund" sfwCaption="Refund" sfwVisibleRule="VisibleRuleIsBenefitDistributionTypeRefund">
+          <sfwTable CssClass="Table" ID="tblRefund">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capTaxOptionValue31" Text="Tax Option : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlRefundTaxOption" sfwLoadType="Method" sfwLoadSource="LoadTaxOptionBasedOnTaxIdentifier" sfwEntityField="RefundTaxOption" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capSuppressWarningsFlag2" Text="Suppress Warnings : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwCheckBox ID="chkRefundSupressWarning" sfwEntityField="RefundSupressWarning" />
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlTax" sfwCaption="Federal Refund Tax" sfwVisibleRule="VisibleRuleForNewFedTaxRefund">
+          <sfwTable ID="tblNewPage">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLiteral ID="ltrltrWithHoldingText" CssClass="alignleft" sfwMode="All" Text="Your withholding rate is determined by the type of payment you will receive." />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLiteral ID="ltrltrWithHoldingText1" CssClass="alignleft" sfwMode="All" Text="• For nonperiodic payments, the default withholding rate is 10%. You can choose to have a different rate by entering a rate between 0% and 100% on line 2. Generally, you can’t choose less than 10% for payments to be delivered outside the United States and its possessions." />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLiteral ID="ltrltrWithHoldingText2" CssClass="alignleft" sfwMode="All" Text="• For an eligible rollover distribution, the default withholding rate is 20%. You can choose a rate greater than 20% by entering the rate on line 2. You may not choose a rate less than 20%." />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLiteral ID="ltrltrWithHoldingText3" CssClass="alignleft" sfwMode="All" Text="complete this line if you would like a rate of withholding that is different from the default withholding rate. See the instructions on page 2 and the Marginal Rate Tables below for additional information. Enter the rate as a whole number (no decimals) " />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="TxtFedTax" sfwEntityField="RefundFedPercent" sfwDataFormat="{0'%}" />
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlNewStateRefundTax" sfwCaption="State Tax" sfwVisibleRule="IsNewStateTaxST22Refund">
+          <sfwTable ID="tblW4PNewPage2">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLiteral ID="lblStateStartDate" Text="Start Date: " sfwVisibleRule="VisibleRuleIsMonthlyStateTax" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtTextBox" sfwEntityField="StartDate" sfwVisibleRule="VisibleRuleIsMonthlyStateTax" sfwDataFormat="{0:d}" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLiteral ID="lblEndDateStateTax" Text="End Date: " sfwVisibleRule="VisibleRuleIsMonthlyStateTax" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtStateEndDate" sfwEntityField="EndDate" sfwVisibleRule="VisibleRuleIsMonthlyStateTax" sfwDataFormat="{0:d}" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLiteral ID="ltrStatetaxWithHolding" CssClass="alignleft" sfwMode="All" Text="Please Enter Flat Amount: " />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtStateTax" sfwEntityField="RefundStateAmt" sfwDataFormat="{0:C}" sfwVisibleRule="VisibleRuleIsLumpsumStateTax" />
+                <sfwTextBox ID="txtStateTaxMonthlyBen" sfwEntityField="StateFlatAmount" sfwDataFormat="{0:C}" sfwVisibleRule="VisibleRuleIsMonthlyStateTax" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlFederalRMDTax" sfwCaption="Federal RMD Tax" sfwVisibleRule="VisibleRuleForNewFedTaxRMD">
+          <sfwTable ID="tblNewPageRMD">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLiteral ID="ltrltrWithHoldingTextRMD" CssClass="alignleft" sfwMode="All" Text="Your withholding rate is determined by the type of payment you will receive." />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLiteral ID="ltrltrWithHoldingText1RMD" CssClass="alignleft" sfwMode="All" Text="• For nonperiodic payments, the default withholding rate is 10%. You can choose to have a different rate by entering a rate between 0% and 100% on line 2. Generally, you can’t choose less than 10% for payments to be delivered outside the United States and its possessions." />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLiteral ID="ltrltrWithHoldingText2RMD" CssClass="alignleft" sfwMode="All" Text="• For an eligible rollover distribution, the default withholding rate is 20%. You can choose a rate greater than 20% by entering the rate on line 2. You may not choose a rate less than 20%." />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLiteral ID="ltrltrWithHoldingText3RMD" CssClass="alignleft" sfwMode="All" Text="complete this line if you would like a rate of withholding that is different from the default withholding rate. See the instructions on page 2 and the Marginal Rate Tables below for additional information. Enter the rate as a whole number (no decimals) " />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="TxtFedTaxRMD" sfwEntityField="RefundFedPercent" sfwDataFormat="{0'%}" />
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlNewStateRMDTax" sfwCaption="State RMD Tax" sfwVisibleRule="IsNewStateTaxST22RMD">
+          <sfwTable ID="tblNewPage2W4P">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLiteral ID="ltrStatetaxWithHoldingRMD" CssClass="alignleft" sfwMode="All" Text="Please Enter Flat Amount: " />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtStateTaxRMD" sfwEntityField="RefundStateAmt" sfwDataFormat="{0:C}" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlFederalPLSOTax" sfwCaption="PLSO Federal Tax" sfwVisibleRule="VisibleRuleForNewFedTaxPLSO">
+          <sfwTable ID="tblNewPagePLSO">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLiteral ID="ltrltrWithHoldingTextPLSO" CssClass="alignleft" sfwMode="All" Text="Your withholding rate is determined by the type of payment you will receive." />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLiteral ID="ltrltrWithHoldingText1PLSO" CssClass="alignleft" sfwMode="All" Text="• For nonperiodic payments, the default withholding rate is 10%. You can choose to have a different rate by entering a rate between 0% and 100% on line 2. Generally, you can’t choose less than 10% for payments to be delivered outside the United States and its possessions." />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLiteral ID="ltrltrWithHoldingText2PLSO" CssClass="alignleft" sfwMode="All" Text="• For an eligible rollover distribution, the default withholding rate is 20%. You can choose a rate greater than 20% by entering the rate on line 2. You may not choose a rate less than 20%." />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLiteral ID="ltrltrWithHoldingText3PLSO" CssClass="alignleft" sfwMode="All" Text="complete this line if you would like a rate of withholding that is different from the default withholding rate. See the instructions on page 2 and the Marginal Rate Tables below for additional information. Enter the rate as a whole number (no decimals) " />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="TxtFedTaxPLSO" sfwEntityField="RefundFedPercent" sfwDataFormat="{0'%}" />
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlNewStatePLSOTax" sfwCaption="PLSO State Tax" sfwVisibleRule="IsNewStateTaxST22PLSO">
+          <sfwTable ID="tblNewPage2W4PPLSOState">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLiteral ID="ltrStatetaxWithHoldingplso" CssClass="alignleft" sfwMode="All" Text="Please Enter Flat Amount: " />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtStateTaxplso" sfwEntityField="RefundStateAmt" sfwDataFormat="{0:C}" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnltbTax" sfwCaption="Tax Info">
+          <sfwTable CssClass="Table" ID="tbTax">
+            <sfwRow>
+              <sfwColumn>
+                <sfwGridView AllowPaging="True" AllowSorting="True" AutoGenerateColumns="False" ID="grvTaxWithHoldingTaxItems" sfwEntityField="lstTaxWithHoldingTaxItems" sfwGridEntity="entPayeeAccountTaxWithholdingItemDetail">
+                  <Columns>
+                    <TemplateField HeaderText="Item Description">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objPaymentItemType.ItemTypeDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Amount" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="Amount" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Payee Account Tax Withholding Item Dtl ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="PayeeAccountTaxWithholdingItemDtlId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Start Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="objPayeeAccountPaymentItemType.StartDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="End Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="objPayeeAccountPaymentItemType.EndDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlhistory" sfwCaption="History">
+          <sfwTable CssClass="Table" ID="tblhistory">
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnOpenTaxWithholingHistory" sfwActiveForm="wfmTaxWithholdingInformationMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintpayeeaccounttaxwithholdingid=PayeeAccountTaxWithholdingId" sfwRelatedControl="grvTaxWithholingHistory" Text="Open" Visible="False" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwGridView AllowPaging="True" AllowSorting="True" AutoGenerateColumns="False" ID="grvTaxWithholingHistory" sfwEntityField="objPayeeAccount.lstTaxWithholingHistory" sfwGridEntity="entPayeeAccountTaxWithholding">
+                  <Columns>
+                    <TemplateField HeaderText="Tax ID">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="PayeeAccountTaxWithholdingId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Start Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="StartDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="End Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EndDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Tax Type">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="TaxIdentifierDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Allowance" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="TaxAllowance" Visible="False" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Marital Status" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="MaritalStatusDescription" Visible="False" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Tax Option" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="TaxOptionDescription" Visible="False" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Additional Tax Amount" ItemStyle.HorizontalAlign="Right" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="AdditionalTaxAmount" Visible="False" />
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="AdditionalTaxAmount" Visible="False" />
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="AdditionalTaxAmount" Visible="False" />
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="AdditionalTaxAmount" Visible="False" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlAuditInfo" sfwCaption="Audit Information">
+          <sfwTable CssClass="Table" ID="tblAuditInfo">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capCreate" Text="Create : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblCreatedBy" sfwEntityField="CreatedBy" />
+                <sfwLabel ID="lblUpdateSeq" sfwTwoWayBinding="True" Visible="False" sfwEntityField="UpdateSeq" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblCreatedDate" sfwEntityField="CreatedDate" sfwDataFormat="{0:G}" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capModify" Text="Modify : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblModifiedBy" sfwEntityField="ModifiedBy" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblModifiedDate" sfwEntityField="ModifiedDate" sfwDataFormat="{0:G}" />
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+  </sfwTable>
+  <loaddetails>
+    <entityfield ID="objPayeeAccount.objMember" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objPayeeAccount.objPayee" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objPayeeAccount" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objPayeeAccount.objMember.objPersonCurrentAddress" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstTaxWithHoldingTaxItems" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objPayeeAccount.lstTaxWithholingHistory" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+  </loaddetails>
+</form>

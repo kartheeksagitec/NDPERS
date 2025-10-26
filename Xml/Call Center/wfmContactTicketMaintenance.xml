@@ -1,0 +1,1213 @@
+﻿<form ID="wfmContactTicketMaintenance" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvCallCenter" sfwResource="900" sfwType="Maintenance" sfwTitle="Contact Ticket Maintenance" version="3.5" sfwEntity="entContactTicket">
+  <initialload>
+    <callmethods sfwMode="New" sfwMethodName="NewContactTicket" />
+    <callmethods sfwMode="Update" sfwMethodName="FindContactTicket" />
+  </initialload>
+  <sfwTable ID="Main">
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnltoolbar">
+          <sfwTable ID="toolbar">
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnSave" sfwMethodName="btnNoChangesSave_Click" sfwNavigationParameter="Aintcontactticketid=ContactTicketId" sfwVisibleRule="VISIBLE CONTACT TICKET SAVE BTN" Text="Save" />
+                <sfwButton ID="btnCancel" sfwMethodName="btnCancel_Click" Text="Refresh" />
+                <sfwButton ID="btnPrev" sfwMethodName="btnPrev_Click" Text="Prev" />
+                <sfwButton ID="btnNext" sfwMethodName="btnNext_Click" Text="Next" />
+                <sfwButton ID="btnCopyAndClose" sfwActiveForm="wfmContactTicketMaintenance" sfwMethodName="btnNew_Click" sfwMode="Update" sfwNavigationParameter="AintContactTicketid=lblContactTicketId" sfwVisibleRule="RULE CHECK TICKET STATUS IS OPEN" Text="Copy and Close" />
+                <sfwButton ID="btnSeminar" Text="Seminar Attendees" Visible="False" />
+                <sfwButton ID="btnCorrespondence" sfwMethodName="btnCorrespondence_Click" Text="Correspondence" />
+                <sfwButton ID="btnCreateIDBRemittance" sfwMessageId="3081" sfwMethodName="btnValidateExecuteBusinessMethod_Click" sfwObjectMethod="btnCreateIDBRemittance_Click" sfwVisibleRule="VisibleRuleIDBRemittanceButton" Text="Create IDB Remittance" />
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlMain" sfwCaption="Contact Ticket Detail">
+          <sfwTable CssClass="Table" ID="tblMain">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capContactTicketId" Text="Ticket Number : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblContactTicketId" sfwEntityField="ContactTicketId" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capPersonId" Text="PERSLink ID : " Width="100px" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtPersonId" sfwEntityField="PersonId" />
+                <sfwImageButton ID="btnRetrieve1" ImageAlign="AbsMiddle" ImageUrl="~/Image/Lookup.jpg" sfwActiveForm="wfmPersonLookup" sfwMethodName="btnRetrieve_Click" sfwRelatedControl="txtPersonId" sfwSelectedIndex="PersonId" />
+              </sfwColumn>
+              <sfwColumn CssClass="captionTd">
+                <sfwButton ID="btnGetPersonAndOrgDetails" sfwMessageId="3058" sfwMethodName="btnValidateExecuteBusinessMethod_Click" sfwObjectMethod="btnGetPersonAndOrgDetails_Click" Text="Retrieve" />
+                <sfwLabel ID="capOrgId" Text="Org Code ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtOrgId" sfwEntityField="IstrOrgCodeID" />
+                <sfwImageButton ID="btnRetrieve" ImageAlign="AbsMiddle" ImageUrl="~/Image/Lookup.jpg" sfwActiveForm="wfmOrganizationLookup" sfwMethodName="btnRetrieve_Click" sfwRelatedControl="txtOrgId" sfwSelectedIndex="OrgCode" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="lblPersonName" Text="Person Name :" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblFullName" Width="100px" sfwEntityField="objPerson.FullName" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblOrgName" Text="Org Name :" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblOrgName1" sfwEntityField="objOrganization.OrgName" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capCallbackPhone" Text="Callback Phone : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn CssClass="noWrap">
+                <sfwTextBox CssClass="Table" ID="txtCallbackPhone" sfwDataFormat="{0:(###)###-####}" Width="130px" sfwEntityField="CallbackPhone" />
+                <sfwLabel AssociatedControlID="txtCallbackPhoneExt" ID="capCallbackPhoneExt" Text="Ext : " sfwIsCaption="True" CssClass="ext-label" />
+                <sfwTextBox CssClass="Table ext-input" ID="txtCallbackPhoneExt" MaxLength="10" Width="75px" sfwEntityField="Extn" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capTimeOfDayValue" Text="Time Of Day : " sfwIsCaption="True" Visible="False" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlTimeOfDayValue" sfwLoadType="CodeGroup" sfwLoadSource="5006" sfwEntityField="TimeOfDayValue" Visible="False" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capCallbackPhone2" Text="Callback Phone 2 : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn CssClass="noWrap">
+                <sfwTextBox CssClass="Table" ID="txtCallbackPhone2" sfwDataFormat="{0:(###)###-####}" Width="130px" sfwEntityField="CallbackPhone2" />
+                <sfwLabel AssociatedControlID="txtCallbackPhoneExt2" ID="capCallbackPhoneExt2" Text="Ext 2 : " sfwIsCaption="True" CssClass="ext-label" />
+                <sfwTextBox CssClass="Table ext-input" ID="txtCallbackPhoneExt2" MaxLength="10" Width="75px" sfwEntityField="Extn2" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capEmail" Text="Email : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn ColumnSpan="2">
+                <sfwTextBox ID="txtEmail" sfwEntityField="Email" Width="280px" />
+              </sfwColumn>
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capContactTypeValue" Text="Contact Type : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlContactTypeValue" sfwVisibleRule="VISIBLE RULE FOR CONTACT TYPE DROPDOWN" sfwLoadType="CodeGroup" sfwLoadSource="1001" sfwEntityField="ContactTypeValue" />
+                <sfwLabel ID="lblContactTypeDescription" sfwVisibleRule="VISIBLE RULE FOR CONTACT TYPE DESCRIPTION" sfwEntityField="ContactTypeDescription" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capEventTypeValue" Text="Event Type : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlEventTypeValue" sfwLoadType="CodeGroup" sfwLoadSource="1006" sfwEntityField="EventTypeValue" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capCallerName" Text="Caller's Name : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtCallerName" sfwEntityField="CallerName" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capCallerRelationshipValue" Text="Relationship of Caller  : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlCallerRelationshipValue" sfwDefaultValue="SELF" sfwLoadType="CodeGroup" sfwLoadSource="1012" sfwEntityField="CallerRelationshipValue" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capContactMethodValue" Text="Contact Method : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlContactMethodValue" sfwDefaultValue="TELE" sfwMode="New" sfwLoadType="CodeGroup" sfwLoadSource="1003" sfwEntityField="ContactMethodValue" />
+                <sfwLabel ID="lblContactMethodDescription" sfwMode="Update" sfwEntityField="ContactMethodDescription" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capResponseMethodValue" Text="Response Method : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlResponseMethodValue" sfwDefaultValue="TELE" sfwLoadType="CodeGroup" sfwLoadSource="1004" sfwEntityField="ResponseMethodValue" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel BackColor="White" BorderColor="White" ForeColor="Red" sfwMode="New" SkinID="ReqInformation" Text="*" sfwIsCaption="True" ID="lblLabel6" />
+                <sfwLabel ID="capStatusValue" Text="Ticket Status : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlStatusValue" sfwDefaultValue="OPEN" sfwLoadType="CodeGroup" sfwLoadSource="1002" sfwEntityField="StatusValue" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capAssignToUserId" Text="Assign To : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList DataTextField="user_id" DataValueField="user_serial_id" ID="ddlAssignToUserId" sfwLoadType="Query" sfwLoadSource="entUser.LOADACTIVEUSER" sfwEntityField="AssignToUserId" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capNotes" Text="Notes : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn ColumnSpan="3">
+                <sfwTextBox ID="txtNotes" Rows="5" TextMode="MultiLine" Width="800px" sfwEntityField="Notes" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capPublishWss" Text="Publish to WSS : " AssociatedControlID="chkPublishWss" sfwIsCaption="True" sfwVisibleRule="VisibiltyForPublishToWSSFlag" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwCheckBox ID="chkPublishWss" sfwEntityField="lblnNeedHistory" sfwVisibleRule="VisibiltyForPublishToWSSFlag" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn />
+              <sfwColumn />
+              <sfwColumn>
+                <sfwButton ID="btnServerSideRefresh" sfwMethodName="btnValidateExecuteBusinessMethod_Click" sfwObjectMethod="ReloadHandButtonData" SkinID="ServerSideRefresh" Text="Execute Refresh From Object" CssClass="hideControl" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtOriginalContactTicketId" Visible="False" sfwEntityField="OriginalContactTicketId" />
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlOtherDetailsTab" CssClass="ContainerPanel auto-width-panel" sfwCaption="Other Details">
+          <sfwTable ID="tblOtherDetailsTab" CssClass="wrapTextForNotes">
+            <sfwRow>
+              <sfwColumn>
+                <sfwTabContainer ID="tctOtherDetailsTab">
+                  <Tabs>
+                    <sfwTabSheet HeaderText="History" ID="tshOtherDetails">
+                      <sfwTable ID="tblOtherDetails">
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwButton ID="btnOpenContactTicketHistory" sfwActiveForm="wfmContactTicketHistoryMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintcontacttickethistoryid=ContactTicketHistoryId" sfwRelatedControl="grvContactTicketHistory" Text="Open" Visible="False" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwGridView AllowPaging="True" AllowSorting="True" AutoGenerateColumns="False" ID="grvContactTicketHistory" sfwEntityField="lstContactTicketHistory" sfwGridEntity="entContactTicketHistory" AllowEditing="True" sfwTwoWayBinding="True" SelectedRowStyle.CssClass="wrapTextForNotes">
+                              <Columns>
+                                <TemplateField HeaderText="Contact Ticket History ID" Visible="False">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpenContactTicketHistory" sfwEntityField="ContactTicketHistoryId" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Notes">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwWrap="True" Width="400px" sfwEntityField="Notes" CssClass="wrap-comment" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Assign To ">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="objUser.UserId" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Ticket Status">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="StatusDescription" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Contact Type">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="ContactTypeDescription" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="User ID">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="ModifiedBy" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Publish to WSS" sfwVisibleRule="VisibiltyForPublishToWSSFlag">
+                                  <ItemTemplate>
+                                    <sfwCheckBox sfwEntityField="PublishWss" sfwTwoWayBinding="False" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Date">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="ModifiedDate" sfwDataFormat="{0:d}" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                              </Columns>
+                            </sfwGridView>
+                          </sfwColumn>
+                        </sfwRow>
+                      </sfwTable>
+                    </sfwTabSheet>
+                    <sfwTabSheet HeaderText="Appointment Schedule" ID="tshAppointmentSchedule">
+                      <sfwTable ID="tblAppointmentSchedule">
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capAppointmentName" Text="Appointment Name : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtAppointmentName" sfwEntityField="objAppointmentSchedule.AppointmentName" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capAppointmentCancelFlag" Text=" Cancelled : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwCheckBox ID="chkAppointmentCancelFlag" sfwEntityField="objAppointmentSchedule.AppointmentCancelFlag" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capNoAppointmentNecessary" Text="No appointment necessary : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwCheckBox ID="chkNoAppointmentNecessary" sfwEntityField="objAppointmentSchedule.NoAppointmentNecessary" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capAppointmentTypeValue" Text="Appointment Type : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList ID="ddlAppointmentTypeValue" sfwLoadType="CodeGroup" sfwLoadSource="1007" sfwEntityField="objAppointmentSchedule.AppointmentTypeValue" />
+                            <sfwLabel ID="lblAppointmentTypeDescription" sfwMode="Update" sfwEntityField="objAppointmentSchedule.AppointmentTypeDescription" Visible="False" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capCounselorUserId" Text="Counselor : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList DataTextField="full_name" DataValueField="user_serial_id" ID="ddlCounselorUserId" sfwLoadType="Query" sfwLoadSource="entContactTicket.LOADAPPOINTMENTFACILITATOR" sfwEntityField="objAppointmentSchedule.CounselorUserId" />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capAppointmentDate" Text="Appointment Date : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtAppointmentDate" sfwDataFormat="{0:d}" sfwEntityField="objAppointmentSchedule.AppointmentDate" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capStartTimeValue" Text="Start Time : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList ID="ddlStartTimeValue" sfwLoadType="CodeGroup" sfwLoadSource="1009" sfwEntityField="objAppointmentSchedule.StartTimeValue" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capEndTimeValue" Text="End Time : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList ID="ddlEndTimeValue" sfwLoadType="CodeGroup" sfwLoadSource="1010" sfwEntityField="objAppointmentSchedule.EndTimeValue" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capRequestedDateFrom" Text="Requested Date From : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtRequestedDateFrom" sfwDataFormat="{0:d}" sfwEntityField="objAppointmentSchedule.RequestedDateFrom" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capRequestedDateTo" Text="Requested Date To : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtRequestedDateTo" sfwDataFormat="{0:d}" sfwEntityField="objAppointmentSchedule.RequestedDateTo" />
+                            <CompareValidator ControlToCompare="txtRequestedDateFrom" ControlToValidate="txtRequestedDateTo" ErrorMessage="Requested Date From cannot be greater than Requested Date To." ID="cmvRequestedDateRange" Operator="GreaterThanEqual" Text="*" Type="Date" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capTimeOfDayValue1" Text="Time Of Day : " sfwIsCaption="True" Visible="False" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList ID="ddlTimeOfDayValue1" sfwLoadType="CodeGroup" sfwLoadSource="5006" sfwEntityField="objAppointmentSchedule.TimeOfDayValue" Visible="False" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                      </sfwTable>
+                    </sfwTabSheet>
+                    <sfwTabSheet HeaderText="Benefit Estimate" ID="tshBenefitEstimate">
+                      <sfwTable ID="tblBenefitEstimate">
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capBenefitEstimateId" Text="Benefit Estimate ID : " Visible="False" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblBenefitEstimateId" Visible="False" sfwEntityField="objBenefitEstimate.BenefitEstimateId" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capContactTicketId1" Text="Contact Ticket ID : " Visible="False" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblContactTicketId1" Visible="False" sfwEntityField="objBenefitEstimate.ContactTicketId" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capTerminationDate" Text="Last Day of Work/Termination Date : " Width="250px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtTerminationDate" sfwDataFormat="{0:d}" sfwEntityField="objBenefitEstimate.TerminationDate" />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn />
+                          <sfwColumn ColumnSpan="2">
+                            <hr />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="lbnRetirementType" Text="Enter one of the following :" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwCheckBoxList DataTextField="description" DataValueField="code_value" ID="cblclcRetirementType" sfwEntityField="objBenefitEstimate.lstIclcRetirementType" sfwCheckBoxField="RetirementTypeValue" sfwLoadType="CodeGroup" sfwLoadSource="1021" />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capRetirementEffectiveDate" Text="Retirement Effective Date : " Width="250px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtRetirementEffectiveDate" sfwDataFormat="{0:d}" sfwEntityField="objBenefitEstimate.RetirementEffectiveDate" />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn />
+                          <sfwColumn ColumnSpan="2">
+                            <hr />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capConvertUnusedSickLeaveFlag" Text="Convert Unused Sick Leave : " Width="250px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwRadioButtonList ID="rblConvertUnusedSickLeaveFlag" RepeatDirection="Horizontal" sfwEntityField="objBenefitEstimate.ConvertUnusedSickLeaveFlag">
+                              <ListItem Text="Yes" Value="Y" />
+                              <ListItem Text="No" Value="N" />
+                            </sfwRadioButtonList>
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capUnusedSickLeaveHours" Text="# of Hours :" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtUnusedSickLeaveHours" sfwEntityField="objBenefitEstimate.UnusedSickLeaveHours" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capSendRetKitWithEstFlag" Text="Send Retirement Kit w/estimate: " Width="250px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwRadioButtonList ID="rblSendRetKitWithEstFlag" RepeatDirection="Horizontal" sfwEntityField="objBenefitEstimate.SendRetKitWithEstFlag">
+                              <ListItem Text="Yes" Value="Y" />
+                              <ListItem Text="No" Value="N" />
+                            </sfwRadioButtonList>
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                      </sfwTable>
+                    </sfwTabSheet>
+                    <sfwTabSheet HeaderText="Death Notice" ID="tshDeathNotice">
+                      <sfwTable ID="tblDeathNotice">
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwButton ID="btnValidateDeathNotice" sfwMessageId="128" sfwMethodName="btnValidateExecuteBusinessMethod_Click" sfwObjectMethod="ValidateAddressDeathNotice" sfwVisibleRule="VISIBLE VALIDATE ADDRESS BUTTON" Text="Validate Address" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwButton ID="btnRetriveData" sfwMethodName="btnValidateExecuteBusinessMethod_Click" sfwObjectMethod="btnRetriveDeceasedData_Click" Text="Retrieve" sfwMessageId="3058" />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capDeceasedMemberFlag" Text="Deceased is : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn Width="20px" CssClass="noWrap">
+                            <sfwDropDownList ID="ddlDeceasedName" sfwLoadType="Method" sfwEntityField="objDeathNotice.PerslinkId" sfwLoadSource="LoadDeceasedContactandDependentNames" DataTextField="MemberPersonName" DataValueField="person_id" OnClientChange="DeseasedPersonSelectedIndexChanged" sfwMode="New" />
+                            <sfwLabel ID="txtDeceasedFullName" sfwEntityField="objDeathNotice.DeceasedName" sfwMode="Update" />
+                          </sfwColumn>
+                          <sfwColumn CssClass="captionTd">
+                            <sfwLabel ID="lblName" Text="Name :" sfwIsCaption="True" CssClass="hideControl" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtDeceasedName" sfwEntityField="objDeathNotice.DeceasedName" CssClass="hideControl" sfwValidationRules="RULE CHECK IF CONTACT DECEASED NAME IS NULL" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capLabel" Text="Death already reported :" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwCheckBox ID="chkDeathAlreadyReported" sfwEntityField="objDeathNotice.DeathAlreadyReported" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capDeathDate" Text="Date of Death : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtDeathDate" sfwDataFormat="{0:d}" sfwEntityField="objDeathNotice.DeathDate" />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="lblLabel4" Text="Date of Last Regular Paycheck : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtTextBox" sfwDataFormat="{0:d}" sfwEntityField="objDeathNotice.LastRegularPaycheckDate" />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="lblLabel5" Text="Last Reporting Month for Retirement Contributions : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtTextBox1" sfwDataFormat="{0:MM/YYYY}" sfwEntityField="objDeathNotice.ReportingMonth" />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capContactName" Text="Contact Name : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtContactName" sfwEntityField="objDeathNotice.ContactName" />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capContactAddress" Text="Contact Address : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtContactAddress" sfwEntityField="objDeathNotice.ContactAddress" />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capContactCity" Text="Contact City : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtContactCity" sfwEntityField="objDeathNotice.ContactCity" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capContactStateValue" Text="Contact State : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList ID="ddlContactStateValue" sfwDefaultValue="ND" sfwLoadType="CodeGroup" sfwLoadSource="150" sfwEntityField="objDeathNotice.ContactStateValue" />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capContactZip" Text="Contact Zip : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtContactZip" MaxLength="5" sfwEntityField="objDeathNotice.ContactZip" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capContactPhone" Text="Contact Phone : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtContactPhone" sfwDataFormat="{0:(###)###-####}" sfwEntityField="objDeathNotice.ContactPhone" />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                      </sfwTable>
+                    </sfwTabSheet>
+                    <sfwTabSheet HeaderText="New Group" ID="tshNewGroup">
+                      <sfwTable ID="tblNewGroup">
+                        <sfwRow>
+                          <sfwColumn ColumnSpan="3">
+                            <sfwLabel ID="capDirectGroupToWwwNdGovNDPERSProgramEnrollmentForPlanDetails" Text="Direct group to www.nd.gov/ndpers. Program Enrollment, for plan Details" Width="500px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwButton ID="btnValidateAddressNewGroup" sfwMessageId="128" sfwMethodName="btnValidateExecuteBusinessMethod_Click" sfwObjectMethod="ValidateAddressNewGroup" sfwVisibleRule="VISIBLE VALIDATE ADDRESS BUTTON" Text="Validate Address" />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capCorrespondenceFlag" Text="Send Correspondence ? : " Width="200px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwRadioButtonList ID="rblCorrespondenceFlag" RepeatDirection="Horizontal" sfwEntityField="objNewGroup.CorrespondenceFlag">
+                              <ListItem Text="Yes" Value="Y" />
+                              <ListItem Text="No" Value="N" />
+                            </sfwRadioButtonList>
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capEmpInformationValue" Text="Employer Information : " Width="200px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwRadioButtonList ID="rblEmpInformationValue" RepeatDirection="Horizontal" sfwLoadType="CodeGroup" sfwLoadSource="1011" sfwEntityField="objNewGroup.EmpInformationValue" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capIfTransferFromGroupGroupName" Text="If Transfer from Group, Group Name :" Width="300px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtGroupName" sfwEntityField="objNewGroup.GroupName" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capDepartmentName" Text="Department Name : " Width="200px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtDepartmentName" sfwEntityField="objNewGroup.DepartmentName" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capDepartmentNo" Text="Department No : " Width="300px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtDepartmentNo" sfwEntityField="objNewGroup.DepartmentNo" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capContactName1" Text="Contact Name : " Width="200px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtContactName1" sfwEntityField="objNewGroup.ContactName" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capPhoneNo" Text="Phone No : " Width="300px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtPhoneNo" sfwDataFormat="{0:(###)###-####}" sfwEntityField="objNewGroup.PhoneNo" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capAddress" Text="Address : " Width="200px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtAddress" sfwEntityField="objNewGroup.Address" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capCity" Text="City : " Width="300px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtCity" sfwEntityField="objNewGroup.City" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capStateValue" Text="State : " Width="200px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList ID="ddlStateValue" sfwDefaultValue="ND" sfwLoadType="CodeGroup" sfwLoadSource="150" sfwEntityField="objNewGroup.StateValue" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capZipCode" Text="Zip : " Width="300px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtZipCode" MaxLength="5" sfwEntityField="objNewGroup.ZipCode" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="lblplanType" Text="Plan Type :" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn CssClass="plan-type-width" ColumnSpan="3">
+                            <sfwCheckBoxList ID="cblNewGrpPlan" RepeatColumns="2" RepeatDirection="Horizontal" sfwValueChecked="Y" sfwValueUnChecked="N" sfwEntityField="objNewGroup.lstIclcNewGroupPlanType" sfwCheckBoxField="PlanTypeValue" sfwLoadType="CodeGroup" sfwLoadSource="1025" />
+                          </sfwColumn>
+                          <sfwColumn Width="200px" />
+                          <sfwColumn />
+                        </sfwRow>
+                      </sfwTable>
+                    </sfwTabSheet>
+                    <sfwTabSheet HeaderText="Seminar Schedule" ID="tshSeminarSchedule">
+                      <sfwTable ID="tblSeminarSchedule">
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capSeminarName" Text="Seminar Name : " Width="200px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn ColumnSpan="2">
+                            <sfwTextBox ID="txtSeminarName" Width="500px" sfwEntityField="objSeminarSchedule.SeminarName" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capSeminarCancelFlag" Text="Cancelled : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwCheckBox ID="chkSeminarCancelFlag" sfwEntityField="objSeminarSchedule.SeminarCancelFlag" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capSeminarTypeValue" Text="Seminar Type : " Width="200px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList ID="ddlSeminarTypeValue" sfwVisibleRule="RULE CONTACT TYPE IS WORKFLOW" sfwLoadType="CodeGroup" sfwLoadSource="1013" sfwEntityField="objSeminarSchedule.SeminarTypeValue" />
+                            <sfwLabel ID="lblSeminarTypeValue" sfwMode="Update" sfwVisibleRule="RULE CONTACT TYPE IS NOT WORKFLOW" sfwEntityField="objSeminarSchedule.SeminarTypeDescription" />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capSeminarDate1" Text="Seminar Day 1: " Width="200px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtSeminarDate1" sfwDataFormat="{0:d}" sfwEntityField="objSeminarSchedule.SeminarDate1" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capSeminarDate2" Text="Seminar Day 2: " Width="200px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtSeminarDate2" sfwDataFormat="{0:d}" sfwEntityField="objSeminarSchedule.SeminarDate2" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capSeminarDate1StartTime" Text="Start Time Day 1: " Width="200px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList ID="ddlSeminarDate1StartTimeValue" sfwLoadType="CodeGroup" sfwLoadSource="1009" sfwEntityField="objSeminarSchedule.SeminarDate1StartTimeValue" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capSeminarDate2StartTime" Text="Start Time Day 2: " Width="200px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList ID="ddlSeminarDate2StartTimeValue" sfwLoadType="CodeGroup" sfwLoadSource="1009" sfwEntityField="objSeminarSchedule.SeminarDate2StartTimeValue" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capSeminarDate1EndTime" Text="End Time  Day 1: " Width="200px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList ID="ddlSeminarDate1EndTimeValue" sfwLoadType="CodeGroup" sfwLoadSource="1010" sfwEntityField="objSeminarSchedule.SeminarDate1EndTimeValue" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capSeminarDate2EndTime" Text="End Time Day 2: " Width="200px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList ID="ddlSeminarDate2EndTimeValue" sfwLoadType="CodeGroup" sfwLoadSource="1010" sfwEntityField="objSeminarSchedule.SeminarDate2EndTimeValue" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capFacilitator" Text="Facilitator : " Width="200px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList DataTextField="full_name" DataValueField="user_serial_id" ID="ddlFacilitator" sfwLoadType="Query" sfwLoadSource="entContactTicket.LOADSEMINARCOUNSELOR" sfwEntityField="objSeminarSchedule.Facilitator" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capTimeZone" Text="Location Time Zone : " Width="200px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtTimeZone" sfwEntityField="objSeminarSchedule.TimeZone" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capLocationName" Text="Location Name : " Width="200px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtLocationName" sfwEntityField="objSeminarSchedule.LocationName" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capMeetingRoom" Text="Meeting Room : " Width="200px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtMeetingRoom" sfwEntityField="objSeminarSchedule.MeetingRoom" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capLocationAddress" Text="Location Address : " Width="200px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtLocationAddress" sfwEntityField="objSeminarSchedule.LocationAddress" />
+                          </sfwColumn>
+                          <sfwColumn CssClass="Always-HiddenControl captionTd">
+                            <sfwLabel ID="capAttendeeFee" Text="Attendee Fee : " Width="200px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn CssClass="Always-HiddenControl">
+                            <sfwTextBox ID="txtAttendeeFee" sfwEntityField="objSeminarSchedule.AttendeeFee" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capLocationCity" Text="Location City : " Width="200px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtLocationCity" sfwEntityField="objSeminarSchedule.LocationCity" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblLabel3" Text="Webcast Available : " Width="200px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwDropDownList ID="ddlWebCastAvailable" sfwEntityField="objSeminarSchedule.WebcastAvailable">
+                              <ListItem />
+                              <ListItem Text="Yes" Value="Y" />
+                              <ListItem Text="No" Value="N" />
+                            </sfwDropDownList>
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capNotes2" Text="Notes : " Width="200px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtNotes2" Rows="4" TextMode="MultiLine" Width="400px" sfwEntityField="objSeminarSchedule.Notes" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capAttendees" Text="Onsite Attendees :" Width="200px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblLabel2" sfwEntityField="objSeminarSchedule.NoOfOnsiteAttendees" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn>
+                            <sfwLabel ID="lblGuests" Text="Webcast Attendees :" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblNoOfAttendess" sfwEntityField="objSeminarSchedule.NoOfWebcastAttendees" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capSeminarScheduleId" Text="Seminar Schedule ID : " Visible="False" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblSeminarScheduleId" sfwEntityField="objSeminarSchedule.SeminarScheduleId" CssClass="hideControl" />
+                          </sfwColumn>
+                          <sfwColumn CssClass="Always-HiddenControl captionTd">
+                            <sfwLabel ID="capTotalFee" Text="Total Fee :" Width="200px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn CssClass="Always-HiddenControl">
+                            <sfwLabel ID="lblTotalAmount" sfwEntityField="objSeminarSchedule.TotalAmount" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn HorizontalAlign="Left">
+                            <sfwLabel ID="capAttendees1" Text="Attendees" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn>
+                            <sfwLabel ID="capNoOfOnsiteGuest" Text="Onsite Guest : " AssociatedControlID="lblNoOfOnsiteGuest" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="lblNoOfOnsiteGuest" sfwEntityField="objSeminarSchedule.NoOfOnsiteGuest" />
+                          </sfwColumn>
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn ColumnSpan="3">
+                            <sfwButton ID="btnNewSeminarDetail" sfwActiveForm="wfmSeminarAttendeeDetailMaintenance" sfwMethodName="btnNew_Click" sfwNavigationParameter="AintSeminarScheduleId=lblSeminarScheduleId" sfwResource="902" Text="New" sfwToolBarGrid="dgrAttendees" />
+                            <sfwButton ID="btnOpenSeminarDetail" sfwActiveForm="wfmSeminarAttendeeDetailMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintseminarattendeedetailid=SeminarAttendeeDetailId" sfwRelatedControl="dgrAttendees" sfwResource="902" Text="Open" sfwDisableViewOnly="True" />
+                            <sfwButton ID="btnDeleteSeminarDetail" sfwMethodName="btnDelete_Click" sfwRelatedControl="dgrAttendees" sfwResource="903" sfwVisibleRule="IsContactTicketTypeSeminarDisableDeleteButton" Text="Delete" />
+                            <sfwButton ID="btnRemittanceAllocations" sfwMethodName="btnExecuteBusinessMethod_Click" Text="Remittance Allocation" Visible="False" />
+                            <sfwButton ID="btnAttended" sfwMessageId="3054" sfwMethodName="btnExecuteBusinessMethodSelectRows_Click" sfwNavigationParameter="SeminarAttendeeDetailId" sfwObjectMethod="UpdateStatusAttended" sfwRefreshFromObject="True" sfwRelatedControl="dgrAttendees" sfwSelection="Many" Text="Attended" />
+                            <sfwButton ID="btnGuests" sfwMessageId="3055" sfwMethodName="btnExecuteBusinessMethodSelectRows_Click" sfwNavigationParameter="SeminarAttendeeDetailId" sfwObjectMethod="UpdateStatusGuest" sfwRefreshFromObject="True" sfwRelatedControl="dgrAttendees" sfwSelection="Many" Text="Guest" />
+                            <sfwButton ID="btnExportToExcel" sfwMethodName="btnColumnsToExport_Click" sfwRelatedControl="dgrAttendees" Text="Export To Excel" />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn ColumnSpan="5">
+                            <sfwGridView AllowPaging="True" AllowSorting="True" AutoGenerateColumns="False" ID="dgrAttendees" sfwSelection="Many" sfwEntityField="objSeminarSchedule.lstSeminarAttendeeDetail" sfwGridEntity="entSeminarAttendeeDetail">
+                              <Columns>
+                                <TemplateField HeaderText="Seminar Attendee Detail ID" Visible="False">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="SeminarAttendeeDetailId" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Attendee Name">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpenSeminarDetail" sfwEntityField="IstrAttendeeDisplayName" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="PERSLink ID" ItemStyle.HorizontalAlign="Right">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="PersonId" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Convert Unused Sick Leave" Visible="False">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="ConvertUnusedSickLeaveFlag" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Contact ID">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="ContactId" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Onsite Attendees">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="NoOfGuestAttending" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Attended">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="IstrattendedUnChecked" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Webcast Attendees">
+                                  <ItemTemplate>
+                                    <sfwLabel ID="lblNoOfWebcastAttendees" sfwEntityField="NoOfWebcastAttendees" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Guest Attending">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="IstrGuestFlagUnChecked" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Amt Paid" Visible="False">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="TotalPaidFeeAmount" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Payment Method" Visible="False">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="PaymentMethodDescription" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Org Code ID">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="OrgToBillOrgCode" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Org Name">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="OrgName" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Seminar Schedule ID" Visible="False">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="objSeminarSchedule.SeminarScheduleId" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                              </Columns>
+                            </sfwGridView>
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn HorizontalAlign="Left">
+                            <sfwLabel ID="capGuestSpeakers" Text="Guest Speakers" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwButton ID="btnNewGuestSpeaker" sfwActiveForm="wfmSeminarAttendeeDetailMaintenance" sfwMethodName="btnNew_Click" sfwNavigationParameter="AintSeminarScheduleId=lblSeminarScheduleId" sfwResource="902" Text="New" sfwToolBarGrid="dgrGuests" />
+                            <sfwButton ID="btnOpenGuestSpeaker" sfwActiveForm="wfmSeminarAttendeeDetailMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintseminarattendeedetailid=SeminarAttendeeDetailId" sfwRelatedControl="dgrGuests" sfwResource="902" Text="Open" sfwDisableViewOnly="True" />
+                            <sfwButton ID="btnDeleteGuestSpeaker" sfwMethodName="btnDelete_Click" sfwRelatedControl="dgrGuests" sfwResource="903" sfwVisibleRule="IsContactTicketTypeSeminarDisableDeleteButton" Text="Delete" />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn ColumnSpan="5" CssClass="display-tablecell">
+                            <sfwGridView AllowPaging="True" AllowSorting="True" AutoGenerateColumns="False" ID="dgrGuests" sfwSelection="Many" sfwEntityField="objSeminarSchedule.lstGuestSpeakers" sfwGridEntity="entSeminarAttendeeDetail">
+                              <Columns>
+                                <TemplateField HeaderText="Seminar Attendee Detail ID" Visible="False">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="SeminarAttendeeDetailId" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Guest Speaker Name">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpenGuestSpeaker" sfwEntityField="IstrAttendeeDisplayName" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Contact ID">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="ContactId" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Seminar Schedule ID" Visible="False">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="objSeminarSchedule.SeminarScheduleId" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                              </Columns>
+                            </sfwGridView>
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                      </sfwTable>
+                    </sfwTabSheet>
+                    <sfwTabSheet HeaderText="Service Purchase" ID="tshServicePurchase">
+                      <sfwTable ID="tblServicePurchase">
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capRetirementEffectiveDate1" Text="Retirement Effective Date : " Width="250px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn ColumnSpan="3">
+                            <sfwTextBox ID="txtRetirementEffectiveDate1" sfwDataFormat="{0:d}" sfwEntityField="objContactMgmtServicePurchase.RetirementEffectiveDate" />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capConverUnusedSickLeaveFlag" Text="Converted Unused Sick Leave : " sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn ColumnSpan="2">
+                            <sfwRadioButtonList ID="chkConverUnusedSickLeaveFlag" RepeatDirection="Horizontal" RepeatLayout="Flow" sfwEntityField="objContactMgmtServicePurchase.ConverUnusedSickLeaveFlag">
+                              <ListItem Text="No" Value="N" />
+                              <ListItem Text="Yes" Value="Y" />
+                            </sfwRadioButtonList>
+                            <sfwLabel CssClass="CheckBoxList" ID="lblSickLeaveSpace" Width="6px" sfwIsCaption="True" />
+                            <sfwLabel CssClass="CheckBoxList" ID="capUnusedSickLeaveHours1" Text=", # of Hours : " sfwIsCaption="True" />
+                            <sfwTextBox CssClass="CheckBoxList" ID="txtUnusedSickLeaveHours1" sfwEntityField="objContactMgmtServicePurchase.UnusedSickLeaveHours" />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn HorizontalAlign="Left" CssClass="literal cont-service-from-date">
+                            <sfwLabel CssClass="GridEven" ID="capFromDate" Text="From Date" sfwIsCaption="True" />
+                            <sfwLabel ID="lblFromDateSpace" Width="94px" sfwIsCaption="True" />
+                            <sfwLabel CssClass="GridOdd" ID="capToDate" Text="To Date" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capTypesOfService" Text="Types of Service :" Width="250px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn ColumnSpan="3" Height="100px">
+                            <sfwGridView AllowPaging="True" AllowSorting="True" AutoGenerateColumns="False" ID="grvSerPurServiceType" sfwTwoWayBinding="True" ShowHeader="False" sfwEntityField="objContactMgmtServicePurchase.lstSerPurServiceType" sfwGridEntity="entSerPurServiceType" AllowEditing="True">
+                              <Columns>
+                                <TemplateField HeaderText="Ser Pur Service Type ID" Visible="False">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwEntityField="SerPurServiceTypeId" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Service Type Checked Flag">
+                                  <ItemTemplate>
+                                    <sfwCheckBox sfwEntityField="ServiceTypeCheckedFlag" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Service Type" SortExpression="ServiceTypeValue" SortExpressionUpdated="true">
+                                  <ItemTemplate>
+                                    <sfwLabel sfwTwoWayBinding="True" sfwEntityField="ServiceTypeDescription" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Service Type From Date">
+                                  <ItemTemplate>
+                                    <sfwTextBox sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwEntityField="ServiceTypeFromDate" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                                <TemplateField HeaderText="Service Type To Date">
+                                  <ItemTemplate>
+                                    <sfwTextBox sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwEntityField="ServiceTypeToDate" />
+                                  </ItemTemplate>
+                                </TemplateField>
+                              </Columns>
+                            </sfwGridView>
+                          </sfwColumn>
+                          <sfwColumn ColumnSpan="2" EnableTheming="False" />
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn />
+                          <sfwColumn HorizontalAlign="Left" Width="230px">
+                            <sfwLabel ID="lblSpace1" Width="6px" sfwIsCaption="True" />
+                            <sfwCheckBox ID="chkAddiGenericFlag" sfwDefaultValue="N" sfwEntityField="objContactMgmtServicePurchase.AddiGenericFlag" />
+                            <sfwLabel CssClass="GridEven display-inline" ID="capAddiGenericFlag" Text=" Additional / Generic (up to &lt;br/&gt;  60 months) Months or $ : " Width="180px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn ColumnSpan="2">
+                            <sfwTextBox ID="txtAddiGenericMonth" Width="136px" sfwEntityField="objContactMgmtServicePurchase.AddiGenericMonth" />
+                            <sfwLabel ID="lblSpace" Width="10px" sfwIsCaption="True" CssClass="marg-left-10" />
+                            <sfwTextBox ID="txtAddiGenericAmount" sfwDataFormat="{0:C}" sfwEntityField="objContactMgmtServicePurchase.AddiGenericAmount" />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capRolloverTransferInfo1" Text="Rollover/Transfer Info :" Width="250px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn ColumnSpan="2">
+                            <sfwCheckBoxList ID="cblIbusServicePurchase1" RepeatColumns="2" sfwValueChecked="Y" sfwValueUnChecked="N" sfwEntityField="objContactMgmtServicePurchase.lstIclcSerPurRolloverInfo" sfwCheckBoxField="RolloverValue" sfwLoadType="CodeGroup" sfwLoadSource="1019" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwLabel ID="capAddiGenericMonth" Text="Months or $ : " Visible="False" Width="80px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwLabel ID="capEstFundsToBeUtilAmount" Text="Est Funds To Be Utilized : " Width="250px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn>
+                            <sfwTextBox ID="txtEstFundsToBeUtilAmount" sfwDataFormat="{0:C}" sfwEntityField="objContactMgmtServicePurchase.EstFundsToBeUtilAmount" />
+                          </sfwColumn>
+                          <sfwColumn HorizontalAlign="Left">
+                            <sfwLabel ID="capForRetirementPortionOfPurchaseOnly1" Text="(for retirement portion of purchase only)" Width="300px" sfwIsCaption="True" />
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                        <sfwRow>
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                      </sfwTable>
+                    </sfwTabSheet>
+                  </Tabs>
+                </sfwTabContainer>
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlAuditInfo" sfwCaption="Audit Information">
+          <sfwTable CssClass="Table" ID="tblAuditInfo">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capCreate" Text="Create : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblCreatedBy" sfwEntityField="CreatedBy" />
+                <sfwLabel ID="lblUpdateSeq" sfwTwoWayBinding="True" Visible="False" sfwEntityField="UpdateSeq" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblCreatedDate" sfwEntityField="CreatedDate" sfwDataFormat="{0:G}" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capModify" Text="Modify : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblModifiedBy" sfwEntityField="ModifiedBy" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblModifiedDate" sfwEntityField="ModifiedDate" sfwDataFormat="{0:G}" />
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+  </sfwTable>
+  <loaddetails>
+    <entityfield ID="objPerson" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objOrganization" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstContactTicketHistory" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objAppointmentSchedule" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objBenefitEstimate" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objBenefitEstimate.lstIclcRetirementType" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objDeathNotice" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objNewGroup" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objNewGroup.lstIclcNewGroupPlanType" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objSeminarSchedule" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objSeminarSchedule.lstSeminarAttendeeDetail" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objSeminarSchedule.lstGuestSpeakers" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objContactMgmtServicePurchase" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objContactMgmtServicePurchase.lstSerPurServiceType" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objContactMgmtServicePurchase.lstIclcSerPurRolloverInfo" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+  </loaddetails>
+</form>

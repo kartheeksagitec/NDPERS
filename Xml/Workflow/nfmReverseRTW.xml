@@ -1,0 +1,28 @@
+<form ID="nfmReverseRTW" sfwActive="True" sfwStatus="Valid" sfwType="WorkflowMap" sfwRemoveDeletedActivities="False">
+  <activity sfwDisplayName="Reverse RTW Re Enrollment" sfwReferenceID="person_reference_id" sfwFirstActivityFlag="True" sfwLastActivityFlag="False">
+    <form sfwMode="new" sfwFormName="wfmPersonMaintenance" />
+    <form sfwMode="update" sfwFormName="wfmPersonMaintenance">
+      <parameter sfwParameterSource="FindPerson" sfwParamaterName="Aintpersonid" sfwFieldName="person_id" sfwParameterValue="person_reference_id" sfwValueSource="Parameter" sfwDataType="int" />
+    </form>
+  </activity>
+  <activity sfwDisplayName="Reverse Payee Account Suspension" sfwFirstActivityFlag="False" sfwLastActivityFlag="False">
+    <form sfwMode="new" sfwFormName="wfmPayeeAccountLookup">
+      <parameter sfwParameterSource="Criteria Field" sfwParamaterName="payee_perslink_id" sfwFieldName="payee_perslink_id" sfwParameterValue="ibusProcessInstance.icdoProcessInstance.person_id" sfwValueSource="Object Field" sfwDataType="int" />
+    </form>
+    <form sfwMode="update" sfwFormName="wfmPayeeAccountLookup" />
+  </activity>
+  <activity sfwDisplayName="Audit RTW Reversal" sfwReferenceID="person_account_reference_id" sfwFirstActivityFlag="False" sfwLastActivityFlag="False">
+    <form sfwMode="new" sfwFormName="wfmPensionPlanMaintenance" />
+    <form sfwMode="update" sfwFormName="wfmPensionPlanMaintenance">
+      <parameter sfwParameterSource="FindPersonAccountRetirement" sfwParamaterName="AintPersonAccountID" sfwFieldName="aintpersonaccountid" sfwParameterValue="person_account_reference_id" sfwValueSource="Parameter" sfwDataType="int" />
+    </form>
+  </activity>
+  <activity sfwDisplayName="Return RTW Contributions" sfwReferenceID="reference_id" sfwLastActivityFlag="True">
+    <form sfwMode="new" sfwFormName="wfmEmployerPayrollHeaderLookup" />
+    <form sfwMode="update" sfwFormName="wfmEmployerPayrollHeaderLookup" />
+  </activity>
+  <ProcessVariables>
+    <ProcessVariable ID="person_account_reference_id" sfwObjectID="busPersonAccountRetirement" sfwObjectField="icdoPersonAccount.person_account_id" />
+    <ProcessVariable ID="person_reference_id" sfwObjectID="busProcessInstance" sfwObjectField="icdoProcessInstance.person_id" />
+  </ProcessVariables>
+</form>

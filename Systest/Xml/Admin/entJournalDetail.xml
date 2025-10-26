@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entJournalDetail" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoJournalDetail" sfwObjectID="busJournalDetail" sfwTableName="sgt_journal_detail">
+  <rules>
+    <rule ID="IsSourceTypesVaried" sfwMessageId="4706" sfwExpression="(string.IsNullOrEmpty(this.istrSuppressWarning) || this.istrSuppressWarning == &quot;N&quot;) &amp;&amp; &#xA;(this.IsSourceTypeVaried() == True)" sfwObjectBased="True" />
+    <rule ID="Rule Check Duplicate Record Update" sfwMessageId="4711" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entJournalDetail.CheckDuplicateJournalDetailUpdate&quot;, this.icdoJournalDetail.journal_detail_id, this.icdoJournalDetail.plan_id, this.icdoJournalDetail.journal_header_id, this.icdoJournalDetail.fund_value, this.icdoJournalDetail.dept_value, this.icdoJournalDetail.source_type_value, this.icdoJournalDetail.source_id, this.icdoJournalDetail.istrAccountNo, this.icdoJournalDetail.org_id, this.icdoJournalDetail.person_id) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="Rule Check If Account ID is Null" sfwMessageId="4638" sfwExpression="(string.IsNullOrEmpty(this.icdoJournalDetail.istrAccountNo))" sfwObjectBased="True" />
+    <rule ID="Rule Check If Both Credit and Debit Amount Entered" sfwMessageId="4630" sfwExpression="(this.icdoJournalDetail.credit_amount != 0) &amp;&amp; &#xA;(this.icdoJournalDetail.debit_amount != 0)" sfwObjectBased="True" />
+    <rule ID="Rule Check If Both Credit and Debit Amt Not Entered" sfwMessageId="4629" sfwExpression="(this.icdoJournalDetail.debit_amount == 0) &amp;&amp; &#xA;(this.icdoJournalDetail.credit_amount == 0)" sfwObjectBased="True" />
+    <rule ID="Rule Check If Both PERSLink ID and Org ID NOT Exists" sfwMessageId="4635" sfwExpression="(string.IsNullOrEmpty(this.icdoJournalDetail.istrOrgCodeID)) &amp;&amp; &#xA;(this.icdoJournalDetail.person_id == 0)" sfwObjectBased="True" />
+    <rule ID="Rule Check If Both PERSLink ID and OrgID Exists" sfwMessageId="4635" sfwExpression="(this.icdoJournalDetail.person_id != 0) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.icdoJournalDetail.istrOrgCodeID))" sfwObjectBased="True" />
+    <rule ID="Rule Check If Credit Amount is Negative" sfwMessageId="4631" sfwExpression="(this.icdoJournalDetail.credit_amount &lt; 0)" sfwObjectBased="True" />
+    <rule ID="Rule Check If Debit Amount is Negative" sfwMessageId="4632" sfwExpression="(this.icdoJournalDetail.debit_amount &lt; 0)" sfwObjectBased="True" />
+    <rule ID="Rule Check If Dept ID is Null" sfwMessageId="4608" sfwExpression="(string.IsNullOrEmpty(this.icdoJournalDetail.dept_value))" sfwObjectBased="True" />
+    <rule ID="Rule Check If Duplicate Records New" sfwMessageId="4711" sfwExpression="(this.icdoJournalDetail.effective_date != DateTime.MinValue) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entJournalDetail.CheckDuplicateJournalDetailNew&quot;, this.icdoJournalDetail.plan_id, this.icdoJournalDetail.journal_header_id, this.icdoJournalDetail.istrAccountNo, this.icdoJournalDetail.fund_value, this.icdoJournalDetail.dept_value, this.icdoJournalDetail.source_type_value, this.icdoJournalDetail.source_id, this.icdoJournalDetail.org_id, this.icdoJournalDetail.person_id) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="Rule Check If Effective Date is Null" sfwMessageId="4656" sfwExpression="(this.icdoJournalDetail.effective_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="Rule Check If Fund is Null" sfwMessageId="4607" sfwExpression="(string.IsNullOrEmpty(this.icdoJournalDetail.fund_value))" sfwObjectBased="True" />
+    <rule ID="Rule Check If Journal Description is Null" sfwMessageId="4636" sfwExpression="(string.IsNullOrEmpty(this.icdoJournalDetail.journal_description))" sfwObjectBased="True" />
+    <rule ID="Rule Check If Plan is Null" sfwMessageId="4606" sfwExpression="(this.icdoJournalDetail.plan_id == 0)" sfwObjectBased="True" />
+    <rule ID="Rule Check If Source ID is Null" sfwMessageId="4637" sfwExpression="(this.icdoJournalDetail.source_id == 0)" sfwObjectBased="True" />
+    <rule ID="Rule Check If Source Type is Null" sfwMessageId="4615" sfwExpression="(string.IsNullOrEmpty(this.icdoJournalDetail.source_type_value))" sfwObjectBased="True" />
+    <rule ID="Rule Check Save Button Visibility" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusJournalHeader.icdoJournalHeader.journal_status_value&quot;) == &quot;ENTR&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule Check Valid Account ID" sfwMessageId="4639" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entChartOfAccount.GetCountByGLAccountNo&quot;, this.icdoJournalDetail.istrAccountNo) &lt; 1) &amp;&amp; &#xA;!(string.IsNullOrEmpty(this.icdoJournalDetail.istrAccountNo))" sfwObjectBased="True" />
+    <rule ID="Rule Check Valid Org  ID" sfwMessageId="4641" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entJournalDetail.GetOrgCountByOrgID&quot;, this.icdoJournalDetail.istrOrgCodeID) &lt; 1) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.icdoJournalDetail.istrOrgCodeID))" sfwObjectBased="True" />
+    <rule ID="Rule Check Valid Person ID" sfwMessageId="4640" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entPerson.VALIDATE_PERSLINK_ID&quot;, this.icdoJournalDetail.person_id) &lt; 1) &amp;&amp; &#xA;(this.icdoJournalDetail.person_id != 0)" sfwObjectBased="True" />
+    <rule ID="RuleCheckIfPostingDateLessThanEffectiveDate" sfwMessageId="4717" sfwExpression="(string.IsNullOrEmpty(this.istrSuppressWarning) || this.istrSuppressWarning == &quot;N&quot;) &amp;&amp; &#xA;(this.icdoJournalDetail.effective_date != DateTime.MinValue) &amp;&amp; &#xA;!(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusJournalHeader.icdoJournalHeader.posting_date&quot;) == DateTime.MinValue) &amp;&amp; &#xA;(this.icdoJournalDetail.effective_date &gt; RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusJournalHeader.icdoJournalHeader.posting_date&quot;))" sfwObjectBased="True" />
+    <rule ID="RuleCheckIfValidPlanFundDeptComboExists" sfwMessageId="4721" sfwExpression="(this.IsValidEntry() == False)" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="Rule Check Save Button Visibility" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="Rule Check If Credit Amount is Negative" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Debit Amount is Negative" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Both Credit and Debit Amount Entered" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Both Credit and Debit Amt Not Entered" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Plan is Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Fund is Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Dept ID is Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Source Type is Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Source ID is Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Account ID is Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Journal Description is Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Both PERSLink ID and OrgID Exists" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Both PERSLink ID and Org ID NOT Exists" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check Valid Account ID" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check Valid Person ID" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check Valid Org  ID" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Effective Date is Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Duplicate Records New" sfwMode="New" sfwStatus="Active" />
+    <item ID="Rule Check Duplicate Record Update" sfwMode="Update" sfwStatus="Active" />
+    <item ID="RuleCheckIfPostingDateLessThanEffectiveDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsSourceTypesVaried" sfwMode="All" sfwStatus="Active" />
+    <item ID="RuleCheckIfValidPlanFundDeptComboExists" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <updateablecdo />
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_JOURNAL_DETAIL">
+      <parameters />
+    </query>
+    <query ID="GetOrgCountByOrgID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_ORGANIZATION WHERE ORG_CODE=@ORG_CODE_ID">
+      <parameters>
+        <parameter ID="@ORG_CODE_ID" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="LoadOtherDetail" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_JOURNAL_DETAIL WHERE &#xD;&#xA;JOURNAL_HEADER_ID=@HEADER_ID AND&#xD;&#xA;JOURNAL_DETAIL_ID &lt;&gt; @DETAIL_ID ORDER BY JOURNAL_DETAIL_ID DESC">
+      <parameters>
+        <parameter ID="@HEADER_ID" sfwDataType="int" />
+        <parameter ID="@DETAIL_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetAmountGroupByFundValue" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT FUND_VALUE,SUM(ISNULL(DEBIT_AMOUNT,0)-ISNULL(CREDIT_AMOUNT,0)) AS AMOUNT&#xD;&#xA;FROM SGT_JOURNAL_DETAIL WHERE JOURNAL_HEADER_ID=@HEADER_ID&#xD;&#xA;GROUP BY FUND_VALUE">
+      <parameters>
+        <parameter ID="@HEADER_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="CheckDuplicateJournalDetailNew" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_JOURNAL_DETAIL JHDR&#xD;&#xA;INNER JOIN SGT_CHART_OF_ACCOUNT SCT ON SCT.CHART_OF_ACCOUNT_ID=JHDR.ACCOUNT_ID&#xD;&#xA;WHERE&#xD;&#xA;JHDR.JOURNAL_HEADER_ID=@JHDRID AND&#xD;&#xA;JHDR.PLAN_ID=@PLANID AND &#xD;&#xA;((JHDR.FUND_VALUE=@FUNDVALUE) OR (@FUNDVALUE IS NULL)) AND &#xD;&#xA;((JHDR.DEPT_VALUE=@DEPTVALUE) OR (@DEPTVALUE IS NULL)) AND&#xD;&#xA;((JHDR.SOURCE_TYPE_VALUE=@SOURCETYPE) OR (@SOURCETYPE IS NULL)) AND&#xD;&#xA;((JHDR.SOURCE_ID=@SOURCEID) OR (@SOURCEID =0))  AND&#xD;&#xA;((SCT.GL_ACCOUNT_NUMBER=@ACCTID) OR (@ACCTID IS NULL)) AND&#xD;&#xA;((JHDR.ORG_ID=@ORGID) OR (@ORGID =0)) AND&#xD;&#xA;((JHDR.PERSON_ID=@PERSONID) OR (@PERSONID =0))">
+      <parameters>
+        <parameter ID="@PLANID" sfwDataType="int" />
+        <parameter ID="@JHDRID" sfwDataType="int" />
+        <parameter ID="@ACCTID" sfwDataType="string" />
+        <parameter ID="@FUNDVALUE" sfwDataType="string" />
+        <parameter ID="@DEPTVALUE" sfwDataType="string" />
+        <parameter ID="@SOURCETYPE" sfwDataType="string" />
+        <parameter ID="@SOURCEID" sfwDataType="int" />
+        <parameter ID="@ORGID" sfwDataType="int" />
+        <parameter ID="@PERSONID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="CheckDuplicateJournalDetailUpdate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_JOURNAL_DETAIL JHDR&#xD;&#xA;INNER JOIN SGT_CHART_OF_ACCOUNT SCT ON SCT.CHART_OF_ACCOUNT_ID=JHDR.ACCOUNT_ID&#xD;&#xA;WHERE&#xD;&#xA;JHDR.JOURNAL_DETAIL_ID != @JDTLID AND&#xD;&#xA;JHDR.JOURNAL_HEADER_ID=@JHDRID AND&#xD;&#xA;JHDR.PLAN_ID=@PLANID AND &#xD;&#xA;((JHDR.FUND_VALUE=@FUNDVALUE) OR (@FUNDVALUE IS NULL)) AND &#xD;&#xA;((JHDR.DEPT_VALUE=@DEPTVALUE) OR (@DEPTVALUE IS NULL)) AND&#xD;&#xA;((JHDR.SOURCE_TYPE_VALUE=@SOURCETYPE) OR (@SOURCETYPE IS NULL)) AND&#xD;&#xA;((JHDR.SOURCE_ID=@SOURCEID) OR (@SOURCEID =0))  AND&#xD;&#xA;((SCT.GL_ACCOUNT_NUMBER=@ACCTID) OR (@ACCTID IS NULL))  AND&#xD;&#xA;((JHDR.ORG_ID=@ORGID) OR (@ORGID =0)) AND&#xD;&#xA;((JHDR.PERSON_ID=@PERSONID) OR (@PERSONID =0))">
+      <parameters>
+        <parameter ID="@JDTLID" sfwDataType="int" />
+        <parameter ID="@PLANID" sfwDataType="int" />
+        <parameter ID="@JHDRID" sfwDataType="int" />
+        <parameter ID="@FUNDVALUE" sfwDataType="string" />
+        <parameter ID="@DEPTVALUE" sfwDataType="string" />
+        <parameter ID="@SOURCETYPE" sfwDataType="string" />
+        <parameter ID="@SOURCEID" sfwDataType="int" />
+        <parameter ID="@ACCTID" sfwDataType="string" />
+        <parameter ID="@ORGID" sfwDataType="int" />
+        <parameter ID="@PERSONID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="IsValidEntryForDebitAccount" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_ACCOUNT_REFERENCE&#xD;&#xA;WHERE&#xD;&#xA;PLAN_ID=@PLAN AND&#xD;&#xA;FUND_VALUE=@FUND AND&#xD;&#xA;DEPT_VALUE=@DEPT_VALUE AND&#xD;&#xA;SOURCE_TYPE_VALUE = @SOURCE AND&#xD;&#xA;DEBIT_ACCOUNT_ID=@DEBIT">
+      <parameters>
+        <parameter ID="@PLAN" sfwDataType="int" />
+        <parameter ID="@FUND" sfwDataType="string" />
+        <parameter ID="@DEPT_VALUE" sfwDataType="string" />
+        <parameter ID="@SOURCE" sfwDataType="string" />
+        <parameter ID="@DEBIT" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="IsValidEntryForCreditAccount" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_ACCOUNT_REFERENCE&#xD;&#xA;WHERE&#xD;&#xA;PLAN_ID=@PLAN AND&#xD;&#xA;FUND_VALUE=@FUND AND&#xD;&#xA;DEPT_VALUE=@DEPT_VALUE AND&#xD;&#xA;SOURCE_TYPE_VALUE = @SOURCE AND&#xD;&#xA;CREDIT_ACCOUNT_ID=@CREDIT&#xD;&#xA;&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@PLAN" sfwDataType="int" />
+        <parameter ID="@FUND" sfwDataType="string" />
+        <parameter ID="@DEPT_VALUE" sfwDataType="string" />
+        <parameter ID="@SOURCE" sfwDataType="string" />
+        <parameter ID="@CREDIT" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetPlans" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_PLAN WHERE PLAN_ID NOT IN(11,10,8) ORDER BY SORT_ORDER">
+      <parameters />
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="JournalDetailId" sfwType="Column" sfwValue="journal_detail_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="JournalHeaderId" sfwType="Column" sfwValue="journal_header_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PlanId" sfwType="Column" sfwValue="plan_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="FundDescription" sfwType="Description" sfwValue="fund_description" />
+    <attribute ID="FundId" sfwType="Column" sfwValue="fund_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="1300" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="FundValue" sfwType="Column" sfwValue="fund_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="DeptDescription" sfwType="Description" sfwValue="dept_description" />
+    <attribute ID="DeptId" sfwType="Column" sfwValue="dept_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="1301" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="DeptValue" sfwType="Column" sfwValue="dept_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="SourceTypeDescription" sfwType="Description" sfwValue="source_type_description" />
+    <attribute ID="SourceTypeId" sfwType="Column" sfwValue="source_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="1304" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="SourceTypeValue" sfwType="Column" sfwValue="source_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="SourceId" sfwType="Column" sfwValue="source_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AccountId" sfwType="Column" sfwValue="account_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="OrgId" sfwType="Column" sfwValue="org_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PersonId" sfwType="Column" sfwValue="person_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="DebitAmount" sfwType="Column" sfwValue="debit_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" sfwRequired="False" />
+    <attribute ID="CreditAmount" sfwType="Column" sfwValue="credit_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" sfwRequired="False" />
+    <attribute ID="EffectiveDate" sfwType="Column" sfwValue="effective_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="JournalDescription" sfwType="Column" sfwValue="journal_description" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="100" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="objJournalHeader" sfwType="Object" sfwEntity="entJournalHeader" sfwValue="ibusJournalHeader" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrAccountNo" sfwValue="icdoJournalDetail.istrAccountNo" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrOrgCodeID" sfwValue="icdoJournalDetail.istrOrgCodeID" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrSuppressWarning" sfwValue="istrSuppressWarning" />
+    <attribute ID="objPlan" sfwType="Object" sfwEntity="entPlan" sfwValue="ibusPlan" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrGLType" sfwValue="istrGLType" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdclAmount" sfwValue="idclAmount" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPERSLinkID" sfwValue="istrPERSLinkID" />
+  </attributes>
+</entity>

@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entPersonAccountEAP" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwErrorTable="sgt_person_account_error" sfwParentKey="person_account_id" sfwParentKeyValue="icdoPersonAccount.person_account_id" sfwMainCDO="icdoPersonAccount" sfwStatusColumn="status_value" sfwObjectID="busPersonAccountEAP" sfwParentEntity="entPersonAccount">
+  <rules>
+    <rule ID="IsEndDateNotlastofMonthFollowingEmploymentEndtDate" sfwMessageId="6607" sfwExpression="(this.ValidateEndate() == True)" sfwObjectBased="True" />
+    <rule ID="IsHistoryChangeDateLessThanLastChangeDate" sfwMessageId="5026" sfwExpression="(this.IsHistoryEntryRequired == True) &amp;&amp; &#xA;!(this.ibusHistory.icdoPersonAccountEapHistory.person_account_eap_history_id == 0) &amp;&amp; &#xA;!(this.istrAllowOverlapHistory == &quot;Y&quot;) &amp;&amp; &#xA;(this.icdoPersonAccount.history_change_date &lt; RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusHistory.icdoPersonAccountEapHistory.start_date&quot;))" sfwObjectBased="True" />
+    <rule ID="IsProviderOrgNull" sfwMessageId="6640" sfwExpression="(this.icdoPersonAccount.provider_org_id == 0)" sfwObjectBased="True" />
+    <rule ID="IsStartDateNotFirstOfNextMonth" sfwMessageId="6630" sfwExpression="(this.IsPlanEnrollmentDateValidForEAP() == True)" sfwObjectBased="True" />
+    <rule ID="IsValidProviderOrgID" sfwMessageId="6517" sfwExpression="(this.IsProviderOrgIDValid() == False)" sfwObjectBased="True" />
+    <rule ID="IsMoreThanOneEnrolledInOverlapHistory" sfwMessageId="7132" sfwExpression="(this.istrAllowOverlapHistory == &quot;Y&quot;) &amp;&amp; &#xA;(this.IsMoreThanOneEnrolledInOverlapHistory() == True)" sfwObjectBased="True" />
+    <rule ID="IsStartDatePriortoEnrollmentEffeDate" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(!(this.icdoPersonAccount.history_change_date == DateTime.MinValue) &amp;&amp; &#xA;(this.icdoPersonAccount.plan_participation_status_value == &quot;ENL2&quot;) &amp;&amp;(this.IsStartDatePriortoEnrollmentEffeDate()))" sfwMessageId="10457" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="VisibleRuleForOverlap" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror>
+    <item ID="IsEndDateNotlastofMonthFollowingEmploymentEndtDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPostEnrollmentDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsProviderOrgNull" sfwMode="All" sfwStatus="Active" />
+  </softerror>
+  <harderror>
+    <item ID="IsPersonAgeLessThan18" sfwMode="New" sfwStatus="Active" />
+    <item ID="IsPlanParticipationStatusNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsStartDateNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEnnrollmentDateNotValidForEapDentalLifeHealthVisionFlex457" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsHistoryChangeDateRequired" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsHistoryChangeDateStartsWithFirstDayOfMonth" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsHistoryChangeDateLessThanLastChangeDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEnrollmentDayNOTFirstDay" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsValidProviderOrgID" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMoreThanOneEnrolledInOverlapHistory" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsStartDatePriortoEnrollmentEffeDate" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <attributes>
+    <attribute sfwDataType="int" sfwType="Property" ID="PersonAccountId" sfwValue="icdoPersonAccount.person_account_id" />
+    <attribute ID="objPerson" sfwType="Object" sfwEntity="entPerson" sfwValue="ibusPerson" />
+    <attribute sfwDataType="string" sfwType="Property" ID="StatusDescription" sfwValue="icdoPersonAccount.status_description" />
+    <attribute sfwDataType="string" sfwType="Property" ID="SuppressWarningsFlag" sfwValue="icdoPersonAccount.suppress_warnings_flag" />
+    <attribute ID="objPlan" sfwType="Object" sfwEntity="entPlan" sfwValue="ibusPlan" />
+    <attribute sfwDataType="string" sfwType="Property" ID="PlanParticipationStatusValue" sfwValue="icdoPersonAccount.plan_participation_status_value" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="StartDate" sfwValue="icdoPersonAccount.start_date" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="HistoryChangeDate" sfwValue="icdoPersonAccount.history_change_date" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrAllowOverlapHistory" sfwValue="istrAllowOverlapHistory" />
+    <attribute sfwDataType="int" sfwType="Property" ID="ProviderOrgId" sfwValue="icdoPersonAccount.provider_org_id" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecMonthlyPremium" sfwValue="idecMonthlyPremium" />
+    <attribute sfwDataType="string" sfwType="Property" ID="SuppressWarningsBy" sfwValue="icdoPersonAccount.suppress_warnings_by" />
+    <attribute sfwType="Collection" sfwEntity="entPersonAccountEAPHistory" ID="lstEAPHistory" sfwValue="iclbEAPHistory" />
+    <attribute sfwType="Collection" sfwEntity="entPersonAccountInsuranceContribution" ID="lstInsuranceContribution" sfwValue="iclbInsuranceContribution" />
+    <attribute sfwType="Collection" sfwEntity="entPersonEmploymentDetail" ID="lstEmploymentDetail" sfwValue="iclbEmploymentDetail" />
+    <attribute sfwType="Collection" sfwEntity="entPersonAccountInsuranceTransfer" ID="lstPersonAccountInsuranceTransfer" sfwValue="iclbPersonAccountInsuranceTransfer" />
+    <attribute sfwDataType="string" sfwType="Property" ID="CreatedBy" sfwValue="icdoPersonAccount.created_by" />
+    <attribute sfwDataType="int" sfwType="Property" ID="UpdateSeq" sfwValue="icdoPersonAccount.update_seq" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="CreatedDate" sfwValue="icdoPersonAccount.created_date" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ModifiedBy" sfwValue="icdoPersonAccount.modified_by" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="ModifiedDate" sfwValue="icdoPersonAccount.modified_date" />
+    <attribute ID="objProvider" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusProvider" />
+    <attribute sfwDataType="string" sfwType="Property" ID="PlanParticipationStatusDescription" sfwValue="icdoPersonAccount.plan_participation_status_description" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IintProviderOrgId" sfwValue="iintProviderOrgId" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrAcceptAcknowledgement" sfwValue="istrAcceptAcknowledgement" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrConfirmationText" sfwValue="istrConfirmationText" />
+    <attribute sfwType="Object" sfwEntity="entPersonAccount" sfwValue="ibusPersonAccount" ID="objPersonAccount" />
+  </attributes>
+  <objectmethods>
+    <method ID="LoadParticipationStatusByBenefitType" sfwReturnType="Collection" sfwObjectID="cdoCodeValue" sfwEntity="entPostRetirementDeathApplication" />
+    <method ID="LoadEapProviders" sfwReturnType="Collection" sfwObjectID="cdoOrganization" sfwEntity="entOrganization" />
+  </objectmethods>
+</entity>

@@ -1,0 +1,529 @@
+﻿<div ng-controller="EntityController" class="innerWrapper">
+    <div ng-hide="selectedDesignSource" class="entity-dashboard-wrapper">
+        <search-design main-model="objEntity" current-file="currentfile" select-element="selectElement(path)" traverse-model="traverseMainModel(path)" toggle-design="ToggleUIDesginAttribute(items,IsAction)" class="design-search"></search-design>
+        <div class="entity-tabs-section">
+
+            <div class="primary-tab-header">
+                <ul class="nav nav-tabs" >
+
+                    <li ng-click="selectDashboard()" ng-class="(IsDashboardVisible)?'active':''" class="entity-home-link" >
+
+                        <a data-toggle="tab" aria-expanded="true">
+                            Home
+                        </a>
+                    </li>
+
+                    <li ng-click="selectAttributeTab()" ng-class="SelectedView=='Attributes'?'active':''" class="entity-attributes-link">
+
+                        <a data-toggle="tab" aria-expanded="true">
+                            Attributes
+                        </a>
+
+
+                    </li>
+
+                    <li ng-click="selectValidationRulesTab()" ng-class="SelectedView=='ValidationRules'?'active':''" class="entity-validation-link">
+
+                        <a data-toggle="tab" aria-expanded="true">
+                            Validations
+                        </a>
+
+                    </li>
+
+                    <li ng-click="selectQueriesTab()" ng-class="SelectedView=='Queries'?'active':''" class="entity-queries-link">
+                        <a data-toggle="tab" aria-expanded="true">
+                            Queries
+                        </a>
+
+
+                    </li>
+
+                    <li ng-click="selectFieldConstraintsTab()" ng-class="SelectedView=='FieldConstraints'?'active':''" class="entity-field-constraints-link">
+                        <a data-toggle="tab" aria-expanded="true">
+                            Constraints
+                        </a>
+
+                    </li>
+
+                    <li ng-click="selectBusinessObjectTab()" ng-class="SelectedView=='BusinessObject'?'active':''" class="entity-business-object-link">
+                        <a data-toggle="tab" aria-expanded="true">
+                            Business Object
+                        </a>
+
+
+                    </li>
+
+                </ul>
+            </div>
+
+            <div class="entity-tabs-section-content">
+                <div class="entity-dashboard-container" ng-class="(IsDashboardVisible)?'displayblock':'displaynone'" knowtion-id="2.1">
+                    <div class="entity-dashboard-container-inner">
+                        <div class="col-xs-12 full-height no-padding">
+
+                            <div id="attributes" class="col-xs-3 entity-dashboard-container-section no-left-padding">
+                                <div class="content-wrapper attributes-border">
+                                    <div class="entity-dashboard-tab-head">
+                                        <span ng-class="dashboardFilters.isAttributesFilterVisible?'hidden-text':'visible-text'" ng-click="selectAttributeTab()">Attributes</span>
+                                        <filter-list collection="objAttributes.Elements" change-callback="selectAttribute(obj,true)" propertyname="'dictAttributes.ID'" slide-left="dashboardFilters.isAttributesFilterVisible" skip-prop="'sfwType'" skip-value="'Description'" css-class="col-xs-8 search-text-padding-top" style="top:2px"></filter-list>
+
+                                        <div class="entity-tab-head-icons">
+                                            <span ng-show="dashboardFilters.isAttributesFilterVisible" class="entity-tab-head-textbox-close fa fa-close" ng-click="dashboardFilters.toggleDashboardFilter('Attributes')"></span>
+                                            <a ng-show="!dashboardFilters.isAttributesFilterVisible" title="Search Attributes"><img src="images/Entity/entity-dashboard-search.svg" ng-click="dashboardFilters.toggleDashboardFilter('Attributes')" /></a>
+                                            <a title="Add Attribute"><img src="images/Common/icon_add_dark.svg" ng-click="AddAttributeFromDashBoard()" /></a>
+                                            <a title="Delete Attribute"  ng-disabled="objAttributes.Elements.indexOf(selectedItem) < 0"><img src="images/Common/icon_delete_dark.svg" ng-click="removeValueAttribute()"/></a>
+                                            <!--<a ng-click="syncDBWithEntity()" title="{{isDirty?'Please save file before sync.':'Sync DB With Entity'}}" ng-disabled="isDirty"><img src="images/Entity/table_refresh.svg" height="16" width="18"/></a>-->
+                                            <a ng-click="refreshColumns()" title="{{isDirty?'Please save file before sync.':'Sync Entity With DB'}}" ng-disabled="isDirty || !objEntity.dictAttributes.sfwTableName"><img src="images/Entity/entity_refresh.svg" height="16" width="18"/></a>
+                                        </div>
+                                    </div>
+
+                                    <div class="entity-dashboard-inner-section-container">
+                                        <ul>
+                                            <li ng-repeat="objInput in objAttributes.Elements | orderBy:'dictAttributes.ID'" tabindex="{{$index}}" key-up-down-with-element callbackfn="selectAttribute" objproperty="'objInput'" property="'sfwType'" propvalue="'Description'" ng-hide="objInput.dictAttributes.sfwType=='Description'" ng-dblclick="selectAttributedbclick(objInput)" ng-click="selectAttribute(objInput)" ng-class="{'selected':selectedItem == objInput,'bckgGrey' : objInput.isAdvanceSearched}">
+                                                <span ng-bind="objInput.dictAttributes['ID']"></span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-xs-5 field-contraint-queries-validation-container">
+
+                                <div class="field-contraint-queries">
+
+                                    <div id="constraints" class="col-xs-6 entity-dashboard-container-section">
+                                        <div class="content-wrapper constraitns-border">
+                                            <div class="entity-dashboard-tab-head">
+                                                <span style="position:absolute" ng-class="dashboardFilters.isFieldConstraintsFilterVisible?'hidden-text':'visible-text'" ng-click="selectFieldConstraintsTab()">Constraints</span>
+                                                <filter-list collection="objConstraints.Elements" change-callback="SelectFieldConstraint(obj,true)" propertyname="'dictAttributes.sfwFieldName'" alternate-property="'dictAttributes.sfwDisplayName'" slide-left="dashboardFilters.isFieldConstraintsFilterVisible" css-class="col-xs-9 search-text-padding-top" style="top:2px"></filter-list>
+                                                <div class="entity-tab-head-icons">
+                                                    <span ng-show="dashboardFilters.isFieldConstraintsFilterVisible" class="entity-tab-head-textbox-close fa fa-close" ng-click="dashboardFilters.toggleDashboardFilter('FieldConstraints')"></span>
+                                                    <a ng-show="!dashboardFilters.isFieldConstraintsFilterVisible" ng-hide="SearchFieldconstraint" title="Search Constraints"><img src="images/Entity/entity-dashboard-search.svg" ng-click="dashboardFilters.toggleDashboardFilter('FieldConstraints')" /></a>
+                                                    <a title="Add Constraint" ng-hide="SearchFieldconstraint"><img src="images/Common/icon_add_dark.svg" ng-click="addEditAttributeConstraint()" /></a>
+                                                    <a title="Delete Constraint" ng-hide="SearchFieldconstraint" ng-disabled="objConstraints.Elements.indexOf(objConstraints.SelectedField) < 0"><img src="images/Common/icon_delete_dark.svg" ng-click="DeleteFieldConstraint('SelectFieldConstraint')" /></a>
+                                                </div>
+                                            </div>
+
+                                            <div class="entity-dashboard-inner-section-subcontainer">
+                                                <ul>
+                                                    <li ng-repeat="obj in objConstraints.Elements | orderBy:['dictAttributes.sfwFieldName','dictAttributes.sfwDisplayName']" tabindex="{{$index}}" key-up-down-with-element callbackfn="SelectFieldConstraint" objproperty="'obj'"
+                                                        ng-dblclick="SelectFieldConstraintdbclick(obj)" ng-click="SelectFieldConstraint(obj)"
+                                                        ng-class="{'selected':objConstraints.SelectedField == obj, 'bckgGrey': obj.isAdvanceSearched, 'bckgGreen': (objConstraints.SelectedField == obj && obj.isAdvanceSearched)}">
+                                                        <span ng-if="obj.dictAttributes.sfwDisplayName" ng-bind="obj.dictAttributes.sfwDisplayName"></span>
+                                                        <span ng-if="!obj.dictAttributes.sfwDisplayName" ng-bind="obj.dictAttributes.sfwFieldName"></span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div id="queries" class="col-xs-6 entity-dashboard-container-section">
+                                        <div class="content-wrapper queries-border">
+                                            <div class="entity-dashboard-tab-head">
+                                                <span ng-click="selectQueriesTab()" ng-class="dashboardFilters.isQueriesFilterVisible?'hidden-text':'visible-text'">Queries</span>
+                                                <filter-list collection="objQueries.Elements" change-callback="selectQueryEntityDashboard(obj,null,true)" propertyname="'dictAttributes.ID'" slide-left="dashboardFilters.isQueriesFilterVisible" css-class="col-xs-9 search-text-padding-top"></filter-list>
+                                                <div class="entity-tab-head-icons">
+                                                    <span ng-show="dashboardFilters.isQueriesFilterVisible" class="entity-tab-head-textbox-close fa fa-close" ng-click="dashboardFilters.toggleDashboardFilter('Queries')"></span>
+                                                    <a ng-show="!dashboardFilters.isQueriesFilterVisible" title="Search Queries"><img src="images/Entity/entity-dashboard-search.svg" ng-click="dashboardFilters.toggleDashboardFilter('Queries')" /></a>
+                                                    <a title="Add New Query"><img src="images/Common/icon_add_dark.svg" ng-click="addNewQuery()" /></a>
+                                                    <a title="Delete Query"  ng-disabled="objQueries.Elements.indexOf(selectedQuery) < 0"><img src="images/Common/icon_delete_dark.svg" ng-click="removeSelectedQuery('SelectEntityQuery')" /></a>
+                                                </div>
+                                            </div>
+
+                                            <div class="entity-dashboard-inner-section-subcontainer">
+                                                <ul>
+                                                    <li ng-repeat="objQuery in objQueries.Elements | orderBy:'dictAttributes.ID'" tabindex="{{$index}}" key-up-down-with-element callbackfn="selectQueryEntityDashboard" objproperty="'objQuery'" ng-class="{'selected':selectedQuery == objQuery,'bckgGrey' : objQuery.isAdvanceSearched}"
+                                                        ng-dblclick="selectQueryEntityDashboarddbclick(objQuery)"
+                                                        ng-show="objQuery.Name=='query' && (strSearchQuery==undefined || strSearchQuery=='' || objQuery.dictAttributes['ID'].toLowerCase().indexOf(strSearchQuery.toLowerCase())>-1)"
+                                                        ng-click="selectQueryEntityDashboard(objQuery)">
+                                                        <span ng-bind="objQuery.dictAttributes.ID"></span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="validation-rule">
+
+                                    <div class="col-xs-12 entity-dashboard-container-section">
+                                        <div class="content-wrapper validations-border">
+                                            <div class="entity-dashboard-tab-head">
+                                                <div class="col-xs-12">
+                                                    <div class="col-xs-3">
+                                                        <span ng-click="selectValidationRulesTab()">Validations</span>
+                                                    </div>
+                                                    <div class="col-xs-7">
+                                                        <filter-list collection="objRules.Elements" change-callback="SetSelectedValidationRule(obj,true)" propertyname="'dictAttributes.ID'" slide-left="dashboardFilters.isValidationRulesFilterVisible" css-class="col-xs-12 search-text-padding-top"></filter-list>
+                                                    </div>
+                                                    <div class="col-xs-2">
+                                                        <div class="entity-tab-head-icons">
+                                                            <span ng-show="dashboardFilters.isValidationRulesFilterVisible" class="entity-tab-head-textbox-close fa fa-close" ng-click="dashboardFilters.toggleDashboardFilter('ValidationRules')"></span>
+                                                            <a ng-show="!dashboardFilters.isValidationRulesFilterVisible" title="Search Validation Rules"><img src="images/Entity/entity-dashboard-search.svg" ng-click="dashboardFilters.toggleDashboardFilter('ValidationRules')" /></a>
+                                                            <a title="Add Validation Rules"><img src="images/Common/icon_add_dark.svg" ng-click="AddRuleFromDashBoard()" /></a>
+                                                            <a title="Delete Validation Rules" ng-disabled="objRules.Elements.indexOf(SelectedRule) < 0"><img src="images/Common/icon_delete_dark.svg" ng-click="DeleteValidationRule()" /></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div id="validations" class="entity-dashboard-inner-section-subcontainer no-scroll">
+                                                <div class="validation-panel-left">
+                                                    <ul>
+                                                        <li ng-repeat="objRule in objRules.Elements | orderBy:'dictAttributes.ID'" tabindex="{{$index}}" key-up-down-with-element callbackfn="SetSelectedValidationRule" objproperty="'objRule'" ng-class="{'selected': SelectedRule == objRule,'bckgGrey' : objRule.isAdvanceSearched}" ng-dblclick="SetSelectedValidationRuledbclick(objRule)" ng-click="SetSelectedValidationRule(objRule)">
+                                                            <span ng-bind="objRule.dictAttributes.ID"></span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="validation-panel-right">
+                                                    <div id="dsb-initial-load" class="validation-panel-right-content" ng-show="SelectedDashBoardRule == 'InitialLoad'">
+                                                        <div class="entity-content-wrapper">
+                                                            <div class="entity-dashboard-tab-head">
+
+                                                                <span class="panel-head-text" ng-click="selectInitialLoadTab()" ng-class="dashboardFilters.isInitialLoadFilterVisible?'hidden-text':'visible-text'">Initial Load</span>
+                                                                <filter-list collection="objInitialLoad.Elements" change-callback="setSelectedInitialLoadFromDashBoard(obj,true,true)" propertyname="'dictAttributes.ID'" slide-left="dashboardFilters.isInitialLoadFilterVisible" css-class="col-xs-9 search-text-padding-top"></filter-list>
+                                                                <div class="entity-tab-head-icons">
+                                                                    <span ng-show="dashboardFilters.isInitialLoadFilterVisible" class="entity-tab-head-textbox-close fa fa-close" ng-click="dashboardFilters.toggleDashboardFilter('InitialLoad')"></span>
+                                                                    <a ng-show="!dashboardFilters.isInitialLoadFilterVisible" title="Search Initial Load"><img src="images/Entity/entity-dashboard-search.svg" ng-click="dashboardFilters.toggleDashboardFilter('InitialLoad')" /></a>
+                                                                    <a title="Delete Initial Load" ng-disabled="!SelectedInitialLoad"><img src="images/Common/icon_delete_dark.svg" ng-click="DeleteInitialLoadFromDashBoard()" /></a>
+                                                                </div>
+                                                            </div>
+                                                            <div class="entity-dashboard-inner-section-subcontainer">
+                                                                <ul>
+                                                                    <li ng-repeat="obj in objInitialLoad.Elements | orderBy:'dictAttributes.ID'" tabindex="{{$index}}" key-up-down-with-element callbackfn="setSelectedInitialLoadFromDashBoard" objproperty="'obj'" ng-dblclick="setSelectedInitialLoadFromDashBoarddbclick(obj,true)" ng-click="setSelectedInitialLoadFromDashBoard(obj,true)" ng-class="{'selected': SelectedInitialLoad == obj,'bckgGrey' : obj.isAdvanceSearched}" ng-if="obj.Name == 'item'">
+                                                                        <span ng-bind="obj.dictAttributes.ID"></span>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="dsb-harderror" class="validation-panel-right-content" ng-show="SelectedDashBoardRule == 'HardErrors'">
+                                                        <div class="entity-content-wrapper">
+                                                            <div class="entity-dashboard-tab-head">
+
+                                                                <span class="panel-head-text" ng-click="selectHardErrorTab()" ng-class="dashboardFilters.isHardErrorsFilterVisible?'hidden-text':'visible-text'">Hard Errors</span>
+                                                                <filter-list collection="objHardError.Elements" change-callback="setSelectedHardErrorFromDashBoard(obj,true,true)" propertyname="'dictAttributes.ID'" slide-left="dashboardFilters.isHardErrorsFilterVisible" css-class="col-xs-9 search-text-padding-top"></filter-list>
+                                                                <div class="entity-tab-head-icons">
+                                                                    <span ng-show="dashboardFilters.isHardErrorsFilterVisible" class="entity-tab-head-textbox-close fa fa-close" ng-click="dashboardFilters.toggleDashboardFilter('HardErrors')"></span>
+                                                                    <a ng-show="!dashboardFilters.isHardErrorsFilterVisible" title="Search Hard Error"><img src="images/Entity/entity-dashboard-search.svg" ng-click="dashboardFilters.toggleDashboardFilter('HardErrors')" /></a>
+                                                                    <a title="Delete Hard Error" ng-disabled="!SelectedHardError"><img src="images/Common/icon_delete_dark.svg" ng-click="DeleteHardErrorFromDashBoard()" /></a>
+                                                                </div>
+                                                            </div>
+                                                            <div class="entity-dashboard-inner-section-subcontainer">
+                                                                <ul>
+                                                                    <li ng-repeat="obj in objHardError.Elements" tabindex="{{$index}}" key-up-down-with-element callbackfn="setSelectedHardErrorFromDashBoard" objproperty="'obj'" ng-dblclick="setSelectedHardErrorFromDashBoarddbclick(obj)" ng-click="setSelectedHardErrorFromDashBoard(obj,true)" ng-class="{'selected': SelectedHardError == obj,'bckgGrey' : obj.isAdvanceSearched}" ng-if="obj.Name == 'item'">
+                                                                        <span ng-bind="obj.dictAttributes.ID"></span>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="dsb-softerror" class="validation-panel-right-content" ng-show="SelectedDashBoardRule == 'SoftErrors'">
+                                                        <div class="entity-content-wrapper">
+                                                            <div class="entity-dashboard-tab-head">
+
+                                                                <span class="panel-head-text" ng-click="selectSoftErrorTab()" ng-class="dashboardFilters.isSoftErrorsFilterVisible?'hidden-text':'visible-text'">Soft Errors</span>
+                                                                <filter-list collection="objSoftError.Elements" change-callback="setSelectedSoftErrorFromDashBoard(obj,true)" propertyname="'dictAttributes.ID'" slide-left="dashboardFilters.isSoftErrorsFilterVisible" css-class="col-xs-9 search-text-padding-top"></filter-list>
+                                                                <div class="entity-tab-head-icons">
+                                                                    <span ng-show="dashboardFilters.isSoftErrorsFilterVisible" class="entity-tab-head-textbox-close  fa fa-close" ng-click="dashboardFilters.toggleDashboardFilter('SoftErrors')"></span>
+                                                                    <a ng-show="!dashboardFilters.isSoftErrorsFilterVisible" title="Search Soft Error"><img src="images/Entity/entity-dashboard-search.svg" ng-click="dashboardFilters.toggleDashboardFilter('SoftErrors')" /></a>
+                                                                    <a title="Delete Soft Error" ng-disabled="!SelectedSoftError"><img src="images/Common/icon_delete_dark.svg" ng-click="DeleteSoftErrorFromDashBoard()" /></a>
+                                                                </div>
+                                                            </div>
+                                                            <div class="entity-dashboard-inner-section-subcontainer">
+                                                                <ul>
+                                                                    <li ng-repeat="obj in objSoftError.Elements" tabindex="{{$index}}" key-up-down-with-element callbackfn="setSelectedSoftErrorFromDashBoard" objproperty="'obj'" ng-dblclick="setSelectedSoftErrorFromDashBoarddbclick(obj)" ng-click="setSelectedSoftErrorFromDashBoard(obj,true)" ng-class="{'selected': SelectedSoftError == obj,'bckgGrey' : obj.isAdvanceSearched}" ng-if="obj.Name == 'item'">
+                                                                        <span ng-bind="obj.dictAttributes.ID"></span>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="dsb-validatedelete" class="validation-panel-right-content" ng-show="SelectedDashBoardRule == 'ValidateDelete'">
+                                                        <div class="entity-content-wrapper">
+                                                            <div class="entity-dashboard-tab-head">
+
+                                                                <span class="panel-head-text" ng-click="selectValidateDeleteTab()" ng-class="dashboardFilters.isValidateDeleteFilterVisible?'hidden-text':'visible-text'">Validate Delete</span>
+                                                                <filter-list collection="objValidateDelete.Elements" change-callback="setSelectedValidateDeleteFromDashBoard(obj,true,true)" propertyname="'dictAttributes.ID'" slide-left="dashboardFilters.isValidateDeleteFilterVisible" css-class="col-xs-9 search-text-padding-top"></filter-list>
+                                                                <div class="entity-tab-head-icons">
+                                                                    <span ng-show="dashboardFilters.isValidateDeleteFilterVisible" class="entity-tab-head-textbox-close fa fa-close" ng-click="dashboardFilters.toggleDashboardFilter('ValidateDelete')"></span>
+                                                                    <a ng-show="!dashboardFilters.isValidateDeleteFilterVisible" title="Search Validate Delete"><img src="images/Entity/entity-dashboard-search.svg" ng-click="dashboardFilters.toggleDashboardFilter('ValidateDelete')" /></a>
+                                                                    <a title="Delete Validate Delete" ng-disabled="!SelectedValidateDelete"><img src="images/Common/icon_delete_dark.svg" ng-click="DeleteValidateDeleteFromDashBoard()" /></a>
+                                                                </div>
+                                                            </div>
+                                                            <div class="entity-dashboard-inner-section-subcontainer">
+                                                                <ul>
+                                                                    <li ng-repeat="obj in objValidateDelete.Elements" tabindex="{{$index}}" key-up-down-with-element callbackfn="setSelectedValidateDeleteFromDashBoard" objproperty="'obj'" ng-dblclick="setSelectedValidateDeleteFromDashBoarddbclick(obj)" ng-click="setSelectedValidateDeleteFromDashBoard(obj,true)" ng-class="{'selected': SelectedValidateDelete == obj,'bckgGrey' : obj.isAdvanceSearched}" ng-if="obj.Name == 'item'">
+                                                                        <span ng-bind="obj.dictAttributes.ID"></span>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="dsb-groups" class="validation-panel-right-content" ng-show="SelectedDashBoardRule == 'Groups'">
+                                                        <div class="entity-content-wrapper">
+                                                            <div class="entity-dashboard-tab-head">
+
+                                                                <span class="panel-head-text" ng-click="selectGroupTab()" ng-class="dashboardFilters.isGroupsFilterVisible?'hidden-text':'visible-text'">Groups</span>
+                                                                <filter-list collection="objGroupList.Elements" change-callback="setSelectedGroupFromDashBoard(obj,true)" propertyname="'dictAttributes.ID'" slide-left="dashboardFilters.isGroupsFilterVisible" css-class="col-xs-9 search-text-padding-top"></filter-list>
+                                                                <div class="entity-tab-head-icons">
+                                                                    <span ng-show="dashboardFilters.isGroupsFilterVisible" class="entity-tab-head-textbox-close fa fa-close" ng-click="dashboardFilters.toggleDashboardFilter('Groups')"></span>
+                                                                    <a ng-show="!dashboardFilters.isGroupsFilterVisible" title="Search Groups"><img src="images/Entity/entity-dashboard-search.svg" ng-click="dashboardFilters.toggleDashboardFilter('Groups')" /></a>
+                                                                    <a title="Delete Groups" ng-disabled="!SelectedGroup"><img src="images/Common/icon_delete_dark.svg" ng-click="DeleteGroupFromDashBoard()" /></a>
+                                                                </div>
+                                                            </div>
+                                                            <div class="entity-dashboard-inner-section-subcontainer">
+                                                                <ul>
+                                                                    <li ng-repeat="obj in objGroupList.Elements" tabindex="{{$index}}" key-up-down-with-element callbackfn="setSelectedGroupFromDashBoard" objproperty="'obj'" ng-dblclick="setSelectedGroupFromDashBoarddbclick(obj)" ng-click="setSelectedGroupFromDashBoard(obj)" ng-class="{'selected': SelectedGroup == obj,'bckgGrey' : obj.isAdvanceSearched}" ng-if="obj.Name == 'group'"><span ng-bind="obj.dictAttributes.ID"></span></li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="dsb-checklist" class="validation-panel-right-content" ng-show="SelectedDashBoardRule == 'CheckList'">
+                                                        <div class="entity-content-wrapper">
+                                                            <div class="entity-dashboard-tab-head">
+                                                                <span class="panel-head-text" ng-click="selectCheckListTab()" ng-class="dashboardFilters.isCheckListFilterVisible?'hidden-text':'visible-text'">Check List</span>
+                                                                <filter-list collection="objCheckList.Elements" change-callback="setSelectedCheckListFromDashBoard(obj,true,true)" propertyname="'dictAttributes.ID'" slide-left="dashboardFilters.isCheckListFilterVisible" css-class="col-xs-9 search-text-padding-top"></filter-list>
+                                                                <div class="entity-tab-head-icons">
+                                                                    <span ng-show="dashboardFilters.isCheckListFilterVisible" class="entity-tab-head-textbox-close fa fa-close" ng-click="dashboardFilters.toggleDashboardFilter('CheckList')"></span>
+                                                                    <a ng-show="!dashboardFilters.isCheckListFilterVisible" title="Search CheckList"><img src="images/Entity/entity-dashboard-search.svg" ng-click="dashboardFilters.toggleDashboardFilter('CheckList')" /></a>
+                                                                    <a title="Delete CheckList" ng-disabled="!SelectedCheckList"><img src="images/Common/icon_delete_dark.svg" ng-click="DeleteCheckListFromDashBoard()" /></a>
+                                                                </div>
+                                                            </div>
+                                                            <div class="entity-dashboard-inner-section-subcontainer">
+                                                                <ul>
+                                                                    <li ng-repeat="obj in objCheckList.Elements" tabindex="{{$index}}" key-up-down-with-element callbackfn="setSelectedCheckListFromDashBoard" objproperty="'obj'" ng-dblclick="setSelectedCheckListFromDashBoarddbclick(obj)" ng-click="setSelectedCheckListFromDashBoard(obj,true)" ng-class="{'selected': SelectedCheckList == obj,'bckgGrey' : obj.isAdvanceSearched}" ng-if="obj.Name == 'item'"><span ng-bind="obj.dictAttributes.ID"></span></li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="validation-panel-right-selection">
+                                                        <ul>
+                                                            <li ng-click="setSelectedRuleFromDashBoard('InitialLoad')" ng-class="(SelectedDashBoardRule == 'InitialLoad')?'selected':'none'" title="Initial Load">
+                                                                <img src="images/Entity/initial_load.svg" ng-hide="SelectedDashBoardRule == 'InitialLoad'" />
+                                                                <img src="images/Entity/initial_load_selected.svg" ng-show="SelectedDashBoardRule == 'InitialLoad'" />
+                                                            </li>
+                                                            <li ng-click="setSelectedRuleFromDashBoard('HardErrors')" ng-class="(SelectedDashBoardRule == 'HardErrors')?'selected':'none'" title="Hard Errors">
+                                                                <img src="images/Entity/hard_errors.svg" ng-hide="SelectedDashBoardRule == 'HardErrors'" />
+                                                                <img src="images/Entity/hard_errors_selected.svg" ng-show="SelectedDashBoardRule == 'HardErrors'" />
+                                                            </li>
+                                                            <li ng-click="setSelectedRuleFromDashBoard('SoftErrors')" ng-class="(SelectedDashBoardRule == 'SoftErrors')?'selected':'none'" title="Soft Errors">
+                                                                <img src="images/Entity/soft_erros.svg" ng-hide="SelectedDashBoardRule == 'SoftErrors'" />
+                                                                <img src="images/Entity/soft_erros_selected.svg" ng-show="SelectedDashBoardRule == 'SoftErrors'" />
+                                                            </li>
+                                                            <li ng-click="setSelectedRuleFromDashBoard('ValidateDelete')" ng-class="(SelectedDashBoardRule == 'ValidateDelete')?'selected':'none'" title="Validate Delete">
+                                                                <img src="images/Entity/validate_delete.svg" ng-hide="SelectedDashBoardRule == 'ValidateDelete'" />
+                                                                <img src="images/Entity/validate_delete_selected.svg" ng-show="SelectedDashBoardRule == 'ValidateDelete'" />
+                                                            </li>
+                                                            <li ng-click="setSelectedRuleFromDashBoard('Groups')" ng-class="(SelectedDashBoardRule == 'Groups')?'selected':'none'" title="Groups">
+                                                                <img src="images/Entity/groups.svg" ng-hide="SelectedDashBoardRule == 'Groups'" />
+                                                                <img src="images/Entity/groups_selected.svg" ng-show="SelectedDashBoardRule == 'Groups'" />
+                                                            </li>
+                                                            <li ng-click="setSelectedRuleFromDashBoard('CheckList')" ng-class="(SelectedDashBoardRule == 'CheckList')?'selected':'none'" title="Check List">
+                                                                <img src="images/Entity/checklist.svg" ng-hide="SelectedDashBoardRule == 'CheckList'" />
+                                                                <img src="images/Entity/checklist_selected.svg" ng-show="SelectedDashBoardRule == 'CheckList'" />
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-xs-2 entity-dashboard-container-section">
+                                <div class="content-wrapper c-sharp-border">
+                                    <div class="entity-dashboard-tab-head">
+
+                                        <span ng-click="selectBusinessObjectTab()" ng-class="dashboardFilters.isBusinessObjectFilterVisible?'hidden-text':'visible-text'">Business Object</span>
+                                        <filter-list collection="objMethods.Elements" change-callback="SelectXmlMethod(obj)" propertyname="'dictAttributes.ID'" slide-left="dashboardFilters.isBusinessObjectFilterVisible" css-class="col-xs-9 search-text-padding-top"></filter-list>
+                                        <div class="entity-tab-head-icons">
+                                            <span ng-show="dashboardFilters.isBusinessObjectFilterVisible" class="entity-tab-head-textbox-close fa fa-close" ng-click="dashboardFilters.toggleDashboardFilter('BusinessObject')"></span>
+                                            <a ng-show="!dashboardFilters.isBusinessObjectFilterVisible" title="Search Methods" ng-hide="SearchBusinessObject"><img src="images/Entity/entity-dashboard-search.svg" ng-click="dashboardFilters.toggleDashboardFilter('BusinessObject')" /></a>
+                                            <a title="Delete Method" ng-hide="SearchBusinessObject" ng-disabled="!canDeleteMethod()" ><img src="images/Common/icon_delete_dark.svg" ng-click="DeleteMethod('SelectXmlMethod')" /></a>
+                                        </div>
+                                    </div>
+                                    <div class="entity-dashboard-inner-section-container">
+                                        <ul>
+                                            <li ng-repeat="obj in objMethods.Elements | orderBy:'dictAttributes.ID'" tabindex="{{$index}}" key-up-down-with-element callbackfn="SelectXmlMethod" objproperty="'obj'" ng-dblclick="isSelectedMethoddbclick(obj)" ng-click="SelectXmlMethod(obj)" ng-class="{'selected': obj == SelectedXMLMethod, 'bckgGrey':obj.isAdvanceSearched}"><span ng-bind="obj.dictAttributes.ID"></span></li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <div class="col-xs-2 entity-dashboard-container-section no-right-padding">
+                                <div class="entity-dashboard-items-wrapper">
+                                    <div class="item-heading" ng-click="ItemExpanded='Forms'">
+                                        Forms
+                                        <ul class="items-add-delete" ng-if="ItemExpanded=='Forms'">
+                                            <li>
+                                                <div class="btn-group pull-right" title="Create New">
+                                                    <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="true">
+                                                        <img src="images/Common/icon_add_light.svg" />
+                                                    </a>
+
+                                                    <ul class="dropdown-menu pull-right" role="menu">
+                                                        <li ng-click="onnewfileclick('Forms')">
+                                                            <a>Forms</a>
+                                                        </li>
+                                                        <li ng-click="onnewfileclick('Wizard')">
+                                                            <a>Wizard</a>
+                                                        </li>
+                                                        <li ng-click="onnewfileclick('UserControl')">
+                                                            <a>UserControl</a>
+                                                        </li>
+                                                        <li ng-click="onnewfileclick('Tooltip')">
+                                                            <a>Tooltip</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+
+                                            </li>
+                                            <li><img src="images/Common/icon_delete_light.svg" ng-click="removeRules('Forms')" ng-disabled="!currentFileObj || (currentFileObj && !(currentFileObj.FileType == 'Maintenance' || currentFileObj.FileType == 'Lookup' || currentFileObj.FileType == 'Wizard' || currentFileObj.FileType == 'UserControl' || currentFileObj.FileType == 'Tooltip'))" title="Delete" /></li>
+
+                                        </ul>
+                                    </div>
+                                    <div class="item-list-content" ng-if="ItemExpanded=='Forms'">
+                                        <ul>
+                                            <li class="filetype-icons home-filetype-{{item.FileType}}-black" ng-repeat="item in lstItemsFormsList | orderBy:'FileName'" tabindex="{{$index}}" key-up-down-with-element callbackfn="onClickOnItems" objproperty="'item'" ng-click="onClickOnItems(item)" ng-dblclick="$root.openFile(item);" ng-class="item.isSelected?'selected':''">
+                                                <span ng-bind="item.FileName" title="{{item.FileType}} : {{item.FileID}}"></span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="item-heading" ng-click="ItemExpanded='HTML'">
+                                        HTML
+                                        <ul class="items-add-delete" ng-if="ItemExpanded=='HTML'">
+                                            <li>
+                                                <div class="btn-group pull-right" title="Create New">
+                                                    <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="true">
+                                                        <img src="images/Common/icon_add_light.svg" />
+                                                    </a>
+
+                                                    <ul class="dropdown-menu pull-right" role="menu">
+                                                        <li ng-click="onnewfileclick('HtxLookup')">
+                                                            <a>Htx Lookup</a>
+                                                        </li>
+                                                        <li ng-click="onnewfileclick('HtxMaintenance')">
+                                                            <a>Htx Maintenance</a>
+                                                        </li>
+                                                        <li ng-click="onnewfileclick('HtxWizard')">
+                                                            <a>Htx Wizard</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                            <li><img src="images/Common/icon_delete_light.svg" ng-click="removeRules('HTML')" ng-disabled="!currentFileObj || (currentFileObj && !(currentFileObj.FileType == 'FormLinkMaintenance' || currentFileObj.FileType == 'FormLinkLookup' || currentFileObj.FileType == 'FormLinkWizard'))" title="Delete" /></li>
+
+                                        </ul>
+                                    </div>
+                                    <div class="item-list-content" ng-if="ItemExpanded=='HTML'">
+                                        <ul>
+                                            <li class="filetype-icons home-filetype-{{item.FileType}}-black" ng-repeat="item in lstItemsHtxList | orderBy:'FileName'" tabindex="{{$index}}" key-up-down-with-element callbackfn="onClickOnItems" objproperty="'item'" ng-click="onClickOnItems(item)" ng-dblclick="$root.openFile(item);" ng-class="item.isSelected?'selected':''">
+                                                <span ng-bind="item.FileName" title="{{item.FileType}} : {{item.FileID}}"></span>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="item-heading" ng-click="ItemExpanded='Rules'">
+                                        Rules
+                                        <ul class="items-add-delete" ng-if="ItemExpanded=='Rules'">
+                                            <li>
+                                                <div class="btn-group pull-right" title="Create New">
+                                                    <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="true">
+                                                        <img src="images/Common/icon_add_light.svg" />
+                                                    </a>
+
+                                                    <ul class="dropdown-menu pull-right" role="menu">
+                                                        <li ng-click="addRulesFromEntity('LogicalRule')">
+                                                            <a>Logical Rule</a>
+                                                        </li>
+                                                        <li ng-click="addRulesFromEntity('DecisionTable')">
+                                                            <a>Decision Table</a>
+                                                        </li>
+                                                        <li ng-click="addRulesFromEntity('ExcelMatrix')">
+                                                            <a>Excel Matrix</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                            <li><img src="images/Common/icon_delete_light.svg" ng-click="removeRules('Rules')" ng-disabled="!currentFileObj || (currentFileObj && !(currentFileObj.FileType == 'LogicalRule' || currentFileObj.FileType == 'DecisionTable' || currentFileObj.FileType == 'ExcelMatrix'))" title="Delete" /></li>
+
+                                        </ul>
+                                    </div>
+                                    <div class="item-list-content" ng-if="ItemExpanded=='Rules'">
+                                        <ul>
+                                            <li class="filetype-icons" ng-repeat="item in lstItemsRulesList | orderBy:'FileName'" tabindex="{{$index}}" key-up-down-with-element callbackfn="onClickOnItems" objproperty="'item'" ng-click="onClickOnItems(item)" ng-dblclick="$root.openFile(item);" ng-class="getClassforRulesItemDashboard(item)">
+                                                <span ng-bind="item.FileName" title="{{item.FileType}} : {{item.FileID}}"></span>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="item-heading" ng-click="ItemExpanded='Correspondence'">
+                                        Correspondence
+                                        <ul class="items-add-delete" ng-if="ItemExpanded=='Correspondence'">
+                                            <li>
+                                                <div class="btn-group pull-right" title="Create New">
+                                                    <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="true">
+                                                        <img src="images/Common/icon_add_light.svg" />
+                                                    </a>
+
+                                                    <ul class="dropdown-menu pull-right" role="menu">
+                                                        <li ng-click="onnewfileclick('Correspondence')">
+                                                            <a>Correspondence</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                            <li><img src="images/Common/icon_delete_light.svg" ng-click="removeRules('Correspondence')" ng-disabled="!currentFileObj || (currentFileObj && currentFileObj.FileType != 'Correspondence')" title="Delete" /></li>
+
+                                        </ul>
+                                    </div>
+                                    <div class="item-list-content" ng-if="ItemExpanded=='Correspondence'">
+                                        <ul>
+                                            <li class="filetype-icons home-filetype-{{item.FileType}}-black" ng-repeat="item in lstItemsCorrList |orderBy:'FileName'" tabindex="{{$index}}" key-up-down-with-element callbackfn="onClickOnItems" objproperty="'item'" ng-click="onClickOnItems(item)" ng-dblclick="$root.openFile(item);" ng-class="item.isSelected?'selected':''">
+                                                <span ng-bind="item.FileName" title="{{item.FileType}} : {{item.FileID}}"></span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div ng-class="(IsDashboardVisible)?'displaynone':'displayblock entity-dashboard-editable full-height'">
+                    <div ng-include src="'Entity/views/Attributes/EntityAttributes.html'" ng-if="IsAttributesOpen" ng-class="SelectedView=='Attributes'?'displayblock':'displaynone'" class="full-height" knowtion-id="2.2">
+
+                    </div>
+                    <div ng-include src="'Entity/views/EntityQueries.html'" ng-if="IsQueriesOpen" ng-class="SelectedView=='Queries'?'displayblock':'displaynone'" class="full-height" knowtion-id="2.3">
+
+                    </div>
+                    <div ng-include src="'Entity/views/ValidationRules.html'" ng-if="IsValidationRulesOpen" ng-class="SelectedView=='ValidationRules'?'displayblock':'displaynone'" class="full-height" knowtion-id="2.4">
+
+                    </div>
+                    <div ng-include src="'Entity/views/Constraint/EntityFieldConstraint.html'" ng-if="IsFieldConstraintOpen" ng-class="SelectedView=='FieldConstraints'?'displayblock':'displaynone'" class="full-height" knowtion-id="2.5">
+
+                    </div>
+                    <div ng-include src="'Entity/views/EntityBusinessObject.html'" ng-if="IsBusinessObjectOpen" ng-class="SelectedView=='BusinessObject'?'displayblock':'displaynone'" class="full-height" knowtion-id="2.6">
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div ng-show="selectedDesignSource" class="full-height">
+        <div id="editor_{{currentfile.FileName}}"  class="ace-editor-div"></div>
+    </div>
+</div>

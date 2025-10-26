@@ -1,0 +1,75 @@
+﻿
+<div ng-controller="ActiveFormsController" class="full-height">
+    <!--<div class="popup-secondary-head"> Active Forms </div>-->
+    <div class="portlet-body">
+
+        <div class="col-xs-12" ng-hide="model.dictAttributes.sfwMethodName == 'btnNew_Click'">
+            <div class="col-xs-2">
+                <label class="control-label">Entity Field:</label>
+            </div>
+            <div class="col-xs-8">
+                <select class="form-control input-sm" ng-options="entityField for entityField in lstEntityField" title="{{lstrEntityField}}" ng-model="lstrEntityField" ng-change="clearActiveFormList()" />
+            </div>
+            <div class="col-xs-5 col-md-offset-2">
+                <p><label class="control-label" ng-hide="strParent==undefined || strParent==''">(Entity Field Populated for the {{strParent}}.)</label></p>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="pull-left"><b>Active Forms:</b></div>
+            <div class="pull-right">
+                <img src="images/Common/icon_delete_dark.svg" ng-click="DeleteActiveForm()" />
+                <img src="images/Common/icon_add_dark.svg" ng-click="AddActiveForm()" />
+
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="form-group"></div>
+        </div>
+        <div class="col-xs-12 full-width-form-table">
+            <table class="table table-bordered table-fixedheader">
+                <thead>
+                    <tr>
+                        <th width="50%">Field Value</th>
+                        <th width="50%">Active Form</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="form in lstActiveForm" ng-click="selectActiveFormRow(form)" ng-class="selectedActiveForm==form?'selected':''">
+                        <td width="50%" ng-show="isDropDown">
+                            <codevaluesintellisensetemplate codevalueslabelclass="col-xs-2 control-label padding-0"
+                                                            codevaluestextboxclass="col-xs-12"
+                                                            codevaluesid='form.FieldValue'
+                                                            model='form'
+                                                            showcodevaluestext='false'
+                                                            codedescription="codeDescription"
+                                                            codeid="CurrentCodeID">
+                            </codevaluesintellisensetemplate>
+                        </td>
+                        <td width="50%" ng-show="!isDropDown">
+                            <input class="form-control input-sm" type="text" title="{{form.FieldValue}}" ng-model="form.FieldValue" />
+                        </td>
+                        <td width="50%">
+                            <div class="input-group">
+                                <!--<activeformintellisensetemplate modebinding='form.ActiveForm' model="form" formtype='ActiveFormType' multiactiveformflag='false' />-->
+                                <activeformintellisensetemplate activeformname='form.ActiveForm' model='form' propertyname='"ActiveForm"' formtype='ActiveFormType' multiactiveformflag='false' />
+                            </div>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    <div class="form-actions">
+        <div class="col-xs-8 text-left">
+            <span class="alert-error-msg" ng-bind="ErrorMessageForDisplay"></span>
+        </div>
+        <div class="col-xs-4">
+            <input type="button" value="OK" class="dialog-btn-default" ng-click="OkClick()" ng-disabled="validateActiveForms()" />
+            <input type="button" value="Cancel" class="dialog-btn" ng-click="CancelClick()" />
+     </div>
+    </div>
+</div>
+
+

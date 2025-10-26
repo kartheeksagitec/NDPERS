@@ -1,0 +1,69 @@
+﻿
+<div ng-controller="QueryExpression" class="full-height">
+    <div class="portlet-body series-details-popup" id="ScopeId_{{$id}}">
+        <div class="form-body expression-query-popup full-height">
+            <div class="form-group">
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <span class="control-label">Generic Type </span>
+                        <select ng-model="objQuery.genericType" class="form-control generic-type-select" ng-options="x for x in lstGenericTypes" title="{{objQuery.genericType}}"></select>
+
+                    </div>
+
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <span class="control-label">Select Query</span>
+                        <entityqueryintellisense selecteditem="objQuery.sfwQueryRef" propertyname="'sfwQueryRef'" model='objQuery' showsearchbutton="false" onchangecallback="selectQuery(QueryID)" class="expression-query-builder" isinsidedialog="true"></entityqueryintellisense>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="form-group expression-query-popup-table-wrapper">
+                <div class="col-xs-12 full-height">
+                    <div class="panel-icons">
+
+                        <img src="images/Entity/BusinessObjectPropertyMethod.svg" title="Business Object Property / Method" class="marg-left-10" ng-disabled="!objQuery.SelectedParameter  " ng-click="onBusinessMethodCommand()" ng-show="IsObjectBased=='True'" />
+
+                        <img src="images/Entity/InternalFunctions.svg" title="Internal Functions" class="marg-left-10" ng-disabled="!objQuery.SelectedParameter" ng-click="onInternalFunctionsClick()" />
+
+                        <img src="images/Entity/Query.svg" ng-click="onQueryClick()" title="Query" class="marg-left-10" ng-disabled="!objQuery.SelectedParameter" />
+                    </div>
+                    <div class="expression-query-popup-table">
+                        <div class="params-header">
+                            <span>Parameters</span>
+                        </div>
+                        <table class="sws-table">
+                            <thead>
+
+                                <tr>
+                                    <th width="25%">Name</th>
+                                    <th width="25%">DataType</th>
+                                    <th width="25%">Expression</th>
+                                    <th width="25%">Constant</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="params in objQuery.lstParameters" ng-if="objQuery.lstParameters.length>0" ng-click="SelectParam(params)" ng-class="params == objQuery.SelectedParameter?'selected':''">
+                                    <td width="25%"><span>{{params.ParameterName}}</span></td>
+                                    <td width="25%"><span>{{params.DataType}}</span></td>
+                                    <td width="25%"><input class="form-control input-sm" type="text" ng-model="params.Expression" title="{{params.Expression}}" /></td>
+                                    <td width="25%"><input class="checkbox" type="checkbox" ng-model="params.Isconstant" ng-if="params.DataType.toLowerCase().indexOf('string')!== -1" ng-true-value="'True'" ng-false-value="'False'" /></td>
+                                    <td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-actions">
+        <input type="button" class="btn dialog-btn-default" value="OK" ng-click="onOkClick()" />
+        <input type="button" class="btn dialog-btn-default" value="Cancel" ng-click="onCancelClick()" />
+    </div>
+
+</div>

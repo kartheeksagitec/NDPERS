@@ -1,0 +1,147 @@
+﻿<div class="portlet-body">
+    <div class="form-body ">
+        <div class="col-xs-6">
+            <div class="form-group relative-parent ">
+                <label class="control-label blocked-element"> File Name(ID) </label>
+                <span class="file-prefix">fle</span>
+                <input type="text" class="form-control input-sm ng-pristine ng-untouched ng-valid ng-empty file-suffix" ng-change="objFileDetails.isNextDisable()" title="{{objFileDetails.FileName}}" ng-model="objFileDetails.FileName">
+            </div>
+
+            <div class="form-group">
+                <label class="control-label"> Description</label>
+                <textarea rows="3" title="{{objFileDetails.Description}}" ng-model="objFileDetails.Description" class="form-control input-sm" />
+
+            </div>
+            <div class="form-group">
+                <label class="control-label"> Path</label>
+                <locationintellisensetemplate locationchanged="objFileDetails.isNextDisable()" locationname="objFileDetails.Path" model="objFileDetails" validate="true" errorprop="objFileDetails.errors.invalid_path"></locationintellisensetemplate>
+
+            </div>
+
+            <div class="form-group">
+                <label class="control-label"> Record Type</label>
+                <div class="radio-btn-form-control">
+                    <input type="radio" ng-model="objFileDetails.RecordType" value="FixedLength" ng-change="objFileDetails.isNextDisable()" name="rbRecordType" /> <label>Fixed Length</label>
+                    <input type="radio" ng-model="objFileDetails.RecordType" value="Delimited" ng-change="objFileDetails.isNextDisable()" name="rbRecordType" /> <label>Delimited</label>
+                </div>
+            </div>
+
+            <div class="form-group file-detail-chkgroup" ng-show="objFileDetails.FileType == 'Inbound' && objFileDetails.IsChildOfInboundFileBase">
+                <fieldset class="file-popup-checkbox-panel">
+                    <legend>Receive and Validate</legend>
+
+                    <div class="checkbox-row">
+                        <input type="checkbox" ng-model="objFileDetails.RecieveToFileDetail" id="chkRecieveToFileDetail" /> 
+                        <label for="chkRecieveToFileDetail">Store In File Detail</label>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="form-group file-detail-chkgroup" ng-show="objFileDetails.FileType == 'Inbound' && objFileDetails.IsChildOfInboundFileBase">
+                <fieldset class="file-popup-checkbox-panel">
+                    <legend>Validate and Upload</legend>
+                    <div class="form-group">
+                        <input type="checkbox" ng-model="objFileDetails.UploadInParallel" id="chkUploadInParallel" />
+                        <label for="chkUploadInParallel">In Parallel</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" ng-model="objFileDetails.UploadToFileDetail" id="chkUploadToFileDetail" />
+                        <label for="chkUploadToFileDetail">Store in File Detail</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" ng-model="objFileDetails.GetGroupValueFromHeader" id="chkGetGroupValueFromHeader" ng-disabled="objFileDetails.ProcessDetail" />
+                        <label for="chkGetGroupValueFromHeader">Get Group Value From Header</label>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="form-group" ng-show="objFileDetails.FileType == 'Outbound'">
+                <label class="control-label"> Query ID</label>
+                <entityqueryintellisense selecteditem="objFileDetails.QueryID" model="method" showsearchbutton="true" isinsidedialog="true"></entityqueryintellisense>
+            </div>
+
+            <div class="form-group " ng-show="objFileDetails.FileType == 'Outbound'">
+                <label class="control-label"> File Collection</label>
+                <select class="form-control input-sm" ng-options="objFileCollection for objFileCollection in objFileDetails.lstFileCollection" title="{{objFileDetails.FileCollection}}" ng-model="objFileDetails.FileCollection">{{objFileCollection}}</select>
+
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label class="control-label"> File ID</label>
+                <input type="text" class="form-control input-sm" ng-disabled="objFileDetails.IsFileIdValueValid" title="{{objFileDetails.FileID}}" ng-change="objFileDetails.isNextDisable()" ng-model="objFileDetails.FileID" />
+
+            </div>
+
+            <div class="form-group ">
+                <label class="control-label"> File Type</label>
+                <div class="form-control radio-btn-form-control">
+                    <input type="radio" ng-model="objFileDetails.FileType" value="Inbound" name="rbfileType" ng-change="objFileDetails.FileTypeChanged()" id="rbInboundFile" /> <label for="rbInboundFile">Inbound</label>
+                    <input type="radio" ng-model="objFileDetails.FileType" value="Outbound" name="rbfileType" ng-change="objFileDetails.FileTypeChanged()" id="rbOutboundFile" /> <label for="rbOutboundFile">Outbound</label>
+                </div>
+
+
+            </div>
+
+            <div class="form-group">
+                <label class="control-label"> File Object</label>
+                <busobjectintellisensetemplate model="objFileDetails" filename="objFileDetails.ObjectID" filetype="objFileDetails.FileType" ng-if="objFileDetails.FileType == 'Inbound'" onfileblur="objFileDetails.isNextDisable()" onfilechange="objFileDetails.OnInboundObjectIdChange()"></busobjectintellisensetemplate>
+                <busobjectintellisensetemplate model="objFileDetails" filename="objFileDetails.ObjectID" filetype="objFileDetails.FileType" ng-if="objFileDetails.FileType == 'Outbound'" onfileblur="objFileDetails.isNextDisable()"></busobjectintellisensetemplate>
+
+            </div>
+
+            <div class="form-group " ng-show="objFileDetails.RecordType == 'Delimited'">
+                <label class="control-label "> Delimited Character</label>
+                <input type="text" class="form-control input-sm" title="{{objFileDetails.DelimitedCharacter}}" ng-change="objFileDetails.isNextDisable()" ng-model="objFileDetails.DelimitedCharacter" />
+
+            </div>
+
+            <div class="form-group">
+                <label class="control-label"> Progress Counter </label>
+                <input type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 57" class="form-control input-sm" title="{{objFileDetails.ProgressCounter}}" ng-model="objFileDetails.ProgressCounter" />
+            </div>
+
+            <div class="form-group file-detail-chkgroup" ng-show="objFileDetails.FileType == 'Inbound' && objFileDetails.IsChildOfInboundFileBase">
+                <fieldset class="file-popup-checkbox-panel">
+                    <legend> Process</legend>
+                    <div class="form-group">
+                        <input type="checkbox" ng-model="objFileDetails.ProcessInParallel" id="chkProcessInParallel" ng-change="objFileDetails.CommitSingle=false" />
+                        <label for="chkProcessInParallel">In Parallel</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" ng-model="objFileDetails.CommitSingle" ng-disabled="objFileDetails.ProcessInParallel == true" id="chkCommitSingle" />
+                        <label for="chkCommitSingle">Commit Single</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" ng-model="objFileDetails.ProcessDetail" id="chkProcessDetail" ng-disabled="objFileDetails.GetGroupValueFromHeader"/>
+                        <label for="chkProcessDetail">Process Detail</label>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="form-group " ng-show="objFileDetails.FileType == 'Outbound'">
+                <label class="control-label "> Object Method</label>
+                <select ng-options="objMethod for objMethod in objFileDetails.lstObjectMethod"
+                        title="{{objFileDetails.ObjectMethod}}" ng-model="objFileDetails.ObjectMethod" class="form-control input-sm">
+                    {{objMethod}}
+                </select>
+            </div>
+
+            <div class="form-group" ng-show="objFileDetails.FileType == 'Outbound'">
+                <label class="control-label"> File Name</label>
+                <input type="text" title="{{objFileDetails.strFileName}}" ng-model="objFileDetails.strFileName" class="form-control input-sm" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-actions">
+    <div class="col-xs-6 text-left">
+        <span class="alert-error-msg" ng-if="objFileDetails.ErrorMessageForDisplay.length>0" ng-bind="objFileDetails.ErrorMessageForDisplay"></span>
+    </div>
+    <div class="col-xs-6">
+        <input class="dialog-btn" type="button" value="Cancel" ng-click="CloseWizardClick()" />
+        <input class="dialog-btn" type="button" wz-previous="onPrevious()" value="Back" disabled="disabled" />
+        <input class="dialog-btn" type="button" wz-next="objFileDetails.UpdateOnFileDetailsNext();onNext()" value="Next" ng-disabled="!objFileDetails.isFileDetailsNextDisable" />
+        <input class="dialog-btn" type="button" wz-finish value="Finish" disabled="disabled" />
+    </div>
+</div>

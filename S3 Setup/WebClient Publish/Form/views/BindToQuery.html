@@ -1,0 +1,81 @@
+﻿<div ng-controller="BindToQueryController" class="full-height">
+
+    <div class="portlet-body">
+        <div class="form-group">
+            <div class="col-xs-5">
+                <label class="control-label">Bind to Query</label>
+            </div>
+            <div class="col-xs-7">
+                <input type="checkbox" title="{{blnBoundToQuery}}" ng-model='blnBoundToQuery'
+                       ng-true-value="'True'" ng-false-value="'False'" ng-change="BoundToQueryChange()">
+            </div>
+        </div>
+        <div class="form-group" ng-show="blnBoundToQuery=='True'">
+            <div class="col-xs-5">
+                <label class="control-label">Query Load Type</label>
+            </div>
+            <div class="col-xs-7">
+                <select class="form-control input-sm" title="{{strQueryLoadType}}"
+                        ng-options='querytype for querytype in lstQueryLoadType' ng-model="strQueryLoadType"></select>
+
+            </div>
+        </div>
+        <div class="form-group" ng-show="blnBoundToQuery=='True'">
+            <label class="control-label col-xs-5">Base Query</label>
+            <div class="col-xs-7">
+                <entityqueryintellisense selecteditem="strBaseQuery" showsearchbutton="true"></entityqueryintellisense>
+            </div>
+        </div>
+
+        <div class="form-group" ng-show="(!blnBoundToQuery || blnBoundToQuery=='False') && formobject.dictAttributes.sfwType !='Lookup'&& formobject.dictAttributes.sfwType !='FormLinkLookup'">
+            <div class="col-xs-5">
+                <label class="control-label">Entity Collection</label>
+            </div>
+            <div class="col-xs-7">
+                <div class="textbox-autocomplete-block">
+                   
+                    <entityfieldelementintellisense modebinding="strEntityField" isshowonetoone="true"
+                                                    isshowonetomany="true" entityid="entityName"></entityfieldelementintellisense>
+                </div>
+            </div>
+        </div>
+        <div class="form-group" ng-hide="IsAddNewGrid">
+            <div class="col-xs-5">
+
+            </div>
+            <div class="col-xs-7">
+                <button class="btn btn-default functional-prop-btn" type="button" ng-click='ExecuteQueryClick()'>Execute</button>
+            </div>
+        </div>
+        <div class="form-group" ng-hide="IsAddNewGrid">
+            <table class="table table-condensed table-hover table-fixedheader">
+                <thead>
+                    <tr>
+                        <th width="50%">Grid Control</th>
+                        <th width="50%">Mapped Control</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="field in lstMappedFields" ng-class="field==selectedfield?'selected':''" ng-click="setRowSelection(field)">
+                        <td width="50%">
+                            <label ng-bind="field.GridControl"></label>
+                        </td>
+                        <td width="50%">
+                            <entityfieldelementintellisense ng-show="!blnBoundToQuery || blnBoundToQuery=='False'" modebinding="field.MappedControl" model="field" entityid="GridEntityName" propertyname='"MappedControl"'></entityfieldelementintellisense>
+                            <common-intellisense ng-show="blnBoundToQuery && blnBoundToQuery=='True'" model="field" propertyname='"MappedControl"' collection="lstQueryFields" selected-item="field.MappedControl" is-reset="true"></common-intellisense>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="form-actions">
+        <div class="col-xs-8 text-left">
+            <span class="alert-error-msg" ng-bind="ErrorMessage"></span>
+        </div>
+        <div class="col-xs-4">
+            <input type="button" class="btn dialog-btn-default" value="OK" ng-click="onBindToQuerySaveClick()" ng-disabled="ValidateGridView()" />
+            <input type="button" class="btn dialog-btn-default" value="Cancel" ng-click="onCancelClick()" />
+        </div>
+    </div>
+</div>

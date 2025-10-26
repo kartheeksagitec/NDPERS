@@ -1,0 +1,424 @@
+﻿<entity ID="entOrgPlan" sfwActive="True" sfwStatus="Valid" sfwRemoteObject="srvOrganization" sfwType="BusinessRule" sfwMainCDO="icdoOrgPlan" sfwObjectID="busOrgPlan" sfwTableName="sgt_org_plan" sfwView="False" sfwParentEntity="entExtendBase">
+  <rules>
+    <rule ID="IsEPOBasicSelected" sfwMessageId="4184" sfwExpression="(this.icdoOrgPlan.plan_option_value == &quot;EPBA&quot;)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK BBENEFIT TYPE RETR" sfwMessage="Pre-Tax flag has to be set for Retirement Plans." sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.benefit_type_value&quot;) == &quot;RETR&quot;) &amp;&amp; &#xA;(this.icdoOrgPlan.pre_tax_purchase == &quot;N&quot;)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK EMPL CANNOT ADD DC BEFORE MAIN" sfwMessageId="4043" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;EMPL&quot;) &amp;&amp; &#xA;!(this.icdoOrgPlan.plan_id != 7 &amp;&amp; this.icdoOrgPlan.plan_id != 28) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entOrgPlan.IF EMPL ADD DC BEFORE MAIN OR LE&quot;, this.icdoOrgPlan.org_id) &lt; 1)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK FOR GROUP HEALTH PLAN" sfwMessageId="4095" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.plan_code&quot;) == &quot;GHLT&quot;) &amp;&amp; &#xA;!(this.icdoOrgPlan.wellness_flag == &quot;Y&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;EMPL&quot;)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK FREQUENCY VALUE SELECTED" sfwMessageId="4091" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;EMPL&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.benefit_type_value&quot;) == &quot;DEFF&quot;) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoOrgPlan.report_frequency_value))" sfwObjectBased="True" />
+    <rule ID="Rule Check Health Particiation Start Date Not Entered For Health" sfwMessageId="8561" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.plan_code&quot;) == &quot;GHLT&quot;) &amp;&amp; &#xA;(this.icdoOrgPlan.health_participation_start_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="Rule Check Health Participation Start Date Not Null For Non Health" sfwMessageId="8562" sfwExpression="!(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.plan_code&quot;) == &quot;GHLT&quot;) &amp;&amp; &#xA;!(this.icdoOrgPlan.health_participation_start_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="Rule Check if benefit type is not deff comp and frequency is selected" sfwMessageId="4157" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;EMPL&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.benefit_type_value&quot;) != &quot;DEFF&quot;) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.icdoOrgPlan.report_frequency_value))" sfwObjectBased="True" />
+    <rule ID="Rule check if Org Status is not active" sfwMessageId="4136" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.status_value&quot;) != &quot;ACTV&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule Check if participation duration is less than 5 years" sfwMessageId="3059" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.plan_code&quot;) == &quot;GHLT&quot;) &amp;&amp; &#xA;(this.icdoOrgPlan.participation_start_date != DateTime.MinValue) &amp;&amp; &#xA;(this.icdoOrgPlan.participation_end_date != DateTime.MinValue) &amp;&amp; &#xA;(this.IsDateDiffLessThanFiveYears() == True) &amp;&amp; &#xA;(this.istrSuppressWarning == &quot;N&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule check if plan is group health and plan option not selected1" sfwMessageId="4080" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.plan_code&quot;) == &quot;GHLT&quot;) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoOrgPlan.plan_option_value)) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;EMPL&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule Check if Plan is not deff comp and frequency is selected" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF REST CHECKBOX NOT CHECKED" sfwMessageId="4040" sfwExpression="!(this.icdoOrgPlan.restriction == &quot;Y&quot;) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entOrgPlan.CHECK IF GIVEN PLAN IS RESTRICTED&quot;, this.icdoOrgPlan.org_id, this.icdoOrgPlan.plan_id) &gt; 0) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entOrgPlan.COUNT MAND PLAN TO ORG&quot;, this.icdoOrgPlan.org_id) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="Rule Check if start date is greater than end date" sfwMessageId="4083" sfwExpression="(this.icdoOrgPlan.participation_start_date &gt; this.icdoOrgPlan.participation_end_date) &amp;&amp; &#xA;(this.icdoOrgPlan.participation_start_date != DateTime.MinValue) &amp;&amp; &#xA;(this.icdoOrgPlan.participation_end_date != DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK INVALID PLAN" sfwMessageId="4028" sfwExpression="!(this.icdoOrgPlan.plan_id == 0) &amp;&amp; &#xA;(this.IsPlanValid() == False) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;EMPL&quot;)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK MANDATORY PLAN SHOULD ADD FIRST" sfwMessageId="4040" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entOrgPlan.CHECK IF GIVEN PLAN IS OPTIONAL&quot;, this.icdoOrgPlan.org_id, this.icdoOrgPlan.plan_id) &gt; 0) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;EMPL&quot;) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entOrgPlan.COUNT MAND PLAN TO ORG&quot;, this.icdoOrgPlan.org_id) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK ORG TYPE IS NOT VALID" sfwMessageId="4027" sfwExpression="!(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;PRVD&quot;) &amp;&amp; &#xA;!(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;EMPL&quot;) &amp;&amp; &#xA;!(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;VEND&quot;)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK OVERLAPPING DATES" sfwMessageId="4041" sfwExpression="(this.IsDatesOverlapping() == True)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK PLAN IS BLANK" sfwMessageId="4031" sfwExpression="(this.icdoOrgPlan.plan_id == 0)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK PLAN OPTION IS EPPB" sfwMessageId="4030" sfwExpression="(!string.IsNullOrEmpty(this.icdoOrgPlan.plan_option_value)) &amp;&amp; &#xA;(this.icdoOrgPlan.plan_option_value != &quot;EPPB&quot;) &amp;&amp; &#xA;!(this.icdoOrgPlan.plan_id != 12) &amp;&amp; &#xA;((RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.emp_category_value&quot;) == &quot;STAT&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.emp_category_value&quot;) == &quot;DSHU&quot;)) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;EMPL&quot;)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK PLAN OPTION IS SELECTED" sfwMessageId="4025" sfwExpression="(this.icdoOrgPlan.plan_id != 12) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.icdoOrgPlan.plan_option_value))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK PVDR CANNOT ADD RETR PLANS" sfwMessageId="4042" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;PRVD&quot;) &amp;&amp; &#xA;!(this.icdoOrgPlan.plan_id == 0) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entOrgPlan.CHECK PROVIDERS PLAN&quot;, this.ibusPlan.icdoPlan.plan_id) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK RESTRICTION CHECKBOX" sfwMessageId="4029" sfwExpression="(this.icdoOrgPlan.restriction == &quot;Y&quot;) &amp;&amp; &#xA;!(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entOrgPlan.CHECK IF GIVEN PLAN IS RESTRICTED&quot;, this.icdoOrgPlan.org_id, this.icdoOrgPlan.plan_id) &gt; 0) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;EMPL&quot;)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK RETR PLAN WHILE RESTRICT" sfwMessageId="4044" sfwExpression="!(this.icdoOrgPlan.plan_id == 12) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entOrgPlan.CHECK IF GIVEN PLAN IS RESTRICTED&quot;, this.icdoOrgPlan.org_id, this.icdoOrgPlan.plan_id) &gt; 0) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entOrgPlan.CHECK ATLEAST ONE RETR WHILE RESTRICT&quot;, this.icdoOrgPlan.org_id) &lt; 1) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;EMPL&quot;)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK RETR PLANS FOR REST PLANS" sfwMessageId="4044" sfwExpression="!(this.icdoOrgPlan.plan_id == 12) &amp;&amp; &#xA;(this.icdoOrgPlan.restriction == &quot;Y&quot;) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entOrgPlan.CHECK ATLEAST ONE RETR WHILE RESTRICT&quot;, this.icdoOrgPlan.org_id) &lt; 1) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entOrgPlan.CHECK IF GIVEN PLAN IS RESTRICTED&quot;, this.icdoOrgPlan.org_id, this.icdoOrgPlan.plan_id) &gt; 0) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;EMPL&quot;)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK START DATE IS NULL" sfwMessageId="4032" sfwExpression="(this.icdoOrgPlan.participation_start_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK VALIDATE ADDING HMO PLAN" sfwMessageId="4026" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entOrgPlan.VALIDATE ADDING HMO PLAN&quot;, this.icdoOrgPlan.org_id) &lt; 1) &amp;&amp; &#xA;(this.icdoOrgPlan.plan_id == 22) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;EMPL&quot;)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK WELL NESS PROGRAM" sfwMessageId="4082" sfwExpression="(this.icdoOrgPlan.wellness_flag == &quot;Y&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.plan_code&quot;) != &quot;GHLT&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule if Restriction not checked for DC ExceptState" sfwMessageId="4158" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;EMPL&quot;) &amp;&amp; &#xA;!(this.icdoOrgPlan.plan_id != 7 &amp;&amp; this.icdoOrgPlan.plan_id != 28) &amp;&amp; &#xA;!(this.icdoOrgPlan.restriction == &quot;Y&quot;) &amp;&amp; &#xA;!(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.emp_category_value&quot;) == &quot;STAT&quot;)" sfwObjectBased="True" />
+    <rule ID="Visible Rule Check Plan is Dental and Benefit Type is Insurance" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.plan_code&quot;) == &quot;GRDT&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.benefit_type_value&quot;) == &quot;INSR&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;PRVD&quot;)" sfwObjectBased="True" />
+    <rule ID="Visible Rule Check Plan is EAP and Type Insurance" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.benefit_type_value&quot;) == &quot;INSR&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.plan_code&quot;) == &quot;EAPP&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;PRVD&quot;)" sfwObjectBased="True" />
+    <rule ID="Visible Rule check Plan is Group Health and Type Insurance" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.benefit_type_value&quot;) == &quot;INSR&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.plan_code&quot;) == &quot;GHLT&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;PRVD&quot;)" sfwObjectBased="True" />
+    <rule ID="Visible Rule check Plan is Group Life and Type Insurance" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.plan_code&quot;) == &quot;GRLF&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.benefit_type_value&quot;) == &quot;INSR&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;PRVD&quot;)" sfwObjectBased="True" />
+    <rule ID="Visible Rule Check Plan is HMO and Benefit Type is Insurance" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.benefit_type_value&quot;) == &quot;INSR&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.plan_code&quot;) == &quot;HMOP&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;PRVD&quot;)" sfwObjectBased="True" />
+    <rule ID="Visible Rule Check Plan is Medicare Part D" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.plan_code&quot;) == &quot;MCPD&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.benefit_type_value&quot;) == &quot;INSR&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;PRVD&quot;)" sfwObjectBased="True" />
+    <rule ID="Visible Rule Check Plan is Medicare Part D and Org is employer" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;EMPL&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.plan_code&quot;) == &quot;MCPD&quot;)" sfwObjectBased="True" />
+    <rule ID="Visible Rule Check Plan is Vision and Benefit type is Insurance" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.plan_code&quot;) == &quot;GRVS&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.benefit_type_value&quot;) == &quot;INSR&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;PRVD&quot;)" sfwObjectBased="True" />
+    <rule ID="Visible Rule Cjheck Plan is LTC and Benefit Type is Insr" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.plan_code&quot;) == &quot;LTCP&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.benefit_type_value&quot;) == &quot;INSR&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;PRVD&quot;)" sfwObjectBased="True" />
+    <rule ID="Visible Rule ESS Payroll Freq" sfwExpression="(RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusPlan.icdoPlan.plan_id&quot;) == 19) || &#xA;(RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusPlan.icdoPlan.plan_id&quot;) == 8)" sfwObjectBased="True" />
+    <rule ID="Visible Rule ESS PreTax" sfwExpression="(RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusPlan.icdoPlan.plan_id&quot;) == 1) || &#xA;(RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusPlan.icdoPlan.plan_id&quot;) == 27) || &#xA;(RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusPlan.icdoPlan.plan_id&quot;) == 2) || &#xA;(RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusPlan.icdoPlan.plan_id&quot;) == 4) || &#xA;(RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusPlan.icdoPlan.plan_id&quot;) == 6) || &#xA;(RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusPlan.icdoPlan.plan_id&quot;) == 5) || &#xA;(RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusPlan.icdoPlan.plan_id&quot;) == 3) || &#xA;(this.icdoOrgPlan.plan_id == 26) ||&#xA;(this.icdoOrgPlan.plan_id == 29)" sfwObjectBased="True" />
+    <rule ID="Visible Rule ESS Wellness Prgm" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.plan_code&quot;) == &quot;GHLT&quot;)" sfwObjectBased="True" />
+    <rule ID="Visible Rule For PlanOption" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.plan_code&quot;) == &quot;GHLT&quot;)" sfwObjectBased="True" />
+    <rule ID="Visible Rule Health Participation Date" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.plan_code&quot;) == &quot;GHLT&quot;)" sfwObjectBased="True" />
+    <rule ID="Visible Rule Org Type is Employer" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;EMPL&quot;)" sfwObjectBased="True" />
+    <rule ID="Visible Rule Org Type is Employer and Benefit Type is Retirement" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.benefit_type_value&quot;) == &quot;RETR&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;EMPL&quot;)" sfwObjectBased="True" />
+    <rule ID="Visible Rule Plan Group Health and Org is Employer" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.plan_code&quot;) == &quot;GHLT&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;EMPL&quot;)" sfwObjectBased="True" />
+    <rule ID="Visible Rule Plan is Dental and Org is Provider" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.plan_code&quot;) == &quot;GRDT&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;PRVD&quot;)" sfwObjectBased="True" />
+    <rule ID="Visible Rule Plan is EAP and Org is Employer" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.plan_code&quot;) == &quot;EAPP&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;EMPL&quot;)" sfwObjectBased="True" />
+    <rule ID="Visible Rule Plan is Group Life and Org is Employer" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.plan_code&quot;) == &quot;GRLF&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;EMPL&quot;)" sfwObjectBased="True" />
+    <rule ID="Visible Rule Plan is HMO and Org is Employer" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.plan_code&quot;) == &quot;HMOP&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;EMPL&quot;)" sfwObjectBased="True" />
+    <rule ID="Visible Rule Plan is LTC and Org is Employer" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;EMPL&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.plan_code&quot;) == &quot;LTCP&quot;)" sfwObjectBased="True" />
+    <rule ID="Visible Rule Plan is Vision and Org is Employer" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.plan_code&quot;) == &quot;GRVS&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;EMPL&quot;)" sfwObjectBased="True" />
+    <rule ID="Vision Rule Plan is Dental and Org is Employer" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.plan_code&quot;) == &quot;GRDT&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;EMPL&quot;)" sfwObjectBased="True" />
+    <rule ID="Visible Rule Check Plan is Flex,Deferred Comp  and Other" sfwExpression="(RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusPlan.icdoPlan.plan_id&quot;) == 19) || &#xA;(RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusPlan.icdoPlan.plan_id&quot;) == 8) || &#xA;(RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusPlan.icdoPlan.plan_id&quot;) == 18)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleIsPlanNotFlex" sfwExpression="!(RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusPlan.icdoPlan.plan_id&quot;) == 18)" sfwObjectBased="True" />
+    <rule ID="Visibility Rule- HASPreTaxHealthPlan" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.plan_code&quot;) == &quot;GHLT&quot;)" />
+    <rule ID="RULE CHECK DAY OF MONTH IS NULL" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) == &quot;EMPL&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPlan.icdoPlan.benefit_type_value&quot;) == &quot;DEFF&quot;) &amp;&amp; &#xA;!(string.IsNullOrEmpty(this.icdoOrgPlan.report_frequency_value)) &amp;&amp; &#xA;((this.icdoOrgPlan.report_frequency_value) == &quot;MONT&quot;)  &amp;&amp; (this.icdoOrgPlan.day_of_month) == 0" sfwMessageId="10404" />
+  </rules>
+  <delete>
+    <property ID="lstOrgPlanProvider" sfwMethodName="LoadOrgPlanProviders" />
+    <property ID="lstOrgPlanMemberType" sfwMethodName="LoadMemberType" />
+  </delete>
+  <checklist />
+  <initialload>
+    <item ID="Visible Rule Check Plan is Dental and Benefit Type is Insurance" sfwMode="All" sfwStatus="Active" />
+    <item ID="Visible Rule Check Plan is Vision and Benefit type is Insurance " sfwMode="All" sfwStatus="Active" />
+    <item ID="Visible Rule Check Plan is HMO and Benefit Type is Insurance" sfwMode="All" sfwStatus="Active" />
+    <item ID="Visible Rule check Plan is Group Health and Type Insurance" sfwMode="All" sfwStatus="Active" />
+    <item ID="Visible Rule check Plan is Group Life and Type Insurance" sfwMode="All" sfwStatus="Active" />
+    <item ID="Visible Rule Check Plan is Medicare Part D" sfwMode="All" sfwStatus="Active" />
+    <item ID="Visible Rule Check Plan is EAP and Type Insurance" sfwMode="All" sfwStatus="Active" />
+    <item ID="Visible Rule Cjheck Plan is LTC and Benefit Type is Insr" sfwMode="All" sfwStatus="Active" />
+    <item ID="Visible Rule Org Type is Employer" sfwMode="All" sfwStatus="Active" />
+    <item ID="Visible Rule Org Type is Employer and Benefit Type is Retirement" sfwMode="All" sfwStatus="Active" />
+    <item ID="Visible Rule Plan is Dental and Org is Provider" sfwMode="All" sfwStatus="Active" />
+    <item ID="Vision Rule Plan is Dental and Org is Employer" sfwMode="All" sfwStatus="Active" />
+    <item ID="Visible Rule Plan is EAP and Org is Employer" sfwMode="All" sfwStatus="Active" />
+    <item ID="Visible Rule Plan is Vision and Org is Employer" sfwMode="All" sfwStatus="Active" />
+    <item ID="Visible Rule Plan is LTC and Org is Employer" sfwMode="All" sfwStatus="Active" />
+    <item ID="Visible Rule Plan is Group Life and Org is Employer" sfwMode="All" sfwStatus="Active" />
+    <item ID="Visible Rule Plan Group Health and Org is Employer" sfwMode="All" sfwStatus="Active" />
+    <item ID="Visible Rule Plan is HMO and Org is Employer" sfwMode="All" sfwStatus="Active" />
+    <item ID="Visible Rule Check Plan is Medicare Part D and Org is employer" sfwMode="All" sfwStatus="Active" />
+    <item ID="Visible Rule ESS PreTax" sfwMode="All" sfwStatus="Active" />
+    <item ID="Visible Rule ESS Payroll Freq" sfwMode="All" sfwStatus="Active" />
+    <item ID="Visible Rule ESS Wellness Prgm" sfwMode="All" sfwStatus="Active" />
+    <item ID="Visible Rule For PlanOption" sfwMode="All" sfwStatus="Active" />
+    <item ID="Visible Rule Health Participation Date" sfwMode="All" sfwStatus="Active" />
+    <item ID="Visible Rule Check Plan is Flex,Deferred Comp  and Other" sfwStatus="Active" sfwMode="All" />
+    <item ID="VisibleRuleIsPlanNotFlex" sfwStatus="Active" sfwMode="All" />
+    <item ID="Visibility Rule- HASPreTaxHealthPlan" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="RULE CHECK ORG TYPE IS NOT VALID" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK INVALID PLAN" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK RETR PLAN WHILE RESTRICT" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK MANDATORY PLAN SHOULD ADD FIRST" sfwMode="New" sfwStatus="Inactive" />
+    <item ID="RULE CHECK OVERLAPPING DATES" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK PLAN OPTION IS SELECTED" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK PLAN OPTION IS EPPB" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK RESTRICTION CHECKBOX" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK RETR PLANS FOR REST PLANS" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK IF REST CHECKBOX NOT CHECKED" sfwMode="All" sfwStatus="Inactive" />
+    <item ID="RULE CHECK EMPL CANNOT ADD DC BEFORE MAIN" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK VALIDATE ADDING HMO PLAN" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK PVDR CANNOT ADD RETR PLANS" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK PLAN IS BLANK" sfwMode="New" sfwStatus="Active" />
+    <item ID="RULE CHECK START DATE IS NULL" sfwMode="New" sfwStatus="Active" />
+    <item ID="RULE CHECK WELL NESS PROGRAM" sfwMode="All" sfwStatus="Inactive" />
+    <item ID="RULE CHECK FREQUENCY VALUE SELECTED" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK FOR GROUP HEALTH PLAN" sfwMode="All" sfwStatus="Inactive" />
+    <item ID="RULE CHECK BBENEFIT TYPE RETR" sfwMode="All" sfwStatus="Inactive" />
+    <item ID="Rule check if plan is group health and plan option not selected1" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check if start date is greater than end date" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule check if Org Status is not active" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check if participation duration is less than 5 years " sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule if Restriction not checked for DC ExceptState" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEPOBasicSelected" sfwMode="New" sfwStatus="Active" />
+    <item ID="Rule Check if benefit type is not deff comp and frequency is selected" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check Health Particiation Start Date Not Entered For Health" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check Health Participation Start Date Not Null For Non Health" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK DAY OF MONTH IS NULL" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <expressionfields />
+  <queries>
+    <query ID="LOAD_OTHER_PLANS" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_ORG_PLAN WHERE ORG_ID=@ORG_ID AND ORG_PLAN_ID &lt;&gt; @ORGPLANID">
+      <parameters>
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+        <parameter ID="@ORGPLANID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LOAD_ORG_PLAN_PROVIDERS" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT ORG.ORG_NAME AS ProviderOrgName,OPP.STATUS_ID,OPP.STATUS_VALUE,OPP.ORG_PLAN_PROVIDER_ID,OPP.ORG_PLAN_ID,OPP.PROVIDER_ORG_ID FROM SGT_ORG_PLAN_PROVIDER OPP &#xD;&#xA;LEFT JOIN SGT_ORGANIZATION ORG ON ORG.ORG_ID = OPP.PROVIDER_ORG_ID&#xD;&#xA;LEFT JOIN SGT_ORG_PLAN OP ON OP.ORG_PLAN_ID=OPP.ORG_PLAN_ID&#xD;&#xA;LEFT JOIN SGT_PLAN SP ON SP.PLAN_ID=OP.PLAN_ID&#xD;&#xA;WHERE OPP.ORG_PLAN_ID=@ORG_PLAN_ID">
+      <parameters>
+        <parameter ID="@ORG_PLAN_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="VALIDATE ADDING HMO PLAN" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_ORG_PLAN&#xD;&#xA;WHERE ORG_ID=@ORG_ID AND PLAN_ID=12">
+      <parameters>
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="CHECK ATLEAST ONE RETR WHILE RESTRICT" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_ORG_PLAN OP&#xD;&#xA;INNER JOIN SGT_PLAN SP ON SP.PLAN_ID=OP.PLAN_ID&#xD;&#xA;WHERE OP.ORG_ID=@ORG_ID AND SP.BENEFIT_TYPE_VALUE='RETR'">
+      <parameters>
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="CHECK IF GIVEN PLAN IS OPTIONAL" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_PLAN_EMP_CATEGORY_CROSSREF PC&#xD;&#xA;INNER JOIN SGT_ORGANIZATION ORG ON ORG.EMP_CATEGORY_VALUE=PC.EMP_CATEGORY_VALUE AND ORG.ORG_ID=@ORG_ID&#xD;&#xA;WHERE PC.PLAN_ID=@PLAN_ID AND PC.REQUIRED_FLAG_OPTION_VALUE='OPTN'">
+      <parameters>
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+        <parameter ID="@PLAN_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadAssociatedProviders" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_ORG_PLAN  OP &#xD;&#xA;INNER JOIN SGT_ORGANIZATION ORG ON ORG.ORG_ID=OP.ORG_ID AND ORG.ORG_TYPE_VALUE='PRVD' AND ORG.STATUS_VALUE='ACTV'&#xD;&#xA;WHERE OP.PLAN_ID=@PLAN_ID">
+      <parameters>
+        <parameter ID="@PLAN_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadAssociatedEmployers" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_ORG_PLAN  OP &#xD;&#xA;INNER JOIN SGT_ORGANIZATION ORG ON ORG.ORG_ID=OP.ORG_ID AND ORG.ORG_TYPE_VALUE='EMPL' AND ORG.STATUS_VALUE='ACTV'&#xD;&#xA;WHERE OP.PLAN_ID=@PLAN_ID">
+      <parameters>
+        <parameter ID="@PLAN_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="CHECK PROVIDERS PLAN" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_PLAN &#xD;&#xA;WHERE PLAN_ID=@PLANID AND RETIREMENT_TYPE_VALUE ='DB'&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@PLANID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="IF EMPL ADD DC BEFORE MAIN OR LE" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_ORG_PLAN&#xD;&#xA;WHERE ORG_ID=@ORG_ID&#xD;&#xA;AND PARTICIPATION_END_DATE IS NULL&#xD;&#xA;AND ((PLAN_ID=1) OR (PLAN_ID=27) OR (PLAN_ID=2) OR (PLAN_ID=20))">
+      <parameters>
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="CHECK IF GIVEN PLAN IS RESTRICTED" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_PLAN_EMP_CATEGORY_CROSSREF PC&#xD;&#xA;INNER JOIN SGT_ORGANIZATION ORG ON ORG.EMP_CATEGORY_VALUE=PC.EMP_CATEGORY_VALUE AND ORG.ORG_ID=@ORG_ID&#xD;&#xA;WHERE PC.PLAN_ID=@PLAN_ID AND PC.REQUIRED_FLAG_OPTION_VALUE='REST'">
+      <parameters>
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+        <parameter ID="@PLAN_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="COUNT MAND PLAN TO ORG" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_PLAN_EMP_CATEGORY_CROSSREF PC&#xD;&#xA;INNER JOIN SGT_ORGANIZATION ORG ON ORG.EMP_CATEGORY_VALUE=PC.EMP_CATEGORY_VALUE AND ORG_ID=@ORG_ID&#xD;&#xA;LEFT JOIN SGT_ORG_PLAN OP ON OP.PLAN_ID=PC.PLAN_ID AND ORG.ORG_ID=OP.ORG_ID AND OP.PARTICIPATION_END_DATE IS NULL&#xD;&#xA;WHERE  PC.REQUIRED_FLAG_OPTION_VALUE='MAND' AND OP.ORG_PLAN_ID IS NULL">
+      <parameters>
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadPlanByOrg" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT DISTINCT b.* FROM SGT_ORG_PLAN a&#xD;&#xA;INNER JOIN SGT_PLAN b ON a.ORG_ID = @orgId AND a.PLAN_ID = b.PLAN_ID">
+      <parameters>
+        <parameter ID="@orgId" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetOrgPlanAndEffectiveDateForDentalRates" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select top 1 Org_plan_id,effective_date from sgt_org_plan_dental_rate &#xD;&#xA;where org_plan_id in (select Org_plan_id from sgt_org_plan where Org_id=@Org_id and plan_id=@plan_id) and effective_date &lt;= getdate() order by effective_date desc">
+      <parameters>
+        <parameter ID="@Org_id" sfwDataType="int" />
+        <parameter ID="@plan_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadEmployerRetirementRates" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select  top 1 * from sgt_plan_retirement_rate where effective_date in &#xD;&#xA;(select max(effective_date) from sgt_plan_retirement_rate &#xD;&#xA;where plan_id=@plan_id and member_type_value=@member_type_value and effective_date&lt;=getdate() ) and member_type_value=@member_type_value">
+      <parameters>
+        <parameter ID="@plan_id" sfwDataType="int" />
+        <parameter ID="@member_type_value" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="LoadRateProviders" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select * from sgt_Org_plan_provider &#xD;&#xA;where org_plan_id=@Org_plan_id and status_value='ACTV'">
+      <parameters>
+        <parameter ID="@Org_plan_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadDentalRatesForEmployer" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select *  from sgt_org_plan_dental_rate where org_plan_id=@org_plan_id and effective_date=@effective_date">
+      <parameters>
+        <parameter ID="@org_plan_id" sfwDataType="int" />
+        <parameter ID="@effective_date" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="GetOrgPlanAndEffectiveDateForEaplRates" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select top 1 Org_plan_id,effective_date from sgt_Org_Plan_eap_rate&#xD;&#xA;where org_plan_id in (select Org_plan_id from sgt_org_plan where Org_id=@Org_id and plan_id=@plan_id) and effective_date &lt;= getdate() order by effective_date desc">
+      <parameters>
+        <parameter ID="@Org_id" sfwDataType="int" />
+        <parameter ID="@plan_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadEapRatesForEmployer" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select *  from sgt_Org_Plan_eap_rate where org_plan_id=@org_plan_id and effective_date=@effective_date">
+      <parameters>
+        <parameter ID="@org_plan_id" sfwDataType="int" />
+        <parameter ID="@effective_date" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="GetOrgPlanAndEffectiveDateForLtcRates" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select top 1 Org_plan_id,effective_date from SGT_ORG_PLAN_LTC_RATE&#xD;&#xA;where org_plan_id in (select Org_plan_id from sgt_org_plan where Org_id=@Org_id and plan_id=@plan_id) and effective_date &lt;= getdate() order by effective_date desc&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@Org_id" sfwDataType="int" />
+        <parameter ID="@plan_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadLTCRatesForEmployer" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select *  from SGT_ORG_PLAN_LTC_RATE where org_plan_id=@org_plan_id and effective_date=@effective_date">
+      <parameters>
+        <parameter ID="@org_plan_id" sfwDataType="int" />
+        <parameter ID="@effective_date" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="GetOrgPlanAndEffectiveDateForVisionRates" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select top 1 Org_plan_id,effective_date from SGT_ORG_PLAN_VISION_RATE&#xD;&#xA;where org_plan_id in (select Org_plan_id from sgt_org_plan where Org_id=@Org_id and plan_id=@plan_id) and effective_date &lt;= getdate() order by effective_date desc&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@Org_id" sfwDataType="int" />
+        <parameter ID="@plan_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadVisionRatesForEmployer" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select *  from SGT_ORG_PLAN_VISION_RATE where org_plan_id=@org_plan_id and effective_date=@effective_date">
+      <parameters>
+        <parameter ID="@org_plan_id" sfwDataType="int" />
+        <parameter ID="@effective_date" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="GetOrgPlanAndEffectiveDateForHMORates" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select top 1 Org_plan_id,effective_date from SGT_ORG_PLAN_HMO_RATE&#xD;&#xA;where org_plan_id in (select Org_plan_id from sgt_org_plan where Org_id=@Org_id and plan_id=@plan_id) and effective_date &lt;= getdate() order by effective_date desc&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@Org_id" sfwDataType="int" />
+        <parameter ID="@plan_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadHMORatesForEmployer" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select *  from SGT_ORG_PLAN_HMO_RATE where org_plan_id=@org_plan_id and effective_date=@effective_date and emp_category_value=@emp_category_value">
+      <parameters>
+        <parameter ID="@org_plan_id" sfwDataType="int" />
+        <parameter ID="@effective_date" sfwDataType="DateTime" />
+        <parameter ID="@emp_category_value" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="GetOrgPlanAndEffectiveDateForLifeRates" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select top 1 Org_plan_id,effective_date from SGT_ORG_PLAN_LIFE_RATE&#xD;&#xA;where org_plan_id in (select Org_plan_id from sgt_org_plan where Org_id=@Org_id and plan_id=@plan_id) and effective_date &lt;= getdate() order by effective_date desc&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@Org_id" sfwDataType="int" />
+        <parameter ID="@plan_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadLifeRatesForEmployer" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select *  from SGT_ORG_PLAN_LIFE_RATE where org_plan_id=@org_plan_id and effective_date=@effective_date">
+      <parameters>
+        <parameter ID="@org_plan_id" sfwDataType="int" />
+        <parameter ID="@effective_date" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="GetOrgPlanAndEffectiveDateForHealthRates" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT  top 1  a.Org_plan_id,a.effective_date &#xD;&#xA;FROM DBO.SGT_ORG_PLAN_HEALTH_MEDICARE_PART_D_RATE A&#xD;&#xA;      INNER JOIN DBO.SGT_ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_COVERAGE_REF B&#xD;&#xA;            ON A.ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_COVERAGE_REF_ID = B.ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_COVERAGE_REF_ID&#xD;&#xA;      INNER JOIN DBO.SGT_ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_RATE_REF C ON &#xD;&#xA;            B.ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_RATE_REF_ID =  C.ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_RATE_REF_ID&#xD;&#xA;where a.org_plan_id in (select Org_plan_id from sgt_org_plan where Org_id=@orgid and plan_id=@planid) &#xD;&#xA;and a.effective_date &lt;= getdate() &#xD;&#xA;AND C.HEALTH_INSURANCE_TYPE_VALUE=@membertypevalue&#xD;&#xA;order by a.effective_date desc&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@orgid" sfwDataType="int" />
+        <parameter ID="@planid" sfwDataType="int" />
+        <parameter ID="@membertypevalue" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="GetOrgPlanAndEffectiveDateforMedicareRates" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT  top 1  a.Org_plan_id,a.effective_date &#xD;&#xA;FROM DBO.SGT_ORG_PLAN_HEALTH_MEDICARE_PART_D_RATE A&#xD;&#xA;      INNER JOIN DBO.SGT_ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_COVERAGE_REF B&#xD;&#xA;            ON A.ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_COVERAGE_REF_ID = B.ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_COVERAGE_REF_ID&#xD;&#xA;      INNER JOIN DBO.SGT_ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_RATE_REF C ON &#xD;&#xA;            B.ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_RATE_REF_ID =  C.ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_RATE_REF_ID&#xD;&#xA;where a.org_plan_id in (select Org_plan_id from sgt_org_plan where Org_id=@orgid and plan_id=@planid) &#xD;&#xA;and a.effective_date &lt;= getdate() &#xD;&#xA;AND C.HEALTH_INSURANCE_TYPE_VALUE=@membertypevalue&#xD;&#xA;order by a.effective_date desc&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@orgid" sfwDataType="int" />
+        <parameter ID="@planid" sfwDataType="int" />
+        <parameter ID="@membertypevalue" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="LoadMedicarePartDRates" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="&#xD;&#xA;Select *  from SGT_ORG_PLAN_HEALTH_MEDICARE_PART_D_RATE where org_plan_id=@org_plan_id and effective_date=@effective_date">
+      <parameters>
+        <parameter ID="@org_plan_id" sfwDataType="int" />
+        <parameter ID="@effective_date" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="LoadHealthRatesForEmployers" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="DECLARE @ALTERNATE_STRUCTURE_CODE_VALUE varchar(25);&#xD;&#xA;SELECT @ALTERNATE_STRUCTURE_CODE_VALUE=ALTERNATE_STRUCTURE_CODE_VALUE FROM SGT_ORG_PLAN where org_plan_id=@org_plan_id &#xD;&#xA;IF(@ALTERNATE_STRUCTURE_CODE_VALUE='NGRF')&#xD;&#xA;Begin&#xD;&#xA;SELECT  A.* FROM DBO.SGT_ORG_PLAN_HEALTH_MEDICARE_PART_D_RATE A&#xD;&#xA;      INNER JOIN DBO.SGT_ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_COVERAGE_REF B&#xD;&#xA;            ON A.ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_COVERAGE_REF_ID = B.ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_COVERAGE_REF_ID&#xD;&#xA;      INNER JOIN DBO.SGT_ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_RATE_REF C ON &#xD;&#xA;            B.ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_RATE_REF_ID =  C.ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_RATE_REF_ID&#xD;&#xA;WHERE C.WELLNESS  = CASE WHEN @WELLNESS = 'Y' THEN 1 ELSE 0 END&#xD;&#xA;AND C.HEALTH_INSURANCE_TYPE_VALUE=@MEMBER_TYPE_VALUE and isnull(plan_option_value,'')=isnull(@plan_option_value,'')&#xD;&#xA;and  org_plan_id=@provider_org_plan_id &#xD;&#xA;and  C.rate_structure_value in (SELECT TOP 1 RATE_STRUCTURE_VALUE FROM&#xD;&#xA;SGT_ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_RATE_STRUCTURE_REF &#xD;&#xA;WHERE EFFECTIVE_DATE &lt;= @effective_date AND&#xD;&#xA; @PlanParticipationDate BETWEEN ISNULL(ENROLLMENT_DATE_FROM,CAST(0 AS DATETIME)) AND &#xD;&#xA;ISNULL(ENROLLMENT_DATE_TO,CAST('2999-12-31' AS DATETIME))&#xD;&#xA;AND HEALTH_INSURANCE_TYPE_VALUE=@MEMBER_TYPE_VALUE&#xD;&#xA;ORDER BY EFFECTIVE_DATE DESC) and c.ALTERNATE_STRUCTURE_CODE_VALUE in(SELECT TOP 1 ALTERNATE_STRUCTURE_CODE_VALUE FROM&#xD;&#xA;SGT_ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_RATE_STRUCTURE_REF &#xD;&#xA;WHERE EFFECTIVE_DATE &lt;= @effective_date AND&#xD;&#xA;@PlanParticipationDate BETWEEN ISNULL(ENROLLMENT_DATE_FROM,CAST(0 AS DATETIME)) AND &#xD;&#xA;ISNULL(ENROLLMENT_DATE_TO,CAST('2999-12-31' AS DATETIME))&#xD;&#xA;AND HEALTH_INSURANCE_TYPE_VALUE=@MEMBER_TYPE_VALUE AND ALTERNATE_STRUCTURE_CODE_VALUE='NGRF'&#xD;&#xA;)&#xD;&#xA;End&#xD;&#xA;Else&#xD;&#xA;Begin&#xD;&#xA;SELECT  A.*,C.ALTERNATE_STRUCTURE_CODE_VALUE FROM DBO.SGT_ORG_PLAN_HEALTH_MEDICARE_PART_D_RATE A&#xD;&#xA;      INNER JOIN DBO.SGT_ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_COVERAGE_REF B&#xD;&#xA;            ON A.ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_COVERAGE_REF_ID = B.ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_COVERAGE_REF_ID&#xD;&#xA;      INNER JOIN DBO.SGT_ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_RATE_REF C ON &#xD;&#xA;            B.ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_RATE_REF_ID =  C.ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_RATE_REF_ID&#xD;&#xA;WHERE C.WELLNESS  = CASE WHEN @WELLNESS = 'Y' THEN 1 ELSE 0 END&#xD;&#xA;AND C.HEALTH_INSURANCE_TYPE_VALUE=@MEMBER_TYPE_VALUE and isnull(plan_option_value,'')=isnull(@plan_option_value,'')&#xD;&#xA;and  org_plan_id=@provider_org_plan_id &#xD;&#xA;and  C.rate_structure_value in (SELECT TOP 1 RATE_STRUCTURE_VALUE FROM&#xD;&#xA;SGT_ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_RATE_STRUCTURE_REF &#xD;&#xA;WHERE EFFECTIVE_DATE &lt;= @effective_date AND&#xD;&#xA;@PlanParticipationDate BETWEEN ISNULL(ENROLLMENT_DATE_FROM,CAST(0 AS DATETIME)) AND &#xD;&#xA;ISNULL(ENROLLMENT_DATE_TO,CAST('2999-12-31' AS DATETIME))&#xD;&#xA;AND HEALTH_INSURANCE_TYPE_VALUE=@MEMBER_TYPE_VALUE&#xD;&#xA;ORDER BY EFFECTIVE_DATE DESC) &#xD;&#xA;and isnull(C.ALTERNATE_STRUCTURE_CODE_VALUE,'') &lt;&gt;'NGRF'&#xD;&#xA;End">
+      <parameters>
+        <parameter ID="@WELLNESS" sfwDataType="string" />
+        <parameter ID="@MEMBER_TYPE_VALUE" sfwDataType="string" />
+        <parameter ID="@org_plan_id" sfwDataType="int" />
+        <parameter ID="@effective_date" sfwDataType="DateTime" />
+        <parameter ID="@plan_option_value" sfwDataType="string" />
+        <parameter ID="@PlanParticipationDate" sfwDataType="DateTime" />
+        <parameter ID="@provider_org_plan_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadActiveEmployerOrgPlanByBenefitType" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="If @benifitTypeValue = 'RETR' or @benifitTypeValue = 'INSR' Begin&#xA; SELECT * FROM SGT_ORG_PLAN A&#xA; INNER JOIN SGT_PLAN B &#xA;  ON A.PLAN_ID = B.PLAN_ID&#xA; INNER JOIN SGT_ORGANIZATION O &#xA;  ON O.ORG_ID = A.ORG_ID &#xA;  AND O.ORG_TYPE_VALUE = 'EMPL' &#xA;  AND O.STATUS_VALUE = 'ACTV'&#xA; left outer join &#xA;  (&#xA;  Select * from sgt_employer_payroll_header EH &#xA;   where Month(@ParamDate) = Month(Payroll_paid_date) &#xA;   and Year(@ParamDate) = year(Payroll_paid_date) &#xA;   and Eh.status_Value &lt;&gt; 'IGNR' and Report_type_value = 'REG'&#xA;   and Eh.header_type_Value =  @benifitTypeValue&#xA;  ) EmpH&#xA;  on EMPH.org_id = O.org_id  &#xA; WHERE B.BENEFIT_TYPE_VALUE = @benifitTypeValue&#xA;        and emph.employer_payroll_header_id is null&#xA;&#x9;&#x9;and A.participation_start_date &lt;= @Paramdate&#xA;End&#xA;Else Begin&#xA; SELECT * FROM SGT_ORG_PLAN A&#xA; INNER JOIN SGT_PLAN B &#xA;  ON A.PLAN_ID = B.PLAN_ID&#xA; INNER JOIN SGT_ORGANIZATION O &#xA;  ON O.ORG_ID = A.ORG_ID &#xA;  AND O.ORG_TYPE_VALUE = 'EMPL' &#xA;  AND O.STATUS_VALUE = 'ACTV'&#xA; left outer join &#xA;  (&#xA;  Select * from sgt_employer_payroll_header EH &#xA;   where @ParamDate between pay_period_start_date and Pay_period_end_date&#xA;   and Eh.status_Value &lt;&gt; 'IGNR' and Report_type_value = 'REG'&#xA;   and Eh.header_type_Value =  @benifitTypeValue&#xA;  ) EmpH&#xA;  on EMPH.org_id = O.org_id  &#xA; WHERE B.BENEFIT_TYPE_VALUE = @benifitTypeValue&#xA;          and emph.employer_payroll_header_id is null&#xA;End">
+      <parameters>
+        <parameter ID="@benifitTypeValue" sfwDataType="string" />
+        <parameter ID="@ParamDate" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="LoadEmployerRetirementRateHistory" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from sgt_plan_retirement_rate where  effective_date&lt;DATEADD(yy, DATEDIFF(yy,0,getdate()), 0) and member_type_value=@member_type_value order by effective_date">
+      <parameters>
+        <parameter ID="@plan_id" />
+        <parameter ID="@member_type_value" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="OrgPlanId" sfwType="Column" sfwValue="org_plan_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="OrgId" sfwType="Column" sfwValue="org_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PlanId" sfwType="Column" sfwValue="plan_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ParticipationStartDate" sfwType="Column" sfwValue="participation_start_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ParticipationEndDate" sfwType="Column" sfwValue="participation_end_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ReportFrequencyDescription" sfwType="Description" sfwValue="report_frequency_description" />
+    <attribute ID="ReportFrequencyId" sfwType="Column" sfwValue="report_frequency_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="405" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ReportFrequencyValue" sfwType="Column" sfwValue="report_frequency_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="Comments" sfwType="Column" sfwValue="comments" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="2000" />
+    <attribute ID="PlanOptionDescription" sfwType="Description" sfwValue="plan_option_description" />
+    <attribute ID="PlanOptionId" sfwType="Column" sfwValue="plan_option_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="406" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PlanOptionValue" sfwType="Column" sfwValue="plan_option_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="WellnessFlag" sfwType="Column" sfwValue="wellness_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PreTaxPurchase" sfwType="Column" sfwValue="pre_tax_purchase" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="Restriction" sfwType="Column" sfwValue="restriction" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="HealthParticipationStartDate" sfwType="Column" sfwValue="health_participation_start_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="AlternateStructureCodeDescription" sfwType="Description" sfwValue="alternate_structure_code_description" />
+    <attribute ID="AlternateStructureCodeId" sfwType="Column" sfwValue="alternate_structure_code_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="5010" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AlternateStructureCodeValue" sfwType="Column" sfwValue="alternate_structure_code_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="objPlan" sfwType="Object" sfwEntity="entPlan" sfwValue="ibusPlan" />
+    <attribute ID="objOrganization" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusOrganization" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrSuppressWarning" sfwValue="istrSuppressWarning" />
+    <attribute sfwType="Collection" sfwEntity="entOrgPlan" ID="lstOtherOrgPlans" sfwValue="iclbOtherOrgPlans" />
+    <attribute sfwType="Collection" sfwEntity="entOrgPlanProvider" ID="lstOrgPlanProvider" sfwValue="iclbOrgPlanProvider" />
+    <attribute sfwType="Collection" sfwEntity="entOrgPlanMemberType" ID="lstOrgPlanMemberType" sfwValue="iclbOrgPlanMemberType" />
+    <attribute sfwType="Collection" sfwEntity="entOrgPlanDentalRate" ID="lstEmployerDentalRate" sfwValue="iclbEmployerDentalRate" />
+    <attribute sfwType="Collection" sfwEntity="entOrgPlanDentalRate" ID="lstOrgPlanDentalRate" sfwValue="iclbOrgPlanDentalRate" />
+    <attribute sfwType="Collection" sfwEntity="entOrgPlanEapRate" ID="lstOrgPlanEapRate" sfwValue="iclbOrgPlanEapRate" />
+    <attribute sfwType="Collection" sfwEntity="entOrgPlanVisionRate" ID="lstOrgPlanVisionRate" sfwValue="iclbOrgPlanVisionRate" />
+    <attribute sfwType="Collection" sfwEntity="entOrgPlanHmoRate" ID="lstOrgPlanHmoRate" sfwValue="iclbOrgPlanHmoRate" />
+    <attribute sfwType="Collection" sfwEntity="entOrgPlanLtcRate" ID="lstOrgPlanLtcRate" sfwValue="iclbOrgPlanLtcRate" />
+    <attribute sfwType="Collection" sfwEntity="entOrgPlanLifeRate" ID="lstOrgPlanLifeRate" sfwValue="iclbOrgPlanLifeRate" />
+    <attribute sfwType="Collection" sfwEntity="entOrgPlanHealthMedicarePartDRate" ID="lstOrgPlanHealthRate" sfwValue="iclbOrgPlanHealthRate" />
+    <attribute sfwType="Collection" sfwEntity="entOrgPlanHealthMedicarePartDRate" ID="lstOrgPlanMedicarePartDRate" sfwValue="iclbOrgPlanMedicarePartDRate" />
+    <attribute sfwType="Collection" sfwEntity="entPlanRetirementRate" ID="lstPlanRetirementRate" sfwValue="iclbPlanRetirementRate" />
+    <attribute sfwType="Collection" sfwEntity="entOrgPlanEapRate" ID="lstOrgPlanEmplEapRate" sfwValue="iclbOrgPlanEmplEapRate" />
+    <attribute sfwType="Collection" sfwEntity="entOrgPlanVisionRate" ID="lstEmployerVisionRate" sfwValue="iclbEmployerVisionRate" />
+    <attribute sfwType="Collection" sfwEntity="entOrgPlanLtcRate" ID="lstEmployerLtcRate" sfwValue="iclbEmployerLtcRate" />
+    <attribute sfwType="Collection" sfwEntity="entOrgPlanLifeRate" ID="lstEmployerLifeRate" sfwValue="iclbEmployerLifeRate" />
+    <attribute sfwType="Collection" sfwEntity="entOrgPlanHealthMedicarePartDRate" ID="lstEmployerHealthRate" sfwValue="iclbEmployerHealthRate" />
+    <attribute sfwType="Collection" sfwEntity="entOrgPlanHmoRate" ID="lstEmployerHmoRate" sfwValue="iclbEmployerHmoRate" />
+    <attribute sfwType="Collection" sfwEntity="entOrgPlanHealthMedicarePartDRate" ID="lstEmployerMedicarePartDRate" sfwValue="iclbEmployerMedicarePartDRate" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IintContactID" sfwValue="iintContactID" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrWellnessFlagFormatted" sfwValue="icdoOrgPlan.istrWellnessFlagFormatted" />
+    <attribute sfwType="Collection" sfwEntity="entPlanRetirementRate" ID="lstPlanRetirementRateHistory" sfwValue="iclbPlanRetirementRateHistory" />
+    <attribute sfwDataType="string" sfwType="Property" ID="HealthInsuranceType" sfwValue="HealthInsuranceType" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IintPersonID" sfwValue="iintPersonID" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrLast4DigitsSSN" sfwValue="istrLast4DigitsSSN" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrLastName" sfwValue="istrLastName" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrFirstName" sfwValue="istrFirstName" />
+    <attribute sfwType="Collection" sfwEntity="entPerson" ID="lstEmployeeList" sfwValue="iclbEmployeeList" />
+    <attribute ID="objRateChangeLetterRequest" sfwType="Object" sfwEntity="entRateChangeLetterRequest" sfwValue="ibusRateChangeLetterRequest" />
+    <attribute sfwDataType="boolean" sfwType="Property" ID="IblnIsHealthCOBRA" sfwValue="iblnIsHealthCOBRA" />
+    <attribute sfwDataType="boolean" sfwType="Property" ID="IblnIsOrgToBillExists" sfwValue="iblnIsOrgToBillExists" />
+    <attribute sfwDataType="boolean" sfwType="Property" ID="IblnTFFRMembersExists" sfwValue="iblnTFFRMembersExists" />
+    <attribute sfwType="Collection" sfwEntity="entInsurancePremium" ID="lstDentalPremium" sfwValue="iclbDentalPremium" />
+    <attribute sfwType="Collection" sfwEntity="entInsurancePremium" ID="lstEAPPremium" sfwValue="iclbEAPPremium" />
+    <attribute sfwType="Collection" sfwEntity="entInsurancePremium" ID="lstHealthCOBRAPremium" sfwValue="iclbHealthCOBRAPremium" />
+    <attribute sfwType="Collection" sfwEntity="entInsurancePremium" ID="lstHealthPremium" sfwValue="iclbHealthPremium" />
+    <attribute sfwType="Collection" sfwEntity="entInsurancePremium" ID="lstOrgToBillPremium" sfwValue="iclbOrgToBillPremium" />
+    <attribute sfwType="Collection" sfwEntity="entInsurancePremium" ID="lstTFFRPensionCheckPremium" sfwValue="iclbTFFRPensionCheckPremium" />
+    <attribute sfwType="Collection" sfwEntity="entInsurancePremium" ID="lstVisionPremium" sfwValue="iclbVisionPremium" />
+    <attribute sfwDataType="boolean" sfwType="Property" ID="IblnIsPeopleSoftOrgGroupExists" sfwValue="iblnIsPeopleSoftOrgGroupExists" />
+    <attribute sfwType="Collection" sfwEntity="entInsurancePremium" ID="lstLifeAgeEmployerPremium" sfwValue="iclbLifeAgeEmployerPremium" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecNewMonthDueAmount" sfwValue="idecNewMonthDueAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecNewBeginingBalanceAmount" sfwValue="idecNewBeginingBalanceAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecInvoiceAmount" sfwValue="idecInvoiceAmount" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="IdtStartDate" sfwValue="idtStartDate" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecTotalInvoiceAmount" sfwValue="idecTotalInvoiceAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecTotalRemittanceAmount" sfwValue="idecTotalRemittanceAmount" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="IdtEndDate" sfwValue="idtEndDate" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecNewRemittanceAmount" sfwValue="idecNewRemittanceAmount" />
+    <attribute sfwType="Collection" sfwEntity="entOrgPlan" ID="lstInvoiceCollection" sfwValue="iclbInvoiceCollection" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="IdtBillingDate" sfwValue="idtBillingDate" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IintInvoiceNumber" sfwValue="iintInvoiceNumber" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecIndividualInvoiceAmount" sfwValue="idecIndividualInvoiceAmount" />
+    <attribute sfwType="Collection" sfwEntity="entOrgPlan" ID="lstRemittanceCollection" sfwValue="iclbRemittanceCollection" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="IdtPaymentDate" sfwValue="idtPaymentDate" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IintRemittanceNumber" sfwValue="iintRemittanceNumber" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecIndividualRemittanceAmount" sfwValue="idecIndividualRemittanceAmount" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrWellnessCoordinatorName" sfwValue="istrWellnessCoordinatorName" />
+    <attribute ID="lstCodeValue" sfwType="Collection" sfwValue="iclcCodeValue" sfwEntity="entCodeValue" sfwPrivate="False" />
+    <attribute sfwValue="hsa_pre_tax_agreement" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="char" sfwLength="1" sfwIsNull="True" ID="HsaPreTaxAgreement" sfwCaption="Hsa Pre Tax Agreement" />
+    <attribute ID="DayOfMonth" sfwType="Column" sfwValue="day_of_month" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+  </attributes>
+  <objectmethods>
+    <method ID="btn_ShowEmployees" sfwReturnType="ArrayList" />
+    <method ID="LoadOrgPlanProviders" sfwReturnType="Void" />
+    <method ID="LoadMemberType" sfwReturnType="Void" />
+  </objectmethods>
+  <constraint />
+  <methods />
+  <lifecycle />
+  <ExtraFields />
+</entity>

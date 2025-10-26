@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entServicePurchaseDetailUserra" sfwActive="True" sfwStatus="Review" sfwType="BusinessRule" sfwMainCDO="icdoServicePurchaseDetailUserra" sfwObjectID="busServicePurchaseDetailUserra" sfwTableName="sgt_service_purchase_detail_userra" sfwView="False">
+  <rules>
+    <rule ID="Rule - Check missing Month already Exists for Detail" sfwMessageId="1342" sfwExpression="(this.icdoServicePurchaseDetailUserra.missed_salary_month != DateTime.MinValue) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entServicePurchaseDetailUserra.GetCountOfRecordWithSameMissingMonthExistsInNewMode&quot;, this.ibusServicePurchaseDetail.icdoServicePurchaseDetail.service_purchase_header_id, this.icdoServicePurchaseDetailUserra.missed_salary_month) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="Rule - Check missing month is within Active duty period" sfwMessageId="1336" sfwExpression="(this.icdoServicePurchaseDetailUserra.missed_salary_month != DateTime.MinValue) &amp;&amp; &#xA;(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusServicePurchaseDetail.icdoServicePurchaseDetail.userra_active_duty_end_date&quot;) != DateTime.MinValue) &amp;&amp; &#xA;(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusServicePurchaseDetail.icdoServicePurchaseDetail.userra_active_duty_start_date&quot;) != DateTime.MinValue) &amp;&amp; &#xA;(this.IsMissedSalaryOverlapWithActiveDutyDate() == False)" sfwObjectBased="True" />
+    <rule ID="Rule - Check MissingMonthDuplicationInUpdateMode" sfwMessageId="1342" sfwExpression="(this.icdoServicePurchaseDetailUserra.missed_salary_month != DateTime.MinValue) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entServicePurchaseDetailUserra.GetCountOfRecordWithSameMissingMonthInUpdateMode&quot;, this.ibusServicePurchaseDetail.icdoServicePurchaseDetail.service_purchase_header_id, this.icdoServicePurchaseDetailUserra.missed_salary_month, this.icdoServicePurchaseDetailUserra.service_purchase_userra_detail_id) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="Rule - Header Action Status in Payment" sfwExpression="(RFunc.EvaluateRule(&quot;ibusServicePurchaseDetail.ibusServicePurchaseHeader.Rule - Visible status Inpayment&quot;, this))" sfwObjectBased="True" />
+    <rule ID="Rule - Header Action Status not in payment" sfwExpression="(RFunc.EvaluateRule(&quot;ibusServicePurchaseDetail.ibusServicePurchaseHeader.Rule - Visible when Status not Inpayment&quot;, this))" sfwObjectBased="True" />
+    <rule ID="Rule - Member age less than 18" sfwMessageId="1131" sfwExpression="(this.icdoServicePurchaseDetailUserra.missed_salary_month != DateTime.MinValue) &amp;&amp; &#xA;(this.GetMemberAge() &lt; 18)" sfwObjectBased="True" />
+    <rule ID="Rule - Missing Month not entered" sfwMessageId="1137" sfwExpression="!(this.icdoServicePurchaseDetailUserra.missed_salary_month != DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="VRSaveAndSaveNew" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="!(this.ibusServicePurchaseDetail.ibusServicePurchaseHeader.IsUserCheckingOwnOrSpouseServicePurchase())" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="Rule - Header Action Status in Payment" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - Header Action Status not in payment" sfwMode="All" sfwStatus="Active" />
+    <item ID="VRSaveAndSaveNew" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="Rule - Missing Month not entered" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - Member age less than 18" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - Check missing month is within Active duty period" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - Check missing Month already Exists for Detail" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - Check MissingMonthDuplicationInUpdateMode" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <queries>
+    <query ID="GetCountOfRecordWithSameMissingMonthExistsInNewMode" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) from  dbo.SGT_SERVICE_PURCHASE_DETAIL_USERRA   u&#xD;&#xA;inner join   dbo.SGT_SERVICE_PURCHASE_DETAIL  d on d.SERVICE_PURCHASE_DETAIL_ID=u.SERVICE_PURCHASE_DETAIL_ID&#xD;&#xA;where d.SERVICE_PURCHASE_HEADER_ID = @service_purchase_header_id&#xD;&#xA;and u.MISSED_SALARY_MONTH=@missing_month">
+      <parameters>
+        <parameter ID="@service_purchase_header_id" sfwDataType="int" />
+        <parameter ID="@missing_month" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="GetCountOfRecordWithSameMissingMonthInUpdateMode" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) from  dbo.SGT_SERVICE_PURCHASE_DETAIL_USERRA   u&#xD;&#xA;inner join   dbo.SGT_SERVICE_PURCHASE_DETAIL  d on d.SERVICE_PURCHASE_DETAIL_ID=u.SERVICE_PURCHASE_DETAIL_ID&#xD;&#xA;where d.SERVICE_PURCHASE_HEADER_ID = @service_purchase_header_id&#xD;&#xA;and u.MISSED_SALARY_MONTH=@missing_month&#xD;&#xA;and u.SERVICE_PURCHASE_USERRA_DETAIL_ID&lt;&gt; @SERVICE_PURCHASE_USERRA_DETAIL_ID">
+      <parameters>
+        <parameter ID="@service_purchase_header_id" sfwDataType="int" />
+        <parameter ID="@missing_month" sfwDataType="DateTime" />
+        <parameter ID="@SERVICE_PURCHASE_USERRA_DETAIL_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="ServicePurchaseUserraDetailId" sfwType="Column" sfwValue="service_purchase_userra_detail_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ServicePurchaseDetailId" sfwType="Column" sfwValue="service_purchase_detail_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="MissedSalaryMonth" sfwType="Column" sfwValue="missed_salary_month" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="MissedSalaryAmount" sfwType="Column" sfwValue="missed_salary_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="EmployeeContribution" sfwType="Column" sfwValue="employee_contribution" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="EmployeePickup" sfwType="Column" sfwValue="employee_pickup" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="EmployerContribution" sfwType="Column" sfwValue="employer_contribution" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="RhicContribution" sfwType="Column" sfwValue="rhic_contribution" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PostedFlag" sfwType="Column" sfwValue="posted_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="ServicePurchasePaymentAllocationId" sfwType="Column" sfwValue="service_purchase_payment_allocation_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="objServicePurchaseDetail" sfwType="Object" sfwEntity="entServicePurchaseDetail" sfwValue="ibusServicePurchaseDetail" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IdtMissingMonthFormatted" sfwValue="icdoServicePurchaseDetailUserra.idtMissingMonthFormatted" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="TotalPurchaseCost" sfwValue="icdoServicePurchaseDetailUserra.TotalPurchaseCost" />
+  </attributes>
+</entity>

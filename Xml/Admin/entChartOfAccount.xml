@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entChartOfAccount" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoChartOfAccount" sfwObjectID="busChartOfAccount" sfwTableName="sgt_chart_of_account">
+  <rules>
+    <rule ID="Rule Check If Acct Name is Null" sfwMessageId="4600" sfwExpression="(string.IsNullOrEmpty(this.icdoChartOfAccount.account_name))" sfwObjectBased="True" />
+    <rule ID="Rule Check If Acct Type is Blank" sfwMessageId="4603" sfwExpression="(string.IsNullOrEmpty(this.icdoChartOfAccount.account_type_value))" sfwObjectBased="True" />
+    <rule ID="Rule Check If Effective Date is Null" sfwMessageId="4605" sfwExpression="(this.icdoChartOfAccount.effective_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="Rule Check If GL Acct No Already Exists" sfwMessageId="4601" sfwExpression="(!string.IsNullOrEmpty(this.icdoChartOfAccount.gl_account_number)) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entChartOfAccount.GetCountByGLAccountNo&quot;, this.icdoChartOfAccount.gl_account_number) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="Rule Check If GL Acct No is NOT Numeric" sfwMessageId="4654" sfwExpression="(!RFunc.IsNumeric(this.icdoChartOfAccount.gl_account_number))" sfwObjectBased="True" />
+    <rule ID="Rule Check If GL Acct No is Null" sfwMessageId="4602" sfwExpression="(string.IsNullOrEmpty(this.icdoChartOfAccount.gl_account_number))" sfwObjectBased="True" />
+    <rule ID="ValidateDeleteChartofAccount" sfwMessageId="4657" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entChartOfAccount.ValidateDeleteAccount&quot;, this.icdoChartOfAccount.chart_of_account_id) &gt; 0)" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror>
+    <item ID="Rule Check If Acct Name is Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Acct Type is Blank" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Effective Date is Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If GL Acct No is Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If GL Acct No Already Exists" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If GL Acct No is NOT Numeric" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete>
+    <item ID="ValidateDeleteChartofAccount" sfwMode="All" sfwStatus="Active" />
+  </validatedelete>
+  <updateablecdo />
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_CHART_OF_ACCOUNT">
+      <parameters />
+    </query>
+    <query ID="GetCountByGLAccountNo" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_CHART_OF_ACCOUNT WHERE GL_ACCOUNT_NUMBER=@GL_ACCT_NO">
+      <parameters>
+        <parameter ID="@GL_ACCT_NO" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="GetCountByGLAccountID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_CHART_OF_ACCOUNT WHERE CHART_OF_ACCOUNT_ID=@ACCT_ID">
+      <parameters>
+        <parameter ID="@ACCT_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetByAccountNo" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_CHART_OF_ACCOUNT&#xD;&#xA;WHERE GL_ACCOUNT_NUMBER=@ACCT_NO">
+      <parameters>
+        <parameter ID="@ACCT_NO" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="ValidateDeleteAccount" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="IF EXISTS( SELECT '0' FROM SGT_ACCOUNT_REFERENCE WHERE Debit_Account_id = @Account_id) OR&#xD;&#xA; EXISTS( SELECT '0' FROM SGT_ACCOUNT_REFERENCE WHERE Credit_Account_id = @Account_id) OR&#xD;&#xA; EXISTS( SELECT '0' FROM SGT_GL_TRANSACTION WHERE Account_id = @Account_id) OR&#xD;&#xA; EXISTS( SELECT '0' FROM SGT_JOURNAL_DETAIL WHERE Account_id = @Account_id) &#xD;&#xA; SELECT 1 AS RetVal&#xD;&#xA;Else&#xD;&#xA; SELECT 0 AS RetVal">
+      <parameters>
+        <parameter ID="@Account_id" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="ChartOfAccountId" sfwType="Column" sfwValue="chart_of_account_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="GlAccountNumber" sfwType="Column" sfwValue="gl_account_number" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="10" sfwRequired="False" />
+    <attribute ID="AccountTypeDescription" sfwType="Description" sfwValue="account_type_description" />
+    <attribute ID="AccountTypeId" sfwType="Column" sfwValue="account_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="1306" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AccountTypeValue" sfwType="Column" sfwValue="account_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="AccountName" sfwType="Column" sfwValue="account_name" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="EffectiveDate" sfwType="Column" sfwValue="effective_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+  </attributes>
+</entity>

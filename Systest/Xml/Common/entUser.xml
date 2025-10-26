@@ -1,0 +1,154 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entUser" sfwActive="True" sfwStatus="Valid" sfwRemoteObject="srvAdmin" sfwType="BusinessRule" sfwMainCDO="icdoUser" sfwObjectID="busUser" sfwTableName="sgs_user" sfwView="False">
+  <rules>
+    <rule ID="CheckEmail" sfwMessageId="10343" sfwExpression="(this.ValidateEmail() == False)" sfwObjectBased="True" />
+    <rule ID="Duplicate user" sfwMessage="User ID Exists. Please select Different User ID" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entUser.UserIDExists&quot;, this.icdoUser.user_id) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK BEGIN DATE IS BLANK" sfwMessageId="2002" sfwExpression="(this.icdoUser.begin_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK BEGIN DATE IS LESSTHAN TODAY" sfwMessageId="2004" sfwExpression="!(this.icdoUser.begin_date == DateTime.MinValue) &amp;&amp; &#xA;(this.icdoUser.begin_date &lt; RFunc.CurrentDate())" sfwObjectBased="True" />
+    <rule ID="RULE CHECK END DATE IS LESSTHAN TODAY" sfwMessageId="2005" sfwExpression="(this.icdoUser.end_date != DateTime.MinValue) &amp;&amp; &#xA;(this.icdoUser.end_date &lt; RFunc.CurrentDate())" sfwObjectBased="True" />
+    <rule ID="RULE CHECK FIRST AND LAST NAME IS BLANK" sfwMessageId="1001" sfwExpression="(string.IsNullOrEmpty(this.icdoUser.first_name)) || &#xA;(string.IsNullOrEmpty(this.icdoUser.last_name))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF USER STATUS IS NULL" sfwMessageId="2008" sfwExpression="(string.IsNullOrEmpty(this.icdoUser.user_status_value))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK LOGGED_USER_ID IS CURRENT USER ID" sfwMessageId="2000" sfwExpression="(this.icdoUser.user_serial_id == this.icdoUser.Loggedin_user_id) &amp;&amp; &#xA;(this.icdoUser.user_type_value != &quot;A&quot;)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK USER TYPE IS NULL" sfwMessageId="2003" sfwExpression="(string.IsNullOrEmpty(this.icdoUser.user_type_value))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK VALID PERSLINK" sfwMessageId="2009" sfwExpression="(this.icdoUser.person_id != 0) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entUser.VERIFY VALID PERSLINK ID&quot;, this.icdoUser.person_id) == 0)" sfwObjectBased="True" />
+    <rule ID="Rule EndDate Before BeginDate" sfwMessageId="5010" sfwExpression="(this.EndDateBeforeBeginDate() == True)" sfwObjectBased="True" />
+    <rule ID="RULE USER_ID IS BLANK" sfwMessageId="2001" sfwExpression="(string.IsNullOrEmpty(this.icdoUser.user_id))" sfwObjectBased="True" />
+    <rule ID="Userid not in Active Directory" sfwMessage="Please enter a valid userid" sfwExpression="(this.ValidateAgainstADS() == False)" sfwObjectBased="True" />
+  </rules>
+  <delete>
+    <property ID="lstUserRoles" sfwMethodName="LoadUserRoles" />
+  </delete>
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror>
+    <item ID="Duplicate user" sfwMode="New" sfwStatus="Active" />
+    <item ID="Userid not in Active Directory" sfwMode="New" sfwStatus="Active" />
+    <item ID="Rule EndDate Before BeginDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="CheckEmail" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK LOGGED_USER_ID IS CURRENT USER ID" sfwMode="Update" sfwStatus="Active" />
+    <item ID="RULE USER_ID IS BLANK" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK BEGIN DATE IS BLANK" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK USER TYPE IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK BEGIN DATE IS LESSTHAN TODAY" sfwMode="New" sfwStatus="Active" />
+    <item ID="RULE CHECK END DATE IS LESSTHAN TODAY" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK FIRST AND LAST NAME IS BLANK" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK IF USER STATUS IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK VALID PERSLINK" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties>
+    <item ID="person_id" sfwObjectField="icdoUser.person_id" />
+  </commonproperties>
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from sgs_user">
+      <parameters />
+    </query>
+    <query ID="UserIDExists" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select count(USER_SERIAL_ID) from sgs_user where user_id = @user_id">
+      <parameters>
+        <parameter ID="@user_id" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="Security" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select a.user_id, a.user_type_value, d.resource_id, d.resource_description, MAX(e.security_value) as security_level &#xD;&#xA;  from sgs_user a with(nolock), sgs_user_roles b with(nolock), sgs_resources d with(nolock), sgs_security e with(nolock)&#xD;&#xA; where a.user_serial_id = b.user_serial_id &#xD;&#xA;   and b.role_id = e.role_id &#xD;&#xA;   and e.resource_id = d.resource_id &#xD;&#xA;   and a.user_id     = @user_id&#xD;&#xA; and ((b.effective_start_DATE is null) or (b.effective_start_date&lt;=convert(dateTime,convert(char,getdate(),103),103)))&#xD;&#xA;   and ((b.effective_end_DATE is null) or (b.effective_end_date&gt;=convert(dateTime,convert(char,getdate(),103),103)))&#xD;&#xA; group by a.user_id, a.user_type_value, d.resource_id, d.resource_description &#xD;&#xA; order by a.user_id, d.resource_id">
+      <parameters>
+        <parameter ID="@user_id" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="ListOfUsersByRole" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select a.* &#xD;&#xA;  from sgs_user a, sgs_user_roles b&#xD;&#xA; where a.user_serial_id = b.user_serial_id&#xD;&#xA;   and b.role_id = @role_id&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@role_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="ListOfUsers" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select user_serial_id, last_name + ', ' + first_name full_name from sgs_user order by 2">
+      <parameters />
+    </query>
+    <query ID="VERIFY VALID PERSLINK ID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_PERSON&#xD;&#xA;WHERE PERSON_ID=@PERSON_ID">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LOADACTIVEUSER" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGS_USER WHERE USER_STATUS_VALUE = 'A' order by user_id">
+      <parameters />
+    </query>
+    <query ID="rptRoleByUser" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT U.[USER_ID],U.FIRST_NAME,U.LAST_NAME,CV.[DESCRIPTION],R.ROLE_DESCRIPTION,UR.EFFECTIVE_START_DATE,UR.EFFECTIVE_END_DATE FROM SGS_USER U&#xD;&#xA;INNER JOIN SGS_USER_ROLES UR ON UR.USER_SERIAL_ID=U.USER_SERIAL_ID&#xD;&#xA;INNER JOIN SGS_ROLES R ON R.ROLE_ID=UR.ROLE_ID&#xD;&#xA;INNER JOIN SGS_CODE_VALUE CV ON CV.CODE_ID=USER_TYPE_ID AND CV.CODE_VALUE=U.USER_TYPE_VALUE&#xD;&#xA;ORDER BY U.END_DATE, U.[USER_ID], UR.EFFECTIVE_END_DATE, R.ROLE_DESCRIPTION&#xD;&#xA;">
+      <parameters />
+    </query>
+    <query ID="ListUsersOrderByFirstName" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select first_name + ', ' +last_name  full_name, user_serial_id  from sgs_user order by 1">
+      <parameters />
+    </query>
+    <query ID="ListUsersForCaseManagement" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select last_name + ', ' +first_name  full_name, user_serial_id  from sgs_user order by 1">
+      <parameters />
+    </query>
+    <query ID="GetListOfUsersBySupervisourId" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT&#xA;&#x9; A.* ,&#xA;&#x9;  CONCAT(A.FIRST_NAME,',', A.LAST_NAME) as Fullname&#xA;FROM&#xA;&#x9; SGS_USER A WITH(NOLOCK) &#xA;WHERE&#xA;&#x9; A.USER_ID = @USER_ID&#xA;UNION ALL&#xA;SELECT&#xA;&#x9; U.* ,&#xA;&#x9;  CONCAT(U.FIRST_NAME,',', U.LAST_NAME) as Fullname&#xA;FROM&#xA;&#x9; SGS_USER U WITH(NOLOCK) &#xA;&#x9;INNER &#xA;&#x9; JOIN SGS_USER S WITH(NOLOCK)&#xA;&#x9; ON U.SUPERVISOR_ID = S.USER_SERIAL_ID &#xA;WHERE&#xA;&#x9; S.USER_ID = @USER_ID">
+      <parameters>
+        <parameter ID="@USER_ID" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="GetUsersFullNameAndSerialId" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select  USER_SERIAL_ID, CONCAT(LAST_NAME, ', ',FIRST_NAME) as UserName from sgs_user where USER_STATUS_VALUE = 'A' order by LAST_NAME">
+      <parameters />
+    </query>
+    <query ID="GetResourceByUser" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT DISTINCT U.* FROM SGS_USER U&#xD;&#xA;INNER JOIN SGS_USER_ROLES UR ON U.USER_SERIAL_ID = UR.USER_SERIAL_ID &#xD;&#xA;AND ((UR.EFFECTIVE_START_DATE IS NULL) OR (UR.EFFECTIVE_START_DATE&lt;=CONVERT(DATETIME,CONVERT(CHAR,GETDATE(),103),103)))&#xD;&#xA;AND ((UR.EFFECTIVE_END_DATE IS NULL) OR (UR.EFFECTIVE_END_DATE&gt;=CONVERT(DATETIME,CONVERT(CHAR,GETDATE(),103),103)))   &#xD;&#xA;INNER JOIN SGS_SECURITY S ON S.ROLE_ID = UR.ROLE_ID AND S.SECURITY_VALUE != 0&#xD;&#xA;INNER JOIN SGS_RESOURCES R ON R.RESOURCE_ID = S.RESOURCE_ID&#xD;&#xA;WHERE S.RESOURCE_ID = @RESOURCE_ID AND U.USER_SERIAL_ID = @USER_SERIAL_ID">
+      <parameters>
+        <parameter ID="@RESOURCE_ID" sfwDataType="int" />
+        <parameter ID="@USER_SERIAL_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetUserDetailsByUserSerialId" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT&#xA;&#x9; USER_SERIAL_ID,&#xA;&#x9;USER_ID,&#xA;&#x9;EMAIL_ADDRESS, CONCAT(FIRST_NAME,' ',LAST_NAME) AS USER_FULL_NAME &#xA;FROM&#xA;&#x9; SGS_USER WITH(NOLOCK) &#xA;WHERE&#xA;&#x9; USER_SERIAL_ID = @user_serial_id" sfwOracle="SELECT&#xA;&#x9; USER_SERIAL_ID,&#xA;&#x9;USER_ID,&#xA;&#x9;EMAIL_ADDRESS,(FIRST_NAME||' '||LAST_NAME) AS USER_FULL_NAME &#xA;FROM&#xA;&#x9; SGS_USER &#xA;WHERE&#xA;&#x9; USER_SERIAL_ID = @user_serial_id" sfwPostgre="SELECT&#xD;&#xA;&#x9; USER_SERIAL_ID,&#xD;&#xA;&#x9;USER_ID,&#xD;&#xA;&#x9;EMAIL_ADDRESS, CONCAT(FIRST_NAME,' ',LAST_NAME) AS USER_FULL_NAME &#xD;&#xA;FROM&#xD;&#xA;&#x9; SGS_USER &#xD;&#xA;WHERE&#xD;&#xA;&#x9; USER_SERIAL_ID = @user_serial_id">
+      <parameters>
+        <parameter ID="@user_serial_id" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="UserSerialId" sfwType="Column" sfwValue="user_serial_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="UserId" sfwType="Column" sfwValue="user_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="Password" sfwType="Column" sfwValue="password" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="20" />
+    <attribute ID="FirstName" sfwType="Column" sfwValue="first_name" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="30" />
+    <attribute ID="MiddleInitial" sfwType="Column" sfwValue="middle_initial" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="LastName" sfwType="Column" sfwValue="last_name" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="30" />
+    <attribute ID="BeginDate" sfwType="Column" sfwValue="begin_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="EndDate" sfwType="Column" sfwValue="end_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="EmailAddress" sfwType="Column" sfwValue="email_address" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="UserTypeDescription" sfwType="Description" sfwValue="user_type_description" />
+    <attribute ID="UserTypeId" sfwType="Column" sfwValue="user_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="9" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="UserTypeValue" sfwType="Column" sfwValue="user_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="UserStatusDescription" sfwType="Description" sfwValue="user_status_description" />
+    <attribute ID="UserStatusId" sfwType="Column" sfwValue="user_status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="10" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="UserStatusValue" sfwType="Column" sfwValue="user_status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="PersonId" sfwType="Column" sfwValue="person_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="LogActivityFlag" sfwType="Column" sfwValue="log_activity_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="InitialPage" sfwType="Column" sfwValue="initial_page" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="255" />
+    <attribute ID="ColorScheme" sfwType="Column" sfwValue="color_scheme" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="DivisionDescription" sfwType="Description" sfwValue="division_description" />
+    <attribute ID="DivisionId" sfwType="Column" sfwValue="division_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="53" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="DivisionValue" sfwType="Column" sfwValue="division_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="ActivityLogLevelDescription" sfwType="Description" sfwValue="activity_log_level_description" />
+    <attribute ID="ActivityLogLevelId" sfwType="Column" sfwValue="activity_log_level_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="14" sfwDataType="int" sfwRequired="False" sfwDefaultValue="14" />
+    <attribute ID="ActivityLogLevelValue" sfwType="Column" sfwValue="activity_log_level_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="LogSelectQueryFlag" sfwType="Column" sfwValue="log_select_query_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwDefaultValue="N" sfwLength="1" />
+    <attribute ID="LogInsertQueryFlag" sfwType="Column" sfwValue="log_insert_query_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwDefaultValue="N" sfwLength="1" />
+    <attribute ID="LogUpdateQueryFlag" sfwType="Column" sfwValue="log_update_query_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwDefaultValue="N" sfwLength="1" />
+    <attribute ID="LogDeleteQueryFlag" sfwType="Column" sfwValue="log_delete_query_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwDefaultValue="N" sfwLength="1" />
+    <attribute sfwType="Collection" sfwEntity="entUserRoles" ID="lstUserRoles" sfwValue="iclbUserRoles" />
+    <attribute sfwType="Collection" sfwEntity="entSecurity" ID="lstSecurity" sfwValue="iclbSecurity" />
+    <attribute sfwDataType="string" sfwType="Property" ID="UserFullName" sfwValue="icdoUser.User_full_name" />
+    <attribute sfwDataType="string" sfwType="Property" ID="UserName" sfwValue="icdoUser.User_Name" />
+    <attribute sfwValue="supervisor_id" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="True" ID="SupervisorId" sfwCaption="Supervisor Id" />
+    <attribute ID="objSupervisor" sfwType="Object" sfwEntity="entUser" sfwValue="ibusSupervisor" />
+    <attribute ID="UserFullname1" sfwDataType="string" sfwValue="User_full_name" sfwType="Property" />
+  </attributes>
+  <objectmethods>
+    <method ID="LoadUserRoles" sfwReturnType="Void" />
+  </objectmethods>
+  <constraint />
+  <methods />
+  <lifecycle />
+  <ExtraFields />
+</entity>

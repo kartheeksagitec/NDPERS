@@ -1,0 +1,79 @@
+﻿
+<div ng-controller="InternalFunctions" class="full-height">
+    <div class="portlet-body series-details-popup" id="ScopeId_{{$id}}">
+        <div class="form-body expression-query-popup full-height">
+            <div class="form-group">
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <span class="control-label">Select Internal Function</span>
+                        <internalfunctionsintellisense selecteditem="ObjInternalFunctions.selectedInternalFunc" onchangecallback="onClickInternalFunction(obj)" />
+
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group" ng-show="ObjInternalFunctions.SelectedInternalFunc.IsGeneric">
+                        <span class="control-label">Generic Type </span>
+                        <select ng-model="ObjInternalFunctions.genericType" class="form-control generic-type-select" ng-options="x for x in lstGenericTypes" title="{{ObjInternalFunctions.genericType}}"></select>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="form-group expression-query-popup-table-wrapper">
+
+                <div class="col-xs-12 full-height">
+                    <div class="panel-icons">
+
+
+                        <img src="images/Entity/BusinessObjectPropertyMethod.svg" title="Business Object Property / Method" class="marg-left-10" ng-disabled="!ObjInternalFunctions.SelectedParameter" ng-click="onBusinessMethodCommand()" ng-show="IsObjectBased=='True'" />
+
+                        <img src="images/Entity/InternalFunctions.svg" title="Internal Functions" class="marg-left-10" ng-disabled="!ObjInternalFunctions.SelectedParameter" ng-click="onInternalFunctionsClick()" />
+
+                        <img src="images/Entity/Query.svg" ng-click="onQueryClick()" title="Query" class="marg-left-10" ng-disabled="!ObjInternalFunctions.SelectedParameter" />
+
+                    </div>
+
+                    <div class="expression-query-popup-table">
+                        <div class="params-header">
+                            <span>Parameters</span>
+                        </div>
+                        <table class="sws-table">
+                            <thead>
+
+                                <tr>
+                                    <th width="25%">Name</th>
+                                    <th width="25%">DataType</th>
+                                    <th width="25%">Expression</th>
+                                    <th width="25%">Constant</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="params in ObjInternalFunctions.lstParameters" ng-if="ObjInternalFunctions.lstParameters.length>0" ng-class="params == ObjInternalFunctions.SelectedParameter?'selected':''" ng-click="SelectParam(params)">
+                                    <td width="25%"><span>{{params.ParameterName}}</span></td>
+                                    <td width="25%"><span>{{params.ParameterDataType}}</span></td>
+                                    <td width="25%"><input class="form-control input-sm" type="text" ng-model="params.Expression" ng-if="ObjInternalFunctions.lstParameters.length>0" title="{{params.Expression}}" /></td>
+                                    <td width="25%"><input class="checkbox" type="checkbox" ng-model="params.Isconstant" ng-if="params.ParameterDataType.toLowerCase().indexOf('string')!== -1"  /></td>
+                                    <td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-actions">
+        <div class="col-xs-8 text-left" >
+            <span class="alert-error-msg" ng-bind="InternalFunctionErrorMessage" ng-if="InternalFunctionErrorMessage.length>0"></span>
+        </div>
+        <div class="col-xs-4">
+            <input type="button" class="btn dialog-btn-default" value="OK" ng-click="onOkClick()" ng-disabled="checkGenericMethod()"/>
+            <input type="button" class="btn dialog-btn-default" value="Cancel" ng-click="onCancelClick()" />
+        </div>
+    </div>
+</div>

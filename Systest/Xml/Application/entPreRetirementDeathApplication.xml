@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entPreRetirementDeathApplication" sfwActive="True" sfwStatus="Review" sfwType="BusinessRule" sfwErrorTable="sgt_benefit_application_error" sfwParentKey="benefit_application_id" sfwParentKeyValue="icdoBenefitApplication.benefit_application_id" sfwMainCDO="icdoBenefitApplication" sfwStatusColumn="status_value" sfwReadOnlyRule="IsStatusProcessed" sfwObjectID="busPreRetirementDeathApplication" sfwParentEntity="entBenefitApplication">
+  <rules>
+    <rule ID="IsAllDependentsAlive" sfwMessageId="2035" sfwExpression="(this.AreAllDependentsAlive() == True)" sfwObjectBased="True" />
+    <rule ID="IsApplExistsForPersonAndPlan" sfwMessageId="1990" sfwExpression="(this.IsApplicationAlreadyExistsForPersonAndMember() == True)" sfwObjectBased="True" />
+    <rule ID="IsApplicantBeneficiaryToAccountOwner" sfwMessageId="2036" sfwExpression="(this.IsApplicantIsBeneficiaryToAccoutnOwner() == False)" sfwObjectBased="True" />
+    <rule ID="IsApplicationStatusNotCancelled" sfwExpression="(this.icdoBenefitApplication.action_status_value != &quot;CANC&quot;) &amp;&amp; &#xA;!(this.icdoBenefitApplication.status_value == &quot;PROC&quot;)" sfwObjectBased="True" />
+    <rule ID="IsApplIsChildAndOver18AndMarried" sfwMessageId="1994" sfwExpression="(!string.IsNullOrEmpty(this.icdoBenefitApplication.family_relationship_value)) &amp;&amp; &#xA;(this.IsFamilyRelationshipIsChildForJS() == False)" sfwObjectBased="True" />
+    <rule ID="IsBeneficiaryAlive" sfwMessageId="1988" sfwExpression="(this.IsAllBeneficiariesAlive() == True)" sfwObjectBased="True" />
+    <rule ID="IsBenefitOptionIsAutoRefund" sfwMessageId="1997" sfwExpression="(this.IsBenOptAutoRefund() == True)" sfwObjectBased="True" />
+    <rule ID="IsBenefitOptionNotSelected" sfwMessageId="1904" sfwExpression="(string.IsNullOrEmpty(this.icdoBenefitApplication.benefit_option_value))" sfwObjectBased="True" />
+    <rule ID="IsBenOptIsRefundForRHIC" sfwMessageId="1998" sfwExpression="(this.IsBenOptRefund() == True)" sfwObjectBased="True" />
+    <rule ID="IsFamilyRelationshipIsSpouseForJS" sfwMessageId="1993" sfwExpression="(!string.IsNullOrEmpty(this.icdoBenefitApplication.family_relationship_value)) &amp;&amp; &#xA;(this.IsFamilyRelationshipIsSpouseForJS() == True)" sfwObjectBased="True" />
+    <rule ID="IsInvalidBenefitOptionSelected" sfwMessageId="2050" sfwExpression="(this.icdoBenefitApplication.benefit_option_value == &quot;5100&quot;)" sfwObjectBased="True" />
+    <rule ID="IsPayeeAccountExistsForPerson" sfwMessageId="1989" sfwExpression="(this.IsDeniedButtonClicked == False) &amp;&amp; &#xA;(this.IsPayeeAccountExistForPerson() == True)" sfwObjectBased="True" />
+    <rule ID="IsPersonEligibleForPreRetirementDeath" sfwMessageId="1999" sfwExpression="(this.CheckIsPersonEligible() == False)" sfwObjectBased="True" />
+    <rule ID="IsPersonEligibleForSelectedOption" sfwMessageId="1995" sfwExpression="(!string.IsNullOrEmpty(this.icdoBenefitApplication.benefit_option_value)) &amp;&amp; &#xA;(this.IsPersonEligibleForSelectedOption() == False)" sfwObjectBased="True" />
+    <rule ID="IsPreRetDeathApplExistsForPersonAndPlan" sfwMessageId="1991" sfwExpression="(this.IsPreRetDethApplnAlreadyExistsForPersonAndMember() == True)" sfwObjectBased="True" />
+    <rule ID="IsStatusNotProcessed" sfwExpression="!(this.icdoBenefitApplication.status_value == &quot;PROC&quot;)" sfwObjectBased="True" />
+    <rule ID="IsStatusProcessed" sfwExpression="(this.icdoBenefitApplication.status_value == &quot;PROC&quot;)" sfwObjectBased="True" />
+    <rule ID="IsTFFROptionSelectedForSpouse" sfwMessageId="2026" sfwExpression="(!string.IsNullOrEmpty(this.icdoBenefitApplication.family_relationship_value)) &amp;&amp; &#xA;(this.icdoBenefitApplication.family_relationship_value != &quot;SPOU&quot;) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.icdoBenefitApplication.tffr_calculation_method_value))" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForDenyButton" sfwExpression="!(this.icdoBenefitApplication.action_status_value != &quot;PEND&quot;) || &#xA;((this.icdoBenefitApplication.action_status_value == &quot;VERF&quot;) &amp;&amp; &#xA;(this.icdoBenefitApplication.status_value != &quot;PROC&quot;))" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForPendButton" sfwExpression="!(this.icdoBenefitApplication.action_status_value != &quot;VERF&quot;) || &#xA;!(this.icdoBenefitApplication.action_status_value != &quot;DENI&quot;) || &#xA;!(this.icdoBenefitApplication.status_value == &quot;PROC&quot;)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForVerifyButton" sfwExpression="!(this.icdoBenefitApplication.action_status_value != &quot;PEND&quot;) || &#xA;!(this.icdoBenefitApplication.action_status_value != &quot;DENI&quot;)" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="IsStatusProcessed" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsStatusNotProcessed" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForPendButton" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForVerifyButton" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForDenyButton" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsApplicationStatusNotCancelled" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForNewCalculation" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForOpenCalculation" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror>
+    <item ID="IsBeneficiaryAlive" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAllDependentsAlive" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsFamilyRelationshipIsSpouseForJS" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsApplIsChildAndOver18AndMarried" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsBenefitOverPayment" sfwMode="All" sfwStatus="Active" />
+  </softerror>
+  <harderror>
+    <item ID="IsPayeeAccountExistsForPerson" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsApplExistsForPersonAndPlan" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPreRetDeathApplExistsForPersonAndPlan" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPersonEligibleForSelectedOption" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsBenefitOptionIsAutoRefund" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsBenefitOptionNotSelected" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsTFFROptionSelectedForSpouse" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsApplicantBeneficiaryToAccountOwner" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsInvalidBenefitOptionSelected" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties>
+    <item ID="person_id" sfwObjectField="icdoBenefitApplication.member_person_id" />
+  </commonproperties>
+  <expressionfields />
+  <attributes>
+    <attribute sfwDataType="int" sfwType="Property" ID="BenefitApplicationId" sfwValue="icdoBenefitApplication.benefit_application_id" />
+    <attribute sfwDataType="int" sfwType="Property" ID="BenefitCalculationId" sfwValue="icdoBenefitApplication.benefit_calculation_id" />
+    <attribute sfwDataType="string" sfwType="Property" ID="SuppressWarningsFlag" sfwValue="icdoBenefitApplication.suppress_warnings_flag" />
+    <attribute sfwDataType="int" sfwType="Property" ID="RecipientPersonId" sfwValue="icdoBenefitApplication.recipient_person_id" />
+    <attribute ID="objRecipient" sfwType="Object" sfwEntity="entPerson" sfwValue="ibusRecipient" />
+    <attribute sfwDataType="string" sfwType="Property" ID="StatusDescription" sfwValue="icdoBenefitApplication.status_description" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ActionStatusDescription" sfwValue="icdoBenefitApplication.action_status_description" />
+    <attribute ID="objApplicantOrganization" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusApplicantOrganization" />
+    <attribute sfwDataType="int" sfwType="Property" ID="MemberPersonId" sfwValue="icdoBenefitApplication.member_person_id" />
+    <attribute ID="objPersonAccount" sfwType="Object" sfwEntity="entPersonAccount" sfwValue="ibusPersonAccount" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AccountRelationshipValue" sfwValue="icdoBenefitApplication.account_relationship_value" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AccountRelationshipDescription" sfwValue="icdoBenefitApplication.account_relationship_description" />
+    <attribute sfwDataType="string" sfwType="Property" ID="FamilyRelationshipValue" sfwValue="icdoBenefitApplication.family_relationship_value" />
+    <attribute sfwDataType="string" sfwType="Property" ID="FamilyRelationshipDescription" sfwValue="icdoBenefitApplication.family_relationship_description" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecMemberAgeBasedOnDateOfDeath" sfwValue="idecMemberAgeBasedOnDateOfDeath" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="ReceivedDate" sfwValue="icdoBenefitApplication.received_date" />
+    <attribute sfwDataType="string" sfwType="Property" ID="BenefitAccountTypeDescription" sfwValue="icdoBenefitApplication.benefit_account_type_description" />
+    <attribute sfwDataType="string" sfwType="Property" ID="SuppressWarningsBy" sfwValue="icdoBenefitApplication.suppress_warnings_by" />
+    <attribute sfwDataType="string" sfwType="Property" ID="BenefitOptionValue" sfwValue="icdoBenefitApplication.benefit_option_value" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrOrgCode" sfwValue="icdoBenefitApplication.istrOrgCode" />
+    <attribute sfwDataType="string" sfwType="Property" ID="TffrCalculationMethodValue" sfwValue="icdoBenefitApplication.tffr_calculation_method_value" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="TerminationDate" sfwValue="icdoBenefitApplication.termination_date" />
+    <attribute sfwType="Collection" sfwEntity="entBenefitApplication" ID="lstOtherApplications" sfwValue="iclbOtherApplications" />
+    <attribute sfwDataType="string" sfwType="Property" ID="CreatedBy" sfwValue="icdoBenefitApplication.created_by" />
+    <attribute sfwDataType="int" sfwType="Property" ID="UpdateSeq" sfwValue="icdoBenefitApplication.update_seq" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="CreatedDate" sfwValue="icdoBenefitApplication.created_date" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ModifiedBy" sfwValue="icdoBenefitApplication.modified_by" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="ModifiedDate" sfwValue="icdoBenefitApplication.modified_date" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrAppDateinLongFormat" sfwValue="istrAppDateinLongFormat" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrBeneAdrCorCity" sfwValue="istrBeneAdrCorCity" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrBeneAdrCorState" sfwValue="istrBeneAdrCorState" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrBeneAdrCorStreet1" sfwValue="istrBeneAdrCorStreet1" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrBeneAdrCorStreet2" sfwValue="istrBeneAdrCorStreet2" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrBeneAdrCorZip" sfwValue="istrBeneAdrCorZip" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrBeneFullName" sfwValue="istrBeneFullName" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IintBenePerslinkId" sfwValue="iintBenePerslinkId" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrBeneSalutaion" sfwValue="istrBeneSalutaion" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrImage" sfwValue="istrImage" />
+    <attribute sfwType="Object" sfwEntity="entBenefitApplication" sfwValue="ibusBenefitApplication" ID="objBenefitApplication" />
+  </attributes>
+  <objectmethods>
+    <method ID="btnPendingVerificationClicked" sfwReturnType="ArrayList" />
+    <method ID="btnVerfiyClicked" sfwReturnType="ArrayList" />
+    <method ID="btnCancelClicked" sfwReturnType="ArrayList" />
+    <method ID="btnDenyClicked" sfwReturnType="ArrayList" />
+    <method ID="LoadAccountRelationshipByPlan" sfwReturnType="Collection" sfwObjectID="cdoCodeValue" sfwEntity="entPostRetirementDeathApplication" />
+    <method ID="LoadBenefitOptionsBasedOnPlans" sfwReturnType="Collection" sfwObjectID="cdoCodeValue" sfwEntity="entPostRetirementDeathApplication" />
+  </objectmethods>
+</entity>

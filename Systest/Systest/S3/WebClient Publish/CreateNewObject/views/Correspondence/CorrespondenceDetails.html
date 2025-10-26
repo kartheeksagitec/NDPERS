@@ -1,0 +1,116 @@
+﻿<div class="portlet-body">
+    <div class="form-body full-height">
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label class="control-label"> Correspondence Template </label>
+                <template-name-intellisense collection="objCorrespondenceDetail.CorTemplateCollection" onchangecallback="objCorrespondenceDetail.onCorTemplateChange()" modelname="objCorrespondenceDetail.SfwTemplate"></template-name-intellisense>
+
+            </div>
+
+            <!--<div class="form-group">
+                <label class="control-label"> Conditional Rule</label>
+                <select ng-options="conditionalRule for conditionalRule in objCorrespondenceDetail.ConditionalRuleCollection"
+                        title="{{objCorrespondenceDetail.SfwConditionalRule}}" ng-model="objCorrespondenceDetail.SfwConditionalRule" class="form-control input-sm">
+                    {{conditionalRule}}
+                </select>
+            </div>-->
+
+          
+            <div class="form-group ">
+                <label class="control-label"> Master Template</label>
+                <select ng-options="masterTemplate for masterTemplate in objCorrespondenceDetail.MasterTemplateCollection" ng-change="objCorrespondenceDetail.isFinishDisable()"
+                        ng-model="objCorrespondenceDetail.SfwMasterTemplate" ng-disabled="!objCorrespondenceDetail.IsUpdateMasterTemplateEnable"
+                        class="form-control input-sm">
+                    {{masterTemplate}}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label ">
+                    Header Template
+                </label>
+                <template-name-intellisense collection="objCorrespondenceDetail.AllCorTemplateCollection" modelname="objCorrespondenceDetail.sfwHeaderTemplate"></template-name-intellisense>
+
+
+            </div>
+            <div class="form-group">
+                <label class="control-label ">
+                    Footer Template
+                </label>
+
+                <template-name-intellisense collection="objCorrespondenceDetail.AllCorTemplateCollection" modelname="objCorrespondenceDetail.sfwFooterTemplate"></template-name-intellisense>
+            </div>
+
+
+        </div>
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label class="control-label"> Entity Name</label>
+                <fileintellisensetemplate model="objCorrespondenceDetail" propertyname="'SfwEntity'" onfilechange="objCorrespondenceDetail.isFinishDisable()" projectbasename="'OnlyApp'" filename="objCorrespondenceDetail.SfwEntity" filetype="'Entity'"
+                                          onfileblur="objCorrespondenceDetail.onEntityChange()" isdisabled="IsEntityDisabled" isinsidedialog="true"/>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label"> Path</label>
+                <locationintellisensetemplate  locationchanged="objCorrespondenceDetail.isFinishDisable()" locationname="objCorrespondenceDetail.Path" model="objCorrespondenceDetail" validate="true" errorprop="objCorrespondenceDetail.errors.invalid_path"></locationintellisensetemplate>
+
+            </div>
+
+
+            <div class="form-group">
+                <resourceintellisensetemplate showvertical="true" onchangeresourcecallback="objCorrespondenceDetail.isFinishDisable()" resourceid="objCorrespondenceDetail.SfwResource" resourcetext="'Resources'" showresourcetext='true'></resourceintellisensetemplate>
+            </div>
+
+       
+        </div>
+
+
+        <div class="col-xs-12">
+            <hr />
+        </div>
+
+        <div class="col-xs-12">
+            <div class="page-subheading">
+                Associated Forms
+            </div>
+        </div>
+
+        <div class="correspondence-associated-forms-table full-width">
+            <table class="sws-table" role="grid">
+                <thead>
+                    <tr>
+                        <th>Form Name</th>
+                        <th>Form Entity</th>
+                        <th>Target Entity</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="associatedForm in objCorrespondenceDetail.AssociatedFormCollection" ng-click="objCorrespondenceDetail.SelectAssociatedForm(associatedForm)">
+                        <td><span ng-bind="associatedForm.SfwFormName"></span></td>
+                        <td><span ng-bind="associatedForm.SfwEntity"></span></td>
+                        <td><span ng-bind="associatedForm.SfwTargetBusinessObject"></span></td>
+                        <td>
+                            <input type="button" class="btn btn-default btn-search-popup" ng-click="objCorrespondenceDetail.OnAssociatedFormClick(associatedForm)" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="form-actions">
+    <div class="col-xs-6 text-left">
+        <span class="alert-error-msg" ng-if="objCorrespondenceDetail.ErrorMessageForDisplay.length>0">{{objCorrespondenceDetail.ErrorMessageForDisplay}}</span>
+    </div>
+    <div class="col-xs-6">
+
+        <input class="dialog-btn" type="button" value="Cancel" ng-click="CloseWizardClick()" />
+        <input class="dialog-btn" type="button" wz-previous="onPrevious()" value="Back" disabled="disabled" />
+        <input class="dialog-btn" type="button" value="Next" wz-next="onNext()" ng-if="!showExtraFieldsTab" disabled="disabled" />
+        <input class="dialog-btn" type="button" value="Next" wz-next="onNext()" ng-if="showExtraFieldsTab" ng-disabled="objCorrespondenceDetail.isCorrespondenceDetailFinishDisable" />
+        <input class="dialog-btn" type="button" wz-finish value="Finish" ng-if="showExtraFieldsTab" disabled="disabled" />
+        <input class="dialog-btn" type="button" wz-finish value="Finish" ng-if="!showExtraFieldsTab" ng-disabled="objCorrespondenceDetail.isCorrespondenceDetailFinishDisable" />
+    </div>
+</div>

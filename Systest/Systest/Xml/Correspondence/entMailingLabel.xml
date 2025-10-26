@@ -1,0 +1,184 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entMailingLabel" sfwActive="True" sfwStatus="Review" sfwType="BusinessRule" sfwMainCDO="icdoMailingLabel" sfwObjectID="busMailingLabel" sfwTableName="sgt_mailing_label">
+  <rules>
+    <rule ID="Rule Check If Both Person and Org Entered" sfwMessageId="4801" sfwExpression="(this.IsPersonAndOrgEntered() == True)" sfwObjectBased="True" />
+    <rule ID="Rule Check If City Valid for County" sfwMessageId="4803" sfwExpression="(this.IsCityValidForCounty() == False)" sfwObjectBased="True" />
+    <rule ID="Rule Check If EmpType is Entered" sfwMessageId="4807" sfwExpression="(this.icdoMailingLabel.org_type_value != &quot;EMPL&quot;) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.icdoMailingLabel.employer_type_value)) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.icdoMailingLabel.org_type_value))" sfwObjectBased="True" />
+    <rule ID="Rule Check If Entered Criteria is NOT Specific" sfwMessageId="4808" sfwExpression="(this.IsValidCriteria() == False)" sfwObjectBased="True" />
+    <rule ID="Rule Check If FileName already Exists" sfwMessageId="4812" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entMailingLabel.GetCountofFileName&quot;, this.icdoMailingLabel.file_name) &gt; 0) &amp;&amp; &#xA;(this.icdoMailingLabel.output_format_value == &quot;FILE&quot;) &amp;&amp; &#xA;(this.icdoMailingLabel.run_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="Rule Check If FileName is null" sfwMessageId="4805" sfwExpression="(string.IsNullOrEmpty(this.icdoMailingLabel.file_name))" sfwObjectBased="True" />
+    <rule ID="Rule Check If FileName is Valid" sfwMessageId="4809" sfwExpression="(this.IsValidFileName() == False)" sfwObjectBased="True" />
+    <rule ID="Rule Check If No Criteria Entered" sfwMessageId="4806" sfwExpression="(this.IsNoCriteriaEntered() == True)" sfwObjectBased="True" />
+    <rule ID="Rule Check If Zip Code Not Valid" sfwMessageId="4802" sfwExpression="(this.IsValidZipCode() == False)" sfwObjectBased="True" />
+    <rule ID="Rule Visible View Report Button" sfwExpression="(this.icdoMailingLabel.mailing_label_batch_id != 0) &amp;&amp; &#xA;(this.icdoMailingLabel.output_format_value == &quot;AVRY&quot;) &amp;&amp; &#xA;(this.lblnViewReportFlag == True)" sfwObjectBased="True" />
+    <rule ID="Rule Check If No Plan Selected" sfwMessageId="4813" sfwExpression="(this.iclcPlan.Count == 0) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.icdoMailingLabel.plan_participation_status_value))" sfwObjectBased="True" />
+  </rules>
+  <delete>
+    <property ID="lstIclcPersonType" sfwMethodName="LoadPersonType" />
+    <property ID="lstIclcPlan" sfwMethodName="LoadPlan" />
+  </delete>
+  <checklist />
+  <initialload>
+    <item ID="Rule Visible View Report Button" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="Rule Check If Both Person and Org Entered" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Zip Code Not Valid" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If City Valid for County" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If FileName is null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If No Criteria Entered" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If EmpType is Entered" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Entered Criteria is NOT Specific" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If FileName is Valid" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If FileName already Exists" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If No Plan Selected" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <constraint />
+  <queries>
+    <query ID="LOOKUP" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_MAILING_lABEL ML ORDER BY RUN_DATE DESC">
+      <parameters />
+    </query>
+    <query ID="SubQuery" sfwQueryType="SubSelectQuery" sfwSql="SELECT * FROM SGT_MAILING_LABEL_PERSON_TYPE MLPT&#xD;&#xA;WHERE ML.MAILING_LABEL_BATCH_ID=MLPT.MAILING_LABEL_BATCH_ID">
+      <parameters />
+    </query>
+    <query ID="GetRecordByRunDate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_MAILING_LABEL ML&#xD;&#xA;WHERE RUN_DATE IS NULL &#xD;&#xA;AND OUTPUT_FORMAT_VALUE='FILE'">
+      <parameters />
+    </query>
+    <query ID="GetDistinctCounty" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT DISTINCT COUNTY FROM SGT_COUNTY_REF">
+      <parameters />
+    </query>
+    <query ID="GetMemberID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT PA.PERSON_ID AS PERSON_ID FROM SGT_PERSON_ACCOUNT PA WITH (NOLOCK)&#xD;&#xA;INNER JOIN SGT_PERSON PER WITH (NOLOCK) ON PER.PERSON_ID=PA.PERSON_ID AND PER.DATE_OF_DEATH IS NULL">
+      <parameters />
+    </query>
+    <query ID="GetMemberIDByPlan" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT PA.PERSON_ID AS PERSON_ID FROM SGT_PERSON_ACCOUNT PA WITH (NOLOCK)&#xD;&#xA;INNER JOIN SGT_PERSON PER WITH (NOLOCK) ON PER.PERSON_ID=PA.PERSON_ID AND PER.DATE_OF_DEATH IS NULL">
+      <parameters />
+    </query>
+    <query ID="GetBeneficiaryPersonID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT ISNULL(BENEFICIARY_PERSON_ID,0) AS PERSON_ID FROM SGT_PERSON_BENEFICIARY BENE WITH (NOLOCK)&#xD;&#xA;LEFT JOIN SGT_PERSON PER  WITH (NOLOCK) ON PER.PERSON_ID=BENE.BENEFICIARY_PERSON_ID AND PER.DATE_OF_DEATH IS NULL">
+      <parameters />
+    </query>
+    <query ID="GetBeneficiaryPersonIDByPlan" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT BENE.BENEFICIARY_PERSON_ID AS PERSON_ID FROM SGT_PERSON_BENEFICIARY BENE WITH (NOLOCK)&#xD;&#xA;INNER JOIN SGT_PERSON PER WITH (NOLOCK) ON PER.PERSON_ID=BENE.BENEFICIARY_PERSON_ID AND PER.DATE_OF_DEATH IS NULL&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT_BENEFICIARY SPAB WITH (NOLOCK) ON SPAB.BENEFICIARY_ID=BENE.BENEFICIARY_ID&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT SPA WITH (NOLOCK) ON SPA.PERSON_ACCOUNT_ID=SPAB.PERSON_ACCOUNT_ID&#xD;&#xA;">
+      <parameters />
+    </query>
+    <query ID="GetDependentPersonID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT ISNULL(DEP.DEPENDENT_PERSLINK_ID,0) AS PERSON_ID FROM SGT_PERSON_DEPENDENT DEP WITH (NOLOCK)&#xD;&#xA;LEFT JOIN SGT_PERSON PER WITH (NOLOCK) ON PER.PERSON_ID=DEP.DEPENDENT_PERSLINK_ID AND PER.DATE_OF_DEATH IS NULL&#xD;&#xA;GROUP BY DEP.DEPENDENT_PERSLINK_ID">
+      <parameters />
+    </query>
+    <query ID="GetDependentPersonIDByPlan" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT DEP.DEPENDENT_PERSLINK_ID AS PERSON_ID FROM SGT_PERSON_DEPENDENT DEP WITH (NOLOCK)&#xD;&#xA;INNER JOIN SGT_PERSON PER WITH (NOLOCK) ON PER.PERSON_ID=DEP.DEPENDENT_PERSLINK_ID AND PER.DATE_OF_DEATH IS NULL&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT_DEPENDENT SPAD WITH (NOLOCK) ON SPAD.PERSON_DEPENDENT_ID=DEP.PERSON_DEPENDENT_ID&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT SPA WITH (NOLOCK) ON SPA.PERSON_ACCOUNT_ID=SPAD.PERSON_ACCOUNT_ID&#xD;&#xA;">
+      <parameters />
+    </query>
+    <query ID="GetSpouse" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT PC.CONTACT_PERSON_ID AS PERSON_ID FROM SGT_PERSON_CONTACT PC WITH (NOLOCK)&#xD;&#xA;INNER JOIN SGT_PERSON PER WITH (NOLOCK) ON PER.PERSON_ID=PC.CONTACT_PERSON_ID AND PER.DATE_OF_DEATH IS NULL&#xD;&#xA;WHERE RELATIONSHIP_VALUE='SPOU' AND STATUS_VALUE='ACT' ">
+      <parameters />
+    </query>
+    <query ID="GetCitiesByCounty" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT CITY FROM SGT_COUNTY_REF WHERE COUNTY=@COUNTY">
+      <parameters>
+        <parameter ID="@COUNTY" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="GetPersonByEmploymentStatus" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT PER.PERSON_ID FROM SGT_PERSON PER&#xD;&#xA;INNER JOIN SGT_PERSON_EMPLOYMENT EMP ON PER.PERSON_ID=EMP.PERSON_ID &#xD;&#xA;INNER JOIN SGT_PERSON_EMPLOYMENT_DETAIL DTL ON DTL.PERSON_EMPLOYMENT_ID=EMP.PERSON_EMPLOYMENT_ID">
+      <parameters />
+    </query>
+    <query ID="IsOrgExistsInPlan" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_ORG_PLAN &#xD;&#xA;WHERE PLAN_ID=@PLANID AND ORG_ID=@ORG_ID">
+      <parameters>
+        <parameter ID="@PLANID" sfwDataType="int" />
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetOrgByContactRole" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_ORGANIZATION WHERE ORG_ID IN (SELECT ORG_ID FROM SGT_ORG_CONTACT WHERE ORG_CONTACT_ID IN(SELECT ORG_CONTACT_ID FROM SGT_ORG_CONTACT_ROLE WHERE CONTACT_ROLE_VALUE=@CONTACT_ROLE)) AND STATUS_VALUE='ACTV'">
+      <parameters>
+        <parameter ID="@CONTACT_ROLE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="GetAddressByPersonID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT &#xD;&#xA;PER.LAST_NAME + ',' + PER.FIRST_NAME AS lstrFullName,&#xD;&#xA;PERS.ADDR_LINE_1 AS lstrAddressLine1, &#xD;&#xA;PERS.ADDR_LINE_2 AS lstrAddressLine2,&#xD;&#xA;PERS.ADDR_CITY AS lstrCity,&#xD;&#xA;CV.DESCRIPTION AS lstrState,&#xD;&#xA;CTY.COUNTY AS lstrCountry,&#xD;&#xA;PERS.ADDR_ZIP_CODE AS lstrZipCode,&#xD;&#xA;PER.PERSON_ID AS lintID&#xD;&#xA;FROM SGT_PERSON PER WITH (NOLOCK)&#xD;&#xA;INNER JOIN SGT_PERSON_ADDRESS PERS WITH (NOLOCK) ON PER.PERSON_ID=PERS.PERSON_ID&#xD;&#xA;INNER JOIN SGT_COUNTY_REF CTY ON LOWER(CTY.CITY)=LOWER(PERS.ADDR_CITY)&#xD;&#xA;INNER JOIN SGS_CODE_VALUE CV ON PERS.ADDR_STATE_VALUE=CV.CODE_VALUE AND CV.CODE_ID=150&#xD;&#xA;WHERE PER.PERSON_ID=@PERSON_ID&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetAddressByOrgID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT &#xD;&#xA;ORG.ORG_NAME AS lstrFullName,&#xD;&#xA;ORGCON.ADDR_LINE_1 AS lstrAddressLine1,&#xD;&#xA;ORGCON.ADDR_LINE_2 AS lstrAddressLine2,&#xD;&#xA;ORGCON.CITY AS lstrCity,&#xD;&#xA;CV.DESCRIPTION AS lstrState,&#xD;&#xA;ORGCON.ZIP_CODE AS lstrZipCode,&#xD;&#xA;CTY.COUNTY AS lstrCountry,&#xD;&#xA;ORG.ORG_ID AS lintID&#xD;&#xA; FROM SGT_ORGANIZATION ORG&#xD;&#xA;INNER JOIN SGT_ORG_CONTACT_ADDRESS ORGCON ON ORGCON.ORG_ID=ORG.ORG_ID&#xD;&#xA;INNER JOIN SGT_COUNTY_REF CTY ON LOWER(CTY.CITY)=LOWER(ORGCON.CITY)&#xD;&#xA;INNER JOIN SGS_CODE_VALUE CV ON ORGCON.STATE_VALUE=CV.CODE_VALUE AND CV.CODE_ID=150&#xD;&#xA;WHERE ORG.ORG_ID=@ORG_ID AND ORG.STATUS_VALUE='ACTV'">
+      <parameters>
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetActiveOrgsByOrgAndEmpType" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_ORGANIZATION &#xD;&#xA;WHERE STATUS_VALUE='ACTV' AND&#xD;&#xA;(((ORG_TYPE_VALUE=@ORG_TYPE_VALUE) AND (@ORG_TYPE_VALUE &lt;&gt; '')) OR (@ORG_TYPE_VALUE ='')) AND&#xD;&#xA;(((EMP_CATEGORY_VALUE=@EMPL_TYPE_VALUE) AND (@EMPL_TYPE_VALUE &lt;&gt; '')) OR (@EMPL_TYPE_VALUE =''))">
+      <parameters>
+        <parameter ID="@ORG_TYPE_VALUE" sfwDataType="string" />
+        <parameter ID="@EMPL_TYPE_VALUE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="GetOrgContact" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_ORG_CONTACT&#xD;&#xA;WHERE ORG_ID=@ORG_ID AND &#xD;&#xA;STATUS_VALUE='ACTV'&#xD;&#xA;ORDER BY CREATED_DATE ASC">
+      <parameters>
+        <parameter ID="@ORG_ID" />
+      </parameters>
+    </query>
+    <query ID="GetCountofFileName" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_MAILING_LABEL WHERE&#xD;&#xA;[FILE_NAME] = @FILE_NAME&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@FILE_NAME" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="GetPlanParticipationStatus" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT SPA.PERSON_ID FROM SGT_PERSON_ACCOUNT SPA&#xD;&#xA;INNER JOIN SGS_CODE_VALUE CV ON CV.CODE_ID=SPA.PLAN_PARTICIPATION_STATUS_ID &#xD;&#xA;AND SPA.PLAN_PARTICIPATION_STATUS_VALUE=CV.CODE_VALUE">
+      <parameters />
+    </query>
+    <query ID="GetAlternatePayee" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select distinct SPA.payee_perslink_id from sgt_payee_account SPA WITH (NOLOCK) &#xD;&#xA;inner join SGT_PERSON P WITH (NOLOCK) on P.person_id = SPA.Payee_perslink_id AND P.DATE_OF_DEATH IS NULL&#xD;&#xA;where account_relation_value = 'ALTP' ">
+      <parameters />
+    </query>
+    <query ID="GetPayee" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select distinct spa.payee_perslink_id from sgt_payee_account SPA WITH (NOLOCK) &#xD;&#xA;inner join SGT_PERSON P WITH (NOLOCK) on P.person_id = SPA.Payee_perslink_id AND P.DATE_OF_DEATH IS NULL&#xD;&#xA;where account_relation_value = 'MEMB'">
+      <parameters />
+    </query>
+    <query ID="GetRetiree" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select SPA.person_id from sgt_person_account SPA with (nolock) &#xD;&#xA;inner join SGT_PERSON P WITH (NOLOCK) &#xD;&#xA;on P.person_id = SPA.person_id where plan_participation_status_value = 'RTRD'&#xD;&#xA;">
+      <parameters />
+    </query>
+    <query ID="GetRetireeByPlan" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select distinct SPA.payee_perslink_id  from sgt_person_account PERA WITH (NOLOCK)&#xD;&#xA;inner join SGT_PERSON P WITH (NOLOCK) on P.person_id = PERA.person_id AND P.DATE_OF_DEATH IS NULL &#xD;&#xA;inner join sgt_payee_account SPA WITH (NOLOCK) on PERA.person_id =SPA.Payee_perslink_id and&#xD;&#xA;account_relation_value = 'MEMB' and plan_participation_status_value = 'RTRD' &#xD;&#xA;">
+      <parameters />
+    </query>
+    <query ID="GetPayeeByPlanId" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select distinct SPA.payee_perslink_id  from sgt_person_account PERA WITH (NOLOCK)&#xD;&#xA;inner join SGT_PERSON P WITH (NOLOCK) on P.person_id = PERA.person_id AND P.DATE_OF_DEATH IS NULL&#xD;&#xA;inner join sgt_payee_account SPA WITH (NOLOCK) on PERA.person_id =SPA.Payee_perslink_id&#xD;&#xA;and account_relation_value = 'MEMB' ">
+      <parameters />
+    </query>
+    <query ID="GetAlternatePayeeByPlanID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select distinct SPA.payee_perslink_id  from sgt_person_account PERA WITH (NOLOCK)&#xD;&#xA;inner join SGT_PERSON P WITH (NOLOCK) on P.person_id = PERA.person_id AND P.DATE_OF_DEATH IS NULL&#xD;&#xA;inner join sgt_payee_account SPA WITH (NOLOCK) on PERA.person_id =SPA.Payee_perslink_id&#xD;&#xA;and account_relation_value = 'ALTP' ">
+      <parameters />
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="MailingLabelBatchId" sfwType="Column" sfwValue="mailing_label_batch_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="FileName" sfwType="Column" sfwValue="file_name" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="25" />
+    <attribute ID="OutputFormatDescription" sfwType="Description" sfwValue="output_format_description" />
+    <attribute ID="OutputFormatId" sfwType="Column" sfwValue="output_format_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="602" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="OutputFormatValue" sfwType="Column" sfwValue="output_format_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="PlanParticipationStatusDescription" sfwType="Description" sfwValue="plan_participation_status_description" />
+    <attribute ID="PlanParticipationStatusId" sfwType="Column" sfwValue="plan_participation_status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="358" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PlanParticipationStatusValue" sfwType="Column" sfwValue="plan_participation_status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="ExcludeEmailPreferenceFlag" sfwType="Column" sfwValue="exclude_email_preference_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="EmploymentStatusDescription" sfwType="Description" sfwValue="employment_status_description" />
+    <attribute ID="EmploymentStatusId" sfwType="Column" sfwValue="employment_status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="310" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="EmploymentStatusValue" sfwType="Column" sfwValue="employment_status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="OrgTypeDescription" sfwType="Description" sfwValue="org_type_description" />
+    <attribute ID="OrgTypeId" sfwType="Column" sfwValue="org_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="201" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="OrgTypeValue" sfwType="Column" sfwValue="org_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="EmployerTypeDescription" sfwType="Description" sfwValue="employer_type_description" />
+    <attribute ID="EmployerTypeId" sfwType="Column" sfwValue="employer_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="203" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="EmployerTypeValue" sfwType="Column" sfwValue="employer_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="OrgContactRoleDescription" sfwType="Description" sfwValue="org_contact_role_description" />
+    <attribute ID="OrgContactRoleId" sfwType="Column" sfwValue="org_contact_role_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="515" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="OrgContactRoleValue" sfwType="Column" sfwValue="org_contact_role_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="County" sfwType="Column" sfwValue="county" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="30" />
+    <attribute ID="City" sfwType="Column" sfwValue="city" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="30" />
+    <attribute ID="ZipCode" sfwType="Column" sfwValue="zip_code" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="200" />
+    <attribute ID="RunDate" sfwType="Column" sfwValue="run_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UserId" sfwType="Column" sfwValue="user_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute sfwDataType="string" sfwType="Property" ID="LstrRecordCount" sfwValue="lstrRecordCount" />
+    <attribute sfwType="CDOCollection" sfwEntity="entMailingLabelPersonType" ID="lstIclcPersonType" sfwValue="iclcPersonType" />
+    <attribute sfwType="CDOCollection" sfwEntity="entMailingLabelPlan" ID="lstIclcPlan" sfwValue="iclcPlan" />
+    <attribute ID="IstrReportTemplateName" sfwDataType="string" sfwPrivate="False" sfwValue="istrReportTemplateName" sfwType="Property" />
+  </attributes>
+  <objectmethods>
+    <method ID="LoadPersonType" sfwReturnType="Void" />
+    <method ID="LoadPlan" sfwReturnType="Void" />
+  </objectmethods>
+</entity>

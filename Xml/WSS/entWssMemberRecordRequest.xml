@@ -1,0 +1,386 @@
+﻿<entity ID="entWssMemberRecordRequest" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoWssMemberRecordRequest" sfwObjectID="busWssMemberRecordRequest" sfwTableName="sgt_wss_member_record_request" sfwView="False">
+  <rules>
+    <rule ID="IsAcknowledgementchecked" sfwMessageId="8517" sfwExpression="(this.iblnIsFromPS == False) &amp;&amp; &#xA;!(this.istrIsTermsAndConditionsAgreed == &quot;Y&quot;)" sfwObjectBased="True" />
+    <rule ID="IsAgeGreaterThanOrEqualToEighteen" sfwMessageId="10091" sfwExpression="(this.IsAgeGreaterThanOrEqualToEighteen() == False)" sfwObjectBased="True" />
+    <rule ID="IsContactAddressLine1Null" sfwMessageId="111" sfwExpression="(this.iblnIsFromPS == False) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonContact.address_country_value&quot;) == &quot;0001&quot;) &amp;&amp; &#xA;!(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonContact.same_as_member_address&quot;) == &quot;Y&quot;) &amp;&amp; &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonContact.address_line_1&quot;)))" sfwObjectBased="True" />
+    <rule ID="IsContactAddressStateRequired" sfwMessageId="113" sfwExpression="(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonContact.address_state_value&quot;))) &amp;&amp; &#xA;!(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonContact.same_as_member_address&quot;) == &quot;Y&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonContact.address_country_value&quot;) == &quot;0001&quot;)" sfwObjectBased="True" />
+    <rule ID="IsContactCityIsRequired" sfwMessageId="112" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonContact.address_country_value&quot;) == &quot;0001&quot;) &amp;&amp; &#xA;!(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonContact.same_as_member_address&quot;) == &quot;Y&quot;) &amp;&amp; &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonContact.address_city&quot;)))" sfwObjectBased="True" />
+    <rule ID="IsContactCountryIsNull" sfwMessageId="4081" sfwExpression="(this.iblnIsFromPS == False) &amp;&amp; &#xA;!(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonContact.same_as_member_address&quot;) == &quot;Y&quot;) &amp;&amp; &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonContact.address_country_value&quot;))) &amp;&amp; &#xA;!(this.icdoWssMemberRecordRequest.marital_status_value == &quot;SNGL&quot;)" sfwObjectBased="True" />
+    <rule ID="IsContactDetailsNotAvailableForMarriedMember" sfwMessageId="8533" sfwExpression="(this.iblnIsFromPS == False) &amp;&amp; &#xA;(this.icdoWssMemberRecordRequest.marital_status_value == &quot;MRID&quot;) &amp;&amp; &#xA;((string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonContact.contact_ssn&quot;))) || &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonContact.relationship_value&quot;))) || &#xA;!(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonContact.relationship_value&quot;) == &quot;SPOU&quot;) || &#xA;(RFunc.GetValue&lt;DateTime&gt;(this, &quot;icdoWssPersonContact.contact_date_of_birth&quot;) == DateTime.MinValue) || &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonContact.contact_gender_value&quot;))))" sfwObjectBased="True" />
+    <rule ID="IsContactIDOrORGNull" sfwExpression="(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonContact.contact_org_code&quot;))) &amp;&amp; &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonContact.contact_ssn&quot;)))" sfwObjectBased="True" />
+    <rule ID="IsContactPersonAndORgNull" sfwMessageId="8518" sfwExpression="(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonContact.contact_org_code&quot;))) &amp;&amp; &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonContact.contact_ssn&quot;))) &amp;&amp; &#xA;!(this.icdoWssMemberRecordRequest.marital_status_value == &quot;SNGL&quot;)" sfwObjectBased="True" />
+    <rule ID="IsContactPersonDuplicated" sfwMessageId="1152" sfwExpression="(this.istrSuppressContactPersonDuplicateValidation != &quot;Y&quot;) &amp;&amp; &#xA;(this.IsContactPersonDuplicated() == True)" sfwObjectBased="True" />
+    <rule ID="IsContactRelationshipNull" sfwMessageId="8520" sfwExpression="(this.iblnIsFromPS == False) &amp;&amp; &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonContact.relationship_value&quot;))) &amp;&amp; &#xA;!(this.icdoWssMemberRecordRequest.marital_status_value == &quot;SNGL&quot;)" sfwObjectBased="True" />
+    <rule ID="IscountryNull" sfwMessageId="4081" sfwExpression="(this.iblnIsFromPS == False) &amp;&amp; &#xA;!(!string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonAddress.addr_country_value&quot;)))" sfwObjectBased="True" />
+    <rule ID="IsDateOfBirthNull" sfwMessageId="153" sfwExpression="(this.icdoWssMemberRecordRequest.date_of_birth == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsEmploymentDateValid" sfwMessageId="8572" sfwExpression="!(RFunc.GetValue&lt;DateTime&gt;(this, &quot;icdoWssPersonEmployment.start_date&quot;) &lt;= this.icdoWssMemberRecordRequest.date_of_birth) &amp;&amp; &#xA;!(RFunc.GetValue&lt;DateTime&gt;(this, &quot;icdoWssPersonEmployment.start_date&quot;) == DateTime.MinValue) &amp;&amp; &#xA;!(this.IsEmploymentStartDateValid() == True)" sfwObjectBased="True" />
+    <rule ID="IsEmploymentStartDateNull" sfwMessageId="10232" sfwExpression="(RFunc.GetValue&lt;DateTime&gt;(this, &quot;icdoWssPersonEmployment.start_date&quot;) == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsEmploymentStatusNull" sfwMessageId="10231" sfwExpression="(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonEmploymentDetail.employment_status_value&quot;)))" sfwObjectBased="True" />
+    <rule ID="IsEmploymentTypeNull" sfwMessageId="10230" sfwExpression="(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonEmploymentDetail.type_value&quot;)))" sfwObjectBased="True" />
+    <rule ID="IsFirstNameNull" sfwMessageId="4020" sfwExpression="(string.IsNullOrEmpty(this.icdoWssMemberRecordRequest.first_name))" sfwObjectBased="True" />
+    <rule ID="IsForiegnAddresRequired" sfwMessageId="115" sfwExpression="(this.iblnIsFromPS == False) &amp;&amp; &#xA;!(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonContact.same_as_member_address&quot;) == &quot;Y&quot;) &amp;&amp; &#xA;!(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonContact.address_country_value&quot;) == &quot;0001&quot;) &amp;&amp; &#xA;((string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonContact.foreign_postal_code&quot;))) &amp;&amp; &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonContact.foreign_province&quot;))))" sfwObjectBased="True" />
+    <rule ID="IsGenderValueNull" sfwMessageId="1003" sfwExpression="(string.IsNullOrEmpty(this.icdoWssMemberRecordRequest.gender_value))" sfwObjectBased="True" />
+    <rule ID="IsInvalidDateofHire" sfwMessageId="10233" sfwExpression="(RFunc.GetValue&lt;DateTime&gt;(this, &quot;icdoWssPersonEmployment.start_date&quot;) &lt;= this.icdoWssMemberRecordRequest.date_of_birth)" sfwObjectBased="True" />
+    <rule ID="IsInvalidDOBForContact" sfwMessageId="8531" sfwExpression="(RFunc.GetValue&lt;DateTime&gt;(this, &quot;icdoWssPersonContact.contact_date_of_birth&quot;) &gt; RFunc.CurrentDateTime())" sfwObjectBased="True" />
+    <rule ID="IsInvalidDOBForMember" sfwMessageId="8531" sfwExpression="(this.icdoWssMemberRecordRequest.date_of_birth &gt; RFunc.CurrentDateTime())" sfwObjectBased="True" />
+    <rule ID="IsInvalidEmail" sfwMessageId="10343" sfwExpression="!(this.ValidateEmail() == True)" sfwObjectBased="True" />
+    <rule ID="IsJobClassNull" sfwMessageId="4541" sfwExpression="(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonEmploymentDetail.job_class_value&quot;)))" sfwObjectBased="True" />
+    <rule ID="IsLastNameNull" sfwMessageId="4021" sfwExpression="(string.IsNullOrEmpty(this.icdoWssMemberRecordRequest.last_name))" sfwObjectBased="True" />
+    <rule ID="IsMaritalStatusNull" sfwMessageId="1004" sfwExpression="(string.IsNullOrEmpty(this.icdoWssMemberRecordRequest.marital_status_value))" sfwObjectBased="True" />
+    <rule ID="IsMemberMarriedAndContactNotSpouse" sfwMessageId="8519" sfwExpression="(this.iblnIsFromPS == False) &amp;&amp; &#xA;(this.icdoWssMemberRecordRequest.marital_status_value == &quot;MRID&quot;) &amp;&amp; &#xA;!(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonContact.relationship_value&quot;) == &quot;SPOU&quot;)" sfwObjectBased="True" />
+    <rule ID="IsMiddleNameNull" sfwExpression="(string.IsNullOrEmpty(this.icdoWssMemberRecordRequest.middle_name))" sfwObjectBased="True" />
+    <rule ID="IsOfficeListRequired" sfwMessageId="10236" sfwExpression="((RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonEmploymentDetail.job_class_value&quot;) == &quot;NSAP&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonEmploymentDetail.job_class_value&quot;) == &quot;STAP&quot;)) &amp;&amp; &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonEmploymentDetail.official_list_value&quot;)))" sfwObjectBased="True" />
+    <rule ID="IsPersonDuplicated" sfwMessageId="1152" sfwExpression="(this.istrSuppressPersonDuplicateValidation != &quot;Y&quot;) &amp;&amp; &#xA;(this.IsPersonDuplicated() == True)" sfwObjectBased="True" />
+    <rule ID="IsRequestPending" sfwExpression="(this.icdoWssMemberRecordRequest.status_value == &quot;REVW&quot;) || (this.icdoWssMemberRecordRequest.status_value == &quot;PEND&quot;)" sfwObjectBased="True" />
+    <rule ID="IsSameEmploymentNotExists" sfwMessageId="8508" sfwExpression="(this.CheckActiveEmploymentExists() == True)" sfwObjectBased="True" />
+    <rule ID="IsSeasonalRequired" sfwMessageId="8516" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonEmploymentDetail.istrMemberWorkLessThan12MonthsValue&quot;) == &quot;YES&quot;) &amp;&amp; &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonEmploymentDetail.seasonal_value&quot;)))" sfwObjectBased="True" />
+    <rule ID="IsSpouseOfSameGender" sfwMessageId="134" sfwExpression="(this.IsValidGender() == False)" sfwObjectBased="True" />
+    <rule ID="IsSSNNull" sfwMessageId="152" sfwExpression="(string.IsNullOrEmpty(this.icdoWssMemberRecordRequest.ssn))" sfwObjectBased="True" />
+    <rule ID="IsSSNValid" sfwMessageId="8570" sfwExpression="!(string.IsNullOrEmpty(this.icdoWssMemberRecordRequest.ssn)) &amp;&amp; &#xA;!(this.IsSSNValid() == True)" sfwObjectBased="True" />
+    <rule ID="IsTermBeginRequired" sfwMessageId="1060" sfwExpression="((RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonEmploymentDetail.job_class_value&quot;) == &quot;SEO&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonEmploymentDetail.job_class_value&quot;) == &quot;NSEO&quot;)) &amp;&amp; &#xA;(RFunc.GetValue&lt;DateTime&gt;(this, &quot;icdoWssPersonEmploymentDetail.term_begin_date&quot;) == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="JobClassIsNotAppointedOfficialAndOfficialisSelected" sfwMessageId="1069" sfwExpression="!((RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonEmploymentDetail.job_class_value&quot;) == &quot;NSAP&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonEmploymentDetail.job_class_value&quot;) == &quot;STAP&quot;)) &amp;&amp; &#xA;!(this.IsOfficialListNullOREmpty() == True)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK ADDRESS LINE 1 IS NULL" sfwMessageId="111" sfwExpression="(this.iblnIsFromPS == False) &amp;&amp; &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonAddress.addr_line_1&quot;)))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK ADDRESS TYPE IS BLANK" sfwMessageId="122" sfwExpression="(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonAddress.address_type_value&quot;)))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK CITY IS NULL" sfwMessageId="112" sfwExpression="(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonAddress.addr_city&quot;))) &amp;&amp; &#xA;!(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonAddress.addr_country_value&quot;) != &quot;0001&quot;)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK COUNTRY IS NOT US" sfwMessageId="115" sfwExpression="(this.iblnIsFromPS == False) &amp;&amp; &#xA;(!string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonAddress.addr_country_value&quot;))) &amp;&amp; &#xA;((string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonAddress.foreign_province&quot;))) || &#xA;(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonAddress.foreign_postal_code&quot;)))) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonAddress.addr_country_value&quot;) != &quot;0001&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule Check Member Has Contributing Employment" sfwMessageId="10216" sfwExpression="(this.IsMemberHavingContributingEmployment() == True)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK STATE IS BLANK" sfwMessageId="113" sfwExpression="!(!string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonAddress.addr_state_value&quot;))) &amp;&amp; &#xA;!(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonAddress.addr_country_value&quot;) != &quot;0001&quot;)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK ZIP CODE IS NOT NUMERIC" sfwMessageId="118" sfwExpression="(!RFunc.IsNumeric(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonAddress.addr_zip_code&quot;)))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK ZIP CODE IS NULL" sfwMessageId="114" sfwExpression="!(!string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonAddress.addr_zip_code&quot;))) &amp;&amp; &#xA;!(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonAddress.addr_country_value&quot;) != &quot;0001&quot;)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleMemberSpouseDetails" sfwExpression="(this.icdoWssMemberRecordRequest.marital_status_value == &quot;MRID&quot;)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleRejectionReason" sfwExpression="!(string.IsNullOrEmpty(this.icdoWssMemberRecordRequest.rejection_reason))" sfwObjectBased="True" />
+    <rule ID="IsSSNNotMatch" sfwMessageId="8570" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;(this.IsSSNMatch() == false)" sfwObjectBased="True" />
+    <rule ID="IsContactSSNNotMatch" sfwMessageId="8570" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;(this.IsContactSSNMatch() == False)" sfwObjectBased="True" />
+    <rule ID="IsContactFirstNameNull" sfwMessageId="10228" sfwExpression="(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonContact.contact_first_name&quot;)))" sfwObjectBased="True" />
+    <rule ID="IsContactLastNameNull" sfwMessageId="10229" sfwExpression="(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonContact.contact_last_name&quot;)))" sfwObjectBased="True" />
+    <rule ID="IsSSNValidForContact" sfwMessageId="8570" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;!(this.IsSSNValidForContact() == True) &amp;&amp; &#xA;!(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonContact.contact_ssn&quot;)))" sfwObjectBased="True" />
+    <rule ID="IsCellPhoneNoNull" sfwMessageId="37" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoWssMemberRecordRequest.cell_phone_no))" sfwObjectBased="True" />
+    <rule ID="IsEmployeeWorkLessThan12MonthsNull" sfwMessageId="10234" sfwExpression="(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonEmploymentDetail.istrMemberWorkLessThan12MonthsValue&quot;)))" sfwObjectBased="True" />
+    <rule ID="IsContactSSNNull" sfwMessageId="152" sfwExpression="(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonContact.contact_ssn&quot;)))" sfwObjectBased="True" />
+    <rule ID="IsContactGenderNull" sfwMessageId="1003" sfwExpression="(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonContact.contact_gender_value&quot;)))" sfwObjectBased="True" />
+    <rule ID="IsContactDateOfBirthnull" sfwMessageId="153" sfwExpression="(RFunc.GetValue&lt;DateTime&gt;(this, &quot;icdoWssPersonContact.contact_date_of_birth&quot;) == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsCellAndHomePhoneNoNull" sfwMessageId="10227" sfwExpression="(string.IsNullOrEmpty(this.icdoWssMemberRecordRequest.cell_phone_no)) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoWssMemberRecordRequest.home_phone_no))" sfwObjectBased="True" />
+    <rule ID="IsEmployeeHourlyNull" sfwMessageId="10235" sfwExpression="(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonEmploymentDetail.hourly_value&quot;)))" sfwObjectBased="True" />
+    <rule ID="Rule Check Address Valid" sfwMessageId="127" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;icdoWssPersonAddress.address_validate_flag&quot;) == &quot;N&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule check if new member record request or rejected" sfwExpression="(this.icdoWssMemberRecordRequest.status_value == &quot;RJTD&quot;) || &#xA;(this.icdoWssMemberRecordRequest.member_record_request_id == 0)" sfwObjectBased="True" />
+    <rule ID="Rule Check If Contact Phone Number is Valid" sfwMessageId="10247" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xA;(this.VerifyContactPhoneNumber() == False)" sfwObjectBased="True" />
+    <rule ID="IsDuplicatePerson" sfwRuleType="Validation" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xD;&#xA;(this.IsDuplicatePerson()== true)" sfwMessageId="10220" sfwObjectBased="True" />
+    <rule ID="IsInvalidSSN" sfwRuleType="Validation" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xD;&#xA;(this.IsInvalidSSN()== true)" sfwMessageId="8570" sfwObjectBased="True" />
+    <rule ID="IsDuplicateContact" sfwRuleType="Validation" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xD;&#xA;(this.IsDuplicateContact()== true)" sfwMessageId="10220" sfwObjectBased="True" />
+    <rule ID="IsInvalidContactSSN" sfwRuleType="Validation" sfwExpression="(this.iblnIsFromESS == True) &amp;&amp; &#xD;&#xA;(this.IsInvalidContactSSN()== true)" sfwMessageId="8570" sfwObjectBased="True" />
+    <rule ID="IsWssMemberRecordRequestIsRejected" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="(this.icdoWssMemberRecordRequest.status_value == &quot;RJTD&quot;)" />
+    <rule ID="VisibleRuleRetirementStatus" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="IsPlanOffered(1)" />
+    <rule ID="VisibleRuleLifeStatus" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="IsPlanOffered(3)" />
+    <rule ID="VisibleRuleEAPStatus" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="IsPlanOffered(2)" />
+    <rule ID="IsFirstMonthForRetirementContributionNull" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="this.EmploymentStatusValue == &quot;CONT&quot; &amp;&amp; this.FirstMonthForRetirementContribution == DateTime.MinValue" sfwMessage="First Reporting Month for Retirement Contributions is required" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="IsRequestPending" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleRejectionReason" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleMemberSpouseDetails" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsContactFirstNameNull" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsContactLastNameNull" sfwStatus="Active" sfwMode="All" />
+    <item ID="Rule Check Address Valid" sfwStatus="Active" sfwMode="All" />
+    <item ID="Rule check if new member record request or rejected" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsWssMemberRecordRequestIsRejected" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleRetirementStatus" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleLifeStatus" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleEAPStatus" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror>
+    <item ID="IsEmploymentStartDateNull" sfwMode="All" sfwStatus="Active" />
+  </softerror>
+  <harderror>
+    <item ID="IsSSNNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsLastNameNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMiddleNameNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsGenderValueNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsSameEmploymentNotExists" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK ZIP CODE IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK ZIP CODE IS NOT NUMERIC" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK STATE IS BLANK" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK COUNTRY IS NOT US" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK CITY IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK ADDRESS LINE 1 IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsJobClassNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsOfficeListRequired" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsTermBeginRequired" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMemberMarriedAndContactNotSpouse" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsSeasonalRequired" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAcknowledgementchecked" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEmploymentTypeNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IscountryNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsContactPersonAndORgNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsContactAddressLine1Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsContactRelationshipNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsContactCityIsRequired" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsContactCountryIsNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsForiegnAddresRequired" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsContactAddressStateRequired" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsInvalidDOBForMember" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsInvalidDOBForContact" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsInvalidEmail" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsInvalidDateofHire" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsContactDetailsNotAvailableForMarriedMember" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPersonDuplicated" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsContactPersonDuplicated" sfwMode="All" sfwStatus="Active" />
+    <item ID="JobClassIsNotAppointedOfficialAndOfficialisSelected" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsSSNValid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEmploymentDateValid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEmploymentStatusNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsSpouseOfSameGender" sfwMode="All" sfwStatus="Inactive" />
+    <item ID="Rule Check Member Has Contributing Employment" sfwMode="All" sfwStatus="Inactive" />
+    <item ID="IsSSNNotMatch" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsContactSSNNotMatch" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsSSNValidForContact" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsCellPhoneNoNull" sfwStatus="Active" sfwMode="All" />
+    <item ID="Rule Check Address Valid" sfwStatus="Active" sfwMode="All" />
+    <item ID="Rule Check If Contact Phone Number is Valid" sfwStatus="Active" sfwMode="All" />
+  </harderror>
+  <validatedelete />
+  <groupslist>
+    <group ID="Address">
+      <item ID="RULE CHECK ADDRESS LINE 1 IS NULL" sfwMode="All" sfwStatus="Active" />
+      <item ID="RULE CHECK CITY IS NULL" sfwMode="All" sfwStatus="Active" />
+      <item ID="RULE CHECK COUNTRY IS NOT US" sfwMode="All" sfwStatus="Active" />
+      <item ID="RULE CHECK STATE IS BLANK" sfwMode="All" sfwStatus="Active" />
+      <item ID="RULE CHECK ZIP CODE IS NOT NUMERIC" sfwMode="All" sfwStatus="Active" />
+      <item ID="RULE CHECK ZIP CODE IS NULL" sfwMode="All" sfwStatus="Active" />
+      <item ID="IscountryNull" sfwMode="All" sfwStatus="Active" />
+    </group>
+    <group ID="Contact">
+      <item ID="IsInvalidDOBForContact" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsSpouseOfSameGender" sfwMode="All" sfwStatus="Inactive" />
+      <item ID="IsContactSSNNotMatch" sfwStatus="Active" />
+      <item ID="IsContactFirstNameNull" sfwStatus="Active" />
+      <item ID="IsContactLastNameNull" sfwStatus="Active" />
+      <item ID="IsSSNValidForContact" sfwStatus="Active" />
+      <item ID="IsContactSSNNull" sfwStatus="Active" />
+      <item ID="IsContactGenderNull" sfwStatus="Active" />
+      <item ID="IsContactDateOfBirthnull" sfwStatus="Active" />
+      <item ID="IsDuplicateContact" sfwStatus="Active" sfwMode="All" />
+      <item ID="IsInvalidContactSSN" sfwStatus="Active" sfwMode="All" />
+    </group>
+    <group ID="EmailAddress">
+      <item ID="IsInvalidEmail" sfwMode="All" sfwStatus="Active" />
+    </group>
+    <group ID="Employment">
+      <item ID="IsEmploymentStartDateNull" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsInvalidDateofHire" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsEmploymentDateValid" sfwMode="All" sfwStatus="Active" />
+    </group>
+    <group ID="EmploymentDetail">
+      <item ID="IsJobClassNull" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsOfficeListRequired" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsTermBeginRequired" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsEmploymentTypeNull" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsSeasonalRequired" sfwMode="All" sfwStatus="Active" />
+      <item ID="JobClassIsNotAppointedOfficialAndOfficialisSelected" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsEmploymentStatusNull" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsEmploymentStartDateNull" sfwStatus="Active" />
+      <item ID="IsEmploymentDateValid" sfwStatus="Active" />
+      <item ID="IsInvalidDateofHire" sfwStatus="Active" />
+      <item ID="IsEmployeeWorkLessThan12MonthsNull" sfwStatus="Active" />
+      <item ID="IsEmployeeHourlyNull" sfwStatus="Active" />
+      <item ID="IsFirstMonthForRetirementContributionNull" sfwMode="All" sfwStatus="Active" />
+    </group>
+    <group ID="Finish">
+      <item ID="IsAcknowledgementchecked" sfwMode="All" sfwStatus="Active" />
+    </group>
+    <group ID="RulesForMemberDetails">
+      <item ID="IsFirstNameNull" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsLastNameNull" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsSSNNull" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsGenderValueNull" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsDateOfBirthNull" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsMaritalStatusNull" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsSameEmploymentNotExists" sfwMode="New" sfwStatus="Active" />
+      <item ID="IsInvalidDOBForMember" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsSSNValid" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsAgeGreaterThanOrEqualToEighteen" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsInvalidEmail" sfwStatus="Active" />
+      <item ID="RULE CHECK ADDRESS LINE 1 IS NULL" sfwMode="All" sfwStatus="Active" />
+      <item ID="RULE CHECK CITY IS NULL" sfwMode="All" sfwStatus="Active" />
+      <item ID="RULE CHECK COUNTRY IS NOT US" sfwMode="All" sfwStatus="Active" />
+      <item ID="RULE CHECK STATE IS BLANK" sfwMode="All" sfwStatus="Active" />
+      <item ID="RULE CHECK ZIP CODE IS NOT NUMERIC" sfwMode="All" sfwStatus="Active" />
+      <item ID="RULE CHECK ZIP CODE IS NULL" sfwMode="All" sfwStatus="Active" />
+      <item ID="IscountryNull" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsSSNNotMatch" sfwStatus="Active" />
+      <item ID="IsCellAndHomePhoneNoNull" sfwStatus="Active" />
+      <item ID="Rule Check Address Valid" sfwStatus="Active" />
+      <item ID="Rule Check If Contact Phone Number is Valid" sfwStatus="Active" />
+      <item ID="IsDuplicatePerson" sfwStatus="Active" sfwMode="All" />
+      <item ID="IsInvalidSSN" sfwStatus="Active" sfwMode="All" />
+    </group>
+  </groupslist>
+  <updateablecdo />
+  <commonproperties>
+    <item ID="person_id" sfwObjectField="icdoWssMemberRecordRequest.person_id" />
+  </commonproperties>
+  <expressionfields />
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select a.*,b.org_id from sgt_wss_member_record_request a inner join SGT_WSS_PERSON_EMPLOYMENT b &#xD;&#xA; on a.MEMBER_RECORD_REQUEST_ID=b.MEMBER_RECORD_REQUEST_ID&#xD;&#xA;where (status_value='REVW' or status_value='RJTD') &#xD;&#xA;">
+      <parameters>
+        <parameter ID="@ORGID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LookupInternal" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select a.*,b.org_id from sgt_wss_member_record_request a inner join SGT_WSS_PERSON_EMPLOYMENT b &#xD;&#xA; on a.MEMBER_RECORD_REQUEST_ID=b.MEMBER_RECORD_REQUEST_ID">
+      <parameters />
+    </query>
+    <query ID="LookupEmployee" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT P.*, B.*,B.ORG_ID, ISNULL((SELECT TOP 1 REQ.EMPLOYMENT_CHANGE_REQUEST_ID FROM SGT_WSS_EMPLOYMENT_CHANGE_REQUEST REQ WITH(NOLOCK) WHERE REQ.PERSON_ID = P.PERSON_ID AND REQ.ORG_ID = B.ORG_ID AND REQ.STATUS_VALUE IN ('REVW', 'RJTD') AND REQ.CHANGE_TYPE_VALUE = 'TEEM'), 0) AS iintTermEmpID FROM SGT_PERSON P WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_PERSON_EMPLOYMENT B WITH(NOLOCK) ON B.PERSON_ID = P.PERSON_ID AND( B.END_DATE IS NULL OR B.END_DATE&gt;GETDATE())&#xD;&#xA;ORDER BY P.LAST_NAME, P.FIRST_NAME">
+      <parameters />
+    </query>
+    <query ID="LookupInternalSubQuery1" sfwQueryType="SubSelectQuery" sfwSql="select * from sgt_organization c WITH(NOLOCK)&#xD;&#xA;where c.org_id = b.org_id">
+      <parameters />
+    </query>
+    <query ID="LoadMemberRecordRequest" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select a.*,b.org_id, a.MODIFIED_BY AS istrRejectedByName from sgt_wss_member_record_request a inner join SGT_WSS_PERSON_EMPLOYMENT b &#xD;&#xA;on a.MEMBER_RECORD_REQUEST_ID=b.MEMBER_RECORD_REQUEST_ID&#xD;&#xA;where (status_value='REVW' or status_value='RJTD') &#xD;&#xA;and  b.org_id = @ORGID  &#xD;&#xA;AND DATEDIFF(d,a.MODIFIED_DATE,GETDATE()) &lt;=90">
+      <parameters>
+        <parameter ID="@ORGID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="subLookupEmployee" sfwQueryType="SubSelectQuery" sfwSql="  SELECT * FROM SGT_PERSON_EMPLOYMENT_DETAIL DET&#xD;&#xA; INNER JOIN SGT_PERSON_ACCOUNT_EMPLOYMENT_DETAIL PA ON PA.PERSON_EMPLOYMENT_DTL_ID=DET.PERSON_EMPLOYMENT_DTL_ID AND PA.ELECTION_VALUE = 'ENLD'&#xD;&#xA; INNER JOIN SGT_PERSON_ACCOUNT SPA ON PA.PERSON_ACCOUNT_ID=SPA.PERSON_ACCOUNT_ID&#xD;&#xA; WHERE DET.PERSON_EMPLOYMENT_ID=B.PERSON_EMPLOYMENT_ID ">
+      <parameters />
+    </query>
+    <query ID="LoadProcessInstance" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT SCI.* FROM SGW_BPM_CASE_INSTANCE SCI WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGW_BPM_REQUEST BR WITH(NOLOCK) ON SCI.REQUEST_ID = BR.REQUEST_ID AND BR.REQUEST_ID = @REQUEST_ID&#xD;&#xA;INNER JOIN SGW_BPM_PROCESS_INSTANCE SPI WITH(NOLOCK) ON SCI.CASE_INSTANCE_ID = SPI.CASE_INSTANCE_ID&#xD;&#xA;INNER JOIN SGW_BPM_PROCESS SP WITH(NOLOCK) ON SP.PROCESS_ID = SPI.PROCESS_ID&#xD;&#xA;INNER JOIN SGW_BPM_PROCESS_ID_DESC SPD WITH(NOLOCK) ON SP.DESCRIPTION = SPD.DESCRIPTION AND SP.PROCESS_ID = @PROCESS_ID">
+      <parameters>
+        <parameter ID="@REQUEST_ID" sfwDataType="int" />
+        <parameter ID="@PROCESS_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadPendingMemberRecordRequest" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_WSS_MEMBER_RECORD_REQUEST WITH(NOLOCK) WHERE STATUS_VALUE = 'PEND' AND ISNULL(BPM_INITIATED, 'N') = 'N'">
+      <parameters />
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="MemberRecordRequestId" sfwType="Column" sfwValue="member_record_request_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" />
+    <attribute ID="PersonId" sfwType="Column" sfwValue="person_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="FirstName" sfwType="Column" sfwValue="first_name" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="MiddleName" sfwType="Column" sfwValue="middle_name" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="LastName" sfwType="Column" sfwValue="last_name" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="NamePrefixDescription" sfwType="Description" sfwValue="name_prefix_description" />
+    <attribute ID="NamePrefixId" sfwType="Column" sfwValue="name_prefix_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="301" sfwDataType="int" />
+    <attribute ID="NamePrefixValue" sfwType="Column" sfwValue="name_prefix_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="NameSuffixDescription" sfwType="Description" sfwValue="name_suffix_description" />
+    <attribute ID="NameSuffixId" sfwType="Column" sfwValue="name_suffix_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="302" sfwDataType="int" />
+    <attribute ID="NameSuffixValue" sfwType="Column" sfwValue="name_suffix_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="DateOfBirth" sfwType="Column" sfwValue="date_of_birth" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="Ssn" sfwType="Column" sfwValue="ssn" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="9" />
+    <attribute ID="GenderDescription" sfwType="Description" sfwValue="gender_description" />
+    <attribute ID="GenderId" sfwType="Column" sfwValue="gender_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="300" sfwDataType="int" />
+    <attribute ID="GenderValue" sfwType="Column" sfwValue="gender_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="MaritalStatusDescription" sfwType="Description" sfwValue="marital_status_description" />
+    <attribute ID="MaritalStatusId" sfwType="Column" sfwValue="marital_status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="306" sfwDataType="int" />
+    <attribute ID="MaritalStatusValue" sfwType="Column" sfwValue="marital_status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="HomePhoneNo" sfwType="Column" sfwValue="home_phone_no" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="WorkPhoneNo" sfwType="Column" sfwValue="work_phone_no" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="CellPhoneNo" sfwType="Column" sfwValue="cell_phone_no" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="PostedInPerslinkBy" sfwType="Column" sfwValue="posted_in_perslink_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="PostedDate" sfwType="Column" sfwValue="posted_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="StatusDescription" sfwType="Description" sfwValue="status_description" />
+    <attribute ID="StatusId" sfwType="Column" sfwValue="status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="3508" sfwDataType="int" />
+    <attribute ID="StatusValue" sfwType="Column" sfwValue="status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="DateOfLastRegularPayCheck" sfwType="Column" sfwValue="date_of_last_regular_pay_check" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="RejectionReason" sfwType="Column" sfwValue="rejection_reason" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="2000" />
+    <attribute ID="ContactId" sfwType="Column" sfwValue="contact_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="PeoplesoftId" sfwType="Column" sfwValue="peoplesoft_id" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="MaritalStatusDate" sfwType="Column" sfwValue="marital_status_date" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="WorkPhoneExt" sfwType="Column" sfwValue="work_phone_ext" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="12" />
+    <attribute ID="PsInitiatedFlag" sfwType="Column" sfwValue="ps_initiated_flag" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwDefaultValue="N" sfwLength="1" />
+    <attribute ID="objPerson" sfwType="Object" sfwEntity="entPerson" sfwValue="ibusPerson" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrSuppressPersonDuplicateValidation" sfwValue="istrSuppressPersonDuplicateValidation" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AddrDescription" sfwValue="icdoWssPersonAddress.addr_description" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrSuppressUSPSValidation" sfwValue="istrSuppressUSPSValidation" />
+    <attribute sfwDataType="int" sfwType="Property" ID="ContactPersonId" sfwValue="icdoWssPersonContact.contact_person_id" />
+    <attribute ID="objContactPerson" sfwType="Object" sfwEntity="entPerson" sfwValue="ibusContactPerson" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="ContactDateOfBirth" sfwValue="icdoWssPersonContact.contact_date_of_birth" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ContactGenderValue" sfwValue="icdoWssPersonContact.contact_gender_value" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ContactSsn" sfwValue="icdoWssPersonContact.contact_ssn" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrSuppressContactPersonDuplicateValidation" sfwValue="istrSuppressContactPersonDuplicateValidation" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ContactGenderDescription" sfwValue="icdoWssPersonContact.contact_gender_description" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ContactName" sfwValue="icdoWssPersonContact.contact_name" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AddressLine1" sfwValue="icdoWssPersonContact.address_line_1" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AddressLine2" sfwValue="icdoWssPersonContact.address_line_2" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AddressCity" sfwValue="icdoWssPersonContact.address_city" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AddressCountryDescription" sfwValue="icdoWssPersonContact.address_country_description" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AddressStateDescription" sfwValue="icdoWssPersonContact.address_state_description" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AddressStateValue" sfwValue="icdoWssPersonContact.address_state_value" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AddressZipCode" sfwValue="icdoWssPersonContact.address_zip_code" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AddressZip4Code" sfwValue="icdoWssPersonContact.address_zip_4_code" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ForeignPostalCode" sfwValue="icdoWssPersonContact.foreign_postal_code" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ForeignProvince" sfwValue="icdoWssPersonContact.foreign_province" />
+    <attribute sfwDataType="string" sfwType="Property" ID="RelationshipDescription" sfwValue="icdoWssPersonContact.relationship_description" />
+    <attribute sfwDataType="string" sfwType="Property" ID="EmailAddress" sfwValue="icdoWssPersonContact.email_address" />
+    <attribute ID="objOrganization" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusOrganization" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="StartDate" sfwValue="icdoWssPersonEmployment.start_date" />
+    <attribute sfwDataType="string" sfwType="Property" ID="PsEmplRecordNumber" sfwValue="icdoWssPersonEmployment.ps_empl_record_number" />
+    <attribute sfwDataType="string" sfwType="Property" ID="HourlyDescription" sfwValue="icdoWssPersonEmploymentDetail.hourly_description" />
+    <attribute sfwDataType="string" sfwType="Property" ID="JobClassDescription" sfwValue="icdoWssPersonEmploymentDetail.job_class_description" />
+    <attribute sfwDataType="string" sfwType="Property" ID="OfficialListDescription" sfwValue="icdoWssPersonEmploymentDetail.official_list_description" />
+    <attribute sfwDataType="string" sfwType="Property" ID="SeasonalDescription" sfwValue="icdoWssPersonEmploymentDetail.seasonal_description" />
+    <attribute sfwDataType="string" sfwType="Property" ID="TypeDescription" sfwValue="icdoWssPersonEmploymentDetail.type_description" />
+    <attribute sfwDataType="string" sfwType="Property" ID="EmploymentStatusDescription" sfwValue="icdoWssPersonEmploymentDetail.employment_status_description" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="TermBeginDate" sfwValue="icdoWssPersonEmploymentDetail.term_begin_date" />
+    <attribute sfwDataType="string" sfwType="Property" ID="RequestedByContactId" sfwValue="icdoWssMemberRecordRequest.Requested_By_Contact_id" />
+    <attribute sfwDataType="string" sfwType="Property" ID="RequestedByContactName" sfwValue="icdoWssMemberRecordRequest.Requested_By_Contact_Name" />
+    <attribute sfwDataType="string" sfwType="Property" ID="RequestedByContactPhoneNo" sfwValue="icdoWssMemberRecordRequest.Requested_By_Contact_Phone_No" />
+    <attribute sfwDataType="string" sfwType="Property" ID="RequestedByContactEmail" sfwValue="icdoWssMemberRecordRequest.Requested_By_Contact_Email" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrLastFourDigitsSSN" sfwValue="icdoWssMemberRecordRequest.istrLastFourDigitsSSN" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ReenterSSN" sfwValue="icdoWssMemberRecordRequest.ReenterSSN" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AddrLine1" sfwValue="icdoWssPersonAddress.addr_line_1" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AddrLine2" sfwValue="icdoWssPersonAddress.addr_line_2" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AddrCity" sfwValue="icdoWssPersonAddress.addr_city" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AddrStateValue" sfwValue="icdoWssPersonAddress.addr_state_value" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AddrZipCode" sfwValue="icdoWssPersonAddress.addr_zip_code" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AddrZip4Code" sfwValue="icdoWssPersonAddress.addr_zip_4_code" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrSuppressWarning" sfwValue="istrSuppressWarning" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AddrCountryValue" sfwValue="icdoWssPersonAddress.addr_country_value" />
+    <attribute sfwDataType="int" sfwType="Property" ID="OrgId" sfwValue="icdoWssMemberRecordRequest.org_id" />
+    <attribute sfwDataType="string" sfwType="Property" ID="FullName" sfwValue="icdoWssMemberRecordRequest.FullName" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ContactFirstName" sfwValue="icdoWssPersonContact.contact_first_name" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ContactMiddleName" sfwValue="icdoWssPersonContact.contact_middle_name" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ContactLastName" sfwValue="icdoWssPersonContact.contact_last_name" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ReenterContactSSN" sfwValue="icdoWssPersonContact.ReenterContactSSN" />
+    <attribute sfwDataType="string" sfwType="Property" ID="JobClassValue" sfwValue="icdoWssPersonEmploymentDetail.job_class_value" />
+    <attribute sfwDataType="string" sfwType="Property" ID="TypeValue" sfwValue="icdoWssPersonEmploymentDetail.type_value" />
+    <attribute sfwDataType="string" sfwType="Property" ID="EmploymentStatusValue" sfwValue="icdoWssPersonEmploymentDetail.employment_status_value" />
+    <attribute sfwDataType="string" sfwType="Property" ID="HourlyValue" sfwValue="icdoWssPersonEmploymentDetail.hourly_value" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrMemberWorkLessThan12MonthsValue" sfwValue="icdoWssPersonEmploymentDetail.istrMemberWorkLessThan12MonthsValue" />
+    <attribute sfwDataType="string" sfwType="Property" ID="SeasonalValue" sfwValue="icdoWssPersonEmploymentDetail.seasonal_value" />
+    <attribute sfwDataType="string" sfwType="Property" ID="OfficialListValue" sfwValue="icdoWssPersonEmploymentDetail.official_list_value" />
+    <attribute sfwDataType="string" sfwType="Property" ID="FullName1" sfwValue="icdoWssPersonContact.FullName" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrMemberWorkLessThan12MonthsDescription" sfwValue="icdoWssPersonEmploymentDetail.istrMemberWorkLessThan12MonthsDescription" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrIsTermsAndConditionsAgreed" sfwValue="istrIsTermsAndConditionsAgreed" />
+    <attribute ID="same_as_member_address" sfwDataType="string" sfwPrivate="False" sfwValue="icdoWssPersonContact.same_as_member_address" sfwType="Property" />
+    <attribute ID="lstrRejectedByName" sfwDataType="string" sfwPrivate="False" sfwValue="istrRejectedByName" sfwType="Property" />
+    <attribute ID="lstrRejectedDate" sfwDataType="datetime" sfwPrivate="False" sfwValue="idtmRejectedDate" sfwType="Property" />
+    <attribute ID="lstrRejectionReason" sfwDataType="string" sfwPrivate="False" sfwValue="istrRejectionReason" sfwType="Property" />
+    <attribute sfwValue="bpm_initiated" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="1" sfwIsNull="True" ID="BpmInitiated" sfwCaption="Bpm Initiated" />
+    <attribute sfwValue="first_month_for_retirement_contribution" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="datetime" sfwDBDataType="datetime" sfwIsNull="True" ID="FirstMonthForRetirementContribution" sfwCaption="First Month For Retirement Contribution" />
+    <attribute ID="lstPersonAccountEmploymentDetail" sfwType="Collection" sfwValue="iclbPersonAccountEmploymentDetail" sfwEntity="entWssMemberRecordRequest" sfwPrivate="False" />
+    <attribute ID="RetrStatus" sfwDataType="string" sfwPrivate="False" sfwValue="icdoWssMemberRecordRequest.istrRetrStatus" sfwType="Property" />
+    <attribute ID="EapStatus" sfwDataType="string" sfwPrivate="False" sfwValue="icdoWssMemberRecordRequest.istrEapStatus" sfwType="Property" />
+    <attribute ID="LifeStatus" sfwDataType="string" sfwPrivate="False" sfwValue="icdoWssMemberRecordRequest.istrLifeStatus" sfwType="Property" />
+  </attributes>
+  <objectmethods>
+    <method ID="Post_click" sfwReturnType="ArrayList" />
+    <method ID="Reject_click" sfwReturnType="ArrayList" />
+    <method ID="Ignore_click" sfwReturnType="ArrayList" />
+    <method ID="LoadJobClassByEmployerCategory" sfwReturnType="Collection" sfwObjectID="cdoCodeValue" sfwEntity="entPostRetirementDeathApplication" />
+    <method ID="LoadRetirementParticipationStatusValueDropdown" sfwReturnType="Collection" sfwEntity="entCodeValue" />
+    <method ID="btnCallDuplicatePersonScreen_Click" sfwReturnType="ArrayList">
+      <parameters />
+    </method>
+  </objectmethods>
+  <constraint />
+  <methods />
+  <lifecycle />
+  <ExtraFields />
+</entity>

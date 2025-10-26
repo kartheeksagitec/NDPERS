@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entPsEmployment" sfwMainCDO="icdoPsEmployment" sfwType="BusinessRule" sfwActive="True" sfwStatus="Review" sfwObjectID="busPsEmployment" sfwTableName="sgt_ps_employment" sfwView="False">
+  <queries>
+    <query ID="GetEmploymentCount" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_PS_EMPLOYMENT where SSN =@SSN">
+      <parameters>
+        <parameter ID="@SSN" />
+      </parameters>
+    </query>
+    <query ID="GetPsEmploymentBySSN" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT TOP 1 [PS_EMPLOYMENT_ID]&#xD;&#xA;      ,[SSN]&#xD;&#xA;      ,[ORG_CODE]&#xD;&#xA;      ,[PS_EMPL_RECORD_NUMBER]&#xD;&#xA;      ,[EMPL_START_DATE]&#xD;&#xA;      ,[EMPL_END_DATE]&#xD;&#xA;      ,[JOB_TYPE_VALUE]&#xD;&#xA;      ,[JOB_CLASS_VALUE]&#xD;&#xA;      ,[EMPL_STATUS_VALUE]&#xD;&#xA;      ,[HOURLY_VALUE]&#xD;&#xA;      ,[LOA_START_DATE]&#xD;&#xA;      ,[LOA_DATE_OF_RETURN]&#xD;&#xA;      ,[DATE_OF_LAST_REGULAR_PAYCHECK]&#xD;&#xA;      ,[LAST_MONTH_ON_EMPLOYER_BILLING]&#xD;&#xA;      ,[LAST_RETIREMENT_TRANSMITTAL_OF_DEDUCTION]&#xD;&#xA;      ,[TERM_BEGIN_DATE]&#xD;&#xA;      ,[PROCESSED_FLAG]&#xD;&#xA;      ,[CREATED_BY]&#xD;&#xA;      ,[CREATED_DATE]&#xD;&#xA;      ,[MODIFIED_BY]&#xD;&#xA;      ,[MODIFIED_DATE]&#xD;&#xA;      ,[MONTHLY_SALARY]&#xD;&#xA;      ,CASE WHEN LEN([OFFICIAL_LIST_VALUE]) &gt; 0 THEN [OFFICIAL_LIST_VALUE] ELSE NULL END AS [OFFICIAL_LIST_VALUE]&#xD;&#xA;      ,[PEOPLESOFT_ID]&#xD;&#xA;      ,[FIRST_NAME]&#xD;&#xA;      ,[LAST_NAME] &#xD;&#xA;FROM SGT_PS_EMPLOYMENT where SSN =@SSN AND PROCESSED_FLAG = 'N' ORDER BY PS_EMPLOYMENT_ID">
+      <parameters>
+        <parameter ID="@SSN" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="GetTop10PsEmployment" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql=" SELECT * from SGT_PS_EMPLOYMENT where PS_EMPLOYMENT_ID not in  &#xD;&#xA; (&#xD;&#xA; 35,&#xD;&#xA;36,&#xD;&#xA;39,&#xD;&#xA;43,&#xD;&#xA;47,&#xD;&#xA;48,&#xD;&#xA;50,&#xD;&#xA;70,&#xD;&#xA;71,&#xD;&#xA;72,&#xD;&#xA;73,&#xD;&#xA;74,&#xD;&#xA;75&#xD;&#xA;)&#xD;&#xA;">
+      <parameters />
+    </query>
+    <query ID="GetMemberRecordRequestBySSN" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_WSS_MEMBER_RECORD_REQUEST WHERE SSN = @SSN AND STATUS_VALUE = 'REVW'">
+      <parameters>
+        <parameter ID="@SSN" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="GetEmploymentChangeRequest" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql=" SELECT * FROM SGT_WSS_EMPLOYMENT_CHANGE_REQUEST WHERE PERSON_ID = @PERSON_ID AND STATUS_VALUE = 'REVW'&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetUnprocessedPsEmployment" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT [PS_EMPLOYMENT_ID]&#xD;&#xA;      ,[SSN]&#xD;&#xA;      ,[ORG_CODE]&#xD;&#xA;      ,[PS_EMPL_RECORD_NUMBER]&#xD;&#xA;      ,[EMPL_START_DATE]&#xD;&#xA;      ,[EMPL_END_DATE]&#xD;&#xA;      ,[JOB_TYPE_VALUE]&#xD;&#xA;      ,[JOB_CLASS_VALUE]&#xD;&#xA;      ,[EMPL_STATUS_VALUE]&#xD;&#xA;      ,[HOURLY_VALUE]&#xD;&#xA;      ,[LOA_START_DATE]&#xD;&#xA;      ,[LOA_DATE_OF_RETURN]&#xD;&#xA;      ,[DATE_OF_LAST_REGULAR_PAYCHECK]&#xD;&#xA;      ,[LAST_MONTH_ON_EMPLOYER_BILLING]&#xD;&#xA;      ,[LAST_RETIREMENT_TRANSMITTAL_OF_DEDUCTION]&#xD;&#xA;      ,[TERM_BEGIN_DATE]&#xD;&#xA;      ,[PROCESSED_FLAG]&#xD;&#xA;      ,[CREATED_BY]&#xD;&#xA;      ,[CREATED_DATE]&#xD;&#xA;      ,[MODIFIED_BY]&#xD;&#xA;      ,[MODIFIED_DATE]&#xD;&#xA;      ,[MONTHLY_SALARY]&#xD;&#xA;      ,CASE WHEN LEN([OFFICIAL_LIST_VALUE]) &gt; 0 THEN [OFFICIAL_LIST_VALUE] ELSE NULL END AS [OFFICIAL_LIST_VALUE]&#xD;&#xA;      ,[PEOPLESOFT_ID]&#xD;&#xA;      ,[FIRST_NAME]&#xD;&#xA;      ,[LAST_NAME] &#xD;&#xA;&#x9;  FROM &#xD;&#xA;--(SELECT  ROW_NUMBER() OVER (PARTITION BY SSN ORDER BY PS_EMPLOYMENT_ID) AS ROWNUM,* FROM SGT_PS_EMPLOYMENT WHERE PROCESSED_FLAG = 'N'&#xD;&#xA;--AND EMPL_START_DATE &lt;= DATEADD(DAY, 30, GETDATE())  AND (EMPL_END_DATE IS NULL OR EMPL_END_DATE &lt;= DATEADD(DAY, 30, GETDATE()))&#xD;&#xA;--) TEMP&#xD;&#xA;--WHERE TEMP.ROWNUM = 1&#xD;&#xA;&#x9;  SGT_PS_EMPLOYMENT  WHERE PROCESSED_FLAG = 'N'&#xD;&#xA;&#x9;  ORDER BY PS_EMPLOYMENT_ID, SSN">
+      <parameters />
+    </query>
+    <query ID="GetEmploymentChangeRequestLOA" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_WSS_EMPLOYMENT_CHANGE_REQUEST EMPREQ&#xD;&#xA;INNER JOIN SGT_PERSON PER ON PER.PERSON_ID = EMPREQ.PERSON_ID&#xD;&#xA;INNER JOIN SGT_ORGANIZATION ORG ON ORG.ORG_ID = EMPREQ.ORG_ID&#xD;&#xA;WHERE PER.SSN = @SSN&#xD;&#xA;AND EMPREQ.LOA_START_DATE IS NOT NULL&#xD;&#xA;AND ORG_CODE = @ORG_CODE&#xD;&#xA;AND EMPREQ.STATUS_VALUE = 'REVW'">
+      <parameters>
+        <parameter ID="@SSN" sfwDataType="string" />
+        <parameter ID="@ORG_CODE" sfwDataType="string" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="PsEmploymentId" sfwType="Column" sfwValue="ps_employment_id" sfwIsNull="False" sfwKeyNo="1" sfwIsIdentity="True" sfwDataType="int" />
+    <attribute ID="Ssn" sfwType="Column" sfwValue="ssn" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="9" />
+    <attribute ID="OrgCode" sfwType="Column" sfwValue="org_code" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="6" />
+    <attribute ID="PsEmplRecordNumber" sfwType="Column" sfwValue="ps_empl_record_number" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="2" />
+    <attribute ID="EmplStartDate" sfwType="Column" sfwValue="empl_start_date" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="EmplEndDate" sfwType="Column" sfwValue="empl_end_date" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="JobTypeValue" sfwType="Column" sfwValue="job_type_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="JobClassValue" sfwType="Column" sfwValue="job_class_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="EmplStatusValue" sfwType="Column" sfwValue="empl_status_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="HourlyValue" sfwType="Column" sfwValue="hourly_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="LoaStartDate" sfwType="Column" sfwValue="loa_start_date" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="LoaDateOfReturn" sfwType="Column" sfwValue="loa_date_of_return" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="DateOfLastRegularPaycheck" sfwType="Column" sfwValue="date_of_last_regular_paycheck" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="LastMonthOnEmployerBilling" sfwType="Column" sfwValue="last_month_on_employer_billing" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="LastRetirementTransmittalOfDeduction" sfwType="Column" sfwValue="last_retirement_transmittal_of_deduction" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="TermBeginDate" sfwType="Column" sfwValue="term_begin_date" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="ProcessedFlag" sfwType="Column" sfwValue="processed_flag" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="1" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="MonthlySalary" sfwType="Column" sfwValue="monthly_salary" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="OfficialListValue" sfwType="Column" sfwValue="official_list_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="PeoplesoftId" sfwType="Column" sfwValue="peoplesoft_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="7" />
+    <attribute ID="FirstName" sfwType="Column" sfwValue="first_name" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="LastName" sfwType="Column" sfwValue="last_name" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="Error" sfwValue="error" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="1" sfwIsNull="True" sfwCaption="Error" sfwDefaultValue="N" />
+  </attributes>
+</entity>

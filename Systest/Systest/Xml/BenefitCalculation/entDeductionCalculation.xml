@@ -1,0 +1,81 @@
+﻿<entity ID="entDeductionCalculation" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoBenefitCalculation" sfwObjectID="busDeductionCalculation" sfwParentEntity="entExtendBase">
+  <rules>
+    <rule ID="IsAge65andActiveinOtherCoverages" sfwMessageId="7089" sfwExpression="!(this.IsRetireeAttainedAge65() == False) &amp;&amp; &#xA;(this.IsActiveOnlyInBasicCoverage() == False)" sfwObjectBased="True" />
+    <rule ID="IsCalculationTypeEstimate" sfwExpression="(this.icdoBenefitCalculation.calculation_type_value == &quot;ESTM&quot; ||&#xA;this.icdoBenefitCalculation.calculation_type_value == &quot;ESTS&quot;)" sfwObjectBased="True" />
+    <rule ID="IsCalculationTypeFinal" sfwExpression="!(this.icdoBenefitCalculation.calculation_type_value == &quot;ESTM&quot; ||&#xA;this.icdoBenefitCalculation.calculation_type_value == &quot;ESTS&quot;)" sfwObjectBased="True" />
+    <rule ID="IsCoverageAmountValidForB" sfwMessageId="5101" sfwExpression="(this.IsValidCoverageAmount() == &quot;B&quot;)" sfwObjectBased="True" />
+    <rule ID="IsCoverageAmountValidForDS" sfwMessageId="5102" sfwExpression="(this.IsValidCoverageAmount() == &quot;DS&quot;)" sfwObjectBased="True" />
+    <rule ID="IsCoverageAmountValidForS" sfwMessageId="5103" sfwExpression="(this.IsValidCoverageAmount() == &quot;S&quot;)" sfwObjectBased="True" />
+    <rule ID="IsCoverageAmountValidForSS" sfwMessageId="5104" sfwExpression="(this.IsValidCoverageAmount() == &quot;SS&quot;)" sfwObjectBased="True" />
+    <rule ID="IsRetireeAttainedAge65" sfwExpression="(this.IsRetireeAttainedAge65() == False)" sfwObjectBased="True" />
+    <rule ID="IsValidDeductionForDeath" sfwMessageId="5107" sfwExpression="(this.IsValidDeductionForDeath() == False)" sfwObjectBased="True" />
+    <rule ID="IsValidDeductionForRetirement" sfwMessageId="5106" sfwExpression="(this.IsValidDeductionForRetirement() == False)" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="IsCalculationTypeEstimate" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsCalculationTypeFinal" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="IsAge65andActiveinOtherCoverages" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsCoverageAmountValidForB" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsCoverageAmountValidForDS" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsCoverageAmountValidForS" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsCoverageAmountValidForSS" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsValidDeductionForRetirement" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsValidDeductionForDeath" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <updateablecdo />
+  <attributes>
+    <attribute sfwDataType="int" sfwType="Property" ID="BenefitCalculationId" sfwValue="icdoBenefitCalculation.benefit_calculation_id" />
+    <attribute ID="objBenefitDeductionSummary" sfwType="Object" sfwEntity="entBenefitDeductionSummary" sfwValue="ibusBenefitDeductionSummary" />
+    <attribute ID="objBenefitCalculationOptions" sfwType="Object" sfwEntity="entBenefitCalculationOptions" sfwValue="ibusBenefitCalculationOptions" />
+    <attribute sfwDataType="int" sfwType="Property" ID="PersonId" sfwValue="icdoBenefitCalculation.person_id" />
+    <attribute ID="objPerson" sfwType="Object" sfwEntity="entPerson" sfwValue="ibusPerson" />
+    <attribute sfwDataType="string" sfwType="Property" ID="StatusDescription" sfwValue="icdoBenefitCalculation.status_description" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ActionStatusDescription" sfwValue="icdoBenefitCalculation.action_status_description" />
+    <attribute ID="objPlan" sfwType="Object" sfwEntity="entPlan" sfwValue="ibusPlan" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="CreatedDate" sfwValue="icdoBenefitCalculation.created_date" />
+    <attribute sfwDataType="string" sfwType="Property" ID="CalculationTypeDescription" sfwValue="icdoBenefitCalculation.calculation_type_description" />
+    <attribute sfwDataType="string" sfwType="Property" ID="BenefitAccountTypeDescription" sfwValue="icdoBenefitCalculation.benefit_account_type_description" />
+    <attribute ID="objBenefitHealthDeduction" sfwType="Object" sfwEntity="entBenefitGhdvDeduction" sfwValue="ibusBenefitHealthDeduction" />
+    <attribute ID="objBenefitDentalDeduction" sfwType="Object" sfwEntity="entBenefitGhdvDeduction" sfwValue="ibusBenefitDentalDeduction" />
+    <attribute ID="objBenefitVisionDeduction" sfwType="Object" sfwEntity="entBenefitGhdvDeduction" sfwValue="ibusBenefitVisionDeduction" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrLifeInsuranceTypeValue" sfwValue="istrLifeInsuranceTypeValue" />
+    <attribute sfwType="Collection" sfwEntity="entBenefitLifeDeduction" ID="lstBenefitLifeDeduction" sfwValue="iclbBenefitLifeDeduction" />
+    <attribute ID="objBenefitPayeeFedTaxWithholding" sfwType="Object" sfwEntity="entBenefitPayeeTaxWithholding" sfwValue="ibusBenefitPayeeFedTaxWithholding" />
+    <attribute ID="objBenefitPayeeStateTaxWithholding" sfwType="Object" sfwEntity="entBenefitPayeeTaxWithholding" sfwValue="ibusBenefitPayeeStateTaxWithholding" />
+    <attribute sfwDataType="string" sfwType="Property" ID="CreatedBy" sfwValue="icdoBenefitCalculation.created_by" />
+    <attribute sfwDataType="int" sfwType="Property" ID="UpdateSeq" sfwValue="icdoBenefitCalculation.update_seq" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ModifiedBy" sfwValue="icdoBenefitCalculation.modified_by" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="ModifiedDate" sfwValue="icdoBenefitCalculation.modified_date" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="TerminationDate" sfwValue="icdoBenefitCalculation.termination_date" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="RetirementDate" sfwValue="icdoBenefitCalculation.retirement_date" />
+    <attribute sfwDataType="string" sfwType="Property" ID="BenefitAccountSubTypeDescription" sfwValue="icdoBenefitCalculation.benefit_account_sub_type_description" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecTotalDeductions" sfwValue="idecTotalDeductions" />
+    <attribute ID="objBenefitCalculation" sfwType="Object" sfwEntity="entBenefitCalculation" sfwValue="ibusBenefitCalculation" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IintCheckMiscAmtAvailable" sfwValue="iintCheckMiscAmtAvailable" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="TotalMemberAccountBalance" sfwValue="icdoBenefitCalculation.total_member_account_balance" />
+    <attribute sfwDataType="int" sfwType="Property" ID="PlanId" sfwValue="icdoBenefitCalculation.plan_id" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrRHICOptionName" sfwValue="istrRHICOptionName" />
+    <attribute ID="lstCurrentCoverageLifeOptions" sfwType="Collection" sfwValue="iclbCurrentCoverageLifeOptions" sfwEntity="entPersonAccountLifeOption" sfwPrivate="False" />
+  </attributes>
+  <objectmethods>
+    <method ID="btnRefreshCoverageCodeList_Click" sfwReturnType="ArrayList" />
+    <method ID="LoadHealthInsuranceTypeByPlan" sfwReturnType="Collection" sfwObjectID="cdoCodeValue" sfwEntity="entPostRetirementDeathApplication" />
+    <method ID="LoadCoverageCodeByFilter" sfwReturnType="Collection" sfwObjectID="cdoOrgPlanGroupHealthMedicarePartDCoverageRef" sfwEntity="entOrgPlanGroupHealthMedicarePartDCoverageRef" />
+    <method ID="LoadLevelOfCoverageDental" sfwReturnType="Collection" sfwObjectID="cdoCodeValue" sfwEntity="entPostRetirementDeathApplication" />
+    <method ID="LoadLevelOfCoverageVision" sfwReturnType="Collection" sfwObjectID="cdoCodeValue" sfwEntity="entPostRetirementDeathApplication" />
+    <method ID="LoadTaxOptionForFedTax" sfwReturnType="Collection" sfwObjectID="cdoCodeValue" sfwEntity="entPostRetirementDeathApplication" />
+    <method ID="LoadTaxOptionForStateTax" sfwReturnType="Collection" sfwObjectID="cdoCodeValue" sfwEntity="entPostRetirementDeathApplication" />
+  </objectmethods>
+  <queries />
+  <constraint />
+  <groupslist />
+  <methods />
+  <lifecycle />
+  <ExtraFields />
+</entity>

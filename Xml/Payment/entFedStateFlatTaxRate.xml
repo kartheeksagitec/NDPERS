@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entFedStateFlatTaxRate" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoFedStateFlatTaxRate" sfwObjectID="busFedStateFlatTaxRate" sfwTableName="sgt_fed_state_flat_tax_rate" sfwView="False">
+  <rules>
+    <rule ID="IsAccountRelationshipNull" sfwMessageId="5535" sfwExpression="(string.IsNullOrEmpty(this.icdoFedStateFlatTaxRate.account_relation_value))" sfwObjectBased="True" />
+    <rule ID="IsBenefitSubTypeNull" sfwMessageId="5534" sfwExpression="(string.IsNullOrEmpty(this.icdoFedStateFlatTaxRate.benefit_sub_type_value))" sfwObjectBased="True" />
+    <rule ID="IsBenefitTypeNull" sfwMessageId="7006" sfwExpression="(string.IsNullOrEmpty(this.icdoFedStateFlatTaxRate.benefit_account_type_value))" sfwObjectBased="True" />
+    <rule ID="IsEffectiveDateNull" sfwMessageId="7067" sfwExpression="(this.icdoFedStateFlatTaxRate.effective_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsFedStateTaxPercentageGreathan100" sfwMessageId="5570" sfwExpression="(this.icdoFedStateFlatTaxRate.flat_tax_percentage &gt;= 100)" sfwObjectBased="True" />
+    <rule ID="IsFlatTaxPercetageNull" sfwMessageId="5536" sfwExpression="(this.icdoFedStateFlatTaxRate.flat_tax_percentage == 0.00)" sfwObjectBased="True" />
+    <rule ID="IsTaxIdentifierNull" sfwMessageId="5537" sfwExpression="(string.IsNullOrEmpty(this.icdoFedStateFlatTaxRate.tax_identifier_value))" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror>
+    <item ID="IsBenefitTypeNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsBenefitSubTypeNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAccountRelationshipNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEffectiveDateNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsTaxIdentifierNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsFlatTaxPercetageNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsFedStateTaxPercentageGreathan100" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <updateablecdo />
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select * from SGT_FED_STATE_FLAT_TAX_RATE">
+      <parameters />
+    </query>
+    <query ID="GetLatestRateForEffectiveDate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select top 1 * from SGT_FED_STATE_FLAT_TAX_RATE&#xD;&#xA;where&#xD;&#xA;BENEFIT_ACCOUNT_TYPE_VALUE =@benefittype and &#xD;&#xA;BENEFIT_SUB_TYPE_VALUE=@benefitsubtype and &#xD;&#xA;ACCOUNT_RELATION_VALUE=@accountrelation &#xD;&#xA;and tax_identifier_value=@taxtype and PLSO_FLAG=@plsoflag&#xD;&#xA;and effective_date=(Select max(effective_date) from SGT_FED_STATE_FLAT_TAX_RATE&#xD;&#xA;where BENEFIT_ACCOUNT_TYPE_VALUE =@benefittype and &#xD;&#xA;BENEFIT_SUB_TYPE_VALUE=@benefitsubtype and&#xD;&#xA;ACCOUNT_RELATION_VALUE=@accountrelation and PLSO_FLAG=@plsoflag&#xD;&#xA;and tax_identifier_value=@taxtype and effective_date &lt;=@paymentDate)">
+      <parameters>
+        <parameter ID="@benefittype" sfwDataType="string" />
+        <parameter ID="@benefitsubtype" sfwDataType="string" />
+        <parameter ID="@accountrelation" sfwDataType="string" />
+        <parameter ID="@taxtype" sfwDataType="string" />
+        <parameter ID="@paymentDate" sfwDataType="DateTime" />
+        <parameter ID="@plsoflag" sfwDataType="string" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="FedStateFlatTaxId" sfwType="Column" sfwValue="fed_state_flat_tax_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="TaxIdentifierDescription" sfwType="Description" sfwValue="tax_identifier_description" />
+    <attribute ID="TaxIdentifierId" sfwType="Column" sfwValue="tax_identifier_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="2211" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="TaxIdentifierValue" sfwType="Column" sfwValue="tax_identifier_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="EffectiveDate" sfwType="Column" sfwValue="effective_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="BenefitAccountTypeDescription" sfwType="Description" sfwValue="benefit_account_type_description" />
+    <attribute ID="BenefitAccountTypeId" sfwType="Column" sfwValue="benefit_account_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="1904" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="BenefitAccountTypeValue" sfwType="Column" sfwValue="benefit_account_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="BenefitSubTypeDescription" sfwType="Description" sfwValue="benefit_sub_type_description" />
+    <attribute ID="BenefitSubTypeId" sfwType="Column" sfwValue="benefit_sub_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="2201" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="BenefitSubTypeValue" sfwType="Column" sfwValue="benefit_sub_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="AccountRelationDescription" sfwType="Description" sfwValue="account_relation_description" />
+    <attribute ID="AccountRelationId" sfwType="Column" sfwValue="account_relation_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="2225" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AccountRelationValue" sfwType="Column" sfwValue="account_relation_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="PlsoFlag" sfwType="Column" sfwValue="plso_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="FlatTaxPercentage" sfwType="Column" sfwValue="flat_tax_percentage" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="FamilyRelationDescription" sfwType="Description" sfwValue="family_relation_description" />
+    <attribute ID="FamilyRelationId" sfwType="Column" sfwValue="family_relation_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="321" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="FamilyRelationValue" sfwType="Column" sfwValue="family_relation_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="SuplCheckFlag" sfwType="Column" sfwValue="supl_check_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute sfwValue="is_rmd" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="char" sfwLength="1" sfwIsNull="True" ID="IsRmd" sfwCaption="Is Rmd" />
+    <attribute sfwValue="min_tax_percentage" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,2" sfwIsNull="True" ID="MinTaxPercentage" sfwCaption="Min Tax Percentage" />
+    <attribute sfwValue="max_tax_percentage" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,2" sfwIsNull="True" ID="MaxTaxPercentage" sfwCaption="Max Tax Percentage" />
+    <attribute sfwValue="tax_ref" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="4" sfwIsNull="True" ID="TaxRef" sfwCaption="Tax Ref" />
+  </attributes>
+</entity>

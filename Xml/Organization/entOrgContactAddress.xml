@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entOrgContactAddress" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvOrganization" sfwType="BusinessRule" sfwMainCDO="icdoOrgContactAddress" sfwObjectID="busOrgContactAddress" sfwTableName="sgt_org_contact_address" sfwView="False">
+  <rules>
+    <rule ID="Check Address is Valid" sfwMessageId="127" sfwExpression="(string.IsNullOrEmpty(this.istrSuppressWarning) || this.istrSuppressWarning == &quot;N&quot;) &amp;&amp; &#xA;!(this.icdoOrgContactAddress.country_value != &quot;0001&quot;) &amp;&amp; &#xA;(this.address_validate_flag == &quot;N&quot;)" sfwObjectBased="True" />
+    <rule ID="CHECK ADDRESS LINE 1 IS NULL" sfwMessageId="111" sfwExpression="(string.IsNullOrEmpty(this.icdoOrgContactAddress.addr_line_1))" sfwObjectBased="True" />
+    <rule ID="CHECK CITY IS NULL" sfwMessageId="112" sfwExpression="(string.IsNullOrEmpty(this.icdoOrgContactAddress.city)) &amp;&amp; &#xA;!(this.icdoOrgContactAddress.country_value != &quot;0001&quot;)" sfwObjectBased="True" />
+    <rule ID="CHECK COUNTRY IS NOT US" sfwMessageId="115" sfwExpression="((string.IsNullOrEmpty(this.icdoOrgContactAddress.foreign_province)) || &#xA;(string.IsNullOrEmpty(this.icdoOrgContactAddress.foreign_postal_code))) &amp;&amp; &#xA;(this.icdoOrgContactAddress.country_value != &quot;0001&quot;) &amp;&amp; &#xA;!(string.IsNullOrEmpty(this.icdoOrgContactAddress.country_value))" sfwObjectBased="True" />
+    <rule ID="CHECK STATE IS NULL" sfwMessageId="113" sfwExpression="(string.IsNullOrEmpty(this.icdoOrgContactAddress.state_value)) &amp;&amp; &#xA;!(this.icdoOrgContactAddress.country_value != &quot;0001&quot;)" sfwObjectBased="True" />
+    <rule ID="CHECK STATUS IS NULL" sfwMessageId="4013" sfwExpression="(string.IsNullOrEmpty(this.icdoOrgContactAddress.status_value))" sfwObjectBased="True" />
+    <rule ID="CHECK ZIP CODE 4 IS NOT NUMERIC" sfwMessageId="4039" sfwExpression="(!RFunc.IsNumeric(this.icdoOrgContactAddress.zip_4_code))" sfwObjectBased="True" />
+    <rule ID="CHECK ZIP CODE IS NOT NUMERIC" sfwMessageId="118" sfwExpression="(!RFunc.IsNumeric(this.icdoOrgContactAddress.zip_code))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK ADDRESS ASSOCIATED WITH CONTACT" sfwMessageId="4038" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entOrgContactAddress.CheckAddressAssociatedWithContact&quot;, this.icdoOrgContactAddress.contact_org_address_id) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK ADDRESS IS ORG PRIMARY" sfwMessageId="4037" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entOrgContactAddress.CheckOrgPrimaryAddress&quot;, this.icdoOrgContactAddress.contact_org_address_id) &gt; 0) &amp;&amp; &#xA;(this.icdoOrgContactAddress.org_id != 0)" sfwObjectBased="True" />
+    <rule ID="Rule Check foreign address and US address entered" sfwMessageId="129" sfwExpression="((!string.IsNullOrEmpty(this.icdoOrgContactAddress.state_value)) || &#xA;(!string.IsNullOrEmpty(this.icdoOrgContactAddress.zip_4_code)) || &#xA;(!string.IsNullOrEmpty(this.icdoOrgContactAddress.city)) || &#xA;(!string.IsNullOrEmpty(this.icdoOrgContactAddress.zip_code))) &amp;&amp; &#xA;(this.icdoOrgContactAddress.country_value != &quot;0001&quot;) &amp;&amp; &#xA;((!string.IsNullOrEmpty(this.icdoOrgContactAddress.foreign_postal_code)) || &#xA;(!string.IsNullOrEmpty(this.icdoOrgContactAddress.foreign_province)))" sfwObjectBased="True" />
+    <rule ID="Rule Check if country is null" sfwMessageId="4081" sfwExpression="(string.IsNullOrEmpty(this.icdoOrgContactAddress.country_value))" sfwObjectBased="True" />
+    <rule ID="Rule check if foreign and US address entered for country US" sfwMessageId="129" sfwExpression="((!string.IsNullOrEmpty(this.icdoOrgContactAddress.state_value)) || &#xA;(!string.IsNullOrEmpty(this.icdoOrgContactAddress.zip_4_code)) || &#xA;(!string.IsNullOrEmpty(this.icdoOrgContactAddress.city)) || &#xA;(!string.IsNullOrEmpty(this.icdoOrgContactAddress.zip_code))) &amp;&amp; &#xA;(this.icdoOrgContactAddress.country_value == &quot;0001&quot;) &amp;&amp; &#xA;((!string.IsNullOrEmpty(this.icdoOrgContactAddress.foreign_postal_code)) || &#xA;(!string.IsNullOrEmpty(this.icdoOrgContactAddress.foreign_province)))" sfwObjectBased="True" />
+    <rule ID="Rule Check if Zip code is less than 5 digit" sfwMessageId="4093" sfwExpression="(RFunc.Length(this.icdoOrgContactAddress.zip_code) &lt; 5) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.icdoOrgContactAddress.zip_code))" sfwObjectBased="True" />
+    <rule ID="Rule Check if Zip Code is null" sfwMessageId="4078" sfwExpression="(string.IsNullOrEmpty(this.icdoOrgContactAddress.zip_code)) &amp;&amp; &#xA;(this.icdoOrgContactAddress.country_value == &quot;0001&quot;)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK PRIMARY FLAG AND STATUS" sfwMessageId="4059" sfwExpression="(this.CheckPrimaryflagAndStatus() == True)" sfwObjectBased="True" />
+    <rule ID="Rule Validate delete of Primary Address for Contact" sfwMessageId="4094" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entOrgContactAddress.GetCountofPrimaryAddressForContact&quot;, this.icdoOrgContactAddress.contact_org_address_id) &gt; 0) &amp;&amp; &#xA;(this.icdoOrgContactAddress.contact_id != 0)" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror>
+    <item ID="CHECK ADDRESS LINE 1 IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="CHECK STATE IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="CHECK CITY IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="CHECK STATUS IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="CHECK COUNTRY IS NOT US" sfwMode="All" sfwStatus="Active" />
+    <item ID="CHECK ZIP CODE IS NOT NUMERIC" sfwMode="All" sfwStatus="Active" />
+    <item ID="CHECK ZIP CODE 4 IS NOT NUMERIC" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK PRIMARY FLAG AND STATUS" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check if Zip Code is null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check foreign address and US address entered" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule check if foreign and US address entered for country US" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check if country is null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check if Zip code is less than 5 digit" sfwMode="All" sfwStatus="Active" />
+    <item ID="Check Address is Valid" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete>
+    <item ID="RULE CHECK ADDRESS IS ORG PRIMARY" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK ADDRESS ASSOCIATED WITH CONTACT" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Validate delete of Primary Address for Contact" sfwMode="All" sfwStatus="Active" />
+  </validatedelete>
+  <updateablecdo />
+  <queries>
+    <query ID="LoadOtherOrgAddresses" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_ORG_CONTACT_ADDRESS WHERE ORG_ID=@ORG_ID AND CONTACT_ORG_ADDRESS_ID&lt;&gt; @CONTACT_ORG_ADDRESS_ID">
+      <parameters>
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+        <parameter ID="@CONTACT_ORG_ADDRESS_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadOtherContactAddresses" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_ORG_CONTACT_ADDRESS WHERE CONTACT_ID = @CONTACT_ID AND CONTACT_ORG_ADDRESS_ID&lt;&gt; @CONTACT_ORG_ADDRESS_ID">
+      <parameters>
+        <parameter ID="@CONTACT_ID" sfwDataType="int" />
+        <parameter ID="@CONTACT_ORG_ADDRESS_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="CheckOrgPrimaryAddress" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) from sgt_organization where primary_address_id=@contact_org_address_id">
+      <parameters>
+        <parameter ID="@contact_org_address_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="CheckAddressAssociatedWithContact" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) from sgt_org_contact where primary_address_id=@contact_org_address_id">
+      <parameters>
+        <parameter ID="@contact_org_address_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetCountofPrimaryAddressForContact" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) from sgt_contact where primary_address_id=@contact_org_address_id">
+      <parameters>
+        <parameter ID="@contact_org_address_id" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="ContactOrgAddressId" sfwType="Column" sfwValue="contact_org_address_id" sfwIsNull="False" sfwKeyNo="1" sfwIsIdentity="True" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="OrgId" sfwType="Column" sfwValue="org_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="ContactId" sfwType="Column" sfwValue="contact_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="AddrLine1" sfwType="Column" sfwValue="addr_line_1" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="60" sfwIsSequence="False" />
+    <attribute ID="AddrLine2" sfwType="Column" sfwValue="addr_line_2" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="60" sfwIsSequence="False" />
+    <attribute ID="City" sfwType="Column" sfwValue="city" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwIsSequence="False" />
+    <attribute ID="StateDescription" sfwType="Description" sfwValue="state_description" />
+    <attribute ID="StateId" sfwType="Column" sfwValue="state_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="150" sfwIsSequence="False" />
+    <attribute ID="StateValue" sfwType="Column" sfwValue="state_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwIsSequence="False" />
+    <attribute ID="CountryDescription" sfwType="Description" sfwValue="country_description" />
+    <attribute ID="CountryId" sfwType="Column" sfwValue="country_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="151" sfwIsSequence="False" />
+    <attribute ID="CountryValue" sfwType="Column" sfwValue="country_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwIsSequence="False" />
+    <attribute ID="ForeignProvince" sfwType="Column" sfwValue="foreign_province" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwIsSequence="False" />
+    <attribute ID="ForeignPostalCode" sfwType="Column" sfwValue="foreign_postal_code" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="10" sfwIsSequence="False" />
+    <attribute ID="ZipCode" sfwType="Column" sfwValue="zip_code" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="5" sfwIsSequence="False" />
+    <attribute ID="Zip4Code" sfwType="Column" sfwValue="zip_4_code" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwIsSequence="False" />
+    <attribute ID="StatusDescription" sfwType="Description" sfwValue="status_description" />
+    <attribute ID="StatusId" sfwType="Column" sfwValue="status_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="210" sfwIsSequence="False" />
+    <attribute ID="StatusValue" sfwType="Column" sfwValue="status_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwIsSequence="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwIsSequence="False" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwIsSequence="False" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="AddressValidateFlag" sfwType="Column" sfwValue="address_validate_flag" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="AddressValidateError" sfwType="Column" sfwValue="address_validate_error" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="100" />
+    <attribute ID="objContact" sfwType="Object" sfwEntity="entContact" sfwValue="ibusContact" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrSuppressWarning" sfwValue="istrSuppressWarning" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrCounty" sfwValue="istrCounty" />
+    <attribute sfwDataType="string" sfwType="Property" ID="PrimaryAddressFlag" sfwValue="primary_address_flag" />
+    <attribute sfwType="Collection" sfwEntity="entOrgContactAddress" ID="lstOtherContactAddress" sfwValue="iclbOtherContactAddress" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AddrDescription" sfwValue="addr_description" />
+    <attribute ID="objOrganization" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusOrganization" />
+    <attribute sfwType="Collection" sfwEntity="entOrgContactAddress" ID="lstOtherOrgAddress" sfwValue="iclbOtherOrgAddress" />
+    <attribute sfwDataType="string" sfwType="Property" ID="Lstrcity" sfwValue="icdoOrgContactAddress.lstrcity" />
+    <attribute sfwDataType="string" sfwType="Property" ID="LstrstateValue" sfwValue="icdoOrgContactAddress.lstrstate_value" />
+    <attribute sfwDataType="string" sfwType="Property" ID="LstrAddrLine1" sfwValue="icdoOrgContactAddress.lstrAddr_line_1" />
+    <attribute sfwDataType="string" sfwType="Property" ID="LstraddrLine2" sfwValue="icdoOrgContactAddress.lstraddr_line_2" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ZipCodeValue" sfwValue="icdoOrgContactAddress.zip_code_value" />
+  </attributes>
+</entity>

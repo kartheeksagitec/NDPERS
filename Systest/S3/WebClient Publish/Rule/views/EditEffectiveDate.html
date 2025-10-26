@@ -1,0 +1,42 @@
+﻿<div class="portlet-body">
+    <div class="form-body">
+        <div class="form-group checkbox-row">
+            <label class="control-label">Default Version</label>
+            <input type="checkbox" autofocus ng-model="objEditSelectedRule.IsDefaultVersion" ng-change="onChangeDefaultVersion()" class="popup-single-checkbox" />
+        </div>
+
+        <div class="form-group" ng-show="objEditSelectedRule.IsDefault">
+            <label class="control-label">Effective Date</label>
+            <input type="text" ng-disabled="objEditSelectedRule.IsDefaultVersion" class="form-control input-sm  form-control-inline date-picker" ng-model="objEditSelectedRule.EffectiveDate"
+                   title="Enter Effective Date" ng-change="ValidateEffectiveDate()">
+        </div>
+
+        <div class="form-group" ng-show="!objEditSelectedRule.IsDefault">
+            <label class="control-label" ng-show="!objEditSelectedRule.IsDefaultVersion">Effective Date</label>
+            <label class="control-label" ng-show="hasDefaultVersion && objEditSelectedRule.IsDefaultVersion">Effective Date For Current Default Version</label>
+            <input type="text" class="form-control input-sm  form-control-inline date-picker" ng-model="objEditSelectedRule.EffectiveDate"
+                   title="Enter Effective Date" ng-change="ValidateEffectiveDate()" ng-show="hasDefaultVersion || !objEditSelectedRule.IsDefaultVersion">
+        </div>
+
+        <div class="form-group" ng-show="objEditSelectedRule.IsDefault">
+            <label class="control-label">Select Default Version</label>
+            <select ng-options="effectivedate for effectivedate in objEditSelectedRule.lstEffectiveDate" ng-model="objEditSelectedRule.SelectDefaultVersion"
+                    class="form-control" ng-disabled="objEditSelectedRule.IsDefaultVersion"></select>
+            <!--<input type="text" ng-disabled="chkbxDefault" class="form-control input-sm  form-control-inline date-picker" ng-model="editeffectiveDatePicker">-->
+        </div>
+
+    </div>
+</div>
+<div class="form-actions">
+
+    <div class="col-xs-8 text-left">
+        <span class="alert-error-msg" ng-show="objEditSelectedRule.ErrorMsgForDisplay" ng-bind="objEditSelectedRule.ErrorMsgForDisplay"></span>
+    </div>
+    <div class="col-xs-4">
+        <input type="button" class="dialog-btn-default" value="OK" ng-click="onOkClick()" id="btnchangedate" ng-disabled="ValidateEffectiveDate()" />
+        <input type="button" class="dialog-btn-default" value="Cancel" ng-click="CloseDialog()" />
+    </div>
+
+
+</div>
+

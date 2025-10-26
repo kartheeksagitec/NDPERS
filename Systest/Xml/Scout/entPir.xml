@@ -1,0 +1,95 @@
+﻿<entity ID="entPir" sfwActive="True" sfwStatus="Valid" sfwRemoteObject="srvScout" sfwType="BusinessRule" sfwMainCDO="icdoPir" sfwObjectID="busPir" sfwTableName="sgs_pir" sfwView="False">
+  <rules>
+    <rule ID="Rule Check AssignedTo is Null" sfwMessageId="104" sfwExpression="(this.icdoPir.assigned_to_id == 0) &amp;&amp;&#xA;  !(this.icdoPir.status_value==&quot;CLOS&quot; || this.icdoPir.status_value==&quot;CNCL&quot;  || this.icdoPir.status_value==&quot;RJCT&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule Check Description is Null" sfwMessageId="101" sfwExpression="(string.IsNullOrEmpty(this.icdoPir.pir_description))" sfwObjectBased="True" />
+    <rule ID="Rule Check Priority is Null" sfwMessageId="102" sfwExpression="(string.IsNullOrEmpty(this.icdoPir.priority_value))" sfwObjectBased="True" />
+    <rule ID="Rule Check ReportedBy is Null" sfwMessageId="105" sfwExpression="(this.icdoPir.reported_by_id == 0)" sfwObjectBased="True" />
+    <rule ID="Rule Check Screen Affected is Null" sfwMessageId="106" sfwExpression="(string.IsNullOrEmpty(this.icdoPir.screen_affected))" sfwObjectBased="True" />
+    <rule ID="Rule Check Severity is Null" sfwMessageId="103" sfwExpression="(string.IsNullOrEmpty(this.icdoPir.severity_value))" sfwObjectBased="True" />
+    <rule ID="Check Status is null" sfwMessageId="138" sfwExpression="(string.IsNullOrEmpty(this.icdoPir.status_value))" sfwObjectBased="True" />
+    <rule ID="Rule to display attahment Label" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.GetPIRAttachmentCount() &gt; 0" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="Rule to display attahment Label" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="Rule Check Description is Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check Priority is Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check Severity is Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check AssignedTo is Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check ReportedBy is Null " sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check Screen Affected is Null" sfwMode="All" sfwStatus="Inactive" />
+    <item ID="Check Status is null" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from sgs_pir order by priority_value&#xD;&#xA;  &#xD;&#xA;">
+      <parameters />
+    </query>
+    <query ID="rptPirStatusXTestCase" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select  IsNULL(TESTCASE.TESTCASE_DESC, 'Unknown') TESTCASE_DESC, CODEVALUE.DESCRIPTION STATUS, COUNT(*) COUNT&#xD;&#xA;from sgs_pir PIR left outer join sgs_testcase TESTCASE on PIR.TESTCASE_SCENARIO = TESTCASE.TESTCASE_ID,&#xD;&#xA;sgs_code_value CODEVALUE&#xD;&#xA;where PIR.STATUS_ID = CODEVALUE.CODE_ID&#xD;&#xA;and PIR.STATUS_VALUE = CODEVALUE.CODE_VALUE&#xD;&#xA;GROUP BY IsnULL(TESTCASE.TESTCASE_DESC, 'Unknown') , CODEVALUE.DESCRIPTION&#xD;&#xA;ORDER BY 1 ASC">
+      <parameters />
+    </query>
+    <query ID="rptPIRMonthlyStatistics" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select convert(datetime, (convert(varchar(6), PIR.modified_date, 112) + '01'), 112) Modified_Mnth_year,&#xD;&#xA;STATUS_VAL.DESCRIPTION status_desc, isnull(SEVERITY.DESCRIPTION, 'Unknown') severity_desc, count(*)  pir_count&#xD;&#xA;from sgs_pir PIR left outer join  sgs_code_value SEVERITY on PIR.severity_id = SEVERITY.CODE_ID AND  PIR.severity_value = SEVERITY.CODE_VALUE&#xD;&#xA; left outer join  sgs_code_value STATUS_VAL on PIR.STATUS_ID = STATUS_VAL.CODE_ID AND PIR.STATUS_VALUE = STATUS_VAL.CODE_VALUE&#xD;&#xA;group by convert(datetime, (convert(varchar(6), PIR.modified_date, 112) + '01'), 112)  , STATUS_VAL.DESCRIPTION, isnull(SEVERITY.DESCRIPTION, 'Unknown')&#xD;&#xA;order by 1">
+      <parameters />
+    </query>
+    <query ID="ListOfPirReporters" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT DISTINCT u.user_serial_id,u.user_id,last_name + ', ' + first_name full_name  from sgs_user u&#xD;&#xA;inner join sgs_user_roles ur on u.USER_SERIAL_ID = ur.USER_SERIAL_ID &#xD;&#xA;and ((ur.effective_start_DATE is null) or (ur.effective_start_date&lt;=convert(dateTime,convert(char,getdate(),103),103)))&#xD;&#xA;and ((ur.effective_end_DATE is null) or (ur.effective_end_date&gt;=convert(dateTime,convert(char,getdate(),103),103)))&#xD;&#xA;inner join sgs_security s on s.role_id = ur.role_id and s.security_value != 0&#xD;&#xA;inner join sgs_resources r on r.resource_id = s.resource_id&#xD;&#xA;where s.resource_id = 51 AND U.USER_STATUS_ID = 10 AND U.USER_STATUS_VALUE = 'A'&#xD;&#xA;ORDER BY FULL_NAME">
+      <parameters />
+    </query>
+    <query ID="ListOfPirFixers" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT DISTINCT u.user_serial_id,last_name + ', ' + first_name full_name  from sgs_user u&#xD;&#xA;inner join sgs_user_roles ur on u.USER_SERIAL_ID = ur.USER_SERIAL_ID &#xD;&#xA;and ((ur.effective_start_DATE is null) or (ur.effective_start_date&lt;=convert(dateTime,convert(char,getdate(),103),103)))&#xD;&#xA;and ((ur.effective_end_DATE is null) or (ur.effective_end_date&gt;=convert(dateTime,convert(char,getdate(),103),103)))   &#xD;&#xA;inner join sgs_security s on s.role_id = ur.role_id and s.security_value != 0&#xD;&#xA;inner join sgs_resources r on r.resource_id = s.resource_id&#xD;&#xA;where s.resource_id = 50 AND U.USER_STATUS_ID = 10 AND U.USER_STATUS_VALUE = 'A'&#xD;&#xA;ORDER BY FULL_NAME">
+      <parameters />
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="PirId" sfwType="Column" sfwValue="pir_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusDescription" sfwType="Description" sfwValue="status_description" />
+    <attribute ID="StatusId" sfwType="Column" sfwValue="status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="40" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusValue" sfwType="Column" sfwValue="status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="PirDescription" sfwType="Column" sfwValue="pir_description" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="100" />
+    <attribute ID="PriorityDescription" sfwType="Description" sfwValue="priority_description" />
+    <attribute ID="PriorityId" sfwType="Column" sfwValue="priority_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="41" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PriorityValue" sfwType="Column" sfwValue="priority_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="SeverityDescription" sfwType="Description" sfwValue="severity_description" />
+    <attribute ID="SeverityId" sfwType="Column" sfwValue="severity_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="42" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="SeverityValue" sfwType="Column" sfwValue="severity_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="ReportedById" sfwType="Column" sfwValue="reported_by_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AssignedToId" sfwType="Column" sfwValue="assigned_to_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ScreenAffected" sfwType="Column" sfwValue="screen_affected" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="100" />
+    <attribute ID="OtheruiObjects" sfwType="Column" sfwValue="otherui_objects" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="100" />
+    <attribute ID="TestcaseScenario" sfwType="Column" sfwValue="testcase_scenario" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ReleaseInfo" sfwType="Column" sfwValue="release_info" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="20" />
+    <attribute ID="UpdateDocFlag" sfwType="Column" sfwValue="update_doc_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="CriticalPirPriority" sfwType="Column" sfwValue="critical_pir_priority" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PriorityDate" sfwType="Column" sfwValue="priority_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="PirTypeDescription" sfwType="Description" sfwValue="pir_type_description" />
+    <attribute ID="PirTypeId" sfwType="Column" sfwValue="pir_type_id" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="6010" />
+    <attribute ID="PirTypeValue" sfwType="Column" sfwValue="pir_type_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="objTestcase" sfwType="Object" sfwEntity="entTestcase" sfwValue="ibusTestcase" />
+    <attribute ID="objAssignedTo" sfwType="Object" sfwEntity="entUser" sfwValue="ibusAssignedTo" />
+    <attribute ID="objReportedBy" sfwType="Object" sfwEntity="entUser" sfwValue="ibusReportedBy" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPriorityDate" sfwValue="icdoPir.istrPriorityDate" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AdditionalNotes" sfwValue="icdoPir.additional_notes" />
+    <attribute sfwType="Collection" sfwEntity="entPirHistory" ID="lstPirHistory" sfwValue="iclbPirHistory" />
+    <attribute sfwType="Collection" sfwEntity="entPIRAttachment" ID="lstPIRAttachment" sfwValue="iclbPIRAttchment" />
+    <attribute ID="lstrCreateByUserFullName" sfwDataType="string" sfwPrivate="False" sfwValue="istrCreateByUserFullName" sfwType="Property" />
+    <attribute sfwValue="referent_id" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="True" ID="ReferentId" sfwCaption="Referent Id" />
+    <attribute ID="objReferentBy" sfwType="Object" sfwEntity="entUser" sfwPrivate="False" sfwValue="ibusReferentIDUser" />
+  </attributes>
+  <objectmethods>
+    <method ID="GetScreens" sfwReturnType="Collection" sfwEntity="entScreen" />
+  </objectmethods>
+  <constraint />
+  <methods />
+  <lifecycle />
+  <ExtraFields />
+</entity>

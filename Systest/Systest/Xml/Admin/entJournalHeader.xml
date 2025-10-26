@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entJournalHeader" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoJournalHeader" sfwObjectID="busJournalHeader" sfwTableName="sgt_journal_header">
+  <rules>
+    <rule ID="Rule Check Deleting Posted Records" sfwMessageId="4710" sfwExpression="(this.icdoJournalHeader.journal_status_value == &quot;POST&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule Check If Posing Date is Null" sfwMessageId="4624" sfwExpression="(this.icdoJournalHeader.posting_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="Rule Check If Posting Date is Not Valid" sfwMessageId="4642" sfwExpression="(this.IsValidPostingDate() == False) &amp;&amp; &#xA;!(this.icdoJournalHeader.posting_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="Rule Check POST Button Visibility" sfwExpression="(this.icdoJournalHeader.journal_status_value == &quot;ENTR&quot;)" sfwObjectBased="True" />
+  </rules>
+  <delete>
+    <property ID="lstJournalDetail" sfwMethodName="LoadJournalDetails" />
+  </delete>
+  <checklist />
+  <initialload>
+    <item ID="Rule Check POST Button Visibility" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="Rule Check If Posing Date is Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Posting Date is Not Valid" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete>
+    <item ID="Rule Check Deleting Posted Records" sfwMode="All" sfwStatus="Active" />
+  </validatedelete>
+  <updateablecdo />
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_JOURNAL_HEADER">
+      <parameters />
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="JournalHeaderId" sfwType="Column" sfwValue="journal_header_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="JournalStatusDescription" sfwType="Description" sfwValue="journal_status_description" />
+    <attribute ID="JournalStatusId" sfwType="Column" sfwValue="journal_status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="1308" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="JournalStatusValue" sfwType="Column" sfwValue="journal_status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="PostingDate" sfwType="Column" sfwValue="posting_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="LdclTotalDebits" sfwValue="ldclTotalDebits" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="LdclTotalCredits" sfwValue="ldclTotalCredits" />
+    <attribute sfwType="Collection" sfwEntity="entJournalDetail" ID="lstJournalDetail" sfwValue="icolJournalDetail" />
+    <attribute sfwDataType="string" sfwType="Property" ID="LstrSuppressWarningFlag" sfwValue="lstrSuppressWarningFlag" />
+  </attributes>
+  <objectmethods>
+    <method ID="btnPost_Click" sfwReturnType="ArrayList" />
+    <method ID="LoadJournalDetails" sfwReturnType="Void" />
+  </objectmethods>
+</entity>

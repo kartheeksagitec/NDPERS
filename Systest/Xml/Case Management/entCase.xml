@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entCase" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoCase" sfwReadOnlyRule="IsCaseStatusApproved" sfwObjectID="busCase" sfwTableName="sgt_case" sfwView="False" sfwParentEntity="entExtendBase">
+  <rules>
+    <rule ID="IsCaseStatusApproved" sfwExpression="(this.icdoCase.case_status_value == &quot;APPR&quot;)" sfwObjectBased="True" />
+    <rule ID="IsCaseStatusNotApproved" sfwExpression="!(this.icdoCase.case_status_value == &quot;APPR&quot;)" sfwObjectBased="True" />
+    <rule ID="IsCaseTypeBenefitAppeal" sfwExpression="(this.icdoCase.case_type_value == &quot;BENA&quot;)" sfwObjectBased="True" />
+    <rule ID="IsCaseTypeDisability" sfwExpression="(this.icdoCase.case_type_value == &quot;DISR&quot;)" sfwObjectBased="True" />
+    <rule ID="IsCaseTypeDisabilityOrPre1991" sfwExpression="(this.icdoCase.case_type_value == &quot;DISR&quot;) || &#xA;(this.icdoCase.case_type_value == &quot;PRED&quot;)" sfwObjectBased="True" />
+    <rule ID="IsCaseTypeFinancialHardship" sfwExpression="(this.icdoCase.case_type_value == &quot;FINH&quot;)" sfwObjectBased="True" />
+    <rule ID="IsCaseTypePre1991" sfwExpression="(this.icdoCase.case_type_value == &quot;PRED&quot;)" sfwObjectBased="True" />
+    <rule ID="IsNextRecertificationDateIsFirstOfMonth" sfwMessageId="2084" sfwExpression="(this.IsNextRecertificationDateIsFirstOfMonth == False)" sfwObjectBased="True" />
+    <rule ID="IsNextRecertificationDateIsvalid" sfwMessageId="2085" sfwExpression="(this.IsNextRecertificationDateIsvalid() == False)" sfwObjectBased="True" />
+    <rule ID="IsNextRecertificationNotNecessaryChecked" sfwMessageId="4185" sfwExpression="((this.icdoCase.case_type_value == &quot;DISR&quot;) || &#xA;(this.icdoCase.case_type_value == &quot;PRED&quot;)) &amp;&amp; &#xA;(this.icdoCase.next_recertification_date == DateTime.MinValue) &amp;&amp; &#xA;!(this.icdoCase.disability_recertification_not_necessary_flag == &quot;Y&quot;)" sfwObjectBased="True" />
+    <rule ID="IsNextRecertificationNotNecessaryNOTChecked" sfwMessageId="4186" sfwExpression="((this.icdoCase.case_type_value == &quot;DISR&quot;) || &#xA;(this.icdoCase.case_type_value == &quot;PRED&quot;)) &amp;&amp; &#xA;!(this.icdoCase.next_recertification_date == DateTime.MinValue) &amp;&amp; &#xA;(this.icdoCase.disability_recertification_not_necessary_flag == &quot;Y&quot;)" sfwObjectBased="True" />
+    <rule ID="IsRecertificationDateIsFirstOfMonth" sfwMessageId="2083" sfwExpression="(this.IsRecertificationDateIsFirstOfMonth == False)" sfwObjectBased="True" />
+    <rule ID="IsStartDateEndDateValid" sfwMessageId="2090" sfwExpression="(this.IsStartDateEndDateValid() == False)" sfwObjectBased="True" />
+    <rule ID="IsStartDateNotEntered" sfwMessageId="2089" sfwExpression="(this.IsStartDateNotEntered() == False)" sfwObjectBased="True" />
+    <rule ID="IsStatusNotEntered" sfwMessageId="4100" sfwExpression="(string.IsNullOrEmpty(this.icdoCase.case_status_value))" sfwObjectBased="True" />
+  </rules>
+  <delete>
+    <property ID="lstCaseDisabilityIncomeVerificationDetail" sfwMethodName="LoadCaseDisabilityIncomeVerificationDetails" />
+    <property ID="lstCaseFileDetail" sfwMethodName="LoadCaseFileDetails" />
+    <property ID="lstCaseFinancialHardshipProviderDetail" sfwMethodName="LoadCaseFinancialHardshipProviderDetails" />
+    <property ID="lstCaseStepDetail" sfwMethodName="LoadCaseStepDetails" />
+  </delete>
+  <checklist />
+  <initialload>
+    <item ID="IsCaseTypePre1991" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsCaseTypeFinancialHardship" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsCaseTypeDisability" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsCaseTypeBenefitAppeal" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsCaseStatusNotApproved" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsCaseStatusApproved" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsCaseTypeDisabilityOrPre1991" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="IsRecertificationDateIsFirstOfMonth" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsNextRecertificationDateIsFirstOfMonth" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsNextRecertificationDateIsvalid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsStatusNotEntered" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsStartDateNotEntered" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsStartDateEndDateValid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsNextRecertificationNotNecessaryChecked" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsNextRecertificationNotNecessaryNOTChecked" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties>
+    <item ID="person_id" sfwObjectField="icdoCase.person_id" />
+  </commonproperties>
+  <expressionfields />
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select *, sus.first_name as UserFirstName, sus.last_name as UserLastName from sgt_case  cas WITH(NOLOCK)&#xD;&#xA;inner join sgt_person per WITH(NOLOCK) on per.person_id = cas.person_id &#xD;&#xA;left outer join sgs_user sus WITH(NOLOCK) on sus.user_serial_id = cas.action_by &#xD;&#xA;order by 1 desc">
+      <parameters />
+    </query>
+    <query ID="IncomeVerificationBatch" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_CASE CS WITH(NOLOCK)  &#xD;&#xA;INNER JOIN SGT_PAYEE_ACCOUNT SPA WITH(NOLOCK) ON SPA.PAYEE_ACCOUNT_ID=CS.PAYEE_ACCOUNT_ID&#xD;&#xA;WHERE &#xD;&#xA;MONTH(CS.INCOME_VERIFICATION_DATE) = MONTH(DATEADD(m,1,@CURR_DATE)) AND &#xD;&#xA;YEAR(CS.INCOME_VERIFICATION_DATE) = YEAR(DATEADD(m,1,@CURR_DATE)) AND &#xD;&#xA;CS.INCOME_VERIFICATION_DATE  &lt;&gt; CS.RECERTIFICATION_DATE AND&#xD;&#xA;CS.INCOME_VERIFICATION_FLAG IS NULL AND &#xD;&#xA;CS.CASE_TYPE_VALUE = 'DISR'">
+      <parameters>
+        <parameter ID="@CURR_DATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="DisabilityRecertificationBatch" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT PAY.*&#xD;&#xA;FROM &#xD;&#xA;(SELECT PAY.PAYEE_ACCOUNT_ID,BENEFIT_BEGIN_DATE,&#xD;&#xA;(SELECT TOP 1 STATUS_VALUE FROM SGT_PAYEE_ACCOUNT_STATUS PAYSTAT WITH(NOLOCK)&#xD;&#xA;WHERE PAYSTAT.PAYEE_ACCOUNT_ID=PAY.PAYEE_ACCOUNT_ID &#xD;&#xA;ORDER BY STATUS_EFFECTIVE_DATE DESC, PAYEE_ACCOUNT_STATUS_ID DESC) AS STATUS_VALUE FROM SGT_PAYEE_ACCOUNT PAY  &#xD;&#xA;WHERE BENEFIT_ACCOUNT_TYPE_VALUE='DISA' AND RECERTIFICATION_DATE IS NOT NULL AND ISNULL(IS_DISABILITY_BATCH_LETTER_SENT_FLAG,'N') &lt;&gt; 'Y' &#xD;&#xA;AND DATEDIFF ( MONTH ,  @CURR_DATE, RECERTIFICATION_DATE) = 4) AS INNERTAB&#xD;&#xA;INNER JOIN SGT_PAYEE_ACCOUNT PAY WITH(NOLOCK) ON PAY.PAYEE_ACCOUNT_ID=INNERTAB.PAYEE_ACCOUNT_ID&#xD;&#xA;AND INNERTAB.STATUS_VALUE='RCDS'">
+      <parameters>
+        <parameter ID="@CURR_DATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="DisabilityRecertificationBatchGetIdentifier" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT 1 as RowIdentifier, INNERTAB.*,CAS.*&#xD;&#xA;FROM&#xD;&#xA;(SELECT PAY.PAYEE_ACCOUNT_ID,BENEFIT_BEGIN_DATE,&#xD;&#xA;(SELECT TOP 1 STATUS_VALUE FROM SGT_PAYEE_ACCOUNT_STATUS PAYSTAT WITH(NOLOCK) &#xD;&#xA;WHERE PAYSTAT.PAYEE_ACCOUNT_ID=PAY.PAYEE_ACCOUNT_ID ORDER BY STATUS_EFFECTIVE_DATE DESC) AS STATUS_VALUE&#xD;&#xA;FROM SGT_PAYEE_ACCOUNT PAY WHERE BENEFIT_ACCOUNT_TYPE_VALUE='DISA' &#xD;&#xA;) AS INNERTAB&#xD;&#xA;INNER JOIN SGT_CASE CAS WITH(NOLOCK) ON CAS.PAYEE_ACCOUNT_ID=INNERTAB.PAYEE_ACCOUNT_ID &#xD;&#xA;INNER JOIN (SELECT CASE_ID FROM SGT_CASE_STEP_DETAIL WITH(NOLOCK) WHERE CASE_STEP_DETAIL_ID&#xD;&#xA;IN (SELECT MIN(CASE_STEP_DETAIL_ID) FROM SGT_CASE_STEP_DETAIL WITH(NOLOCK)&#xD;&#xA;GROUP BY CASE_ID) AND END_DATE IS NULL) AS TEMP ON TEMP.CASE_ID=CAS.CASE_ID&#xD;&#xA;AND CAS.CASE_TYPE_VALUE IN ('DISR','PRED')&#xD;&#xA;AND INNERTAB.STATUS_VALUE='RCDS'&#xD;&#xA;AND MONTH(DATEADD(M,-2,CAS.RECERTIFICATION_DATE))=MONTH(@CURR_DATE)&#xD;&#xA;AND YEAR(DATEADD(M,-2,CAS.RECERTIFICATION_DATE))=YEAR(@CURR_DATE)&#xD;&#xA;and ISNULL(THIRD_NOTIFICATION_FLAG,'N')&lt;&gt;'Y'&#xD;&#xA;and ISNULL(CAS.SECOND_NOTIFICATION_FLAG,'N') = 'Y'&#xD;&#xA;&#xD;&#xA;union all&#xD;&#xA;&#xD;&#xA;SELECT 2 as RowIdentifier, INNERTAB.*,CAS.*&#xD;&#xA;FROM&#xD;&#xA;(SELECT PAY.PAYEE_ACCOUNT_ID,BENEFIT_BEGIN_DATE,(SELECT TOP 1 STATUS_VALUE FROM SGT_PAYEE_ACCOUNT_STATUS PAYSTAT WITH(NOLOCK)&#xD;&#xA;WHERE PAYSTAT.PAYEE_ACCOUNT_ID=PAY.PAYEE_ACCOUNT_ID ORDER BY STATUS_EFFECTIVE_DATE DESC) AS STATUS_VALUE&#xD;&#xA;FROM SGT_PAYEE_ACCOUNT PAY WHERE BENEFIT_ACCOUNT_TYPE_VALUE='DISA' &#xD;&#xA;) AS INNERTAB&#xD;&#xA;INNER JOIN SGT_CASE CAS WITH(NOLOCK) ON CAS.PAYEE_ACCOUNT_ID=INNERTAB.PAYEE_ACCOUNT_ID &#xD;&#xA;INNER JOIN (SELECT CASE_ID FROM SGT_CASE_STEP_DETAIL WITH(NOLOCK) WHERE CASE_STEP_DETAIL_ID&#xD;&#xA;IN (SELECT MIN(CASE_STEP_DETAIL_ID) FROM SGT_CASE_STEP_DETAIL WITH(NOLOCK)&#xD;&#xA;GROUP BY CASE_ID) AND END_DATE IS NULL) AS TEMP ON TEMP.CASE_ID=CAS.CASE_ID&#xD;&#xA;AND CAS.CASE_TYPE_VALUE IN ('DISR','PRED')&#xD;&#xA;AND INNERTAB.STATUS_VALUE='RCDS'&#xD;&#xA;AND MONTH(DATEADD(M,-3,CAS.RECERTIFICATION_DATE))=MONTH(@CURR_DATE)&#xD;&#xA;AND YEAR(DATEADD(M,-3,CAS.RECERTIFICATION_DATE))=YEAR(@CURR_DATE)&#xD;&#xA;and ISNULL(SECOND_NOTIFICATION_FLAG,'N')&lt;&gt;'Y'&#xD;&#xA;and ISNULL(CAS.FIRST_NOTIFICATION_FLAG,'N') = 'Y'&#xD;&#xA;&#xD;&#xA;union all&#xD;&#xA;&#xD;&#xA;SELECT 3 as RowIdentifier, INNERTAB.*,CAS.*&#xD;&#xA;FROM&#xD;&#xA;(SELECT PAY.PAYEE_ACCOUNT_ID,BENEFIT_BEGIN_DATE,(SELECT TOP 1 STATUS_VALUE FROM SGT_PAYEE_ACCOUNT_STATUS PAYSTAT WITH(NOLOCK)&#xD;&#xA;WHERE PAYSTAT.PAYEE_ACCOUNT_ID=PAY.PAYEE_ACCOUNT_ID ORDER BY STATUS_EFFECTIVE_DATE DESC) AS STATUS_VALUE&#xD;&#xA;FROM SGT_PAYEE_ACCOUNT PAY WHERE BENEFIT_ACCOUNT_TYPE_VALUE='DISA' &#xD;&#xA;) AS INNERTAB&#xD;&#xA;INNER JOIN SGT_CASE CAS WITH(NOLOCK) ON CAS.PAYEE_ACCOUNT_ID=INNERTAB.PAYEE_ACCOUNT_ID &#xD;&#xA;INNER JOIN (SELECT CASE_ID FROM SGT_CASE_STEP_DETAIL WITH(NOLOCK) WHERE CASE_STEP_DETAIL_ID&#xD;&#xA;IN (SELECT MIN(CASE_STEP_DETAIL_ID) FROM SGT_CASE_STEP_DETAIL WITH(NOLOCK)&#xD;&#xA;GROUP BY CASE_ID) AND END_DATE IS NULL) AS TEMP ON TEMP.CASE_ID=CAS.CASE_ID&#xD;&#xA;AND CAS.CASE_TYPE_VALUE IN ('DISR','PRED')&#xD;&#xA;AND INNERTAB.STATUS_VALUE='RCDS'&#xD;&#xA;AND MONTH(DATEADD(M,-4,CAS.RECERTIFICATION_DATE))=MONTH(@CURR_DATE)&#xD;&#xA;AND YEAR(DATEADD(M,-4,CAS.RECERTIFICATION_DATE))=YEAR(@CURR_DATE)&#xD;&#xA;and ISNULL(FIRST_NOTIFICATION_FLAG,'N')&lt;&gt;'Y'">
+      <parameters>
+        <parameter ID="@CURR_DATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="GetRetDisAppsForCorres" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_BENEFIT_APPLICATION WHERE MEMBER_PERSON_ID = @PersonID&#xD;&#xA;AND BENEFIT_ACCOUNT_TYPE_VALUE IN ('RETR', 'DISA') AND ACTION_STATUS_VALUE &lt;&gt; 'CANC'&#xD;&#xA;ORDER BY BENEFIT_APPLICATION_ID DESC">
+      <parameters>
+        <parameter ID="@PersonID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="CaseId" sfwType="Column" sfwValue="case_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PersonId" sfwType="Column" sfwValue="person_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="CaseTypeDescription" sfwType="Description" sfwValue="case_type_description" />
+    <attribute ID="CaseTypeId" sfwType="Column" sfwValue="case_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="2254" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="CaseTypeValue" sfwType="Column" sfwValue="case_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="AppealTypeDescription" sfwType="Description" sfwValue="appeal_type_description" />
+    <attribute ID="AppealTypeId" sfwType="Column" sfwValue="appeal_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="2256" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AppealTypeValue" sfwType="Column" sfwValue="appeal_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="CaseStatusDescription" sfwType="Description" sfwValue="case_status_description" />
+    <attribute ID="CaseStatusId" sfwType="Column" sfwValue="case_status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="2257" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="CaseStatusValue" sfwType="Column" sfwValue="case_status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="OverallTime" sfwType="Column" sfwValue="overall_time" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="Comments" sfwType="Column" sfwValue="comments" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="2000" />
+    <attribute ID="FilenetDateFrom" sfwType="Column" sfwValue="filenet_date_from" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="FilenetDateTo" sfwType="Column" sfwValue="filenet_date_to" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ActionBy" sfwType="Column" sfwValue="action_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PayeeAccountId" sfwType="Column" sfwValue="payee_account_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="RecertificationDate" sfwType="Column" sfwValue="recertification_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="NextRecertificationDate" sfwType="Column" sfwValue="next_recertification_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="FirstNotificationFlag" sfwType="Column" sfwValue="first_notification_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="SecondNotificationFlag" sfwType="Column" sfwValue="second_notification_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="ThirdNotificationFlag" sfwType="Column" sfwValue="third_notification_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="ComparableEarningsAmount" sfwType="Column" sfwValue="comparable_earnings_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="IncomeVerificationDate" sfwType="Column" sfwValue="income_verification_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="IncomeVerificationFlag" sfwType="Column" sfwValue="income_verification_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="EmployerName1" sfwType="Column" sfwValue="employer_name1" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="EmployerName2" sfwType="Column" sfwValue="employer_name2" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="EmployerName3" sfwType="Column" sfwValue="employer_name3" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="FinancialHardshipRequestedAmount" sfwType="Column" sfwValue="financial_hardship_requested_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="DisabilityRecertificationNotNecessaryFlag" sfwType="Column" sfwValue="disability_recertification_not_necessary_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="objPerson" sfwType="Object" sfwEntity="entPerson" sfwValue="ibusPerson" />
+    <attribute ID="objUser" sfwType="Object" sfwEntity="entUser" sfwValue="ibusUser" />
+    <attribute sfwType="Collection" sfwEntity="entCaseStepDetail" ID="lstCaseStepDetailBenefitAppeal" sfwValue="iclbCaseStepDetailBenefitAppeal" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPlanName" sfwValue="icdoCase.istrPlanName" />
+    <attribute sfwType="Collection" sfwEntity="entCaseStepDetail" ID="lstCaseStepDetailDisability" sfwValue="iclbCaseStepDetailDisability" />
+    <attribute sfwType="Collection" sfwEntity="entCaseDisabilityIncomeVerificationDetail" ID="lstCaseDisabilityIncomeVerificationDetail" sfwValue="iclbCaseDisabilityIncomeVerificationDetail" />
+    <attribute sfwType="Collection" sfwEntity="entCaseStepDetail" ID="lstCaseStepDetailFinancialHardship" sfwValue="iclbCaseStepDetailFinancialHardship" />
+    <attribute sfwType="Collection" sfwEntity="entCaseFinancialHardshipProviderDetail" ID="lstCaseFinancialHardshipProviderDetail" sfwValue="iclbCaseFinancialHardshipProviderDetail" />
+    <attribute sfwType="Collection" sfwEntity="entCaseFileDetail" ID="lstCaseFileDetail" sfwValue="iclbCaseFileDetail" />
+    <attribute sfwType="Collection" sfwEntity="entNotes" ID="lstNotes" sfwValue="iclbNotes" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ActionByUser" sfwValue="icdoCase.action_by_user" />
+    <attribute sfwType="Object" sfwEntity="entRetirementDisabilityApplication" sfwValue="ibusRetirementDisabilityApplication" ID="objRetirementDisabilityApplication" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IintPlanId" sfwValue="icdoCase.iintPlanId" />
+    <attribute sfwDataType="string" sfwType="Property" ID="Istrdte60DaysEarlierToRecertificationDate" sfwValue="istrdte60DaysEarlierToRecertificationDate" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrIsDisability" sfwValue="istrIsDisability" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrIsSecondorFinalNotification" sfwValue="istrIsSecondorFinalNotification" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrNotificationIdentifier" sfwValue="istrNotificationIdentifier" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrRecertificationDate" sfwValue="istrRecertificationDate" />
+    <attribute sfwDataType="string" sfwType="Property" ID="RecertificationLongDate" sfwValue="icdoCase.recertification_long_date" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecComparateEarningAmount" sfwValue="idecComparateEarningAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecComparableEarningPercentage" sfwValue="idecComparableEarningPercentage" />
+    <attribute sfwType="Collection" sfwEntity="entPerson" ID="lstMedicalConsultantRecordsPurge" sfwValue="iclbMedicalConsultantRecordsPurge" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrMemberEnrolledInInsurancePlan" sfwValue="istrMemberEnrolledInInsurancePlan" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrIsMemberEnrolledInDental" sfwValue="istrIsMemberEnrolledInDental" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrIsMemberEnrolledInHealth" sfwValue="istrIsMemberEnrolledInHealth" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrMemberEnrolledInLife" sfwValue="istrMemberEnrolledInLife" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrMemberEnrolledInVision" sfwValue="istrMemberEnrolledInVision" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrCreatedBy" sfwValue="istrCreatedBy" />
+    <attribute sfwType="Collection" sfwEntity="entCaseStepDetail" ID="lstEndDatedStepDetails" sfwValue="iclbEndDatedStepDetails" />
+    <attribute sfwType="Collection" sfwEntity="entCaseStepDetail" ID="lstCaseStepDetail" sfwValue="iclbCaseStepDetail" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrIncomeVerificationEndDate" sfwValue="istrIncomeVerificationEndDate" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrIncomeVerificationStartDate" sfwValue="istrIncomeVerificationStartDate" />
+    <attribute ID="IstrPetitionForReviewType" sfwDataType="string" sfwPrivate="False" sfwValue="istrPetitionForReviewType" sfwType="Property" />
+  </attributes>
+  <objectmethods>
+    <method ID="btnRefreshImageData_Click" sfwReturnType="ArrayList" />
+    <method ID="btnShowAll_Click" sfwReturnType="ArrayList" />
+    <method ID="LoadCaseDisabilityIncomeVerificationDetails" sfwReturnType="Void" />
+    <method ID="LoadCaseFileDetails" sfwReturnType="Void" />
+    <method ID="LoadCaseFinancialHardshipProviderDetails" sfwReturnType="Void" />
+    <method ID="LoadCaseStepDetails" sfwReturnType="Collection" sfwEntity="entCaseStepDetail" />
+  </objectmethods>
+</entity>

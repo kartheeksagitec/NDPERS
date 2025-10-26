@@ -1,0 +1,324 @@
+﻿<form ID="wfmESSCombinedPayrollDetailLookup" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2005" sfwType="FormLinkLookup" sfwTitle="Employer Payroll Detail Lookup" version="3.5" sfwEntity="entEmployerPayrollDetail" sfwGridCollection="busEmployerPayrollDetailLookup.iclbPayrollDetail" sfwTemplate="ESSCombinedPayrollDetailLookup.html" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmESSCombinedPayrollDetailLookup" isBasedOnWfm="true" sfwMaxCount="15000">
+  <initialload>
+    <query ID="ESSLookup" sfwQueryRef="entEmployerPayrollDetail.ESSLookup" sfwMethodName="LoadPayrollDetail" />
+    <query ID="cdoEmployerPayrollDetail" sfwQueryRef="entEmployerPayrollDetail.ESSSubLOOKUP" />
+    <query ID="SubLOOKUP2" sfwQueryRef="entEmployerPayrollDetail.SubLOOKUP2" />
+    <query ID="sqEssLookupContactFilter" sfwQueryRef="entEmployerPayrollDetail.sqEssLookupContactFilter" />
+    <query ID="SubLOOKUP1" sfwQueryRef="entEmployerPayrollDetail.SubLOOKUP1" />
+  </initialload>
+  <items>
+    <sfwTable ID="Main" />
+    <sfwPanel ID="pnlHeader" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblN" />
+        <sfwLiteral ID="ltrlPayrollDetailLookup" Text="Payroll Detail Lookup " />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlCriteria" sfwCaption="Criteria">
+      <items>
+        <sfwTable ID="tblCriteria" />
+        <sfwLabel ID="lblLabel" Text="Benefit :" sfwIsCaption="True" />
+        <sfwCascadingDropDownList DataTextField="description" DataValueField="code_value" ID="ddlBenefitTypeValue" sfwDataField="header_type_value" sfwOperator="=" sfwQueryID="cdoEmployerPayrollDetail" sfwClientVisibility="controllist:ddlRecordTypeValue,ddlPayrollDetailStatusValue,ddlRecordTypeValuesDefIns,ddlPayrollDetailStatusValueINSR#RETR:ddlRecordTypeValue,ddlPayrollDetailStatusValue;INSR:ddlRecordTypeValuesDefIns,ddlPayrollDetailStatusValueINSR;DEFF:ddlRecordTypeValuesDefIns,ddlPayrollDetailStatusValue;default:ddlPayrollDetailStatusValue;PRCH:ddlPayrollDetailStatusValue;" sfwLoadType="ServerMethod" sfwLoadSource="GetBenefitTypes" />
+        <sfwLabel ID="capPayrollDetailStatusValue" Text="Detail Status : " sfwIsCaption="True" />
+        <sfwDropDownList ID="ddlPayrollDetailStatusValue" sfwDataField="epd.status_value" sfwOperator="=" sfwQueryID="ESSLookup" sfwLoadType="CodeGroup" sfwLoadSource="1210" />
+        <sfwDropDownList ID="ddlPayrollDetailStatusValueINSR" sfwDataField="epd.status_value" sfwOperator="=" sfwQueryID="ESSLookup" sfwData2EqualTo="Y" sfwLoadType="CodeGroup" sfwLoadSource="1210" />
+        <sfwLabel ID="lblLabel1" Text="PERSLink ID :" sfwIsCaption="True" />
+        <sfwTextBox ID="txtTextBox" sfwDataField="epd.person_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="ESSLookup" />
+        <sfwImageButton ID="btnRetrieve" ImageAlign="AbsMiddle" ImageUrl="~/Image/Lookup1.jpg" sfwActiveForm="wfmESSPersonLookup" sfwMethodName="btnRetrieve_Click" sfwRelatedControl="txtTextBox" sfwSelectedIndex="PersonId" />
+        <sfwLabel ID="lblLabel2" Text="Employee SSN :" sfwIsCaption="True" />
+        <sfwTextBox ID="txtTextBox1" sfwDataField="epd.ssn" sfwQueryID="ESSLookup" sfwOperator="like" sfwDataFormat="{0:000-##-####}" />
+        <sfwLabel ID="capLastName" Text="Last Name : " AssociatedControlID="txtLastName" sfwIsCaption="True" />
+        <sfwTextBox ID="txtLastName" sfwDataField="epd.last_name" sfwQueryID="ESSLookup" sfwOperator="like" />
+        <sfwLabel ID="capFirstName" Text="First Name : " AssociatedControlID="txtFirstName" sfwIsCaption="True" />
+        <sfwTextBox ID="txtFirstName" sfwDataField="epd.first_name" sfwQueryID="ESSLookup" sfwOperator="like" />
+        <sfwLabel ID="capEmployerPayrollDetailId" Text="Detail ID : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtEmployerPayrollDetailId" sfwDataField="employer_payroll_detail_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="ESSLookup" />
+        <sfwLabel ID="capEmployerPayrollHeaderId" Text="Report ID : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtEmployerPayrollHeaderId" sfwDataField="employer_payroll_header_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="cdoEmployerPayrollDetail" />
+        <sfwImageButton ID="btnRetrieveHeaderID" ImageAlign="AbsMiddle" ImageUrl="~/Image/Lookup1.jpg" sfwActiveFormField="ddlBenefitTypeValue" sfwMethodName="btnRetrieve_Click" sfwRelatedControl="txtEmployerPayrollHeaderId" sfwSelectedIndex="EmployerPayrollHeaderId" sfwActiveForm="RETR=wfmESSRetirementEmployerPayrollHeaderLookup;INSR=wfmESSInsuranceEmployerPayrollHeaderLookup;DEFF=wfmESSDefferedCompEmployerPayrollHeaderLookup;PRCH=wfmESSServicePurchaseEmployerPayrollHeaderLookup" />
+        <sfwLabel ID="capReportTypeValue" Text="Record Type : " sfwIsCaption="True" />
+        <sfwDropDownList ID="ddlRecordTypeValue" sfwDataField="EPD.record_type_value" sfwOperator="like" sfwQueryID="ESSLookup" sfwData2EqualTo="Y" sfwLoadType="CodeGroup" sfwLoadSource="1208" />
+        <sfwDropDownList ID="ddlRecordTypeValuesDefIns" sfwDataField="EPD.record_type_value" sfwOperator="like" sfwQueryID="ESSLookup" sfwData3EqualTo="Y" sfwLoadType="CodeGroup" sfwLoadSource="1208" />
+        <sfwLabel ID="capPlanId" Text="Plan : " sfwIsCaption="True" />
+        <sfwCascadingDropDownList DataValueField="plan_id" DataTextField="plan_name" ID="ddlPlanId" sfwDataField="EPD.plan_id" sfwOperator="=" sfwQueryID="ESSLookup" sfwLoadType="ServerMethod" sfwLoadSource="GetOrgAndBenefitTypePlans" sfwFirstItemText="All" sfwParentControl="ddlBenefitTypeValue" sfwParameters="astrBenefitTypeValue=ddlBenefitTypeValue" />
+        <sfwLabel ID="capEphSubmittedDatefrm" Text="Submitted Date From : " AssociatedControlID="txtEphSubmittedDatefrm" sfwIsCaption="True" />
+        <sfwTextBox ID="txtEphSubmittedDatefrm" sfwDataField="eph.submitted_date" sfwQueryID="ESSLookup" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="&gt;=" />
+        <sfwLabel ID="capEphSubmittedDateTo" Text="Submitted Date To: " AssociatedControlID="txtEphSubmittedDateTo" sfwIsCaption="True" />
+        <sfwTextBox ID="txtEphSubmittedDateTo" sfwDataField="eph.submitted_date" sfwQueryID="ESSLookup" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="&lt;=" />
+        <sfwLabel ID="lblReportingMonthFrom" Text="Reporting Month From :" sfwIsCaption="True" />
+        <sfwTextBox ID="txtReportingPeriodFrom" sfwDataField="epd.pay_period_date" sfwDataFormat="{0:MM/YYYY}" sfwDataType="DateTime" sfwOperator="&gt;=" sfwQueryID="ESSLookup" sfwTwoWayBinding="False" />
+        <sfwLabel ID="lblReportingMonthTo" Text="Reporting Month To :" sfwIsCaption="True" />
+        <sfwTextBox ID="txtReportingPeriodTo" sfwDataField="epd.pay_period_date" sfwDataFormat="{0:MM/YYYY}" sfwDataType="DateTime" sfwOperator="&lt;=" sfwQueryID="ESSLookup" sfwTwoWayBinding="False" />
+        <sfwLabel ID="capPayPeriodStartDate" Text="Pay Period Start Date : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtPayPeriodStartDate" sfwDataField="epd.pay_period_start_date" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="=" sfwQueryID="ESSLookup" />
+        <sfwLabel ID="capPayPeriodEndDate" Text="Pay Period End Date : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtPayPeriodEndDate" sfwDataField="epd.pay_period_end_date" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="=" sfwQueryID="ESSLookup" />
+        <sfwLabel ID="capPayCheckDateFrom" Text="Pay Check Date From : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtPayCheckDateFrom" sfwDataField="epd.pay_check_date" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="&gt;=" sfwQueryID="ESSLookup" />
+        <sfwLabel ID="capPayCheckDateTo" Text="Pay Check Date To : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtPayCheckDateTo" sfwDataField="epd.pay_check_date" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="&lt;=" sfwQueryID="ESSLookup" />
+        <sfwLabel ID="lblError" Text="Detail Error :" sfwIsCaption="True" />
+        <sfwDropDownList DataTextField="display_message" DataValueField="message_id" ID="ddlMessageId" sfwDataField="message_id" sfwOperator="exists" sfwQueryID="SubLOOKUP1" sfwLoadType="Query" sfwLoadSource="entEmployerPayrollDetail.GET_ERROR_MESSAGE" />
+        <sfwLabel ID="lblLimitResultTo" Text="Limit Results To :" Visible="False" sfwIsCaption="True" />
+        <sfwTextBox ID="txtMaxCount" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="ESSLookup" Visible="False" />
+        <sfwButton ID="btnSearch" sfwMethodName="btnSearch_Click" Text="Search" OnClientClick="TriggerChange" />
+        <sfwButton ID="btnReset" sfwMethodName="btnReset_Click" Text="Reset" />
+        <sfwButton ID="btnStoreSearch" sfwMethodName="btnStoreUserDefaults_Click" Text="StoreSearch" CssClass="hideControl" />
+        <sfwTextBox ID="txbContactId" sfwDataField="OC.contact_id" sfwDataType="Numeric" sfwOperator="exists" sfwQueryID="sqEssLookupContactFilter" />
+        <sfwTextBox ID="txbOrgId" sfwDataField="EPH.org_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="ESSLookup" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlResult" sfwCaption="Search Results">
+      <items>
+        <sfwTable ID="tblResult" />
+        <sfwButton ID="btnNew" sfwActiveForm="wfmESSEmployerPayrollDetailMaintenance" sfwMethodName="btnNew_Click" sfwNavigationParameter="aintEmployerPayrollHeaderId=txtEmployerPayrollHeaderId" Text="New" Visible="False" />
+        <sfwButton ID="btnOpen" sfwMethodName="btnOpen_Click" sfwRelatedControl="grvPayrollDetail" Text="Open" sfwActiveForm="wfmESSEmployerPayrollDetailMaintenance" sfwNavigationParameter="Aintemployerpayrolldetailid=EmployerPayrollDetailId" />
+        <sfwButton ID="btnDelete" sfwMethodName="btnDelete_Click" sfwRelatedControl="grvPayrollDetail" Text="Delete" Visible="False" />
+        <sfwButton ID="btnExportExcel" sfwMethodName="btnColumnsToExport_Click" sfwRelatedControl="grvPayrollDetail" Text="Export To Excel" />
+        <sfwButton ID="btnOpenHeader" sfwActiveForm="wfmESSEmployerPayrollHeaderMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintemployerpayrollheaderid=EmployerPayrollHeaderId" sfwRelatedControl="grvPayrollDetail" Visible="False" />
+        <sfwLabel ID="lblContributionsDisplayed" Text="Contributions displayed are REPORTED amounts" sfwIsCaption="True" />
+        <sfwGridView AllowPaging="True" AllowSorting="True" ID="grvPayrollDetail" sfwSortExpression="EmployerPayrollDetailId desc" sfwSelection="Many" PageSize="1000">
+          <Columns>
+            <TemplateField HeaderText="Detail ID">
+              <ItemTemplate>
+                <sfwLabel sfwRelatedControl="btnOpen" sfwLinkable="True" sfwEntityField="EmployerPayrollDetailId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Report ID">
+              <ItemTemplate>
+                <sfwLabel sfwRelatedControl="btnOpenHeader" sfwLinkable="True" sfwEntityField="EmployerPayrollHeaderId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Last Name">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="LastName" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="First Name">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="FirstName" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="PERSLink ID">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="PersonId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="SSN">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="Ssn" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Detail Status">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="StatusDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Benefit">
+              <ItemTemplate>
+                <sfwLabel ID="lblLabel" sfwEntityField="objEmployerPayrollHeader.HeaderTypeDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Plan">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="PlanName" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Record Type">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="RecordTypeDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Reporting Month">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="PayPeriod" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Submitted Date">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="objEmployerPayrollHeader.SubmittedDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Pay Period Start Date">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="PayPeriodStartDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Pay Period End Date">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="PayPeriodEndDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Pay Check Date">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="PayCheckDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="End Month for Bonus/Retro Pay">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="PayPeriodEndMonthForBonus" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Eligible Wages" ItemStyle.HorizontalAlign="Right">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="EligibleWages" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="EE Post Tax" ItemStyle.HorizontalAlign="Right">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="EeContributionReported" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="EE Pre Tax" ItemStyle.HorizontalAlign="Right">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="EePreTaxReported" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="EE Employer Pickup" ItemStyle.HorizontalAlign="Right">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="EeEmployerPickupReported" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="ER Pre Tax" ItemStyle.HorizontalAlign="Right">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="ErContributionReported" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="RHIC ER" ItemStyle.HorizontalAlign="Right">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="RhicErContributionReported" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="RHIC EE" ItemStyle.HorizontalAlign="Right">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="RhicEeContributionReported" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="EE Interest" ItemStyle.HorizontalAlign="Right">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="MemberInterestCalculated" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="ER Interest" ItemStyle.HorizontalAlign="Right">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="EmployerInterestCalculated" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="ER RHIC Interest" ItemStyle.HorizontalAlign="Right">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="EmployerRhicInterestCalculated" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Premium Amount" ItemStyle.HorizontalAlign="Right">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="PremiumAmount" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Contribution 1" ItemStyle.HorizontalAlign="Right">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="ContributionAmount1" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Provider1">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="ProviderOrgCodeId1" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Contribution 2" ItemStyle.HorizontalAlign="Right">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="ContributionAmount2" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Provider2">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="ProviderOrgCodeId2" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Contribution 3" ItemStyle.HorizontalAlign="Right">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="ContributionAmount3" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Provider3">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="ProviderOrgCodeId3" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Contribution 4" ItemStyle.HorizontalAlign="Right">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="ContributionAmount4" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Provider4">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="ProviderOrgCodeId4" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Contribution 5" ItemStyle.HorizontalAlign="Right">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="ContributionAmount5" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Provider5">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="ProviderOrgCodeId5" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Contribution 6" ItemStyle.HorizontalAlign="Right">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="ContributionAmount6" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Provider6">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="ProviderOrgCodeId6" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Contribution 7" ItemStyle.HorizontalAlign="Right">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="ContributionAmount7" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Provider7">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="ProviderOrgCodeId7" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Purchase Amount" ItemStyle.HorizontalAlign="Right">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="PurchaseAmountReported" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Org Name" Visible="False" sfwUseAsSortExpression="True">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objEmployerPayrollHeader.objOrganization.OrgName" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Org Code ID" Visible="False" sfwUseAsSortExpression="True">
+              <ItemTemplate>
+                <sfwLabel sfwRelatedControl="btnOpen" sfwEntityField="objEmployerPayrollHeader.objOrganization.OrgCode" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Comment">
+              <ItemTemplate>
+                <sfwLabel Width="750px" sfwEntityField="IstrComments50Char" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Comments">
+              <ItemTemplate>
+                <sfwLabel Width="250px" sfwEntityField="IstrlookupComment" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Peoplesoft ID">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="IstrPeopleSoftID" />
+              </ItemTemplate>
+            </TemplateField>
+          </Columns>
+        </sfwGridView>
+      </items>
+    </sfwPanel>
+  </items>
+  <loaddetails />
+  <ExtraFields />
+</form>

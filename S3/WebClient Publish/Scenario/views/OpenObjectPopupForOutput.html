@@ -1,0 +1,69 @@
+﻿<div class="portlet-body ">
+
+    <div class="page-subheading fleft">Fields</div>
+
+    <div id="dvButtons" class="fright">
+        <a id="addField" ng-click="AddColumnForCollection()" title="Add Column" ng-hide="IsExcelBasedScenario"><img src="images/Common/icon_add_dark.svg" /></a>
+        <a ng-click="DeleteObjectField()" title="Remove Column" ng-hide="IsExcelBasedScenario"><img src="images/Common/icon_delete_dark.svg" /></a>
+    </div>
+
+
+    <div class="scenario-popup-body">
+        <table cellspacing="0" cellpadding="0" id="tblScenarioObjectPopupOutput" class="sws-table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Id</th>
+                    <th>Is Constant</th>
+                    <th>Expected Value</th>
+                    <th ng-hide="objselectedstep.IsRunSelected !=true">Actual Value</th>
+                    <th>Ignore</th>
+                    <th ng-hide="objselectedstep.IsRunSelected !=true">Result</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="field in SelectedTestField.objFieldsVM.Elements" ng-click="UpdateSelectedObjectField(field)" ng-disabled="IsExcelBasedScenario">
+                    <td></td>
+                    <td><span ng-bind="field.dictAttributes.ID"></span></td>
+
+                    <td>
+                        <input type="checkbox" ng-model="field.dictAttributes.sfwIsconstant" ng-true-value="'True'" ng-false-value="'False'" undoredodirective model="field" 
+                               ng-disabled="field.dictAttributes.sfwDataType=='Collection' || field.dictAttributes.sfwDataType=='List' || field.dictAttributes.sfwDataType=='Object'" 
+                               ng-change="OnConstantValueChange(field)"/>
+                    </td>
+                    <td ng-show="field.dictAttributes.sfwIsconstant =='True'">
+                        <constantintellisene constantbinding="field.dictAttributes.Value" propertyname="'dictAttributes.Value'" model="field" ></constantintellisene>
+                    </td>
+                    <td ng-hide="field.dictAttributes.sfwIsconstant =='True' || field.dictAttributes.sfwDataType =='Collection' || field.dictAttributes.sfwDataType =='Object' || field.dictAttributes.sfwDataType =='List'">
+                        <input type="text" ng-disabled="IsExcelBasedScenario" class="form-control form-filter input-sm" title="{{field.dictAttributes.Value}}" ng-model="field.dictAttributes.Value" 
+                               model="field" undoredodirective/>
+                    </td>
+                    <td ng-show="(field.dictAttributes.sfwDataType =='Collection' || field.dictAttributes.sfwDataType =='List')">
+                        <a ng-click="OpenPopupForCollection(field,SelectedTestField.IsOutput)" title="Add Collection">
+                            <img src="images/Common/icon_add_dark.svg">
+                        </a>
+                    </td>
+                    <td ng-show="field.dictAttributes.sfwDataType =='Object'">
+                        <a ng-click="OpenPopupForOutputObject(field, objselectedstep)" title="Add Object">
+                            <img src="images/Common/icon_add_dark.svg">
+                        </a>
+                    </td>
+                    <td ng-hide="objselectedstep.IsRunSelected !=true">
+                        <span ng-bind="field.ResultValue"></span>
+                    </td>
+                    <td>
+                        <input type="checkbox" ng-true-value="'True'" ng-false-value="'False'" ng-model="field.dictAttributes.sfwIgnore" ng-checked="field.dictAttributes.sfwIgnore" 
+                               model="field" undoredodirective/>
+                    </td>
+                    <td ng-show="objselectedstep.IsRunSelected ==true && (field.dictAttributes.sfwIgnore == 'False' || field.dictAttributes.sfwIgnore==undefined)">
+                        <i class="fa fa-check faCheckScenario" ng-show="field.Status"></i>
+                        <i class="fa fa-times faTimesScenario" ng-show="!field.Status"></i>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="form-actions">
+    <input type="button" value="OK" ng-click="objectOutputDialog.close()" class="dialog-btn" />
+</div>

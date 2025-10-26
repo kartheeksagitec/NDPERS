@@ -1,0 +1,79 @@
+
+/********************Purpose: PIR 26488******************************
+*********************Created By: Sarvesh Ghante********************************
+*********************Comments: Added New Columns to tha table Payee Account Rollover Detail************/
+
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE [Name] = N'FBO' AND Object_ID = Object_ID(N'dbo.SGT_PAYEE_ACCOUNT_ROLLOVER_DETAIL'))
+BEGIN
+    ALTER TABLE SGT_PAYEE_ACCOUNT_ROLLOVER_DETAIL
+	ADD FBO varchar (100) NULL;
+END
+GO
+
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE [Name] = N'ADDR_LINE_1' AND Object_ID = Object_ID(N'dbo.SGT_PAYEE_ACCOUNT_ROLLOVER_DETAIL'))
+BEGIN
+    ALTER TABLE SGT_PAYEE_ACCOUNT_ROLLOVER_DETAIL
+	ADD ADDR_LINE_1 varchar(60) NULL
+END
+GO
+
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE [Name] = N'ADDR_LINE_2' AND Object_ID = Object_ID(N'dbo.SGT_PAYEE_ACCOUNT_ROLLOVER_DETAIL'))
+BEGIN
+    ALTER TABLE SGT_PAYEE_ACCOUNT_ROLLOVER_DETAIL
+	ADD ADDR_LINE_2 varchar(60) NULL
+END
+GO
+
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE [Name] = N'CITY' AND Object_ID = Object_ID(N'dbo.SGT_PAYEE_ACCOUNT_ROLLOVER_DETAIL'))
+BEGIN
+    ALTER TABLE SGT_PAYEE_ACCOUNT_ROLLOVER_DETAIL
+	ADD CITY varchar(50) NULL
+END
+GO
+
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE [Name] = N'STATE_ID' AND Object_ID = Object_ID(N'dbo.SGT_PAYEE_ACCOUNT_ROLLOVER_DETAIL'))
+BEGIN
+    ALTER TABLE SGT_PAYEE_ACCOUNT_ROLLOVER_DETAIL
+	ADD STATE_ID int null
+END
+GO
+
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE [Name] = N'STATE_VALUE' AND Object_ID = Object_ID(N'dbo.SGT_PAYEE_ACCOUNT_ROLLOVER_DETAIL'))
+BEGIN
+    ALTER TABLE SGT_PAYEE_ACCOUNT_ROLLOVER_DETAIL
+	ADD STATE_VALUE varchar(4) NULL
+END
+GO
+
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE [Name] = N'ZIP_CODE' AND Object_ID = Object_ID(N'dbo.SGT_PAYEE_ACCOUNT_ROLLOVER_DETAIL'))
+BEGIN
+    ALTER TABLE SGT_PAYEE_ACCOUNT_ROLLOVER_DETAIL
+	ADD ZIP_CODE varchar(5) NULL
+END
+GO
+
+IF NOT EXISTS(SELECT 1 FROM sys.columns 
+          WHERE [Name] = N'ZIP_4_CODE' AND Object_ID = Object_ID(N'dbo.SGT_PAYEE_ACCOUNT_ROLLOVER_DETAIL'))
+BEGIN
+    ALTER TABLE SGT_PAYEE_ACCOUNT_ROLLOVER_DETAIL
+	ADD ZIP_4_CODE varchar(4) NULL
+END
+GO
+
+/********************Purpose: PIR 27006******************************
+*********************Created By: Vidya Fulsoundar ********************************
+*********************Comments: Added New Column in SGT_PAYMENT_1099R table************/
+
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'SGT_PAYMENT_1099R' AND COLUMN_NAME = 'CORRECTIONS_1099R')
+BEGIN
+ALTER TABLE SGT_PAYMENT_1099R
+ADD CORRECTIONS_1099R VARCHAR(1) DEFAULT NULL
+END
+GO

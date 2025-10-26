@@ -1,0 +1,138 @@
+﻿<div class="portlet-body file-inbound-content">
+    <ul class="nav nav-tabs" ng-init="selectedFilesTab='CSS'">
+        <li ng-class="selectedFilesTab=='CSS'?'active':''" ng-click="selectFileTab('CSS')">
+            <a data-toggle="tab" aria-expanded="true">
+                CSS
+            </a>
+        </li>
+        <li ng-class="selectedFilesTab=='JS'?'active':''" ng-click="selectFileTab('JS')">
+            <a data-toggle="tab" aria-expanded="false">
+                JavaScript
+            </a>
+        </li>
+    </ul>
+
+    <div class="form-body full-height" ng-class="selectedFilesTab=='CSS'?'tab-pane fade active in':'tab-pane fade'" ng-show="selectedFilesTab=='CSS'">
+        <div class="form-group full-height">
+            <div class="col-xs-5 full-height no-left-padding">
+                <div class="panel panel-primary full-height">
+                    <div class="panel-heading col-xs-12">
+                        <div class="col-xs-6">
+                            <input ng-disabled="lstCssFiles && !lstCssFiles.length" id="select-all-css" type="checkbox" ng-model="selectAllCssFiles" ng-change="selectAllCssFile(selectAllCssFiles,lstCssFiles,cssFileList)" />
+                            <label for="select-all-css"> Select All</label>
+                        </div>
+                        <div class="col-xs-6">
+                            <input ng-disabled="lstCssFiles && !lstCssFiles.length" type="text" placeholder="Filter files" class="form-control input-sm" ng-model="filterCssFile" />
+                        </div>
+                    </div>
+                    <div class="panel-body details-session-panel-body" style="height: calc(100% - 33px) !important;">
+                        <table class="sws-table" role="grid">
+                            <tbody id="cssFileList">
+                                <tr ng-repeat="cssFile in lstCssFiles | filter:filterCssFile track by $index" ng-click="selectCssFile($event,cssFile,cssFileList)">
+                                    <td>
+                                        <span ng-bind="cssFile" title="{{cssFile}}"></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-1 add-btn-adjust sessions-tab">
+                <input ng-disabled="cssFileList && !cssFileList.length" type="button" title="Add" class="dialog-btn" value=">>" ng-click="addCssFiles(selectAllCssFiles,selectedCssFileList,lstCssFiles,'css')" />
+            </div>
+            <div class="col-xs-6 full-height">
+                <div class="panel panel-primary full-height">
+                    <div class="panel-heading col-xs-12">
+                        <span class="col-xs-4">Added Files </span>
+                        <div class="col-xs-7">
+                            <input style="padding-top: 0px;float: right;" type="button" class="dialog-btn" value="Add From Web.config" ng-click="addCssFromWebConfig(lstCssFiles,selectedCssFileList)" />
+                        </div>
+                        <div class="col-xs-1">
+                            <i class="fa fa-minus" title="Delete File" ng-click="deleteCssFile(selectedCssFileList,lstCssFiles,'#selectedCssFiles')" ng-disabled="!canDeleteCssFile()"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body details-session-panel-body" style="height: calc(100% - 33px) !important;">
+
+                        <table class="sws-table" role="grid">
+                            <tbody id="selectedCssFiles">
+                                <tr ng-repeat="file in selectedCssFileList track by $index" ng-click="selectAddedCssFile($event,file,'#selectedCssFiles')">
+                                    <td>
+                                        <span ng-bind="file" title="{{file}}"></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content form-details-label form-detail-tab-content subquery-tab-main" ng-class="selectedFilesTab=='JS'?'tab-pane fade active in':'tab-pane fade'" ng-if="selectedFilesTab=='JS'">
+        <div class="form-group full-height">
+            <div class="col-xs-5 full-height no-left-padding">
+                <div class="panel panel-primary full-height">
+                    <div class="panel-heading col-xs-12">
+                        <div class="col-xs-6">
+                            <input ng-disabled="lstJsFiles && !lstJsFiles.length" id="select-all-css" type="checkbox" ng-model="selectAllJsFiles" ng-change="selectAllCssFile(selectAllJsFiles,lstJsFiles,jsFileList)" />
+                            <label for="select-all-css"> Select All</label>
+                        </div>
+                        <div class="col-xs-6">
+                            <input ng-disabled="lstJsFiles && !lstJsFiles.length" type="text" placeholder="Filter files" class="form-control input-sm" ng-model="filterJsFile" />
+                        </div>
+                    </div>
+                    <div class="panel-body details-session-panel-body" style="height: calc(100% - 33px) !important;">
+                        <table class="sws-table" role="grid">
+                            <tbody id="jsFileList">
+                                <tr ng-repeat="jsFile in lstJsFiles | filter:filterJsFile track by $index" ng-click="selectCssFile($event,jsFile,jsFileList)">
+                                    <td>
+                                        <span ng-bind="jsFile" title="{{jsFile}}"></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-1 add-btn-adjust sessions-tab">
+                <input ng-disabled="jsFileList && !jsFileList.length" type="button" title="Add" class="dialog-btn" value=">>" ng-click="addCssFiles(selectAllJsFiles,selectedJsFilesList,lstJsFiles,'js')" />
+            </div>
+            <div class="col-xs-6 full-height">
+                <div class="panel panel-primary full-height">
+                    <div class="panel-heading col-xs-12">
+                        <span class="col-xs-4">Added Files </span>
+                        <!--<div class="col-xs-7">
+                            <input style="padding-top: 0px;float: right;" type="button" class="dialog-btn" value="Add From Web.config" ng-click="addCssFromWebConfig(lstJsFiles,selectedJsFilesList)"  />
+                        </div>-->
+                        <div class="col-xs-1">
+                            <i class="fa fa-minus" title="Delete File" ng-click="deleteCssFile(selectedJsFilesList,lstJsFiles,'#selectedJsFiles')" ng-disabled="!canDeleteJsFile()"></i>
+                        </div>
+                    </div>
+
+                    <div class="panel-body details-session-panel-body" style="height: calc(100% - 33px) !important;">
+                        <table class="sws-table" role="grid">
+                            <tbody id="selectedJsFiles">
+                                <tr ng-repeat="file in selectedJsFilesList track by $index" ng-click="selectAddedCssFile($event,file,'#selectedJsFiles')">
+                                    <td>
+                                        <span ng-bind="file" title="{{file}}"></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-actions">
+    <div class="col-xs-8 text-left">
+        <span class="alert-error-msg" ng-bind="ErrorMessage"></span>
+    </div>
+    <div class="col-xs-4">
+        <input type="button" value="OK" class="dialog-btn" ng-click="onCssDialogOkClick()" ng-disabled="validateCssDetails()" />
+        <input type="button" value="Cancel" class="dialog-btn" ng-click="closeDialog()" />
+    </div>
+</div>

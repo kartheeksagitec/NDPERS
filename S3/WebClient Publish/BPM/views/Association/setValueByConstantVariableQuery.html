@@ -1,0 +1,22 @@
+﻿<div>
+    <div class="form-group">
+        <label class="control-label marg-bottom-5">{{ $ctrl.direction }} Source</label>
+        <select class="form-control input-sm" ng-model="$ctrl.model.type" ng-change="$ctrl.onTypechange()" undoredodirective model="$ctrl.model" propertyname="'type'">
+            <option>SystemConstant</option>
+            <option>Variable</option>
+            <option>Query</option>
+            <option ng-if="$ctrl.isLeftSideExpression">Expression</option>
+        </select>
+    </div>
+    <div class="form-group" ng-show="$ctrl.model.type">
+        <label class="control-label marg-bottom-5">{{ $ctrl.direction }} Value</label>
+        <input class="form-control input-sm" ng-disabled="$ctrl.isDisabledforVersioning" type="text" title="{{$ctrl.model.value}}" ng-model="$ctrl.model.value" undoredodirective model='$ctrl.model' ng-show="$ctrl.model.type === 'SystemConstant'" />
+        <select class="form-control input-sm" ng-options="x for x in $ctrl.parent.queryParametersvalues" title="{{$ctrl.model.value}}" ng-model="$ctrl.model.value" undoredodirective model='$ctrl.model' propertyname="'value'" ng-show="$ctrl.model.type === 'Variable'">
+            <option value=""></option>
+        </select>
+        <div ng-show="$ctrl.model.type === 'Query'">
+            <entityqueryintellisense selecteditem="$ctrl.model.sfwQueryID" disableflag="$ctrl.IsDisabledforVersioning" model="$ctrl.model" propertyname="'sfwQueryID'" parametermodel="$ctrl.model.sfwQueryParameters" showsearchbutton="true" isbpm="true" parameterallowedvalues="$ctrl.parent.queryParameterallowedValues"></entityqueryintellisense>
+        </div>
+        <input class="form-control input-sm" ng-disabled="$ctrl.isDisabledforVersioning" type="text" title="{{$ctrl.model.value}}" ng-model="$ctrl.model.value" undoredodirective model='$ctrl.model' ng-show="$ctrl.model.type === 'Expression'" />
+    </div>
+</div>

@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entPlanRetirementRate" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoPlanRetirementRate" sfwObjectID="busPlanRetirementRate" sfwTableName="sgt_plan_retirement_rate" sfwParentEntity="entPlanBase">
+  <rules>
+    <rule ID="Check EE Emp Pickup is betweeen 0 and 100" sfwMessageId="4150" sfwExpression="((this.icdoPlanRetirementRate.ee_emp_pickup &gt; 100) || &#xA;(this.icdoPlanRetirementRate.ee_emp_pickup &lt; 0))" sfwObjectBased="True" />
+    <rule ID="Rule Check EE Post Tax is greater than 0 and less than 100" sfwMessageId="4151" sfwExpression="((this.icdoPlanRetirementRate.ee_post_tax &gt; 100) || &#xA;(this.icdoPlanRetirementRate.ee_post_tax &lt; 0))" sfwObjectBased="True" />
+    <rule ID="Rule check EE Pre tax is greater than 100 or less than 0" sfwMessageId="4152" sfwExpression="((this.icdoPlanRetirementRate.ee_pre_tax &lt; 0) || &#xA;(this.icdoPlanRetirementRate.ee_pre_tax &gt; 100))" sfwObjectBased="True" />
+    <rule ID="Rule Check EE RHIC is greater than 100 and less than 0" sfwMessageId="4153" sfwExpression="((this.icdoPlanRetirementRate.ee_rhic &gt; 100) || &#xA;(this.icdoPlanRetirementRate.ee_rhic &lt; 0))" sfwObjectBased="True" />
+    <rule ID="Rule Check effective date is null" sfwMessageId="4140" sfwExpression="(this.icdoPlanRetirementRate.effective_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="Rule Check ER Post TAx greater than 100 and less than 0" sfwMessageId="4154" sfwExpression="((this.icdoPlanRetirementRate.er_post_tax &gt; 100) || &#xA;(this.icdoPlanRetirementRate.er_post_tax &lt; 0))" sfwObjectBased="True" />
+    <rule ID="Rule Check ER RHIC greater than 100 and less than 0" sfwMessageId="4155" sfwExpression="((this.icdoPlanRetirementRate.er_rhic &gt; 100) || &#xA;(this.icdoPlanRetirementRate.er_rhic &lt; 0))" sfwObjectBased="True" />
+    <rule ID="Rule check Member Type is null" sfwMessageId="4139" sfwExpression="(string.IsNullOrEmpty(this.icdoPlanRetirementRate.member_type_value))" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror>
+    <item ID="Rule check Member Type is null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check effective date is null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Check EE Emp Pickup is betweeen 0 and 100" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check EE Post Tax is greater than 0 and less than 100" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule check EE Pre tax is greater than 100 or less than 0" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check EE RHIC is greater than 100 and less than 0" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check ER Post TAx greater than 100 and less than 0" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check ER RHIC greater than 100 and less than 0 " sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <updateablecdo />
+  <queries>
+    <query ID="GetRateForPlanAndDate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select top 1 * from SGT_PLAN_RETIREMENT_RATE (nolock)&#xD;&#xA;Where Plan_Id = @Plan_Id and Effective_Date &lt;= @Eff_Date&#xD;&#xA;and Member_Type_Value = @member_type_value&#xD;&#xA;Order by Effective_Date desc&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@Plan_Id" sfwDataType="int" />
+        <parameter ID="@Eff_Date" sfwDataType="DateTime" />
+        <parameter ID="@member_type_value" sfwDataType="string" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="PlanRateId" sfwType="Column" sfwValue="plan_rate_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PlanId" sfwType="Column" sfwValue="plan_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="EffectiveDate" sfwType="Column" sfwValue="effective_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="MemberTypeDescription" sfwType="Description" sfwValue="member_type_description" />
+    <attribute ID="MemberTypeId" sfwType="Column" sfwValue="member_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="320" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="MemberTypeValue" sfwType="Column" sfwValue="member_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="EePreTax" sfwType="Column" sfwValue="ee_pre_tax" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,4" />
+    <attribute ID="EePostTax" sfwType="Column" sfwValue="ee_post_tax" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,4" />
+    <attribute ID="EeEmpPickup" sfwType="Column" sfwValue="ee_emp_pickup" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,4" />
+    <attribute ID="EeRhic" sfwType="Column" sfwValue="ee_rhic" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,4" />
+    <attribute ID="ErPostTax" sfwType="Column" sfwValue="er_post_tax" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,4" />
+    <attribute ID="ErRhic" sfwType="Column" sfwValue="er_rhic" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,4" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AddlEePreTax" sfwType="Column" sfwValue="addl_ee_pre_tax" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,4" />
+    <attribute ID="AddlEePostTax" sfwType="Column" sfwValue="addl_ee_post_tax" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,4" />
+    <attribute ID="AddlEeEmpPickup" sfwType="Column" sfwValue="addl_ee_emp_pickup" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,4" />
+    <attribute sfwValue="ee_pretax_addl" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="18,0" sfwIsNull="True" ID="EePretaxAddl" sfwCaption="Ee Pretax Addl" />
+    <attribute sfwValue="ee_post_tax_addl" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="18,0" sfwIsNull="True" ID="EePostTaxAddl" sfwCaption="Ee Post Tax Addl" />
+    <attribute sfwValue="er_pretax_match" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="18,0" sfwIsNull="True" ID="ErPretaxMatch" sfwCaption="Er Pretax Match" />
+    <attribute sfwValue="adec" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="18,0" sfwIsNull="True" ID="Adec" sfwCaption="Adec" />
+    <attribute ID="IstrEmploymentTypeValue" sfwDataType="string" sfwPrivate="False" sfwValue="istrEmploymentTypeValue" sfwType="Property" />
+    <attribute sfwType="CDOCollection" sfwEntity="entPlanMemberTypeCrossref" ID="lstPlanMemberTypeCrossref" sfwValue="iclbPlanMemberTypeCrossref" />
+  </attributes>
+</entity>

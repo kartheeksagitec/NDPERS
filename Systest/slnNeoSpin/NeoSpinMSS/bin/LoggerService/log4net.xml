@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <configSections>
+    <section name="log4net" type="log4net.Config.Log4NetConfigurationSectionHandler, log4net" />
+  </configSections>
+  <log4net>
+    <appender name="RollingLogFileAppender" type="log4net.Appender.RollingFileAppender">
+      <file value="../../ErrorLog/logfile" />
+      <appendToFile value="true" />
+      <rollingStyle value="Date" />
+      <datePattern value="yyyyMMdd" />
+      <layout type="log4net.Layout.PatternLayout">
+        <conversionPattern value="%date [%thread] %-5level %logger [%property{NDC}] - %message%newline" />
+      </layout>
+    </appender>
+    <!--
+    CREATE TABLE [dbo].[Log] (
+    [Id] [int] IDENTITY (1, 1) NOT NULL,
+    [Date] [datetime] NOT NULL,
+    [Thread] [varchar] (255) NOT NULL,
+    [Level] [varchar] (50) NOT NULL,
+    [Logger] [varchar] (255) NOT NULL,
+    [Message] [varchar] (4000) NOT NULL,
+    [Exception] [varchar] (2000) NULL
+    )
+    -->
+    <appender name="AdoNetAppender" type="log4net.Appender.AdoNetAppender">
+      <bufferSize value="100" />
+      <connectionType value="System.Data.SqlClient.SqlConnection, System.Data, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+      <connectionString value="data source=[database server];initial catalog=[database name];integrated security=false;persist security info=True;User ID=[user];Password=[password]" />
+      <commandText value="INSERT INTO Log ([Date],[Thread],[Level],[Logger],[Message],[Exception]) VALUES (@log_date, @thread, @log_level, @logger, @message, @exception)" />
+      <parameter>
+        <parameterName value="@log_date" />
+        <dbType value="DateTime" />
+        <layout type="log4net.Layout.RawTimeStampLayout" />
+      </parameter>
+      <parameter>
+        <parameterName value="@thread" />
+        <dbType value="String" />
+        <size value="255" />
+        <layout type="log4net.Layout.PatternLayout">
+          <conversionPattern value="%thread" />
+        </layout>
+      </parameter>
+      <parameter>
+        <parameterName value="@log_level" />
+        <dbType value="String" />
+        <size value="50" />
+        <layout type="log4net.Layout.PatternLayout">
+          <conversionPattern value="%level" />
+        </layout>
+      </parameter>
+      <parameter>
+        <parameterName value="@logger" />
+        <dbType value="String" />
+        <size value="255" />
+        <layout type="log4net.Layout.PatternLayout">
+          <conversionPattern value="%logger" />
+        </layout>
+      </parameter>
+      <parameter>
+        <parameterName value="@message" />
+        <dbType value="String" />
+        <size value="4000" />
+        <layout type="log4net.Layout.PatternLayout">
+          <conversionPattern value="%message" />
+        </layout>
+      </parameter>
+      <parameter>
+        <parameterName value="@exception" />
+        <dbType value="String" />
+        <size value="2000" />
+        <layout type="log4net.Layout.ExceptionLayout" />
+      </parameter>
+    </appender>
+    
+    <appender name="SmtpAppender" type="log4net.Appender.SmtpAppender">
+      <to value="[to@domain.com]" />
+      <from value="[from@domain.com]" />
+      <subject value="test logging message" />
+      <smtpHost value="SMTPServer.domain.com" />
+      <bufferSize value="[512]" />
+      <lossy value="true" />
+      <evaluator type="log4net.Core.LevelEvaluator">
+        <threshold value="WARN"/>
+      </evaluator>
+      <layout type="log4net.Layout.PatternLayout">
+        <conversionPattern value="%newline%date [%thread] %-5level %logger [%property{NDC}] - %message%newline%newline%newline" />
+      </layout>
+    </appender>
+
+    <appender name="RemoteSyslogAppender" type="log4net.Appender.RemoteSyslogAppender">
+      <layout type="log4net.Layout.PatternLayout" value="%-5p %type: %m%n"/>
+      <remoteAddress value="[LOGSERVER]" />
+    </appender>
+    <root>
+      <level value="INFO" />
+      <appender-ref ref="RollingFileAppender" />
+    </root>
+  </log4net>
+</configuration>

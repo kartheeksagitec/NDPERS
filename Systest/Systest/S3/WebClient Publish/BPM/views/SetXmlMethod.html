@@ -1,0 +1,62 @@
+﻿<div class="portlet-body">
+    <div class="form-group">
+        <label class="col-xs-3">Entity : </label>
+        <div class="col-xs-9">
+            <common-intellisense change-callback="onEntityChanged()" model="businessObjectModel" propertyname="'dictAttributes.sfwEntity'" collection="validEntities" display-property-name="'ID'" selected-property-name="'ID'" selected-item="businessObjectModel.dictAttributes.sfwEntity" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-3">Initialization Source:</label>
+        <div class="col-xs-9">
+            <select class="form-control input-sm" ng-model="businessObjectModel.initializeModel.dictAttributes.ObjectType" ng-change="onObjectTypeChanged()" undoredodirective model="businessObjectModel.initializeModel" propertyname="'dictAttributes.ObjectType'">
+                <option selected value="">XML Method</option>
+                <option value="SrvMethod">Service Method</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group" ng-show="businessObjectModel.initializeModel.dictAttributes.ObjectType !== 'SrvMethod'">
+        <label class="col-xs-3">Load Method: </label>
+        <div class="col-xs-9">
+            <common-intellisense change-callback="onXmlMethodChange()" model="objSetParam" propertyname="'selectedXmlMethodID'" collection="xmlMethods" display-property-name="'ID'" selected-property-name="'ID'" selected-item="objSetParam.selectedXmlMethodID" />
+        </div>
+    </div>
+    <div class="form-group" ng-show="businessObjectModel.initializeModel.dictAttributes.ObjectType === 'SrvMethod'">
+        <label class="col-xs-3">Service : </label>
+        <div class="col-xs-9">
+            <common-intellisense model="businessObjectModel.initializeModel.srvMethodModel" propertyname="'dictAttributes.srvName'" collection="businessObjectModel.initializeModel.srvObjects" selected-item="businessObjectModel.initializeModel.srvMethodModel.dictAttributes.srvName" display-property-name="'ID'" selected-property-name="'ID'"
+                                 change-callback="onSrvObjectChanged()"></common-intellisense>
+        </div>
+    </div>
+    <div class="form-group" ng-show="businessObjectModel.initializeModel.dictAttributes.ObjectType === 'SrvMethod'">
+        <label class="col-xs-3">Service Method : </label>
+        <div class="col-xs-9">
+            <common-intellisense model="businessObjectModel.initializeModel.srvMethodModel" propertyname="'dictAttributes.ID'" collection="businessObjectModel.initializeModel.srvMethods" selected-item="businessObjectModel.initializeModel.srvMethodModel.dictAttributes.ID" display-property-name="'ID'" selected-property-name="'ID'"
+                                 change-callback="onSrvMethodChanged()"></common-intellisense>
+        </div>
+    </div>
+
+    <div class="col-xs-12 margin-bottom-10" ng-show="selectedXmlMethodID">
+        <div class="parameter-data" ng-repeat="item in xmlMethodParameters">
+            <div class="parameter-head"><label class="ng-binding">{{ item.ID }}</label></div>
+            <div class="inner-parameter-content">
+                <span class="dashoard-rules-span ng-binding" contenteditable="false" data-placeholder="Parameter">{{ item.SfwParameters }}</span>
+                <span class="dashoard-rules-span ng-binding" contenteditable="false" data-placeholder="Load Type">{{ item.LoadType }}</span>
+                <span class="dashoard-rules-span ng-binding" contenteditable="false" data-placeholder="Load Source">{{ item.LoadSource }}</span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-3">Navigation Parameters: </label>
+        <div class="col-xs-9">
+            <div class='input-group'>
+                <input class="form-control input-sm" type="text" readonly title="{{businessObjectModel.dictAttributes.sfwNavigationParameter}}" ng-model="businessObjectModel.dictAttributes.sfwNavigationParameter" />
+                <span title="set XML method Parameters" class='input-group-addon input-sm' ng-click="setXmlMethodParameters()">
+                    <i class="fa fa-chevron-right"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-actions">
+    <input type="button" value="OK" class="dialog-btn" ng-click="onOKClick()" />
+</div>

@@ -1,0 +1,28 @@
+﻿<div class="form-body full-height">
+    <div ng-repeat="obj in lstDisplayBusinessObject" ng-show="obj.IsVisible" class="entity-tree-path">
+        <div ng-bind="obj.strDisplayName" title="{{obj.strDisplayName}}"></div>
+        <div ng-if="obj.strDisplayName.trim() == ''"><input type="text" placeholder="Object Path" disabled="disabled" style="border: none;background:#ffffff"></div>
+    </div>
+    <div class="col-xs-12 form-group entity-tree-top" id='tree_2' ng-repeat="objBusinessObject in lstBusinessObjects" ng-show="objBusinessObject.IsVisible">
+
+        <div class="toolbox-entity-search">
+            <input type="text" ng-model="objBusinessObjectFilter.ObjectTreeFilter" ng-change="sortList(objBusinessObject,objBusinessObjectFilter.ObjectTreeFilter)" class="form-control input-sm" placeholder="search here.." />
+            <img src="images/Common/uparrow.png" title="Navigate back" ng-click="Navigatetoprevlist()" />
+        </div>
+        <div ng-if="ischeckboxvisible">
+            <input type="checkbox" ng-model="IsSelectAll" ng-true-value="true" ng-false-value="false" ng-show="ischeckboxvisible" ng-change="OnChangeSelectAll(IsSelectAll)" />
+            <label ng-show="ischeckboxvisible"> Select All</label>
+        </div>
+        <div ng-bind="objBusinessObject.strBusinessobjectId" title="{{objBusinessObject.strBusinessobjectId}}" class="entity-tree-list-input"></div>
+        <div class="form-group form-entity-list-maintenance" ng-class="ischeckboxvisible ?'div-busobject-list':''" entitytreescroll>
+            <ul style="float:left">
+                <li ng-mousedown="selectField(field, $event)" ng-repeat='field in objBusinessObject.SortedProperties | limitTo:objBusinessObjectFilter.LimitCount' customdraggable isobjectbased="true" displaypath="objBusinessObjectFilter.DisplayPath" dragdata="field" ng-class="field.IsRecordSelected?'selected':''" ng-dblclick='LoadNextLevelObjectField(field, $event)' ng-show="objBusinessObject.SortedProperties.length > 0">
+                    <input type="checkbox" ng-model="field.IsSelected" ng-if="ischeckboxvisible" ng-true-value="'True'" ng-false-value="'False'" ng-change="AddIntoSelectedList(field)" />
+                    <span ng-if="field.DataType && field.DataType != 'ValueType'" class="datatype-iconproperties datatype-icon-{{field.DataType}}"></span>
+                    <span ng-if="field.DataType && field.DataType == 'ValueType'" class="datatype-iconproperties datatype-icon-{{field.DataTypeName}}"></span>
+                    <span ng-bind="field.Name" tabindex='{{$index}}' key-up-down-with-element callbackfn='selectField' objproperty="'field'" parentelem="'li'" require-event="true"></span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

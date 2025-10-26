@@ -1,0 +1,27 @@
+﻿CREATE TABLE [dbo].[SGW_BPM_EVENT] (
+    [BPM_EVENT_ID]             INT           IDENTITY (1, 1) NOT NULL,
+    [EVENT_DESC]               VARCHAR (100) NULL,
+    [EVENT_TYPE_ID]            INT           NOT NULL,
+    [EVENT_TYPE_VALUE]         VARCHAR (4)   NULL,
+    [RCPT_EMAIL_ID]            VARCHAR (70)  NULL,
+    [RCPT_FAX_NU]              VARCHAR (15)  NULL,
+    [DOC_TYPE]                 VARCHAR (50)  NULL,
+    [SCREEN_ID]                VARCHAR (50)  NULL,   
+    [PRIORITY_DOCUMENT_IND]    VARCHAR (1)   NULL,
+    [ECM_SECURITY_TEMPLATE_ID] INT           NULL,
+    [ECM_SUBSCRIPTION_FLAG]    VARCHAR (1)   NOT NULL,
+    [STATUS_ID]                INT           NOT NULL,
+    [STATUS_VALUE]             VARCHAR (4)   NULL,
+    [CREATED_BY]               VARCHAR (50)  NOT NULL,
+    [CREATED_DATE]             DATETIME      NOT NULL,
+    [MODIFIED_BY]              VARCHAR (50)  NOT NULL,
+    [MODIFIED_DATE]            DATETIME      NOT NULL,
+    [UPDATE_SEQ]               INT           NULL,
+    [DOCUMENT_CATEGORY]        VARCHAR (50)  NULL,
+    [ORG_ID_REQUIRED_IND]      VARCHAR (1)   NULL,
+    [PERSON_ID_REQUIRED_IND]   VARCHAR (1)   NULL,
+	[DOC_CLASS]                 VARCHAR (100)  NULL,
+    CONSTRAINT [PK_SGW_BPM_EVENT_EVENT_ID] PRIMARY KEY CLUSTERED ([BPM_EVENT_ID] ASC),
+    CONSTRAINT [UK_SGW_BPM_EVENT_DOC_TYPE] UNIQUE NONCLUSTERED ([DOC_TYPE] ASC)
+);
+

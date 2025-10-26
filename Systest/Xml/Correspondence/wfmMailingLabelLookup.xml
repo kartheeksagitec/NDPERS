@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<form ID="wfmMailingLabelLookup" sfwActive="True" sfwStatus="Valid" sfwRemoteObject="srvCorrespondence" sfwResource="603 " sfwType="Lookup" sfwTitle="Mailing Label Lookup" version="3.5" sfwEntity="entMailingLabel" sfwGridCollection="busMailingLabelLookup.icolMailingLabel">
+  <initialload>
+    <query ID="cdoMailingLabel" sfwQueryRef="entMailingLabel.LOOKUP" sfwMethodName="LoadMailingLabels" />
+    <query ID="SubQuery" sfwQueryRef="entMailingLabel.SubQuery" />
+  </initialload>
+  <sfwTable ID="Main">
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlCriteria" sfwCaption="Criteria">
+          <sfwTable CssClass="Table" ID="tblCriteria">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="lblOutput" Text="Output Format :" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlOutputFormatValue" sfwDataField="output_format_value" sfwOperator="like" sfwQueryID="cdoMailingLabel" sfwLoadType="CodeGroup" sfwLoadSource="602" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblcreated_date" Text="Run Date : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtRunDate" sfwDataField="CONVERT(DATETIME,CONVERT(VARCHAR,run_date,101) ,110)" sfwDataType="DateTime" sfwOperator="=" sfwQueryID="cdoMailingLabel" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capFileName" Text="File Name : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtFileName" sfwDataField="file_name" sfwOperator="like" sfwQueryID="cdoMailingLabel" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblperson_type_value" Text="Person Type : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlMailingLabelPersonTypeId" sfwDataField="person_type_value" sfwOperator="=" sfwQueryID="SubQuery" sfwLoadType="CodeGroup" sfwLoadSource="309" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="lblorg_type_value" Text="Org Type : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlOrgTypeValue" sfwDataField="org_type_value" sfwOperator="like" sfwQueryID="cdoMailingLabel" sfwLoadType="CodeGroup" sfwLoadSource="201" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblorg_contact_type_value" Text="Org Contact Type : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlOrgContactRoleValue" sfwDataField="org_contact_role_value" sfwOperator="like" sfwQueryID="cdoMailingLabel" sfwLoadType="CodeGroup" sfwLoadSource="515" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="lblUserId" Text="User ID :" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList DataTextField="user_id" DataValueField="user_id" ID="ddlUserId" sfwDataField="user_id" sfwOperator="=" sfwQueryID="cdoMailingLabel" sfwLoadType="Query" sfwLoadSource="entUser.LOADACTIVEUSER" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnSearch" sfwMethodName="btnSearch_Click" Text="Search" />
+                <sfwButton ID="btnReset" sfwMethodName="btnReset_Click" Text="Reset" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwButton ID="btnStoreSearch" sfwMethodName="btnStoreUserDefaults_Click" Text="Store Search" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlResult" sfwCaption="Search Results">
+          <sfwTable CssClass="Table" ID="tblResult">
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnNew" sfwActiveForm="wfmMailingLabelMaintenance" sfwMethodName="btnNew_Click" Text="New" />
+                <sfwButton ID="btnOpen" sfwActiveForm="wfmMailingLabelMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintmailinglabelid=MailingLabelBatchId" sfwRelatedControl="dgrResult" Text="Open" sfwDisableViewOnly="True" />
+                <sfwButton ID="btnDelete" sfwMethodName="btnDelete_Click" sfwRelatedControl="dgrResult" Text="Delete" />
+                <sfwButton ID="btnExportExcel" sfwMethodName="btnColumnsToExport_Click" sfwRelatedControl="dgrResult" Text="Export to Excel" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwGridView AllowPaging="True" AllowSorting="True" ID="dgrResult" sfwSelection="Many">
+                  <Columns>
+                    <TemplateField HeaderText="Output Format">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="OutputFormatDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Run Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="RunDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="File Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpen" sfwEntityField="FileName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Org Type">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="OrgTypeDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Org Contact Type">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="OrgContactRoleDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="City">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="City" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="User ID">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="UserId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Mailing Label Batch ID" Visible="False" sfwShowInExportToExcel="True">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="MailingLabelBatchId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+  </sfwTable>
+  <loaddetails />
+</form>

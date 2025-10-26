@@ -1,0 +1,176 @@
+﻿<div class="portlet-body">
+    <div class="form-body">
+
+        <div class="form-group search-btn-manage marg-bottom-8">
+            <messageintellisensetemplate messageid='objMaintenanceDetails.sfwNewMessageID'
+                                         model='FormModel' messagetext="'New Message ID:'" showmessagetext='true'
+                                         newDisplayMessage="newDisplayMessage" newSeverityValue="newSeverityValue"></messageintellisensetemplate>
+        </div>
+
+        <div class="form-group search-btn-manage marg-bottom-8">
+            <messageintellisensetemplate messageid='objMaintenanceDetails.sfwOpenMessageID'
+                                         model='FormModel' messagetext="'Open Message ID:'" showmessagetext='true'
+                                         newDisplayMessage="openDisplayMessage" newSeverityValue="openSeverityValue"></messageintellisensetemplate>
+        </div>
+
+        <div class="form-group marg-bottom-8">
+            <label class="control-label col-xs-4"> Initial Load Group:</label>
+            <div class="col-xs-8">
+                <div class='input-group'>
+                    <input type="text" name="FormName" class="form-control input-sm" ng-keydown="objMaintenanceDetails.getGroupList($event)" title="{{objMaintenanceDetails.sfwInitialLoadGroup}}" ng-model="objMaintenanceDetails.sfwInitialLoadGroup" />
+                    <span class='input-group-addon button-intellisense' ng-click="objMaintenanceDetails.showGroupList($event);"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group marg-bottom-8">
+            <label class="control-label col-xs-4"> Hard Error Group:</label>
+            <div class="col-xs-8">
+                <div class='input-group'>
+                    <input type="text" class="form-control input-sm" ng-keydown="objMaintenanceDetails.getGroupList($event)" title="{{objMaintenanceDetails.sfwHardErrorGroup}}" ng-model="objMaintenanceDetails.sfwHardErrorGroup" />
+                    <span class='input-group-addon button-intellisense' ng-click="objMaintenanceDetails.showGroupList($event);"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group form-details-label" ng-init="selectedMaintenanceTab='New'">
+            <ul class="nav nav-tabs">
+                <li ng-class="selectedMaintenanceTab=='New'?'active':''" ng-click="selectedMaintenanceTab='New'">
+                    <a data-toggle="tab" aria-expanded="true">
+                        New
+                    </a>
+                </li>
+                <li ng-class="selectedMaintenanceTab=='Update'?'active':''" ng-click="selectedMaintenanceTab='Update'">
+                    <a data-toggle="tab" aria-expanded="false">
+                        Update
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div ng-class="selectedMaintenanceTab=='New'?'tab-pane fade active in':'tab-pane fade'">
+                    <div class="form-body" ng-show="objFormsDetails.MethodType=='XmlMethod'">
+                        <div class="form-group marg-bottom-8">
+                            <label class="col-xs-4 control-label">New Method:</label>
+                            <div class="col-xs-8">
+                                <select ng-options="method.dictAttributes.ID as method.dictAttributes.ID for method in XmlNewMethodsCollection" title="{{objMaintenanceDetails.sfwNewXmlMethod}}" ng-model="objMaintenanceDetails.sfwNewXmlMethod"
+                                        ng-change="objMaintenanceDetails.populateParamtersForNew(objMaintenanceDetails.sfwNewXmlMethod)"
+                                        class="form-control input-sm"></select>
+                            </div>
+                        </div>
+                        <div class="form-group parametermanage">
+                            <ul ng-if="paramtersForNewMethod.length>0">
+                                <li ng-repeat="item in paramtersForNewMethod" ng-if="paramtersForNewMethod.length>0" style="list-style:none">
+                                    <div>
+                                        <label ng-bind="item.dictAttributes.ID"></label>
+                                    </div>
+
+                                    <div>
+
+                                        <span contenteditable="false" class="dashoard-rules-span" data-placeholder="Parameter" ng-bind="item.dictAttributes.sfwParameter"></span>
+                                        <span contenteditable="false" class="dashoard-rules-span" data-placeholder="Load Type" ng-bind="item.dictAttributes.sfwLoadType"></span>
+                                        <span contenteditable="false" class="dashoard-rules-span" data-placeholder="Load Source" ng-bind="item.dictAttributes.sfwLoadSource"></span>
+
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="form-body" ng-show="objFormsDetails.MethodType=='SrvMethod'">
+                        <div class="form-group marg-bottom-8">
+                            <label class="col-xs-4 control-label">New Method:</label>
+                            <div class="col-xs-8">
+                                <select ng-options="method.dictAttributes.ID as method.dictAttributes.ID for method in objFormsDetails.SrvNewMethodCollection" title="{{objMaintenanceDetails.sfwNewXmlMethod}}" ng-model="objMaintenanceDetails.sfwNewXmlMethod"
+                                        ng-change="objMaintenanceDetails.populateSrvParamtersForNew(objMaintenanceDetails.sfwNewXmlMethod)"
+                                        class="form-control input-sm"></select>
+                            </div>
+                        </div>
+                        <div class="form-group parametermanage">
+                            <ul ng-if="paramtersForNewMethod.length>0">
+                                <li ng-repeat="item in paramtersForNewMethod" ng-if="paramtersForNewMethod.length>0" style="list-style:none">
+                                    <div>
+                                        <label ng-bind="item.dictAttributes.ID"></label>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div ng-class="selectedMaintenanceTab=='Update'?'tab-pane fade active in':'tab-pane fade'">
+                    <div class="form-body" ng-show="objFormsDetails.MethodType=='XmlMethod'">
+                        <div class="form-group marg-bottom-8">
+                            <label class="col-xs-4 control-label">Update Method:</label>
+                            <div class="col-xs-8">
+
+                                <div class="col-xs-8 margin-right-10">
+                                    <select ng-options="method.dictAttributes.ID as method.dictAttributes.ID for method  in XmlUpdateMethodsCollection"
+                                            title="{{objMaintenanceDetails.sfwUpdateXmlMethod}}" ng-model="objMaintenanceDetails.sfwUpdateXmlMethod" ng-change="objMaintenanceDetails.populateParamtersForUpdate(objMaintenanceDetails.sfwUpdateXmlMethod)"
+                                            ng-disabled="objMaintenanceDetails.IsSameAsNew" class="form-control input-sm"></select>
+                                </div>
+
+                                <div class="col-xs-3 padding-0 marg-top-5">
+                                    <input type="checkbox" name="Same as New" ng-model="objMaintenanceDetails.IsSameAsNew" ng-change="objMaintenanceDetails.IsChecked()" ng-disabled="IsSameAsNewDisabled"/>  Same As New
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-group parametermanage">
+                            <ul ng-if="paramtersForUpdateMethod.length>0">
+                                <li ng-repeat="item in paramtersForUpdateMethod">
+                                    <div>
+                                        <label ng-bind="item.dictAttributes.ID"></label>
+                                    </div>
+
+                                    <div>
+                                        <span contenteditable="false" class="dashoard-rules-span" data-placeholder="Parameter" ng-bind="item.dictAttributes.sfwParameter"></span>
+                                        <span contenteditable="false" class="dashoard-rules-span" data-placeholder="Load Type" ng-bind="item.dictAttributes.sfwLoadType"></span>
+                                        <span contenteditable="false" class="dashoard-rules-span" data-placeholder="Load Source" ng-bind="item.dictAttributes.sfwLoadSource"></span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="form-body" ng-show="objFormsDetails.MethodType=='SrvMethod'">
+                        <div class="form-group marg-bottom-8">
+                            <label class="col-xs-4 control-label">Update Method:</label>
+                            <div class="col-xs-8">
+
+                                <div class="col-xs-8 margin-right-10">
+                                    <select ng-options="method.dictAttributes.ID as method.dictAttributes.ID for method  in objFormsDetails.SrvUpdateMethodCollection"
+                                            title="{{objMaintenanceDetails.sfwUpdateXmlMethod}}" ng-model="objMaintenanceDetails.sfwUpdateXmlMethod" ng-change="objMaintenanceDetails.populateSrvParamtersForUpdate(objMaintenanceDetails.sfwUpdateXmlMethod)"
+                                            ng-disabled="objMaintenanceDetails.IsSameAsNew" class="form-control input-sm"></select>
+                                </div>
+
+                                <div class="col-xs-3 padding-0 marg-top-5">
+                                    <input type="checkbox" name="Same as New" ng-model="objMaintenanceDetails.IsSameAsNew" ng-change="objMaintenanceDetails.IsChecked()" ng-disabled="IsSameAsNewDisabled"/>  Same As New
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-group parametermanage">
+                            <ul ng-if="paramtersForUpdateMethod.length>0">
+                                <li ng-repeat="item in paramtersForUpdateMethod">
+                                    <div>
+                                        <label ng-bind="item.dictAttributes.ID"></label>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-actions">
+    <div class="col-xs-6 text-left">
+        <span class="alert-error-msg" ng-if="objMaintenanceDetails.ErrorMessageForDisplay.length>0" ng-bind="objMaintenanceDetails.ErrorMessageForDisplay"></span>
+    </div>
+    <div class="col-xs-6">
+
+        <input type="button" class="dialog-btn" value="Cancel" ng-click="CloseWizardClick()" />
+        <input type="button" class="dialog-btn" value="Back" wz-previous="onPrevious()" />
+        <input type="button" class="dialog-btn" value="Next" wz-next="objMaintenanceDetails.UpdateOnFormDetailsNext();onNext()" ng-disabled="!objMaintenanceDetails.isMaintennanceDetailsNextDisable" />
+        <input type="button" class="dialog-btn" value="Finish" disabled="disabled" />
+    </div>
+</div>

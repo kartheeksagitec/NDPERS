@@ -1,0 +1,99 @@
+﻿<entity ID="entCorTracking" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvCorrespondence" sfwType="BusinessRule" sfwMainCDO="icdoCorTracking" sfwObjectID="busCorTracking" sfwTableName="sgs_cor_tracking" sfwView="False">
+  <rules>
+    <rule ID="Valid To Delete" sfwMessageId="604" sfwExpression="(this.icdoCorTracking.cor_status_value == &quot;GENR&quot;) || &#xA;(this.icdoCorTracking.cor_status_value == &quot;PRNT&quot;)" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror>
+    <item ID="Valid To Delete" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete>
+    <item ID="Valid To Delete" sfwMode="All" sfwStatus="Active" />
+  </validatedelete>
+  <updateablecdo />
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select *&#xD;&#xA;  from sgs_cor_tracking a&#xD;&#xA;  left outer join sgs_cor_templates e on a.template_id = e.template_id&#xD;&#xA;  left outer join sgt_person b on a.person_id = b.person_id&#xD;&#xA;  left outer join sgt_org_contact c on a.org_contact_id = c.org_contact_id&#xD;&#xA;  left outer join sgt_organization d on a.org_id = d.org_id&#xD;&#xA;  left outer join sgt_plan p on a.plan_id = p.plan_id&#xD;&#xA;order by generated_date desc&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;">
+      <parameters />
+    </query>
+    <query ID="ByPerson" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select top 10 a.*, b.template_name, template_desc &#xD;&#xA;  from sgs_cor_tracking a, sgs_cor_templates b &#xD;&#xA; where a.template_id    = b.template_id&#xD;&#xA;   and person_id        = @person_id&#xD;&#xA;order by generated_date desc">
+      <parameters>
+        <parameter ID="@person_id" />
+      </parameters>
+    </query>
+    <query ID="ByOrg" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select top 10 a.*, b.template_name, template_desc &#xD;&#xA;  from sgs_cor_tracking a, sgs_cor_templates b, &#xD;&#xA;       sgt_organization_contact c, sgt_organization d&#xD;&#xA; where a.template_id    = b.template_id&#xD;&#xA;   and a.org_contact_id = c.org_contact_id&#xD;&#xA;   and c.org_id         = d.org_id&#xD;&#xA;   and c.org_id         = @org_id&#xD;&#xA;order by generated_date desc">
+      <parameters>
+        <parameter ID="@org_id" />
+      </parameters>
+    </query>
+    <query ID="LoadCorrespondenceForPurging" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGS_COR_TRACKING A WITH(NOLOCK) &#xD;&#xA;INNER JOIN  SGS_COR_TEMPLATES B WITH(NOLOCK) ON A.TEMPLATE_ID = B.TEMPLATE_ID&#xD;&#xA;WHERE (COR_STATUS_VALUE = 'GENR' AND &#xD;&#xA;DATEDIFF(HH,GENERATED_DATE,GETDATE()) &gt; (SELECT DATA1 FROM SGS_CODE_VALUE WITH(NOLOCK) WHERE CODE_ID=52 AND CODE_VALUE='CREP'))">
+      <parameters />
+    </query>
+    <query ID="GetCorrTrackAndTemplateByTrackingId" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * &#xD;&#xA;  from sgs_cor_tracking a inner join  sgs_cor_templates b on a.template_id = b.template_id&#xD;&#xA; where tracking_id = @trackingId&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@trackingId" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadCorrForFileNetTransfer" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from sgs_cor_tracking a WITH(NOLOCK) inner join  sgs_cor_templates b WITH(NOLOCK) on a.template_id = b.template_id&#xD;&#xA;where a.cor_status_value = 'REIM' AND a.CONVERTED_TO_IMAGE_FLAG = 'Y'">
+      <parameters />
+    </query>
+    <query ID="LoadCorrForTiffConversion" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from sgs_cor_tracking a WITH(NOLOCK) inner join  sgs_cor_templates b WITH(NOLOCK) on a.template_id = b.template_id&#xD;&#xA;where a.cor_status_value = 'REIM' AND (a.CONVERTED_TO_IMAGE_FLAG IS NULL OR a.CONVERTED_TO_IMAGE_FLAG &lt;&gt; 'Y')">
+      <parameters />
+    </query>
+    <query ID="GetCorrTrackPersonTemplate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGS_COR_TRACKING &#xD;&#xA;WHERE PERSON_ID = @PERSON_ID AND TEMPLATE_ID = @TEMPLATE_ID&#xD;&#xA;ORDER BY 1 DESC">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+        <parameter ID="@TEMPLATE_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadFilesToBePurged" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql=" select * from sgs_cor_tracking a WITH(NOLOCK) inner join  sgs_cor_templates b WITH(NOLOCK) on a.template_id = b.template_id&#xD;&#xA;where a.cor_status_value = 'IMNP' AND a.CONVERTED_TO_IMAGE_FLAG = 'Y'">
+      <parameters />
+    </query>
+    <query ID="GetLettersForBatchPrinting" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGS_COR_TRACKING CT WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGS_COR_TEMPLATES CTS WITH(NOLOCK) ON CT.TEMPLATE_ID = CTS.TEMPLATE_ID&#xD;&#xA;WHERE COR_STATUS_VALUE = 'REBP'&#xD;&#xA;ORDER BY CT.PERSON_ID ASC, CT.TRACKING_ID ASC">
+      <parameters />
+    </query>
+    <query ID="UpdateCorStatusToImagingFromCommunicationBatch" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="UPDATE SGS_COR_TRACKING SET COR_STATUS_VALUE = 'REIM' WHERE TEMPLATE_ID IN (SELECT TEMPLATE_ID FROM SGS_COR_TEMPLATES WHERE TEMPLATE_NAME IN ('ENR-5305','ENR-5306'))&#xA;AND COR_STATUS_VALUE = 'GENR'">
+      <parameters />
+    </query>
+    <query ID="LoadCorTrackByPerson" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="DECLARE @DEATHNOTIFICATIONID INT = ISNULL((SELECT DEATH_NOTIFICATION_ID FROM SGT_DEATH_NOTIFICATION WHERE PERSON_ID = @PERSON_ID &#xD;&#xA;AND ACTION_STATUS_VALUE NOT IN ('ERRN','CANC')),0)&#xD;&#xA;SELECT *&#xD;&#xA;  FROM SGS_COR_TRACKING A WITH(NOLOCK)&#xD;&#xA;  LEFT OUTER JOIN SGS_COR_TEMPLATES E WITH(NOLOCK) ON A.TEMPLATE_ID = E.TEMPLATE_ID&#xD;&#xA;  LEFT OUTER JOIN SGT_PERSON B WITH(NOLOCK) ON A.PERSON_ID = B.PERSON_ID&#xD;&#xA;  LEFT OUTER JOIN SGT_ORG_CONTACT C WITH(NOLOCK) ON A.ORG_CONTACT_ID = C.ORG_CONTACT_ID&#xD;&#xA;  LEFT OUTER JOIN SGT_ORGANIZATION D WITH(NOLOCK) ON A.ORG_ID = D.ORG_ID&#xD;&#xA;  LEFT OUTER JOIN SGT_PLAN P WITH(NOLOCK) ON A.PLAN_ID = P.PLAN_ID  &#xD;&#xA;  WHERE (--A.PERSON_ID = @PERSON_ID OR&#xD;&#xA;  A.PERSON_ID IN &#xD;&#xA;  (&#xD;&#xA;&#x9;&#x9;&#x9;SELECT &#xD;&#xA;&#x9;&#x9;&#x9;SPB.BENEFICIARY_PERSON_ID FROM SGT_PERSON_BENEFICIARY SPB WITH(NOLOCK)&#xD;&#xA;&#x9;&#x9;&#x9;LEFT OUTER JOIN SGT_PERSON_ACCOUNT_BENEFICIARY SPAB WITH(NOLOCK) ON SPAB.BENEFICIARY_ID=SPB.BENEFICIARY_ID&#xD;&#xA;&#x9;&#x9;&#x9;LEFT OUTER JOIN SGT_PERSON_ACCOUNT SPA WITH(NOLOCK) ON SPA.PERSON_ACCOUNT_ID=SPAB.PERSON_ACCOUNT_ID&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;&#x9;WHERE SPB.PERSON_ID=@PERSON_ID AND ISNULL(SPA.PLAN_PARTICIPATION_STATUS_VALUE, '') NOT LIKE '%CAN%'&#xD;&#xA;&#xD;&#xA;&#x9;&#x9;&#x9;UNION&#xD;&#xA;&#xD;&#xA;&#x9;&#x9;&#x9;SELECT SPD.DEPENDENT_PERSLINK_ID FROM SGT_PERSON_DEPENDENT SPD WITH(NOLOCK)&#xD;&#xA;&#x9;&#x9;&#x9;INNER JOIN SGT_PERSON_ACCOUNT_DEPENDENT SPAD WITH(NOLOCK) ON SPAD.PERSON_DEPENDENT_ID=SPD.PERSON_DEPENDENT_ID&#xD;&#xA;&#x9;&#x9;&#x9;INNER JOIN SGT_PERSON_ACCOUNT SPA WITH(NOLOCK) ON SPA.PERSON_ACCOUNT_ID=SPAD.PERSON_ACCOUNT_ID&#xD;&#xA;&#x9;&#x9;&#x9;INNER JOIN SGT_PLAN PLN WITH(NOLOCK) ON PLN.PLAN_ID=SPA.PLAN_ID&#xD;&#xA;&#x9;&#x9;&#x9;LEFT OUTER JOIN SGT_PERSON P WITH(NOLOCK) ON SPD.DEPENDENT_PERSLINK_ID = P.PERSON_ID &#xD;&#xA;&#x9;&#x9;&#x9;WHERE SPD.PERSON_ID=@PERSON_ID &#xD;&#xA;&#xD;&#xA;&#x9;&#x9;&#x9;UNION&#xD;&#xA;&#xD;&#xA;&#x9;&#x9;&#x9;SELECT PER.PERSON_ID FROM SGT_PERSON PER WITH(NOLOCK)&#xD;&#xA;&#x9;&#x9;&#x9;INNER JOIN SGT_PERSON_BENEFICIARY BEN WITH(NOLOCK) ON BEN.PERSON_ID= PER.PERSON_ID&#xD;&#xA;&#x9;&#x9;&#x9;AND BEN.BENEFICIARY_PERSON_ID = @PERSON_ID&#xD;&#xA;&#xD;&#xA;&#x9;&#x9;&#x9;UNION&#xD;&#xA;&#xD;&#xA;&#x9;&#x9;&#x9;SELECT PERSON_ID FROM SGT_PERSON WHERE PERSON_ID IN(SELECT PERSON_ID FROM SGT_PERSON_DEPENDENT&#xD;&#xA;&#x9;&#x9;&#x9;WHERE DEPENDENT_PERSLINK_ID=@PERSON_ID)&#xD;&#xA;  ))  AND A.TEMPLATE_ID IN (228,488,415) &#xD;&#xA;  AND (1 = CASE WHEN (@DEATHNOTIFICATIONID &gt; 0) THEN CASE WHEN (A.GENERATED_DATE &gt;= (SELECT CREATED_DATE FROM SGT_DEATH_NOTIFICATION WHERE DEATH_NOTIFICATION_ID = @DEATHNOTIFICATIONID)) THEN 1 ELSE 0 END ELSE 0 END)&#xD;&#xA;ORDER BY GENERATED_DATE DESC">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="TrackingId" sfwType="Column" sfwValue="tracking_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="TemplateId" sfwType="Column" sfwValue="template_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PersonId" sfwType="Column" sfwValue="person_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PlanId" sfwType="Column" sfwValue="plan_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="OrgContactId" sfwType="Column" sfwValue="org_contact_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="OrgId" sfwType="Column" sfwValue="org_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ContactId" sfwType="Column" sfwValue="contact_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="CorStatusDescription" sfwType="Description" sfwValue="cor_status_description" />
+    <attribute ID="CorStatusId" sfwType="Column" sfwValue="cor_status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="13" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="CorStatusValue" sfwType="Column" sfwValue="cor_status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="GeneratedDate" sfwType="Column" sfwValue="generated_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="PrintOnDate" sfwType="Column" sfwValue="print_on_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="PrintedDate" sfwType="Column" sfwValue="printed_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ImagedDate" sfwType="Column" sfwValue="imaged_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ImagingSerialNo" sfwType="Column" sfwValue="imaging_serial_no" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ConvertedToImageFlag" sfwType="Column" sfwValue="converted_to_image_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="Comments" sfwType="Column" sfwValue="comments" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="200" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="objCorTemplates" sfwType="Object" sfwEntity="entCorTemplates" sfwValue="ibusCorTemplates" />
+    <attribute ID="objOrganization" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusOrganization" />
+    <attribute ID="objPerson" sfwType="Object" sfwEntity="entPerson" sfwValue="ibusPerson" />
+    <attribute ID="objPlan" sfwType="Object" sfwEntity="entPlan" sfwValue="ibusPlan" />
+  </attributes>
+  <constraint />
+  <groupslist />
+  <methods />
+  <lifecycle />
+  <objectmethods />
+  <ExtraFields />
+</entity>

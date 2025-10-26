@@ -1,0 +1,125 @@
+﻿<div class="portlet-body overflow-hidden" ng-controller="GetActiveDirectoryUsersController">
+    <div class="form-group">
+        <div class="col-xs-4">
+            <div class="col-xs-5">
+                <label class="control-label">SAM Account Name: </label>
+            </div>
+            <div class="col-xs-7">
+                <input type="text" class="form-control input-sm" ng-model="$parent.samAccountName" placeholder="Enter SAM Account Name" />
+            </div>
+        </div>
+        <div class="col-xs-3">
+            <div class="col-xs-2">
+                <label class="control-label">Name:</label>
+            </div>
+            <div class="col-xs-10">
+                <input type="text" class="form-control input-sm" ng-model="$parent.name" placeholder="Ex. Smith, John" />
+            </div>
+        </div>
+        <div class="col-xs-3">
+            <label class="control-label col-xs-2">Email:</label>
+            <div class="col-xs-10">
+                <input type="text" class="form-control input-sm" ng-model="$parent.email" placeholder="Enter Email" />
+            </div>
+        </div>
+        <div class="col-xs-1">
+            <input type="button" class="dialog-btn-default" value="Search" ng-click="searchADUser()" />
+        </div>
+        <div class="col-xs-1">
+            <input type="button" class="dialog-btn" value="Clear" ng-click="clearSearchCriteria()" />
+        </div>
+    </div>
+    <div class="col-xs-6 overflowA" style="height:calc(100% - 30px)">
+        <table class="table table-striped table-bordered table-condensed" id="grid-ad-users" st-table="users" st-safe-src="llstUnMappedADUsers" st-table-item-row="User" role="grid">
+            <thead>
+                <tr>
+                    <th colspan="16">
+                        Un-Mapped AD Users
+                    </th>
+                </tr>
+                <tr role="heading">
+                    <th><i class="fa fa-angle-double-right" ng-click="selectAllADUsers()" /></th>
+                    <th st-sort="UserName">Username</th>
+                    <th st-sort="FirstName">First Name</th>
+                    <th st-sort="LastName">Last Name</th>
+                    <th st-sort="EmailID">Email</th>
+                    <th st-sort="DomainName">Domain Name</th>
+                </tr>
+                <tr role="search">
+                    <th colspan="16"><input st-search="" class="form-control" placeholder="search with User Name, First Name , Last Name etc..." type="text" /></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr tabindex="{{$index}}" role="row" st-select-row="user" ng-repeat="user in users">
+                    <td><i class="fa fa-angle-double-right" ng-click="selectADUser(user,$index)" /></td>
+                    <td>{{user.UserName}}</td>
+                    <td>{{user.FirstName}}</td>
+                    <td>{{user.LastName}}</td>
+                    <td>{{user.EmailID}}</td>
+                    <td>{{user.DomainName}}</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="16" class="text-center">
+                        <div st-pagination="" st-items-by-page="12" st-displayed-pages="5" st-template="common/views/pagination-grid.html"></div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <div class="col-xs-6 overflowA" style="height:calc(100% - 30px)">
+        <table class="table table-striped table-bordered table-condensed" id="grid-ad-users" st-table="selectedUsers" st-safe-src="selectedADUsers" st-table-item-row="User" role="grid">
+            <thead>
+                <tr>
+                    <th colspan="16">
+                        Selected AD Users for Mapping
+                    </th>
+                </tr>
+                <tr role="heading">
+                    <th><i class="fa fa-angle-double-right" ng-click="unSelectAllADUsers()" /></th>
+                    <th st-sort="UserName">Username</th>
+                    <th st-sort="FirstName">First Name</th>
+                    <th st-sort="LastName">Last Name</th>
+                    <th st-sort="EmailID">Email</th>
+                    <th st-sort="DomainName">Domain Name</th>
+                    <!--<th st-sort="UserType" ng-if="IsShowRole">Role</th>-->
+                </tr>
+                <tr role="search">
+                    <th colspan="16"><input st-search="" class="form-control" placeholder="search with User Name, First Name , Last Name etc..." type="text" /></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr tabindex="{{$index}}" role="row" st-select-row="selectedUser" ng-repeat="selectedUser in selectedUsers">
+                    <td><i class="fa fa-angle-double-right" ng-click="deSelectADUser(selectedUser,$index)" /></td>
+                    <td>{{selectedUser.UserName}}</td>
+                    <td>{{selectedUser.FirstName}}</td>
+                    <td>{{selectedUser.LastName}}</td>
+                    <td>
+                        <input class="form-control input-sm" type="text" ng-model="selectedUser.editableEmailId" ng-change="$parent.validateEmail()" />
+                    </td>
+                    <td>{{selectedUser.DomainName}}</td>
+                    <!--<td ng-if="IsShowRole">
+                        <select class="form-control input-sm" ng-options='Type.ID as Type.Description for Type in lstUserType' ng-model="selectedUser.UserType" />
+                    </td>-->
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="16" class="text-center">
+                        <div st-pagination="" st-items-by-page="12" st-displayed-pages="5" st-template="common/views/pagination-grid.html"></div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+<div class="form-actions right">
+    <div class="col-xs-8 text-left">
+        <span class="alert-error-msg" ng-show="errorMessage" ng-bind="errorMessage"></span>
+    </div>
+    <div class="col-xs-4">
+        <input type="button" class="dialog-btn-default" ng-disabled="selectedADUsers.legnth == 0 || errorMessage" value="OK" ng-click="OK()" />
+        <input type="button" class="dialog-btn" value="Cancel" ng-click="closeDialog()" />
+    </div>
+</div>

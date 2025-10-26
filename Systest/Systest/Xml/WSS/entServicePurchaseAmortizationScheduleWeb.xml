@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entServicePurchaseAmortizationScheduleWeb" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoServicePurchaseHeader" sfwObjectID="busServicePurchaseAmortizationScheduleWeb">
+  <rules>
+    <rule ID="IsActionStatusClosedOrPIF" sfwExpression="((RFunc.GetValue&lt;String&gt;(this, &quot;ibusServicePurchaseHeader.icdoServicePurchaseHeader.action_status_value&quot;) == &quot;CLOS&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusServicePurchaseHeader.icdoServicePurchaseHeader.action_status_value&quot;) == &quot;PIF&quot;))" sfwObjectBased="True" />
+    <rule ID="IsActionStatusInPayment" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusServicePurchaseHeader.icdoServicePurchaseHeader.action_status_value&quot;) == &quot;INPY&quot;)" sfwObjectBased="True" />
+    <rule ID="IsConsolidatedSelected" sfwExpression="(this.istrConsolidatedPurchase == &quot;Y&quot;)" sfwObjectBased="True" />
+    <rule ID="IsNoOfPaymentsNotEntered" sfwMessage="No of Payments is mandatory." sfwExpression="(RFunc.GetValue&lt;Int32&gt;(this, &quot;ibusServicePurchaseHeader.iintWhatIfNoOfPayments&quot;) == 0)" sfwObjectBased="True" />
+    <rule ID="IsPreTaxedCheckedInPayment" sfwExpression="!(RFunc.GetValue&lt;String&gt;(this, &quot;ibusServicePurchaseHeader.icdoServicePurchaseHeader.pre_tax&quot;) == &quot;Y&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusServicePurchaseHeader.icdoServicePurchaseHeader.action_status_value&quot;) == &quot;INPY&quot;)" sfwObjectBased="True" />
+    <rule ID="IsPurchaseConsolidatedAndStatusClosedPIF" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusServicePurchaseHeader.icdoServicePurchaseHeader.service_purchase_type_value&quot;) == &quot;CONS&quot;) &amp;&amp; &#xA;((RFunc.GetValue&lt;String&gt;(this, &quot;ibusServicePurchaseHeader.icdoServicePurchaseHeader.action_status_value&quot;) == &quot;CLOS&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusServicePurchaseHeader.icdoServicePurchaseHeader.action_status_value&quot;) == &quot;PIF&quot;))" sfwObjectBased="True" />
+    <rule ID="IsUnusedLeaveSelected" sfwExpression="(this.istrUnusedSickLeavePurchase == &quot;Y&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule_IsServicePurchaseLbl" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.IsServicePurchaseLbl() ==false)" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="IsConsolidatedSelected" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsUnusedLeaveSelected" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsActionStatusInPayment" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPurchaseConsolidatedAndStatusClosedPIF" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsActionStatusClosedOrPIF" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPreTaxedCheckedInPayment" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule_IsServicePurchaseLbl" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="IsNoOfPaymentsNotEntered" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <expressionfields />
+  <attributes>
+    <attribute ID="objSickLeavePurchaseHeader" sfwType="Object" sfwEntity="entServicePurchaseHeader" sfwValue="ibusSickLeavePurchaseHeader" />
+    <attribute ID="objConsolidatedPurchaseHeader" sfwType="Object" sfwEntity="entServicePurchaseHeader" sfwValue="ibusConsolidatedPurchaseHeader" />
+    <attribute ID="objServicePurchaseHeader" sfwType="Object" sfwEntity="entServicePurchaseHeader" sfwValue="ibusServicePurchaseHeader" />
+  </attributes>
+  <queries />
+  <constraint />
+  <methods />
+  <lifecycle />
+  <objectmethods />
+  <ExtraFields />
+</entity>

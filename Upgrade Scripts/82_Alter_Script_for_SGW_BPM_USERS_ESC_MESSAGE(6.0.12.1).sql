@@ -1,0 +1,40 @@
+------------------------------------------------------------------------------------------------------------------------ 
+--Created By	:	Siddharth Sabadra
+--Created On	:	30th June 2020
+--Description	:	Adding audit columns in  SGW_BPM_USERS_ESC_MESSAGE
+------------------------------------------------------------------------------------------------------------------------ 
+
+IF COL_LENGTH('dbo.SGW_BPM_USERS_ESC_MESSAGE', 'CREATED_BY') IS NULL
+BEGIN
+ALTER TABLE SGW_BPM_USERS_ESC_MESSAGE
+ADD CREATED_BY varchar(50) NOT NULL DEFAULT 'BPM Service'
+END
+GO
+
+IF COL_LENGTH('dbo.SGW_BPM_USERS_ESC_MESSAGE', 'CREATED_DATE') IS NULL
+BEGIN
+ALTER TABLE SGW_BPM_USERS_ESC_MESSAGE
+ADD CREATED_DATE datetime NOT NULL DEFAULT getdate()
+END
+GO
+
+IF COL_LENGTH('dbo.SGW_BPM_USERS_ESC_MESSAGE', 'MODIFIED_BY') IS NULL
+BEGIN
+ALTER TABLE SGW_BPM_USERS_ESC_MESSAGE
+ADD MODIFIED_BY varchar(50) NOT NULL DEFAULT 'BPM Service'
+END
+GO
+
+IF COL_LENGTH('dbo.SGW_BPM_USERS_ESC_MESSAGE', 'MODIFIED_DATE') IS NULL
+BEGIN
+ALTER TABLE SGW_BPM_USERS_ESC_MESSAGE
+ADD MODIFIED_DATE datetime NOT NULL DEFAULT getdate()
+END
+GO
+
+IF COL_LENGTH('dbo.SGW_BPM_USERS_ESC_MESSAGE', 'UPDATE_SEQ') IS NULL
+BEGIN
+ALTER TABLE SGW_BPM_USERS_ESC_MESSAGE
+ADD UPDATE_SEQ int NOT NULL DEFAULT 0
+END
+GO

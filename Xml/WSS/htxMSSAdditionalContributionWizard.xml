@@ -1,0 +1,124 @@
+﻿<form ID="wfmMSSAdditionalContributionWizard" sfwActive="True" sfwDescription="Additional Contribution" sfwStatus="Valid" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2001" sfwType="FormLinkWizard" sfwTitle="Additional Contribution Wizard" version="3.5" sfwEntity="entWssPersonAccountEnrollmentRequest" sfwTemplate="MSSAdditionalContributionWizard.html" isBasedOnWfm="true">
+  <initialload>
+    <callmethods sfwMethodName="FindRetirementPlanEnrolledInfo" />
+  </initialload>
+  <items>
+    <sfwWizard ID="wizMain">
+      <items>
+        <sfwTable ID="tblHeaderTemplate" />
+        <sfwWizardStep ID="wzsAddContryIntro" Title="Intro" sfwShowInHeader="True">
+          <items>
+            <sfwLiteral ID="ltrL1Calculator" Text="Additional Contribution Election&lt;br/&gt;&lt;br/&gt;" />
+            <sfwPanel ID="pnlAddContryStep" sfwCaption="Steps to complete your Enrollment">
+              <items />
+            </sfwPanel>
+            <sfwLabel ID="lblLabel6" Text="&lt;br/&gt;&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwButton ID="btnIntro" sfwMethodName="btnWizardNext_Click" Text="Begin Process" />
+            <sfwButton ID="btnBeginClick" sfwMethodName="btnCancel_Click" Text="Begin Process" />
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsAddContryStep2" Title="Member Additional Percentage Election" sfwShowInHeader="True" sfwVisibleRule="VRIsAddlEEContributionPercentNotAvailable" sfwRulesGroup="AddPercentageElection">
+          <items>
+            <sfwLiteral ID="ltrLiteral" Text="Member Additional Percentage Election &lt;br/&gt;&lt;br/&gt;" />
+            <sfwLabel ID="lblLabel10" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwPanel GroupingText="&lt;b&gt;Agreement to Participate&lt;/b&gt;" ID="pnlParticipantAgreement" sfwCaption="AgreementtoParticipate" sfwCollapsible="False">
+              <items>
+                <sfwTable ID="tblNewPage11" />
+                <sfwLabel ID="lblIstrADECInfoAckText" sfwEntityField="IstrADECInfoAckText" sfwRenderType="RichText" />
+                <sfwLabel ID="capADECPercentage" Text="I irrevocably elect to contribute the following additional percentage into the Defined Contribution Plan :" sfwIsCaption="True" />
+                <sfwDropDownList ID="ddlAddlContributionPercentage" sfwEntityField="IintAddlEEContributionPercent" sfwLoadType="Method" sfwLoadSource="LoadADECAmountValues" DataTextField="code_value" DataValueField="code_id" sfwValidationRules="IsPercentageBlank" />
+                <sfwLabel ID="lblPersonAccountId" Visible="False" sfwEntityField="TargetPersonAccountId" />
+                <sfwLabel ID="lblPersonId" Visible="False" sfwEntityField="PersonId" />
+                <sfwLabel ID="lblPersonEmploymentDtlId" Visible="False" sfwEntityField="PersonEmploymentDtlId" />
+                <sfwLabel ID="lblScreenDifferentiator" Visible="False" sfwEntityField="IstrScreenDifferentiator" />
+                <sfwLabel ID="lblIintEnrollmentRequestID" Visible="False" sfwEntityField="WssPersonAccountEnrollmentRequestId" />
+                <sfwLabel ID="lblIstrIsDCEligible" Visible="False" sfwEntityField="IstrIsDCEligible" />
+              </items>
+            </sfwPanel>
+            <sfwButton ID="btnAddContryPrevious2" sfwMethodName="btnWizardPrevious_Click" Text="Back" />
+            <sfwButton ID="btnAddContryNext2" sfwMethodName="btnWizardNext_Click" Text="Next" />
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsAddContryAck" Title="Acknowledgement" sfwShowInHeader="True" sfwNextButton="btnUpdatePersonAccountADECPercentage">
+          <items>
+            <sfwPanel GroupingText="&lt;b&gt;Member Additional Percentage Election Maintenance&lt;/b&gt;" ID="pnlEmpAck" sfwCaption="Member Additional Percentage Election Maintenance" sfwCollapsible="False" sfwVisibleRule="IsTemporaryMember">
+              <items>
+                <sfwTable ID="tblNewPage10" />
+                <sfwGridView ID="grvTempEEADECAcknowledgement" PageSize="15" sfwTwoWayBinding="True" sfwEntityField="lstTempEEADECAcknowledgement">
+                  <Columns>
+                    <TemplateField HeaderText="Acknowledgement ID" SortExpression="acknowledgement_id" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="AcknowledgementId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Select" SortExpression="is_acknowledgement_selected">
+                      <ItemTemplate>
+                        <sfwCheckBox sfwDefaultValue="N" sfwEntityField="is_acknowledgement_selected" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Acknowledgement" SortExpression="acknowledgement_text">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="AcknowledgementText" sfwRenderType="RichText" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </items>
+            </sfwPanel>
+            <sfwPanel ID="pnlAddContryAcknow">
+              <items>
+                <sfwLabel ID="capADECPercentageAck" Text="I irrevocably elect to contribute the following additional percentage into the Defined Contribution Plan :" sfwIsCaption="True" />
+                <sfwLabel ID="lblAddlContributionPercentageZeroAck" sfwVisibleRule="VRADECAmount" sfwDataFormat="{0:#0.00'%}" />
+                <sfwLabel ID="lblADECPercentageAck" sfwEntityField="IintAddlEEContributionPercent" sfwDataFormat="{0:#0.00'%}" sfwVisibleRule="VRADECAmountGreaterThanZero" />
+                <sfwLabel ID="lblADECSubmittedText" />
+                <sfwLabel ID="lblIstrADECAckText" sfwEntityField="IstrADECAckText" sfwRenderType="RichText" />
+                <sfwCheckBox ID="chkEeAcknowledgementAgreementFlag" sfwEntityField="IstrADECAcknowledgementAgreementFlag" sfwDefaultValue="N" sfwValidationRules="VSIsADECAgreementFlagNotChecked" />
+                <sfwLabel ID="lblIstrConfirmationText" sfwEntityField="IstrConfirmationText" sfwRenderType="RichText" />
+              </items>
+            </sfwPanel>
+            <sfwButton ID="btnAddContryAckPrevious" sfwMethodName="btnWizardPrevious_Click" Text="Back" />
+            <sfwButton ID="btnAddContryAckNext" sfwMethodName="btnWizardNext_Click" Text="Next" />
+            <sfwButton ID="btnCallNextClick" sfwMethodName="btnCancel_Click" CssClass="hideControl" />
+            <sfwButton ID="btnUpdatePersonAccountADECPercentage" sfwMethodName="btnValidateExecuteBusinessMethod_Click" sfwObjectMethod="btnUpdatePersonAccountADECPercentage_Click" Text="Save additional percentage election" OnClientClick="DisplayADECSubmitText" sfwShowInActionBar="True" sfwExecuteAfterSuccess="btnCallNextClick" />
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsAddContryPrint" Title="Print For Your Records" sfwShowInHeader="True">
+          <items>
+            <sfwLiteral ID="ltrLiteral1" Text="Member Additional Percentage Election &lt;br/&gt;&lt;br/&gt;" />
+            <sfwLabel ID="lblLabel16" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwPanel GroupingText="&lt;b&gt;Member Additional Percentage Election &lt;/b&gt;" ID="pnlEmpAck" sfwCaption="Member Additional Percentage Election" sfwCollapsible="False">
+              <items>
+                <sfwGridView ID="grvTempEEADECAcknowledgementSummary" PageSize="15" sfwTwoWayBinding="True" sfwEntityField="lstTempEEADECAcknowledgement" sfwVisibleRule="IsTemporaryMember">
+                  <Columns>
+                    <TemplateField HeaderText="Acknowledgement ID" SortExpression="acknowledgement_id" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="AcknowledgementId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Acknowledgement" SortExpression="acknowledgement_text">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="AcknowledgementText" sfwRenderType="RichText" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+                <sfwLabel ID="capADECPercentageSummary" Text="I irrevocably elect to contribute the following additional percentage into the Defined Contribution Plan :" sfwIsCaption="True" />
+                <sfwLabel ID="lblAddlContributionPercentageZero" sfwVisibleRule="VRADECAmount" sfwDataFormat="{0:#0.00'%}" />
+                <sfwLabel ID="lblADECPercentageSummary" sfwEntityField="IintAddlEEContributionPercent" sfwDataFormat="{0:#0.00'%}" sfwVisibleRule="VRADECAmountGreaterThanZero" />
+                <sfwLabel ID="lblADECSubmittedTextSummary" />
+                <sfwLabel ID="lblIstrADECAckTextSummary" sfwEntityField="IstrADECAckText" sfwRenderType="RichText" />
+                <sfwLabel ID="lblIstrConfirmationTextSummary" sfwEntityField="IstrConfirmationText" sfwRenderType="RichText" />
+              </items>
+            </sfwPanel>
+            <sfwButton ID="btnButton" Text="Return To Plans" sfwMethodName="btnOpen_Click" sfwActiveForm="wfmActiveMemberBenefitPlansMaintenance" sfwNavigationParameter="aintPersonID=PersonId" />
+            <sfwButton ID="btnButton1" Text="Print" OnClientClick="PrintCenterMiddle(e)" sfwMethodName="btnOpen_Click" />
+          </items>
+        </sfwWizardStep>
+      </items>
+    </sfwWizard>
+  </items>
+  <loaddetails>
+    <entityfield ID="lstTempEEADECAcknowledgement" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+  </loaddetails>
+  <ExtraFields />
+</form>

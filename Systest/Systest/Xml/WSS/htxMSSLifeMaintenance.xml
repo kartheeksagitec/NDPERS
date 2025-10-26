@@ -1,0 +1,262 @@
+﻿<form ID="wfmMSSLifeMaintenance" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2001" sfwType="FormLinkMaintenance" sfwTitle="Life Maintenance" version="3.5" sfwEntity="entMSSLifeWeb" sfwTemplate="MSSLifeMaintenance.html" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmMSSLifeLookup" sfwFormObjectType="None" isBasedOnWfm="true">
+  <initialload>
+    <callmethods sfwMethodName="FindInsurancePlanLifeEnrolled" />
+  </initialload>
+  <items>
+    <sfwTable ID="Main" />
+    <sfwPanel ID="pnlHeader" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblNewPage2" />
+        <sfwLiteral ID="ltrlMessage" Text="Life Insurance Plan" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlBack" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblNewPage3" />
+        <sfwImageButton ID="btnBack" ImageAlign="AbsMiddle" ImageUrl="~/Images/back.gif" sfwMethodName="btnBack_Click" />
+        <sfwImageButton ID="btnPrint" ImageUrl="~/Images/print.png" ImageAlign="AbsMiddle" OnClientClick="PrintCenterMiddle(e)" sfwMethodName="btnOpen_Click" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlMain" sfwCaption="Plan Details">
+      <items>
+        <sfwTable ID="tblMain" />
+        <sfwLabel ID="capPlanName" Text="Plan Name : " sfwIsCaption="True" />
+        <sfwLabel ID="lblPlanName" sfwEntityField="objPlan.PlanName" />
+        <sfwLabel ID="capPlanParticipationStatusDescription" Text="Plan Participation Status : " sfwIsCaption="True" />
+        <sfwLabel ID="lblPlanParticipationStatusDescription" sfwEntityField="PlanParticipationStatusDescription" />
+        <sfwLabel ID="capOrgName" Text="Provider : " sfwIsCaption="True" />
+        <sfwLabel ID="lblOrgName" sfwEntityField="objProvider.OrgName" />
+        <sfwLabel ID="capStartDate" Text="Start Date : " sfwIsCaption="True" />
+        <sfwLabel ID="lblStartDate" sfwDataFormat="{0:d}" sfwEntityField="HistoryChangeDate" />
+        <sfwLabel ID="capEndDateNoNull" Text="End Date : " sfwIsCaption="True" />
+        <sfwLabel ID="lblEndDateNoNull" sfwDataFormat="{0:d}" sfwEntityField="EndDate" />
+        <sfwLabel ID="capIstrPreTax" sfwVisibleRule="VisibleRuleIsFlexCompPlanNotAvailable" Text="Pre-tax Payroll Deduction :" sfwIsCaption="True" />
+        <sfwLabel ID="lblPreTax" sfwVisibleRule="VisibleRuleIsFlexCompPlanNotAvailable" sfwEntityField="IstrPremiumFlag" />
+        <sfwLabel ID="lblIintEnrollmentRequestID" sfwEntityField="IintEnrollmentRequestID" CssClass="hideControl" />
+        <sfwLabel ID="lblPersonEmploymentDtlId" sfwEntityField="PersonEmploymentDtlId" CssClass="hideControl"/>
+        <sfwLabel ID="lblPersonAccountId" sfwEntityField="PersonAccountId" CssClass="hideControl"/>
+        <sfwLabel ID="lblPlanId" sfwEntityField="PlanId" />
+        <sfwLabel ID="lblPersonId" sfwEntityField="PersonId" CssClass="hideControl"/>
+        <sfwLabel ID="lblIstrMSSElectionStatus" sfwEntityField="IstrMSSElectionStatus" CssClass="hideControl"/>
+        <sfwLabel ID="lblLabel2" Text="&lt;br/&gt;" sfwIsCaption="True" />
+        <sfwLabel ID="lblLabel3" Text="Contributing Employers " sfwIsCaption="True" CssClass="hideControl"/>
+        <sfwGridView AllowPaging="True" ID="grvEmploymentDetail" sfwEntityField="lstEmploymentDetail" sfwGridEntity="entPersonEmploymentDetail" CssClass="hideControl">
+          <Columns>
+            <TemplateField HeaderText="Employer Name">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objPersonEmployment.objOrganization.OrgName" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Start Date">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="StartDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="End Date">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EndDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Job Class" CssClass="hideControl">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="JobClassDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Member Type" CssClass="hideControl">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="DerivedMemberTypeDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Person Employment Dtl ID" CssClass="hideControl">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="PersonEmploymentDtlId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Status">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="StatusDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Type">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="TypeDescription" />
+              </ItemTemplate>
+            </TemplateField>
+          </Columns>
+        </sfwGridView>
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlNewPage" sfwCaption="Level of Coverage">
+      <items>
+        <sfwTable ID="tblNewPage4" />
+        <sfwGridView AllowPaging="True" ID="grvLifeOption" sfwEntityField="lstLifeOption" sfwGridEntity="entPersonAccountLifeOption">
+          <Columns>
+            <TemplateField HeaderText="Account Life Option ID" CssClass="hideControl" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="AccountLifeOptionId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Level Of Coverage">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="LevelOfCoverageDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Coverage Amount" ItemStyle.HorizontalAlign="Right">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="ActualCoverageAmount" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Effective Start Date">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EffectiveStartDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Effective End Date">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EffectiveEndDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Employee Premium" CssClass="hideControl" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="EmployeePremiumAmount" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Employer Premium" CssClass="hideControl" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="EmployerPremiumAmount" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Monthly Premium" CssClass="hideControl" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="MonthlyPremium" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Plan Option Status" CssClass="hideControl" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="PlanOptionStatusDescription" />
+              </ItemTemplate>
+            </TemplateField>
+          </Columns>
+        </sfwGridView>
+        <sfwLabel ID="lblLabel1" Text="Total Monthly Premium" sfwIsCaption="True" CssClass="hideControl"/>
+        <sfwLabel ID="lblIdecTotalMonthlyPremium" sfwDataFormat="{0:C}" sfwEntityField="IdecTotalMonthlyPremium" CssClass="hideControl"/>
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlHistory" sfwCaption="History">
+      <items>
+        <sfwTable ID="tblNewPage6" />
+        <sfwGridView AllowPaging="True" ID="grvPreviousHistory" sfwSortExpression="SequenceID" sfwEntityField="lstPreviousHistory" sfwGridEntity="entPersonAccountLifeHistory">
+          <Columns>
+            <TemplateField HeaderText="Person Account Life History ID" CssClass="hideControl" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="PersonAccountLifeHistoryId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Level of Coverage">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="LevelOfCoverageDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Coverage Amount" ItemStyle.HorizontalAlign="Right">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="CoverageAmount" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Effective Start Date">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EffectiveStartDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Effective End Date">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EffectiveEndDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Sequence Id" CssClass="hideControl" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="SequenceID" />
+              </ItemTemplate>
+            </TemplateField>
+          </Columns>
+        </sfwGridView>
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlBeneficiaries" sfwCaption="Beneficiaries">
+      <items>
+        <sfwTable ID="tblNewPage1" />
+        <sfwButton ID="btnOpenEmploymentDetail" sfwActiveForm="wfmPersonEmploymentDetailMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintemploymentdetailid=PersonEmploymentDtlId" sfwRelatedControl="grvEmploymentDetail" Text="Open" CssClass="hideControl"/>
+        <sfwGridView AllowPaging="True" ID="grvMSSPersonAccountBeneficiaries" sfwEntityField="lstMSSPersonAccountBeneficiaries" sfwGridEntity="entPersonBeneficiary">
+          <Columns>
+            <TemplateField HeaderText="Beneficiary Name">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="BeneficiaryName" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Relationship">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="RelationshipDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Type">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objPersonAccountBeneficiary.BeneficiaryTypeDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Percentage" ItemStyle.HorizontalAlign="Right">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objPersonAccountBeneficiary.DistPercent" sfwDataFormat="{0:#0.000}" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Start Date">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="objPersonAccountBeneficiary.StartDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="End Date">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="objPersonAccountBeneficiary.EndDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Person Account Beneficiary ID" CssClass="hideControl" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objPersonAccountBeneficiary.PersonAccountBeneficiaryId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Beneficiary ID" CssClass="hideControl" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="BeneficiaryId" />
+              </ItemTemplate>
+            </TemplateField>
+          </Columns>
+        </sfwGridView>
+        <sfwLabel ID="lblLabel4" Text="&lt;br/&gt;" sfwIsCaption="True" />
+        <sfwLabel ID="lblLabel" Text="To update or change your designation of beneficiary, you must complete and mail a " sfwIsCaption="True" />
+        <sfwLinkButton ID="btnPdfCorrespondenceClick1" sfwMethodName="btn_OpenPDF" sfwNavigationParameter="pdf_file_name=IstrDownloadFileName" />
+        <sfwTextBox ID="txtDownloadFileName" sfwEntityField="IstrDownloadFileName" />
+        <sfwLabel ID="lblLabeltond" Text=" to NDPERS." sfwIsCaption="True" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlContributingEmployers" sfwCaption="Contributing Employers" CssClass="hideControl">
+      <items>
+        <sfwTable ID="tblNewPage5" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlUpdate" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblNewPage" />
+        <sfwButton ID="btnLinkButton1" sfwActiveForm="wfmLifeEnrollmentWizard" sfwMethodName="btnOpen_Click" sfwNavigationParameter="aintRequestId=IintEnrollmentRequestID" sfwVisibleRule="IblnIsEnrollmentRequestRejectedOrPending" Text="Update enrollment" />
+        <sfwButton ID="btnNew" sfwActiveForm="wfmLifeEnrollmentWizard" sfwMethodName="btnNew_Click" sfwNavigationParameter="aintPlanId=lblPlanId;aintPersonId=lblPersonId;aintPersonEmploymentDetailId=lblPersonEmploymentDtlId" sfwVisibleRule="IblnNoEnrollmentRequestExits" Text="Update enrollment" />
+        <sfwLinkButton ID="btnPdfCorrespondenceClick2" sfwNavigationParameter="pdf_file_name=#PDFCorrespondence\Templates\SFN-50134.pdf" sfwMethodName="btnPdfCorrespondence_Click" sfwVisibleRule="IsIbsFlagChecked"/>
+      </items>
+    </sfwPanel>
+  </items>
+  <loaddetails>
+    <entityfield ID="objPlan" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objProvider" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstEmploymentDetail" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstLifeOption" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstPreviousHistory" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstMSSPersonAccountBeneficiaries" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+  </loaddetails>
+  <ExtraFields />
+</form>

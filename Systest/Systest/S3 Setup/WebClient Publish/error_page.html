@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Sagitec Software Studio</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="images/Home/s3-fevicon.png" type="image/png" sizes="16x16">
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+
+    <style>
+        html {
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-size: cover;
+            background-image: url(images/Home/hub_error_bckg.jpg);
+            margin-top: 15%;
+            margin-left: 25%;
+        }
+
+            body label {
+                font-size: 1.25em;
+                font-weight: inherit;
+            }
+
+            body ul {
+                list-style: none;
+                padding: 0;
+            }
+
+            body h3 {
+                position: absolute;
+                bottom: 18%;
+                right: 60px;
+            }
+
+            body ul > li {
+                font-size: 1.25em;
+                padding: 10px 5px;
+            }
+    </style>
+
+    <script src="scripts/jquery.min.js"></script>
+    <script src="scripts/signalR.min.js"></script>
+</head>
+<body>
+    <div class="col-xs-6">
+        <ul></ul>
+        <button class="btn btn-primary" onclick="window.location.href = 'mainpage.html';">Reload</button>
+    </div>
+
+    <h3>Something went wrong at your end.</h3>
+
+    <script>
+        $(document).ready(function () {
+            var errorMessages = [];
+            var objQueryString = getQueryString();
+            if (objQueryString.ERROR_CODE === "101") {
+                errorMessages.push("Try :");
+                errorMessages.push("checking whether you have started the HUB.");
+                errorMessages.push("checking whether you are running an old version of HUB which does not support HTTPS connection");
+                errorMessages.push("checking the SSL certificate required for a secure connection via HTTPS.");
+            }
+            else if (objQueryString.ERROR_CODE === "102") {
+                errorMessages.push("An active instance of S3 is already running. At a time user can work only on one browser window/tab.");
+                errorMessages.push("If you want to work here, please close existing instance and click on Reload button.");
+            }
+            else if (objQueryString.ERROR_CODE === "103") {
+                errorMessages.push("This version of S3 is no longer supported. Please migrate to next available version of S3.");
+                errorMessages.push("For more information, please contact to <a href='mailto:studio@sagitec.com'>Studio Team</a>.");
+            }
+
+            if (errorMessages && errorMessages.length > 0) {
+                for (var idx = 0; idx < errorMessages.length; idx++) {
+                    var li = $("<li></li>");
+                    li.html(errorMessages[idx]);
+                    $("ul").append(li);
+                }
+            }
+        });
+        function getQueryString() {
+            var objQueryString = {};
+            var queryStringParams = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+            for (var i = 0; i < queryStringParams.length; i++) {
+                var param = queryStringParams[i].split('=');
+                objQueryString[param[0]] = param[1];
+            }
+            return objQueryString;
+        }
+    </script>
+
+</body>
+</html>

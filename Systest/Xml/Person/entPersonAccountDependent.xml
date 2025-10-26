@@ -1,0 +1,67 @@
+﻿<entity ID="entPersonAccountDependent" sfwMainCDO="icdoPersonAccountDependent" sfwType="BusinessRule" sfwActive="True" sfwStatus="Review" sfwObjectID="busPersonAccountDependent" sfwTableName="sgt_person_account_dependent" sfwView="False" sfwParentEntity="entPersonDependent">
+  <queries>
+    <query ID="LoadDependentForBilling" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_PERSON_ACCOUNT_DEPENDENT WITH(NOLOCK)&#xD;&#xA;WHERE @BILLINGDATE BETWEEN START_DATE &#xD;&#xA;AND DATEADD(S,-1,DATEADD(MM, DATEDIFF(M,0,ISNULL(END_DATE,'99991101'))+1,0))">
+      <parameters>
+        <parameter ID="@BILLINGDATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="GenerateCorrespondenceForDropDependent" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT DISTINCT SGT_PERSON_BASE.PERSON_ID, SGT_PERSON_BASE.LAST_NAME, SGT_PERSON_BASE.FIRST_NAME, SGT_PERSON_ACCOUNT.PLAN_ID, &#xD;&#xA;SGT_PERSON_ACCOUNT.PERSON_ACCOUNT_ID, SGT_PERSON_ACCOUNT_DEPENDENT.PERSON_DEPENDENT_ID AS PersonDependentId, &#xD;&#xA;SGT_PERSON_ACCOUNT_DEPENDENT.PERSON_ACCOUNT_DEPENDENT_ID AS PersonAccountDependentId --, SGT_PERSON_ACCOUNT_DEPENDENT.* &#xD;&#xA;FROM SGT_PERSON_ACCOUNT_DEPENDENT&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT ON SGT_PERSON_ACCOUNT_DEPENDENT.PERSON_ACCOUNT_ID = SGT_PERSON_ACCOUNT.PERSON_ACCOUNT_ID&#xD;&#xA;INNER JOIN SGT_PERSON_DEPENDENT ON SGT_PERSON_ACCOUNT_DEPENDENT.PERSON_DEPENDENT_ID = SGT_PERSON_DEPENDENT.PERSON_DEPENDENT_ID&#xD;&#xA;INNER JOIN SGT_PERSON_BASE ON SGT_PERSON_ACCOUNT.PERSON_ID = SGT_PERSON_BASE.PERSON_ID&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT_EMPLOYMENT_DETAIL ON SGT_PERSON_ACCOUNT.PERSON_ACCOUNT_ID = SGT_PERSON_ACCOUNT_EMPLOYMENT_DETAIL.PERSON_ACCOUNT_ID&#xD;&#xA;INNER JOIN SGT_PERSON_EMPLOYMENT_DETAIL ON SGT_PERSON_ACCOUNT_EMPLOYMENT_DETAIL.PERSON_EMPLOYMENT_DTL_ID = SGT_PERSON_EMPLOYMENT_DETAIL.PERSON_EMPLOYMENT_DTL_ID&#xD;&#xA;INNER JOIN SGT_PERSON_EMPLOYMENT ON SGT_PERSON_EMPLOYMENT_DETAIL.PERSON_EMPLOYMENT_ID = SGT_PERSON_EMPLOYMENT.PERSON_EMPLOYMENT_ID&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT_GHDV ON SGT_PERSON_ACCOUNT.PERSON_ACCOUNT_ID = SGT_PERSON_ACCOUNT_GHDV.PERSON_ACCOUNT_ID&#xD;&#xA;WHERE SGT_PERSON_ACCOUNT.PLAN_PARTICIPATION_STATUS_VALUE LIKE 'ENL%'&#xD;&#xA;AND SGT_PERSON_BASE.DATE_OF_DEATH IS NULL AND&#xD;&#xA;&#x9;((SGT_PERSON_EMPLOYMENT.END_DATE IS NULL)&#xD;&#xA;&#x9;OR&#xD;&#xA;&#x9;(SGT_PERSON_ACCOUNT_GHDV.HEALTH_INSURANCE_TYPE_VALUE &lt;&gt; 'RT12' OR &#xD;&#xA;&#x9;SGT_PERSON_ACCOUNT_GHDV.DENTAL_INSURANCE_TYPE_VALUE &lt;&gt; 'RT16' OR&#xD;&#xA;&#x9;SGT_PERSON_ACCOUNT_GHDV.VISION_INSURANCE_TYPE_VALUE &lt;&gt; 'RETR' &#xD;&#xA;&#x9;))&#xD;&#xA;AND SGT_PERSON_ACCOUNT_DEPENDENT.END_DATE IS NOT NULL&#xD;&#xA;AND SGT_PERSON_ACCOUNT_DEPENDENT.END_DATE &gt;= DATEADD(dd,-60, GETDATE()) &#xD;&#xA;AND ISNULL(SGT_PERSON_ACCOUNT_DEPENDENT.IS_DROP_DEPENDENT_LETTER_SENT_FLAG,'N') = 'N'&#xD;&#xA;AND NOT EXISTS (SELECT 1 FROM SGT_PERSON_EMPLOYMENT EMP&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;INNER JOIN SGT_ORGANIZATION ORG ON ORG.ORG_ID = EMP.ORG_ID&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;INNER JOIN SGS_CODE_VALUE CV ON CV.DATA1 = ORG.ORG_CODE AND CV.CODE_ID = 7022&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;WHERE EMP.PERSON_ID = SGT_PERSON_BASE.PERSON_ID )">
+      <parameters />
+    </query>
+    <query ID="LoadDependentForBillingInsurance" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT person_account_dependent_id, person_account_id FROM SGT_PERSON_ACCOUNT_DEPENDENT WITH(NOLOCK)&#xD;&#xA;WHERE @BILLINGDATE BETWEEN START_DATE &#xD;&#xA;AND DATEADD(S,-1,DATEADD(MM, DATEDIFF(M,0,ISNULL(END_DATE,'99991101'))+1,0))">
+      <parameters>
+        <parameter ID="@BILLINGDATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="GetPersonAccountDependentId" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT PERSON_ACCOUNT_DEPENDENT_ID FROM SGT_PERSON_ACCOUNT_DEPENDENT &#xD;&#xA;WHERE PERSON_ACCOUNT_ID = @PERSON_ACCOUNT_ID &#xD;&#xA;AND PERSON_DEPENDENT_ID = @PERSON_DEPENDENT_ID&#xD;&#xA;AND END_DATE IS NULL">
+      <parameters>
+        <parameter ID="@PERSON_ACCOUNT_ID" sfwDataType="int" />
+        <parameter ID="@PERSON_DEPENDENT_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="IsSpouseCombinedRHICDonor" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql=" SELECT * FROM SGT_BENEFIT_RHIC_COMBINE_DETAIL SBRCD WITH(NOLOCK)&#xD;&#xA;INNER JOIN  SGT_BENEFIT_RHIC_COMBINE SBRC WITH(NOLOCK) ON SBRC.BENEFIT_RHIC_COMBINE_ID = SBRCD.BENEFIT_RHIC_COMBINE_ID&#xD;&#xA;INNER JOIN SGT_PAYEE_ACCOUNT PA WITH(NOLOCK) ON SBRCD.donar_payee_account_id = pa.payee_account_id&#xD;&#xA;WHERE SBRC.ACTION_STATUS_VALUE = 'APPR' AND PA.PAYEE_PERSLINK_ID = @PERSON_ID AND ISNULL(SBRCD.COMBINE_FLAG, 'N') = 'Y' &#xD;&#xA;AND ((@DEPENDDATE BETWEEN SBRC.[START_DATE] AND ISNULL(SBRC.END_DATE, '99991231')) OR (SBRC.[START_DATE] &gt; @DEPENDDATE))&#xD;&#xA;AND @PERSON_ID &lt;&gt; SBRC.PERSON_ID">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+        <parameter ID="@DEPENDDATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="UpdatePersonAccountDependentList" sfwQueryType="NonQuery" sfwDataType="bool" sfwSql="UPDATE SGT_PERSON_ACCOUNT_DEPENDENT&#xD;&#xA;SET IS_DROP_DEPENDENT_LETTER_SENT_FLAG = 'Y'&#xD;&#xA;WHERE PERSON_ACCOUNT_ID = @PERSONACCID">
+      <parameters>
+        <parameter ID="@PERSONACCID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="PersonAccountDependentId" sfwType="Column" sfwValue="person_account_dependent_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PersonDependentId" sfwType="Column" sfwValue="person_dependent_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PersonAccountId" sfwType="Column" sfwValue="person_account_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StartDate" sfwType="Column" sfwValue="start_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="EndDate" sfwType="Column" sfwValue="end_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="NmsoCoFlag" sfwType="Column" sfwValue="nmso_co_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="OutAreaFlag" sfwType="Column" sfwValue="out_area_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="IncludedToHmoFileFlag" sfwType="Column" sfwValue="included_to_hmo_file_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="IsBcbsFileSentFlag" sfwType="Column" sfwValue="is_bcbs_file_sent_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="IsModifiedAfterBcbsFileSentFlag" sfwType="Column" sfwValue="is_modified_after_bcbs_file_sent_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="IsDropDependentLetterSentFlag" sfwType="Column" sfwValue="is_drop_dependent_letter_sent_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPlanName" sfwValue="icdoPersonAccountDependent.istrPlanName" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="StartDateNoNull" sfwValue="icdoPersonAccountDependent.start_date_no_null" />
+    <attribute ID="objPerson" sfwType="Object" sfwEntity="entPerson" sfwValue="ibusPerson" />
+    <attribute sfwDataType="string" sfwType="Property" ID="DependentName" sfwValue="icdoPersonDependent.dependent_name" />
+    <attribute sfwDataType="string" sfwType="Property" ID="RelationshipDescription" sfwValue="icdoPersonDependent.relationship_description" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsSelectedFlag" sfwValue="icdoPersonDependent.is_selected_flag" />
+    <attribute ID="objPlan" sfwType="Object" sfwEntity="entPlan" sfwValue="ibusPlan" />
+    <attribute ID="objPersonAccount" sfwType="Object" sfwEntity="entPersonAccount" sfwValue="ibusPersonAccount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="TotalPremiumAmount" sfwValue="icdoPersonAccountDependent.Total_Premium_Amount" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrImage" sfwValue="istrImage" />
+    <attribute ID="IstrAllPlanNames" sfwDataType="string" sfwPrivate="False" sfwValue="istrAllPlanNames" sfwType="Property" />
+    <attribute ID="IstrCorPlanName" sfwDataType="string" sfwPrivate="False" sfwValue="istrCorPlanName" sfwType="Property" />
+    <attribute ID="IdecMonthlypremiumAmount" sfwDataType="decimal" sfwPrivate="False" sfwValue="idecMonthlyPremiumAmount" sfwType="Property" />
+    <attribute ID="lstCorPersonAccountDependent" sfwType="Collection" sfwValue="iclbCorPersonAccountDependent" sfwEntity="entPersonAccountDependent" sfwPrivate="False" />
+    <attribute ID="lintPlanID" sfwDataType="int" sfwPrivate="False" sfwValue="icdoPersonAccountDependent.plan_id" sfwType="Property" />
+  </attributes>
+</entity>

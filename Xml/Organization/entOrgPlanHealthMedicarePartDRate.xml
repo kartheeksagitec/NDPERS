@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entOrgPlanHealthMedicarePartDRate" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoOrgPlanHealthMedicarePartDRate" sfwObjectID="busOrgPlanHealthMedicarePartDRate" sfwTableName="sgt_org_plan_health_medicare_part_d_rate" sfwView="False" sfwParentEntity="entPlanBase">
+  <rules>
+    <rule ID="Rule Premium Period Start Date is null or End date is Null" sfwMessage="Enter Premium Period Start date and End date." sfwExpression="(this.icdoOrgPlanHealthMedicarePartDRate.premium_period_start_date == DateTime.MinValue) || &#xA;(this.icdoOrgPlanHealthMedicarePartDRate.premium_period_end_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="RuleCheckCoverageIsNull" sfwMessage="Select Coverage Code" sfwExpression="(string.IsNullOrEmpty(this.istrCoverageCode))" sfwObjectBased="True" />
+    <rule ID="RuleCheckEffective Date is Null" sfwMessage="Enter Effective Date." sfwExpression="(this.icdoOrgPlanHealthMedicarePartDRate.effective_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="RuleCheckEmploymentTypeIsNull" sfwMessage="Select employment Type" sfwExpression="(string.IsNullOrEmpty(this.istrEmploymentType)) &amp;&amp; &#xA;(this.IsGroupHealthScreen == True)" sfwObjectBased="True" />
+    <rule ID="RuleCheckforRatesOverlapping" sfwMessage="There record exists for the given Premiun period start date and end date." sfwExpression="(this.CheckForRatesOvelapping() == True)" sfwObjectBased="True" />
+    <rule ID="RuleCheckMemberDependantEligbleIsNull" sfwMessage="Select Member Dependent eligible." sfwExpression="(string.IsNullOrEmpty(this.istrMemberDependentEligible))" sfwObjectBased="True" />
+    <rule ID="RuleCheckRateRefIDOrCoverageRefIDAreNotFound" sfwMessage="Unable to find appropriate rate for this combination of data." sfwExpression="(this.icdoOrgPlanHealthMedicarePartDRate.org_plan_group_health_medicare_part_d_coverage_ref_id == 0) || &#xA;(this.iintOrgPlanGroupHealthMedicarePartDRateRefID == 0)" sfwObjectBased="True" />
+    <rule ID="RuleCheckRateStructureIsNull" sfwMessage="Select Rate Structure" sfwExpression="(string.IsNullOrEmpty(this.istrRateStructure))" sfwObjectBased="True" />
+    <rule ID="RuleIsMemberTypeNull" sfwMessage="Select Member Type" sfwExpression="(string.IsNullOrEmpty(this.istrMemberType)) &amp;&amp; &#xA;(this.IsGroupHealthScreen == True)" sfwObjectBased="True" />
+    <rule ID="RulleCheckPlanOptionIsNull" sfwMessage="Select Plan Option" sfwExpression="(this.IsGroupHealthScreen == True) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.istrPlanOption))" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror>
+    <item ID="RuleIsMemberTypeNull" sfwMode="New" sfwStatus="Active" />
+    <item ID="RuleCheckRateStructureIsNull" sfwMode="New" sfwStatus="Active" />
+    <item ID="RuleCheckEmploymentTypeIsNull" sfwMode="New" sfwStatus="Active" />
+    <item ID="RuleCheckMemberDependantEligbleIsNull" sfwMode="New" sfwStatus="Active" />
+    <item ID="RulleCheckPlanOptionIsNull" sfwMode="New" sfwStatus="Active" />
+    <item ID="RuleCheckCoverageIsNull" sfwMode="New" sfwStatus="Active" />
+    <item ID="RuleCheckRateRefIDOrCoverageRefIDAreNotFound" sfwMode="New" sfwStatus="Active" />
+    <item ID="RuleCheckEffective Date is Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Premium Period Start Date is null or End date is Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="RuleCheckforRatesOverlapping" sfwMode="New" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <queries>
+    <query ID="GetOrgPlanGroupHealthMedicarePartDRateRefID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_RATE_REF_ID &#xD;&#xA;from SGT_ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_RATE_REF&#xD;&#xA;where ((@PLAN_OPTION_VALUE = '' AND PLAN_OPTION_VALUE IS NULL) &#xD;&#xA;OR (PLAN_OPTION_VALUE = @PLAN_OPTION_VALUE))&#xD;&#xA;AND WELLNESS=@WELLNESS&#xD;&#xA;and LOW_INCOME=@LOW_INCOME and RATE_STRUCTURE_VALUE=@RATE_STRUCTURE_VALUE &#xD;&#xA;and HEALTH_INSURANCE_TYPE_VALUE=@MEMBER_TYPE_VALUE&#xD;&#xA;&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@PLAN_OPTION_VALUE" sfwDataType="string" />
+        <parameter ID="@WELLNESS" sfwDataType="string" />
+        <parameter ID="@LOW_INCOME" sfwDataType="string" />
+        <parameter ID="@RATE_STRUCTURE_VALUE" sfwDataType="string" />
+        <parameter ID="@MEMBER_TYPE_VALUE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="GetOrgPlanGroupHealthMedicarePartDCoverageRefID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="&#xD;&#xA;Select ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_COVERAGE_REF_ID&#xD;&#xA;&#xD;&#xA;From dbo.SGT_ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_COVERAGE_REF&#xD;&#xA;&#xD;&#xA;where ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_RATE_REF_ID=@ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_RATE_REF_ID&#xD;&#xA;&#xD;&#xA;and EMPLOYMENT_TYPE_VALUE=@EMPLOYMENT_TYPE_VALUE and  GROUP_COVERAGE_VALUE=@GROUP_COVERAGE_VALUE&#xD;&#xA;&#xD;&#xA;and MEDICARE_IN=@MEDICARE_IN and COBRA_IN=@COBRA_IN and Coverage_code=@Coverage_code">
+      <parameters>
+        <parameter ID="@ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_RATE_REF_ID" sfwDataType="int" />
+        <parameter ID="@EMPLOYMENT_TYPE_VALUE" sfwDataType="string" />
+        <parameter ID="@GROUP_COVERAGE_VALUE" sfwDataType="string" />
+        <parameter ID="@MEDICARE_IN" sfwDataType="string" />
+        <parameter ID="@COBRA_IN" sfwDataType="string" />
+        <parameter ID="@Coverage_code" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="GetMemberTypeForMedicare" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select top 1 Code_value from sgs_code_value where Code_id=345 and data1='9'">
+      <parameters />
+    </query>
+    <query ID="CheckForOverlapping" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select * from dbo.SGT_ORG_PLAN_HEALTH_MEDICARE_PART_D_RATE &#xD;&#xA;where ORG_PLAN_ID=@ORG_PLAN_ID and ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_COVERAGE_REF_ID=@ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_COVERAGE_REF_ID">
+      <parameters>
+        <parameter ID="@ORG_PLAN_ID" sfwDataType="int" />
+        <parameter ID="@ORG_PLAN_GROUP_HEALTH_MEDICARE_PART_D_COVERAGE_REF_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="OrgPlanHealthMedicarePartDRateId" sfwType="Column" sfwValue="org_plan_health_medicare_part_d_rate_id" sfwIsNull="False" sfwKeyNo="1" sfwIsIdentity="True" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="OrgPlanId" sfwType="Column" sfwValue="org_plan_id" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="EffectiveDate" sfwType="Column" sfwValue="effective_date" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="PremiumPeriodStartDate" sfwType="Column" sfwValue="premium_period_start_date" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="PremiumPeriodEndDate" sfwType="Column" sfwValue="premium_period_end_date" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="OrgPlanGroupHealthMedicarePartDCoverageRefId" sfwType="Column" sfwValue="org_plan_group_health_medicare_part_d_coverage_ref_id" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="ProviderPremiumAmt" sfwType="Column" sfwValue="provider_premium_amt" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="7,2" sfwIsSequence="False" />
+    <attribute ID="FeeAmt" sfwType="Column" sfwValue="fee_amt" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="7,2" sfwIsSequence="False" />
+    <attribute ID="MedicarePartDAmt" sfwType="Column" sfwValue="medicare_part_d_amt" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="7,2" sfwIsSequence="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwIsSequence="False" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwIsSequence="False" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="HealthSavingsAmount" sfwType="Column" sfwValue="health_savings_amount" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="Decimal" />
+    <attribute ID="HealthSavingsVendorAmount" sfwType="Column" sfwValue="health_savings_vendor_amount" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="Decimal" />
+    <attribute ID="BuydownAmount" sfwType="Column" sfwValue="buydown_amount" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="7,2" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrMemberType" sfwValue="istrMemberType" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrRateStructure" sfwValue="istrRateStructure" />
+    <attribute ID="objMedicarePartDRateRef" sfwType="Object" sfwEntity="entOrgPlanGroupHealthMedicarePartDRateRef" sfwValue="ibusMedicarePartDRateRef" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPlanOption" sfwValue="istrPlanOption" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrEmploymentType" sfwValue="istrEmploymentType" />
+    <attribute ID="objMedicarePartDCoverageRef" sfwType="Object" sfwEntity="entOrgPlanGroupHealthMedicarePartDCoverageRef" sfwValue="ibusMedicarePartDCoverageRef" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrWellnessFlag" sfwValue="istrWellnessFlag" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrMedicareInFlag" sfwValue="istrMedicareInFlag" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrLowIncomeFlag" sfwValue="istrLowIncomeFlag" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrCobraFlag" sfwValue="istrCobraFlag" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrMemberDependentEligible" sfwValue="istrMemberDependentEligible" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrCoverageCode" sfwValue="istrCoverageCode" />
+    <attribute ID="objProvider" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusProvider" />
+    <attribute ID="objOrgPlan" sfwType="Object" sfwEntity="entOrgPlan" sfwValue="ibusOrgPlan" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="PremiumAmount" sfwValue="icdoOrgPlanHealthMedicarePartDRate.premium_amount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="RevisedPremiumAmount" sfwValue="icdoOrgPlanHealthMedicarePartDRate.revised_premium_amount" />
+  </attributes>
+  <objectmethods>
+    <method ID="LoadMemberTypeByPlan" sfwReturnType="Collection" sfwObjectID="cdoCodeValue" sfwEntity="entPostRetirementDeathApplication" />
+  </objectmethods>
+</entity>

@@ -1,0 +1,142 @@
+﻿<div ng-controller="createNewObjectController" class="full-height manage-create-object">
+    <wizard wizard-title-update hide-indicators="true" on-finish="OnFinishClick()" current-step="objNewItems.SelectedStep" class="full-height" id="ScopeId_{{$id}}" step-changed="onStepChanged()">
+        <!--<wz-step wz-title="Create New Entity" class="full-height">
+        <div ng-include="'CreateNewObject/views/NewItemOptions.html'" class="full-height"/>
+    </wz-step>-->
+        <!--Create New Entity Steps-->
+        <wz-step wz-title="Entity Details" wz-disabled="{{objNewItems.SelectedOption != 'Entity'}}" class="full-height">
+            <div ng-include="'CreateNewObject/views/Entity/NewEntityDetails.html'" class="full-height" ng-if="objNewItems.SelectedOption == 'Entity'" />
+        </wz-step>
+        <wz-step class="full-height" wz-title="One To One" wz-disabled="{{IsOneToOneOrManyDisable || objNewItems.SelectedOption != 'Entity'}}">
+            <div ng-include="'CreateNewObject/views/Entity/ConsolidatedBOOneToOne.html'" class="full-height" ng-if="!IsOneToOneOrManyDisable && objNewItems.SelectedOption == 'Entity'" />
+        </wz-step>
+        <wz-step class="full-height" wz-title="One To Many" wz-disabled="{{IsOneToOneOrManyDisable || objNewItems.SelectedOption != 'Entity'}}">
+            <div ng-include="'CreateNewObject/views/Entity/ConsolidatedBOOneToMany.html'" class="full-height" ng-if="!IsOneToOneOrManyDisable && objNewItems.SelectedOption == 'Entity'" />
+        </wz-step>
+        <wz-step class="full-height" wz-title="Code Value" wz-disabled="{{IsCodeValueDisable || objNewItems.SelectedOption != 'Entity'}}">
+            <div ng-include="'CreateNewObject/views/Entity/ConsolidatedBOCodeValue.html'" class="full-height" ng-if="!IsCodeValueDisable && objNewItems.SelectedOption == 'Entity'" />
+        </wz-step>
+        <wz-step class="full-height" wz-title="Properties" wz-disabled="{{IsOneToOneOrManyDisable || objNewItems.SelectedOption != 'Entity'  || !blnShowConsolidatedBORelatedProperties}}">
+            <div ng-include="'CreateNewObject/views/Entity/ConsolidatedBORelatedProperties.html'" class="full-height" ng-if="objNewItems.SelectedOption == 'Entity'" />
+        </wz-step>
+        <wz-step class="full-height" wz-title="Extra Fields" wz-disabled="{{objNewItems.SelectedOption != 'Entity' }}">
+            <div class="full-height" ng-if="objNewItems.SelectedOption == 'Entity'">
+                <extra-field-directive is-file-creation="true" extra-field-model="objExtraFields" is-tab="showExtraFieldsTab" obj-fn="objDirFunctions" form-name="objName" is-steps="true" close-wizard-fn="CloseWizardClick"></extra-field-directive>
+            </div>
+        </wz-step>
+        <!--End Create New Entity Steps-->
+        <!--Create New Correspondence Steps-->
+        <wz-step class="full-height" wz-title="Correspondence Details" wz-disabled="{{objNewItems.SelectedOption != 'Correspondence'}}">
+            <div ng-include="'CreateNewObject/views/Correspondence/CorrespondenceDetails.html'" class="full-height" ng-if="objNewItems.SelectedOption == 'Correspondence'" />
+        </wz-step>
+        <wz-step class="full-height" wz-title="Extra Fields" wz-disabled="{{objNewItems.SelectedOption != 'Correspondence'}}">
+            <div class="full-height" ng-if="objNewItems.SelectedOption == 'Correspondence'">
+                <extra-field-directive is-file-creation="true" extra-field-model="objExtraFields" is-tab="showExtraFieldsTab" obj-fn="objDirFunctions" form-name="objName" is-steps="true" close-wizard-fn="CloseWizardClick"></extra-field-directive>
+            </div>
+        </wz-step>
+        <!--End Create New Correspondence Steps-->
+        <!--Create New File Steps-->
+        <wz-step class="full-height" wz-title="File Details" wz-disabled="{{objNewItems.SelectedOption != 'File'}}">
+            <div ng-include="'CreateNewObject/views/File/FileCommonDetails.html'" class="full-height" ng-if="objNewItems.SelectedOption == 'File'" />
+        </wz-step>
+        <wz-step class="full-height" wz-title="Inbound Outbound Details" wz-disabled="{{objNewItems.SelectedOption != 'File'}}">
+            <div ng-include="'CreateNewObject/views/File/InboundOutboundDetails.html'" class="full-height" ng-if="objNewItems.SelectedOption == 'File'" />
+        </wz-step>
+        <wz-step class="full-height" wz-title="Extra Fields" wz-disabled="{{objNewItems.SelectedOption != 'File'}}">
+            <div class="full-height" ng-if="objNewItems.SelectedOption == 'File'">
+                <extra-field-directive is-file-creation="true" extra-field-model="objExtraFields" is-tab="showExtraFieldsTab" obj-fn="objDirFunctions" form-name="objName" is-steps="true" close-wizard-fn="CloseWizardClick"></extra-field-directive>
+            </div>
+        </wz-step>
+        <!--End Create New File Steps-->
+        <!--Create New Wizard Steps-->
+        <wz-step class="full-height" wz-title="Wizard Form Details" wz-disabled="{{objNewItems.SelectedOption != 'Wizard'}}">
+            <div ng-include="'CreateNewObject/views/Form/Wizard/WizardFormDetails.html'" class="full-height" ng-if="objNewItems.SelectedOption == 'Wizard'" />
+        </wz-step>
+        <wz-step class="full-height" wz-title="Extra Fields" wz-disabled="{{objNewItems.SelectedOption != 'Wizard'}}">
+            <div class="full-height" ng-if="objNewItems.SelectedOption == 'Wizard'">
+                <extra-field-directive is-file-creation="true" extra-field-model="objExtraFields" is-tab="showExtraFieldsTab" obj-fn="objDirFunctions" form-name="objName" is-steps="true" close-wizard-fn="CloseWizardClick"></extra-field-directive>
+            </div>
+        </wz-step>
+        <!--End Create New Wizard Steps-->
+        <!--Create New Report Steps-->
+        <wz-step class="full-height" wz-title="Report Details" wz-disabled="{{objNewItems.SelectedOption != 'Report'}}">
+            <div ng-include="'CreateNewObject/views/Report/ReportDetails.html'" class="full-height" ng-if="objNewItems.SelectedOption == 'Report'" />
+        </wz-step>
+        <wz-step class="full-height" wz-title="Extra Fields" wz-disabled="{{objNewItems.SelectedOption != 'Report'}}">
+            <div class="full-height" ng-if="objNewItems.SelectedOption == 'Report'">
+                <extra-field-directive is-file-creation="true" extra-field-model="objExtraFields" is-tab="showExtraFieldsTab" obj-fn="objDirFunctions" form-name="objName" is-steps="true" close-wizard-fn="CloseWizardClick"></extra-field-directive>
+            </div>
+        </wz-step>
+        <!--End Create New Report Steps-->
+        <!--Create New Forms Steps-->
+        <wz-step class="full-height" wz-title="Form Details" wz-disabled="{{objNewItems.SelectedOption != 'Forms'}}">
+            <div ng-include="'CreateNewObject/views/Form/FormsCommonDetails.html'" class="full-height" ng-if="objNewItems.SelectedOption == 'Forms'" />
+        </wz-step>
+        <wz-step class="full-height" wz-title="LookUp Fields Details" wz-disabled="{{objFormsDetails.isShowLookupStep || objNewItems.SelectedOption != 'Forms' }}">
+            <div ng-include="'CreateNewObject/views/Form/Lookup/LookupFieldsDetails.html'" class="full-height" ng-show="!objFormsDetails.isShowLookupStep" ng-if="objNewItems.SelectedOption == 'Forms'" />
+        </wz-step>
+        <wz-step class="full-height" wz-title="LookUp Result Fields" wz-disabled="{{objFormsDetails.isShowLookupStep|| objNewItems.SelectedOption != 'Forms' }}">
+            <div ng-include="'CreateNewObject/views/Form/Lookup/LookupResultFields.html'" class="full-height" ng-show="!objFormsDetails.isShowLookupStep" ng-if="objNewItems.SelectedOption == 'Forms'" />
+        </wz-step>
+        <wz-step class="full-height" wz-title="Extra Fields" wz-disabled="{{objNewItems.SelectedOption != 'Forms'}}">
+            <div class="full-height" ng-if="objNewItems.SelectedOption == 'Forms'">
+                <extra-field-directive is-file-creation="true" extra-field-model="objExtraFields" is-tab="showExtraFieldsTab" obj-fn="objDirFunctions" form-name="objName" is-steps="true" close-wizard-fn="CloseWizardClick"></extra-field-directive>
+            </div>
+        </wz-step>
+
+        <!--End Create New Forms Steps-->
+        <!-- Create New User Control steps -->
+        <wz-step class="full-height" wz-title="User Control Details" wz-disabled="{{objNewItems.SelectedOption != 'UserControl'}}">
+            <div ng-include="'CreateNewObject/views/UserControl/UserControlDetailsForm.html'" class="full-height" ng-if="objNewItems.SelectedOption == 'UserControl'" />
+        </wz-step>
+        <wz-step class="full-height" wz-title="Extra Fields" wz-disabled="{{objNewItems.SelectedOption != 'UserControl'}}">
+            <div class="full-height" ng-if="objNewItems.SelectedOption == 'UserControl'">
+                <extra-field-directive is-file-creation="true" extra-field-model="objExtraFields" is-tab="showExtraFieldsTab" obj-fn="objDirFunctions" form-name="objName" is-steps="true" close-wizard-fn="CloseWizardClick"></extra-field-directive>
+            </div>
+        </wz-step>
+        <!-- End of Create New User Control Steps-->
+        <!-- Create New Tooltip steps -->
+        <wz-step class="full-height" wz-title="Tooltip Details" wz-disabled="{{objNewItems.SelectedOption != 'Tooltip'}}">
+            <div ng-include="'CreateNewObject/views/TooltipForm/TooltipDetailsForm.html'" class="full-height" ng-if="objNewItems.SelectedOption == 'Tooltip'" />
+        </wz-step>
+        <wz-step class="full-height" wz-title="Extra Fields" wz-disabled="{{objNewItems.SelectedOption != 'Tooltip'}}">
+            <div class="full-height" ng-if="objNewItems.SelectedOption == 'Tooltip'">
+                <extra-field-directive is-file-creation="true" extra-field-model="objExtraFields" is-tab="showExtraFieldsTab" obj-fn="objDirFunctions" form-name="objName" is-steps="true" close-wizard-fn="CloseWizardClick"></extra-field-directive>
+            </div>
+        </wz-step>
+        <!-- End of Create New User Control Steps-->
+        <!--Start Create New BPM Steps-->
+        <wz-step class="full-height" wz-title="New BPM Details" wz-disabled="{{objNewItems.SelectedOption != 'BPMN' && objNewItems.SelectedOption != 'BPMTemplate'}}">
+            <div ng-include="'CreateNewObject/views/BPM/NewBPMWizardStep.html'" class="full-height" ng-if="objNewItems.SelectedOption == 'BPMN' || objNewItems.SelectedOption == 'BPMTemplate'" />
+        </wz-step>
+        <wz-step class="full-height" wz-title="Extra Fields" wz-disabled="{{objNewItems.SelectedOption != 'BPMN' && objNewItems.SelectedOption != 'BPMTemplate'}}">
+            <div class="full-height" ng-if="objNewItems.SelectedOption == 'BPMN' || objNewItems.SelectedOption == 'BPMTemplate'">
+                <extra-field-directive is-file-creation="true" extra-field-model="objExtraFields" is-tab="showExtraFieldsTab" obj-fn="objDirFunctions" form-name="objName" is-steps="true" close-wizard-fn="CloseWizardClick"></extra-field-directive>
+            </div>
+        </wz-step>
+        <!--End Create New BPM Steps-->
+        <!--Create New Form Link Step-->
+        <wz-step class="full-height" wz-title="Form Link Details" wz-disabled="{{objNewItems.SelectedOption != 'HtxLookup' && objNewItems.SelectedOption != 'HtxMaintenance' && objNewItems.SelectedOption != 'HtxWizard'}}">
+            <div ng-include="'CreateNewObject/views/FormLink/FormLinkLookupDetails.html'" class="full-height" ng-if="objNewItems.SelectedOption == 'HtxLookup' || objNewItems.SelectedOption == 'HtxMaintenance' || objNewItems.SelectedOption == 'HtxWizard'" />
+        </wz-step>
+        <wz-step class="full-height" wz-title="Extra Fields" wz-disabled="{{objNewItems.SelectedOption != 'HtxLookup' && objNewItems.SelectedOption != 'HtxMaintenance' && objNewItems.SelectedOption != 'HtxWizard'}}">
+            <div class="full-height" ng-if="objNewItems.SelectedOption == 'HtxLookup' || objNewItems.SelectedOption == 'HtxMaintenance' || objNewItems.SelectedOption == 'HtxWizard'">
+                <extra-field-directive is-file-creation="true" extra-field-model="objExtraFields" is-tab="showExtraFieldsTab" obj-fn="objDirFunctions" form-name="objName" is-steps="true" close-wizard-fn="CloseWizardClick"></extra-field-directive>
+            </div>
+        </wz-step>
+        <!--End Create Form Link Step-->
+        <!--Create New Prototype Form  Step-->
+        <wz-step class="full-height" wz-title="Prototype Form Details" wz-disabled="{{objNewItems.SelectedOption != 'PrototypeLookup' && objNewItems.SelectedOption != 'PrototypeMaintenance' && objNewItems.SelectedOption != 'PrototypeWizard'}}">
+            <div ng-include="'CreateNewObject/views/Prototype/PrototypeLookupDetails.html'" class="full-height" ng-if="objNewItems.SelectedOption == 'PrototypeLookup' || objNewItems.SelectedOption == 'PrototypeMaintenance' || objNewItems.SelectedOption == 'PrototypeWizard'" />
+        </wz-step>
+        <wz-step class="full-height" wz-title="Prototype Lookup Columns" wz-disabled="{{objNewItems.SelectedOption != 'PrototypeLookup'}}">
+            <div ng-include="'CreateNewObject/views/Prototype/Lookup/PrototypeLookupColumnDetails.html'" class="full-height" ng-if="objNewItems.SelectedOption == 'PrototypeLookup'" />
+        </wz-step>
+        <!--End Create Prototype Form Step-->
+        <!--Create New WorkFlow Map  Step-->
+        <wz-step class="full-height" wz-title="Workflow Map Details" wz-disabled="{{objNewItems.SelectedOption != 'WorkflowMap'}}">
+            <div ng-include="'CreateNewObject/views/WorkflowMap/WorkflowMapDetails.html'" class="full-height" ng-if="objNewItems.SelectedOption == 'WorkflowMap'" />
+        </wz-step>
+        <!--End Create Prototype Form Step-->
+    </wizard>
+</div>

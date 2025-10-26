@@ -1,0 +1,165 @@
+﻿<div class="portlet-body">
+    <ul class="nav nav-tabs" id="menu" ng-show="showExtraFieldsTab">
+        <li ng-click="SelectedRuleDetailsDialogTab='Details'" ng-class="SelectedRuleDetailsDialogTab=='Details'?'active':''"><a>Details</a></li>
+        <li ng-click="SelectedRuleDetailsDialogTab='ExtraFields'" ng-class="SelectedRuleDetailsDialogTab=='ExtraFields'?'active':''"><a>Extra Fields</a></li>
+    </ul>
+    <div class="tab-content">
+        <div ng-show="SelectedRuleDetailsDialogTab=='Details'" ng-class="SelectedRuleDetailsDialogTab=='Details'?'tab-pane fade active in':'tab-pane fade'">
+            <div class="form-body">
+
+                <div class="col-xs-6">
+
+                    <div class="form-group">
+                        <label class="control-label" ng-if='!sfwEntity && !Entity'>Entity</label>
+                        <label class="control-label" ng-if='sfwEntity'><a style="color: #5b9bd1!important;" ng-click='RuleDetailsOkClick();NavigateToEntity(sfwEntity)'>Entity</a></label>
+                        <label class="control-label" ng-if='Entity'><a style="color: #5b9bd1!important;" ng-click='RuleDetailsOkClick();NavigateToEntity(Entity)'>Entity</a></label>
+
+                        <fileintellisensetemplate filename="sfwEntity" filetype="'Entity'" model="" propertyname="'sfwEntity'" ng-hide="IsDecisionTable" />
+                        <fileintellisensetemplate filename="Entity" filetype="'Entity'" model="" propertyname="'Entity'" ng-show="IsDecisionTable" />
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label class="control-label">NeoTrack ID </label>
+                        <input type="text" title="{{sfwNeoTrackID}}" ng-model="sfwNeoTrackID" class="form-control input-sm" ng-hide="IsDecisionTable" />
+                        <input type="text" title="{{NeoTrackID}}" ng-model="NeoTrackID" class="form-control input-sm" ng-show="IsDecisionTable" />
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Description</label>
+                        <textarea ng-model="Text" class="form-control input-sm" ng-hide="IsDecisionTable" style="height:100px !important"> </textarea>
+
+                        <textarea ng-model="Description" class="form-control input-sm" ng-show="IsDecisionTable" style="height:100px !important"> </textarea>
+
+                    </div>
+
+
+
+
+
+
+
+                    <div class="form-group" ng-show="objLogicalRule.dictAttributes.sfwRuleType == 'ExcelMatrix'">
+                        <label class="control-label">Column Description </label>
+
+                        <input type="text" title="{{columnHeader}}" ng-model="columnHeader" class="form-control input-sm" />
+
+                    </div>
+
+                </div>
+
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="control-label">Return Type </label>
+
+                        <select title="{{sfwReturnType}}" ng-model="sfwReturnType" class="form-control input-sm" ng-change="onReturnTypeChange()" ng-hide="IsDecisionTable">
+                            <option ng-repeat="option in LoadRuleReturnTypes.ReturnValue" value="{{option.name}}"> {{option.name}}</option>
+
+                        </select>
+
+                        <select title="{{ReturnType}}" ng-model="ReturnType" class="form-control input-sm" ng-change="onReturnTypeChange()" ng-show="IsDecisionTable">
+                            <option ng-repeat="option in LoadRuleReturnTypesForDecisionTable.ReturnValue" value="{{option.name}}"> {{option.name}}</option>
+                        </select>
+
+                    </div>
+
+                    <div class="form-group" ng-show="sfwReturnType == 'Collection' || sfwReturnType == 'List' || sfwReturnType == 'Object'">
+                        <label class="control-label" ng-if='!sfwReturnEntity'>Entity Return Type</label>
+                        <label class="control-label" ng-if='sfwReturnEntity'><a style="color: #5b9bd1!important;" ng-click='RuleDetailsOkClick();NavigateToEntity(sfwReturnEntity)'>Entity Return Type</a></label>
+
+                        <fileintellisensetemplate filename="sfwReturnEntity" filetype="'Entity'" model="" propertyname="'sfwReturnEntity'" />
+
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label">Status</label>
+
+                        <select title="{{sfwStatus}}" ng-model="sfwStatus" class="form-control input-sm" ng-hide="IsDecisionTable">
+                            <option ng-repeat="option in LoadRuleStatus.StatusValue" value="{{option.name}}">{{option.name}}</option>
+                        </select>
+
+                        <select title="{{Status}}" ng-model="Status" class="form-control input-sm" ng-show="IsDecisionTable">
+                            <option ng-repeat="option in LoadRuleStatus.StatusValue" value="{{option.name}}">{{option.name}}</option>
+                        </select>
+
+                    </div>
+
+                    <div class="form-group checkbox-row">
+                        <div class="col-xs-3">
+                            <label class="control-label">Static</label>
+
+                            <input type="checkbox" value="Static" ng-model="sfwStatic" ng-checked="sfwStatic" ng-disabled="objLogicalRule.dictAttributes.sfwRuleType == 'ExcelMatrix' " ng-hide="IsDecisionTable" class="popup-single-checkbox" />
+                            <input type="checkbox" value="Static" ng-model="Static" ng-checked="Static" ng-show="IsDecisionTable" class="popup-single-checkbox" />
+                        </div>
+                        <div class="col-xs-3">
+                            <label class="control-label">Private</label>
+                            <div class="col-xs-12">
+                                <input type="checkbox" value="Private" ng-model="sfwPrivate" ng-checked="sfwPrivate" ng-hide="IsDecisionTable" class="popup-single-checkbox" />
+                                <input type="checkbox" value="Private" ng-model="Private" ng-checked="Private" ng-show="IsDecisionTable" class="popup-single-checkbox" />
+                            </div>
+                        </div>
+                        <div class="col-xs-3">
+                            <label class="control-label">Trace</label>
+
+                            <input type="checkbox" value="Trace" ng-model="sfwTrace" ng-checked="sfwTrace" ng-hide="IsDecisionTable" class="popup-single-checkbox" />
+                            <input type="checkbox" value="Trace" ng-model="Trace" ng-checked="Trace" ng-show="IsDecisionTable" class="popup-single-checkbox" />
+                        </div>
+                        <div class="col-xs-3">
+                            <label class="control-label text-nowrap" ng-show="IsDecisionTable && Static"> Cache Result</label>
+                            <label class="control-label text-nowrap" ng-show="!IsDecisionTable && sfwStatic"> Cache Result</label>
+
+                            <input type="checkbox" value="Cache Result" ng-model="CacheResult" ng-checked="CacheResult" ng-show="IsDecisionTable && Static" class="popup-single-checkbox" />
+                            <input type="checkbox" value="Cache Result" ng-model="sfwCacheResult" ng-checked="sfwCacheResult" ng-show="!IsDecisionTable && sfwStatic" class="popup-single-checkbox" />
+                        </div>
+                    </div>
+
+                    <div class="form-group checkbox-row" ng-show="IsDecisionTable">
+                        <div class="col-xs-6">
+                            <label class="control-label text-nowrap">Match All Conditions</label>
+                            <div class="col-xs-12">
+                                <input type="checkbox" ng-model="MatchAllConditions" ng-checked="MatchAllConditions" class="popup-single-checkbox">
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <label class="control-label text-nowrap">Throw Error</label>
+                            <div class="col-xs-12">
+                                <input type="checkbox" ng-model="ThrowError" ng-checked="ThrowError" class="popup-single-checkbox">
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group" ng-show="objLogicalRule.dictAttributes.sfwRuleType == 'ExcelMatrix'">
+                        <label class="control-label">Row Description </label>
+
+                        <input type="text" title="{{rowHeader}}" ng-model="rowHeader" class="form-control input-sm" />
+
+                    </div>
+                    <div class="form-group" ng-show="objLogicalRule.dictAttributes.sfwRuleType == 'ExcelMatrix'">
+                        <label class="control-label">Default Output Value</label>
+
+                        <input type="text" title="{{sfwDefaultValue}}" ng-model="sfwDefaultValue" class="form-control input-sm" />
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div ng-show="SelectedRuleDetailsDialogTab=='ExtraFields'" ng-class="SelectedRuleDetailsDialogTab=='ExtraFields'?'tab-pane fade active in':'tab-pane fade'">
+            <extra-field-directive extra-field-model="objRuleExtraFields" is-tab="showExtraFieldsTab" obj-fn="objDirFunctions" form-name="formName" is-steps="false"></extra-field-directive>
+
+        </div>
+    </div>
+
+
+</div>
+<div class="form-actions">
+    <div class="col-xs-8 text-left">
+        <span class="alert-error-msg" ng-if="RuleDetailsErrorMessage.length > 0" ng-bind="RuleDetailsErrorMessage"></span>
+    </div>
+    <div class="col-xs-4">
+        <input type="button" class="btn dialog-btn-default" value="OK" ng-click="RuleDetailsOkClick()" ng-disabled="validateRuleDetails()" />
+        <input type="button" class="btn dialog-btn-default" value="Cancel" ng-click="closeRuleDetails()" />
+    </div>
+</div>

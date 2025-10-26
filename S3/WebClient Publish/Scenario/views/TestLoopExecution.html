@@ -1,0 +1,61 @@
+﻿<div class="portlet-body scenario-overflow-hide">
+    <div class="run-result-spliter-loop full-height">
+        <div class="run-result-spliter fleft  full-width full-height">
+            <div class="toolbox-wrapper execution-result-wrapper form-toolbox" ng-if="!IsDiagramDivExpanded">
+                <div class="client-visi-layout-inner" id="divRunResultsTable">
+                    <div class="client-visi-header">
+                        <span>Execution Data</span>
+                        <span class="toolbox-close-icon top-0" ng-click="ExpandCollapseDiagram()" title="Collapse"> </span>
+                    </div>
+                    <div class="client-visi-content">
+                    <table ng-show="!IsWhileLoop" class="table table-striped table-hover table-bordered dataTable no-footer">
+                        <thead>
+                            <tr>
+                                <th ng-repeat="col in Columns" class="loop-execution-column" title="{{col}}">{{ col }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="step in Elements" ng-click="UpdateStepOnSelectionChange(step)" ng-class="setClassForLoop(step)">
+                                <td ng-show="step.Name!=undefined">
+                                    <span ng-bind="step.Name"></span>
+                                </td>
+                                <td ng-repeat="obj in step.properties" ng-show="step.Name==undefined">
+                                    <span ng-bind="obj"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <ul ng-show="IsWhileLoop" class="list-unstyled">
+                        <li ng-repeat="step in Elements" ng-click="UpdateStepOnSelectionChange(step)" ng-class="setClassForLoop(step)">
+                            <span ng-bind="step.Name"></span>
+                        </li>
+                    </ul>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="toolbox-sidebar" ng-if="IsDiagramDivExpanded">
+                <span class="toolbox-close-icon" ng-click="ExpandCollapseDiagram()" title="Expand"> </span>
+
+        </div>
+
+            <div ng-class="IsDiagramDivExpanded ? 'form-area-expanded execution-result-diagram-area-border' : 'form-area execution-result-diagram-area' " id="divRunResultsDiagram">
+            <div class="b RunResult-body">
+                <div class="tree logical-rule-container">
+                    <ul class='start-ul no-top-marg  marg-left-5'>
+                        <li ng-show="LoopViewModel.IsShowDiagram">
+                            <logical-rule-node-wrapper-for-scenario-execution model="LoopViewModel" parent-model="LoopViewModel" objmainlogicalrule="objmainlogicalrule" scenarioruntype="scenarioruntype" objentity="objentity"></logical-rule-node-wrapper-for-scenario-execution> 
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        </div>
+
+    </div>
+
+</div>
+<div class="form-actions">
+    <input type="button" value="OK" ng-click="loopExecutionDialog.close()" class="fright dialog-btn" />
+</div>

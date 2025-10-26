@@ -1,0 +1,59 @@
+﻿<entity ID="entBoardMemberVote" sfwView="False" sfwActive="True" sfwMainCDO="icdoBoardMemberVote" sfwType="EntityRule" sfwStatus="Review" sfwTableName="sgt_board_member_vote" sfwObjectID="busBoardMemberVote" sfwDataObjectID="doBoardMemberVote" CreateWithClass="True">
+  <attributes>
+    <attribute sfwValue="board_member_vote_id" sfwType="Column" sfwKeyNo="1" sfwIsIdentity="True" sfwDataType="int" sfwDBDataType="int" sfwIsNull="False" ID="BoardMemberVoteId" sfwCaption="ID" />
+    <attribute sfwValue="election_id" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="False" ID="ElectionId" sfwCaption="Election Id" />
+    <attribute sfwValue="candidate_id" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="True" ID="CandidateId" sfwCaption="Candidate Id" />
+    <attribute sfwValue="vote_cast_time" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="datetime" sfwDBDataType="datetime" sfwIsNull="False" ID="VoteCastTime" sfwCaption="Vote Cast Time" />
+    <attribute sfwValue="candidate_name" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="150" sfwIsNull="True" ID="CandidateName" sfwCaption="Candidate Name" />
+    <attribute sfwValue="created_by" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="50" sfwIsNull="True" ID="CreatedBy" sfwCaption="Created By" />
+    <attribute sfwValue="created_date" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="datetime" sfwDBDataType="datetime" sfwIsNull="True" ID="CreatedDate" sfwCaption="Created Date" />
+    <attribute sfwValue="modified_by" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="50" sfwIsNull="True" ID="ModifiedBy" sfwCaption="Modified By" />
+    <attribute sfwValue="modified_date" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="datetime" sfwDBDataType="datetime" sfwIsNull="True" ID="ModifiedDate" sfwCaption="Modified Date" />
+    <attribute sfwValue="update_seq" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="True" ID="UpdateSeq" sfwCaption="Update Seq" />
+    <attribute sfwValue="person_id" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="False" ID="PersonId" sfwCaption="Person Id" />
+    <attribute ID="IstrBoardMemberStaticText" sfwDataType="string" sfwPrivate="False" sfwValue="istrBoardMemberStaticText" sfwType="Property" />
+    <attribute ID="lstBoardMemberElectionCandidates" sfwType="Collection" sfwValue="iclcBoardMemberElectionCandidates" sfwEntity="entBoardMemberElectionCandidate" sfwPrivate="False" />
+    <attribute ID="IstrBalletStaticText" sfwDataType="string" sfwPrivate="False" sfwValue="istrBalletStaticText" sfwType="Property" />
+    <attribute ID="istrIsWriteInCandidateSelected" sfwDataType="string" sfwPrivate="False" sfwValue="istrIsWriteInCandidateSelected" sfwType="Property" />
+    <attribute ID="istrWriteInCandidateName" sfwDataType="string" sfwPrivate="False" sfwValue="istrWriteInCandidateName" sfwType="Property" />
+    <attribute ID="lstBoardMemberElectedCandidates" sfwType="Collection" sfwValue="iclcBoardMemberElectedCandidates" sfwEntity="entBoardMemberElectionCandidate" sfwPrivate="False" />
+  </attributes>
+  <ExtraFields />
+  <queries>
+    <query ID="DidPersonVoteForOpenElection" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="DECLARE @SYSMGMTDATE DATE&#xA;DECLARE @ELECTIONID INT = 0&#xA;DECLARE @ISPERSONAMONGACTIVESELECTION CHAR(1) = 'N'&#xA;&#xA;&#xA;IF(@AUDIENCEVALUE = 'ACTV')&#xA;SELECT @ISPERSONAMONGACTIVESELECTION = CASE WHEN ISNULL(PERSON_ID,0) &gt; 0 THEN 'Y' ELSE 'N' END&#xA;FROM SGT_PERSON_ACCOUNT WITH(NOLOCK)&#xA;WHERE PLAN_ID IN (1,2,3,4,5,6,7,20,26,27,28,29,30)&#xA;AND PLAN_PARTICIPATION_STATUS_VALUE = 'ENL1'&#xA;AND PERSON_ID = @PERSONID&#xA;ELSE IF (@AUDIENCEVALUE = 'RETR')&#xA;SELECT @ISPERSONAMONGACTIVESELECTION = CASE WHEN ISNULL(PAYEE_PERSLINK_ID,0) &gt; 0 THEN 'Y' ELSE 'N' END&#xA;FROM&#x9;SGT_PAYEE_ACCOUNT WITH(NOLOCK) INNER JOIN&#xA;&#x9;&#x9;SGT_PAYEE_ACCOUNT_STATUS WITH(NOLOCK) ON SGT_PAYEE_ACCOUNT.PAYEE_ACCOUNT_ID = SGT_PAYEE_ACCOUNT_STATUS.PAYEE_ACCOUNT_ID&#xA;WHERE&#x9;(SGT_PAYEE_ACCOUNT_STATUS.PAYEE_ACCOUNT_STATUS_ID =&#xA;&#x9;&#x9;&#x9;(SELECT TOP (1) PAYEE_ACCOUNT_STATUS_ID&#xA;             FROM SGT_PAYEE_ACCOUNT_STATUS AS SGT_PAYEE_ACCOUNT_STATUS_1 WITH (NOLOCK)&#xA;             WHERE (PAYEE_ACCOUNT_ID = SGT_PAYEE_ACCOUNT.PAYEE_ACCOUNT_ID)&#xA;             ORDER BY STATUS_EFFECTIVE_DATE DESC, PAYEE_ACCOUNT_STATUS_ID DESC)) &#xA;&#x9;&#x9;&#x9; AND (SGT_PAYEE_ACCOUNT_STATUS.STATUS_VALUE IN ('RECV','RCDT','DAPD','APDS','RCDS','DCDT','DCDS','DCPS','RCPS','PAPD','APRD','DCRC','3RDP','3RDR','3RDD'))&#xA;&#x9;&#x9;AND PAYEE_PERSLINK_ID IS NOT NULL AND PAYEE_PERSLINK_ID = @PERSONID&#xA;&#xA;SELECT @SYSMGMTDATE = BATCH_DATE FROM SGS_SYSTEM_MANAGEMENT WITH(NOLOCK)&#xA;&#xA;SELECT&#xA;&#x9;TOP 1 @ELECTIONID = E.ELECTION_ID &#xA;FROM &#xA;&#x9;SGT_BOARD_MEMBER_ELECTION E WITH(NOLOCK)&#xA;WHERE&#xA;&#x9;AUDIENCE_VALUE = @AUDIENCEVALUE AND&#xA;&#x9;(@SYSMGMTDATE BETWEEN E.[START_DATE] AND ISNULL(E.END_DATE, '99991231'))&#xA;ORDER BY&#xA;&#x9;E.[START_DATE] DESC, ISNULL(E.[END_DATE], '99991231') DESC &#xA;&#xA;IF EXISTS (&#x9;&#xA;&#x9;&#x9;&#x9;SELECT&#xA;&#x9;&#x9;&#x9;&#x9;1&#xA;&#x9;&#x9;&#x9;FROM&#xA;&#x9;&#x9;&#x9;&#x9;SGT_BOARD_MEMBER_VOTE V WITH(NOLOCK)&#xA;&#x9;&#x9;&#x9;WHERE&#xA;&#x9;&#x9;&#x9;&#x9;V.ELECTION_ID = @ELECTIONID AND V.PERSON_ID = @PERSONID&#xA;&#xA;&#x9;&#x9; )  OR (ISNULL(@ISPERSONAMONGACTIVESELECTION, 'N') = 'N')&#xA;BEGIN&#xA;SELECT 0 AS ELECTION_ID&#xA;END&#xA;ELSE&#xA;BEGIN&#xA;SELECT @ELECTIONID AS ELECTION_ID&#xA;END">
+      <parameters>
+        <parameter ID="@AUDIENCEVALUE" sfwDataType="string" />
+        <parameter ID="@PERSONID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="HasThePersonVotedForCurrentOpenElection" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT&#xA;&#x9;COUNT(*) AS VOTE_COUNT&#xA;FROM&#xA;&#x9;SGT_BOARD_MEMBER_VOTE&#xA;WHERE&#xA;&#x9;PERSON_ID = @PERSONID AND&#xA;&#x9;ELECTION_ID = @ELECTIONID">
+      <parameters>
+        <parameter ID="@PERSONID" sfwDataType="int" />
+        <parameter ID="@ELECTIONID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <constraint />
+  <rules>
+    <rule ID="Rule - Is No Candidate Has Been Voted" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.iclcBoardMemberElectedCandidates != null &amp;&amp; &#xA;this.iclcBoardMemberElectedCandidates.Count == 0 &amp;&amp;&#xA;(string.IsNullOrEmpty(this.istrIsWriteInCandidateSelected) || &#xA;this.istrIsWriteInCandidateSelected == &quot;N&quot;)" sfwMessageId="10443" />
+    <rule ID="Rule - Are More Than Allowed Votes Per Person Getting Voted" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="((this.istrIsWriteInCandidateSelected == &quot;Y&quot; &amp;&amp; &#xA;this.iclcBoardMemberElectedCandidates.Count == this.ibusBoardMemberElection.icdoBoardMemberElection.allowed_votes_per_person) || (this.istrIsWriteInCandidateSelected != &quot;Y&quot; &amp;&amp; &#xA;this.iclcBoardMemberElectedCandidates.Count &gt; this.ibusBoardMemberElection.icdoBoardMemberElection.allowed_votes_per_person))" sfwMessageId="10444" />
+    <rule ID="Visible Rule - Has The Person Voted For Current Election" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entBoardMemberVote.HasThePersonVotedForCurrentOpenElection&quot;, &#xA;this.icdoBoardMemberVote.person_id, &#xA;this.icdoBoardMemberVote.election_id) == 0)" />
+    <rule ID="Rule - Is Write In Checkbox Selected But No Name Entered" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.istrIsWriteInCandidateSelected == &quot;Y&quot; &amp;&amp; &#xA;string.IsNullOrEmpty(this.istrWriteInCandidateName)" sfwMessageId="10445" />
+  </rules>
+  <initialload>
+    <item ID="Visible Rule - Has The Person Voted For Current Election" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="Rule - Is No Candidate Has Been Voted" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - Are More Than Allowed Votes Per Person Getting Voted" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - Is Write In Checkbox Selected But No Name Entered" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <delete />
+  <groupslist />
+  <checklist />
+  <methods />
+  <lifecycle />
+  <objectmethods />
+</entity>

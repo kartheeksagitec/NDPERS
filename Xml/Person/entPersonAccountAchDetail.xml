@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entPersonAccountAchDetail" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoPersonAccountAchDetail" sfwObjectID="busPersonAccountAchDetail" sfwTableName="sgt_person_account_ach_detail">
+  <rules>
+    <rule ID="IsAccountNumberNull" sfwMessageId="4602" sfwExpression="(string.IsNullOrEmpty(this.icdoPersonAccountAchDetail.bank_account_number))" sfwObjectBased="True" />
+    <rule ID="IsAchRecordExist" sfwMessageId="5569" sfwExpression="(this.IsACHRecordExist() == True)" sfwObjectBased="True" />
+    <rule ID="IsAchStartDateNull" sfwMessageId="4032" sfwExpression="(this.icdoPersonAccountAchDetail.ach_start_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsBAnkOrgActive" sfwMessageId="5501" sfwExpression="!(string.IsNullOrEmpty(this.icdoPersonAccountAchDetail.org_code)) &amp;&amp; &#xA;!(RFunc.GetValue&lt;String&gt;(this, &quot;ibusBankOrg.icdoOrganization.status_value&quot;) == &quot;ACTV&quot;)" sfwObjectBased="True" />
+    <rule ID="IsEndateLessthanStartDate" sfwMessageId="5507" sfwExpression="!(this.icdoPersonAccountAchDetail.ach_start_date == DateTime.MinValue) &amp;&amp; &#xA;!(this.icdoPersonAccountAchDetail.ach_end_date == DateTime.MinValue) &amp;&amp; &#xA;(this.icdoPersonAccountAchDetail.ach_end_date &lt; this.icdoPersonAccountAchDetail.ach_start_date)" sfwObjectBased="True" />
+    <rule ID="IsEndDateValid" sfwMessageId="5510" sfwExpression="(this.IsEnddateValid() == True)" sfwObjectBased="True" />
+    <rule ID="IsOrBanInvalid" sfwMessageId="4017" sfwExpression="!(string.IsNullOrEmpty(this.icdoPersonAccountAchDetail.org_code)) &amp;&amp; &#xA;!(RFunc.GetValue&lt;String&gt;(this, &quot;ibusBankOrg.icdoOrganization.org_type_value&quot;) == &quot;BANK&quot;)" sfwObjectBased="True" />
+    <rule ID="IsOrgCodeNull" sfwMessageId="1032" sfwExpression="(string.IsNullOrEmpty(this.icdoPersonAccountAchDetail.org_code))" sfwObjectBased="True" />
+    <rule ID="IsStartDateValid" sfwMessageId="5571" sfwExpression="(this.IsStartdateValid() == True)" sfwObjectBased="True" />
+    <rule ID="IsAccountTypeNull" sfwMessageId="4014" sfwExpression="(string.IsNullOrEmpty(this.icdoPersonAccountAchDetail.bank_account_type_value))" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror>
+    <item ID="IsOrgCodeNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAchStartDateNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsBAnkOrgActive" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAccountNumberNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEndDateValid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsStartDateValid" sfwMode="New" sfwStatus="Active" />
+    <item ID="IsOrBanInvalid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEndateLessthanStartDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAchRecordExist" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAccountTypeNull" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <expressionfields />
+  <queries>
+    <query ID="LoadExistingACHDetails" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT PA.PERSON_ID,PA.PLAN_ID as plan_id_ach, ACHDET.* &#xD;&#xA;FROM SGT_PERSON_ACCOUNT_ACH_DETAIL ACHDET&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT PA ON ACHDET.PERSON_ACCOUNT_ID = PA.PERSON_ACCOUNT_ID&#xD;&#xA;WHERE PA.PERSON_ID = @PERSON_ID&#xD;&#xA;AND PA.PLAN_ID IN (12,13,16,17)&#xD;&#xA;AND ACHDET.ACH_END_DATE IS NULL&#xD;&#xA;&#xD;&#xA;UNION&#xD;&#xA;&#xD;&#xA;SELECT MED.MEMBER_PERSON_ID, PA.PLAN_ID as plan_id_ach ,ACHDET.* &#xD;&#xA;FROM SGT_PERSON_ACCOUNT_ACH_DETAIL ACHDET&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT PA ON ACHDET.PERSON_ACCOUNT_ID = PA.PERSON_ACCOUNT_ID&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT_MEDICARE_PART_D_HISTORY MED ON MED.PERSON_ACCOUNT_ID = PA.PERSON_ACCOUNT_ID&#x9;&#xD;&#xA;WHERE MED.MEMBER_PERSON_ID = @PERSON_ID&#xD;&#xA;AND PA.PLAN_ID IN (9)&#xD;&#xA;AND ACHDET.ACH_END_DATE IS NULL&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadACHForMedicare" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT distinct MED.MEMBER_PERSON_ID, PA.PLAN_ID as plan_id_ach ,PA.PERSON_ACCOUNT_ID &#xD;&#xA;FROM SGT_PERSON_ACCOUNT_ACH_DETAIL ACHDET&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT PA ON ACHDET.PERSON_ACCOUNT_ID = PA.PERSON_ACCOUNT_ID&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT_MEDICARE_PART_D_HISTORY MED ON MED.PERSON_ACCOUNT_ID = PA.PERSON_ACCOUNT_ID&#x9;&#xD;&#xA;WHERE MED.MEMBER_PERSON_ID = @PERSON_ID&#xD;&#xA;AND PA.PLAN_PARTICIPATION_STATUS_VALUE = 'ENL2'&#xD;&#xA;AND PA.PLAN_ID IN (9)&#xD;&#xA;AND ACHDET.ACH_END_DATE IS NULL&#xD;&#xA;&#xD;&#xA;UNION&#xD;&#xA;&#xD;&#xA;SELECT distinct MED.MEMBER_PERSON_ID, PA.PLAN_ID as plan_id_ach ,PA.PERSON_ACCOUNT_ID&#xD;&#xA;FROM SGT_PERSON_ACCOUNT PA &#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT_MEDICARE_PART_D_HISTORY MED ON MED.PERSON_ACCOUNT_ID = PA.PERSON_ACCOUNT_ID&#x9;&#xD;&#xA;WHERE MED.MEMBER_PERSON_ID = @PERSON_ID&#xD;&#xA;AND PA.PLAN_PARTICIPATION_STATUS_VALUE = 'ENL2'&#xD;&#xA;AND PA.PLAN_ID IN (9)&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="IsBankInfoAlreadyExists" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="DECLARE @SYSMGMTDATE DATE&#xA;SELECT @SYSMGMTDATE= BATCH_DATE FROM SGS_SYSTEM_MANAGEMENT WITH(NOLOCK)&#xA;SELECT * FROM SGT_PERSON_ACCOUNT_ACH_DETAIL PACD WITH(NOLOCK)&#xA;INNER JOIN SGT_ORGANIZATION ORG WITH(NOLOCK) ON PACD.BANK_ORG_ID= ORG.ORG_ID  &#xA;WHERE PERSON_ACCOUNT_ID = @PERSON_ACCOUNT_ID AND (ORG.ROUTING_NO = @ABA_NUMBER OR ABA_NUMBER=@ABA_NUMBER) AND BANK_ACCOUNT_NUMBER =@BANK_ACCOUNT_NUMBER&#xA;AND  BANK_ACCOUNT_TYPE_VALUE = @BANK_ACCOUNT_TYPE_VALUE AND (ACH_END_DATE IS NULL OR&#xA;ISNULL(ACH_END_DATE,'01/01/2900') &gt;= ISNULL(@SYSMGMTDATE,'01/01/2900'))">
+      <parameters>
+        <parameter ID="@ABA_NUMBER" sfwDataType="string" />
+        <parameter ID="@BANK_ACCOUNT_NUMBER" sfwDataType="string" />
+        <parameter ID="@BANK_ACCOUNT_TYPE_VALUE" sfwDataType="string" />
+        <parameter ID="@PERSON_ACCOUNT_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="PersonAccountAchDetailId" sfwType="Column" sfwValue="person_account_ach_detail_id" sfwIsNull="False" sfwKeyNo="1" sfwIsIdentity="True" sfwDataType="int" />
+    <attribute ID="PersonAccountId" sfwType="Column" sfwValue="person_account_id" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="AchStartDate" sfwType="Column" sfwValue="ach_start_date" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="AchEndDate" sfwType="Column" sfwValue="ach_end_date" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="BankOrgId" sfwType="Column" sfwValue="bank_org_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="BankAccountTypeDescription" sfwType="Description" sfwValue="bank_account_type_description" />
+    <attribute ID="BankAccountTypeId" sfwType="Column" sfwValue="bank_account_type_id" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="1706" sfwIsSequence="False" />
+    <attribute ID="BankAccountTypeValue" sfwType="Column" sfwValue="bank_account_type_value" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwIsSequence="False" />
+    <attribute ID="BankAccountNumber" sfwType="Column" sfwValue="bank_account_number" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="20" sfwIsSequence="False" />
+    <attribute ID="AbaNumber" sfwType="Column" sfwValue="aba_number" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="PreNoteFlag" sfwType="Column" sfwValue="pre_note_flag" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="1" sfwIsSequence="False" />
+    <attribute ID="PreNoteCompletionDate" sfwType="Column" sfwValue="pre_note_completion_date" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="InsuranceTermPaymentDescription" sfwType="Description" sfwValue="insurance_term_payment_description" />
+    <attribute ID="InsuranceTermPaymentId" sfwType="Column" sfwValue="insurance_term_payment_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="1707" sfwIsSequence="False" />
+    <attribute ID="InsuranceTermPaymentValue" sfwType="Column" sfwValue="insurance_term_payment_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwIsSequence="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwIsSequence="False" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwIsSequence="False" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="objBankOrg" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusBankOrg" />
+    <attribute ID="objPersonAccount" sfwType="Object" sfwEntity="entPersonAccount" sfwValue="ibusPersonAccount" />
+    <attribute sfwDataType="string" sfwType="Property" ID="OrgCode" sfwValue="icdoPersonAccountAchDetail.org_code" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ScrambledAccountNumber" sfwValue="icdoPersonAccountAchDetail.scrambled_account_number" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrRoutingNumber" sfwValue="icdoPersonAccountAchDetail.istrRoutingNumber" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrBankName" sfwValue="icdoPersonAccountAchDetail.istrBankName" />
+  </attributes>
+</entity>

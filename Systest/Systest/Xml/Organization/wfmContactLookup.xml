@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<form ID="wfmContactLookup" sfwActive="True" sfwStatus="Valid" sfwRemoteObject="srvOrganization" sfwResource="310 " sfwType="Lookup" sfwTitle="Contact Lookup" version="3.5" sfwEntity="entContact" sfwGridCollection="busContactLookup.icolContact">
+  <initialload>
+    <query ID="cdoContact" sfwQueryRef="entContact.Lookup" sfwMethodName="LoadContacts" />
+    <query ID="sqLoadContactAddress" sfwQueryRef="entContact.sqLoadContactAddress" />
+    <query ID="sqLoadOrgContactandRoles" sfwQueryRef="entContact.sqLoadOrgContactandRoles" />
+  </initialload>
+  <sfwTable ID="Main">
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlCriteria" sfwCaption="Criteria">
+          <sfwTable CssClass="Table" ID="tblCriteria">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capOrgId" Text="Org Code ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                            <sfwTextBox ID="txtOrgId" sfwDataField="o.org_code" sfwOperator="=" sfwQueryID="sqLoadOrgContactandRoles" />
+                <sfwImageButton ID="btnRetrieve" ImageAlign="AbsMiddle" ImageUrl="~/Image/Lookup.jpg" sfwActiveForm="wfmOrganizationLookup" sfwMethodName="btnRetrieve_Click" sfwRelatedControl="txtOrgId" sfwSelectedIndex="OrgCode" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblcontact_id" Text="Contact ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txt_contact_id" sfwDataField="contact_id" sfwDataType="Numeric" sfwQueryID="cdoContact" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="lbllast_name" Text="Last Name : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txt_last_name" sfwDataField="last_name" sfwQueryID="cdoContact" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblfirst_name" Text="First Name : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txt_first_name" sfwDataField="first_name" sfwQueryID="cdoContact" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capOrgContactRoleId" Text="Contact Type : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                 <sfwDropDownList ID="ddlOrgContactRoleId" sfwDataField="c.contact_role_value" sfwOperator="=" sfwQueryID="sqLoadOrgContactandRoles" sfwLoadType="CodeGroup" sfwLoadSource="515" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capEmailAddress" Text="Email Address : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtEmailAddress" sfwDataField="email_address" sfwOperator="like" sfwQueryID="cdoContact" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capCity" Text="City : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                            <sfwTextBox ID="txtCity" sfwDataField="b.city" sfwOperator="=" sfwQueryID="sqLoadContactAddress" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnSearch" sfwMethodName="btnSearch_Click" Text="Search" />
+                <sfwButton ID="btnReset" sfwMethodName="btnReset_Click" Text="Reset" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwButton ID="btnStoreSearch" sfwMethodName="btnStoreUserDefaults_Click" Text="StoreSearch" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlResult" sfwCaption="Search Results">
+          <sfwTable CssClass="Table" ID="tblResult">
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnNew" sfwActiveForm="wfmContactMaintenance" sfwMethodName="btnNew_Click" Text="New" />
+                <sfwButton ID="btnOpen" sfwActiveForm="wfmContactMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="AintContactid=ContactId" sfwRelatedControl="dgrResult" Text="Open" sfwDisableViewOnly="True" />
+                <sfwButton ID="btnDelete" sfwMethodName="btnDelete_Click" sfwNavigationParameter="ContactId" sfwRelatedControl="dgrResult" Text="Delete" Visible="False" />
+                <sfwButton ID="btnExportExcel" sfwMethodName="btnColumnsToExport_Click" sfwRelatedControl="dgrResult" Text="Export To Excel" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwGridView AllowPaging="True" AllowSorting="True" ID="dgrResult" sfwSelection="Many">
+                  <Columns>
+                    <TemplateField HeaderText="Contact ID">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpen" sfwEntityField="ContactId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Last Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="LastName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="First Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="FirstName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Address">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objContactPrimaryAddress.AddrDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="City" Visible="False" sfwShowInExportToExcel="True">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objContactPrimaryAddress.City" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Email Address">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="EmailAddress" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+  </sfwTable>
+  <loaddetails />
+</form>

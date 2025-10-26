@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<form ID="wfmEmploymentChangeRequestLookupLOB" sfwActive="True" sfwStatus="Valid" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2021 " sfwType="Lookup" sfwTitle="Employment Change Request Lookup" sfwMaxCount="2000" version="3.5" WebSite="NeoSpinWebClient" sfwEntity="entWssEmploymentChangeRequest" sfwGridCollection="busWSSEmploymentChangeRequestLookup.iclbWssEmploymentChangeRequest">
+  <initialload>
+    <query ID="cdoWssEmploymentChangeRequest" sfwQueryRef="entWssEmploymentChangeRequest.Lookup" sfwMethodName="LoadWSSEmploymentChangeRequests" />
+    <query ID="LoadOrg" sfwQueryRef="entWssEmploymentChangeRequest.LoadOrg" />
+  </initialload>
+  <sfwTable ID="Main">
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlCriteria" sfwCaption="Criteria">
+          <sfwTable ID="tblCriteria">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capEmploymentChangeRequestId" Text="Employment Change Request ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtEmploymentChangeRequestId" sfwDataField="employment_change_request_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="cdoWssEmploymentChangeRequest" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capPersonId" Text="PERSLink ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtPersonId" sfwDataField="person_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="cdoWssEmploymentChangeRequest" />
+                <sfwImageButton ID="btnRetrieve1" sfwMethodName="btnRetrieve_Click" ImageUrl="~/Image/Lookup.jpg" ImageAlign="AbsMiddle" sfwActiveForm="wfmPersonLookup" sfwRelatedControl="txtPersonId" sfwSelectedIndex="PersonId" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capStatusValue" Text="Status : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlStatusValue" sfwDataField="status_value" sfwOperator="like" sfwQueryID="cdoWssEmploymentChangeRequest" sfwLoadType="CodeGroup" sfwLoadSource="3508" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel AssociatedControlID="txtOrgCode" ID="capOrgCode" Text="Org Code ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtOrgCode" sfwDataField="org_code" sfwOperator="=" sfwQueryID="LoadOrg" />
+                <sfwImageButton ID="btnRetrieve" ImageAlign="AbsMiddle" ImageUrl="~/Image/Lookup.jpg" sfwActiveForm="wfmOrganizationLookup" sfwMethodName="btnRetrieve_Click" sfwRelatedControl="txtOrgCode" sfwSelectedIndex="OrgCode" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="lblCreatedDateFrom" Text="Requested Date From : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtCreatedDateFrom" sfwDataField="convert(datetime, convert(varchar(10), created_date, 101))" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="between" sfwQueryID="cdoWssEmploymentChangeRequest" sfwRelatedControl="txtCreatedDateTo" />
+                <CompareValidator ControlToValidate="txtCreatedDateFrom" ID="CreatedDateFrom" Operator="DataTypeCheck" Type="Date" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblCreatedDateTo" Text="Requested Date To : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtCreatedDateTo" sfwDataField="convert(datetime, convert(varchar(10), created_date, 101))" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="=" sfwQueryID="cdoWssEmploymentChangeRequest" />
+                <CompareValidator ControlToCompare="txtCreatedDateFrom" ControlToValidate="txtCreatedDateTo" ErrorMessage="Requested Date To cannot be less than Requested Date From." ID="CretaedDateRange" Operator="GreaterThanEqual" Text="*" Type="Date" />
+                <CompareValidator ControlToValidate="txtCreatedDateTo" ID="CreatedDateTo" Operator="DataTypeCheck" Type="Date" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capChangeTypeValue" Text="Change Type : " AssociatedControlID="ddlChangeTypeValue" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlChangeTypeValue" sfwDataField="change_type_value" sfwQueryID="cdoWssEmploymentChangeRequest" sfwLoadType="CodeGroup" sfwLoadSource="3506" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnSearch" sfwMethodName="btnSearch_Click" Text="Search" />
+                <sfwButton ID="btnReset" sfwMethodName="btnReset_Click" Text="Reset" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwButton ID="btnStoreSearch" sfwMethodName="btnStoreUserDefaults_Click" Text="Store Search" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlResult" sfwCaption="Search Results">
+          <sfwTable CssClass="Table" ID="tblResult">
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnOpen" sfwActiveForm="wfmViewEmploymentChangeRequestMaintenanceLOB" sfwMethodName="btnOpen_Click" sfwNavigationParameter="aintEmploymentChangeRequestID=EmploymentChangeRequestId" sfwRelatedControl="dgrResult" Text="Open" sfwDisableViewOnly="True" />
+                <sfwButton ID="btnExportExcel" sfwMethodName="btnColumnsToExport_Click" sfwRelatedControl="dgrResult" Text="Export To Excel" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwGridView AllowPaging="True" AllowSorting="True" ID="dgrResult" sfwSelection="Many">
+                  <Columns>
+                    <TemplateField HeaderText="Request ID">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpen" sfwEntityField="EmploymentChangeRequestId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="PERSLink ID">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objPerson.PersonId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="First Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objPerson.FirstName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Last Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objPerson.LastName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Org Code">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objOrganization.OrgCode" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Org Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objOrganization.OrgName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Change Type">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="ChangeTypeDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Status">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="StatusDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Rejection Reason">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="RejectionReason" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+  </sfwTable>
+  <loaddetails />
+</form>

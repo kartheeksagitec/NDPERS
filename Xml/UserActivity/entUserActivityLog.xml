@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entUserActivityLog" sfwMainCDO="icdoUserActivityLog" sfwType="BusinessRule" sfwActive="True" sfwStatus="Review" sfwObjectID="busUserActivityLog" sfwTableName="sgs_user_activity_log" sfwView="False">
+  <queries>
+    <query ID="LookUp" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT&#xD;&#xA; UAL.*,&#xD;&#xA; (&#xD;&#xA;  SELECT&#xD;&#xA;   COUNT(*) &#xD;&#xA;  FROM&#xD;&#xA;   SGS_USER_ACTIVITY_LOG_DETAIL UCLD &#xD;&#xA;  WHERE&#xD;&#xA;   UCLD.USER_ACTIVITY_LOG_ID = UAL.USER_ACTIVITY_LOG_ID &#xD;&#xA; ) AS ACTIVITY_COUNT,&#xD;&#xA; UAL.LOGGED_USER_ID AS USER_ID&#xD;&#xA;FROM&#xD;&#xA; SGS_USER_ACTIVITY_LOG UAL WITH(NOLOCK)&#xD;&#xA; LEFT JOIN SGS_USER U ON U.USER_ID = UAL.LOGGED_USER_ID &#xD;&#xA;ORDER BY &#xD;&#xA; USER_ACTIVITY_LOG_ID DESC">
+      <parameters />
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="UserActivityLogId" sfwType="Column" sfwValue="user_activity_log_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="LoggedUserId" sfwType="Column" sfwValue="logged_user_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="MachineName" sfwType="Column" sfwValue="machine_name" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="100" />
+    <attribute ID="IpAddress" sfwType="Column" sfwValue="ip_address" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="MacAddress" sfwType="Column" sfwValue="mac_address" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="SessionId" sfwType="Column" sfwValue="session_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="LoginTime" sfwType="Column" sfwValue="login_time" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="LogoffTime" sfwType="Column" sfwValue="logoff_time" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute sfwDataType="string" sfwType="Property" ID="UserId" sfwValue="icdoUserActivityLog.user_id" />
+    <attribute sfwDataType="int" sfwType="Property" ID="ActivityCount" sfwValue="icdoUserActivityLog.activity_count" />
+    <attribute sfwType="Collection" sfwEntity="entUserActivityLogDetail" ID="lstUserActivityLogDetail" sfwValue="iclbUserActivityLogDetail" />
+  </attributes>
+</entity>

@@ -1,0 +1,120 @@
+﻿<div ng-controller="ReportController" class="innerWrapper">
+
+    <div class="toolbox-wrapper correspondence-toolbar" ng-hide="selectedDesignSource">
+        <search-design main-model="ReportModel" current-file="currentfile" select-element="selectElement(path)" traverse-model="traverseMainModel(path)" toggle-design="ToggleUIDesginAttribute(items,IsAction)" class="design-search"></search-design>
+        <div class="toolbox toolbox-form" ng-init="ActiveTabForReport='Parameters'">
+
+            <ul class="nav nav-tabs">
+                <li ng-class="ActiveTabForReport=='Parameters'?'active':''" ng-click="ActiveTabForReport='Parameters'">
+                    <a data-toggle="tab" aria-expanded="true">
+                        Parameters
+                    </a>
+                </li>
+                <li ng-class="ActiveTabForReport=='Toolbox'?'active':''" ng-click="ActiveTabForReport='Toolbox'">
+                    <a data-toggle="tab" aria-expanded="false">
+                        Toolbox
+                    </a>
+                </li>
+                <li ng-class="ActiveTabForReport=='Properties'?'active':''" ng-click="ActiveTabForReport='Properties'">
+                    <a data-toggle="tab" aria-expanded="false">
+                        Properties
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="page-sidebar full-height full-width" ng-class="ActiveTabForReport=='Parameters'?'tab-pane fade active in':'tab-pane fade'" ng-show="ActiveTabForReport=='Parameters'">
+                    <div class="search-param">
+                        <input type="text" placeholder="Search" class="form-control" title="{{SearchByParams}}" ng-model="SearchByParams" />
+                    </div>
+
+                    <div class="parameter-inner-container">
+                        <table class="table table-striped table-hover table-bordered dataTable no-footer" id="sample_editable_1" role="grid" aria-describedby="sample_editable_1_info">
+                            <thead>
+
+                                <tr role="columnheader">
+                                    <th class="sorting_asc" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="Name" aria-sort="ascending" style="width: 224px;">
+                                        Name
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="Expression activate to sort column ascending" style="width: 281px;">
+                                        Data Type
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr role="row" ng-repeat="obj in lstParameters | filter:SearchByParams" ng-click="selectedParameters(obj)" ng-class="obj==currentSelectedParams?'selected':''" formcontroldraggable dragdata="obj.ParamName" dragfromleft="true">
+                                    <td>
+                                        <span ng-bind="obj.ParamName"></span>
+                                    </td>
+                                    <td>
+                                        <span ng-bind="obj.ParamDataType"></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!--<div class="content-head">
+                            <span class="head-data"><label>Name</label></span>
+                            <span class="head-data"><label>Data Type</label></span>
+                        </div>
+
+                        <div class="parameter-content">
+                            <div class="content-row" ng-repeat="obj in lstParameters | filter:SearchByParams" ng-click="selectedParameters(obj)" ng-class="obj==currentSelectedParams?'selected':''" formcontroldraggable dragdata="obj.ParamName" dragfromleft="true">
+
+
+                            </div>
+                        </div>-->
+                    </div>
+                </div>
+                <div ng-class="ActiveTabForReport=='Toolbox'?'tab-pane fade active in':'tab-pane fade'" ng-show="ActiveTabForReport=='Toolbox'" onselectstart="return false;">
+
+                    <div class="toolbox-items" ng-mousedown="ClearSelectFields()" ng-if="ReportModel">
+                        <div class="toolbox-items-heading">
+                            Basic
+                        </div>
+                        <div ng-repeat="control in lstControl | controlbyFormtype : 'toolbox' : 'basic' : ReportModel | orderBy : 'Name'" class="col-xs-6 no-padding toolbox-items-wrapper" formcontroldraggable dragdata="control.method" title="{{control.method}}">
+                            <img class="image-icon-tools" ng-src="{{control.icon}}" />
+                            <span>{{control.Name | cut:false:18:'...'}}</span>
+                        </div>
+                        <div class="toolbox-items-heading">
+                            Advanced
+                        </div>
+                        <div ng-repeat="control in lstControl | controlbyFormtype : 'toolbox' : 'advanced' : ReportModel | orderBy : 'Name'" class="col-xs-6 no-padding toolbox-items-wrapper" formcontroldraggable dragdata="control.method" title="{{control.method}}">
+                            <img class="image-icon-tools" ng-src="{{control.icon}}" />
+                            <span>{{control.Name | cut:false:18:'...'}}</span>
+                        </div>
+                    </div>
+
+                </div>
+                <div ng-class="ActiveTabForReport=='Properties'?'tab-pane fade active in':'tab-pane fade'" ng-if="ActiveTabForReport=='Properties'">
+                    <div class="control-common-properties" id="dvcommonProperties">
+                        <div class="common-properties-header form-common-properties-header">
+                            <span>{{ReportModel.SelectedControl.Name}} - </span>
+                            <span ng-show="ReportModel.SelectedControl.dictAttributes.ID" title="{{ReportModel.SelectedControl.dictAttributes.ID}}">{{ReportModel.SelectedControl.dictAttributes.ID}}</span>
+                            <span class="blank-id-text" ng-hide="ReportModel.SelectedControl.dictAttributes.ID">[BLANK]</span>
+
+                        </div>
+
+                        <div class="common-properties-content">
+                            <commonpropertiesdirective model="ReportModel.SelectedControl" parent="ReportModel.SelectedControl.ParentVM" formobject="ReportModel"></commonpropertiesdirective>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="correspondence-content" ng-hide="selectedDesignSource">
+        <div class="form-area-editable report-panel" context-menu="menuOptionsForReport">
+            <base-control-view ng-repeat="objChild in ReportModel.Elements | filter : { Name : 'sfwTable'}" formodel='ReportModel' model='objChild' objparent='ReportModel' ng-click='selectControl(objChild, $event)' ng-if="objChild.Name=='sfwTable'">
+            </base-control-view>
+        </div>
+
+    </div>
+
+    <div ng-show="selectedDesignSource" class="full-height">
+        <div id="editor_{{currentfile.FileName}}" class="ace-editor-div"></div>
+    </div>
+    <addrowsandcolumnstotable></addrowsandcolumnstotable>
+</div>
+

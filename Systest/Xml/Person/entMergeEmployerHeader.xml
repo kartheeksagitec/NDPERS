@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entMergeEmployerHeader" sfwActive="True" sfwStatus="Review" sfwType="BusinessRule" sfwErrorTable="sgt_merge_employer_header_error" sfwParentKey="merge_employer_header_id" sfwParentKeyValue="icdoMergeEmployerHeader.merge_employer_header_id" sfwMainCDO="icdoMergeEmployerHeader" sfwStatusColumn="status_value" sfwObjectID="busMergeEmployerHeader" sfwTableName="sgt_merge_employer_header">
+  <rules>
+    <rule ID="AreAllFieldsNull" sfwMessageId="4195" sfwExpression="(this.icdoMergeEmployerHeader.to_employer_id == 0) || &#xA;(this.icdoMergeEmployerHeader.from_employer_id == 0) || &#xA;(this.icdoMergeEmployerHeader.effective_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="AreEmployersSame" sfwMessageId="4169" sfwExpression="(this.istrFromOrgCodeID == this.istrToOrgCodeID)" sfwObjectBased="True" />
+    <rule ID="IsEmployerNotHavingPlans" sfwMessageId="4170" sfwExpression="(this.IsEmployersHavingPlans() == True)" sfwObjectBased="True" />
+    <rule ID="IsFromAndToEmployersEmpCategorySame" sfwMessageId="4166" sfwExpression="!(this.icdoMergeEmployerHeader.from_employer_id == 0) &amp;&amp; &#xA;!(this.icdoMergeEmployerHeader.to_employer_id == 0) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusFromEmployer.icdoOrganization.emp_category_value&quot;) != RFunc.GetValue&lt;String&gt;(this, &quot;ibusToEmployer.icdoOrganization.emp_category_value&quot;))" sfwObjectBased="True" />
+    <rule ID="IsFromEmployerHasContribution" sfwMessageId="4167" sfwExpression="!(this.icdoMergeEmployerHeader.from_employer_id == 0) &amp;&amp; &#xA;!(this.icdoMergeEmployerHeader.effective_date == DateTime.MinValue) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entMergeEmployerHeader.IsMergeEmployerHasContribution&quot;, this.icdoMergeEmployerHeader.from_employer_id, this.icdoMergeEmployerHeader.effective_date) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="IsFromEmployerTypeEmployer" sfwMessageId="4174" sfwExpression="!(this.icdoMergeEmployerHeader.from_employer_id == 0) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entMergeEmployerHeader.CheckFromEmployerTypeisEmployer&quot;, this.icdoMergeEmployerHeader.from_employer_id) == 0)" sfwObjectBased="True" />
+    <rule ID="IsMemberTypeMatchingBetweenEmployers" sfwMessageId="4168" sfwExpression="(this.ValidateMergeOrgPlansMemberTypesAreValid() == False)" sfwObjectBased="True" />
+    <rule ID="IsProvidersSameBetweenEmployers" sfwMessageId="4165" sfwExpression="(this.ValidateMergeEmployersProvidersAreSame() == False)" sfwObjectBased="True" />
+    <rule ID="IsRecordExistForGivenEmployers" sfwMessageId="4173" sfwExpression="(this.IsHeaderExist() == True)" sfwObjectBased="True" />
+    <rule ID="IsReportFrequencyAndWellnessAndPlanOptionNotMatching" sfwMessageId="4171" sfwExpression="(this.IsReportFrequencyMatchForDeferredComp() == True)" sfwObjectBased="True" />
+    <rule ID="IsStatusNotQueuedForMerging" sfwExpression="(this.icdoMergeEmployerHeader.merge_status_value == &quot;CMPL&quot;)" sfwObjectBased="True" />
+    <rule ID="IsStatusQueuedForMerging" sfwExpression="(this.icdoMergeEmployerHeader.merge_status_value == &quot;QUEU&quot;)" sfwObjectBased="True" />
+    <rule ID="IsToEmployerProvidingAllPlans" sfwMessageId="4164" sfwExpression="(this.ValidateMergeOrgPlansAreValid() == False)" sfwObjectBased="True" />
+    <rule ID="IsToEmployerTypeEmployer" sfwMessageId="4174" sfwExpression="!(this.icdoMergeEmployerHeader.to_employer_id == 0) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entMergeEmployerHeader.CheckToEmployerTypeisEmployer&quot;, this.icdoMergeEmployerHeader.to_employer_id) == 0)" sfwObjectBased="True" />
+  </rules>
+  <delete>
+    <property ID="lstMergeEmployerDetail" sfwMethodName="LoadMergeEmployerDetails" />
+    <property ID="SoftErrors" sfwMethodName="LoadErrors" />
+  </delete>
+  <checklist />
+  <initialload>
+    <item ID="IsStatusNotQueuedForMerging" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsStatusQueuedForMerging" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror>
+    <item ID="IsFromAndToEmployersEmpCategorySame" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsFromEmployerHasContribution" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsProvidersSameBetweenEmployers" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsToEmployerProvidingAllPlans" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMemberTypeMatchingBetweenEmployers" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsReportFrequencyAndWellnessAndPlanOptionNotMatching" sfwMode="All" sfwStatus="Active" />
+  </softerror>
+  <harderror>
+    <item ID="IsFromEmployerTypeEmployer" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsToEmployerTypeEmployer" sfwMode="All" sfwStatus="Active" />
+    <item ID="AreAllFieldsNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEmployerNotHavingPlans" sfwMode="All" sfwStatus="Active" />
+    <item ID="AreEmployersSame" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsRecordExistForGivenEmployers" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select * from SGT_MERGE_EMPLOYER_HEADER b">
+      <parameters />
+    </query>
+    <query ID="LookupSubQuery1" sfwQueryType="SubSelectQuery" sfwSql="Select * from sgt_organization c where c.org_id= b.from_employer_id">
+      <parameters />
+    </query>
+    <query ID="LookupSubquery2" sfwQueryType="SubSelectQuery" sfwSql="Select * from sgt_organization d where d.org_id= b.to_employer_id">
+      <parameters />
+    </query>
+    <query ID="CheckFromEmployerTypeisEmployer" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select Count(*) from SGT_ORGANIZATION where org_id=@FromEmployerID and org_type_value='EMPL' and status_value='ACTV'">
+      <parameters>
+        <parameter ID="@FromEmployerID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="CheckToEmployerTypeisEmployer" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select Count(*) from SGT_ORGANIZATION where org_id=@ToEmployerID and org_type_value='EMPL' and status_value='ACTV'">
+      <parameters>
+        <parameter ID="@ToEmployerID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="IsMergeEmployerHasContribution" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select count(*) from  SGT_EMPLOYER_PAYROLL_HEADER &#xD;&#xA;where ORG_ID = @orgid and (PAYROLL_PAID_DATE &gt; @efftectivedate or &#xD;&#xA;PAY_PERIOD_START_DATE &gt; @efftectivedate or&#xD;&#xA;PAY_PERIOD_END_DATE &gt; @efftectivedate or&#xD;&#xA;POSTED_DATE &gt; @efftectivedate)&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@orgid" sfwDataType="int" />
+        <parameter ID="@efftectivedate" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="CheckRecordExist" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select * from SGT_MERGE_EMPLOYER_HEADER&#xD;&#xA;Where MERGE_STATUS_VALUE=@mergerstatus &#xD;&#xA;and TO_EMPLOYER_ID=@toemployer and FROM_EMPLOYER_ID=@fromemployer and MERGE_EMPLOYER_HEADER_ID &lt;&gt; @mergemployerheaderid">
+      <parameters>
+        <parameter ID="@mergerstatus" sfwDataType="string" />
+        <parameter ID="@toemployer" sfwDataType="int" />
+        <parameter ID="@fromemployer" sfwDataType="int" />
+        <parameter ID="@mergemployerheaderid" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="MergeEmployerHeaderId" sfwType="Column" sfwValue="merge_employer_header_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="FromEmployerId" sfwType="Column" sfwValue="from_employer_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ToEmployerId" sfwType="Column" sfwValue="to_employer_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="EffectiveDate" sfwType="Column" sfwValue="effective_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="MergeStatusDescription" sfwType="Description" sfwValue="merge_status_description" />
+    <attribute ID="MergeStatusId" sfwType="Column" sfwValue="merge_status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="414" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="MergeStatusValue" sfwType="Column" sfwValue="merge_status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="StatusDescription" sfwType="Description" sfwValue="status_description" />
+    <attribute ID="StatusId" sfwType="Column" sfwValue="status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="336" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusValue" sfwType="Column" sfwValue="status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="objFromEmployer" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusFromEmployer" />
+    <attribute ID="objToEmployer" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusToEmployer" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrFromOrgCodeID" sfwValue="istrFromOrgCodeID" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrToOrgCodeID" sfwValue="istrToOrgCodeID" />
+    <attribute sfwType="Collection" sfwEntity="entMergeEmployerDetail" ID="lstMergeEmployerDetail" sfwValue="iclbMergeEmployerDetail" />
+    <attribute sfwDataType="" sfwType="Property" ID="SoftErrors" sfwValue="ibusSoftErrors" />
+  </attributes>
+  <objectmethods>
+    <method ID="LoadMergeEmployerDetails" sfwReturnType="Void" />
+    <method ID="LoadErrors" sfwReturnType="Void" />
+  </objectmethods>
+</entity>

@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entPersonAccountLtc" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwErrorTable="sgt_person_account_error" sfwParentKey="person_account_id" sfwParentKeyValue="icdoPersonAccount.person_account_id" sfwMainCDO="icdoPersonAccount" sfwStatusColumn="status_value" sfwObjectID="busPersonAccountLtc" sfwParentEntity="entPersonAccount">
+  <rules>
+    <rule ID="AreMandatoryFieldsRequired" sfwMessageId="6532" sfwExpression="(this.IsMandatoryFieldsEnteredForLoc() == True)" sfwObjectBased="True" />
+    <rule ID="IsAllLOCinfoenteredforSpouseorMember" sfwMessageId="6624" sfwExpression="(this.CheckAllLOCSelectedForMemberOrSpouse() == True)" sfwObjectBased="True" />
+    <rule ID="IsHistoryChangeDateLessThanLastChangeDate" sfwMessageId="5026" sfwExpression="(this.IsHistoryEntryRequired == True) &amp;&amp; &#xA;!(this.istrAllowOverlapHistory == &quot;Y&quot;) &amp;&amp; &#xA;(this.IsHistoryChangeDateLessThanLastChangeDate() == True)" sfwObjectBased="True" />
+    <rule ID="IsIBSCheckedAndPaymentModeOrOrgToBillNull" sfwMessageId="6528" sfwExpression="(this.ibusPaymentElection.icdoPersonAccountPaymentElection.ibs_flag == &quot;Y&quot;) &amp;&amp; &#xA;!((this.ibusPaymentElection.icdoPersonAccountPaymentElection.ibs_org_id &gt; 0) || &#xA;(!string.IsNullOrEmpty(this.ibusPaymentElection.icdoPersonAccountPaymentElection.payment_method_value)))" sfwObjectBased="True" />
+    <rule ID="IsIBSEffectiveDateStartsWithFirstDayOfMonth" sfwMessageId="7107" sfwExpression="(this.IsIBSEffectiveDateStartsWithFirstDayOfMonth() == False)" sfwObjectBased="True" />
+    <rule ID="IsIBSEffectiveDateValid" sfwMessageId="7108" sfwExpression="(this.IsIBSEffectiveDateValid() == False)" sfwObjectBased="True" />
+    <rule ID="IsIBSFlagCheckedForActiveMember" sfwMessageId="6681" sfwExpression="(this.ibusPaymentElection.icdoPersonAccountPaymentElection.ibs_flag == &quot;Y&quot;) &amp;&amp; &#xA;!(this.icdoPersonAccount.person_employment_dtl_id == 0)" sfwObjectBased="True" />
+    <rule ID="IsIBSModeNDPERSCheckAndStatusValid" sfwMessageId="7095" sfwExpression="(this.ibusPaymentElection.icdoPersonAccountPaymentElection.payment_method_value == &quot;PNCH&quot;) &amp;&amp; &#xA;!(this.ibusPaymentElection.icdoPersonAccountPaymentElection.payee_account_id == 0) &amp;&amp; &#xA;(this.ibusPaymentElection.IsValidPayeeAccountStatusExists() == False)" sfwObjectBased="True" />
+    <rule ID="IsIBSNDPERSCheckAndPayeeNOTSelected" sfwMessageId="7094" sfwExpression="(this.ibusPaymentElection.icdoPersonAccountPaymentElection.payment_method_value == &quot;PNCH&quot;) &amp;&amp; &#xA;(this.ibusPaymentElection.icdoPersonAccountPaymentElection.payee_account_id == 0)" sfwObjectBased="True" />
+    <rule ID="IsIBSNotCheckedWhenOrgToBillEntered" sfwMessageId="6529" sfwExpression="(RFunc.EvaluateRule(&quot;ibusPaymentElection.IsIBSNotCheckedWhenOrgToBillEntered&quot;, this))" sfwObjectBased="True" />
+    <rule ID="IsIBSPayeeAccountSelectedForPaymentModeNOTNDPERSCheck" sfwExpression="!(this.ibusPaymentElection.icdoPersonAccountPaymentElection.payment_method_value == &quot;PNCH&quot;) &amp;&amp; &#xA;!(this.ibusPaymentElection.icdoPersonAccountPaymentElection.payee_account_id == 0)" sfwObjectBased="True" />
+    <rule ID="IsInValidPayeeAccountSelected" sfwMessageId="6676" sfwExpression="(this.icdoPersonAccount.plan_participation_status_value == &quot;ENL2&quot;) &amp;&amp; &#xA;(this.ibusPaymentElection.IsValidPayeeAccountSelected() == False)" sfwObjectBased="True" />
+    <rule ID="IsLateEnrollment" sfwMessageId="6536" sfwExpression="(this.IsPostEnrollmentDate() == True) &amp;&amp; &#xA;!(this.icdoPersonAccount.reason_value == &quot;ANNE&quot;)" sfwObjectBased="True" />
+    <rule ID="IsLevelOfCoverageSelected" sfwMessageId="6564" sfwExpression="!(this.CheckAtleastOneLevelOfCoverageSelectedForMember() == True)" sfwObjectBased="True" />
+    <rule ID="IsMemberDecreasingLevelOfCoverage" sfwMessageId="6666" sfwExpression="(this.IsMemberDecreasingLevelOfCoverage() == True)" sfwObjectBased="True" />
+    <rule ID="IsMoreThanOneEnrolledInOverlapHistory" sfwMessageId="7132" sfwExpression="(this.istrAllowOverlapHistory == &quot;Y&quot;) &amp;&amp; &#xA;(this.IsMoreThanOneEnrolledInOverlapHistory() == True)" sfwObjectBased="True" />
+    <rule ID="IsPaymentModeSelectedAndIBSFlagNotChecked" sfwMessageId="6530" sfwExpression="!(string.IsNullOrEmpty(this.ibusPaymentElection.icdoPersonAccountPaymentElection.payment_method_value)) &amp;&amp; &#xA;!(this.ibusPaymentElection.icdoPersonAccountPaymentElection.ibs_flag == &quot;Y&quot;)" sfwObjectBased="True" />
+    <rule ID="IsReasonValueNull" sfwMessageId="7109" sfwExpression="(string.IsNullOrEmpty(this.icdoPersonAccount.reason_value))" sfwObjectBased="True" />
+    <rule ID="IsSouseNotHavingPerslinkID" sfwMessageId="7726" sfwExpression="(this.IsSouseNotHavingPerslinkID() == True)" sfwObjectBased="True" />
+    <rule ID="IsStartDateEnteredForSelectedLevelOfCoverage" sfwMessageId="6633" sfwExpression="(this.IsStartDateNotEnteredForLoc() == True)" sfwObjectBased="True" />
+    <rule ID="IsACHDetailWithNoEndDateExists" sfwMessageId="8585" sfwExpression="(!string.IsNullOrEmpty(this.ibusPaymentElection.icdoPersonAccountPaymentElection.payment_method_value)) &amp;&amp; &#xA;(this.ibusPaymentElection.icdoPersonAccountPaymentElection.payment_method_value != &quot;ACH&quot;) &amp;&amp; &#xA;(this.IsACHDetailWithNoEndDateExists() == True)" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="VisibleRuleIsACHApplicable" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror>
+    <item ID="IsACHDetailNotEnteredForACHPaymentMethod" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsReasonValueNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsSouseNotHavingPerslinkID" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsLateEnrollment" sfwMode="All" sfwStatus="Active" />
+  </softerror>
+  <harderror>
+    <item ID="IsPlanParticipationStatusNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsLevelOfCoverageSelected" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsIBSCheckedAndPaymentModeOrOrgToBillNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPaymentModeSelectedAndIBSFlagNotChecked" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPersonAgeLessThan18" sfwMode="New" sfwStatus="Active" />
+    <item ID="AreMandatoryFieldsRequired" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsStartDateEnteredForSelectedLevelOfCoverage" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAllLOCinfoenteredforSpouseorMember" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsHistoryChangeDateRequired" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsHistoryChangeDateLessThanLastChangeDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsHistoryChangeDateStartsWithFirstDayOfMonth" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEnrollmentDayNOTFirstDay" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMemberDecreasingLevelOfCoverage" sfwMode="Update" sfwStatus="Active" />
+    <item ID="IsIBSNDPERSCheckAndPayeeNOTSelected" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsIBSModeNDPERSCheckAndStatusValid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsIBSPayeeAccountSelectedForPaymentModeNOTNDPERSCheck" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsInValidPayeeAccountSelected" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsIBSEffectiveDateStartsWithFirstDayOfMonth" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsIBSNotCheckedWhenOrgToBillEntered" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsIBSFlagCheckedForActiveMember" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMoreThanOneEnrolledInOverlapHistory" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsACHDetailWithNoEndDateExists" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <expressionfields />
+  <attributes>
+    <attribute sfwDataType="int" sfwType="Property" ID="PersonAccountId" sfwValue="icdoPersonAccount.person_account_id" />
+    <attribute ID="objPerson" sfwType="Object" sfwEntity="entPerson" sfwValue="ibusPerson" />
+    <attribute sfwDataType="string" sfwType="Property" ID="StatusDescription" sfwValue="icdoPersonAccount.status_description" />
+    <attribute sfwDataType="string" sfwType="Property" ID="SuppressWarningsFlag" sfwValue="icdoPersonAccount.suppress_warnings_flag" />
+    <attribute ID="objPlan" sfwType="Object" sfwEntity="entPlan" sfwValue="ibusPlan" />
+    <attribute sfwDataType="string" sfwType="Property" ID="PlanParticipationStatusValue" sfwValue="icdoPersonAccount.plan_participation_status_value" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="StartDate" sfwValue="icdoPersonAccount.start_date" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="HistoryChangeDate" sfwValue="icdoPersonAccount.history_change_date" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ReasonValue" sfwValue="icdoPersonAccount.reason_value" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrAllowOverlapHistory" sfwValue="istrAllowOverlapHistory" />
+    <attribute sfwType="Collection" sfwEntity="entPersonAccountLtcOption" ID="lstLtcOptionMember" sfwValue="iclbLtcOptionMember" />
+    <attribute sfwType="Collection" sfwEntity="entPersonAccountLtcOption" ID="lstLtcOptionSpouse" sfwValue="iclbLtcOptionSpouse" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecTotalMonthlyPremium" sfwValue="idecTotalMonthlyPremium" />
+    <attribute sfwDataType="string" sfwType="Property" ID="SuppressWarningsBy" sfwValue="icdoPersonAccount.suppress_warnings_by" />
+    <attribute sfwType="Collection" sfwEntity="entPersonAccountLtcOptionHistory" ID="lstLtcHistory" sfwValue="iclbLtcHistory" />
+    <attribute ID="objPaymentElection" sfwType="Object" sfwEntity="entPersonAccountPaymentElection" sfwValue="ibusPaymentElection" />
+    <attribute sfwDataType="int" sfwType="Property" ID="PersonId" sfwValue="icdoPersonAccount.person_id" />
+    <attribute sfwType="Collection" sfwEntity="entPersonAccountAchDetail" ID="lstPersonAccountAchDetail" sfwValue="iclbPersonAccountAchDetail" />
+    <attribute sfwType="Collection" sfwEntity="entPersonAccountInsuranceContribution" ID="lstInsuranceContribution" sfwValue="iclbInsuranceContribution" />
+    <attribute sfwType="Collection" sfwEntity="entPersonEmploymentDetail" ID="lstEmploymentDetail" sfwValue="iclbEmploymentDetail" />
+    <attribute sfwType="Collection" sfwEntity="entPersonAccountInsuranceTransfer" ID="lstPersonAccountInsuranceTransfer" sfwValue="iclbPersonAccountInsuranceTransfer" />
+    <attribute sfwDataType="string" sfwType="Property" ID="CreatedBy" sfwValue="icdoPersonAccount.created_by" />
+    <attribute sfwDataType="int" sfwType="Property" ID="UpdateSeq" sfwValue="icdoPersonAccount.update_seq" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="CreatedDate" sfwValue="icdoPersonAccount.created_date" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ModifiedBy" sfwValue="icdoPersonAccount.modified_by" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="ModifiedDate" sfwValue="icdoPersonAccount.modified_date" />
+    <attribute sfwDataType="string" sfwType="Property" ID="PlanParticipationStatusDescription" sfwValue="icdoPersonAccount.plan_participation_status_description" />
+    <attribute sfwType="Object" sfwEntity="entPersonAccount" sfwValue="ibusPersonAccount" ID="objPersonAccount" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrImage" sfwValue="istrImage" />
+  </attributes>
+  <objectmethods>
+    <method ID="LoadParticipationStatusByBenefitType" sfwReturnType="Collection" sfwObjectID="cdoCodeValue" sfwEntity="entPostRetirementDeathApplication" />
+  </objectmethods>
+</entity>

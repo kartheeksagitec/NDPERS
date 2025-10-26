@@ -1,0 +1,154 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entAccountReference" sfwActive="True" sfwStatus="Review" sfwType="BusinessRule" sfwMainCDO="icdoAccountReference" sfwObjectID="busAccountReference" sfwTableName="sgt_account_reference">
+  <rules>
+    <rule ID="Rule Check If Credit Account ID is Null" sfwMessageId="4616" sfwExpression="(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusCreditAccount.icdoChartOfAccount.gl_account_number&quot;)))" sfwObjectBased="True" />
+    <rule ID="Rule Check If Debit Account ID is Null" sfwMessageId="4617" sfwExpression="(string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusDebitAccount.icdoChartOfAccount.gl_account_number&quot;)))" sfwObjectBased="True" />
+    <rule ID="Rule Check If Debit and Credit Acct are same" sfwMessageId="4655" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusCreditAccount.icdoChartOfAccount.gl_account_number&quot;) == RFunc.GetValue&lt;String&gt;(this, &quot;ibusDebitAccount.icdoChartOfAccount.gl_account_number&quot;)) &amp;&amp; &#xA;(!string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusCreditAccount.icdoChartOfAccount.gl_account_number&quot;))) &amp;&amp; &#xA;(!string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusDebitAccount.icdoChartOfAccount.gl_account_number&quot;)))" sfwObjectBased="True" />
+    <rule ID="Rule Check If Department is Null" sfwMessageId="4608" sfwExpression="(string.IsNullOrEmpty(this.icdoAccountReference.dept_value))" sfwObjectBased="True" />
+    <rule ID="Rule Check If Duplicate Record Exists" sfwMessageId="4703" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entAccountReference.GetCountOfDuplicateRecords&quot;, this.icdoAccountReference.plan_id, this.icdoAccountReference.fund_value, this.icdoAccountReference.dept_value, this.icdoAccountReference.item_type_value, this.icdoAccountReference.from_item_type_value, this.icdoAccountReference.to_item_type_value, this.icdoAccountReference.transaction_type_value, this.icdoAccountReference.status_transition_value, this.icdoAccountReference.source_type_value) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="Rule Check If From Item Type Source Type Not Exists" sfwMessageId="4649" sfwExpression="(!string.IsNullOrEmpty(this.icdoAccountReference.from_item_type_value)) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.icdoAccountReference.source_type_value)) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entAccountReference.ValidateItemTypeSourceType&quot;, this.icdoAccountReference.from_item_type_value, this.icdoAccountReference.source_type_value) &lt; 1)" sfwObjectBased="True" />
+    <rule ID="Rule Check If Fund is Null" sfwMessageId="4607" sfwExpression="(string.IsNullOrEmpty(this.icdoAccountReference.fund_value))" sfwObjectBased="True" />
+    <rule ID="Rule Check If GL Tran exists for given Acct Ref ID" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entAccountReference.GetGLTransactionCountByAcctRefID&quot;, this.icdoAccountReference.account_reference_id) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="Rule Check If ItemType SourceType Not Exists" sfwMessageId="4648" sfwExpression="(!string.IsNullOrEmpty(this.icdoAccountReference.item_type_value)) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.icdoAccountReference.source_type_value)) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entAccountReference.ValidateItemTypeSourceType&quot;, this.icdoAccountReference.item_type_value, this.icdoAccountReference.source_type_value) &lt; 1)" sfwObjectBased="True" />
+    <rule ID="Rule Check If Journal Description is Null" sfwMessageId="4618" sfwExpression="(string.IsNullOrEmpty(this.icdoAccountReference.journal_description))" sfwObjectBased="True" />
+    <rule ID="Rule Check If Plan ID is Null" sfwMessageId="4606" sfwExpression="(this.icdoAccountReference.plan_id == 0)" sfwObjectBased="True" />
+    <rule ID="Rule Check If PlanFundDeptComboNOTExists" sfwMessageId="4721" sfwExpression="(this.IsValidEntry() == False)" sfwObjectBased="True" />
+    <rule ID="Rule Check If Source Type is Null" sfwMessageId="4615" sfwExpression="(string.IsNullOrEmpty(this.icdoAccountReference.source_type_value))" sfwObjectBased="True" />
+    <rule ID="Rule Check If To Item Type Source Type Not Exists" sfwMessageId="4650" sfwExpression="(!string.IsNullOrEmpty(this.icdoAccountReference.to_item_type_value)) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.icdoAccountReference.source_type_value)) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entAccountReference.ValidateItemTypeSourceType&quot;, this.icdoAccountReference.to_item_type_value, this.icdoAccountReference.source_type_value) &lt; 1)" sfwObjectBased="True" />
+    <rule ID="Rule Check If Trans is Allocation and From Item Type is Null" sfwMessageId="4612" sfwExpression="(this.icdoAccountReference.transaction_type_value == &quot;ALLO&quot;) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoAccountReference.from_item_type_value))" sfwObjectBased="True" />
+    <rule ID="Rule Check If Trans is Allocation and Item Type Not Null" sfwMessageId="4610" sfwExpression="(this.icdoAccountReference.transaction_type_value == &quot;ALLO&quot;) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.icdoAccountReference.item_type_value))" sfwObjectBased="True" />
+    <rule ID="Rule Check If Trans is Allocation and To Item is Null" sfwMessageId="4613" sfwExpression="(this.icdoAccountReference.transaction_type_value == &quot;ALLO&quot;) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoAccountReference.to_item_type_value))" sfwObjectBased="True" />
+    <rule ID="Rule Check If Transaction Type is Null" sfwMessageId="4609" sfwExpression="(string.IsNullOrEmpty(this.icdoAccountReference.transaction_type_value))" sfwObjectBased="True" />
+    <rule ID="Rule Check Valid Credit Account ID" sfwMessageId="4620" sfwExpression="(!string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusCreditAccount.icdoChartOfAccount.gl_account_number&quot;))) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entAccountReference.ValidateAcctID&quot;, this.ibusCreditAccount.icdoChartOfAccount.gl_account_number) &lt; 1)" sfwObjectBased="True" />
+    <rule ID="Rule Check Valid Debit Account ID" sfwMessageId="4621" sfwExpression="(!string.IsNullOrEmpty(RFunc.GetValue&lt;String&gt;(this, &quot;ibusDebitAccount.icdoChartOfAccount.gl_account_number&quot;))) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entAccountReference.ValidateAcctID&quot;, this.ibusDebitAccount.icdoChartOfAccount.gl_account_number) &lt; 1)" sfwObjectBased="True" />
+    <rule ID="RuleCheckFromItemTypeSameAsToItemType" sfwMessageId="4716" sfwExpression="(this.istrSuppressWarning == &quot;N&quot;) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.icdoAccountReference.from_item_type_value)) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.icdoAccountReference.to_item_type_value)) &amp;&amp; &#xA;(this.icdoAccountReference.from_item_type_value == this.icdoAccountReference.to_item_type_value)" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror>
+    <item ID="Rule Check If Trans is Allocation and Item Type Not Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Plan ID is Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Trans is Allocation and From Item Type is Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Trans is Allocation and To Item is Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Fund is Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Department is Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Transaction Type is Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Source Type is Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Debit Account ID is Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Credit Account ID is Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Journal Description is Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check Valid Debit Account ID" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check Valid Credit Account ID" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If ItemType SourceType Not Exists" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If From Item Type Source Type Not Exists" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If To Item Type Source Type Not Exists" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Debit and Credit Acct are same" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Duplicate Record Exists" sfwMode="All" sfwStatus="Active" />
+    <item ID="RuleCheckFromItemTypeSameAsToItemType" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If PlanFundDeptComboNOTExists" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <updateablecdo />
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_ACCOUNT_REFERENCE SAR WHERE SAR.GENERATE_GL_FLAG &lt;&gt; 0">
+      <parameters />
+    </query>
+    <query ID="GetGLTransactionCountByAcctRefID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_GL_TRANSACTION WHERE ACCOUNT_REFERENCE_ID=@ACCT_REF_ID">
+      <parameters>
+        <parameter ID="@ACCT_REF_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="ValidateAcctID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_CHART_OF_ACCOUNT WHERE GL_ACCOUNT_NUMBER=@ACCT_NO">
+      <parameters>
+        <parameter ID="@ACCT_NO" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="sqDebitAccount" sfwQueryType="SubSelectQuery" sfwSql="SELECT * FROM SGT_CHART_OF_ACCOUNT SCC&#xD;&#xA;WHERE SCC.CHART_OF_ACCOUNT_ID=SAR.DEBIT_ACCOUNT_ID">
+      <parameters />
+    </query>
+    <query ID="ValidateItemTypeSourceType" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_ITEM_TYPE_SOURCE_TYPE_CROSSREF&#xD;&#xA;WHERE ITEM_TYPE_VALUE=@ITEM_TYPE AND SOURCE_TYPE_VALUE=@SOURCE_TYPE">
+      <parameters>
+        <parameter ID="@ITEM_TYPE" sfwDataType="string" />
+        <parameter ID="@SOURCE_TYPE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="sqCreditAccount" sfwQueryType="SubSelectQuery" sfwSql="SELECT * FROM SGT_CHART_OF_ACCOUNT SCC&#xD;&#xA;WHERE SCC.CHART_OF_ACCOUNT_ID=SAR.CREDIT_ACCOUNT_ID">
+      <parameters />
+    </query>
+    <query ID="GetCountOfDuplicateRecords" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_ACCOUNT_REFERENCE WHERE&#xD;&#xA;PLAN_ID=@PLANID AND &#xD;&#xA;((FUND_VALUE=@FUNDVALUE) OR (FUND_VALUE IS NULL)) AND&#xD;&#xA;((DEPT_VALUE=@DEPTVALUE) OR (DEPT_VALUE IS NULL)) AND&#xD;&#xA;((ITEM_TYPE_VALUE=@ITEMTYPEVALUE) OR (ITEM_TYPE_VALUE IS NULL)) AND&#xD;&#xA;((FROM_ITEM_TYPE_VALUE=@FROMITEMTYPE) OR (FROM_ITEM_TYPE_VALUE IS NULL)) AND&#xD;&#xA;((TO_ITEM_TYPE_VALUE=@TOITEMTYPE) OR (TO_ITEM_TYPE_VALUE IS NULL)) AND&#xD;&#xA;((TRANSACTION_TYPE_VALUE=@TRANSACTIONTYPE) OR (TRANSACTION_TYPE_VALUE IS NULL)) AND&#xD;&#xA;((STATUS_TRANSITION_VALUE=@STATUSTRANSITION) OR (STATUS_TRANSITION_VALUE IS NULL)) AND&#xD;&#xA;((SOURCE_TYPE_VALUE=@SOURCETYPE) OR (SOURCE_TYPE_VALUE IS NULL))">
+      <parameters>
+        <parameter ID="@PLANID" sfwDataType="int" />
+        <parameter ID="@FUNDVALUE" sfwDataType="string" />
+        <parameter ID="@DEPTVALUE" sfwDataType="string" />
+        <parameter ID="@ITEMTYPEVALUE" sfwDataType="string" />
+        <parameter ID="@FROMITEMTYPE" sfwDataType="string" />
+        <parameter ID="@TOITEMTYPE" sfwDataType="string" />
+        <parameter ID="@TRANSACTIONTYPE" sfwDataType="string" />
+        <parameter ID="@STATUSTRANSITION" sfwDataType="string" />
+        <parameter ID="@SOURCETYPE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="GetValidAccountReference" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select * from dbo.SGT_ACCOUNT_REFERENCE &#xD;&#xA;where TRANSACTION_TYPE_VALUE=@TransactionType and &#xD;&#xA;SOURCE_TYPE_VALUE=@SourceType and item_type_value=@ItemType and plan_id=@planID and&#xD;&#xA;((@statustransition = '' and STATUS_TRANSITION_VALUE is null) or (STATUS_TRANSITION_VALUE = @statustransition))">
+      <parameters>
+        <parameter ID="@TransactionType" sfwDataType="string" />
+        <parameter ID="@SourceType" sfwDataType="string" />
+        <parameter ID="@ItemType" sfwDataType="string" />
+        <parameter ID="@planID" sfwDataType="int" />
+        <parameter ID="@statustransition" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="GetValidAccountReferenceForFromTypeToType" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select * from dbo.SGT_ACCOUNT_REFERENCE &#xD;&#xA;where TRANSACTION_TYPE_VALUE=@TransactionType and &#xD;&#xA;SOURCE_TYPE_VALUE=@SourceType and from_item_type_value=@FromItemType and to_item_type_value=@ToItemType and plan_id=@planID and&#xD;&#xA;((@statustransition = '' and STATUS_TRANSITION_VALUE is null) or (STATUS_TRANSITION_VALUE = @statustransition))">
+      <parameters>
+        <parameter ID="@TransactionType" sfwDataType="string" />
+        <parameter ID="@SourceType" sfwDataType="string" />
+        <parameter ID="@FromItemType" sfwDataType="string" />
+        <parameter ID="@ToItemType" sfwDataType="string" />
+        <parameter ID="@planID" sfwDataType="int" />
+        <parameter ID="@statustransition" sfwDataType="string" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="AccountReferenceId" sfwType="Column" sfwValue="account_reference_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PlanId" sfwType="Column" sfwValue="plan_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="FundDescription" sfwType="Description" sfwValue="fund_description" />
+    <attribute ID="FundId" sfwType="Column" sfwValue="fund_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="1300" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="FundValue" sfwType="Column" sfwValue="fund_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="DeptDescription" sfwType="Description" sfwValue="dept_description" />
+    <attribute ID="DeptId" sfwType="Column" sfwValue="dept_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="1301" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="DeptValue" sfwType="Column" sfwValue="dept_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="ItemTypeDescription" sfwType="Description" sfwValue="item_type_description" />
+    <attribute ID="ItemTypeId" sfwType="Column" sfwValue="item_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="1302" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ItemTypeValue" sfwType="Column" sfwValue="item_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="FromItemTypeDescription" sfwType="Description" sfwValue="from_item_type_description" />
+    <attribute ID="FromItemTypeId" sfwType="Column" sfwValue="from_item_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="1302" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="FromItemTypeValue" sfwType="Column" sfwValue="from_item_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="ToItemTypeDescription" sfwType="Description" sfwValue="to_item_type_description" />
+    <attribute ID="ToItemTypeId" sfwType="Column" sfwValue="to_item_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="1302" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ToItemTypeValue" sfwType="Column" sfwValue="to_item_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="TransactionTypeDescription" sfwType="Description" sfwValue="transaction_type_description" />
+    <attribute ID="TransactionTypeId" sfwType="Column" sfwValue="transaction_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="1303" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="TransactionTypeValue" sfwType="Column" sfwValue="transaction_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="StatusTransitionDescription" sfwType="Description" sfwValue="status_transition_description" />
+    <attribute ID="StatusTransitionId" sfwType="Column" sfwValue="status_transition_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="1309" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusTransitionValue" sfwType="Column" sfwValue="status_transition_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="SourceTypeDescription" sfwType="Description" sfwValue="source_type_description" />
+    <attribute ID="SourceTypeId" sfwType="Column" sfwValue="source_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="1304" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="SourceTypeValue" sfwType="Column" sfwValue="source_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="GenerateGlFlag" sfwType="Column" sfwValue="generate_gl_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="1" sfwRequired="False" />
+    <attribute ID="DebitAccountId" sfwType="Column" sfwValue="debit_account_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="CreditAccountId" sfwType="Column" sfwValue="credit_account_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="JournalDescription" sfwType="Column" sfwValue="journal_description" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="80" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute sfwDataType="string" sfwType="Property" ID="LstrPlanName" sfwValue="lstrPlanName" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrSuppressWarning" sfwValue="istrSuppressWarning" />
+    <attribute ID="objDebitAccount" sfwType="Object" sfwEntity="entChartOfAccount" sfwValue="ibusDebitAccount" />
+    <attribute ID="objCreditAccount" sfwType="Object" sfwEntity="entChartOfAccount" sfwValue="ibusCreditAccount" />
+  </attributes>
+</entity>

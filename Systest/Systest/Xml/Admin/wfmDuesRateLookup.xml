@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<form ID="wfmDuesRateLookup" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvAdmin" sfwResource="1920 " sfwType="Lookup" sfwTitle="Dues Rate Lookup" version="3.5" sfwEntity="entDuesRateChangeRequest" sfwGridCollection="busDuesRateChangeRequestLookup.iclbDuesRateChangeRequest">
+  <initialload>
+    <query ID="cdoDuesRateChangeRequest" sfwQueryRef="entDuesRateChangeRequest.Lookup" sfwMethodName="LoadDuesRateChangeRequests" />
+  </initialload>
+  <sfwTable ID="Main">
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlCriteria" sfwCaption="Criteria">
+          <sfwTable CssClass="Table" ID="tblCriteria">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capDuesRateChangeRequestId" Text="Dues Rate ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtDuesRateChangeRequestId" sfwDataField="dues_rate_change_request_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="cdoDuesRateChangeRequest" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capEffectiveDate" Text="Effective Date : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtEffectiveDate" sfwDataField="effective_date" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="=" sfwQueryID="cdoDuesRateChangeRequest" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capVendorOrgId" Text="Vendor : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtVendorOrgId" sfwDataField="org_code" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="cdoDuesRateChangeRequest" />
+                <sfwImageButton ID="btnRetrieve" ImageAlign="AbsMiddle" ImageUrl="~/Image/Lookup.jpg" sfwActiveForm="wfmOrganizationLookup" sfwMethodName="btnRetrieve_Click" sfwRelatedControl="txtVendorOrgId" sfwSelectedIndex="OrgCode" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnSearch" sfwMethodName="btnSearch_Click" Text="Search" />
+                <sfwButton ID="btnReset" sfwMethodName="btnReset_Click" Text="Reset" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwButton ID="btnStoreSearch" sfwMethodName="btnStoreUserDefaults_Click" Text="StoreSearch" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlResult" sfwCaption="Search Results">
+          <sfwTable CssClass="Table" ID="tblResult">
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnNew" sfwActiveForm="wfmDuesRateMaintenance" sfwMethodName="btnNew_Click" sfwNavigationParameter="astrVendorOrgCode=txtVendorOrgId" Text="New" />
+                <sfwButton ID="btnOpen" sfwActiveForm="wfmDuesRateMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="aintduesratechangerequestid=DuesRateChangeRequestId" sfwRelatedControl="dgrResult" Text="Open" sfwDisableViewOnly="True" />
+                <sfwButton ID="btnDelete" sfwMethodName="btnDelete_Click" sfwRelatedControl="dgrResult" Text="Delete" />
+                <sfwButton ID="btnExportExcel" sfwMethodName="btnColumnsToExport_Click" sfwRelatedControl="dgrResult" Text="Export To Excel" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwGridView AllowPaging="True" AllowSorting="True" ID="dgrResult" sfwSelection="Many">
+                  <Columns>
+                    <TemplateField HeaderText="Dues Rate Change Request ID" Visible="False" sfwShowInExportToExcel="True">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="DuesRateChangeRequestId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Effective Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EffectiveDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Vendor">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpen" sfwEntityField="objVendor.OrgName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Monthly Amount">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="MonthlyAmount" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+  </sfwTable>
+  <loaddetails />
+</form>

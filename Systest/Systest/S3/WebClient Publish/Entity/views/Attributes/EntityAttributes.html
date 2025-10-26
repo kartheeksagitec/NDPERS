@@ -1,0 +1,346 @@
+﻿<ul class="nav nav-tabs" attribute-tab-wrapper>
+    <li class="active">
+        <a data-toggle="tab" data-attribute-type="COLUMNS" data-target="#entity-attributes-COLUMNS-tab-content-{{::currentfile.FileName}}" knowtion-id="2.2.1">Columns</a>
+    </li>
+    <li>
+        <a data-toggle="tab" data-attribute-type="ONETOONE" data-target="#entity-attributes-ONETOONE-tab-content-{{::currentfile.FileName}}" knowtion-id="2.2.2">One To One</a>
+    </li>
+    <li>
+        <a data-toggle="tab" data-attribute-type="ONETOMANY" data-target="#entity-attributes-ONETOMANY-tab-content-{{::currentfile.FileName}}" knowtion-id="2.2.3">One To Many</a>
+    </li>
+    <li>
+        <a data-toggle="tab" data-attribute-type="PROPERTIES" data-target="#entity-attributes-PROPERTIES-tab-content-{{::currentfile.FileName}}" knowtion-id="2.2.4">Properties</a>
+    </li>
+    <li>
+        <a data-toggle="tab" data-attribute-type="EXPRESSION" data-target="#entity-attributes-EXPRESSION-tab-content-{{::currentfile.FileName}}" knowtion-id="2.2.5">Expressions</a>
+    </li>
+    <li ng-show="hasAppJsonDataColumn">
+        <a data-toggle="tab" data-attribute-type="APPJSONDATA" data-target="#entity-attributes-APPJSONDATA-tab-content-{{::currentfile.FileName}}" knowtion-id="2.2.6">Application JSON Properties</a>
+    </li>
+
+    <li class="entity-add-fields-from-object-tree" ng-show="objEntity.dictAttributes.sfwObjectID" ng-click="addFieldFromObjectTreeClick()" title="Add Fields From Object Tree">
+        <a>
+            <img src="images/Entity/icon_add_field_black.svg" ng-disabled="IsBaseAppFile" />
+        </a>
+    </li>
+</ul>
+<div class="tab-content entity-attributes-tab-content overflow-hidden">
+    <div class="tab-pane fade in active full-height" id="entity-attributes-COLUMNS-tab-content-{{::currentfile.FileName}}">
+        <div id="attributescolumn-{{::currentfile.FileName}}" class="property-table">
+            <table class="table table-striped table-bordered table-condensed" id="grid-entity-attributes-COLUMNS-{{::currentfile.FileName}}" st-table="lstCloneAttributesColumn" st-safe-src="objAttributes.Elements" st-group-filter="entityAttributesbytype" st-group="true" st-group-prop-value="Column" st-table-item-row="Attribute" role="grid" aria-describedby="entity-attributes-COLUMNS-{{::currentfile.FileName}}-info">
+                <thead>
+                    <tr st-operation-row st-operation-allowed="update" st-operation-add-template="Entity/views/Attributes/attributes-column-edit.html" st-operation-after-update-callback="updateModelForBaseAppModel()">
+                        <th colspan="20">
+                            <a href="#" ng-show="!hasAppJsonDataColumn && IsBaseAppFile"><img class="fright" ng-click="addAppJsonColumn()" src="images/Common/icon_add_dark.svg" title="{{isDirty?'Please save file before adding APP_JSON_DATA column.':'Add APP_JSON_DATA Column'}}" ng-disabled="isDirty || !objEntity.dictAttributes.sfwTableName" /></a>
+                            <i class="entity-refresh marg-left-10 fright" ng-click="refreshColumns()" title="{{isDirty?'Please save file before sync.':'Sync Entity With DB'}}" ng-disabled="isDirty" />
+                        </th>
+                    </tr>
+                    <tr role="heading">
+                        <th st-sort="dictAttributes.ID" st-sort-default="true">Attribute</th>
+                        <th st-sort="dictAttributes.sfwDataType">Data Type</th>
+                        <th st-sort="dictAttributes.sfwDBDataType">DB Data Type</th>
+                        <th st-sort="dictAttributes.sfwValue">Column Name</th>
+                        <th st-sort="dictAttributes.sfwCaption">Caption</th>
+                        <th st-sort="dictAttributes.sfwIsNull">Is Null</th>
+                        <th ng-if="!$root.IsOracleDB" st-sort="dictAttributes.sfwIsIdentity">Is Identity</th>
+                        <th ng-if="$root.IsOracleDB" st-sort="dictAttributes.sfwSequenceName">Sequence Name</th>
+                        <th st-sort="dictAttributes.sfwLength">Length</th>
+                        <th st-sort="dictAttributes.sfwCodeID">Code Id</th>
+                        <th st-sort="dictAttributes.sfwDataFormat">Data Format</th>
+                        <th st-sort="dictAttributes.sfwChangeCase">Change Case</th>
+                        <th st-sort="dictAttributes.sfwPrivate">Private</th>
+                        <th st-sort="dictAttributes.sfwImportant">Important</th>
+                        <th st-sort="dictAttributes.sfwEncrypt">Encrypt</th>
+                        <th st-sort="dictAttributes.sfwSaveDateAsUtc">Save Date as Utc</th>
+                        <th st-sort="dictAttributes.Text">Description</th>
+                        <th st-sort="dictAttributes.sfwKeyNo">Key Number</th>
+                        <th st-sort="dictAttributes.sfwDefaultValue">Default Value</th>
+                        <th st-sort="dictAttributes.sfwDbDefault">DB Default Value</th>
+                        <th>Action</th>
+                    </tr>
+                    <tr role="search">
+                        <th colspan="20"><input st-search="" class="form-control" placeholder="search with attribute name, column name , code ids etc..." type="text" /></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr tabindex="{{$index}}" role="row" st-select-row="attribute" ng-repeat="attribute in lstCloneAttributesColumn" ng-class="{'bckgGrey': attribute.isAdvanceSearched, 'bckgGreen': (attribute.isSelected && attribute.isAdvanceSearched)}">
+                        <td>{{attribute.dictAttributes.ID}}</td>
+                        <td>{{attribute.dictAttributes.sfwDataType}}</td>
+                        <td>{{attribute.dictAttributes.sfwDBDataType}}</td>
+                        <td>{{attribute.dictAttributes.sfwValue}}</td>
+                        <td>{{attribute.dictAttributes.sfwCaption}}</td>
+                        <td>{{attribute.dictAttributes.sfwIsNull}}</td>
+                        <td ng-if="!$root.IsOracleDB">{{attribute.dictAttributes.sfwIsIdentity}}</td>
+                        <td ng-if="$root.IsOracleDB">{{attribute.dictAttributes.sfwSequenceName}}</td>
+                        <td>{{attribute.dictAttributes.sfwLength}}</td>
+                        <td>{{attribute.dictAttributes.sfwCodeID}}</td>
+                        <td>{{attribute.dictAttributes.sfwDataFormat}}</td>
+                        <td>{{attribute.dictAttributes.sfwChangeCase}}</td>
+                        <td>{{attribute.dictAttributes.sfwPrivate}}</td>
+                        <td>{{attribute.dictAttributes.sfwImportant}}</td>
+                        <td>{{attribute.dictAttributes.sfwEncrypt}}</td>
+                        <td>{{attribute.dictAttributes.sfwSaveDateAsUtc}}</td>
+                        <td>{{attribute.dictAttributes.Text}}</td>
+                        <td>{{attribute.dictAttributes.sfwKeyNo}}</td>
+                        <td>{{attribute.dictAttributes.sfwDefaultValue}}</td>
+                        <td>{{attribute.dictAttributes.sfwDbDefault}}</td>
+                        <td>
+                            <a st-operation="update"><i class="glyphicon glyphicon-pencil"></i></a>
+                            <a ng-show="!attribute.IsBaseAppModel && attribute.BaseAppModel"><i class="fa fa-undo" style="margin-left:3px;font-size:14px;" ng-click="revertToBaseAppModel(attribute)"></i></a>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="20" class="text-center">
+                            <div st-pagination="" st-items-by-page="12" st-displayed-pages="5" st-template="common/views/pagination-grid.html" st-navigation-select="activeGridRow"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    <div class="tab-pane fade full-height" id="entity-attributes-ONETOONE-tab-content-{{::currentfile.FileName}}">
+        <div id="attributesonetoone-{{::currentfile.FileName}}" class="property-table">
+            <table class="table table-striped table-bordered table-condensed" id="grid-entity-attributes-ONETOONE-{{::currentfile.FileName}}" st-table="lstCloneAttributesOnetoone" st-safe-src="objAttributes.Elements" st-group-filter="entityAttributesbytype" st-group="true" st-group-prop-value="Object" st-table-item-row="Attribute" role="grid" aria-describedby="entity-attributes-ONETOONE-{{::currentfile.FileName}}-info">
+                <thead>
+                    <tr st-operation-row st-operation-allowed="add,delete,update" st-operation-after-update-callback="updateModelForBaseAppModel()" st-operation-add-object="objnewonetooneAttribute" st-operation-add-template="Entity/views/Attributes/attributes-onetoone-edit.html" st-operation-before-delete-callback="updateValidation(updatedobject,'BEFORE')" st-operation-after-delete-callback="updateValidation(updatedobject,'AFTER')" st-operation-delete-item-property="dictAttributes.ID" st-operation-add-validation-errors="empty_id,invalid_entity" st-operation-on-select-callback="onSelectOneToOne(record)">
+                        <th colspan="7">
+                            <a href="#"><img class="fright" ng-disabled="canDeleteOneToOne()" st-operation="delete" src="images/Common/icon_delete_dark.svg" title="Remove One To One" /></a>
+                            <a href="#"><img class="fright" st-operation="add" src="images/Common/icon_add_dark.svg" title="Add One To One" /></a>
+                        </th>
+                    </tr>
+                    <tr role="heading">
+                        <th st-sort="dictAttributes.ID" st-sort-default="true">Attribute</th>
+                        <th st-sort="dictAttributes.sfwObjectID" ng-if="objEntity.dictAttributes.sfwObjectID">Object Field</th>
+                        <th st-sort="dictAttributes.sfwCaption">Caption</th>
+                        <th st-sort="dictAttributes.sfwEntity">Entity</th>
+                        <th st-sort="dictAttributes.sfwPrivate">Private</th>
+                        <th st-sort="dictAttributes.Text">Description</th>
+                        <th>Action</th>
+                    </tr>
+                    <tr role="search">
+                        <th colspan="16"><input st-search="" class="form-control" placeholder="search with attribute name, object field , entity name etc..." type="text" /></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr tabindex="{{$index}}" role="row" st-select-row="attribute" ng-repeat="attribute in lstCloneAttributesOnetoone" ng-class="{'bckgGrey': attribute.isAdvanceSearched, 'bckgGreen': (attribute.isSelected && attribute.isAdvanceSearched)}">
+                        <td>{{attribute.dictAttributes.ID}}</td>
+                        <td ng-if="objEntity.dictAttributes.sfwObjectID">{{attribute.dictAttributes.sfwValue}}</td>
+                        <td>{{attribute.dictAttributes.sfwCaption}}</td>
+                        <td><a title="Click here to navigate" ng-click="openEntityClick(attribute.dictAttributes.sfwEntity)">{{attribute.dictAttributes.sfwEntity}}</a></td>
+                        <td>{{attribute.dictAttributes.sfwPrivate}}</td>
+                        <td>{{attribute.dictAttributes.Text}}</td>
+                        <td>
+                            <a st-operation="update"><i class="glyphicon glyphicon-pencil"></i></a>
+                            <a ng-show="!attribute.IsBaseAppModel && attribute.BaseAppModel"><i class="fa fa-undo" style="margin-left:3px;font-size:14px;" ng-click="revertToBaseAppModel(attribute)"></i></a>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="16" class="text-center">
+                            <div st-pagination="" st-items-by-page="12" st-displayed-pages="5" st-template="common/views/pagination-grid.html" st-navigation-select="activeGridRow"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    <div class="tab-pane fade full-height" id="entity-attributes-ONETOMANY-tab-content-{{::currentfile.FileName}}">
+        <div id="attributesonetomany-{{::currentfile.FileName}}" class="property-table">
+            <table class="table table-striped table-bordered table-condensed" id="grid-entity-attributes-ONETOMANY-{{::currentfile.FileName}}" st-table="lstCloneAttributesonetomany" st-safe-src="objAttributes.Elements" st-group-filter="entityAttributesbytype" st-group="true" st-group-prop-value="Collection,List,CDOCollection" st-table-item-row="Attribute" role="grid" aria-describedby="entity-attributes-ONETOMANY-{{::currentfile.FileName}}-info">
+                <thead>
+                    <tr st-operation-row st-operation-allowed="add,delete,update" st-operation-after-update-callback="updateModelForBaseAppModel()" st-operation-add-object="objnewonetomanyAttribute" st-operation-add-template="Entity/views/Attributes/attributes-onetomany-edit.html" st-operation-before-delete-callback="updateValidation(updatedobject,'BEFORE')" st-operation-after-delete-callback="updateValidation(updatedobject,'AFTER')" st-operation-delete-item-property="dictAttributes.ID" st-operation-add-validation-errors="empty_id,invalid_entity" st-operation-on-select-callback="onSelectOneToMany(record)">
+                        <th colspan="8">
+                            <a href="#"><img class="fright" ng-disabled="canDeleteOneToMany()" st-operation="delete" src="images/Common/icon_delete_dark.svg" title="Remove One To Many" /></a>
+                            <a href="#"><img class="fright" st-operation="add" src="images/Common/icon_add_dark.svg" title="Add One To Many" /></a>
+                        </th>
+                    </tr>
+                    <tr role="heading">
+                        <th st-sort="dictAttributes.ID" st-sort-default="true">Attribute</th>
+                        <th st-sort="dictAttributes.sfwType">Type</th>
+                        <th st-sort="dictAttributes.sfwObjectID" ng-if="objEntity.dictAttributes.sfwObjectID">Object Field</th>
+                        <th st-sort="dictAttributes.sfwCaption">Caption</th>
+                        <th st-sort="dictAttributes.sfwEntity">Entity</th>
+                        <th st-sort="dictAttributes.sfwPrivate">Private</th>
+                        <th st-sort="dictAttributes.Text">Description</th>
+                        <th>Action</th>
+                    </tr>
+                    <tr role="search">
+                        <th colspan="16"><input st-search="" class="form-control" placeholder="search with attribute name, object field , entity name etc..." type="text" /></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr tabindex="{{$index}}" role="row" st-select-row="attribute" ng-repeat="attribute in lstCloneAttributesonetomany" ng-class="{'bckgGrey': attribute.isAdvanceSearched, 'bckgGreen': (attribute.isSelected && attribute.isAdvanceSearched)}">
+                        <td>{{attribute.dictAttributes.ID}}</td>
+                        <td><span ng-if="!attribute.dictAttributes.sfwType" style="color:red">!</span>{{attribute.dictAttributes.sfwType}}</td>
+                        <td ng-if="objEntity.dictAttributes.sfwObjectID">{{attribute.dictAttributes.sfwValue}}</td>
+                        <td>{{attribute.dictAttributes.sfwCaption}}</td>
+                        <td><a title="Click here to navigate" ng-click="openEntityClick(attribute.dictAttributes.sfwEntity)">{{attribute.dictAttributes.sfwEntity}}</a></td>
+                        <td>{{attribute.dictAttributes.sfwPrivate}}</td>
+                        <td>{{attribute.dictAttributes.Text}}</td>
+                        <td>
+                            <a st-operation="update"><i class="glyphicon glyphicon-pencil"></i></a>
+                            <a ng-show="!attribute.IsBaseAppModel && attribute.BaseAppModel"><i class="fa fa-undo" style="margin-left:3px;font-size:14px;" ng-click="revertToBaseAppModel(attribute)"></i></a>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="16" class="text-center">
+                            <div st-pagination="" st-items-by-page="12" st-displayed-pages="5" st-template="common/views/pagination-grid.html" st-navigation-select="activeGridRow"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    <div class="tab-pane fade full-height" id="entity-attributes-PROPERTIES-tab-content-{{::currentfile.FileName}}">
+        <div id="attributesproperty-{{::currentfile.FileName}}" class="property-table">
+            <table class="table table-striped table-bordered table-condensed" id="grid-entity-attributes-PROPERTIES-{{::currentfile.FileName}}" st-table="lstCloneAttributesproperties" st-safe-src="objAttributes.Elements" st-group-filter="entityAttributesbytype" st-group="true" st-group-prop-value="Property" st-table-item-row="Attribute" role="grid" aria-describedby="entity-attributes-PROPERTIES-{{::currentfile.FileName}}-info">
+                <thead>
+                    <tr st-operation-row st-operation-allowed="add,delete,update" st-operation-after-update-callback="updateModelForBaseAppModel()" st-operation-add-object="objnewpropertyAttribute" st-operation-add-template="Entity/views/Attributes/attributes-property-edit.html" st-operation-before-delete-callback="updateValidation(updatedobject,'BEFORE')" st-operation-after-delete-callback="updateValidation(updatedobject,'AFTER')" st-operation-delete-item-property="dictAttributes.ID" st-operation-add-validation-errors="empty_id,data_type" st-operation-on-select-callback="onSelectProperty(record)">
+                        <th colspan="9">
+                            <a href="#"><img class="fright" ng-disabled="canDeleteProperty()" st-operation="delete" src="images/Common/icon_delete_dark.svg" title="Remove Property" /></a>
+                            <a href="#"><img class="fright" st-operation="add" src="images/Common/icon_add_dark.svg" title="Add Property" /></a>
+                        </th>
+                    </tr>
+                    <tr role="heading">
+                        <th st-sort="dictAttributes.ID" st-sort-default="true">Attribute</th>
+                        <th st-sort="dictAttributes.sfwDataType">Data Type</th>
+                        <th ng-if="objEntity.dictAttributes.sfwObjectID" st-sort="dictAttributes.sfwValue">Object Field</th>
+                        <th st-sort="dictAttributes.sfwCaption">Caption</th>
+                        <th st-sort="dictAttributes.sfwDataFormat">Data Format</th>
+                        <th st-sort="dictAttributes.sfwPrivate">Private</th>
+                        <th st-sort="dictAttributes.sfwImportant">Important</th>
+                        <th st-sort="dictAttributes.Text">Description</th>
+                        <th>Action</th>
+                    </tr>
+                    <tr role="search">
+                        <th colspan="16"><input st-search="" class="form-control" placeholder="search with attribute name, object field , entity name etc..." type="text" /></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr tabindex="{{$index}}" role="row" st-select-row="attribute" ng-repeat="attribute in lstCloneAttributesproperties" ng-class="{'bckgGrey': attribute.isAdvanceSearched, 'bckgGreen': (attribute.isSelected && attribute.isAdvanceSearched)}">
+                        <td>{{attribute.dictAttributes.ID}}</td>
+                        <td>{{attribute.dictAttributes.sfwDataType}}</td>
+                        <td ng-if="objEntity.dictAttributes.sfwObjectID && attribute.dictAttributes.sfwRelatedJSONField == undefined ||attribute.dictAttributes.sfwRelatedJSONField.trim() == ''">{{attribute.dictAttributes.sfwValue}}</td>
+                        <td ng-if="attribute.dictAttributes.sfwRelatedJSONField != undefined && attribute.dictAttributes.sfwRelatedJSONField.trim() != ''">{{attribute.dictAttributes.sfwRelatedJSONField}}</td>
+                        <td>{{attribute.dictAttributes.sfwCaption}}</td>
+                        <td>{{attribute.dictAttributes.sfwDataFormat}}</td>
+                        <td>{{attribute.dictAttributes.sfwPrivate}}</td>
+                        <td>{{attribute.dictAttributes.sfwImportant}}</td>
+                        <td>{{attribute.dictAttributes.Text}}</td>
+                        <td>
+                            <a st-operation="update"><i class="glyphicon glyphicon-pencil"></i></a>
+                            <a ng-show="!attribute.IsBaseAppModel && attribute.BaseAppModel"><i class="fa fa-undo" style="margin-left:3px;font-size:14px;" ng-click="revertToBaseAppModel(attribute)"></i></a>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="16" class="text-center">
+                            <div st-pagination="" st-items-by-page="12" st-displayed-pages="5" st-template="common/views/pagination-grid.html" st-navigation-select="activeGridRow"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    <div class="tab-pane fade full-height" id="entity-attributes-EXPRESSION-tab-content-{{::currentfile.FileName}}">
+        <div id="attributesexpression-{{::currentfile.FileName}}" class="property-table">
+            <table class="table table-striped table-bordered table-condensed" id="grid-entity-attributes-EXPRESSION-{{::currentfile.FileName}}" st-table="lstCloneAttributesexpression" st-safe-src="objAttributes.Elements" st-group-filter="entityAttributesbytype" st-group="true" st-group-prop-value="Expression" st-table-item-row="Attribute" role="grid" aria-describedby="entity-attributes-EXPRESSION-{{::currentfile.FileName}}-info">
+                <thead>
+                    <tr st-operation-row st-operation-allowed="add,delete,update" st-operation-after-update-callback="updateModelForBaseAppModel()" st-operation-add-object="objnewexpressionAttribute" st-operation-add-template="Entity/views/Attributes/attributes-expression-edit.html" st-operation-before-delete-callback="updateValidation(updatedobject,'BEFORE')" st-operation-after-delete-callback="updateValidation(updatedobject,'AFTER')" st-operation-delete-item-property="dictAttributes.ID" st-operation-add-validation-errors="empty_id" st-operation-on-select-callback="onSelectExpression(record)">
+                        <th colspan="9">
+                            <a href="#"><img class="fright" ng-disabled="canDeleteExpression()" st-operation="delete" src="images/Common/icon_delete_dark.svg" title="Remove Expression" /></a>
+                            <a href="#"><img class="fright" st-operation="add" src="images/Common/icon_add_dark.svg" title="Add Expression" /></a>
+                        </th>
+                    </tr>
+                    <tr role="heading">
+                        <th st-sort="dictAttributes.ID" st-sort-default="true">Attribute</th>
+                        <th st-sort="dictAttributes.sfwCaption">Caption</th>
+                        <th st-sort="dictAttributes.sfwDataFormat">Expression</th>
+                        <th>Action</th>
+                    </tr>
+                    <tr role="search">
+                        <th colspan="16"><input st-search="" class="form-control" placeholder="search with attribute name, object field , entity name etc..." type="text" /></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr tabindex="{{$index}}" role="row" st-select-row="attribute" ng-repeat="attribute in lstCloneAttributesexpression" ng-class="{'bckgGrey': attribute.isAdvanceSearched, 'bckgGreen': (attribute.isSelected && attribute.isAdvanceSearched)}">
+                        <td>{{attribute.dictAttributes.ID}}</td>
+                        <td>{{attribute.dictAttributes.sfwCaption}}</td>
+                        <td>{{attribute.dictAttributes.sfwValue}}</td>
+                        <td>
+                            <a st-operation="update"><i class="glyphicon glyphicon-pencil"></i></a>
+                            <a ng-show="!attribute.IsBaseAppModel && attribute.BaseAppModel"><i class="fa fa-undo" style="margin-left:3px;font-size:14px;" ng-click="revertToBaseAppModel(attribute)"></i></a>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="16" class="text-center">
+                            <div st-pagination="" st-items-by-page="12" st-displayed-pages="5" st-template="common/views/pagination-grid.html" st-navigation-select="activeGridRow"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    <div ng-show="hasAppJsonDataColumn" class="tab-pane fade full-height" id="entity-attributes-APPJSONDATA-tab-content-{{::currentfile.FileName}}">
+        <div id="attributesappjsondata-{{::currentfile.FileName}}" class="property-table">
+            <table class="table table-striped table-bordered table-condensed" id="grid-entity-attributes-APPJSONDATA-{{::currentfile.FileName}}" st-table="lstCloneAttributesAppJsonData" st-safe-src="objAttributes.Elements" st-group-filter="entityAttributesbytype" st-group="true" st-group-prop-value="AppJsonData" st-table-item-row="Attribute" role="grid" aria-describedby="entity-attributes-APPJSONDATA-{{::currentfile.FileName}}-info">
+                <thead>
+                    <tr st-operation-row st-operation-allowed="add,delete,update" st-operation-add-object="objnewJsonAttribute" st-operation-add-template="Entity/views/Attributes/attributes-column-edit.html" st-operation-before-add-callback="beforeAddJsonAttribute(newobject)" st-operation-before-delete-callback="updateValidation(updatedobject,'BEFORE')" st-operation-after-delete-callback="updateValidation(updatedobject,'AFTER')" st-operation-delete-item-property="dictAttributes.ID" st-operation-add-validation-errors="empty_id,data_type">
+                        <th colspan="12">
+                            <a href="#"><img class="fright" st-operation="delete" src="images/Common/icon_delete_dark.svg" title="Remove Property" /></a>
+                            <a href="#"><img class="fright" st-operation="add" src="images/Common/icon_add_dark.svg" title="Add Property" /></a>
+                        </th>
+                    </tr>
+                    <tr role="heading">
+                        <th st-sort="dictAttributes.ID" st-sort-default="true">Attribute</th>
+                        <th st-sort="dictAttributes.sfwDataType">Data Type</th>
+                        <th st-sort="dictAttributes.sfwCaption">Caption</th>
+                        <th st-sort="dictAttributes.sfwDataFormat">Data Format</th>
+                        <th st-sort="dictAttributes.sfwIsNull">Is Null</th>
+                        <th st-sort="dictAttributes.sfwLength">Length</th>
+                        <th st-sort="dictAttributes.sfwChangeCase">Change Case</th>
+                        <th st-sort="dictAttributes.sfwDefaultValue">Default Value</th>
+                        <th st-sort="dictAttributes.sfwPrivate">Private</th>
+                        <th st-sort="dictAttributes.sfwImportant">Important</th>
+                        <th st-sort="dictAttributes.Text">Description</th>
+                        <th>Action</th>
+                    </tr>
+                    <tr role="search">
+                        <th colspan="12"><input st-search="" class="form-control" placeholder="search with attribute name, object field , entity name etc..." type="text" /></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr tabindex="{{$index}}" role="row" st-select-row="attribute" ng-repeat="attribute in lstCloneAttributesAppJsonData" ng-class="{'bckgGrey': attribute.isAdvanceSearched, 'bckgGreen': (attribute.isSelected && attribute.isAdvanceSearched)}">
+                        <td>{{attribute.dictAttributes.ID}}</td>
+                        <td>{{attribute.dictAttributes.sfwDataType}}</td>
+                        <td>{{attribute.dictAttributes.sfwCaption}}</td>
+                        <td>{{attribute.dictAttributes.sfwDataFormat}}</td>
+                        <td>{{attribute.dictAttributes.sfwIsNull}}</td>
+                        <td>{{attribute.dictAttributes.sfwLength}}</td>
+                        <td>{{attribute.dictAttributes.sfwChangeCase}}</td>
+                        <td>{{attribute.dictAttributes.sfwDefaultValue}}</td>
+                        <td>{{attribute.dictAttributes.sfwPrivate}}</td>
+                        <td>{{attribute.dictAttributes.sfwImportant}}</td>
+                        <td>{{attribute.dictAttributes.Text}}</td>
+                        <td><a st-operation="update"><i class="glyphicon glyphicon-pencil"></i></a></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="12" class="text-center">
+                            <div st-pagination="" st-items-by-page="12" st-displayed-pages="5" st-template="common/views/pagination-grid.html" st-navigation-select="activeGridRow"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entPersonAccountBeneficiary" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoPersonAccountBeneficiary" sfwObjectID="busPersonAccountBeneficiary" sfwTableName="sgt_person_account_beneficiary" sfwView="False" sfwParentEntity="entPersonBeneficiary">
+  <rules />
+  <delete />
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror />
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <queries>
+    <query ID="LoadOtherBeneficiaries" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT SPB.*,SPAB.*,PLN.PLAN_NAME AS ISTRPLANNAME,&#xD;&#xA;SPA.START_DATE as idtInitialPlanStartDate,&#xD;&#xA;cv.description as istrPlanParticipationStatus  &#xD;&#xA; FROM SGT_PERSON_BENEFICIARY SPB WITH(NOLOCK)&#xD;&#xA;LEFT OUTER JOIN SGT_PERSON_ACCOUNT_BENEFICIARY SPAB WITH(NOLOCK) ON SPAB.BENEFICIARY_ID=SPB.BENEFICIARY_ID&#xD;&#xA;LEFT OUTER JOIN SGT_PERSON_ACCOUNT SPA WITH(NOLOCK) ON SPA.PERSON_ACCOUNT_ID=SPAB.PERSON_ACCOUNT_ID&#xD;&#xA;LEFT OUTER JOIN SGT_PLAN PLN WITH(NOLOCK) ON PLN.PLAN_ID=SPA.PLAN_ID&#xD;&#xA;inner join sgs_code_value cv WITH(NOLOCK) on cv.code_id =PLAN_PARTICIPATION_STATUS_ID and code_value =  PLAN_PARTICIPATION_STATUS_VALUE&#xD;&#xA;WHERE SPB.PERSON_ID=@PERSON_ID AND SPB.BENEFICIARY_ID!=@BENEFICIARY_ID&#xD;&#xA;ORDER BY SPAB.START_DATE DESC">
+      <parameters>
+        <parameter ID="@BENEFICIARY_ID" sfwDataType="int" />
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadPlan" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT PERSON_ACCOUNT_ID,PL.PLAN_NAME AS ISTRPLANNAME  FROM SGT_PERSON_ACCOUNT SPA &#xD;&#xA;INNER JOIN SGT_PLAN PL ON PL.PLAN_ID=SPA.PLAN_ID&#xD;&#xA;WHERE PERSON_ID=@PERSON_ID">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="PersonAccountBeneficiaryId" sfwType="Column" sfwValue="person_account_beneficiary_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="BeneficiaryId" sfwType="Column" sfwValue="beneficiary_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PersonAccountId" sfwType="Column" sfwValue="person_account_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StartDate" sfwType="Column" sfwValue="start_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="EndDate" sfwType="Column" sfwValue="end_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="DistPercent" sfwType="Column" sfwValue="dist_percent" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="11,3" />
+    <attribute ID="BeneficiaryTypeDescription" sfwType="Description" sfwValue="beneficiary_type_description" />
+    <attribute ID="BeneficiaryTypeId" sfwType="Column" sfwValue="beneficiary_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="317" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="BeneficiaryTypeValue" sfwType="Column" sfwValue="beneficiary_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="NmsoCoFlag" sfwType="Column" sfwValue="nmso_co_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPlanName" sfwValue="icdoPersonAccountBeneficiary.istrPlanName" />
+    <attribute ID="objPersonAccount" sfwType="Object" sfwEntity="entPersonAccount" sfwValue="ibusPersonAccount" />
+    <attribute ID="objPerson" sfwType="Object" sfwEntity="entPerson" sfwValue="ibusPerson" />
+    <attribute sfwDataType="string" sfwType="Property" ID="RelationshipDescription" sfwValue="icdoPersonBeneficiary.relationship_description" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPlanParticipationStatus" sfwValue="icdoPersonAccountBeneficiary.istrPlanParticipationStatus" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="IdtInitialPlanStartDate" sfwValue="icdoPersonAccountBeneficiary.idtInitialPlanStartDate" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrBeneficiaryType" sfwValue="icdoPersonAccountBeneficiary.istrBeneficiaryType" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPrimaryBeneficiaryName" sfwValue="icdoPersonAccountBeneficiary.istrPrimaryBeneficiaryName" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrPlanNameCaps" sfwValue="istrPlanNameCaps" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrBeneficiaryTypeCaps" sfwValue="istrBeneficiaryTypeCaps" />
+    <attribute ID="lintPlanId" sfwDataType="int" sfwPrivate="False" sfwValue="icdoPersonAccountBeneficiary.plan_id" sfwType="Property" />
+  </attributes>
+</entity>

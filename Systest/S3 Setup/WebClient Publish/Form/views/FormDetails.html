@@ -1,0 +1,573 @@
+﻿<div class="portlet-body file-inbound-content">
+    <ul class="nav nav-tabs" ng-init="selectedDetailTab='Details'" ng-show="!IsPrototypeDetails">
+        <li ng-class="selectedDetailTab=='Details'?'active':''" ng-click="OnSelectDetailTab('Details')">
+            <a data-toggle="tab" aria-expanded="true">
+                Details
+            </a>
+        </li>
+        <li ng-class="selectedDetailTab=='Entity'?'active':''" ng-click="OnSelectDetailTab('Entity')">
+            <a data-toggle="tab" aria-expanded="false">
+                Entity
+            </a>
+        </li>
+        <li ng-if="FormModel.dictAttributes.sfwType=='Maintenance'"
+            ng-class="selectedDetailTab=='Group'?'active':''" ng-click="OnSelectDetailTab('Group')">
+            <a data-toggle="tab" aria-expanded="false">
+                Group
+            </a>
+        </li>
+        <li ng-if="FormModel.dictAttributes.sfwType=='Maintenance'"
+            ng-class="selectedDetailTab=='Session'?'active':''" ng-click="OnSelectDetailTab('Session')">
+            <a data-toggle="tab" aria-expanded="false">
+                Session
+            </a>
+        </li>
+        <li ng-show="showExtraFieldsTab" ng-class="selectedDetailTab=='ExtraFields'?'active':''" ng-click="OnSelectDetailTab('ExtraFields')">
+            <a data-toggle="tab" aria-expanded="false">
+                Extra Fields
+            </a>
+        </li>
+    </ul>
+    <div class="tab-content form-details-label form-detail-tab-content subquery-tab-main" ng-if="!IsPrototypeDetails">
+        <div ng-class="selectedDetailTab=='Details'?'tab-pane fade active in':'tab-pane fade'" ng-show="selectedDetailTab=='Details'">
+           
+
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="control-label">Form Name(ID)</label>
+
+                        <input type="text" class="form-control input-sm" placeholder="Enter Form ID"
+                               title="{{FormModel.dictAttributes.ID}}" ng-model="FormModel.dictAttributes.ID" disabled="disabled">
+
+                    </div>
+                    <div class="form-group">
+                    <resourceintellisensetemplate resourceid='FormModel.dictAttributes.sfwResource' resourcelabelclass="col-xs-5 control-label" resourcetextboxclass="col-xs-7" propertyname="'dictAttributes.sfwResource'" model='FormModel' resourcetext="'Resources'" showresourcetext='true' showvertical="true" isinsidedialog="true"></resourceintellisensetemplate>
+                    </div>
+
+                    <div class="form-group" ng-show="FormModel.dictAttributes.sfwType=='Maintenance'">
+                        <label class="control-label">Log View Rule</label>
+                    <select class="form-control input-sm" ng-options="x.dictAttributes.ID as x.dictAttributes.ID for x in lstLogRules" title="{{FormModel.dictAttributes.sfwLogViewRule}}" ng-model="FormModel.dictAttributes.sfwLogViewRule"></select>
+
+                    </div>
+                    <div class="form-group marg-top-5">
+                        <label class="control-label">Website</label>
+                    <select class="form-control input-sm" ng-options="itm for itm in lstWebsite" title="{{FormModel.dictAttributes.WebSite}}" ng-model="FormModel.dictAttributes.WebSite"></select>
+
+                    </div>
+
+                    <div class="form-group checkbox-row">
+                    <input type="checkbox" ng-model="FormModel.dictAttributes.NoDataRequired" ng-true-value="'True'" ng-false-value="''">
+                        <label class="control-label">No Data Required</label>
+
+                    <input type="checkbox" ng-model="FormModel.dictAttributes.sfwApplyXSLT" ng-true-value="'True'" ng-false-value="'False'">
+                        <label class="control-label">Apply XSLT</label>
+
+                    </div>
+                    <div class="form-group checkbox-row">
+
+                        <input type="checkbox" ng-model="FormModel.dictAttributes.sfwActive" ng-true-value="'True'" ng-false-value="'False'">
+                        <label class="control-label">Active</label>
+                    </div>
+                </div>
+
+                <div class="col-xs-6">
+
+                    <div class="form-group">
+                        <label class="control-label">Form Title</label>
+
+                        <input type="text" class="form-control input-sm " placeholder="Enter Title"
+                               title="{{FormModel.dictAttributes.sfwTitle}}" ng-model="FormModel.dictAttributes.sfwTitle" autofocus />
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Form Title Field</label>
+
+                        <common-intellisense-without-undo-redo collection="valueTypeFormControls" selected-item="FormModel.dictAttributes.sfwTitleField" model="FormModel" propertyname="'dictAttributes.sfwTitleField'" is-reset="isReset" isinsidedialog="true" validate="true" errorprop="FormModel.errors.sfwTitleField"></common-intellisense-without-undo-redo>
+                        <!--<input type="text" class="form-control input-sm " placeholder="Enter Title Field"
+                               title="{{FormModel.dictAttributes.sfwTitleField}}" ng-model="FormModel.dictAttributes.sfwTitleField" />-->
+
+                    </div>
+
+                    <div class="form-group" ng-show="FormModel.dictAttributes.sfwType!='Wizard'">
+                        <label class="control-label">Default button</label>
+                        <div class='input-group'>
+                            <span class="info-tooltip dtc-span" ng-if="FormModel.errors.sfwDefaultButtonID" ng-attr-title="{{FormModel.errors.sfwDefaultButtonID}}" style="color:red"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                            <input type="text" class="form-control input-sm " ng-keydown="getButtonList($event)" ng-change="validateButtonName()" ng-keyup="validateButtonName()"
+                                   title="{{FormModel.dictAttributes.sfwDefaultButtonID}}" ng-model="FormModel.dictAttributes.sfwDefaultButtonID">
+                            <span class='input-group-addon button-intellisense' ng-click='showButtonList($event)'></span>
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-group" ng-show="FormModel.dictAttributes.sfwType=='Lookup'">
+                        <label class="control-label">Max Count</label>
+                        <input type="text" class="form-control input-sm" title="{{FormModel.dictAttributes.sfwMaxCount}}" ng-model="FormModel.dictAttributes.sfwMaxCount" numbers-only />
+
+                        <span class="help-block">
+                            (Default Value of 'Max Count' is defined in Web.config file)
+                        </span>
+
+
+                    </div>
+
+
+                    <div class="form-group" ng-show="FormModel.dictAttributes.sfwType!='Lookup'">
+                        <messageintellisensetemplate messageid='FormModel.dictAttributes.sfwNewMessageID' propertyname="'dictAttributes.sfwNewMessageID'"
+                                                     model='FormModel' messagetext="'New Message ID'" showmessagetext='true'
+                                                     messagelabelclass="control-label" messagetextboxclass="" errorprop="FormModel.errors.sfwNewMessageID" isvalidate="'true'" isinsidedialog="true"></messageintellisensetemplate>
+                    </div>
+
+                    <div class="form-group" ng-show="FormModel.dictAttributes.sfwType!='Lookup'">
+                        <messageintellisensetemplate messageid='FormModel.dictAttributes.sfwOpenMessageID' propertyname="'dictAttributes.sfwOpenMessageID'"
+                                                     model='FormModel' messagetext="'Open Message ID'" showmessagetext='true'
+                                                     messagelabelclass="control-label" messagetextboxclass="" errorprop="FormModel.errors.sfwOpenMessageID" isvalidate="'true'" isinsidedialog="true"></messageintellisensetemplate>
+                    </div>
+
+
+                    <div class="form-group checkbox-row">
+
+                        <input type="checkbox" ng-show="FormModel.dictAttributes.sfwType=='Wizard'" ng-model="FormModel.dictAttributes.sfwOptimizeResponse" ng-true-value="'True'" ng-false-value="'False'">
+                        <label class="control-label" ng-show="FormModel.dictAttributes.sfwType=='Wizard'">Optimize Response</label>
+
+
+                    </div>
+                </div>
+                <div class="form-group" ng-show="FormModel.dictAttributes.sfwType=='Lookup'">
+                    <label class="control-label" ng-if='!MainQuery.dictAttributes.sfwQueryRef'>Main Query</label>
+                    <label class="control-label" ng-if='MainQuery.dictAttributes.sfwQueryRef'><a style="color: #5b9bd1!important;" ng-click='NavigateToEntityQuery(MainQuery.dictAttributes.sfwQueryRef)'>Main Query</a></label>
+
+                <input name="Path" class="form-control input-sm ng-pristine ng-valid ng-not-empty ng-touched" type="text" title="{{MainQuery.dictAttributes.ID}}" ng-model="MainQuery.dictAttributes.ID" ng-blur="MainQueryIDChange(MainQuery)">
+
+                <entityqueryintellisense selecteditem="MainQuery.dictAttributes.sfwQueryRef" propertyname="'dictAttributes.sfwQueryRef'" model='MainQuery' showsearchbutton="true" onchangecallback="onMainQueryChange(MainQuery.dictAttributes.sfwQueryRef)" 
+                                         errorprop="MainQuery.errors.sfwQueryRef" validate="true" style="position: relative;" isinsidedialog="true" bln-without-parameter="true"></entityqueryintellisense>
+
+                </div>
+
+                <div class="subquery-content-form-group" ng-show="FormModel.dictAttributes.sfwType=='Lookup'">
+                    <label class="control-label">Sub Query</label>
+
+                    <div class="subquery-container">
+                        <div class="subquery-head">
+                            <span class="subquery-action">
+                            <i class="fa fa-plus" title="Add Query" ng-click="openSubQueryDialog()" ng-disabled="!MainQuery.dictAttributes.sfwQueryRef"></i>
+                                <i class="fa fa-minus" title="Delete Query"  ng-click="deleteSelectedSubQuery()" ng-disabled="!canDelete()"></i>
+                                <i class="fa fa-edit" title="Edit Query" ng-click="openEditQueryDialog()" ng-disabled="!canDelete()"></i>
+                            </span>
+
+                            <span class="subquery-prev-next">
+                                <i class="fa fa-arrow-up" title="Move Up" ng-click="moveUpClick()" ng-disabled="canmoveUp()"></i>
+                                <i class="fa fa-arrow-down" title="Move Down" ng-click="moveDownClick()" ng-disabled="canMoveDown()"></i>
+                            </span>
+                        </div>
+                        <div class="subquery-content manage-subquery-scroll">
+
+                            <table class="full-width">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th colspan="2">Field Name</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="obj in SubQueryCollection.Elements" ng-click="onSubQueryClick(obj)" ng-class="SelectedSubQuery==obj?'selected':''">
+                                        <td>
+                                            <div style="position:relative">
+                                                <span class="info-tooltip dtc-span" ng-if="obj.errors.duplicate_id" ng-attr-title="{{obj.errors.duplicate_id}}" style="color: red!important;left: 0px;"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                                                <input type="text" name="Path" title="{{obj.dictAttributes.ID}}" ng-model="obj.dictAttributes.ID" class="form-control input-sm" ng-change="validateQueryID(obj)" style="margin:5px;" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                        <entityqueryintellisense selecteditem="obj.dictAttributes.sfwQueryRef" propertyname="'dictAttributes.sfwQueryRef'" querytype="'SubSelectQuery'" model='obj' showsearchbutton="false" onchangecallback="onChangeSubQuery(QueryID)" errorprop="obj.errors.sfwQueryRef" validate="true" style="position: relative;" isinsidedialog="true"></entityqueryintellisense>
+                                            <!--<input ng-if="obj.dictAttributes.sfwQueryRef" type="button" class="form-control input-sm pull-right" style="height:16px !important; width:20px; margin-right:10px;" value=">>" ng-click="NavigateToEntityQuery(obj.dictAttributes.sfwQueryRef)" />-->
+                                        </td>
+                                        <td>
+                                            <img ng-if="obj.dictAttributes.sfwQueryRef" src="images/entity/entity_navigation.svg" class="pull-right" ng-click="NavigateToEntityQuery(obj.dictAttributes.sfwQueryRef)" />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+
+                </div>
+           
+        </div>
+
+        <div ng-class="selectedDetailTab=='Entity'?'tab-pane fade active in':'tab-pane fade'" ng-if="IsEntityTabSelected">
+            <div class="form-body">
+
+                <div class="col-xs-6">
+                    <div class="form-group">
+
+                        <label class="control-label" ng-if='!FormModel.dictAttributes.sfwEntity || FormModel.errors.invalid_entity'>Entity</label>
+                        <label class="control-label" ng-if='FormModel.dictAttributes.sfwEntity && !FormModel.errors.invalid_entity'><a style="color: #5b9bd1!important;" ng-click='openEntityClick(FormModel.dictAttributes.sfwEntity)'>Entity</a></label>
+
+                        <!--<span class="info-tooltip dtc-span" ng-if="FormModel.errors.invalid_entity" ng-attr-title="{{FormModel.errors.invalid_entity}}" style="color:red"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>-->
+                        <fileintellisensetemplate model="FormModel" filename="FormModel.dictAttributes.sfwEntity" filetype="'Entity'" propertyname="'dictAttributes.sfwEntity'" onfilechange="populateXmlMethodsForEntityChange(FormModel.dictAttributes.sfwEntity)" errorprop="FormModel.errors.invalid_entity" isinsidedialog="true"/>
+
+
+                    </div>
+
+
+                    <div class="form-group" ng-show="MethodType=='SrvMethod'">
+                        <label class="control-label">Remote Object</label>
+
+                        <select ng-options="remoteObject.dictAttributes.ID as remoteObject.dictAttributes.ID for remoteObject in RemoteObjectCollection" ng-model="FormModel.dictAttributes.sfwRemoteObject"
+                                ng-change="onRemoteObjectChange()" class="form-control input-sm full-width" />
+
+                    </div>
+
+                    <div class="form-group" ng-show="FormModel.dictAttributes.sfwType=='Lookup' && MethodType=='SrvMethod'">
+                        <label class="control-label">Grid Collection</label>
+
+                        <input type="text" class="form-control input-sm" ng-model="FormModel.dictAttributes.sfwGridCollection" />
+
+                    </div>
+
+                </div>
+                <div class="col-xs-6">
+
+                    <div class="form-group">
+                        <label class="control-label">Method Type </label>
+                        <div class="radio-btn-row ">
+                            <input type="radio" ng-show="FormModel.dictAttributes.sfwType!='Lookup'" ng-model="MethodType" value="SrvMethod" ng-change="onMethodTypeChange(MethodType)" /> <label class="control-label" ng-show="FormModel.dictAttributes.sfwType!='Lookup'">Srv Method</label>
+                            <input type="radio" ng-show="FormModel.dictAttributes.sfwType!='Lookup'" ng-model="MethodType" value="XmlMethod" ng-change="onMethodTypeChange(MethodType)" /> <label class="control-label" ng-show="FormModel.dictAttributes.sfwType!='Lookup'">Xml Method</label>
+                            <input type="checkbox" ng-show="FormModel.dictAttributes.sfwType=='Lookup'" ng-model="MethodType" ng-true-value="'SrvMethod'" ng-false-value="'XmlMethod'" ng-change="onMethodTypeChange(MethodType)" /> <label class="control-label" ng-show="FormModel.dictAttributes.sfwType=='Lookup'">Srv Method</label>
+                        </div>
+                    </div>
+                    <div class="form-group checkbox-row" ng-show="FormModel.dictAttributes.sfwType!='Lookup'">
+                      
+                            <input type="checkbox" name="Same as New" ng-model="FormModel.IsSameAsNew" ng-change="IsSameAsNewChecked()" ng-disabled="IsSameAsNewDisabled" /> <label class="control-label"> Same As New</label>
+                        
+                    </div>
+
+                    <div class="form-group" ng-show="FormModel.dictAttributes.sfwType=='Lookup' && MainQuery && (MainQuery && MainQuery.dictAttributes.sfwQueryRef)">
+                        <label class="control-label" ng-if="MethodType=='SrvMethod'">Load Method</label>
+
+                        <select ng-options="method.dictAttributes.ID as method.dictAttributes.ID for method  in SrvMethodCollection" ng-model="MainQuery.dictAttributes.sfwMethodName" class="form-control input-sm full-width" ng-if="MethodType=='SrvMethod'" />
+
+                    </div>
+                </div>
+
+
+
+            </div>
+            <div class="form-group" ng-hide="FormModel.dictAttributes.sfwType=='Lookup'">
+                <div class="col-xs-12" ng-show="MethodType=='XmlMethod'">
+                    <div class="col-xs-6">
+
+                        <div class="form-group">
+                            <div class="panel  panel-primary">
+                                <div class="panel-heading">New Method</div>
+                                <div class="panel-body">
+                                    <div class="form-body entity-details">
+                                        <label class="control-label col-xs-5" ng-if="SelectedNewMethod.dictAttributes.sfwMethodName && (SelectedNewMethod.dictAttributes.sfwMethodName != 'NewObject')"><u><a style="color: #5b9bd1!important;" ng-click='selectXmlMethodClick(SelectedNewMethod.dictAttributes.sfwMethodName)'>Method Name</a></u></label>
+                                        <div class="col-xs-12 entity-selection">
+                                            <common-intellisense-without-undo-redo collection="XmlNewMethodsCollection" display-property-name="'ID'" selected-property-name="'ID'" selected-item="SelectedNewMethod.dictAttributes.sfwMethodName" change-callback="populateParamtersForNew(SelectedNewMethod)" model="SelectedNewMethod" propertyname="'dictAttributes.sfwMethodName'" is-reset="isReset" isinsidedialog="true" validate="true" errorprop="SelectedNewMethod.errors.sfwMethodName"></common-intellisense-without-undo-redo>
+                                            <!--<select class="form-control input-sm full-width" ng-options="method.dictAttributes.ID as method.dictAttributes.ID for method in XmlNewMethodsCollection"
+                                                    title="{{SelectedNewMethod.dictAttributes.sfwMethodName}}" ng-model="SelectedNewMethod.dictAttributes.sfwMethodName"
+                                                    ng-change="populateParamtersForNew(SelectedNewMethod)"></select>-->
+                                        </div>
+
+
+                                        <div class="form-group entity-content">
+
+                                            <ul ng-if="paramtersForNewMethod.length>0">
+                                                <li ng-repeat="item in paramtersForNewMethod" style="list-style:none">
+                                                    <div>
+                                                        <label ng-bind="item.dictAttributes.ID"></label>
+                                                    </div>
+
+                                                    <!--<div>
+
+                                                        <span contenteditable="false" class="dashoard-rules-span" data-placeholder="Parameter">{{item.dictAttributes.sfwParameter}}</span>
+                                                        <span contenteditable="false" class="dashoard-rules-span" data-placeholder="Load Type">{{item.dictAttributes.sfwLoadType}}</span>
+                                                        <span contenteditable="false" class="dashoard-rules-span" data-placeholder="Load Source">{{item.dictAttributes.sfwLoadSource}}</span>
+
+                                                    </div>-->
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <div class="panel  panel-primary">
+                                <div class="panel-heading">Update Method</div>
+                                <div class="panel-body">
+
+                                    <div class="form-body entity-details">
+                                        <label class="control-label col-xs-5" ng-if='SelectedUpdateMethod.dictAttributes.sfwMethodName'><u><a style="color: #5b9bd1!important;" ng-click='selectXmlMethodClick(SelectedUpdateMethod.dictAttributes.sfwMethodName)'>Method Name</a></u></label>
+                                        <div class="col-xs-12 entity-selection">
+                                            <common-intellisense-without-undo-redo collection="XmlUpdateMethodsCollection" display-property-name="'ID'" selected-property-name="'ID'" selected-item="SelectedUpdateMethod.dictAttributes.sfwMethodName" change-callback="populateParamtersForUpdate(SelectedUpdateMethod)" model="SelectedUpdateMethod" propertyname="'dictAttributes.sfwMethodName'" is-reset="isReset" is-disable="FormModel.IsSameAsNew" isinsidedialog="true" validate="true" errorprop="SelectedUpdateMethod.errors.sfwMethodName"></common-intellisense-without-undo-redo>
+                                            <!--<select class="form-control input-sm full-width" ng-options="method.dictAttributes.ID as method.dictAttributes.ID for method  in XmlUpdateMethodsCollection"
+                                                    title="{{SelectedUpdateMethod.dictAttributes.sfwMethodName}}" ng-model="SelectedUpdateMethod.dictAttributes.sfwMethodName"
+                                                    ng-change="populateParamtersForUpdate(SelectedUpdateMethod)"
+                                                    ng-disabled="FormModel.IsSameAsNew"></select>-->
+                                        </div>
+
+                                        <div class="form-group entity-content">
+                                            <ul ng-if="paramtersForUpdateMethod.length>0">
+                                                <li ng-repeat="item in paramtersForUpdateMethod">
+
+                                                    <div>
+                                                        <label ng-bind="item.dictAttributes.ID"></label>
+                                                    </div>
+
+                                                    <!--<div>
+                                                        <span contenteditable="false" class="dashoard-rules-span" data-placeholder="Parameter">{{item.dictAttributes.sfwParameter}}</span>
+                                                        <span contenteditable="false" class="dashoard-rules-span" data-placeholder="Load Type">{{item.dictAttributes.sfwLoadType}}</span>
+                                                        <span contenteditable="false" class="dashoard-rules-span" data-placeholder="Load Source">{{item.dictAttributes.sfwLoadSource}}</span>
+                                                    </div>-->
+
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-detail-border" ng-show="MethodType=='SrvMethod'">
+                    <div class="col-xs-6">
+
+                        <div class="form-group">
+                            <div class="panel  panel-primary">
+                                <div class="panel-heading">New Method</div>
+                                <div class="panel-body">
+                                    <div class="form-body entity-details entity-details-list-width">
+
+                                        <div class="col-xs-12 entity-selection">
+                                            <common-intellisense-without-undo-redo collection="SrvNewMethodCollection" display-property-name="'ID'" selected-property-name="'ID'" selected-item="SelectedNewMethod.dictAttributes.sfwMethodName" change-callback="populateSrvParamtersForNew(SelectedNewMethod)" model="SelectedNewMethod" propertyname="'dictAttributes.sfwMethodName'" is-reset="isReset" isinsidedialog="true"></common-intellisense-without-undo-redo>
+                                            <!--<select class="form-control input-sm full-width" ng-options="method.dictAttributes.ID as method.dictAttributes.ID for method in SrvNewMethodCollection" title="{{SelectedNewMethod.dictAttributes.sfwMethodName}}" ng-model="SelectedNewMethod.dictAttributes.sfwMethodName" ng-change="populateSrvParamtersForNew(SelectedNewMethod)"></select>-->
+                                        </div>
+
+
+                                        <div class="form-group entity-content entity-details-list-width">
+
+                                            <ul ng-if="paramtersForNewMethod.length>0">
+                                                <li ng-repeat="item in paramtersForNewMethod" style="list-style:none">
+                                                    <div>
+                                                        <label ng-bind="item.dictAttributes.ID"></label>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <div class="panel  panel-primary">
+                                <div class="panel-heading">Update Method</div>
+                                <div class="panel-body">
+
+                                    <div class="form-body entity-details entity-details-list-width">
+
+                                        <div class="col-xs-12 entity-selection">
+                                            <common-intellisense-without-undo-redo collection="SrvUpdateMethodCollection" display-property-name="'ID'" selected-property-name="'ID'" selected-item="SelectedUpdateMethod.dictAttributes.sfwMethodName" change-callback="populateSrvParamtersForUpdate(SelectedUpdateMethod)" model="SelectedUpdateMethod" propertyname="'dictAttributes.sfwMethodName'" is-reset="isReset" is-disable="FormModel.IsSameAsNew" isinsidedialog="true"></common-intellisense-without-undo-redo>
+                                            <!--<select class="form-control input-sm full-width" ng-options="method.dictAttributes.ID as method.dictAttributes.ID for method  in SrvUpdateMethodCollection"
+                                                    title="{{SelectedUpdateMethod.dictAttributes.sfwMethodName}}" ng-model="SelectedUpdateMethod.dictAttributes.sfwMethodName"
+                                                     ng-change="populateSrvParamtersForUpdate(SelectedUpdateMethod)"
+                                                    ng-disabled="FormModel.IsSameAsNew"></select>-->
+                                        </div>
+
+                                        <div class="form-group entity-content">
+                                            <ul ng-if="paramtersForUpdateMethod.length>0">
+                                                <li ng-repeat="item in paramtersForUpdateMethod">
+                                                    <div>
+                                                        <label ng-bind="item.dictAttributes.ID"></label>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div ng-if="IsGroupTabSelected" ng-class="selectedDetailTab=='Group'?'tab-pane fade active in':'tab-pane fade'">
+            <div class="form-body">
+
+
+                    <div class="form-group">
+                    <!--<label class="control-label" ng-if='!FormModel.dictAttributes.sfwInitialLoadGroup || ! FormModel.dictAttributes.sfwInitialLoadGroup.trim()'>Initial Load Group</label>
+                        <label class="control-label" ng-if='FormModel.dictAttributes.sfwInitialLoadGroup && FormModel.dictAttributes.sfwInitialLoadGroup.trim()'><a style="color: #5b9bd1!important;" ng-click='selectGroupClick(FormModel.dictAttributes.sfwInitialLoadGroup,"sfwInitialLoadGroup")'>Initial Load Group </a></label>
+                        <div class='input-group'>
+                            <span class="info-tooltip dtc-span" ng-if="FormModel.errors.sfwInitialLoadGroup" ng-attr-title="{{FormModel.errors.sfwInitialLoadGroup}}" style="color:red"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                            <input type="text" class="form-control input-sm " placeholder="Enter Initial Load Group"
+                               title="{{FormModel.dictAttributes.sfwInitialLoadGroup}}" ng-model="FormModel.dictAttributes.sfwInitialLoadGroup" ng-keydown="getGroupList($event)" ng-change="validdateGroupList('sfwInitialLoadGroup');" ng-keyup="validdateGroupList('sfwInitialLoadGroup');">
+                            <span class='input-group-addon button-intellisense' ng-click="showGroupList($event);"></span>
+
+                    </div>-->
+                    <rulegroupintellisensewithoutundoredo model="FormModel" modelvalue="FormModel.dictAttributes.sfwInitialLoadGroup" entityid="FormModel.dictAttributes.sfwEntity" propertyname="'dictAttributes.sfwInitialLoadGroup'" label-text="Initial Load Group" label-class="control-label col-xs-5" errorprop="FormModel.errors.sfwInitialLoadGroup" validate="true" callback="OkClick()"></rulegroupintellisensewithoutundoredo>
+                </div>
+
+
+                    <div class="form-group">
+                    <!--<label class="control-label " ng-if='!FormModel.dictAttributes.sfwHardErrorGroup || !FormModel.dictAttributes.sfwHardErrorGroup.trim()'>Hard Error Group </label>
+                        <label class="control-label " ng-if='FormModel.dictAttributes.sfwHardErrorGroup && FormModel.dictAttributes.sfwHardErrorGroup.trim()'><a style="color: #5b9bd1!important;" ng-click='selectGroupClick(FormModel.dictAttributes.sfwHardErrorGroup,"sfwHardErrorGroup")'>Hard Load Group </a></label>
+                        <div class='input-group'>
+                            <span class="info-tooltip dtc-span" ng-if="FormModel.errors.sfwHardErrorGroup" ng-attr-title="{{FormModel.errors.sfwHardErrorGroup}}" style="color:red"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                            <input type="text" class="form-control input-sm " placeholder="Enter Hard Error Group"
+                               title="{{FormModel.dictAttributes.sfwHardErrorGroup}}" ng-model="FormModel.dictAttributes.sfwHardErrorGroup" ng-keydown="getGroupList($event)" ng-change="validdateGroupList('sfwHardErrorGroup');" ng-keyup="validdateGroupList('sfwHardErrorGroup');">
+                            <span class='input-group-addon button-intellisense' ng-click="showGroupList($event);"></span>
+
+                    </div>-->
+                    <rulegroupintellisensewithoutundoredo model="FormModel" modelvalue="FormModel.dictAttributes.sfwHardErrorGroup" entityid="FormModel.dictAttributes.sfwEntity" propertyname="'dictAttributes.sfwHardErrorGroup'" label-text="Hard Error Group" label-class="control-label col-xs-5" errorprop="FormModel.errors.sfwHardErrorGroup" validate="true" callback="OkClick()"></rulegroupintellisensewithoutundoredo>
+                </div>
+
+
+            </div>
+        </div>
+
+        <div ng-if="IsSessionTabSelected" ng-class="selectedDetailTab=='Session'?'tab-pane fade active in':'tab-pane fade'" class="full-height">
+            <div class="form-body full-height">
+                <div class="form-group full-height">
+                    <div class="col-xs-5 full-height no-left-padding">
+                        <div class="panel panel-primary full-height">
+                            <div class="panel-heading">
+                                Entity Tree
+                            </div>
+                            <div class="form-session-fields-list form-content">
+                                <newentityobjecttreetemplate ischeckboxvisible="true" isallownavigation="false" selectedfield="SessionFields.SelecetdField" showonlycollection="false" lstdisplayentity="SessionFields.LstDisplayedEntities" selectedentityobjecttreefields="SessionFields.lstselectedobjecttreefields" entityname="FormModel.dictAttributes.sfwEntity"></newentityobjecttreetemplate>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-1 add-btn-adjust sessions-tab">
+                        <input type="button" class="dialog-btn" value="Add" ng-click="addSessionFields()" />
+                    </div>
+                    <div class="col-xs-6 full-height">
+                        <div class="panel panel-primary full-height">
+                            <div class="panel-heading">
+                                Session Fields
+                            </div>
+                            <div class="col-xs-12 sorting_asc ui-resizable" tabindex="0" aria-controls="sample_editable_1" aria-label="Attribute activate to sort column ascending" aria-sort="ascending">
+                                <div class="panel-icons">
+                                    <i class="fa fa-minus" ng-click="deleteSelectedRow()" ng-disabled="!canDeleteRow()"></i>
+                                    <i class="fa fa-arrow-up" ng-click="moveSelectedRowUp()" ng-disabled="canmoveSelectedRowUp()"></i>
+                                    <i class="fa fa-arrow-down" ng-click="moveSelectedRowDown()" ng-disabled="canmoveSelectedRowDown()"></i>
+                                </div>
+                            </div>
+                            <div class="panel-body details-session-panel-body">
+                              
+                               
+
+                                <table class="sws-table" role="grid">
+                                    <thead>
+
+                                        <!--<tr role="heading">
+                                            <th tabindex="0" class="sorting_asc ui-resizable padding-0" aria-controls="sample_editable_1" aria-label="Attribute activate to sort column ascending" aria-sort="ascending" rowspan="1" colspan="13">
+                                                <div class="table-hader-actions">
+                                                    <i class="fa fa-minus" ng-click="deleteSelectedRow()" ng-disabled="!canDeleteRow()"></i>
+                                                    <i class="fa fa-arrow-up" ng-click="moveSelectedRowUp()" ng-disabled="canmoveSelectedRowUp()"></i>
+                                                    <i class="fa fa-arrow-down" ng-click="moveSelectedRowDown()" ng-disabled="canmoveSelectedRowDown()"></i>
+                                                </div>
+                                                <div class="ui-resizable-handle ui-resizable-e" style="z-index: 90;"></div>
+                                            </th>
+                                        </tr>-->
+
+                                        <tr>
+                                            <th>Session ID</th>
+                                            <th>Entity Field</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="obj in SessionFields.Elements" ng-click="selectedSessionFieldClick(obj)" ng-class="{'selected':obj==selectedCurrentSessionRow}">
+                                            <td>
+                                                <div style="position:relative">
+                                                    <span class="info-tooltip dtc-span" ng-if="obj.errors.empty_id || obj.errors.inValid_id || obj.errors.duplicate_id" ng-attr-title="{{obj.errors.empty_id || obj.errors.inValid_id || obj.errors.duplicate_id}}" style="color:red !important"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                                                    <input type="text" class="form-control form-filter input-sm" title="{{obj.dictAttributes.ID}}" ng-model="obj.dictAttributes.ID" ng-change="validateSeesionID(obj)" ng-keyup="validateSeesionID(obj)" />
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div style="position:relative">
+                                                    <span class="info-tooltip dtc-span" ng-if="obj.errors.sfwEntityField" ng-attr-title="{{obj.errors.sfwEntityField}}" style="color:red !important"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                                                    <input type="text" class="form-control form-filter input-sm" title="{{obj.dictAttributes.sfwEntityField}}" ng-model="obj.dictAttributes.sfwEntityField" disabled="disabled" />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div ng-class="selectedDetailTab=='ExtraFields'?'tab-pane fade active in':'tab-pane fade'">
+            <extra-field-directive extra-field-model="objFormExtraFields" is-tab="$parent.showExtraFieldsTab" obj-fn="objDirFunctions" form-name="$parent.formName" is-steps="false"></extra-field-directive>
+        </div>
+    </div>
+    <div class="tab-content form-details-label form-detail-tab-content" ng-if="IsPrototypeDetails">
+        <div class="form-body">
+
+            <div class="col-xs-6">
+
+                <div class="form-group">
+                    <label class="control-label">Form Name(ID)</label>
+
+                    <input type="text" class="form-control input-sm" placeholder="Enter Form ID"
+                           title="{{FormModel.dictAttributes.ID}}" ng-model="FormModel.dictAttributes.ID" disabled="disabled">
+
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Website </label>
+
+                    <select class="form-control input-sm" ng-options="itm for itm in lstWebsite" title="{{FormModel.dictAttributes.WebSite}}" ng-model="FormModel.dictAttributes.WebSite"></select>
+
+                </div>
+
+            </div>
+            <div class="col-xs-6">
+                <div class="form-group">
+                    <label class="control-label">Form Title</label>
+
+                    <input type="text" class="form-control input-sm " placeholder="Enter Title"
+                           title="{{FormModel.dictAttributes.sfwTitle}}" ng-model="FormModel.dictAttributes.sfwTitle">
+
+                </div>
+                <div class="form-group checkbox-row">
+                    <input type="checkbox" ng-model="FormModel.dictAttributes.sfwActive" ng-true-value="'True'" ng-false-value="'False'">
+                    <label class="control-label">Active</label>
+
+                    <input type="checkbox" ng-model="FormModel.dictAttributes.sfwApplyXSLT" ng-true-value="'True'" ng-false-value="'False'">
+                    <label class="control-label">Apply XSLT</label>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-actions">
+    <div class="col-xs-8 text-left">
+        <span class="alert-error-msg" ng-bind="FormDetailsErrorMessage"></span>
+    </div>
+    <div class="col-xs-4">
+        <input type="button" value="OK" class="dialog-btn-default" ng-click="OkClick()" ng-disabled="validateFormDetails()" />
+        <input type="button" value="Cancel" class="dialog-btn" ng-click="closeDetailDialog()" />
+    </div>
+</div>

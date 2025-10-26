@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entJsRhicRemittanceAllocation" sfwMainCDO="icdoJsRhicRemittanceAllocation" sfwType="BusinessRule" sfwActive="True" sfwStatus="Review" sfwObjectID="busJsRhicRemittanceAllocation" sfwTableName="sgt_js_rhic_remittance_allocation">
+  <queries>
+    <query ID="GetJSRHICRemittanceAllocationAmount" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select A.Remittance_id,A.ORG_ID, Sum(isnull(A.Remittance_amount,0)) Remittace_amount,&#xD;&#xA;&#xD;&#xA;Sum(Isnull(b.allocated_amount,0)) Allocated_amount,(Sum(isnull(A.Remittance_amount,0))-(Sum(Isnull(b.allocated_amount,0)))) as Available_Amount&#xD;&#xA;&#xD;&#xA;From SGT_REMITTANCE A&#xD;&#xA;    &#xD;&#xA;      Left Join &#xD;&#xA;&#xD;&#xA;      SGT_JS_RHIC_REMITTANCE_ALLOCATION B on  A.Remittance_id = b.remittance_id&#xD;&#xA;&#xD;&#xA;WHERE A.ORG_ID = (Select Org_id from SGT_ORGANIZATION Inner Join &#xD;&#xA;&#xD;&#xA;      sgs_code_value  on Org_code = data1 &#xD;&#xA;&#xD;&#xA;      where code_value = 'JSRH' AND CODE_ID = 52) and A.REMITTANCE_TYPE_VALUE='JSRD'&#xD;&#xA;&#xD;&#xA;group by A.ORG_ID, a.Remittance_id &#xD;&#xA;&#xD;&#xA;having Sum(isnull(Remittance_amount,0)) &lt;&gt; Sum(Isnull(b.allocated_amount,0))&#xD;&#xA;">
+      <parameters />
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="RhicRemittanceAllocationId" sfwType="Column" sfwValue="rhic_remittance_allocation_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="RemittanceId" sfwType="Column" sfwValue="remittance_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="IbsHeaderId" sfwType="Column" sfwValue="ibs_header_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="JsRhicBillId" sfwType="Column" sfwValue="js_rhic_bill_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AllocatedAmount" sfwType="Column" sfwValue="allocated_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" sfwRequired="False" />
+    <attribute ID="RhicAllocationStatusDescription" sfwType="Description" sfwValue="rhic_allocation_status_description" />
+    <attribute ID="RhicAllocationStatusId" sfwType="Column" sfwValue="rhic_allocation_status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="1704" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="RhicAllocationStatusValue" sfwType="Column" sfwValue="rhic_allocation_status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+  </attributes>
+</entity>

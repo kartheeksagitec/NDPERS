@@ -1,0 +1,206 @@
+﻿<form ID="wfmAuditLogLookup" sfwType="Lookup" sfwEntity="entPERSAudit" sfwTitle="Audit Log Lookup" sfwActive="True" sfwStatus="Review" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmAuditLogLookup" sfwRemoteObject="srvAudit" sfwGridCollection="busPERSAudit.iclbLookupResult">
+  <initialload>
+    <query sfwQueryRef="entPERSAudit.PersAuditLookup" ID="entAuditLog" sfwMethodName="LoadSearchResult" />
+  </initialload>
+  <sfwTable>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlCriteria" sfwCaption="Criteria">
+          <sfwTable ID="tblCriteria">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capFormName" Text="Form Name : " AssociatedControlID="txtFormName" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtFormName" sfwDataField="form_name" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capChangeType" Text="Change Type : " AssociatedControlID="ddlChangeType" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlChangeType" sfwDataField="change_type">
+                  <ListItem Text="All" />
+                  <ListItem Text="Insert" Value="I" />
+                  <ListItem Text="Update" Value="U" />
+                  <ListItem Text="Delete" Value="D" />
+                  <ListItem Text="View" Value="V" />
+                </sfwDropDownList>
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capTableName" Text="Table Name : " AssociatedControlID="txtTableName" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtTableName" sfwDataField="table_name" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capBoPrimaryKey" Text="Primary Key : " AssociatedControlID="txtBoPrimaryKey" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtBoPrimaryKey" sfwDataField="primary_key" sfwDataType="Numeric" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capModifiedDateFrom" sfwIsCaption="True" Text="Modified Date  From : " />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtModifiedDateFrom" sfwDataField="convert(datetime, convert(varchar(10), a.modified_date, 101))" sfwOperator="between" sfwRelatedControl="txtModifiedDateTo" sfwDataType="datetime" sfwDataFormat="{0:d}" />
+                <CompareValidator ID="valModifiedDateFrom" Text="*" Operator="DataTypeCheck" ControlToValidate="txtModifiedDateFrom" Type="Date" ErrorMessage="Modified Date : From must be in mm/dd/yyyy format. " />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capModifiedDateTo" sfwIsCaption="True" Text="Modified Date  To : " />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtModifiedDateTo" sfwDataField="convert(datetime, convert(varchar(10), a.modified_date, 101))" sfwOperator="between" sfwDataType="datetime" sfwDataFormat="{0:d}" />
+                <CompareValidator ID="valModifiedDateTo" Text="*" Operator="DataTypeCheck" ControlToValidate="txtModifiedDateTo" Type="Date" ErrorMessage="Modified Date : To must be in mm/dd/yyyy format." />
+                <CompareValidator ID="valModifiedDateRange" Text="*" Operator="GreaterThanEqual" ControlToValidate="txtModifiedDateTo" ControlToCompare="txtModifiedDateFrom" ErrorMessage="Modified Date : To cannot be less than Modified Date : From." Type="Date" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn />
+              <sfwColumn />
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capPersonId" Text="PERSLink ID :" AssociatedControlID="txtPersonId" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtPersonId" sfwDataField="person_id" sfwDataType="Numeric" sfwQueryID="entAuditLog" sfwOperator="=" />
+                <sfwImageButton ID="btnRetrievePerson" ImageAlign="AbsMiddle" ImageUrl="~/Image/Lookup.jpg" sfwActiveForm="wfmPersonLookup" sfwMethodName="btnRetrieve_Click" sfwRelatedControl="txtPersonId" sfwSelectedIndex="PersonId" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capOrgCode" Text="Org Code ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtOrgCode" sfwDataField="o.org_code" sfwOperator="=" sfwQueryID="entAuditLog" />
+                <sfwImageButton ID="btnRetrieve" ImageAlign="AbsMiddle" ImageUrl="~/Image/Lookup.jpg" sfwActiveForm="wfmOrganizationLookup" sfwMethodName="btnRetrieve_Click" sfwRelatedControl="txtOrgCode" sfwSelectedIndex="OrgCode" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capModifiedBy" Text="Modified By : " AssociatedControlID="ddlModifiedBy" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlModifiedBy" sfwDataField="a.modified_by" sfwLoadType="Query" sfwLoadSource="entUser.LOADACTIVEUSER" DataValueField="user_id" DataTextField="user_id" sfwFirstItemText="All" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capGuidTransactionId" Text="Transaction Id : " AssociatedControlID="txtGuidTransactionId" sfwIsCaption="True" Visible="False" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtGuidTransactionId" sfwDataField="guid_transaction_id" Visible="False" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnSearch" sfwMethodName="btnSearch_Click" sfwOperateOn="tblCriteria" Text="Search" />
+                <sfwButton ID="btnReset" sfwMethodName="btnReset_Click" sfwOperateOn="tblCriteria" Text="Reset" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwButton ID="btnStoreSearch" sfwMethodName="btnStoreUserDefaults_Click" sfwOperateOn="tblCriteria" Text="Store Search" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlResult" sfwCaption="Search Results">
+          <sfwTable ID="tblResult" CssClass="Table">
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnOpen" ImageUrl="~/Image/gOpen.gif" sfwMethodName="btnOpen_Click" sfwRelatedControl="dgrResult" Text="Open" sfwActiveForm="wfmAuditLogMaintenance" sfwNavigationParameter="aintPrimaryKey=AuditLogId" />
+                <sfwButton ID="btnExportExcel" ImageUrl="~/Image/gExport.gif" sfwMethodName="btnColumnsToExport_Click" sfwRelatedControl="dgrResult" Text="Export To Excel" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwGridView ID="dgrResult" AllowPaging="True" AllowSorting="True" sfwSelection="Many">
+                  <Columns>
+                    <TemplateField HeaderText="Log ID">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="AuditLogId" sfwLinkable="True" sfwRelatedControl="btnOpen" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Form Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="FormName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Table Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="TableName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Change">
+                      <ItemTemplate>
+                        <sfwDropDownList ID="ddlDropDownList" sfwEntityField="ChangeType" sfwTwoWayBinding="False" sfwReadOnlyRule="MakeReadOnly">
+                          <ListItem Text="Insert" Value="I" />
+                          <ListItem Text="Update" Value="U" />
+                          <ListItem Text="Delete" Value="D" />
+                          <ListItem Text="View" Value="V" />
+                        </sfwDropDownList>
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Key">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="PrimaryKey" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Transaction Id" Visible="False" sfwShowInExportToExcel="True">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="GuidTransactionId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="PERSLink ID">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="PersonId" sfwShowZero="True" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Person Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objPerson.FullName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Org Code ID">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objOrganization.OrgCode" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Org Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objOrganization.OrgName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Modified By">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="ModifiedBy" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Modified Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="ModifiedDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="OrgId" Visible="False" sfwShowInExportToExcel="True">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objOrganization.OrgId" sfwShowZero="True" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+  </sfwTable>
+  <ExtraFields />
+</form>

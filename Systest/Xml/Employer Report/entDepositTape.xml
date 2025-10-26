@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entDepositTape" sfwActive="True" sfwStatus="Valid" sfwRemoteObject="srvEmployerReport" sfwType="BusinessRule" sfwMainCDO="icdoDepositTape" sfwReadOnlyRule="Rule Check Deposit tape is frozen(Deposits are frozen 30 days after the Deposit Date)" sfwObjectID="busDepositTape" sfwTableName="sgt_deposit_tape">
+  <rules>
+    <rule ID="Rule Check Deposit tape is frozen(Deposits are frozen 30 days after the Deposit Date)" sfwExpression="(this.IsDepositDateValid() == False)" sfwObjectBased="True" />
+    <rule ID="Rule Check If Apply Button Visible" sfwExpression="(this.IsDepositTapeValid() == True)" sfwObjectBased="True" />
+    <rule ID="Rule Check If Bank Account is Null" sfwMessageId="4104" sfwExpression="(string.IsNullOrEmpty(this.icdoDepositTape.bank_account_value))" sfwObjectBased="True" />
+    <rule ID="Rule Check If Deposit Amount LessthanEquals Zero" sfwMessageId="4106" sfwExpression="(this.icdoDepositTape.total_amount &lt;= 0)" sfwObjectBased="True" />
+    <rule ID="Rule Check If Deposit Date is not Valid" sfwMessageId="4102" sfwExpression="(this.IsDepositDateValid() == False) &amp;&amp; &#xA;(this.icdoDepositTape.deposit_date != DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="Rule Check If Deposit Date is Null" sfwMessageId="4103" sfwExpression="(this.icdoDepositTape.deposit_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="Rule Check If Deposit Method is Null" sfwMessageId="4105" sfwExpression="(string.IsNullOrEmpty(this.icdoDepositTape.deposit_method_value))" sfwObjectBased="True" />
+    <rule ID="Rule Check If Deposit Tape is Valid Status" sfwMessageId="4107" sfwExpression="(this.icdoDepositTape.status_value == &quot;VALD&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule Check Visible New Button" sfwExpression="(this.IsNewButtonVisible() == True)" sfwObjectBased="True" />
+    <rule ID="Rule Check Visible Pull ACH Button" sfwExpression="(this.icdoDepositTape.deposit_method_value == &quot;ACHP&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule Check Visible Validate Button" sfwExpression="(this.IsValidateButtonVisible() == True)" sfwObjectBased="True" />
+    <rule ID="Rule Save Button If Status is Review or Valid Deposit Date" sfwExpression="(this.IsSaveButtonVisible() == True)" sfwObjectBased="True" />
+    <rule ID="VisibleRulePulACHRetirement" sfwExpression="!(this.icdoDepositTape.pull_ach_status_value == &quot;APCM&quot;) &amp;&amp; &#xA;(this.icdoDepositTape.deposit_method_value == &quot;ACHP&quot;) &amp;&amp; &#xA;((this.iblnPullACHForRetirement == True) || &#xA;(this.iblnPullACHForPurchase == True))" sfwObjectBased="True" />
+    <rule ID="VisibleRulePullACHIBSInsurance" sfwExpression="!(this.icdoDepositTape.pull_ach_status_value == &quot;APCM&quot;) &amp;&amp; &#xA;(this.iblnPullACHForIBS == True) &amp;&amp; &#xA;(this.icdoDepositTape.deposit_method_value == &quot;ACHP&quot;)" sfwObjectBased="True" />
+    <rule ID="VisibleRulePullACHInsurance" sfwExpression="!(this.icdoDepositTape.pull_ach_status_value == &quot;APCM&quot;) &amp;&amp; &#xA;(this.iblnPullACHForInsurance == True) &amp;&amp; &#xA;(this.icdoDepositTape.deposit_method_value == &quot;ACHP&quot;)" sfwObjectBased="True" />
+    <rule ID="VisibleRulePullACHPurchase" sfwExpression="!(this.icdoDepositTape.pull_ach_status_value == &quot;APCM&quot;) &amp;&amp; &#xA;(this.iblnPullACHForPurchase == True) &amp;&amp; &#xA;(this.icdoDepositTape.deposit_method_value == &quot;ACHP&quot;)" sfwObjectBased="True" />
+    <rule ID="VisibleRullPullACHDeferredComp" sfwExpression="!(this.icdoDepositTape.pull_ach_status_value == &quot;APCM&quot;) &amp;&amp; &#xA;(this.iblnPullACHForDeferredComp == True) &amp;&amp; &#xA;(this.icdoDepositTape.deposit_method_value == &quot;ACHP&quot;)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForBtnAllocateRemittance" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.icdoDepositTape.deposit_method_value == &quot;ACHP&quot;)  &amp;&amp; &#xA;(this.icdoDepositTape.DepositsCount &gt; 0) &amp;&amp;&#xA;(this.IsDepositOrgIdNotExist()==True)" />
+    <rule ID="Rule Check If Deposit Date is exceeds 5 days" sfwRuleType="Validation" sfwObjectBased="True" sfwMessageId="10411" sfwExpression="(this.icdoDepositTape.deposit_date != DateTime.MinValue) &amp;&amp; (this.icdoDepositTape.deposit_date &gt; RFunc.AddDays(RFunc.CurrentDateTime(),5))" />
+  </rules>
+  <delete>
+    <property ID="lstDeposit" sfwMethodName="LoadDeposits" />
+  </delete>
+  <checklist />
+  <initialload>
+    <item ID="Rule Save Button If Status is Review or Valid Deposit Date" sfwMode="Update" sfwStatus="Active" />
+    <item ID="Rule Check Deposit tape is frozen(Deposits are frozen 30 days after the Deposit Date)" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check Visible New Button" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check Visible Validate Button" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check Visible Pull ACH Button" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRulePulACHRetirement" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRulePullACHInsurance" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRullPullACHDeferredComp" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRulePullACHIBSInsurance" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRulePullACHPurchase" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Apply Button Visible" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForBtnAllocateRemittance" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="Rule Check If Deposit Date is not Valid" sfwMode="New" sfwStatus="Active" />
+    <item ID="Rule Check If Deposit Date is Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Bank Account is Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Deposit Method is Null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Deposit Amount LessthanEquals Zero" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Deposit Date is exceeds 5 days" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete>
+    <item ID="Rule Check If Deposit Tape is Valid Status" sfwMode="All" sfwStatus="Active" />
+  </validatedelete>
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <expressionfields />
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from sgt_deposit_tape NOLOCK">
+      <parameters />
+    </query>
+    <query ID="LoadPullACHStatusReadyRecords" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT DEPOSIT_TAPE_ID, DEPOSIT_DATE, STATUS_ID, STATUS_VALUE, DEPOSIT_METHOD_ID, DEPOSIT_METHOD_VALUE, BANK_ACCOUNT_ID, BANK_ACCOUNT_VALUE, TOTAL_AMOUNT, PULL_ACH_STATUS_ID, PULL_ACH_STATUS_VALUE, CREATED_BY, CREATED_DATE, MODIFIED_BY, MODIFIED_DATE, UPDATE_SEQ&#xD;&#xA;FROM  SGT_DEPOSIT_TAPE NOLOCK&#xD;&#xA;WHERE  DEPOSIT_METHOD_VALUE = 'ACHP'&#xD;&#xA;   AND PULL_ACH_STATUS_VALUE = 'APRD'">
+      <parameters />
+    </query>
+    <query ID="CreateDepositTape" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="INSERT INTO SGT_DEPOSIT_TAPE&#xD;&#xA;(&#xD;&#xA;DEPOSIT_TAPE_ID, DEPOSIT_DATE, STATUS_ID, STATUS_VALUE, DEPOSIT_METHOD_ID, DEPOSIT_METHOD_VALUE, BANK_ACCOUNT_ID, BANK_ACCOUNT_VALUE, TOTAL_AMOUNT, PULL_ACH_STATUS_ID, PULL_ACH_STATUS_VALUE, CREATED_BY, CREATED_DATE, MODIFIED_BY, MODIFIED_DATE, UPDATE_SEQ&#xD;&#xA;)&#xD;&#xA;SELECT &#xD;&#xA; @PAYMENTDATE AS DEPOSIT_DATE, &#xD;&#xA; 1502 AS STATUS_ID,&#xD;&#xA; 'VALD' AS STATUS_VALUE,&#xD;&#xA; NULL AS ACH_RETRIEVE_FLAG,&#xD;&#xA; 1501 AS DEPOSIT_METHOD_ID,&#xD;&#xA; 'CHEK' AS DEPOSIT_METHOD_VALUE,&#xD;&#xA; 1201 AS BANK_ACCOUNT_ID,&#xD;&#xA; 'RETR' AS BANK_ACCOUNT_VALUE,&#xD;&#xA; NULL AS TOTAL_AMOUNT,&#xD;&#xA; 2453 AS PULL_ACH_STATUS_ID,&#xD;&#xA; NULL AS PULL_ACH_STATUS_VALUE,&#xD;&#xA; 'PERSLink Batch'+' '+ convert(nvarchar,@batchscheduleid) AS CREATED_BY,&#xD;&#xA; GETDATE() AS CREATED_DATE,&#xD;&#xA; 'PERSLink Batch'+' '+ convert(nvarchar,@batchscheduleid) AS MODIFIED_BY,&#xD;&#xA; GETDATE() AS MODIFIED_DATE,&#xD;&#xA; 0 AS UPDATE_SEQ">
+      <parameters>
+        <parameter ID="@batchscheduleid" sfwDataType="int" />
+        <parameter ID="@PAYMENTDATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="DepositTapeId" sfwType="Column" sfwValue="deposit_tape_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="DepositDate" sfwType="Column" sfwValue="deposit_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="StatusDescription" sfwType="Description" sfwValue="status_description" />
+    <attribute ID="StatusId" sfwType="Column" sfwValue="status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="1502" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusValue" sfwType="Column" sfwValue="status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="DepositMethodDescription" sfwType="Description" sfwValue="deposit_method_description" />
+    <attribute ID="DepositMethodId" sfwType="Column" sfwValue="deposit_method_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="1501" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="DepositMethodValue" sfwType="Column" sfwValue="deposit_method_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="BankAccountDescription" sfwType="Description" sfwValue="bank_account_description" />
+    <attribute ID="BankAccountId" sfwType="Column" sfwValue="bank_account_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="1201" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="BankAccountValue" sfwType="Column" sfwValue="bank_account_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="TotalAmount" sfwType="Column" sfwValue="total_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="18,2" />
+    <attribute ID="PullAchStatusDescription" sfwType="Description" sfwValue="pull_ach_status_description" />
+    <attribute ID="PullAchStatusId" sfwType="Column" sfwValue="pull_ach_status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="2453" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PullAchStatusValue" sfwType="Column" sfwValue="pull_ach_status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute sfwType="Collection" sfwEntity="entDeposit" ID="lstDeposit" sfwValue="iclbDeposit" />
+    <attribute sfwDataType="int" sfwType="Property" ID="DepositsCount" sfwValue="icdoDepositTape.DepositsCount" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IintActivityInstanceID" sfwValue="iintActivityInstanceID" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="TotalDepositAmount" sfwValue="icdoDepositTape.TotalDepositAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecTotalRemittance" sfwValue="idecTotalRemittance" />
+  </attributes>
+  <objectmethods>
+    <method ID="ValidateDepositTape" sfwReturnType="ArrayList" />
+    <method ID="btnACHPull_Click" sfwReturnType="ArrayList" />
+    <method ID="btnACHPullRetirement_Click" sfwReturnType="ArrayList" />
+    <method ID="btnACHPullInsurance_Click" sfwReturnType="ArrayList" />
+    <method ID="btnACHPullDefComp_Click" sfwReturnType="ArrayList" />
+    <method ID="btnACHPullServicePurchase_Click" sfwReturnType="ArrayList" />
+    <method ID="btnApply_Click" sfwReturnType="ArrayList" />
+    <method ID="LoadDeposits" sfwReturnType="Void" />
+    <method ID="btnAllocateRemittance_Click" sfwReturnType="ArrayList" />
+  </objectmethods>
+  <constraint />
+  <methods />
+  <lifecycle />
+</entity>

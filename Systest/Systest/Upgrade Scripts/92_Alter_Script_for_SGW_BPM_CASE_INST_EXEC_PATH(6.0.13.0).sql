@@ -1,0 +1,40 @@
+------------------------------------------------------------------------------------------------------------------------ 
+--Created By	:	Rashmi Deepak
+--Created On	:	14th September 2020
+--Description	:	Adding audit columns in  SGW_BPM_CASE_INST_EXEC_PATH
+------------------------------------------------------------------------------------------------------------------------ 
+
+IF COL_LENGTH('dbo.SGW_BPM_CASE_INST_EXEC_PATH', 'CREATED_BY') IS NULL
+BEGIN
+ALTER TABLE SGW_BPM_CASE_INST_EXEC_PATH
+ADD CREATED_BY varchar(50) NOT NULL DEFAULT 'BPM Service'
+END
+GO
+
+IF COL_LENGTH('dbo.SGW_BPM_CASE_INST_EXEC_PATH', 'CREATED_DATE') IS NULL
+BEGIN
+ALTER TABLE SGW_BPM_CASE_INST_EXEC_PATH
+ADD CREATED_DATE datetime NOT NULL DEFAULT getdate()
+END
+GO
+
+IF COL_LENGTH('dbo.SGW_BPM_CASE_INST_EXEC_PATH', 'MODIFIED_BY') IS NULL
+BEGIN
+ALTER TABLE SGW_BPM_CASE_INST_EXEC_PATH
+ADD MODIFIED_BY varchar(50) NOT NULL DEFAULT 'BPM Service'
+END
+GO
+
+IF COL_LENGTH('dbo.SGW_BPM_CASE_INST_EXEC_PATH', 'MODIFIED_DATE') IS NULL
+BEGIN
+ALTER TABLE SGW_BPM_CASE_INST_EXEC_PATH
+ADD MODIFIED_DATE datetime NOT NULL DEFAULT getdate()
+END
+GO
+
+IF COL_LENGTH('dbo.SGW_BPM_CASE_INST_EXEC_PATH', 'UPDATE_SEQ') IS NULL
+BEGIN
+ALTER TABLE SGW_BPM_CASE_INST_EXEC_PATH
+ADD UPDATE_SEQ int NOT NULL DEFAULT 0
+END
+GO

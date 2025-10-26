@@ -1,0 +1,100 @@
+﻿<form ID="wfmWSSPersonAccountEnrollmentRequestLookup" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2026" sfwType="FormLinkLookup" sfwTitle="Person Account Enrollment Request Lookup" version="3.5" sfwEntity="entWssPersonAccountEnrollmentRequest" sfwGridCollection="busWSSPersonAccountEnrollmentRequestLookup.iclbWssPersonAccountEnrollmentRequest" sfwTemplate="WSSPersonAccountEnrollmentRequestLookup.html" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmWSSPersonAccountEnrollmentRequestLookup" isBasedOnWfm="true">
+  <initialload>
+    <query ID="cdoWssPersonAccountEnrollmentRequest" sfwQueryRef="entWssPersonAccountEnrollmentRequest.Lookup" sfwMethodName="LoadWSSPersonAccountEnrollmentRequests" />
+  </initialload>
+  <items>
+    <sfwTable ID="Main" />
+    <sfwPanel ID="pnlCriteria" sfwCaption="Criteria">
+      <items>
+        <sfwTable ID="tblCriteria" />
+        <sfwLabel ID="capPersonId" Text="PERSLink Id : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtPersonId" sfwDataField="e.person_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="cdoWssPersonAccountEnrollmentRequest" />
+        <sfwImageButton ID="btnRetrieve" ImageAlign="AbsMiddle" ImageUrl="~/Image/Lookup.jpg" sfwActiveForm="wfmPersonLookup" sfwMethodName="btnRetrieve_Click" sfwRelatedControl="txtPersonId" sfwSelectedIndex="PersonId" />
+        <sfwLabel ID="capPlanId" Text="Plan : " sfwIsCaption="True" />
+        <sfwDropDownList DataTextField="plan_name" DataValueField="plan_id" ID="ddlPlanId" sfwDataField="e.plan_id" sfwOperator="=" sfwQueryID="cdoWssPersonAccountEnrollmentRequest" sfwLoadType="Query" sfwLoadSource="entPlan.Lookup" />
+        <sfwTextBox ID="txtTargetPersonAccountId" sfwDataField="target_person_account_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="cdoWssPersonAccountEnrollmentRequest" Visible="False" />
+        <sfwDropDownList ID="ddlStatusValue" sfwDataField="status_value" sfwOperator="like" sfwQueryID="cdoWssPersonAccountEnrollmentRequest" Visible="False" sfwLoadType="CodeGroup" sfwLoadSource="1023" />
+        <sfwTextBox ID="txtPersonEmploymentDtlId" sfwDataField="person_employment_dtl_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="cdoWssPersonAccountEnrollmentRequest" Visible="False" />
+        <sfwLabel ID="capStatusValue" Text="Request Status : " sfwIsCaption="True" />
+        <sfwDropDownList ID="ddlStatusValue1" sfwDataField="status_value" sfwOperator="like" sfwQueryID="cdoWssPersonAccountEnrollmentRequest" sfwLoadType="CodeGroup" sfwLoadSource="1023" />
+        <sfwLabel ID="lblCreatedDateFrom" Text="Requested Date From :" sfwIsCaption="True" />
+        <sfwTextBox ID="txtCreatedDateFrom" sfwDataField="convert(datetime, convert(varchar(10), e.created_date, 101))" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="between" sfwQueryID="cdoWssPersonAccountEnrollmentRequest" sfwRelatedControl="txtCreatedDateTo" />
+        <CompareValidator ID="cmvCreatedDateFrom" />
+        <sfwLabel ID="lblCreatedDateTo" Text="Requested Date To :" sfwIsCaption="True" />
+        <sfwTextBox ID="txtCreatedDateTo" sfwDataField="convert(datetime, convert(varchar(10), e.created_date, 101))" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="=" sfwQueryID="cdoWssPersonAccountEnrollmentRequest" />
+        <CompareValidator ID="cmvCreatedDateRange" />
+        <CompareValidator ID="cmvCreatedDateTo" />
+        <sfwButton ID="btnSearch" sfwMethodName="btnSearch_Click" Text="Search" />
+        <sfwButton ID="btnReset" sfwMethodName="btnReset_Click" Text="Reset" />
+        <sfwButton ID="btnStoreSearch" sfwMethodName="btnStoreUserDefaults_Click" Text="Store Search" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlResult" sfwCaption="Search Results">
+      <items>
+        <sfwTable ID="tblResult" />
+        <sfwButton ID="btnOpen" sfwActiveForm="DBEL=wfmViewRequestDBElectedOfficialMaintenance;DBOP=wfmViewRequestPensionPlanMainRetirementOptionalEnrollmentMaintenance;DBRE=wfmViewRequestPensionPlanRetirementEnrollmentMaintenance;DCOP=wfmViewRequestPensionPlanDCOptionalEnrollmentMaintenance;DCRE=wfmViewRequestPensionPlanDCRetirementEnrollmentMaintenance;LIFE=wfmViewRequestLifeEnrollmentMaintenance;LTCP=wfmViewRequestLTCMaintenance;GHDV=wfmViewRequestGHDVEnrollmentMaintenance;FLEX=wfmViewRequestFlexCompEnrollmentMaintenance;DEFC=wfmViewRequestDeferredCompMaintenance;EAPP=wfmViewRequestEAPMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="aintRequestId=WssPersonAccountEnrollmentRequestId;EnrollmentTypeValue" sfwRelatedControl="dgrResult" Text="Open" sfwEntityField="EnrollmentTypeValue" />
+        <sfwButton ID="btnExportExcel" sfwMethodName="btnColumnsToExport_Click" sfwRelatedControl="dgrResult" Text="Export To Excel" />
+        <sfwGridView AllowPaging="True" AllowSorting="True" ID="dgrResult" sfwSelection="Many" sfwSortExpression="WssPersonAccountEnrollmentRequestId desc">
+          <Columns>
+            <TemplateField HeaderText="Request ID">
+              <ItemTemplate>
+                <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpen" sfwEntityField="WssPersonAccountEnrollmentRequestId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="PERSLink ID">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="PersonId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Person">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objPerson.PersonNameWithPrefixAndSuffix" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Effective From Date" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EffectiveFromDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Effective To Date" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EffectiveToDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Person Employment Dtl ID" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="PersonEmploymentDtlId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Plan ID" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="PlanId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Status">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="StatusDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Person Account ID" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="TargetPersonAccountId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Enrollment Type" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="EnrollmentTypeValue" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Plan">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="objPlan.PlanName" />
+              </ItemTemplate>
+            </TemplateField>
+          </Columns>
+        </sfwGridView>
+      </items>
+    </sfwPanel>
+  </items>
+  <loaddetails />
+</form>

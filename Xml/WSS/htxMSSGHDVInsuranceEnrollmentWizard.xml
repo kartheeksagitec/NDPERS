@@ -1,0 +1,1313 @@
+﻿<form ID="wfmMSSGHDVInsuranceEnrollmentWizard" sfwActive="True" sfwDescription="GHDV Enrollment" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2001" sfwType="FormLinkWizard" sfwTitle=" GHDV Enrollment Wizard" version="3.5" sfwEntity="entWssPersonAccountEnrollmentRequest" sfwTemplate="MSSGHDVInsuranceEnrollmentWizard.html" isBasedOnWfm="true">
+  <initialload>
+    <callmethods sfwMode="New" sfwMethodName="NewMSSGHDVWizard" />
+    <callmethods sfwMode="Update" sfwMethodName="FindMSSGHDVWizard" />
+  </initialload>
+  <items>
+    <sfwWizard ID="wizMain">
+      <items>
+        <sfwLabel ID="capRejectionReason" sfwVisibleRule="IsStatusRejected" Text="Rejection Reason : " sfwIsCaption="True" CssClass="hideControl" />
+        <sfwLabel ID="lblRejectionReason" sfwVisibleRule="IsStatusRejected" sfwEntityField="RejectionReason" CssClass="hideControl" />
+        <sfwWizardStep ID="wzsIntro" sfwRulesGroup="InitialGHDVStep" Title="Intro" sfwShowInHeader="True">
+          <items>
+            <sfwLabel ID="capRejectionReasonIntro" sfwVisibleRule="IsStatusRejected" Text="Rejection Reason : " sfwIsCaption="True" />
+            <sfwLabel ID="lblRejectionReasonIntro" sfwVisibleRule="IsStatusRejected" sfwEntityField="RejectionReason" />
+            <sfwLiteral ID="GHE" sfwVisibleRule="IsPlanGroupHealth" Text="Health Insurance Plan Enrollment" />
+            <sfwLiteral ID="ltrDentalDer" sfwVisibleRule="IsPlanDental" Text="Dental Insurance Plan Enrollment" />
+            <sfwLiteral ID="ltrVision" sfwVisibleRule="IsPlanVision" Text="Vision Insurance Plan Enrollment" />
+            <sfwPanel ID="pnlEnrollmentPlan" sfwCaption="Steps to complete your Enrollment">
+              <items>
+                <sfwPanel ID="pnlIsHealth" sfwCaption="Health" sfwCollapsible="False" sfwVisibleRule="IsPlanGroupHealth">
+                  <items />
+                </sfwPanel>
+                <sfwPanel ID="pnlNoHealth" sfwCaption="Not Health" sfwCollapsible="False" sfwVisibleRule="IsPlanNOTHealth">
+                  <items />
+                </sfwPanel>
+                <sfwPanel ID="pnlOption" sfwCaption="Option" sfwCollapsible="False">
+                  <items>
+                    <sfwTable ID="tblNewPage15" />
+                    <sfwLabel ID="capIstrGHDVPlanOptionSelection" Text="Plan Enrollment Option Selection : " sfwIsCaption="True" />
+                    <sfwCascadingDropDownList ID="ddlPlanEnrollmentOptionValue" DataTextField="description" DataValueField="code_value" sfwClientVisibility="controllist:capReasonValue1,ddlReasonValue1#ADRD:capReasonValue1,ddlReasonValue1;RTFL:capReasonValue1,ddlReasonValue1;ANNE:capReasonValue1,ddlReasonValue1;UPDT:capReasonValue1,ddlReasonValue1;RETR:capReasonValue1,ddlReasonValue1;ENRL:capReasonValue1,ddlReasonValue1,capReasonValue2,lblDdlReasonValue1;" sfwLoadType="Method" sfwLoadSource="LoadPlanEnrollmentOption" sfwEntityField="PlanEnrollmentOptionValue" sfwValidationRules="IsGHDVPlanOptionSelected" />
+                    <sfwLabel ID="capReasonValue1" AssociatedControlID="ddlReasonValue1" Text="Change Reason : " sfwIsCaption="True" sfwVisibleRule="IsNotEnrollInHealthAsTemporary" />
+                    <sfwCascadingDropDownList ID="ddlReasonValue1" DataTextField="description" DataValueField="code_value" sfwParameters="astrPlanEnrollmentOption=ddlPlanEnrollmentOptionValue" sfwParentControl="ddlPlanEnrollmentOptionValue" sfwLoadType="Method" sfwLoadSource="LoadChangeReason" sfwEntityField="ReasonValue" sfwValidationRules="IsChangeReasonNotEnteredForInsurancePlan" sfwClientVisibility="controllist:capIsAppliedForDivorce,ddlIsAppliedForDivorce#RMVD:capIsAppliedForDivorce,ddlIsAppliedForDivorce;" sfwVisibleRule="IsNotEnrollInHealthAsTemporary" />
+                    <sfwLabel ID="capReasonValue2" Text="Change Reason : " sfwIsCaption="True" sfwVisibleRule="IsEnrollInHealthAsTemporary" />
+                    <sfwLabel ID="lblDdlReasonValue1" sfwEntityField="ReasonDescription" sfwVisibleRule="IsEnrollInHealthAsTemporary" />
+                    <sfwPanel ID="pnlDental" sfwCaption="Dental" sfwCollapsible="False" sfwVisibleRule="IsPlanDental">
+                      <items>
+                        <sfwLabel ID="capDental" Text="The NDPERS dental plan is administered by " sfwIsCaption="True" />
+                        <sfwLabel ID="lblDental" sfwEntityField="lstrDentalProviderName" />
+                        <sfwLabel ID="lblDental1" Text=" of MN." sfwIsCaption="True" />
+                      </items>
+                    </sfwPanel>
+                    <sfwLabel ID="capIsAppliedForDivorce" AssociatedControlID="ddlIsAppliedForDivorce" Text="Are you removing a dependent as a result of divorce? : " sfwIsCaption="True" />
+                    <sfwDropDownList ID="ddlIsAppliedForDivorce" sfwEntityField="IsAppliedForDivorce" sfwValidationRules="IsAppliedForDivorceNotEntered">
+                      <ListItem />
+                      <ListItem Text="Yes" Value="Y" />
+                      <ListItem Text="No" Value="N" />
+                    </sfwDropDownList>
+                  </items>
+                </sfwPanel>
+                <sfwLabel ID="lblL" Text="If you choose to waive the coverage, steps 1, 2, 3 and 4 will be skipped." sfwIsCaption="True" />
+                <sfwLabel ID="lblCancelMsgForNotInHDHP" sfwEntityField="lstrCancelMsgForNotInDHP" />
+                <sfwLabel ID="lblIsUserLinkedInSTATDHSU" sfwEntityField="lstrIsHDHPValid" CssClass="hideControl" />
+                <sfwLabel ID="lblIsHealthPlan" sfwEntityField="lstrIsHealthPlan" CssClass="hideControl" />
+                <sfwLabel ID="lblPerson" sfwEntityField="PersonId" CssClass="hideControl" />
+                <sfwButton ID="btnIntro" sfwMethodName="btnWizardNext_Click" Text="Begin Process" />
+                <sfwButton ID="btnBeginClick" sfwMethodName="btnCancel_Click" OnClientClick="fnAnnualEnrollment(e);" />
+                <sfwButton ID="btnContinue" sfwMethodName="btnCancel_Click" OnClientClick="fnAnnualEnrollment(e);" />
+                <sfwButton ID="btnDoNotContinue" sfwMethodName="btnOpen_Click" sfwActiveForm="wfmActiveMemberBenefitPlansMaintenance" sfwNavigationParameter="aintPersonID=PersonId" />
+              </items>
+            </sfwPanel>
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsStep2" sfwRulesGroup="GHDVEnrollment" sfwVisibleRule="IsGHDVOptionEnrolled" Title="Enrollment" sfwShowInHeader="True">
+          <items>
+            <sfwLabel ID="capRejectionReason2" sfwVisibleRule="IsStatusRejected" Text="Rejection Reason : " sfwIsCaption="True" />
+            <sfwLabel ID="lblRejectionReason2" sfwVisibleRule="IsStatusRejected" sfwEntityField="RejectionReason" />
+            <sfwLiteral ID="GHE1" sfwVisibleRule="IsPlanGroupHealth" Text="Health Insurance Plan Enrollment" />
+            <sfwLiteral ID="ltrDentalDer1" sfwVisibleRule="IsPlanDental" Text="Dental Insurance Plan Enrollment" />
+            <sfwLiteral ID="ltrVision1" sfwVisibleRule="IsPlanVision" Text="Vision Insurance Plan Enrollment" />
+            <sfwLabel ID="lblCapTwo" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="lblLabel8" sfwVisibleRule="IsPlanNOTHealth" Text="&lt;ul class=&quot;steps&quot;&gt;&lt;li class=&quot;start&quot;&gt;Enrollment&lt;/li&gt;&lt;li class=&quot;next&quot;&gt;Workers Compensation / Other Coverages&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Dependents&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Review Enrollment&lt;/li&gt;&lt;li class = &quot;nextcontinue&quot;&gt;Print For Your Records&lt;/li&gt;&lt;li class=&quot;emptygray&quot;&gt;&lt;/li&gt;&lt;/ul&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="lblStep31" sfwVisibleRule="IsPlanGroupHealth" Text="&lt;ul class=&quot;steps&quot;&gt;&lt;li class=&quot;start&quot;&gt;Enrollment&lt;/li&gt;&lt;li class=&quot;next&quot;&gt;Pre-Tax HSA Contribution&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Workers Compensation / Other Coverages&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Dependents&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Medicare Coverage Information&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Review Enrollment&lt;/li&gt;&lt;li class =&quot;nextcontinue&quot;&gt;Print For Your Records&lt;/li&gt;&lt;li class=&quot;emptygray&quot;&gt;&lt;/li&gt;&lt;/ul&gt;" sfwIsCaption="True" />
+            <sfwPanel ID="pnlEnrollment" sfwCaption="Enrollment" sfwVisibleRule="IsPlanEnrollmentOptionNOTWaive">
+              <items>
+                <sfwTable ID="tblEnrollment" />
+                <sfwLabel ID="capDateOfChange" sfwVisibleRule="IsChangeReasonNotNEWHandEMCH" sfwEntityField="IstrDateofChangeText" />
+                <sfwLabel ID="lblLabel10" sfwVisibleRule="IsChangeReasonNotNewHire" Text="&amp;nbsp;&amp;nbsp;" sfwIsCaption="True" />
+                <sfwTextBox ID="txtLabel22" sfwDataFormat="{0:d}" sfwVisibleRule="IsChangeReasonNotNEWHandEMCH" sfwEntityField="DateOfChange" sfwValidationRules="IsDateofChangeNotEntered" />
+                <sfwPanel ID="pnlCancelPlan" sfwCaption="Enrollment" sfwCollapsible="False" sfwVisibleRule="IsPlanenrollmentOptionNOTCancel">
+                  <items>
+                    <sfwTable ID="tblEnrollmen" />
+                    <sfwPanel ID="pnlVisible002" sfwVisibleRule="IsLevelOfCoverageVisible">
+                      <items>
+                        <sfwLabel ID="capLevelOfCoverageValue" sfwVisibleRule="IsLevelOfCoverageVisible" Text="Level of NDPERS Coverage : " sfwIsCaption="True" />
+                        <sfwDropDownList ID="ddlLevelOfCoverageValue" DataTextField="description" DataValueField="code_value" sfwLoadType="Method" sfwLoadSource="LoadMSSLevelOfCoverageByPlan" sfwEntityField="LevelOfCoverageValue" sfwValidationRules="IsLevelOfCoverage" sfwVisibleRule="IsLevelOfCoverageVisible" />
+                      </items>
+                    </sfwPanel>
+                    <sfwPanel ID="pnlVisible2" sfwVisibleRule="IsCoverageCodeVisible">
+                      <items>
+                        <sfwLabel ID="capCoverageCode300" Text="Level of NDPERS Coverage : " sfwIsCaption="True" />
+                        <sfwDropDownList ID="ddlCoverageCode" DataTextField="short_description" DataValueField="coverage_code" sfwLoadType="Method" sfwLoadSource="LoadCoverageCodeForMSS" sfwEntityField="CoverageCode" sfwValidationRules="IsCoverageCodeNotEntered" />
+                      </items>
+                    </sfwPanel>
+                    <sfwPanel ID="pnlVisible11" sfwVisibleRule="VisibleRuleForDependentsAdd">
+                      <items>
+                        <sfwLabel ID="lblLabel38" Text="Is this an Adult Child?  " sfwIsCaption="True" />
+                        <sfwDropDownList ID="ddlCheckBox5" sfwEntityField="IsDependentAdultChildFlag">
+                          <ListItem />
+                          <ListItem Text="Yes" Value="Y" />
+                          <ListItem Text="No" Value="N" />
+                        </sfwDropDownList>
+                        <sfwLabel ID="lblLabel39" Text="Is the Adult Child Married?  " sfwIsCaption="True" />
+                        <sfwDropDownList ID="ddlCheckBox6" sfwEntityField="IsDependentAdultChildMarriedFlag">
+                          <ListItem />
+                          <ListItem Text="Yes" Value="Y" />
+                          <ListItem Text="No" Value="N" />
+                        </sfwDropDownList>
+                        <sfwLabel ID="lblLabel40" Text="Is the Adult Child Disabled?  " sfwIsCaption="True" />
+                        <sfwDropDownList ID="ddlCheckBox7" sfwEntityField="IsDependentAdultChildDisabledFlag">
+                          <ListItem />
+                          <ListItem Text="Yes" Value="Y" />
+                          <ListItem Text="No" Value="N" />
+                        </sfwDropDownList>
+                      </items>
+                    </sfwPanel>
+                    <sfwLabel ID="lblLabel41" sfwVisibleRule="IsPlanGroupHealth" Text="Type of Coverage : " sfwIsCaption="True" />
+                    <sfwDropDownList ID="ddlCascadingDropDownList1" DataTextField="description" DataValueField="code_value" sfwClientVisibility="controllist:tblNewPage12,lblLabel42,lblLabel46,lblLabel47,lblLabel48,chkCheckBox8,lblLabel49,pnlHDHP#HDHP:lblLabel42,lblLabel46,lblLabel47,lblLabel48,chkCheckBox8,lblLabel49,tblNewPage12,pnlHDHP;" sfwVisibleRule="IsPlanGroupHealth" sfwLoadType="Method" sfwLoadSource="LoadTypeofCoverage" sfwEntityField="TypeOfCoverageValue" sfwValidationRules="IsTypeOfCoverageRequired" />
+                    <sfwPanel ID="pnlHDHP" GroupingText="&lt;u&gt;&lt;b&gt;HDHP/HSA Authorization&lt;/b&gt;&lt;/u&gt;" sfwCaption="HDHP/HSA Authorization" sfwCollapsible="False" sfwVisibleRule="VisibilityForAuthorizePanelForHSA">
+                      <items>
+                        <sfwTable ID="tblNewPage12" />
+                        <sfwGridView ID="grvHDHP" sfwEntityField="lstHDHPAcknowledgement" CssClass="GridColumnHide">
+                          <Columns>
+                            <TemplateField HeaderText="Acknowledgement Text">
+                              <ItemTemplate>
+                                <sfwLabel sfwEntityField="AcknowledgementText" sfwRenderType="RichText" />
+                              </ItemTemplate>
+                            </TemplateField>
+                          </Columns>
+                        </sfwGridView>
+                        <sfwCheckBox ID="chkCheckBox8" sfwDefaultValue="N" sfwEntityField="IstrHDHPAcknowledgement" />
+                        <sfwLabel ID="lblLabel49" sfwEntityField="IstrHDHPConfirmationText" sfwRenderType="RichText" />
+                        <sfwLabel ID="capLabel17" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                        <sfwLabel ID="lblAcknowledgeTextForHDHP" sfwEntityField="AcknowledgeTextForHDHP" sfwRenderType="RichText" />
+                        <sfwDropDownList ID="ddlPreTaxHSA" sfwEntityField="PreTaxHSA">
+                          <ListItem />
+                          <ListItem Text="Yes" Value="Y" />
+                          <ListItem Text="No" Value="N" />
+                        </sfwDropDownList>
+                      </items>
+                    </sfwPanel>
+                    <sfwLabel ID="lblLabel4" sfwVisibleRule="VisibleRule-IsFlexPlanAvailableForGHDV" Text="Your insurance premium can be a pre-tax payroll deduction. If you pretax an insurance premium, you may not change coverage during the plan year unless you experience an IRS Qualified Change of Status. &lt;br/&gt;Do you wish to have your insurance premium deducted as a pre-tax payroll deduction? " sfwIsCaption="True" />
+                    <sfwDropDownList ID="ddlIstrSupplementalDependentParticipation" sfwVisibleRule="VisibleRulePreTaxForNewEnrollmentRegular" sfwEntityField="PreTaxPayrollDeductionFlag" sfwValidationRules="IsPreTaxSelected">
+                      <ListItem />
+                      <ListItem Text="Yes" Value="Y" />
+                      <ListItem Text="No" Value="N" />
+                    </sfwDropDownList>
+                    <sfwLabel ID="lblPreTax" sfwVisibleRule="VisibleRulePreTaxForUpdateEnrollmentRegular" sfwEntityField="IstrPreTaxDeductionFlag" />
+                    <sfwLabel ID="lblLabel44" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                    <sfwLabel ID="lblLabel2" Text="Other Coverage Information" sfwIsCaption="True" />
+                    <sfwLabel ID="lblLabel20" Text="Are you, your spouse or any of your Eligible Dependents currently or were previously covered by another insurance benefit plan(s)?&lt;br/&gt;(Please send NDPERS a copy of the applicable Certificate(s) of Coverage or other documentation from your insurance company.)  " sfwIsCaption="True" Width="131%" />
+                    <sfwDropDownList ID="ddlCheckBox" sfwClientVisibility="controllist:pnlOC#Y:pnlOC;" sfwEntityField="IsEligibleDependentExistsFlag">
+                      <ListItem />
+                      <ListItem Text="Yes" Value="Y" />
+                      <ListItem Text="No" Value="N" />
+                    </sfwDropDownList>
+                    <sfwLabel ID="lblLabel18" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                    <sfwLabel ID="lblLabel3" Text="Workers’ Compensation/No-Fault" sfwIsCaption="True" />
+                    <sfwLabel ID="lblLabel23" Text="Are you, your spouse or any of your eligible dependents currently receiving or have received worker’s compensation benefits?   " sfwIsCaption="True" Width="125%" />
+                    <sfwDropDownList ID="ddlCheckBox2" sfwEntityField="DependentReceivingWorkersCompensationFlag">
+                      <ListItem />
+                      <ListItem Text="Yes" Value="Y" />
+                      <ListItem Text="No" Value="N" />
+                    </sfwDropDownList>
+                    <sfwLabel ID="lblLabel25" Text="Are you, your spouse or any of your eligible dependents currently receiving no-fault benefits?   " sfwIsCaption="True" Width="94%" />
+                    <sfwDropDownList ID="ddlCheckBox3" sfwEntityField="DependentReceivingNoFaultBenefitsFlag">
+                      <ListItem />
+                      <ListItem Text="Yes" Value="Y" />
+                      <ListItem Text="No" Value="N" />
+                    </sfwDropDownList>
+                    <sfwPanel ID="lblpnl1" sfwVisibleRule="VisibilityRuleForMedicareOptions" Visible="False">
+                      <items>
+                        <sfwLabel ID="lblLabel19" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                        <sfwLabel ID="lblLabel22" Text="Medicare Coverage Information" sfwIsCaption="True" />
+                      </items>
+                    </sfwPanel>
+                    <sfwPanel ID="lblpnl2" sfwVisibleRule="VisibilityRuleForMedicareOptions" Visible="False">
+                      <items>
+                        <sfwLabel ID="lblLabel27" Text="Are you or spouse or any of your Eligible Dependents currently covered by Medicare?  " sfwIsCaption="True" Width="85%" sfwVisibleRule="VisibilityRuleForMedicareOptions" />
+                        <sfwDropDownList ID="ddlIsDependentMedicareEligible" sfwEntityField="IsDependentMedicareEligible">
+                          <ListItem />
+                          <ListItem Text="Yes" Value="Y" />
+                          <ListItem Text="No" Value="N" />
+                        </sfwDropDownList>
+                        <sfwLabel ID="lblLabel28" Text="Are you or spouse or any of your Eligible Dependents currently covered by Medicare due to ESRD (End Stage Renal Disease)?  " sfwIsCaption="True" Width="125%" sfwVisibleRule="VisibilityRuleForMedicareOptions" />
+                        <sfwDropDownList ID="ddlIsDependentMedicareEsrd" sfwEntityField="IsDependentMedicareEsrd" sfwVisibleRule="VisibilityRuleForMedicareOptions">
+                          <ListItem />
+                          <ListItem Text="Yes" Value="Y" />
+                          <ListItem Text="No" Value="N" />
+                        </sfwDropDownList>
+                      </items>
+                    </sfwPanel>
+                  </items>
+                </sfwPanel>
+              </items>
+            </sfwPanel>
+            <sfwButton ID="btnPrevious3" sfwMethodName="btnWizardPrevious_Click" Text="Previous" />
+            <sfwButton ID="btnNext1" sfwMethodName="btnWizardNext_Click" Text="Next" />
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsStepHDHP" Title="Pre-Tax HSA Contribution" sfwRulesGroup="StepHDHP" sfwVisibleRule="VisibilityRuleHSAStepPretax" sfwShowInHeader="True">
+          <items>
+            <sfwTable ID="tblStepHDHPHsa" />
+            <sfwLabel ID="capRejectionReasonHDHP" sfwVisibleRule="IsStatusRejected" Text="Rejection Reason : " sfwIsCaption="True" />
+            <sfwLabel ID="lblRejectionReasonHDHP" sfwVisibleRule="IsStatusRejected" sfwEntityField="RejectionReason" />
+            <sfwLiteral ID="GHEHDHP" sfwVisibleRule="IsPlanGroupHealth" Text="Health Insurance Plan" />
+            <sfwLiteral ID="ltrDentalDerHDHP" sfwVisibleRule="IsPlanDental" Text="Dental Insurance Plan" />
+            <sfwLiteral ID="ltrVisionHDHP" sfwVisibleRule="IsPlanVision" Text="Vision Insurance Plan" />
+            <sfwLabel ID="lblStepHDHP51" sfwVisibleRule="IsPlanGroupHealth" Text="&lt;ul class=&quot;steps&quot;&gt;&lt;li class=&quot;nextstart&quot;&gt;Enrollment&lt;/li&gt;&lt;li class=&quot;startnext&quot;&gt;Pre-Tax HSA Contribution&lt;/li&gt;&lt;li class=&quot;next&quot;&gt;Workers Compensation / Other Coverages&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Dependents&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Medicare Coverage Information&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Review Enrollment&lt;/li&gt;&lt;li class = &quot;nextcontinue&quot;&gt;Print For Your Records&lt;/li&gt;&lt;li class=&quot;emptygray&quot;&gt;&lt;/li&gt;&lt;/ul&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="lblCapFiveHDHP" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwPanel ID="pnlNewPanel" sfwCaption="HDHP">
+              <items>
+                <sfwTable ID="tblNewPage19" />
+                <sfwLabel ID="capContributionStartDate" Text="Contribution Start Date : " AssociatedControlID="txtContributionStartDate" sfwIsCaption="True" />
+                <sfwTextBox ID="txtContributionStartDate" sfwEntityField="WssHsaContributionStartDate" sfwDataFormat="{0:d}" />
+                <sfwLabel ID="capContributionAmount" Text="Monthly Contribution Amount : " AssociatedControlID="txtContributionAmount" sfwIsCaption="True" />
+                <sfwTextBox ID="txtContributionAmount" sfwEntityField="WssHsaContributionAmount" sfwDataFormat="{0:C}" />
+                <sfwLabel ID="lblAcknowledgementTextForHDHP2" sfwEntityField="AcknowledgementTextForHDHP" sfwRenderType="RichText" CssClass=".GridColumnHide" />
+                <sfwCheckBox ID="chkLstrIsHDHPAcknowledged" sfwEntityField="lstrIsHDHPAcknowledged" sfwValidationRules="IsAcknowlegdementFlagOnHDHPnotSelected" />
+                <sfwLabel ID="lblLabel17" sfwEntityField="IstrConfirmationText" sfwRenderType="RichText" CssClass="view-inline" />
+              </items>
+            </sfwPanel>
+            <sfwButton ID="btnPreviousMoveHDHP" sfwMethodName="btnWizardPrevious_Click" Text="Previous" />
+            <sfwButton ID="btnButton1HDHP" sfwMethodName="btnWizardNext_Click" Text="Next" />
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsStep3" sfwRulesGroup="GHDVWorkersComp" sfwVisibleRule="VisibilityRuleForWorkersAndOtherCoverage" Title="Workers Compensation / Other Coverages" sfwShowInHeader="True">
+          <items>
+            <sfwLabel ID="capRejectionReason3" sfwVisibleRule="IsStatusRejected" Text="Rejection Reason : " sfwIsCaption="True" />
+            <sfwLabel ID="lblRejectionReason3" sfwVisibleRule="IsStatusRejected" sfwEntityField="RejectionReason" />
+            <sfwLiteral ID="GHE2" sfwVisibleRule="IsPlanGroupHealth" Text="Health Insurance Plan Enrollment" />
+            <sfwLiteral ID="ltrDentalDer2" sfwVisibleRule="IsPlanDental" Text="Dental Insurance Plan Enrollment" />
+            <sfwLiteral ID="ltrVision2" sfwVisibleRule="IsPlanVision" Text="Vision Insurance Plan Enrollment" />
+            <sfwLabel ID="lblCapThree" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="lblLabel50" sfwVisibleRule="IsPlanNOTHealth" Text="&lt;ul class=&quot;steps&quot;&gt;&lt;li class=&quot;nextstart&quot;&gt;Enrollment&lt;/li&gt;&lt;li class=&quot;startnext&quot;&gt;Workers Compensation / Other Coverage&lt;/li&gt;&lt;li class=&quot;next&quot;&gt;Dependents&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Review Enrollment&lt;/li&gt;&lt;li class =&quot;nextcontinue&quot;&gt;Print For Your Records&lt;/li&gt;&lt;li class=&quot;emptygray&quot;&gt;&lt;/li&gt;&lt;/ul&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="lblStep31" sfwVisibleRule="IsPlanGroupHealth" Text="&lt;ul class=&quot;steps&quot;&gt;&lt;li class=&quot;start&quot;&gt;Enrollment&lt;/li&gt;&lt;li class=&quot;next&quot;&gt;Pre-Tax HSA Contribution&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Workers Compensation / Other Coverages&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Dependents&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Medicare Coverage Information&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Review Enrollment&lt;/li&gt;&lt;li class =&quot;nextcontinue&quot;&gt;Print For Your Records&lt;/li&gt;&lt;li class=&quot;emptygray&quot;&gt;&lt;/li&gt;&lt;/ul&gt;" sfwIsCaption="True" />
+            <sfwPanel ID="pnlOC" sfwCaption="Other Coverage" sfwVisibleRule="VisiblilityForOtherCoverage">
+              <items>
+                <sfwButton ID="btnAdd" sfwMethodName="btnNewPopupDialog_Click" sfwRelatedControl="grvMSSOtherCoverageDetail" sfwRelatedDialogPanel="pnlOtherCo12" Text="Add New" />
+                <sfwGridView ID="grvMSSOtherCoverageDetail" AllowPaging="True" sfwAllowNew="True" sfwEntityField="lstMSSOtherCoverageDetail" sfwGridEntity="entWssPersonAccountOtherCoverageDetail">
+                  <Columns>
+                    <TemplateField SortExpression="WssPersonAccountOtherCoverageDetailId">
+                      <ItemTemplate>
+                        <sfwButton sfwMethodName="btnOpenPopupDialog_Click" sfwRelatedControl="grvMSSOtherCoverageDetail" sfwRelatedDialogPanel="pnlOtherCo12" Text="Update" />
+                        <sfwButton sfwMethodName="btnGridViewDelete_Click" sfwRelatedControl="grvMSSOtherCoverageDetail" Text="Delete" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Provider Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="ProviderOrgName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Other Coverage Telephone Number" SortExpression="OtherCoverageNumber">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:(###)###-####}" sfwEntityField="OtherCoverageNumber" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Policy Number" SortExpression="PolicyNumber">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="PolicyNumber" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Policy Holder" SortExpression="PolicyHolder">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="PolicyHolder" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Date Of Birth" SortExpression="DateOfBirth">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="DateOfBirth" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Policy Coverage Start Date" SortExpression="PolicyStartDate">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="PolicyStartDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Policy Coverage End Date" SortExpression="PolicyEndDate">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="PolicyEndDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Name(s) of Person(s) Covered" SortExpression="CoveredPerson">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="CoveredPerson" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+                <sfwDialogPanel ID="pnlOtherCo12" sfwCaption="Other Coverages">
+                  <items>
+                    <sfwTable ID="tblOtherc" />
+                    <sfwLabel ID="capProviderOrgName" Text="Provider Name : " sfwIsCaption="True" />
+                    <sfwTextBox ID="txtProviderOrgName" sfwEntityField="ProviderOrgName" />
+                    <sfwLabel ID="capCoveredPerson" Text="Covered Person : " sfwIsCaption="True" />
+                    <sfwTextBox ID="txtCoveredPerson" sfwEntityField="CoveredPerson" />
+                    <sfwLabel ID="capDateOfBirth1" Text="Date Of Birth : " sfwIsCaption="True" />
+                    <sfwTextBox ID="txtDateOfBirth1" sfwDataFormat="{0:d}" sfwEntityField="DateOfBirth" />
+                    <sfwLabel ID="capPolicyNumber" Text="Policy Number : " sfwIsCaption="True" />
+                    <sfwTextBox ID="txtPolicyNumber" sfwEntityField="PolicyNumber" />
+                    <sfwLabel ID="capPolicyHolder" Text="Policy Holder : " sfwIsCaption="True" />
+                    <sfwTextBox ID="txtPolicyHolder" sfwEntityField="PolicyHolder" />
+                    <sfwLabel ID="capOtherCoverageNumber" Text="Other Coverage Telephone Number : " sfwIsCaption="True" />
+                    <sfwTextBox ID="txtOtherCoverageNumber" sfwDataFormat="{0:(###)###-####}" sfwEntityField="OtherCoverageNumber" />
+                    <sfwLabel ID="capPolicyStartDate" Text="Policy Start Date : " sfwIsCaption="True" />
+                    <sfwTextBox ID="txtPolicyStartDate" sfwDataFormat="{0:d}" sfwEntityField="PolicyStartDate" />
+                    <sfwLabel ID="capPolicyEndDate" Text="Policy End Date : " sfwIsCaption="True" />
+                    <sfwTextBox ID="txtPolicyEndDate" sfwDataFormat="{0:d}" sfwEntityField="PolicyEndDate" />
+                    <sfwButton ID="btnFinishPopupDialogClick" sfwMethodName="btnFinishPopupDialog_Click" sfwRelatedControl="grvMSSOtherCoverageDetail" sfwRelatedDialogPanel="pnlOtherCo12" Text="Finish" />
+                  </items>
+                </sfwDialogPanel>
+                <sfwLabel ID="lblLabel24" sfwWrap="True" Text="Do you intend to keep your current policy(ies) in force after the effective date of this Application? " sfwIsCaption="True" />
+                <sfwDropDownList ID="ddlKeepingOtherCoverageFlag1" sfwClientVisibility="controllist:lblLabel43,txtKeepCurrentFlagPolicyReason#Y:lblLabel43,txtKeepCurrentFlagPolicyReason;" sfwEntityField="KeepingOtherCoverageFlag">
+                  <ListItem />
+                  <ListItem Text="Yes" Value="Y" />
+                  <ListItem Text="No" Value="N" />
+                </sfwDropDownList>
+                <sfwLabel ID="lblLabel43" Text="&lt;br/&gt;Why?" sfwIsCaption="True" />
+                <sfwTextBox ID="txtKeepCurrentFlagPolicyReason" TextMode="MultiLine" Rows="3" Width="1000px" sfwEntityField="KeepCurrentFlagPolicyReason" />
+              </items>
+            </sfwPanel>
+            <sfwPanel ID="pnlWorkers" sfwCaption="Workers Compensation" sfwVisibleRule="VisibilityForWorkersCompensation">
+              <items>
+                <sfwButton ID="btnNewComp" sfwMethodName="btnNewPopupDialog_Click" sfwRelatedControl="grvMSSWorkerCompensation" sfwRelatedDialogPanel="pnlWC" Text="Add New" />
+                <sfwGridView ID="grvMSSWorkerCompensation" AllowPaging="True" sfwAllowNew="True" sfwEntityField="lstMSSWorkerCompensation" sfwGridEntity="entWssPersonAccountWorkerCompensation">
+                  <Columns>
+                    <TemplateField>
+                      <ItemTemplate>
+                        <sfwButton sfwMethodName="btnOpenPopupDialog_Click" sfwRelatedControl="grvMSSWorkerCompensation" sfwRelatedDialogPanel="pnlWC" Text="Update" />
+                        <sfwButton sfwMethodName="btnGridViewDelete_Click" sfwRelatedControl="grvMSSWorkerCompensation" Text="Delete" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Injured Person's Name" SortExpression="PersonName">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="PersonName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Date of Injury" SortExpression="InjuryDate">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="InjuryDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Type of Injury" SortExpression="TypeOfInjury">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="TypeOfInjury" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Company Providing Benefits" SortExpression="CompanyName">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="CompanyName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Company's Telephone Number" SortExpression="PhoneNumber">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:(###)###-####}" sfwEntityField="PhoneNumber" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Wss Person Account Worker Compensation ID" SortExpression="WssPersonAccountWorkerCompensationId" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="WssPersonAccountWorkerCompensationId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+                <sfwDialogPanel ID="pnlWC" sfwCaption="Workers Compensation Info">
+                  <items>
+                    <sfwTable ID="tblWorkersComp" />
+                    <sfwLabel ID="capCompanyName" Text="Company Providing Benefit : " sfwIsCaption="True" />
+                    <sfwTextBox ID="txtCompanyName" sfwEntityField="CompanyName" />
+                    <sfwLabel ID="capInjuryDate" Text="Date of Injury : " sfwIsCaption="True" />
+                    <sfwTextBox ID="txtInjuryDate" sfwDataFormat="{0:d}" sfwEntityField="InjuryDate" />
+                    <sfwLabel ID="capPersonName" Text="Injured Person’s Name : " sfwIsCaption="True" />
+                    <sfwTextBox ID="txtPersonName" sfwEntityField="PersonName" />
+                    <sfwLabel ID="capTypeOfInjury" Text="Type Of Injury : " sfwIsCaption="True" />
+                    <sfwTextBox ID="txtTypeOfInjury" sfwEntityField="TypeOfInjury" />
+                    <sfwLabel ID="capPhoneNumber" AssociatedControlID="txtPhoneNumber" Text="Company’s Telephone Number : " sfwIsCaption="True" />
+                    <sfwTextBox ID="txtPhoneNumber" sfwDataFormat="{0:(###)###-####}" sfwEntityField="PhoneNumber" />
+                    <sfwButton ID="btnAddNewWorkersComp" sfwMethodName="btnFinishPopupDialog_Click" sfwRelatedControl="grvMSSWorkerCompensation" sfwRelatedDialogPanel="pnlWC" Text="Finish" />
+                  </items>
+                </sfwDialogPanel>
+              </items>
+            </sfwPanel>
+            <sfwButton ID="btnPrevious4" sfwMethodName="btnWizardPrevious_Click" Text="Previous" />
+            <sfwButton ID="btnNext2" sfwMethodName="btnWizardNext_Click" Text="Next" />
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsStep4" sfwRulesGroup="GHDVDependent" sfwVisibleRule="DependentStepVisible" Title="Dependents" sfwShowInHeader="True">
+          <items>
+            <sfwLabel ID="capRejectionReason4" sfwVisibleRule="IsStatusRejected" Text="Rejection Reason : " sfwIsCaption="True" />
+            <sfwLabel ID="lblRejectionReason4" sfwVisibleRule="IsStatusRejected" sfwEntityField="RejectionReason" />
+            <sfwLiteral ID="GHE3" sfwVisibleRule="IsPlanGroupHealth" Text="Health Insurance Plan" />
+            <sfwLiteral ID="ltrDentalDer3" sfwVisibleRule="IsPlanDental" Text="Dental Insurance Plan" />
+            <sfwLiteral ID="ltrVision3" sfwVisibleRule="IsPlanVision" Text="Vision Insurance Plan" />
+            <sfwLabel ID="lblCapFour" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="lblLabel51" sfwVisibleRule="IsPlanNOTHealth" Text="&lt;ul class=&quot;steps&quot;&gt;&lt;li class=&quot;nextstart&quot;&gt;Enrollment&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Workers Compensation / Other Coverages&lt;/li&gt;&lt;li class=&quot;startnext&quot;&gt;Dependents&lt;/li&gt;&lt;li class=&quot;next&quot;&gt;Review Enrollment&lt;/li&gt;&lt;li class =&quot;nextcontinue&quot;&gt;Print For Your Records&lt;/li&gt;&lt;li class=&quot;emptygray&quot;&gt;&lt;/li&gt;&lt;/ul&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="lblStep41" sfwVisibleRule="IsPlanGroupHealth" Text="&lt;ul class=&quot;steps&quot;&gt;&lt;li class=&quot;nextstart&quot;&gt;Enrollment&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Pre-Tax HSA Contribution&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Workers Compensation / Other Coverages&lt;/li&gt;&lt;li class=&quot;startnext&quot;&gt;Dependents&lt;/li&gt;&lt;li class=&quot;next&quot;&gt;Medicare Coverage Information&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Review Enrollment&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Print For Your Records&lt;/li&gt;&lt;li class=&quot;emptygray&quot;&gt;&lt;/li&gt;&lt;/ul&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="lblSSNUnkownQuestion" sfwWrap="True" Text="Are you missing the Social Security Number?" sfwIsCaption="True" />
+            <sfwLabel ID="lblSSNUnkownStaticText" sfwWrap="True" Text="Submit your " sfwIsCaption="True" />
+            <sfwLiteral ID="ltrHealth31" sfwVisibleRule="IsPlanGroupHealth" Text="Health Insurance " />
+            <sfwLiteral ID="ltrDentalDer31" sfwVisibleRule="IsPlanDental" Text="Dental Insurance " />
+            <sfwLiteral ID="ltrVision31" sfwVisibleRule="IsPlanVision" Text="Vision Insurance " />
+            <sfwLabel ID="lblSSNUnkownStaticTextRemaining" sfwWrap="True" Text="application even if you do not have the Social Security Number at the time of application. This might be the case with a newborn or adopted child. Contact NDPERS as soon as you receive the Social Security Number." sfwIsCaption="True" />
+            <sfwLabel ID="lblAnyUpdateQuestion" sfwWrap="True" Text="Do you have any updates?" sfwIsCaption="True" />
+            <sfwLabel ID="lblModifyEnrollment" sfwWrap="True" Text="Please review your spouse and/or dependent(s) information already on record. Click 'Update' to modify the enrollments below. #8226; Enroll spouse or dependent? Select the individual (for both) and update to 'Enrolled' • Decline coverage? Select the individual (for both) and update to 'Waived'" sfwIsCaption="True" />
+            <sfwPanel ID="pnlMSSDependents" sfwCaption="Spouse / Dependents">
+              <items>
+                <sfwButton ID="btnAddChild" sfwMethodName="btnNewPopupDialog_Click" sfwRelatedControl="grvMSSPersonDependent" sfwRelatedDialogPanel="pnlDependentInfo" Text="Add New Spouse/Dependent" />
+                <sfwGridView ID="grvMSSPersonDependent" AllowPaging="True" sfwAllowNew="True" sfwEntityField="lstMSSPersonDependent" sfwGridEntity="entWssPersonDependent">
+                  <Columns>
+                    <TemplateField>
+                      <ItemTemplate>
+                        <sfwButton sfwMethodName="btnOpenPopupDialog_Click" sfwRelatedControl="grvMSSPersonDependent" sfwRelatedDialogPanel="pnlDependentInfo" Text="Update" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="First Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="FirstName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Middle Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="MiddleName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Last Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="LastName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Wss Person Dependent ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="WssPersonDependentId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Date Of Birth">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="DateOfBirth" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Effective Start Date" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EffectiveStartDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Effective End Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EffectiveEndDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Full Time Student Flag" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="FullTimeStudentFlag" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Gender">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="GenderDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Marital Status">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="MaritalStatusDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Relationship">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="RelationshipDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="SSN">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:XXX-XX-0000}" sfwEntityField="LastFourDigitsOfSSN" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Enrollment Option">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="CurrentPlanEnrollmentOptionDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Wss Person Account Enrollment Request ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="WssPersonAccountEnrollmentRequestId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+                <sfwLabel ID="lblLabel7" sfwVisibleRule="VisibilityForMedicareStep" Text="Add Dependents here to update Medicare coverage Info in next  step. &lt;br/&gt;If your dependent’s SSN is missing, you will be required to send the SSN number in writing to the NDPERS office." sfwIsCaption="True" />
+                <sfwDialogPanel ID="pnlDependentInfo" sfwCaption="Spouse / Dependent Info">
+                  <items>
+                    <sfwTable ID="tblDep" />
+                    <sfwLabel ID="capFirstName" Text="First Name : " sfwIsCaption="True" />
+                    <sfwTextBox ID="txtFirstName" sfwEntityField="FirstName" sfwValidationRules="IsFirstNameBlank" />
+                    <sfwLabel ID="capMiddleName" Text="Middle Name : " sfwIsCaption="True" />
+                    <sfwTextBox ID="txtMiddleName" sfwEntityField="MiddleName" />
+                    <sfwLabel ID="capLastName" Text="Last Name : " sfwIsCaption="True" />
+                    <sfwTextBox ID="txtLastName" sfwEntityField="LastName" sfwValidationRules="IsLastNameBlank" />
+                    <sfwLabel ID="capSsn" Text="SSN : " sfwIsCaption="True" />
+                    <sfwTextBox ID="txtSsn" sfwDataFormat="{0:000-##-####}" sfwEntityField="Ssn" sfwMode="New" sfwValidationRules="IsDuplicatePerson" />
+                    <sfwLabel ID="lblSSNUnkownStaticText2" sfwWrap="True" Text="If the Social Security Number is unknown at the time of application, you may still submit the application, but will need to follow up with this information once received/known.&lt;br/&gt;" sfwIsCaption="True" />
+                    <sfwLabel ID="lblssn" sfwDataFormat="{0:000-##-####}" sfwEntityField="LastFourDigitsOfSSN" sfwMode="Update" sfwClientVisibility="controllist:lblDOB,txtDateOfBirth#default:lblDOB;:txtDateOfBirth;" />
+                    <sfwLabel ID="capRelationshipValue" Text="Relationship : " sfwIsCaption="True" />
+                    <sfwDropDownList ID="ddlRelationshipValue" DataTextField="description" DataValueField="code_value" sfwData1EqualTo="Y" sfwLoadType="CodeGroup" sfwLoadSource="321" sfwEntityField="RelationshipValue" />
+                    <sfwLabel ID="capGenderValue" Text="Gender : " sfwIsCaption="True" />
+                    <sfwDropDownList ID="ddlGenderValue" DataTextField="description" DataValueField="code_value" sfwData1EqualTo="Y" sfwLoadType="CodeGroup" sfwLoadSource="300" sfwEntityField="GenderValue" sfwValidationRules="IsGenderBlank" />
+                    <sfwLabel ID="capDateOfBirth" Text="Date of Birth : " sfwIsCaption="True" />
+                    <sfwTextBox ID="txtDateOfBirth" sfwDataFormat="{0:d}" sfwEntityField="DateOfBirth" sfwValidationRules="IsDateofBirthBlank" />
+                    <sfwLabel ID="lblDOB" sfwEntityField="DateOfBirth" sfwMode="Update" />
+                    <sfwLabel ID="capMaritalStatusValue" Text="Marital Status : " sfwIsCaption="True" />
+                    <sfwDropDownList ID="ddlMaritalStatusValue" DataTextField="description" DataValueField="code_value" sfwLoadType="CodeGroup" sfwLoadSource="6002" sfwEntityField="MaritalStatusValue" sfwValidationRules="IsMaritalStatusNull" />
+                    <sfwLabel ID="lblLabel5" Text="Child Status :" Visible="False" sfwIsCaption="True" />
+                    <sfwCheckBox ID="chkFullTimeStudentFlag" sfwDefaultValue="N" Visible="False" sfwEntityField="FullTimeStudentFlag" />
+                    <sfwLabel ID="capFullTimeStudentFlag" Text="Full Time Student Flag " Visible="False" sfwIsCaption="True" />
+                    <sfwLabel ID="lblLabel11" Text="Dependent Enrollment Option :" sfwIsCaption="True" />
+                    <sfwDropDownList ID="ddlAddToPlan" DataTextField="description" DataValueField="code_value" sfwLoadType="CodeGroup" sfwLoadSource="340" sfwEntityField="CurrentPlanEnrollmentOptionValue" />
+                    <sfwTextBox ID="txtPersonID" Visible="False" sfwEntityField="IintPersonID" />
+                    <sfwLabel ID="lblWssPersonDependentId" Visible="False" sfwEntityField="WssPersonDependentId" />
+                    <sfwTextBox ID="txtLevelofCoverageValue" sfwEntityField="LevelOfCoverageValue" CssClass="hideControl" />
+                    <sfwTextBox ID="txtRequestDateTime" sfwEntityField="EffectiveStartDate" CssClass="hideControl" />
+                    <sfwButton ID="btnAddNewDepedent" sfwMethodName="btnFinishPopupDialog_Click" sfwRelatedControl="grvMSSPersonDependent" sfwRelatedDialogPanel="pnlDependentInfo" Text="Finish" />
+                  </items>
+                </sfwDialogPanel>
+              </items>
+            </sfwPanel>
+            <sfwButton ID="btnPrevious" sfwMethodName="btnWizardPrevious_Click" Text="Previous" />
+            <sfwButton ID="btnNextOverview" sfwMethodName="btnWizardNext_Click" Text="Next" />
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsStepMedicare" sfwRulesGroup="GHDVMedicare" sfwVisibleRule="VisibilityForMedicareStep" Title="Medicare Coverage Information" sfwShowInHeader="True">
+          <items>
+            <sfwLabel ID="capRejectionReasonMedicare" sfwVisibleRule="IsStatusRejected" Text="Rejection Reason : " sfwIsCaption="True" />
+            <sfwLabel ID="lblRejectionReasonMedicare" sfwVisibleRule="IsStatusRejected" sfwEntityField="RejectionReason" />
+            <sfwLiteral ID="GHE4" sfwVisibleRule="IsPlanGroupHealth" Text="Health Insurance Plan" />
+            <sfwLiteral ID="ltrDentalDer4" sfwVisibleRule="IsPlanDental" Text="Dental Insurance Plan" />
+            <sfwLiteral ID="ltrVision4" sfwVisibleRule="IsPlanVision" Text="Vision Insurance Plan" />
+            <sfwLabel ID="lblCapFive" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="lblStep51" sfwVisibleRule="IsPlanGroupHealth" Text="&lt;ul class=&quot;steps&quot;&gt;&lt;li class=&quot;nextstart&quot;&gt;Enrollment&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Pre-Tax HSA Contribution&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Workers Compensation / Other Coverages&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Dependents&lt;/li&gt;&lt;li class=&quot;startnext&quot;&gt;Medicare Coverage Information&lt;/li&gt;&lt;li class=&quot;next&quot;&gt;Review Enrollment&lt;/li&gt;&lt;li class = &quot;nextcontinue&quot;&gt;Print For Your Records&lt;/li&gt;&lt;li class=&quot;emptygray&quot;&gt;&lt;/li&gt;&lt;/ul&gt;" sfwIsCaption="True" />
+            <sfwPanel ID="pnlMedicare" GroupingText="&lt;b&gt;Member's Medicare Coverage Information&lt;/b&gt;" sfwCaption="Member's Medicare Coverage Information" sfwCollapsible="False">
+              <items>
+                <sfwPanel ID="pnlMemberMedicareCoverageInformation" sfwCaption="Member's Medicare Coverage Information">
+                  <items>
+                    <sfwTable ID="tblNewPage8" />
+                    <sfwLabel ID="capMedicareClaimNo1" AssociatedControlID="txtMedicareClaimNo1" Text="Member Medicare Claim No : " sfwIsCaption="True" />
+                    <sfwTextBox ID="txtMedicareClaimNo1" sfwEntityField="MedicareClaimNo" />
+                    <sfwLabel ID="capMedicarePartAEffectiveDate1" AssociatedControlID="txtMedicarePartAEffectiveDate1" Text="Medicare Part A Effective Date : " sfwIsCaption="True" />
+                    <sfwTextBox ID="txtMedicarePartAEffectiveDate1" sfwDataFormat="{0:d}" sfwEntityField="MedicarePartAEffectiveDate" />
+                    <sfwLabel ID="capMedicarePartBEffectiveDate1" AssociatedControlID="txtMedicarePartBEffectiveDate1" Text="Medicare Part B Effective Date : " sfwIsCaption="True" />
+                    <sfwTextBox ID="txtMedicarePartBEffectiveDate1" sfwDataFormat="{0:d}" sfwEntityField="MedicarePartBEffectiveDate" />
+                  </items>
+                </sfwPanel>
+              </items>
+            </sfwPanel>
+            <sfwPanel ID="pnlMedicareDependents" GroupingText="&lt;b&gt;Dependents Medicare Coverage Information&lt;/b&gt;" sfwCaption="Dependents Medicare Coverage Information" sfwCollapsible="False">
+              <items>
+                <sfwPanel ID="pnlDependentMedicareCoverageInformation" sfwCaption="Dependents Medicare Coverage Information">
+                  <items>
+                    <sfwButton ID="btnAddMedicareDependent" sfwMethodName="btnNewPopupDialog_Click" sfwRelatedControl="grvMSSMedicareDependents" sfwRelatedDialogPanel="pnlMedicareCov" Text="Add New" Visible="False" />
+                    <sfwGridView ID="grvMSSMedicareDependents" AllowPaging="True" sfwAllowNew="True" sfwTwoWayBinding="True" sfwEntityField="lstMSSPersonDependent" sfwGridEntity="entWssPersonDependent">
+                      <Columns>
+                        <TemplateField>
+                          <ItemTemplate>
+                            <sfwButton sfwMethodName="btnOpenPopupDialog_Click" sfwRelatedControl="grvMSSMedicareDependents" sfwRelatedDialogPanel="pnlMedicareCov" Text="Update Medicare Coverage Info" />
+                            <sfwButton sfwMethodName="btnGridViewDelete_Click" sfwRelatedControl="grvMSSMedicareDependents" Text="Delete" Visible="False" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="First Name">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="FirstName" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Last Name">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="LastName" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Middle Name">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="MiddleName" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="SSN">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:XXX-XX-0000}" sfwEntityField="LastFourDigitsOfSSN" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Medicare Claim No">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="MedicareClaimNo" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Medicare Part A&#xD;&#xA;                                             Effective Date">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="MedicarePartAEffectiveDate" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Medicare Part B&#xD;&#xA;                                             Effective Date">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="MedicarePartBEffectiveDate" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Wss Person Dependent ID" Visible="False">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="WssPersonDependentId" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Effective&#xD;&#xA;                                            Start Date">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EffectiveStartDate" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Effective&#xD;&#xA;                                            End Date">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EffectiveEndDate" />
+                          </ItemTemplate>
+                        </TemplateField>
+                      </Columns>
+                    </sfwGridView>
+                  </items>
+                </sfwPanel>
+                <sfwDialogPanel ID="pnlMedicareCov" sfwCaption="Medicare Coverage Info">
+                  <items>
+                    <sfwTable ID="tblMedicare" />
+                    <sfwLabel ID="capFirstName1" AssociatedControlID="lblDepFirstName1" Text="First Name : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblDepFirstName1" sfwEntityField="FirstName" />
+                    <sfwLabel ID="capMiddleName1" AssociatedControlID="lblMiddleName1" Text="Middle Name : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblMiddleName1" sfwEntityField="MiddleName" />
+                    <sfwLabel ID="capLastName1" AssociatedControlID="lblLastName1" Text="Last Name : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblLastName1" sfwEntityField="LastName" />
+                    <sfwLabel ID="capSsn1" AssociatedControlID="lblSsn1" Text="SSN : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblSsn1" sfwDataFormat="{0:000-##-####}" sfwEntityField="Ssn" />
+                    <sfwLabel ID="capMedicareClaimNo" AssociatedControlID="txtMedicareClaimNo" Text="Dependent Medicare Claim No : " sfwIsCaption="True" />
+                    <sfwTextBox ID="txtMedicareClaimNo" sfwEntityField="MedicareClaimNo" />
+                    <sfwLabel ID="capMedicarePartAEffectiveDate" AssociatedControlID="txtMedicarePartAEffectiveDate11" Text="Medicare Part A Effective Date : " sfwIsCaption="True" />
+                    <sfwTextBox ID="txtMedicarePartAEffectiveDate11" sfwDataFormat="{0:d}" sfwEntityField="MedicarePartAEffectiveDate" />
+                    <sfwLabel ID="capMedicarePartBEffectiveDate" AssociatedControlID="txtMedicarePartBEffectiveDate" Text="Medicare Part B Effective Date : " sfwIsCaption="True" />
+                    <sfwTextBox ID="txtMedicarePartBEffectiveDate" sfwDataFormat="{0:d}" sfwEntityField="MedicarePartBEffectiveDate" />
+                    <sfwLabel ID="capEffectiveStartDate1" AssociatedControlID="lblEffectiveStartDate1" Text="Effective Start Date : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblEffectiveStartDate1" sfwDataFormat="{0:d}" sfwEntityField="EffectiveStartDate" />
+                    <sfwLabel ID="capEffectiveEndDate1" AssociatedControlID="lblEffectiveEndDate1" Text="Effective End Date : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblEffectiveEndDate1" sfwDataFormat="{0:d}" sfwEntityField="EffectiveEndDate" />
+                    <sfwLabel ID="capDateOfBirth2" AssociatedControlID="lblDateOfBirth2" Text="Date Of Birth : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblDateOfBirth2" sfwDataFormat="{0:d}" sfwEntityField="DateOfBirth" />
+                    <sfwLabel ID="capGenderValue1" AssociatedControlID="lblGenderValue1" Text="Gender : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblGenderValue1" sfwEntityField="GenderDescription" />
+                    <sfwLabel ID="capMaritalStatusValue1" AssociatedControlID="lblMaritalStatusValue1" Text="Marital Status : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblMaritalStatusValue1" sfwEntityField="MaritalStatusDescription" />
+                    <sfwLabel ID="capRelationshipValue1" AssociatedControlID="lblRelationshipValue1" Text="Relationship : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblRelationshipValue1" sfwEntityField="RelationshipDescription" />
+                    <sfwButton ID="btnAddNewMedicareDep" sfwMethodName="btnFinishPopupDialog_Click" sfwRelatedControl="grvMSSMedicareDependents" sfwRelatedDialogPanel="pnlMedicareCov" Text="Finish" />
+                  </items>
+                </sfwDialogPanel>
+              </items>
+            </sfwPanel>
+            <sfwButton ID="btnPreviousMove" sfwMethodName="btnWizardPrevious_Click" Text="Previous" />
+            <sfwButton ID="btnButton1" sfwMethodName="btnWizardNext_Click" Text="Next" />
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsStep6" sfwRulesGroup="GHDVAcknowledgement" Title="Summary" sfwShowInHeader="True">
+          <items>
+            <sfwLabel ID="capRejectionReason6" sfwVisibleRule="IsStatusRejected" Text="Rejection Reason : " sfwIsCaption="True" />
+            <sfwLabel ID="lblRejectionReason6" sfwVisibleRule="IsStatusRejected" sfwEntityField="RejectionReason" />
+            <sfwLiteral ID="GHE5" sfwVisibleRule="IsPlanGroupHealth" Text="Health Insurance Plan Enrollment" />
+            <sfwLiteral ID="ltrDentalDer5" sfwVisibleRule="IsPlanDental" Text="Dental Insurance Plan Enrollment" />
+            <sfwLiteral ID="ltrVision5" sfwVisibleRule="IsPlanVision" Text="Vision Insurance Plan Enrollment" />
+            <sfwLabel ID="lblLabel53" sfwVisibleRule="IsWaivedHealth" Text="&lt;ul class=&quot;steps&quot;&gt;&lt;li class=&quot;nextstart&quot;&gt;Enrollment&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Pre-Tax HSA Contribution&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Workers Compensation / Other Coverages&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Dependents&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Medicare Coverage Information&lt;/li&gt;&lt;li class=&quot;startnext&quot;&gt;Waive&lt;/li&gt;&lt;li class=&quot;emptygray&quot;&gt;&lt;/li&gt;&lt;/ul&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="lblLabel54" sfwVisibleRule="IsEnrolledHealth" Text="&lt;ul class=&quot;steps&quot;&gt;&lt;li class=&quot;nextstart&quot;&gt;Enrollment&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Pre-Tax HSA Contribution&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Workers Compensation / Other Coverages&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Dependents&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Medicare Coverage Information&lt;/li&gt;&lt;li class=&quot;startnext&quot;&gt;Review Enrollment&lt;/li&gt;&lt;li class=&quot;next&quot;&gt;Print For your records&lt;/li&gt;&lt;li class=&quot;emptygray&quot;&gt;&lt;/li&gt;&lt;/ul&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="lblLabel14" sfwVisibleRule="IsWaivedDentalVision" Text="&lt;ul class=&quot;steps&quot;&gt;&lt;li class=&quot;nextstart&quot;&gt;Enrollment&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Workers Compensation / Other Coverages&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Dependents&lt;/li&gt;&lt;li class=&quot;startnext&quot;&gt;Waive&lt;/li&gt;&lt;li class=&quot;emptygray&quot;&gt;&lt;/li&gt;&lt;/ul&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="lblLabel45" sfwVisibleRule="IsEnrolledDentalVision" Text="&lt;ul class=&quot;steps&quot;&gt;&lt;li class=&quot;nextstart&quot;&gt;Enrollment&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Workers Compensation / Other Coverages&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Dependents&lt;/li&gt;&lt;li class=&quot;startnext&quot;&gt;Review Enrollment&lt;/li&gt;&lt;li class=&quot;next&quot;&gt;Print For your records&lt;/li&gt;&lt;li class=&quot;emptygray&quot;&gt;&lt;/li&gt;&lt;/ul&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="lblLabel6" Visible="False" sfwEntityField="PersonId" />
+            <sfwPanel ID="pnlEnrollmentDetails" sfwCaption="Enrollment Details">
+              <items>
+                <sfwLabel ID="capReasonValue" Text="Change Reason : " sfwIsCaption="True" />
+                <sfwLabel ID="lblDropDownList" sfwEntityField="ReasonDescription" />
+                <sfwLabel ID="capDateOfChange" Text="Date of Change : " sfwIsCaption="True" />
+                <sfwLabel ID="lblDateOfChange" sfwDataFormat="{0:d}" sfwEntityField="DateOfChange" sfwVisibleRule="IsChangeReasonNotNewHire" />
+                <sfwLabel ID="capLevelOfCoverageValue" sfwVisibleRule="IsLevelOfCoverageVisible" Text="Level of Coverage : " sfwIsCaption="True" />
+                <sfwLabel ID="lblLevelOfCoverageValue" sfwEntityField="LevelOfCoverageDescription" sfwVisibleRule="IsLevelOfCoverageVisible" />
+                <sfwLabel ID="capCoverageCode12" sfwVisibleRule="IsCoverageCodeVisible" Text="Level of Coverage : " sfwIsCaption="True" />
+                <sfwLabel ID="lblCoverageCode" sfwVisibleRule="IsCoverageCodeVisible" sfwEntityField="IstrCoverageCodeDescription" />
+                <sfwLabel ID="capIsEligibleDependentExistsFlagDesc" sfwVisibleRule="VisibleRule-IsFlexPlanAvailableForGHDV" Text="Pre-Tax Payroll Deduction : " sfwIsCaption="True" />
+                <sfwLabel ID="lblIsEligibleDependentExistsFlagDesc" sfwVisibleRule="VisibleRulePreTaxForNewEnrollmentRegular" sfwEntityField="IsPremiumTaxDeductionDesc" />
+                <sfwLabel ID="lblLabel42" sfwVisibleRule="VisibleRulePreTaxForUpdateEnrollmentRegular" sfwEntityField="IstrPreTaxDeductionFlag" />
+                <sfwLabel ID="capEPOTypeOfCoverage" AssociatedControlID="lblEPOTypeOfCoverage" sfwVisibleRule="IsTypeofCoverageNOTHDHP" Text="Type of Coverage : " sfwIsCaption="True" />
+                <sfwLabel ID="lblEPOTypeOfCoverage" sfwVisibleRule="IsTypeofCoverageNOTHDHP" sfwEntityField="TypeOfCoverageForMss" />
+                <sfwPanel ID="pnlHDHP1" GroupingText="&lt;u&gt;&lt;b&gt;HDHP/HSA Authorization&lt;/b&gt;&lt;/u&gt;" sfwCaption="High Deductible Health Plan/ Health Savings Account (HDHP/HSA)" sfwCollapsible="False" sfwVisibleRule="IsTypeofCoverageHDHP">
+                  <items>
+                    <sfwLabel ID="capTypeOfCoverageDescription" AssociatedControlID="lblTypeOfCoverageDescription" Text="Type of Coverage : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblTypeOfCoverageDescription" sfwEntityField="TypeOfCoverageForMss" />
+                    <sfwGridView ID="grvGridView2" sfwEntityField="lstHDHPAcknowledgement" CssClass="GridColumnHide">
+                      <Columns>
+                        <TemplateField HeaderText="Acknowledgement Text">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="AcknowledgementText" sfwRenderType="RichText" />
+                          </ItemTemplate>
+                        </TemplateField>
+                      </Columns>
+                    </sfwGridView>
+                    <sfwLabel ID="lblLabel15" sfwEntityField="IstrHDHPConfirmationText" sfwRenderType="RichText" />
+                    <sfwLabel ID="lblAcknowledgeTextForHDHP22" sfwEntityField="AcknowledgeTextForHDHP" />
+                    <sfwLabel ID="lblPreTaxHSA" sfwEntityField="PreTaxHSADisplay" />
+                    <sfwPanel ID="pnlHSASummary" GroupingText="&lt;u&gt;&lt;b&gt;Pre-Tax HSA Contribution&lt;/b&gt;&lt;/u&gt;" sfwCaption="Pre-Tax HSA Contribution" sfwCollapsible="False" sfwVisibleRule="VisibilityRuleHSAStepPretax">
+                      <items>
+                        <sfwLabel ID="capContributionStartDate1" Text="Contribution Start Date : " AssociatedControlID="lblContributionStartDate" sfwIsCaption="True" sfwVisibleRule="IsTypeofCoverageHDHP" />
+                        <sfwLabel ID="lblContributionStartDate" sfwEntityField="WssHsaContributionStartDate" sfwDataFormat="{0:d}" sfwVisibleRule="IsTypeofCoverageHDHP" />
+                        <sfwLabel ID="capContributionAmount1" Text="Monthly Contribution Amount : " AssociatedControlID="lblContributionAmount" sfwIsCaption="True" sfwVisibleRule="IsTypeofCoverageHDHP" />
+                        <sfwLabel ID="lblContributionAmount" sfwEntityField="WssHsaContributionAmount" sfwDataFormat="{0:C}" sfwVisibleRule="IsTypeofCoverageHDHP" />
+                        <sfwLabel ID="lblAchnowledgementTextForHDHP1" sfwEntityField="AcknowledgementTextForHDHP" sfwVisibleRule="IsTypeofCoverageHDHP" sfwRenderType="RichText" />
+                        <sfwLabel ID="lblLabel55" sfwEntityField="IstrConfirmationText" sfwRenderType="RichText" />
+                      </items>
+                    </sfwPanel>
+                  </items>
+                </sfwPanel>
+                <sfwPanel ID="pnlOtherCompensation1" sfwCaption="Other Coverage" sfwCollapsible="False" sfwVisibleRule="VisiblilityForOtherCoverage">
+                  <items>
+                    <sfwLabel ID="lblLabel4" sfwVisibleRule="VisibleRule-IsFlexPlanAvailableForGHDV" Text="Your insurance premium can be a pre-tax payroll deduction. If you pretax an insurance premium, you may not change coverage during the plan year unless you experience an IRS Qualified Change of Status. &lt;br/&gt;Do you wish to have your insurance premium deducted as a pre-tax payroll deduction? " sfwIsCaption="True" />
+                    <sfwLabel ID="lblLabel" Text="Are you or spouse or any of your Eligible Dependent currently or previously covered by another insurance benefit plan(s)?  " sfwIsCaption="True" />
+                    <sfwLabel ID="lblKeepingOtherCoverageFlag" sfwEntityField="IsEligibleDependentExistsFlagDesc" />
+                    <sfwLabel ID="lblLabel1" Text="If Yes, please complete this section" sfwIsCaption="True" />
+                    <sfwGridView ID="grvMSSOtherCoverageDetail1" AllowPaging="True" sfwAllowNew="True" sfwEntityField="lstMSSOtherCoverageDetail" sfwGridEntity="entWssPersonAccountOtherCoverageDetail">
+                      <Columns>
+                        <TemplateField HeaderText="Provider Name">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="ProviderOrgName" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Other Coverage Number/Phone Number" SortExpression="OtherCoverageNumber">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="OtherCoverageNumber" sfwDataFormat="{0:(###)###-####}" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Policy Number" SortExpression="PolicyNumber">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="PolicyNumber" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Policy Holder" SortExpression="PolicyHolder">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="PolicyHolder" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Date Of Birth" SortExpression="DateOfBirth">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="DateOfBirth" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Policy Coverage Start Date" SortExpression="PolicyStartDate">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="PolicyStartDate" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Policy Coverage End Date" SortExpression="PolicyEndDate">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="PolicyEndDate" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Name(s) of Person(s) Covered" SortExpression="CoveredPerson">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="CoveredPerson" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Wss Person Account Other Coverage Detail ID" SortExpression="WssPersonAccountOtherCoverageDetailId" Visible="False">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="WssPersonAccountEnrollmentRequestId" />
+                          </ItemTemplate>
+                        </TemplateField>
+                      </Columns>
+                    </sfwGridView>
+                    <sfwLabel ID="lblLabel26" sfwVisibleRule="IsPlanGroupHealth" Text="Do you intend to keep your current policy in force after the effective date of this application?  " sfwIsCaption="True" />
+                    <sfwLabel ID="lblKeepingOtherCoverageFlag2" sfwVisibleRule="IsPlanGroupHealth" sfwEntityField="KeepingOtherCoverageFlagDesc" />
+                    <sfwLabel ID="lblTextBox" Width="1000px" sfwEntityField="KeepCurrentFlagPolicyReason" />
+                  </items>
+                </sfwPanel>
+                <sfwPanel ID="pnlWorkers1" sfwCaption="Workers Compensation" sfwVisibleRule="VisibilityForWorkersCompensation">
+                  <items>
+                    <sfwLabel ID="lblLabel9" Text="Worker's Compensation" sfwIsCaption="True" />
+                    <sfwLabel ID="lblLabel23" Text="Are you, your spouse or any of your eligible dependents currently receiving or have received worker’s compensation benefits?   " sfwIsCaption="True" Width="125%" />
+                    <sfwLabel ID="lblCheckBox21" sfwEntityField="DependentReceivingWorkersCompensationFlagDesc" />
+                    <sfwLabel ID="lblLabel25" Text="Are you, your spouse or any of your eligible dependents currently receiving no-fault benefits?   " sfwIsCaption="True" Width="94%" />
+                    <sfwLabel ID="lblCheckBox31" sfwEntityField="DependentReceivingNoFaultBenefitsFlagDesc" />
+                    <sfwGridView ID="grvMSSWorkerCompensation1" AllowPaging="True" sfwAllowNew="True" sfwEntityField="lstMSSWorkerCompensation" sfwGridEntity="entWssPersonAccountWorkerCompensation">
+                      <Columns>
+                        <TemplateField HeaderText="Person Name" SortExpression="PersonName">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="PersonName" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Injury Date (MM-DD-YY)" SortExpression="InjuryDate">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="InjuryDate" sfwDataFormat="{0:d}" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Type Of Injury" SortExpression="TypeOfInjury">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="TypeOfInjury" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Wss Person Account Worker Compensation ID" SortExpression="WssPersonAccountWorkerCompensationId" Visible="False">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="WssPersonAccountWorkerCompensationId" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Company Providing Benefits" SortExpression="CompanyName">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="CompanyName" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Phone Number" SortExpression="PhoneNumber" Visible="False">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="PhoneNumber" />
+                          </ItemTemplate>
+                        </TemplateField>
+                      </Columns>
+                    </sfwGridView>
+                  </items>
+                </sfwPanel>
+                <sfwLabel ID="lblLabel32" sfwVisibleRule="IsSupportingDocumentExistsRegularGHDV" Text="The following document needs to be submitted to NDPERS before your enrollment/change can be approved. " sfwIsCaption="True" />
+                <sfwLabel ID="lblDocument" sfwVisibleRule="IsSupportingDocumentExistsRegularGHDV" sfwEntityField="Document" />
+                <sfwLabel ID="lblGrandChild" sfwVisibleRule="VisibleRuleIsGrandChildSelected" Text="The following document needs to be submitted to NDPERS before your enrollment/change can be approved. Birth Certificate and SFN 60983 Grandchild Eligibility Verification Form " sfwIsCaption="True" />
+              </items>
+            </sfwPanel>
+            <sfwPanel ID="pnlPanel" sfwCaption="Enrollment Details" sfwVisibleRule="IsPlanenrollmentOptionCancel">
+              <items>
+                <sfwLabel ID="capDateO" Text="Date of Change : " sfwIsCaption="True" />
+                <sfwLabel ID="lblDoc" sfwDataFormat="{0:d}" sfwEntityField="DateOfChange" />
+              </items>
+            </sfwPanel>
+            <sfwPanel ID="pnlDepedents" sfwCaption="Spouse/Dependents" sfwVisibleRule="DependentStepVisible">
+              <items>
+                <sfwGridView ID="grvGridView" AllowPaging="True" sfwAllowNew="True" sfwEntityField="lstMSSPersonDependent" sfwGridEntity="entWssPersonDependent">
+                  <Columns>
+                    <TemplateField HeaderText="Dependent Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="IstrDependentName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Wss Person Dependent ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="WssPersonDependentId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Date of Birth">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="DateOfBirth" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Effective Start Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EffectiveStartDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Effective End Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EffectiveEndDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Full Time Student Flag" Visible="False">
+                      <ItemTemplate>
+                        <sfwCheckBox sfwDefaultValue="N" sfwTwoWayBinding="False" sfwEntityField="FullTimeStudentFlag" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Gender">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="GenderDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Marital Status">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="MaritalStatusDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Relationship">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="RelationshipDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="SSN">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:XXX-XX-0000}" sfwEntityField="LastFourDigitsOfSSN" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Enrollment Option">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="CurrentPlanEnrollmentOptionDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </items>
+            </sfwPanel>
+            <sfwPanel ID="pnlMedicareDependentsInformation" sfwCaption="Medicare Coverage Information" sfwVisibleRule="VisibilityForMedicareStep">
+              <items>
+                <sfwTable ID="tblNewPage11" />
+                <sfwLabel ID="lblLabel29" Text="Are you or spouse or any of your Eligible Dependents currently covered by Medicare?  " sfwIsCaption="True" />
+                <sfwLabel ID="lblCheckBox1" sfwEntityField="IsDependentMedicareEligibleDesc" />
+                <sfwLabel ID="lblLabel30" Text="Are you or spouse or any of your Eligible Dependents currently covered by Medicare due to ESRD?  " sfwIsCaption="True" />
+                <sfwLabel ID="lblCheckBox4" sfwEntityField="IsDependentMedicareEsrdDesc" />
+                <sfwPanel ID="pnlMembeMedicare" GroupingText="&lt;b&gt;Member's Medicare Coverage Information&lt;/b&gt;" sfwCaption="Member's Medicare Coverage Information" sfwCollapsible="False">
+                  <items>
+                    <sfwLabel ID="capMedicareClaimNo2" AssociatedControlID="lblMedicareClaimNo" Text="Member Medicare Claim No : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblMedicareClaimNo" sfwEntityField="MedicareClaimNo" />
+                    <sfwLabel ID="capMedicarePartAEffectiveDate2" AssociatedControlID="lblMedicarePartAEffectiveDate" Text="Medicare Part A Effective Date : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblMedicarePartAEffectiveDate" sfwDataFormat="{0:d}" sfwEntityField="MedicarePartAEffectiveDate" />
+                    <sfwLabel ID="capMedicarePartBEffectiveDate2" AssociatedControlID="lblMedicarePartBEffectiveDate" Text="Medicare Part B Effective Date : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblMedicarePartBEffectiveDate" sfwDataFormat="{0:d}" sfwEntityField="MedicarePartBEffectiveDate" />
+                  </items>
+                </sfwPanel>
+                <sfwPanel ID="pnlMedic" GroupingText="&lt;b&gt;Dependents Medicare Coverage Information&lt;/b&gt;" sfwCaption="Dependents Medicare Coverage Information" sfwCollapsible="False">
+                  <items>
+                    <sfwGridView ID="grvMedicareCoverageInformation" AllowPaging="True" sfwAllowNew="True" sfwTwoWayBinding="True" sfwEntityField="lstMSSPersonDependent" sfwGridEntity="entWssPersonDependent">
+                      <Columns>
+                        <TemplateField HeaderText="Dependent Name">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="IstrDependentName" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="SSN">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:000-##-####}" sfwEntityField="Ssn" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Medicare Claim No">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="MedicareClaimNo" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Medicare Part A&#xD;&#xA;                                                                     Effective Date">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="MedicarePartAEffectiveDate" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Medicare Part B&#xD;&#xA;                                                                     Effective Date">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="MedicarePartBEffectiveDate" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Wss Person Dependent ID" Visible="False">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="WssPersonDependentId" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Effective&#xD;&#xA;                                                                    Start Date">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EffectiveStartDate" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Effective&#xD;&#xA;                                                                    End Date">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EffectiveEndDate" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Date Of Birth">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="DateOfBirth" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Gender">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="GenderDescription" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Marital&#xD;&#xA;                                                                    Status">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="MaritalStatusDescription" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Relationship">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="RelationshipDescription" />
+                          </ItemTemplate>
+                        </TemplateField>
+                      </Columns>
+                    </sfwGridView>
+                  </items>
+                </sfwPanel>
+              </items>
+            </sfwPanel>
+            <sfwPanel ID="pnlAgreement" sfwCaption="Member Authorization" sfwVisibleRule="IsGHDVOptionEnrolled">
+              <items>
+                <sfwGridView ID="grvAcknowledgementMemAuth" sfwEntityField="lstAcknowledgementMemAuth" CssClass="GridColumnHide">
+                  <Columns>
+                    <TemplateField HeaderText="Acknowledgement Text">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="AcknowledgementText" sfwRenderType="RichText" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+                <sfwGridView ID="grvGridView1" sfwEntityField="lstGHDVAcknowledgement" CssClass="GridColumnHide">
+                  <Columns>
+                    <TemplateField HeaderText="Acknowledgement Text">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="AcknowledgementText" sfwRenderType="RichText" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+                <sfwLabel ID="lblLabel35" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwCheckBox ID="chkCheckB" sfwDefaultValue="N" sfwEntityField="IstrAcknowledgementFlag" sfwValidationRules="IsGHDVAcknowledgementSelected" />
+                <sfwLabel ID="lblIstrConfirmationText" sfwEntityField="IstrConfirmationText" sfwRenderType="RichText" />
+                <sfwLabel ID="lblLabel36" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwTextBox ID="TextBox" Visible="False" sfwEntityField="WssPersonAccountEnrollmentRequestId" />
+                <sfwButton ID="btnPrevious1" sfwMethodName="btnWizardPrevious_Click" Text="Previous" />
+                <sfwButton ID="btnFinish" sfwMethodName="btnWizardSaveAndNext_Click" />
+                <sfwLabel ID="lblLabel31" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel16" sfwVisibleRule="IsSSNMissingForAnyDependnets" Text="Your dependent’s SSN is missing.  If you are unable to provide it at this time, you will be required to send the SSN number in writing to the NDPERS office." sfwIsCaption="True" />
+              </items>
+            </sfwPanel>
+            <sfwPanel ID="pnlWaive" sfwCaption="Waived" sfwVisibleRule="IsGHDVPlanOptionWaive">
+              <items>
+                <sfwLabel ID="lblLabel12" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwLabel ID="lblWaiveText1" sfwIsCaption="True" sfwVisibleRule="IsWaiveInHealthAsTemporary" />
+                <sfwLabel ID="lblWaiveText2" sfwIsCaption="True" sfwVisibleRule="IsWaiveInHealthAsTemporary" />
+                <sfwTextBox ID="txtWssPersonAccountEnrollmentRequestId" Visible="False" sfwEntityField="WssPersonAccountEnrollmentRequestId" />
+                <sfwRadioButtonList ID="rblRadioButtonList" sfwEntityField="IstrWaiveReason" sfwVisibleRule="IsWaiveInHealthAsTemporary">
+                  <ListItem Text="I have coverage through my spouse’s or parent’s employer (non-NDPERS)" Value="EMPL" />
+                  <ListItem Text="I have other individual coverage (non-NDPERS)" Value="INDI" />
+                  <ListItem Text="I have Medicare coverage" Value="MEDI" />
+                  <ListItem Text="Other" Value="OTHR" />
+                </sfwRadioButtonList>
+                <sfwTextBox ID="txtWaiveResonOTHRText" sfwEntityField="IstrWaiveReasonOTHRText" TextMode="MultiLine" Rows="3" Width="200px" sfwVisibleRule="IsWaiveInHealthAsTemporary" />
+                <sfwLabel ID="lblWaiveText3" sfwIsCaption="True" sfwVisibleRule="IsWaiveInHealthAsTemporary" />
+                <sfwGridView ID="grvAckGen" sfwEntityField="lstAcknowledgementGen" CssClass="GridColumnHide">
+                  <Columns>
+                    <TemplateField HeaderText="Acknowledgement Text">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="AcknowledgementText" sfwRenderType="RichText" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+                <sfwCheckBox ID="chkIsPlanWaivedFlag" sfwDefaultValue="N" sfwTwoWayBinding="False" sfwEntityField="AcknolwedgementPartDFlag" />
+                <sfwLabel ID="lblLabel13" Text="Waive" sfwEntityField="IstrWaive" />
+                <sfwLabel ID="lblIstrConfirmationText1" sfwEntityField="IstrConfirmationText" sfwRenderType="RichText" />
+                <sfwButton ID="btnPrevious2" sfwMethodName="btnWizardPrevious_Click" Text="Previous" />
+                <sfwButton ID="btnFinish1" sfwMethodName="btnWizardFinish_Click" Text="Finish" sfwNavigationParameter="aintRequestID=WssPersonAccountEnrollmentRequestId" sfwActiveForm="wfmCompletionMaintenance" />
+              </items>
+            </sfwPanel>
+          </items>
+        </sfwWizardStep>
+        <sfwWizardStep ID="wzsStep7" Title="Print For Your Records" sfwVisibleRule="IsPlanNotWaived" sfwShowInHeader="True">
+          <items>
+            <sfwLiteral ID="ltrLiteral1" sfwVisibleRule="IsPlanGroupHealth" Text="Health Insurance Plan" />
+            <sfwLiteral ID="ltrLiteral2" sfwVisibleRule="IsPlanDental" Text="Dental Insurance Plan" />
+            <sfwLiteral ID="ltrLiteral3" sfwVisibleRule="IsPlanVision" Text="Vision Insurance Plan" />
+            <sfwLabel ID="lblLabel34" Text="&lt;br/&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="lblLabel46" sfwVisibleRule="IsEnrolledHealth" Text="&lt;ul class=&quot;steps&quot;&gt;&lt;li class=&quot;nextstart&quot;&gt;Enrollment&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Pre-Tax HSA Contribution&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Workers Compensation / Other Coverages&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Dependents&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Medicare Coverage Information&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Review Enrollment&lt;/li&gt;&lt;li class=&quot;startnext&quot;&gt;Print For your records&lt;/li&gt;&lt;li class=&quot;emptyblue&quot;&gt;&lt;/li&gt;&lt;/ul&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="lblLabel48" sfwVisibleRule="IsEnrolledDentalVision" Text="&lt;ul class=&quot;steps&quot;&gt;&lt;li class=&quot;nextstart&quot;&gt;Enrollment&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Workers Compensation / Other Coverages&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Dependents&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Medicare Coverage Information&lt;/li&gt;&lt;li class=&quot;nextcontinue&quot;&gt;Review Enrollment&lt;/li&gt;&lt;li class=&quot;startnext&quot;&gt;Print For your records&lt;/li&gt;&lt;li class=&quot;emptyblue&quot;&gt;&lt;/li&gt;&lt;/ul&gt;" sfwIsCaption="True" />
+            <sfwLabel ID="lblLabel52" Visible="False" sfwEntityField="PersonId" />
+            <sfwPanel ID="pnlPanel1" sfwCaption="Enrollment Details" sfwVisibleRule="IsGHDVOptionNOTwaiveRCancel">
+              <items>
+                <sfwLabel ID="capReasonValue" Text="Change Reason : " sfwIsCaption="True" />
+                <sfwLabel ID="lblDropDownList11" sfwEntityField="ReasonDescription" />
+                <sfwLabel ID="capDateOfChange" Text="Date of Change : " sfwIsCaption="True" />
+                <sfwLabel ID="lblDateOfChange11" sfwDataFormat="{0:d}" sfwEntityField="DateOfChange" />
+                <sfwLabel ID="capLevelOfCoverageValue" sfwVisibleRule="IsLevelOfCoverageVisible" Text="Level of NDPERS Coverage : " sfwIsCaption="True" />
+                <sfwLabel ID="lblLevelOfCoverageValue11" sfwEntityField="LevelOfCoverageDescription" />
+                <sfwLabel ID="capCoverageCode" sfwVisibleRule="IsCoverageCodeVisible" Text="Level of Coverage : " sfwIsCaption="True" />
+                <sfwLabel ID="lblCoverageCode11" sfwVisibleRule="IsCoverageCodeVisible" sfwEntityField="IstrCoverageCodeDescription" />
+                <sfwLabel ID="capIsEligibleDependentExistsFlagDesc" sfwVisibleRule="VisibleRule-IsFlexPlanAvailableForGHDV" Text="Pre-Tax Payroll Deduction : " sfwIsCaption="True" />
+                <sfwLabel ID="lblIsEligibleDependentExistsFlagDesc11" sfwVisibleRule="VisibleRulePreTaxForNewEnrollmentRegular" sfwEntityField="IsPremiumTaxDeductionDesc" />
+                <sfwLabel ID="lblLabel471" sfwVisibleRule="VisibleRulePreTaxForUpdateEnrollmentRegular" sfwEntityField="IstrPreTaxDeductionFlag" />
+                <sfwLabel ID="capEPOTypeOfCoverage" AssociatedControlID="lblEPOTypeOfCoverage" sfwVisibleRule="IsTypeofCoverageNOTHDHP" Text="Type of NDPERS Coverage : " sfwIsCaption="True" />
+                <sfwLabel ID="lblEPOTypeOfCoverage11" sfwVisibleRule="IsTypeofCoverageNOTHDHP" sfwEntityField="TypeOfCoverageForMss" />
+                <sfwPanel ID="pnlHDHP22" GroupingText="&lt;u&gt;&lt;b&gt;HDHP/HSA Authorization&lt;/b&gt;&lt;/u&gt;" sfwCaption="High Deductible Health Plan/ Health Savings Account (HDHP/HSA)" sfwCollapsible="False" sfwVisibleRule="IsTypeofCoverageHDHP">
+                  <items>
+                    <sfwLabel ID="capTypeOfCoverageDescription" AssociatedControlID="lblTypeOfCoverageDescription" Text="Type of Coverage : " sfwIsCaption="True" />
+                    <sfwLabel ID="lblTypeOfCoverageDescription11" sfwEntityField="TypeOfCoverageForMss" />
+                    <sfwGridView ID="grvGridView22" sfwEntityField="lstHDHPAcknowledgement" CssClass="GridColumnHide">
+                      <Columns>
+                        <TemplateField HeaderText="Acknowledgement Text">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="AcknowledgementText" sfwRenderType="RichText" />
+                          </ItemTemplate>
+                        </TemplateField>
+                      </Columns>
+                    </sfwGridView>
+                    <sfwLabel ID="lblLabel151" sfwEntityField="IstrHDHPConfirmationText" sfwRenderType="RichText" />
+                    <sfwLabel ID="lblAcknowledgeTextForHDHP1" sfwEntityField="AcknowledgeTextForHDHP" />
+                    <sfwLabel ID="lblPreTaxHSA1" sfwEntityField="PreTaxHSADisplay" />
+                    <sfwPanel ID="pnlHSAPrint1" GroupingText="&lt;u&gt;&lt;b&gt;Pre-Tax HSA Contribution&lt;/b&gt;&lt;/u&gt;" sfwCaption="Pre-Tax HSA Contribution" sfwCollapsible="False" sfwVisibleRule="VisibilityRuleHSAStepPretax">
+                      <items>
+                        <sfwLabel ID="capWssContributionStartDate" Text="Contribution Start Date : " AssociatedControlID="lblWssContributionStartDate11" sfwIsCaption="True" sfwVisibleRule="IsTypeofCoverageHDHP" />
+                        <sfwLabel ID="lblWssContributionStartDate11" sfwEntityField="WssHsaContributionStartDate" sfwDataFormat="{0:d}" sfwVisibleRule="IsTypeofCoverageHDHP" />
+                        <sfwLabel ID="capWssContributionAmount" Text="Monthly Contribution Amount : " AssociatedControlID="lblWssContributionAmount11" sfwIsCaption="True" sfwVisibleRule="IsTypeofCoverageHDHP" />
+                        <sfwLabel ID="lblWssContributionAmount11" sfwEntityField="WssHsaContributionAmount" sfwDataFormat="{0:C}" sfwVisibleRule="IsTypeofCoverageHDHP" />
+                        <sfwLabel ID="lblAchnowledgementTextForHDHP21" sfwEntityField="AcknowledgementTextForHDHP" sfwRenderType="RichText" />
+                        <sfwLabel ID="lblLabel561" sfwEntityField="IstrConfirmationText" sfwRenderType="RichText" />
+                      </items>
+                    </sfwPanel>
+                  </items>
+                </sfwPanel>
+                <sfwPanel ID="pnlOtherCompensation111" sfwCaption="Other Coverage" sfwCollapsible="False" sfwVisibleRule="VisiblilityForOtherCoverage">
+                  <items>
+                    <sfwLabel ID="lblLabel4" sfwVisibleRule="VisibleRule-IsFlexPlanAvailableForGHDV" Text="Your insurance premium can be a pre-tax payroll deduction. If you pretax an insurance premium, you may not change coverage during the plan year unless you experience an IRS Qualified Change of Status. &lt;br/&gt;Do you wish to have your insurance premium deducted as a pre-tax payroll deduction? " sfwIsCaption="True" />
+                    <sfwLabel ID="lblLabel" Text="Are you or spouse or any of your Eligible Dependent currently or previously covered by another insurance benefit plan(s)?  " sfwIsCaption="True" />
+                    <sfwLabel ID="lblKeepingOtherCoverageFlag1" sfwEntityField="IsEligibleDependentExistsFlagDesc" />
+                    <sfwLabel ID="lblLabel1" Text="If Yes, please complete this section" sfwIsCaption="True" />
+                    <sfwGridView ID="grvMSSOtherCoverageDetail111" AllowPaging="True" sfwAllowNew="True" sfwEntityField="lstMSSOtherCoverageDetail" sfwGridEntity="entWssPersonAccountOtherCoverageDetail">
+                      <Columns>
+                        <TemplateField HeaderText="Provider Name">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="ProviderOrgName" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Other Coverage Number/Phone Number" SortExpression="OtherCoverageNumber">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="OtherCoverageNumber" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Policy Number" SortExpression="PolicyNumber">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="PolicyNumber" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Policy Holder" SortExpression="PolicyHolder">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="PolicyHolder" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Date Of Birth" SortExpression="DateOfBirth">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="DateOfBirth" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Policy Coverage Start Date" SortExpression="PolicyStartDate">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="PolicyStartDate" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Policy Coverage End Date" SortExpression="PolicyEndDate">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="PolicyEndDate" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Name(s) of Person(s) Covered" SortExpression="CoveredPerson">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="CoveredPerson" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Wss Person Account Other Coverage Detail ID" SortExpression="WssPersonAccountOtherCoverageDetailId" Visible="False">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="WssPersonAccountEnrollmentRequestId" />
+                          </ItemTemplate>
+                        </TemplateField>
+                      </Columns>
+                    </sfwGridView>
+                    <sfwLabel ID="lblLabel26" sfwVisibleRule="IsPlanGroupHealth" Text="Do you intend to keep your current policy in force after the effective date of this application?  " sfwIsCaption="True" />
+                    <sfwLabel ID="lblKeepingOtherCoverageFlag211" sfwVisibleRule="IsPlanGroupHealth" sfwEntityField="KeepingOtherCoverageFlagDesc" />
+                    <sfwLabel ID="lblTextBox11" Width="1000px" sfwEntityField="KeepCurrentFlagPolicyReason" />
+                  </items>
+                </sfwPanel>
+                <sfwPanel ID="pnlWorkers111" sfwCaption="Workers Compensation" sfwVisibleRule="VisibilityForWorkersCompensation">
+                  <items>
+                    <sfwLabel ID="lblLabel9" Text="Worker's Compensation" sfwIsCaption="True" />
+                    <sfwLabel ID="lblLabel23" Text="Are you, your spouse or any of your eligible dependents currently receiving or have received worker’s compensation benefits?   " sfwIsCaption="True" Width="125%" />
+                    <sfwLabel ID="lblCheckBox211" sfwEntityField="DependentReceivingWorkersCompensationFlagDesc" />
+                    <sfwLabel ID="lblLabel25" Text="Are you, your spouse or any of your eligible dependents currently receiving no-fault benefits?   " sfwIsCaption="True" Width="94%" />
+                    <sfwLabel ID="lblCheckBox311" sfwEntityField="DependentReceivingNoFaultBenefitsFlagDesc" />
+                    <sfwGridView ID="grvMSSWorkerCompensation111" AllowPaging="True" sfwAllowNew="True" sfwEntityField="lstMSSWorkerCompensation" sfwGridEntity="entWssPersonAccountWorkerCompensation">
+                      <Columns>
+                        <TemplateField HeaderText="Person Name" SortExpression="PersonName">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="PersonName" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Injury Date (MM-DD-YY)" SortExpression="InjuryDate">
+                          <ItemTemplate>
+                            <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="InjuryDate" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Type Of Injury" SortExpression="TypeOfInjury">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="TypeOfInjury" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Wss Person Account Worker Compensation ID" SortExpression="WssPersonAccountWorkerCompensationId" Visible="False">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="WssPersonAccountWorkerCompensationId" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Company Providing Benefits" SortExpression="CompanyName">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="CompanyName" />
+                          </ItemTemplate>
+                        </TemplateField>
+                        <TemplateField HeaderText="Phone Number" SortExpression="PhoneNumber" Visible="False">
+                          <ItemTemplate>
+                            <sfwLabel sfwEntityField="PhoneNumber" />
+                          </ItemTemplate>
+                        </TemplateField>
+                      </Columns>
+                    </sfwGridView>
+                  </items>
+                </sfwPanel>
+                <sfwLabel ID="lblLabelSupportingDocument" sfwVisibleRule="IsSupportingDocumentExistsRegularGHDV" Text="The following document needs to be submitted to NDPERS before your enrollment/change can be approved. " sfwIsCaption="True" />
+                <sfwLabel ID="lblDocument111" sfwVisibleRule="IsSupportingDocumentExistsRegularGHDV" sfwEntityField="Document" />
+                <sfwLabel ID="lblGrandChildSelected" sfwVisibleRule="VisibleRuleIsGrandChildSelected" Text="The following document needs to be submitted to NDPERS before your enrollment/change can be approved. Birth Certificate and SFN 60983 Grandchild Eligibility Verification Form " sfwIsCaption="True" />
+              </items>
+            </sfwPanel>
+            <sfwPanel ID="pnlPanel211" sfwCaption="Enrollment Details" sfwVisibleRule="IsPlanenrollmentOptionCancel">
+              <items>
+                <sfwLabel ID="capDateO" Text="Date of Change : " sfwIsCaption="True" />
+                <sfwLabel ID="lblDoc11" sfwDataFormat="{0:d}" sfwEntityField="DateOfChange" />
+              </items>
+            </sfwPanel>
+            <sfwPanel ID="pnlPanel311" sfwCaption="Spouse/Dependents" sfwVisibleRule="DependentStepVisible">
+              <items>
+                <sfwGridView ID="grvGridView1111" AllowPaging="True" sfwAllowNew="True" sfwEntityField="lstMSSPersonDependent" sfwGridEntity="entWssPersonDependent">
+                  <Columns>
+                    <TemplateField HeaderText="Dependent Name">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="IstrDependentName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Wss Person Dependent ID" Visible="False">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="WssPersonDependentId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Date of Birth">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="DateOfBirth" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Effective Start Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EffectiveStartDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Effective End Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EffectiveEndDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Full Time Student Flag" Visible="False">
+                      <ItemTemplate>
+                        <sfwCheckBox sfwDefaultValue="N" sfwTwoWayBinding="False" sfwEntityField="FullTimeStudentFlag" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Gender">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="GenderDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Marital Status">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="MaritalStatusDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Relationship">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="RelationshipDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="SSN">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:XXX-XX-0000}" sfwEntityField="LastFourDigitsOfSSN" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Enrollment Option">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="CurrentPlanEnrollmentOptionDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </items>
+            </sfwPanel>
+            <sfwPanel ID="pnlPanel411" sfwCaption="Member Authorization" sfwVisibleRule="IsGHDVOptionEnrolled">
+              <items>
+                <sfwGridView ID="grvAcknowledgementMemAuth11" sfwEntityField="lstAcknowledgementMemAuth" CssClass="GridColumnHide">
+                  <Columns>
+                    <TemplateField HeaderText="Acknowledgement Text">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="AcknowledgementText" sfwRenderType="RichText" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+                <sfwGridView ID="grvGridView112" sfwEntityField="lstGHDVAcknowledgement" CssClass="GridColumnHide">
+                  <Columns>
+                    <TemplateField HeaderText="Acknowledgement Text">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="AcknowledgementText" sfwRenderType="RichText" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+                <sfwLabel ID="lblLabel35" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwCheckBox ID="chkCheckB11" sfwDefaultValue="N" sfwEntityField="IstrAcknowledgementFlag" />
+                <sfwLabel ID="lblIstrConfirmationText1111" sfwEntityField="IstrConfirmationText" sfwRenderType="RichText" />
+                <sfwLabel ID="lblLabel36" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwTextBox ID="TextBox" Visible="False" sfwEntityField="WssPersonAccountEnrollmentRequestId" />
+                <sfwButton ID="btnButton3" Text="Return To Plans" sfwMethodName="btnBack_Click" />
+                <sfwButton ID="btnButton4" Text="Print" OnClientClick="PrintCenterMiddle(e)" sfwMethodName="btnOpen_Click" />
+                <sfwLabel ID="lblLabel31" Text="&lt;br/&gt;" sfwIsCaption="True" />
+                <sfwLabel ID="lblLabelSSN" sfwVisibleRule="IsSSNMissingForAnyDependnets" Text="Your dependent’s SSN is missing.  If you are unable to provide it at this time, you will be required to send the SSN number in writing to the NDPERS office." sfwIsCaption="True" />
+              </items>
+            </sfwPanel>
+          </items>
+        </sfwWizardStep>
+      </items>
+    </sfwWizard>
+  </items>
+  <loaddetails>
+    <entityfield ID="lstHDHPAcknowledgement" sfwNewAutoLoad="True" sfwUpdateAutoLoad="True" />
+    <entityfield ID="lstMSSOtherCoverageDetail" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstMSSWorkerCompensation" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstMSSPersonDependent" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstAcknowledgementMemAuth" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstGHDVAcknowledgement" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstAcknowledgementGen" sfwNewAutoLoad="True" sfwUpdateAutoLoad="False" />
+  </loaddetails>
+  <ExtraFields />
+</form>

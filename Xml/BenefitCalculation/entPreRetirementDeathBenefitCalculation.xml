@@ -1,0 +1,152 @@
+﻿<entity ID="entPreRetirementDeathBenefitCalculation" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwErrorTable="sgt_benefit_calculation_error" sfwParentKey="benefit_calculation_id" sfwParentKeyValue="icdoBenefitCalculation.benefit_calculation_id" sfwMainCDO="icdoBenefitCalculation" sfwStatusColumn="status_value" sfwReadOnlyRule="IsStatusProcessed" sfwObjectID="busPreRetirementDeathBenefitCalculation" sfwParentEntity="entBenefitCalculation">
+  <rules>
+    <rule ID="IsAnyApplicantsDeathNotified" sfwMessageId="4221" sfwExpression="(this.IsAnyApplicantsDeathNotified() == True)" sfwObjectBased="True" />
+    <rule ID="IsAnyApplicationsExistsPending" sfwMessageId="4220" sfwExpression="(this.icdoBenefitCalculation.calculation_type_value == &quot;FNAL&quot;) &amp;&amp; &#xA;(this.IsAnyApplicationsExistsPending() == False)" sfwObjectBased="True" />
+    <rule ID="IsBenefitBeginDateNOTValid" sfwMessageId="4218" sfwExpression="(this.IsBenefitBeginDateValid() == False)" sfwObjectBased="True" />
+    <rule ID="IsBenefitBeginDateNull" sfwMessageId="4217" sfwExpression="(this.icdoBenefitCalculation.retirement_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsBenefitOptionNOTExists" sfwMessageId="4213" sfwExpression="(this.icdoBenefitCalculation.calculation_type_value == &quot;ESTM&quot;) &amp;&amp; &#xA;(this.IsBenefitOptionExists() == False)" sfwObjectBased="True" />
+    <rule ID="IsDateofDeathFutureDate" sfwMessageId="4211" sfwExpression="(this.icdoBenefitCalculation.date_of_death &gt; RFunc.CurrentDate())" sfwObjectBased="True" />
+    <rule ID="IsDateofDeathLessThanBirthDate" sfwMessageId="4215" sfwExpression="!(this.icdoBenefitCalculation.date_of_death == DateTime.MinValue) &amp;&amp; &#xA;(this.icdoBenefitCalculation.date_of_death &lt;= RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusMember.icdoPerson.date_of_birth&quot;))" sfwObjectBased="True" />
+    <rule ID="IsDateofDeathNull" sfwMessageId="4216" sfwExpression="(this.icdoBenefitCalculation.date_of_death == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsInvalidBenefitOptionSelected" sfwMessageId="2050" sfwExpression="(this.icdoBenefitCalculation.benefit_option_value == &quot;5100&quot;)" sfwObjectBased="True" />
+    <rule ID="IsJobServiceFASNOTConsecutive" sfwMessageId="2041" sfwExpression="(this.IsJobService == True)" sfwObjectBased="True" />
+    <rule ID="IsMemberContributedTillTerminationDate" sfwMessageId="4230" sfwExpression="(this.icdoBenefitCalculation.calculation_type_value == &quot;FNAL&quot;) &amp;&amp; &#xA;(this.IsContributedTillTerminationDate() == False)" sfwObjectBased="True" />
+    <rule ID="IsMemberEmploymentNOTEndDated" sfwMessageId="4229" sfwExpression="(this.icdoBenefitCalculation.calculation_type_value == &quot;FNAL&quot;) &amp;&amp; &#xA;(this.IsAllEmploymentTerminated() == False)" sfwObjectBased="True" />
+    <rule ID="IsPaidUpAmountEntered" sfwMessageId="4224" sfwExpression="(this.icdoBenefitCalculation.paid_up_annuity_amount != 0) &amp;&amp; &#xA;!(this.IsJobService == True)" sfwObjectBased="True" />
+    <rule ID="IsServicePurchaseAvailableInProgress" sfwMessageId="4222" sfwExpression="(this.IsServicePurchaseAvailableInProgress() == True)" sfwObjectBased="True" />
+    <rule ID="IsStatusProcessed" sfwExpression="(this.icdoBenefitCalculation.status_value == &quot;PROC&quot;)" sfwObjectBased="True" />
+    <rule ID="IsTerminationDateEmpty" sfwMessageId="1905" sfwExpression="(this.icdoBenefitCalculation.calculation_type_value == &quot;FNAL&quot;) &amp;&amp; &#xA;(this.icdoBenefitCalculation.termination_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsTotalPercentageNotEqual100Estimate" sfwMessageId="4212" sfwExpression="(this.icdoBenefitCalculation.calculation_type_value == &quot;ESTM&quot;) &amp;&amp; &#xA;(this.IsTotalBenefitPercentageSum100() == False)" sfwObjectBased="True" />
+    <rule ID="IsTotalPercentageNotEqual100Final" sfwMessageId="4212" sfwExpression="(this.icdoBenefitCalculation.calculation_type_value == &quot;FNAL&quot;) &amp;&amp; &#xA;(this.IsTotalBenefitPercentageSum100() == False)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForApproveButton" sfwExpression="!(this.icdoBenefitCalculation.action_status_value == &quot;CANC&quot;) &amp;&amp; &#xA;!(this.icdoBenefitCalculation.status_value == &quot;REVW&quot;) &amp;&amp; &#xA;(this.icdoBenefitCalculation.created_by != RFunc.GetValue&lt;String&gt;(this, &quot;iobjPassInfo.istrUserID&quot;)) &amp;&amp; &#xA;(this.IsPayeeAccountCreatedForallPayees() == False) &amp;&amp; &#xA;(this.icdoBenefitCalculation.recalculated_by != RFunc.GetValue&lt;String&gt;(this, &quot;iobjPassInfo.istrUserID&quot;))" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForSaveButton" sfwExpression="(this.icdoBenefitCalculation.action_status_value == &quot;PAPR&quot;) &amp;&amp; &#xA;!(this.IsCalculationApproved() == True)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleIsBenefitPayeeTabForNewModeVisible" sfwExpression="(this.iblnIsBenefitPayeeTabForNewModeVisible == True)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleIsBenefitPayeeTabForUpdateModeVisible" sfwExpression="(this.iblnIsBenefitPayeeTabForNewModeVisible == False)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleRMDAmount" sfwExpression="(this.idecMemberAgeAsonDateofDeath &gt;= 73) &amp;&amp; &#xA;(this.icdoBenefitCalculation.rmd_amount != 0)" sfwObjectBased="True" />
+    <rule ID="IsRHICEffectiveDateEntered" sfwMessageId="10278" sfwExpression="!(this.icdoBenefitCalculation.plan_id == 27 || this.icdoBenefitCalculation.plan_id == 28) &amp;&amp;&#xA;(this.icdoBenefitCalculation.rhic_effective_date == DateTime.MinValue) &amp;&amp; &#xA;!(this.icdoBenefitCalculation.calculation_type_value == &quot;ESTM&quot;)" sfwObjectBased="True" />
+    <rule ID="IsBenefitOverPayment" sfwRuleType="Validation" sfwExpression="(this.IsBenefitOverpayment() == true)" sfwMessageId="10329" sfwObjectBased="True" />
+    <rule ID="IsMemberTFFRDual" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="(this.OverriddenFinalAverageSalary==0)&amp;&amp;&#xA;(this.IsMemberIsTFFRdual())" sfwMessageId="10427" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="VisibleRuleForApproveButton" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleIsStatusApprovedOrPendApproval" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleIsStatusCancelled" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleIsBenefitPayeeTabForNewModeVisible" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleIsBenefitPayeeTabForUpdateModeVisible" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForSaveButton" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForSaveButton" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForApproveButton" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleRMDAmount" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForReviewPCD" sfwStatus="Active" sfwMode="All" />
+    <item ID="VisibleRuleForFAS2020" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForFAS2010" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror>
+    <item ID="IsTotalPercentageNotEqual100Estimate" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAnyApplicationsExistsPending" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAnyApplicantsDeathNotified" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsServicePurchaseAvailableInProgress" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsJobServiceFASNOTConsecutive" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMemberContributedTillTerminationDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsApplicationModifiedAfterCalculation" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsRHICEffectiveDateEntered" sfwStatus="Active" sfwMode="All" />
+    <item ID="TentativeTFFRTIAARecordExists" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsBenefitOverPayment" sfwMode="All" sfwStatus="Active" />
+  </softerror>
+  <harderror>
+    <item ID="IsStatusProcessed" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsStatusProcessed" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsTotalPercentageNotEqual100Final" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsBenefitOptionNOTExists" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsDateofDeathLessThanBirthDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsDateofDeathNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsBenefitBeginDateNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsBenefitBeginDateNOTValid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPaidUpAmountEntered" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsTerminationDateEmpty" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMemberEmploymentNOTEndDated" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsInvalidBenefitOptionSelected" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule - IfPersonLimit401aFlagYandOverriddenFASisZero" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsFASCalculatedBy3Consecutive12MonthsPeriod" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMemberTFFRDual" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete>
+    <item ID="IsCalculationTypeFinal" sfwMode="All" sfwStatus="Active" />
+  </validatedelete>
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <expressionfields />
+  <attributes>
+    <attribute sfwDataType="int" sfwType="Property" ID="BenefitCalculationId" sfwValue="icdoBenefitCalculation.benefit_calculation_id" />
+    <attribute sfwType="Collection" sfwEntity="entBenefitCalculationOptions" ID="lstBenefitCalculationOptions" sfwValue="iclbBenefitCalculationOptions" />
+    <attribute sfwDataType="string" sfwType="Property" ID="StatusDescription" sfwValue="icdoBenefitCalculation.status_description" />
+    <attribute sfwDataType="int" sfwType="Property" ID="PersonId" sfwValue="icdoBenefitCalculation.person_id" />
+    <attribute ID="objMember" sfwType="Object" sfwEntity="entPerson" sfwValue="ibusMember" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecMemberAgeAsonDateofDeath" sfwValue="idecMemberAgeAsonDateofDeath" />
+    <attribute ID="objPlan" sfwType="Object" sfwEntity="entPlan" sfwValue="ibusPlan" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="CreatedDate" sfwValue="icdoBenefitCalculation.created_date" />
+    <attribute sfwDataType="string" sfwType="Property" ID="CalculationTypeDescription" sfwValue="icdoBenefitCalculation.calculation_type_description" />
+    <attribute sfwDataType="string" sfwType="Property" ID="BenefitAccountTypeDescription" sfwValue="icdoBenefitCalculation.benefit_account_type_description" />
+    <attribute sfwDataType="string" sfwType="Property" ID="BenefitAccountTypeValue" sfwValue="icdoBenefitCalculation.benefit_account_type_value" />
+    <attribute sfwDataType="int" sfwType="Property" ID="PlanId" sfwValue="icdoBenefitCalculation.plan_id" />
+    <attribute sfwDataType="string" sfwType="Property" ID="SuppressWarningsFlag" sfwValue="icdoBenefitCalculation.suppress_warnings_flag" />
+    <attribute sfwDataType="string" sfwType="Property" ID="SuppressWarningsBy" sfwValue="icdoBenefitCalculation.suppress_warnings_by" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="TerminationDate" sfwValue="icdoBenefitCalculation.termination_date" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="DateOfDeath" sfwValue="icdoBenefitCalculation.date_of_death" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="RetirementDate" sfwValue="icdoBenefitCalculation.retirement_date" />
+    <attribute sfwDataType="string" sfwType="Property" ID="BenefitOptionValue" sfwValue="icdoBenefitCalculation.benefit_option_value" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="PercentageSalaryIncrease" sfwValue="icdoBenefitCalculation.percentage_salary_increase" />
+    <attribute sfwDataType="int" sfwType="Property" ID="SalaryMonthIncrease" sfwValue="icdoBenefitCalculation.salary_month_increase" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="AdjustedTvsc" sfwValue="icdoBenefitCalculation.adjusted_tvsc" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="AdjustedPsc" sfwValue="icdoBenefitCalculation.adjusted_psc" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="QdroAmount" sfwValue="icdoBenefitCalculation.qdro_amount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="PaidUpAnnuityAmount" sfwValue="icdoBenefitCalculation.paid_up_annuity_amount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="JsResidualMgAmount" sfwValue="icdoBenefitCalculation.js_residual_mg_amount" />
+    <attribute ID="objBenefitDeductionSummary" sfwType="Object" sfwEntity="entBenefitDeductionSummary" sfwValue="ibusBenefitDeductionSummary" />
+    <attribute sfwDataType="string" sfwType="Property" ID="Comments" sfwValue="icdoBenefitCalculation.comments" />
+    <attribute sfwType="Collection" sfwEntity="entBenefitServicePurchase" ID="lstBenefitServicePurchaseAll" sfwValue="iclbBenefitServicePurchaseAll" />
+    <attribute sfwType="Collection" sfwEntity="entBenefitCalculationPayee" ID="lstBenefitCalculationPayee" sfwValue="iclbBenefitCalculationPayee" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IintFASMonths" sfwValue="iintFASMonths" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="ComputedFinalAverageSalary" sfwValue="icdoBenefitCalculation.computed_final_average_salary" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="OverriddenFinalAverageSalary" sfwValue="icdoBenefitCalculation.overridden_final_average_salary" />
+    <attribute sfwType="Collection" sfwEntity="entBenefitCalculationFasMonths" ID="lstBenefitCalculationFASMonths" sfwValue="iclbBenefitCalculationFASMonths" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="CalculationFinalAverageSalary" sfwValue="icdoBenefitCalculation.calculation_final_average_salary" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="CreditedVsc" sfwValue="icdoBenefitCalculation.credited_vsc" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="CreditedPsc" sfwValue="icdoBenefitCalculation.credited_psc" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="NormalRetirementDate" sfwValue="icdoBenefitCalculation.normal_retirement_date" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecMemberAgeBasedOnRetirementDate" sfwValue="idecMemberAgeBasedOnRetirementDate" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="AnnuitantAge" sfwValue="icdoBenefitCalculation.annuitant_age" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IsMemberVested" sfwValue="icdoBenefitCalculation.is_member_vested" />
+    <attribute sfwType="Collection" sfwEntity="entBenefitMultiplier" ID="lstBenefitMultiplier" sfwValue="iclbBenefitMultiplier" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="UnreducedBenefitAmount" sfwValue="icdoBenefitCalculation.unreduced_benefit_amount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="ReducedMonthlyAfterPlsoDeduction" sfwValue="icdoBenefitCalculation.reduced_monthly_after_plso_deduction" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="FinalMonthlyBenefit" sfwValue="icdoBenefitCalculation.final_monthly_benefit" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="MinimumGuarenteeAmount" sfwValue="icdoBenefitCalculation.minimum_guarentee_amount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="MemberAccountBalance" sfwValue="icdoBenefitCalculation.member_account_balance" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="TaxableAmount" sfwValue="icdoBenefitCalculation.taxable_amount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="NonTaxableAmount" sfwValue="icdoBenefitCalculation.non_taxable_amount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="RmdAmount" sfwValue="icdoBenefitCalculation.rmd_amount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="UnreducedRhicAmount" sfwValue="icdoBenefitCalculation.unreduced_rhic_amount" />
+    <attribute sfwType="Collection" sfwEntity="entBenefitRHICOption" ID="lstBenefitRHICOption" sfwValue="iclbBenefitRHICOption" />
+    <attribute sfwDataType="string" sfwType="Property" ID="CreatedBy" sfwValue="icdoBenefitCalculation.created_by" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ModifiedBy" sfwValue="icdoBenefitCalculation.modified_by" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="ModifiedDate" sfwValue="icdoBenefitCalculation.modified_date" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ActionStatusDescription" sfwValue="icdoBenefitCalculation.action_status_description" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="RhicEffectiveDate" sfwValue="icdoBenefitCalculation.rhic_effective_date" />
+    <attribute ID="lstBenefitCalculationFASMonths2019" sfwType="Collection" sfwValue="iclbBenefitCalculationFASMonths2019" sfwEntity="entBenefitCalculationFasMonths" />
+    <attribute ID="lstBenefitCalculationFASMonths2020" sfwType="Collection" sfwValue="iclbBenefitCalculationFASMonths2020" sfwEntity="entBenefitCalculationFasMonths" />
+  </attributes>
+  <objectmethods>
+    <method ID="btnPendingApprovalClick" sfwReturnType="Void" />
+    <method ID="btnCancelClick" sfwReturnType="ArrayList" />
+    <method ID="LoadBenefitOptionsBasedOnPlans" sfwReturnType="Collection" sfwObjectID="cdoCodeValue" sfwEntity="entPostRetirementDeathApplication" />
+    <method ID="btnApprove_Clicked" sfwReturnType="ArrayList" />
+  </objectmethods>
+  <queries />
+  <constraint />
+  <methods />
+  <lifecycle />
+</entity>

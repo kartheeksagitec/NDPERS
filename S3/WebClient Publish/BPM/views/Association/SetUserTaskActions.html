@@ -1,0 +1,72 @@
+﻿<div class="portlet-body">
+    <div class="bpm-container">
+        <div class="bpm-container-title">
+            <span>Parameters</span>
+            <div class="bpmn-right" ng-if="!IsDisabledforVersioning">
+                <i class="fa fa-plus color-light2" ng-click="addAction()" style="cursor:pointer" />
+                <i class="fa fa-minus color-light2" ng-click="deleteAction()" ng-disabled="!canDeleteAction()" style="cursor:pointer" />
+            </div>
+        </div>
+        <div class="bpm-container-body">
+            <div class="table-scrollable">
+                <table class="sws-table table-bpm-task-action">
+                    <thead>
+                        <tr>
+                            <th ng-show="ActiveFormType == 'Multiple'">Active Form</th>
+                            <th>Button ID</th>
+                            <th>Process Variables</th>
+                            <th ng-if="!isObjectbased">Entity ID</th>
+                            <th ng-if="IsDisabledforVersioning && isObjectbased">Business Object</th>
+                            <th ng-if="!isObjectbased">Entity Field</th>
+                            <th ng-if="IsDisabledforVersioning && isObjectbased">Object Field</th>
+                            <th>Is Constant</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr role="row" ng-repeat="action in actionsModel.Elements" ng-click="selectAction(action)" ng-class="action.isSelected?'selected':''">
+                            <td ng-show="ActiveFormType == 'Multiple'">
+                                <span ng-if="IsDisabledforVersioning" title="{{action.dictAttributes.sfwActiveForm}}" ng-bind="action.dictAttributes.sfwActiveForm"></span>
+                                <select class="form-control form-filter input-sm" ng-show="!IsDisabledforVersioning" ng-model="action.dictAttributes.sfwActiveForm" ng-options="x.ActiveForm as x.ActiveForm for x in lstActiveForm"  ng-change="OnChangeOfActiveForms(action)">
+                                    <option></option>
+                                </select>
+                            </td>
+                            <td ng-click="getButtonsAndEntitiesFromActiveForm(action)" ng-show="ActiveFormType == 'Multiple' && !IsDisabledforVersioning">
+                                <common-intellisense model="action" propertyname="'dictAttributes.sfwButtonID'" collection="action.buttons" selected-item="action.dictAttributes.sfwButtonID" display-property-name="'CodeDescription'" selected-property-name="'Code'" is-reset="true"></common-intellisense>
+                            </td>
+                            <td ng-show="ActiveFormType != 'Multiple' || IsDisabledforVersioning">
+                                <span ng-if="IsDisabledforVersioning" title="{{action.dictAttributes.sfwButtonID}}" ng-bind="action.dictAttributes.sfwButtonID"></span>
+                                <select ng-if="!IsDisabledforVersioning" class="form-control form-filter input-sm" name="select" ng-options="item.Code as item.CodeDescription for item in buttons" title="{{action.dictAttributes.sfwButtonID}}" ng-model="action.dictAttributes.sfwButtonID" ></select>
+                            </td>
+                            <td>
+                                <select class="form-control form-filter input-sm" name="select" ng-options="variable for variable in variables" ng-disabled="IsDisabledforVersioning || !action.dictAttributes.sfwButtonID" title="{{action.selectedVariableID}}" ng-model="action.selectedVariableID" ng-change="onProcessVariableChanged(action)" ></select>
+                            </td>
+                            <td ng-click="getButtonsAndEntitiesFromActiveForm(action)" ng-show="ActiveFormType == 'Multiple' && !IsDisabledforVersioning">
+                                <common-intellisense model="action.selectedVariable" propertyname="'dictAttributes.sfwEntity'" collection="action.entities" selected-item="action.selectedVariable.dictAttributes.sfwEntity" is-reset="true" change-callback="onEntityChanged(action)"></common-intellisense>
+                            </td>
+                            <td  ng-show="ActiveFormType != 'Multiple' || IsDisabledforVersioning">
+                                <span ng-if="IsDisabledforVersioning && isObjectbased" title="{{action.selectedVariable.dictAttributes.sfwObjectID}}" ng-bind="action.selectedVariable.dictAttributes.sfwObjectID"></span>
+                                <select ng-if="!isObjectbased" class="form-control form-filter input-sm" name="select" ng-options="item as item for item in entities" title="{{action.selectedVariable.dictAttributes.sfwEntity}}" ng-model="action.selectedVariable.dictAttributes.sfwEntity" ng-disabled="action.dictAttributes.sfwIsConstant.toLowerCase() == 'true' || !action.selectedVariable || IsDisabledforVersioning" ng-change="onEntityChanged(action)" ></select>
+                            </td>
+                            <td>
+                                <span ng-if="IsDisabledforVersioning && isObjectbased" title="{{action.selectedVariable.dictAttributes.sfwObjectField}}" ng-bind="action.selectedVariable.dictAttributes.sfwObjectField"></span>
+                                <div ng-if="!isObjectbased">
+                                    <div ng-hide="action.dictAttributes.sfwIsConstant.toLowerCase() == 'true'">
+                                        <entityfieldelementintellisense modebinding="action.selectedVariable.dictAttributes.sfwEntityField" model="action.selectedVariable" entityid="action.selectedVariable.dictAttributes.sfwEntity" is-disabled="!action.selectedVariable || IsDisabledforVersioning" />
+                                    </div>
+                                    <input ng-disabled="!action.selectedVariable || IsDisabledforVersioning" class="form-control form-filter input-sm" ng-show="action.dictAttributes.sfwIsConstant.toLowerCase() == 'true'" type="text" ng-model="action.selectedVariable.dictAttributes.sfwEntityField"  />
+                                </div>
+                            </td>
+                            <td>
+                                <input type="checkbox" ng-disabled="IsDisabledforVersioning" ng-true-value="'True'" ng-false-value="'False'" ng-model="action.dictAttributes.sfwIsConstant" ng-change="onIsConstantChanged(action)"  />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-actions">
+    <input type="button" class="dialog-btn-default" value="OK" ng-if="!IsDisabledforVersioning" ng-click="onOKClick()" />
+    <input type="button" class="dialog-btn" value="Cancel" ng-click="closeDialog()" />
+</div>

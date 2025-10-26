@@ -1,0 +1,203 @@
+﻿<entity ID="entPersonEmployment" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoPersonEmployment" sfwObjectID="busPersonEmployment" sfwTableName="sgt_person_employment" sfwView="False" sfwParentEntity="entPersonBase">
+  <rules>
+    <rule ID="IsContributionPostedAfterEndDate" sfwMessageId="2045" sfwExpression="(this.IsContributionExistsAfterEmploymentEndDate() == True)" sfwObjectBased="True" />
+    <rule ID="IsDateofLastRegularPaycheckFuture" sfwMessageId="10069" sfwExpression="(this.icdoPersonEmployment.date_of_last_regular_paycheck &gt; RFunc.CurrentDate())" sfwObjectBased="True" />
+    <rule ID="IsEmployerNotAcitve" sfwMessageId="185" sfwExpression="!(string.IsNullOrEmpty(this.icdoPersonEmployment.istrOrgCodeID)) &amp;&amp; &#xA;!(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entPersonEmployment.GetOrgCount&quot;, this.icdoPersonEmployment.istrOrgCodeID) == 0) &amp;&amp; &#xA;!(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.status_value&quot;) == &quot;ACTV&quot;)" sfwObjectBased="True" />
+    <rule ID="IsEmploymentDetailExist" sfwExpression="(this.CheckDetailExists() == True)" sfwObjectBased="True" />
+    <rule ID="IsEmploymentDetailNotExist" sfwExpression="!(this.CheckDetailExists() == True)" sfwObjectBased="True" />
+    <rule ID="IsEmploymentExistforStartDateAndEndDateCombination" sfwMessageId="1048" sfwExpression="(this.CheckEmploymentOverlapping() == True)" sfwObjectBased="True" />
+    <rule ID="IsEndDateLessthanStartDate" sfwMessageId="5017" sfwExpression="!(this.icdoPersonEmployment.end_date == DateTime.MinValue) &amp;&amp; &#xA;!(this.icdoPersonEmployment.start_date == DateTime.MinValue) &amp;&amp; &#xA;(this.icdoPersonEmployment.end_date &lt; this.icdoPersonEmployment.start_date)" sfwObjectBased="True" />
+    <rule ID="IsEndDateNull" sfwExpression="(this.icdoPersonEmployment.end_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsEndDateValid" sfwMessageId="5031" sfwExpression="(this.IsEndDateGreaterThanAllEmpDetailsStartDate() == False)" sfwObjectBased="True" />
+    <rule ID="IsOrgIDNull" sfwMessageId="1032" sfwExpression="(string.IsNullOrEmpty(this.icdoPersonEmployment.istrOrgCodeID))" sfwObjectBased="True" />
+    <rule ID="IsOrgTypeNotEmployer" sfwMessageId="1031" sfwExpression="!(string.IsNullOrEmpty(this.icdoPersonEmployment.istrOrgCodeID)) &amp;&amp; &#xA;!(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entPersonEmployment.GetOrgCount&quot;, this.icdoPersonEmployment.istrOrgCodeID) == 0) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrganization.icdoOrganization.org_type_value&quot;) != &quot;EMPL&quot;)" sfwObjectBased="True" />
+    <rule ID="IsOrgValid" sfwMessageId="1027" sfwExpression="!(string.IsNullOrEmpty(this.icdoPersonEmployment.istrOrgCodeID)) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entPersonEmployment.GetOrgCount&quot;, this.icdoPersonEmployment.istrOrgCodeID) == 0)" sfwObjectBased="True" />
+    <rule ID="IsPersonAgeisLessthan18" sfwMessageId="6505" sfwExpression="!(this.icdoPersonEmployment.start_date == DateTime.MinValue) &amp;&amp; &#xA;(this.ValidatePersonEnrollmentAge() == True)" sfwObjectBased="True" />
+    <rule ID="IsStartDateNull" sfwMessageId="1030" sfwExpression="(this.icdoPersonEmployment.start_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsVisibleDateOfLastRegularPaycheck" sfwExpression="(this.iblnIsEmploymentChangeRequestExists == True)" sfwObjectBased="True" />
+    <rule ID="ValidateDeleteIfDetailExist" sfwMessageId="6647" sfwExpression="(this.CheckDetailExists() == True)" sfwObjectBased="True" />
+    <rule ID="IsLookBackMeasureNull" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.IsLookBackMeasureIsNull()" />
+    <rule ID="IsLookBackMeasureNotNull" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="!(this.IsLookBackMeasureIsNull())" />
+    <rule ID="IsAcaCertificationRecordNotPresent" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.IsAcaCertificationRecordNotPresent()" />
+    <rule ID="IsEndDateNotNull" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.icdoPersonEmployment.end_date != DateTime.MinValue)" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="IsEndDateNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEmploymentDetailExist" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEmploymentDetailNotExist" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsVisibleDateOfLastRegularPaycheck" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsLookBackMeasureNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsLookBackMeasureNotNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAcaCertificationRecordNotPresent" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEndDateNotNull" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="IsEmployerNotAcitve" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsOrgIDNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsStartDateNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsOrgTypeNotEmployer" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEmploymentExistforStartDateAndEndDateCombination" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPersonAgeisLessthan18" sfwMode="New" sfwStatus="Active" />
+    <item ID="IsOrgValid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEndDateLessthanStartDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEndDateValid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsDateofLastRegularPaycheckFuture" sfwMode="All" sfwStatus="Inactive" />
+    <item ID="IsContributionPostedAfterEndDate" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete>
+    <item ID="ValidateDeleteIfDetailExist" sfwMode="All" sfwStatus="Active" />
+  </validatedelete>
+  <groupslist />
+  <updateablecdo />
+  <commonproperties>
+    <item ID="person_id" sfwObjectField="icdoPersonEmployment.person_id" />
+  </commonproperties>
+  <expressionfields />
+  <queries>
+    <query ID="GetOrgCount" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*)FROM SGT_ORGANIZATION WHERE ORG_CODE=@ORG_CODE">
+      <parameters>
+        <parameter ID="@ORG_CODE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="RetOrgName" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select ORG_NAME from sgt_organization where ORG_CODE=@ORG_CODE">
+      <parameters>
+        <parameter ID="@ORG_CODE" sfwDataType="string" />
+      </parameters>
+      <mappedcolumns>
+        <column ID="org_name" sfwEntityField="objOrganization.OrgName" />
+      </mappedcolumns>
+    </query>
+    <query ID="LoadOtherEmployment" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_PERSON_EMPLOYMENT WHERE PERSON_ID=@PERSON_ID AND PERSON_EMPLOYMENT_ID &lt;&gt; @EMPLOYMENT_HISTORY_ID ">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+        <parameter ID="@EMPLOYMENT_HISTORY_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadLOAEmployees" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT SPED.* FROM SGT_PERSON_EMPLOYMENT_DETAIL SPED &#xD;&#xA;INNER JOIN SGT_PERSON_EMPLOYMENT SPE ON SPED.PERSON_EMPLOYMENT_ID=SPE.PERSON_EMPLOYMENT_ID&#xD;&#xA;INNER JOIN SGT_PERSON PER ON SPE.PERSON_ID=PER.PERSON_ID&#xD;&#xA;WHERE SPED.STATUS_VALUE='LOA' AND SPED.END_DATE IS NULL">
+      <parameters />
+    </query>
+    <query ID="LoadLastPostedPayroll" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT A.ORG_ID as ORG_ID,MAX(PAYROLL_PAID_DATE) AS &quot;PAYROLL_PAID_DATE&quot;&#xD;&#xA;FROM SGT_PERSON_EMPLOYMENT A(NOLOCK)&#xD;&#xA;INNER JOIN SGT_EMPLOYER_PAYROLL_HEADER B (NOLOCK) ON A.ORG_ID=B.ORG_ID&#xD;&#xA;WHERE A.END_DATE IS NULL AND B.HEADER_TYPE_VALUE='RETR' AND B.STATUS_VALUE='PSTD'&#xD;&#xA;GROUP BY A.ORG_ID&#xD;&#xA;ORDER BY A.ORG_ID">
+      <parameters />
+    </query>
+    <query ID="LoadPersonNoDeposit" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT A.Person_id,A.Person_employment_id,C.Person_Account_ID&#xD;&#xA;FROM SGT_PERSON_EMPLOYMENT A(NOLOCK)&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT C (NOLOCK) ON A.PERSON_ID=C.PERSON_ID&#xD;&#xA;INNER JOIN SGT_PLAN D(NOLOCK) ON C.PLAN_ID=D.PLAN_ID AND D.BENEFIT_TYPE_VALUE='RETR'&#xD;&#xA;LEFT OUTER JOIN SGT_PERSON_ACCOUNT_RETIREMENT_CONTRIBUTION E(NOLOCK) ON  E.PERSON_ACCOUNT_ID=C.PERSON_ACCOUNT_ID&#xD;&#xA;AND E.PAY_PERIOD_MONTH=@Month AND E.PAY_PERIOD_YEAR=@YEAR&#xD;&#xA;AND (E.SUBSYSTEM_VALUE='PAYR' OR E.SUBSYSTEM_VALUE='CONV') AND TRANSACTION_TYPE_VALUE='RGPR'&#xD;&#xA;WHERE A.END_DATE IS NULL &#xD;&#xA;AND A.ORG_ID=@Org_id&#xD;&#xA;AND (C.END_DATE IS NULL OR C.END_DATE &gt; GETDATE())&#xD;&#xA;AND C.PLAN_PARTICIPATION_STATUS_VALUE='ENL1'&#xD;&#xA;AND E.RETIREMENT_CONTRIBUTION_ID IS NULL&#xD;&#xA;ORDER BY A.PERSON_ID">
+      <parameters>
+        <parameter ID="@Month" sfwDataType="int" />
+        <parameter ID="@YEAR" sfwDataType="int" />
+        <parameter ID="@Org_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadEmploymentByEmpDtlID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_PERSON_EMPLOYMENT_DETAIL DTL &#xD;&#xA;INNER JOIN SGT_PERSON_EMPLOYMENT EMP ON EMP.PERSON_EMPLOYMENT_ID=DTL.PERSON_EMPLOYMENT_ID&#xD;&#xA;INNER JOIN SGT_ORGANIZATION ORG ON ORG.ORG_ID=EMP.ORG_ID&#xD;&#xA;WHERE DTL.PERSON_EMPLOYMENT_DTL_ID=@EMP_DTL_ID">
+      <parameters>
+        <parameter ID="@EMP_DTL_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadPersonEmploymentForPeopleSoftPlanFile" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT EMP.PERSON_ID,EMP.ORG_ID,EMP.START_DATE AS H_START_DATE,EMP.END_DATE AS H_END_DATE,&#xD;&#xA;EMPDTL.START_DATE AS D_START_DATE,EMPDTL.END_DATE AS D_END_DATE,EMPDTL.TYPE_VALUE,&#xD;&#xA;PERACCTEMP.PERSON_ACCOUNT_ID,EMPDTL.*,EMP.*,ORG.*&#xD;&#xA;FROM SGT_PERSON_ACCOUNT_EMPLOYMENT_DETAIL PERACCTEMP WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_PERSON_EMPLOYMENT_DETAIL EMPDTL WITH(NOLOCK) ON PERACCTEMP.PERSON_EMPLOYMENT_DTL_ID = EMPDTL.PERSON_EMPLOYMENT_DTL_ID&#xD;&#xA;INNER JOIN SGT_PERSON_EMPLOYMENT EMP WITH(NOLOCK) ON EMPDTL.PERSON_EMPLOYMENT_ID = EMP.PERSON_EMPLOYMENT_ID&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT PERACCT WITH(NOLOCK) ON PERACCTEMP.PERSON_ACCOUNT_ID = PERACCT.PERSON_ACCOUNT_ID&#xD;&#xA;INNER JOIN SGT_ORGANIZATION ORG WITH(NOLOCK) ON EMP.ORG_ID = ORG.ORG_ID&#xD;&#xA;WHERE ISNULL(PERACCT.PEOPLE_SOFT_FILE_SENT_FLAG,'N')='N'&#xD;&#xA;ORDER BY EMP.PERSON_ID,PERACCTEMP.PERSON_ACCOUNT_ID, EMP.START_DATE DESC, EMPDTL.START_DATE DESC,&#xD;&#xA;CASE WHEN EMP.END_DATE IS NULL THEN 0 ELSE 1 END, CASE WHEN EMPDTL.END_DATE IS NULL THEN 0 ELSE 1 END">
+      <parameters />
+    </query>
+    <query ID="LoadPersonEmploymentForPeoplesoftAE" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT EMP.PERSON_ID,EMP.ORG_ID,EMP.START_DATE AS H_START_DATE,EMP.END_DATE AS H_END_DATE,&#xD;&#xA;EMPDTL.START_DATE AS D_START_DATE,EMPDTL.END_DATE AS D_END_DATE,EMPDTL.TYPE_VALUE,&#xD;&#xA;PERACCTEMP.PERSON_ACCOUNT_ID,EMPDTL.*,EMP.*,ORG.*&#xD;&#xA;FROM SGT_PERSON_ACCOUNT_EMPLOYMENT_DETAIL PERACCTEMP WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_PERSON_EMPLOYMENT_DETAIL EMPDTL WITH(NOLOCK) ON PERACCTEMP.PERSON_EMPLOYMENT_DTL_ID = EMPDTL.PERSON_EMPLOYMENT_DTL_ID&#xD;&#xA;INNER JOIN SGT_PERSON_EMPLOYMENT EMP WITH(NOLOCK) ON EMPDTL.PERSON_EMPLOYMENT_ID = EMP.PERSON_EMPLOYMENT_ID&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT PERACCT WITH(NOLOCK) ON PERACCTEMP.PERSON_ACCOUNT_ID = PERACCT.PERSON_ACCOUNT_ID&#xD;&#xA;INNER JOIN SGT_ORGANIZATION ORG WITH(NOLOCK) ON EMP.ORG_ID = ORG.ORG_ID&#xD;&#xA;WHERE ISNULL(PERACCT.PEOPLE_SOFT_FILE_SENT_FLAG,'N')='N'&#xD;&#xA;AND ISNULL(PS_FILE_CHANGE_EVENT_VALUE,'') in ('ANNE','ANNT')&#xD;&#xA;ORDER BY EMP.PERSON_ID,PERACCTEMP.PERSON_ACCOUNT_ID, EMP.START_DATE DESC, EMPDTL.START_DATE DESC,&#xD;&#xA;CASE WHEN EMP.END_DATE IS NULL THEN 0 ELSE 1 END, CASE WHEN EMPDTL.END_DATE IS NULL THEN 0 ELSE 1 END">
+      <parameters />
+    </query>
+    <query ID="LoadOpenEmploymentForOrgFromESS" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from sgt_person_employment WITH(NOLOCK)&#xD;&#xA;where org_id = @orgid and isnull(end_date,'99991231') &gt; getdate()">
+      <parameters>
+        <parameter ID="@orgid" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadLastPaycheckDate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select top 1 *,LAST_DATE_OF_SERVICE from SGT_WSS_EMPLOYMENT_CHANGE_REQUEST &#xD;&#xA;where STATUS_VALUE='PRCD' and isnull(LAST_DATE_OF_SERVICE,'') &lt;&gt; '' and (CHANGE_TYPE_VALUE = '' OR CHANGE_TYPE_VALUE = 'TEEM')&#xD;&#xA;and PERSON_ID=@PERSON_ID and ORG_ID=@ORG_ID &#xD;&#xA;order by EMPLOYMENT_CHANGE_REQUEST_ID desc">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadOpenPersonEmployment" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT PERSON_EMPLOYMENT_ID FROM SGT_PERSON_EMPLOYMENT WHERE PERSON_ID = @PERSON_ID &#xD;&#xA;AND END_DATE IS NULL">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="CountOfOpenEmployments" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_PERSON_EMPLOYMENT WITH(NOLOCK)&#xD;&#xA;WHERE END_DATE IS NULL and PERSON_ID=@PERSON_ID&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetEmploymentDetail" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT distinct PE.* from SGT_PS_EMPLOYMENT PSE&#xD;&#xA;inner JOIN SGT_PERSON PER ON PSE.SSN =PER.SSN&#xD;&#xA;INNER JOIN SGT_PERSON_EMPLOYMENT PE ON PE.PERSON_ID = PER.PERSON_ID&#xD;&#xA;WHERE PSE.SSN = @SSN AND PE.END_DATE IS null ORDER BY PE.START_DATE">
+      <parameters>
+        <parameter ID="@SSN" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="GetOrgIdForPensionFile" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT DISTINCT PE.ORG_ID FROM (SELECT TOP 1 * FROM SGT_PERSON_ACCOUNT_EMPLOYMENT_DETAIL WHERE PERSON_ACCOUNT_ID = @PERSON_ACCOUNT_ID ORDER BY PERSON_EMPLOYMENT_DTL_ID DESC) PAED &#xD;&#xA;INNER JOIN SGT_PERSON_EMPLOYMENT_DETAIL PED ON PED.PERSON_EMPLOYMENT_DTL_ID = PAED.PERSON_EMPLOYMENT_DTL_ID&#xD;&#xA;INNER JOIN SGT_PERSON_EMPLOYMENT PE ON PE.PERSON_EMPLOYMENT_ID = PED.PERSON_EMPLOYMENT_ID">
+      <parameters>
+        <parameter ID="@PERSON_ACCOUNT_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetLatestEmpDetailEndDate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT TOP 1 * FROM SGT_PERSON_EMPLOYMENT_DETAIL DET&#xD;&#xA;INNER JOIN SGT_PERSON_EMPLOYMENT EMP ON EMP.PERSON_EMPLOYMENT_ID = DET.PERSON_EMPLOYMENT_ID&#xD;&#xA;INNER JOIN SGT_PERSON PER ON PER.PERSON_ID = EMP.PERSON_ID&#xD;&#xA;WHERE PER.PERSON_ID = @PERSONID&#xD;&#xA;AND DET.END_DATE IS NOT NULL&#xD;&#xA;ORDER BY DET.PERSON_EMPLOYMENT_DTL_ID DESC, DET.END_DATE DESC">
+      <parameters>
+        <parameter ID="@PERSONID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetLatestContEmpDetail" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT&#xA;&#x9; TOP 1 &#xA;&#x9; PED.END_DATE &#xA;FROM&#xA;&#x9; SGT_PERSON_EMPLOYMENT_DETAIL PED WITH(NOLOCK) &#xA;&#x9;INNER &#xA;&#x9; JOIN SGT_PERSON_EMPLOYMENT PE WITH(NOLOCK)&#xA;&#x9; ON PED.PERSON_EMPLOYMENT_ID = PE.PERSON_EMPLOYMENT_ID &#xA;WHERE&#xA;&#x9; PED.STATUS_VALUE &lt;&gt; 'NCON' AND&#xA;&#x9; PE.PERSON_ID = @personid &#xA;&#x9; ORDER BY  PED.START_DATE desc">
+      <parameters>
+        <parameter ID="@personid" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadPersonEmploymentForDailyPeopleSoft" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT EMP.PERSON_ID,EMP.ORG_ID,EMP.START_DATE AS H_START_DATE,EMP.END_DATE AS H_END_DATE,&#xD;&#xA;EMPDTL.START_DATE AS D_START_DATE,EMPDTL.END_DATE AS D_END_DATE,EMPDTL.TYPE_VALUE,&#xD;&#xA;PERACCTEMP.PERSON_ACCOUNT_ID,EMPDTL.*,EMP.*,ORG.*&#xD;&#xA;FROM SGT_PERSON_ACCOUNT_EMPLOYMENT_DETAIL PERACCTEMP WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_PERSON_EMPLOYMENT_DETAIL EMPDTL WITH(NOLOCK) ON PERACCTEMP.PERSON_EMPLOYMENT_DTL_ID = EMPDTL.PERSON_EMPLOYMENT_DTL_ID&#xD;&#xA;INNER JOIN SGT_PERSON_EMPLOYMENT EMP WITH(NOLOCK) ON EMPDTL.PERSON_EMPLOYMENT_ID = EMP.PERSON_EMPLOYMENT_ID&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT PERACCT WITH(NOLOCK) ON PERACCTEMP.PERSON_ACCOUNT_ID = PERACCT.PERSON_ACCOUNT_ID&#xD;&#xA;INNER JOIN SGT_ORGANIZATION ORG WITH(NOLOCK) ON EMP.ORG_ID = ORG.ORG_ID&#xD;&#xA;WHERE EMP.PERSON_ID = @PERSON_ID&#xD;&#xA;ORDER BY EMP.PERSON_ID,PERACCTEMP.PERSON_ACCOUNT_ID, EMP.START_DATE DESC, EMPDTL.START_DATE DESC,&#xD;&#xA;CASE WHEN EMP.END_DATE IS NULL THEN 0 ELSE 1 END, CASE WHEN EMPDTL.END_DATE IS NULL THEN 0 ELSE 1 END">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadPersonEmploymentForDailyPeopleSoftByEmpId" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT EMP.PERSON_ID,EMP.ORG_ID,EMP.START_DATE AS H_START_DATE,EMP.END_DATE AS H_END_DATE,&#xD;&#xA;EMPDTL.START_DATE AS D_START_DATE,EMPDTL.END_DATE AS D_END_DATE,EMPDTL.TYPE_VALUE,&#xD;&#xA;PERACCTEMP.PERSON_ACCOUNT_ID,EMPDTL.*,EMP.*,ORG.*&#xD;&#xA;FROM SGT_PERSON_ACCOUNT_EMPLOYMENT_DETAIL PERACCTEMP WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_PERSON_EMPLOYMENT_DETAIL EMPDTL WITH(NOLOCK) ON PERACCTEMP.PERSON_EMPLOYMENT_DTL_ID = EMPDTL.PERSON_EMPLOYMENT_DTL_ID&#xD;&#xA;INNER JOIN SGT_PERSON_EMPLOYMENT EMP WITH(NOLOCK) ON EMPDTL.PERSON_EMPLOYMENT_ID = EMP.PERSON_EMPLOYMENT_ID&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT PERACCT WITH(NOLOCK) ON PERACCTEMP.PERSON_ACCOUNT_ID = PERACCT.PERSON_ACCOUNT_ID&#xD;&#xA;INNER JOIN SGT_ORGANIZATION ORG WITH(NOLOCK) ON EMP.ORG_ID = ORG.ORG_ID&#xD;&#xA;WHERE EMP.PERSON_ID = @PERSON_ID  and EMPDTL.PERSON_EMPLOYMENT_ID =@PERSON_EMPLOYMENT_ID&#xD;&#xA;ORDER BY EMP.PERSON_ID,PERACCTEMP.PERSON_ACCOUNT_ID, EMP.START_DATE DESC, EMPDTL.START_DATE DESC,&#xD;&#xA;CASE WHEN EMP.END_DATE IS NULL THEN 0 ELSE 1 END, CASE WHEN EMPDTL.END_DATE IS NULL THEN 0 ELSE 1 END">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+        <parameter ID="@PERSON_EMPLOYMENT_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="PersonEmploymentId" sfwType="Column" sfwValue="person_employment_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" />
+    <attribute ID="PersonId" sfwType="Column" sfwValue="person_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="StartDate" sfwType="Column" sfwValue="start_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="EndDate" sfwType="Column" sfwValue="end_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="OrgId" sfwType="Column" sfwValue="org_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="UnusedSickLeave" sfwType="Column" sfwValue="unused_sick_leave" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="TerminationLetterStatusDescription" sfwType="Description" sfwValue="termination_letter_status_description" />
+    <attribute ID="TerminationLetterStatusId" sfwType="Column" sfwValue="termination_letter_status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="351" sfwDataType="int" />
+    <attribute ID="TerminationLetterStatusValue" sfwType="Column" sfwValue="termination_letter_status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="SuppressSsnFlag" sfwType="Column" sfwValue="suppress_ssn_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="1" />
+    <attribute ID="PsEmplRecordNumber" sfwType="Column" sfwValue="ps_empl_record_number" sfwKeyNo="0" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="5" />
+    <attribute ID="VoyaSent" sfwType="Column" sfwValue="voya_sent" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="1" />
+    <attribute sfwValue="date_of_last_regular_paycheck" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="datetime" sfwDBDataType="datetime" sfwIsNull="True" ID="DateOfLastRegularPaycheck" sfwCaption="Date Of Last Regular Paycheck" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrOrgCodeID" sfwValue="icdoPersonEmployment.istrOrgCodeID" />
+    <attribute ID="objOrganization" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusOrganization" />
+    <attribute ID="objPerson" sfwType="Object" sfwEntity="entPerson" sfwValue="ibusPerson" />
+    <attribute sfwDataType="int" sfwType="Property" ID="IintScreenIdentifier" sfwValue="icdoPersonEmployment.iintScreenIdentifier" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="NewStartDate" sfwValue="icdoPersonEmployment.new_start_date" />
+    <attribute sfwType="Collection" sfwEntity="entPersonEmploymentDetail" ID="lstPersonEmploymentDetail" sfwValue="icolPersonEmploymentDetail" />
+    <attribute ID="objLatestEmploymentDetail" sfwType="Object" sfwEntity="entPersonEmploymentDetail" sfwValue="ibusLatestEmploymentDetail" />
+    <attribute ID="objESSLatestPersonEmploymentDetail" sfwType="Object" sfwEntity="entPersonEmploymentDetail" sfwValue="ibusESSLatestPersonEmploymentDetail" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrImage" sfwValue="istrImage" />
+    <attribute sfwDataType="string" sfwType="Property" ID="StartDateLong" sfwValue="icdoPersonEmployment.start_date_long" />
+    <attribute sfwDataType="string" sfwType="Property" ID="EndLongDate" sfwValue="icdoPersonEmployment.end_long_date" />
+    <attribute sfwDataType="string" sfwType="Property" ID="EndLongDateLastofmonth" sfwValue="end_long_date_lastofmonth" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrDBPlan" sfwValue="istrDBPlan" />
+    <attribute ID="lintPlanID" sfwDataType="int" sfwPrivate="False" sfwValue="iintPlanID" sfwType="Property" />
+    <attribute ID="lstWssEmploymentAcaCerts" sfwType="Collection" sfwValue="iclbWssEmploymentAcaCerts" sfwEntity="entWssEmploymentAcaCert" sfwPrivate="False" />
+    <attribute ID="SuspendedPlanStartDateLongDate" sfwDataType="string" sfwPrivate="False" sfwValue="Suspended_Plan_Start_Date_Long_Date" sfwType="Property" />
+    <attribute ID="lintBatchIDCOBRANotice" sfwDataType="int" sfwPrivate="False" sfwValue="lintBatchIDCOBRANotice" sfwType="Property" />
+    <attribute ID="lintBatchIDEmpTerminationNotices" sfwDataType="int" sfwPrivate="False" sfwValue="lintBatchIDEmpTerminationNotices" sfwType="Property" />
+    <attribute ID="IstrMessageToShowAfterPostClick" sfwDataType="string" sfwPrivate="False" sfwValue="istrMessageToShowAfterPostClick" sfwType="Property" />
+    <attribute ID="IblnEmploymentEndDateFromDeath" sfwDataType="bool" sfwPrivate="False" sfwValue="icdoPersonEmployment.iblnEmploymentEndDateFromDeath" sfwType="Property" />
+  </attributes>
+  <objectmethods>
+    <method ID="ReloadHandButtonData" sfwReturnType="ArrayList" />
+  </objectmethods>
+  <constraint />
+  <methods />
+  <lifecycle />
+  <ExtraFields />
+</entity>

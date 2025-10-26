@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entPersonAccountLifeHistory" sfwActive="True" sfwStatus="Review" sfwType="BusinessRule" sfwMainCDO="icdoPersonAccountLifeHistory" sfwObjectID="busPersonAccountLifeHistory" sfwTableName="sgt_person_account_life_history" sfwView="False">
+  <rules />
+  <delete />
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror />
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <queries>
+    <query ID="UpdateReportGeneratedFlag" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="UPDATE SGT_PERSON_ACCOUNT_LIFE_HISTORY SET IS_ENROLLMENT_REPORT_GENERATED = 'N'&#xD;&#xA;WHERE PERSON_ACCOUNT_LIFE_HISTORY_ID IN&#xD;&#xA;(&#xD;&#xA;SELECT TOP 1 PERSON_ACCOUNT_LIFE_HISTORY_ID FROM SGT_PERSON_ACCOUNT_LIFE_HISTORY &#xD;&#xA;WHERE PERSON_ACCOUNT_ID = @PERSON_ACCOUNT_ID AND PLAN_PARTICIPATION_STATUS_VALUE = 'ENL2' AND&#xD;&#xA;LEVEL_OF_COVERAGE_VALUE = @COVERAGE AND EFFECTIVE_START_DATE &lt;&gt; ISNULL(EFFECTIVE_END_DATE,'29001231') &#xD;&#xA;ORDER BY EFFECTIVE_START_DATE DESC&#xD;&#xA;)&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@PERSON_ACCOUNT_ID" sfwDataType="int" />
+        <parameter ID="@COVERAGE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="UpdatePreviousEnrolledFlag" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="UPDATE SGT_PERSON_ACCOUNT_LIFE_HISTORY SET IS_ENROLLMENT_REPORT_GENERATED = 'Y' &#xD;&#xA;WHERE PERSON_ACCOUNT_LIFE_HISTORY_ID  IN&#xD;&#xA;(&#xD;&#xA; SELECT max(PERSON_ACCOUNT_LIFE_HISTORY_ID) FROM SGT_PERSON_ACCOUNT_LIFE_HISTORY &#xD;&#xA; WHERE PERSON_ACCOUNT_ID = @PERSON_ACCOUNT_ID AND  PLAN_PARTICIPATION_STATUS_VALUE = 'ENL2'&#xD;&#xA; AND CONVERT(DATE,CREATED_DATE,101) &lt; CONVERT(DATE,GETDATE(),101)&#xD;&#xA; GROUP BY LEVEL_OF_COVERAGE_VALUE &#xD;&#xA;)&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@PERSON_ACCOUNT_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="PersonAccountLifeHistoryId" sfwType="Column" sfwValue="person_account_life_history_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PersonAccountId" sfwType="Column" sfwValue="person_account_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StartDate" sfwType="Column" sfwValue="start_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="EndDate" sfwType="Column" sfwValue="end_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="PlanParticipationStatusDescription" sfwType="Description" sfwValue="plan_participation_status_description" />
+    <attribute ID="PlanParticipationStatusId" sfwType="Column" sfwValue="plan_participation_status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="337" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PlanParticipationStatusValue" sfwType="Column" sfwValue="plan_participation_status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="StatusDescription" sfwType="Description" sfwValue="status_description" />
+    <attribute ID="StatusId" sfwType="Column" sfwValue="status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="336" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusValue" sfwType="Column" sfwValue="status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="FromPersonAccountId" sfwType="Column" sfwValue="from_person_account_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ToPersonAccountId" sfwType="Column" sfwValue="to_person_account_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="SuppressWarningsFlag" sfwType="Column" sfwValue="suppress_warnings_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="SuppressWarningsBy" sfwType="Column" sfwValue="suppress_warnings_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="SuppressWarningsDate" sfwType="Column" sfwValue="suppress_warnings_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="LifeInsuranceTypeDescription" sfwType="Description" sfwValue="life_insurance_type_description" />
+    <attribute ID="LifeInsuranceTypeId" sfwType="Column" sfwValue="life_insurance_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="347" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="LifeInsuranceTypeValue" sfwType="Column" sfwValue="life_insurance_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="PremiumWaiverFlag" sfwType="Column" sfwValue="premium_waiver_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="ProjectedPremiumWaiverDate" sfwType="Column" sfwValue="projected_premium_waiver_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ActualPremiumWaiverDate" sfwType="Column" sfwValue="actual_premium_waiver_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="WaivedAmount" sfwType="Column" sfwValue="waived_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="9,2" />
+    <attribute ID="LevelOfCoverageDescription" sfwType="Description" sfwValue="level_of_coverage_description" />
+    <attribute ID="LevelOfCoverageId" sfwType="Column" sfwValue="level_of_coverage_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="408" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="LevelOfCoverageValue" sfwType="Column" sfwValue="level_of_coverage_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="EffectiveStartDate" sfwType="Column" sfwValue="effective_start_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="EffectiveEndDate" sfwType="Column" sfwValue="effective_end_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="PlanOptionStatusDescription" sfwType="Description" sfwValue="plan_option_status_description" />
+    <attribute ID="PlanOptionStatusId" sfwType="Column" sfwValue="plan_option_status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="340" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PlanOptionStatusValue" sfwType="Column" sfwValue="plan_option_status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="CoverageAmount" sfwType="Column" sfwValue="coverage_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="DisabilityLetterSentFlag" sfwType="Column" sfwValue="disability_letter_sent_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="ProviderOrgId" sfwType="Column" sfwValue="provider_org_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PremiumWaiverProviderOrgId" sfwType="Column" sfwValue="premium_waiver_provider_org_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ReasonDescription" sfwType="Description" sfwValue="reason_description" />
+    <attribute ID="ReasonId" sfwType="Column" sfwValue="reason_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="332" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ReasonValue" sfwType="Column" sfwValue="reason_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="PremiumConversionIndicatorFlag" sfwType="Column" sfwValue="premium_conversion_indicator_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="PremiumConversionEffectiveDate" sfwType="Column" sfwValue="premium_conversion_effective_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="IsEnrollmentReportGenerated" sfwType="Column" sfwValue="is_enrollment_report_generated" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwDefaultValue="N" sfwLength="1" />
+    <attribute ID="PsFileChangeEventDescription" sfwType="Description" sfwValue="ps_file_change_event_description" />
+    <attribute ID="PsFileChangeEventId" sfwType="Column" sfwValue="ps_file_change_event_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="368" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PsFileChangeEventValue" sfwType="Column" sfwValue="ps_file_change_event_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="PeopleSoftFileSentFlag" sfwType="Column" sfwValue="people_soft_file_sent_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="SpouseWaivedAmount" sfwType="Column" sfwValue="spouse_waived_amount" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="18,0" />
+    <attribute ID="DependentWaivedAmount" sfwType="Column" sfwValue="dependent_waived_amount" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="18,0" />
+    <attribute sfwDataType="string" sfwType="Property" ID="PlanName" sfwValue="icdoPersonAccountLifeHistory.plan_name" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="EmployeePremiumAmount" sfwValue="icdoPersonAccountLifeHistory.Employee_Premium_Amount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="EmployerPremiumAmount" sfwValue="icdoPersonAccountLifeHistory.Employer_Premium_Amount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="MonthlyPremium" sfwValue="icdoPersonAccountLifeHistory.Monthly_Premium" />
+    <attribute sfwDataType="int" sfwType="Property" ID="SequenceID" sfwValue="icdoPersonAccountLifeHistory.Sequence_ID" />
+    <attribute ID="IsEndDatedDueToLossOfSuppLife" sfwType="Column" sfwValue="is_end_dated_due_to_loss_of_supp_life" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+  </attributes>
+</entity>

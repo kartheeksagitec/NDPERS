@@ -1,0 +1,41 @@
+﻿
+<div class="portlet-body popup-rule-in-expression">
+
+    <div class="popup-rule-in-expression-left">
+        <ul>
+            <li ng-repeat="objExpression in lstRuleInExpression" ng-include="'ruleInExpressionTree'"></li>
+        </ul>
+    </div>
+    <div class="popup-rule-in-expression-right">
+        <div class="form-group" ng-show="$parent.SelectedRuleInExpression.IsChildRule">
+            <label class="col-xs-3 control-label" >Effective Date</label>
+            <div class="col-xs-9">
+                <select class="form-control input-sm" ng-options="obj.EffectiveDate for obj in $parent.SelectedRuleInExpression.lstExpressions" title="{{$parent.SelectedRuleInExpression.SelectedEffectiveDate}}" ng-model="$parent.SelectedRuleInExpression.SelectedEffectiveDate"></select>
+            </div>
+        </div>
+        <form ng-class="$parent.SelectedRuleInExpression.IsChildRule?'popup-rule-in-expression-textarea-child':'popup-rule-in-expression-textarea'">
+            <textarea id="txtruleInExpression" name="txtruleInExpression" ng-model="$parent.SelectedRuleInExpression.SelectedEffectiveDate.objExpression.ExpressionWithOutTracing"
+                      ng-readonly="true"></textarea>
+        </form>
+    </div>
+
+</div>
+<div class="form-actions">
+    <input type="button" value="OK" class="btn dialog-btn-default" ng-click="CloseDialog()" />
+</div>
+<script type="text/ng-template" id="ruleInExpressionTree">
+    <table ng-click="onSelectRuleInExpression(objExpression,$event)" ng-class="getClassForRuleInExpression(objExpression)">
+        <tr>
+            <td width="20px" ng-show="objExpression.HasChildRules">
+                <span ng-class="objExpression.IsExpanded?'fa fa-minus':'fa fa-plus'" ng-click="loadChildRuleInExpression(objExpression)" />
+            </td>
+            <td>
+                <span ng-bind="objExpression.RuleID"></span>
+            </td>
+        </tr>
+    </table>
+    <ul class="marg-left-5" ng-if="objExpression.lstChildren.length > 0" ng-show="objExpression.IsExpanded">
+        <li ng-repeat="objExpression in objExpression.lstChildren" ng-include="'ruleInExpressionTree'">
+        </li>
+    </ul>
+</script>

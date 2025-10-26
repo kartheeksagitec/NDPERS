@@ -1,0 +1,79 @@
+﻿<form ID="wfmMSSUpdateDefCompProviderMaintenance" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2001" sfwType="FormLinkMaintenance" sfwTitle="Deferred Compensation Provider Maintenance" version="3.5" sfwEntity="entPersonAccountDeferredCompProvider" sfwTemplate="MSSUpdateDefCompProviderMaintenance.html" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmMSSUpdateDefCompProviderLookup" sfwFormObjectType="None" isBasedOnWfm="true" sfwDefaultButtonID="btnSave">
+  <initialload>
+    <callmethods sfwMode="New" sfwMethodName="NewDeferredCompProvider" />
+    <callmethods sfwMode="Update" sfwMethodName="FindDeferredCompProvider" />
+  </initialload>
+  <items>
+    <sfwTable ID="Main" />
+    <sfwPanel ID="pnltoolbar" sfwCaption="Back" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblNewPage2" />
+        <sfwImageButton ID="btnBack" ImageAlign="AbsMiddle" ImageUrl="~/Images/back.gif" sfwMethodName="btnBack_Click" />
+        <sfwButton sfwMethodName="btnOpen_Click" Text="Back" ID="btnBackClick" sfwActiveForm="wfmMSSDeferredCompEnrolledMaintenance" sfwNavigationParameter="aintPersonAccountId=PersonAccountId;aintPersonEmploymentDetailId=objPersonAccountDeferredComp.objPersonAccount.PersonEmploymentDtlId" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlNewPage1" sfwCaption="Header" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblNewPage1" />
+        <sfwLiteral ID="GHE" Text="Deferred Compensation Plan Provider" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlMain" sfwCaption="Deferred Comp Provider Details">
+      <items>
+        <sfwTable ID="tblMain" />
+        <sfwLabel ID="capProviderOrgId" Text="Provider Name : " sfwIsCaption="True" />
+        <sfwLabel ID="lblLabel1" sfwEntityField="CompanyName" />
+        <sfwLabel ID="capFullName" Text="Agent Contact Name :" sfwIsCaption="True" />
+        <sfwLabel ID="lblLabel2" sfwEntityField="objProviderAgentOrgContact.objContact.FullName" />
+        <sfwLabel ID="capPersonEmploymentId" Text="Employer Name : " sfwIsCaption="True" />
+        <sfwLabel ID="lblLabel3" sfwEntityField="objPersonEmployment.objOrganization.OrgName" />
+        <sfwLabel ID="capPerPayPeriodContributionAmt" Text="Amount Per Pay Period : " sfwIsCaption="True" sfwValidationRules="IsMSSAmountPerPayPeriodInValid" />
+        <sfwTextBox ID="txtPayPeriodAmount" sfwDataFormat="{0:C}" sfwDefaultValue="0" sfwEntityField="PerPayPeriodContributionAmt" />
+        <sfwLabel ID="capStartDate" Text="Pay Period Begin Date : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtStartDate" sfwDataFormat="{0:d}" sfwEntityField="StartDate" sfwValidationRules="IsStartDateLessThanDefaultDate;IsStartDateWithinFutureLimit" />
+        <sfwLabel ID="lblLabel" Text="If this is not when you want your deduction to start, please change the date." sfwIsCaption="True" />
+        <sfwLabel ID="capIsAppyEmployerMathchingContribution" Text="Apply Employer matching contribution : " sfwIsCaption="True" sfwVisibleRule="VRIsEmployerMatchAvailable" />
+        <sfwLabel ID="chkIsAppyEmployerMathchingContribution" sfwEntityField="IsApplyEmployerMatchingContributionDesc" sfwVisibleRule="VRIsEmployerMatchAvailable" />
+        <sfwLabel ID="lblPersonEmploymentDtlId" Visible="False" sfwEntityField="objPersonAccountDeferredComp.objPersonAccount.PersonEmploymentDtlId" />
+        <sfwLabel ID="lblPersonAccountProviderId" Visible="False" sfwEntityField="PersonAccountProviderId" />
+        <sfwLabel ID="lblPersonAccountId" sfwEntityField="PersonAccountId" CssClass="hideControl" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlNewPage" sfwCaption="Acknowledgement">
+      <items>
+        <sfwTable ID="tblNewPage" />
+        <sfwLabel ID="lblLabel13" sfwEntityField="IstrDefCompAmountMessage" />
+        <sfwGridView AllowPaging="True" ID="grvDefCompAcknowledgement" sfwShowEmptyTable="False" sfwEntityField="lstDefCompAcknowledgementNew" CssClass="GridColumnHide">
+          <Columns>
+            <TemplateField HeaderText="Acknowledgement ID" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="AcknowledgementId" sfwRenderType="RichText" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Acknowledgement Text">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="AcknowledgementText" sfwRenderType="RichText" />
+              </ItemTemplate>
+            </TemplateField>
+          </Columns>
+        </sfwGridView>
+        <sfwCheckBox ID="chkIblnAuthorizationFlagChecked" sfwEntityField="IstrAuthorizationFlagChecked" sfwValidationRules="IsAcknowledgementChecked" />
+        <sfwLabel ID="lblIstrConfirmationText" sfwEntityField="IstrConfirmationText" sfwRenderType="RichText" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlSavebtn" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="toolbar" />
+        <sfwButton ID="btnSave" sfwMessageId="8" sfwMethodName="btnNoChangesSave_Click" sfwObjectMethod="UpdateDefCompProvider" sfwActiveForm="wfmMSSDeferredCompEnrolledMaintenance" Text="Save" sfwNavigationParameter="aintPersonAccountDeferredCompProviderId=PersonAccountProviderId;aintPersonEmplDtlId=objPersonAccountDeferredComp.objPersonAccount.PersonEmploymentDtlId" sfwExecuteAfterSuccess="btnBackClick" />
+        <sfwLabel ID="lblOrgId" Visible="False" sfwEntityField="objPersonEmployment.objOrganization.OrgId" />
+      </items>
+    </sfwPanel>
+  </items>
+  <loaddetails>
+    <entityfield ID="objProviderAgentOrgContact.objContact" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objPersonEmployment.objOrganization" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objPersonAccountDeferredComp.objPersonAccount" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstDefCompAcknowledgementNew" sfwNewAutoLoad="True" sfwUpdateAutoLoad="True" />
+  </loaddetails>
+  <ExtraFields />
+</form>

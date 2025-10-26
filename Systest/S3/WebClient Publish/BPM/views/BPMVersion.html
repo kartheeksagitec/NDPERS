@@ -1,0 +1,241 @@
+﻿<div class="innerWrapper" id="versionBPMN-{{$id}}" ng-controller="VersionController">
+    <div class="col-xs-12 full-height">
+        <div class="inner-container full-height" ng-show="BPMNModel && BPMNModel.Type != 'BPMTemplate'">
+            <div class="form-area-header">
+                <ul class="nav nav-tabs">
+                    <li ng-class="activeTab=='MAP'?'active':''" ng-click="setActiveTab('MAP')">
+                        <a>
+                            Map
+                        </a>
+                    </li>
+                    <li ng-class="activeTab=='VARIABLES'?'active':''" ng-click="setActiveTab('VARIABLES')">
+                        <a>
+                            Variable
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="tab-content" ng-class="BPMNModel.Type == 'BPMTemplate'?'bpm-tab-content-template':'bpm-tab-content'" tabindex="0">
+                <div ng-show="activeTab=='MAP'" class="full-height">
+                    <div class="content-container">
+                        <div class="toolbox-sidebar" ng-show="!selectedDesignSource && IsToolsDivCollapsed">
+                            <div class="toolbox-sidebardiv" ng-click="IsToolsDivCollapsed=!IsToolsDivCollapsed"></div>
+                        </div>
+                        <div class="toolbox-wrapper form-toolbox" ng-show="!selectedDesignSource && !IsToolsDivCollapsed">
+                            <span class="toolbox-close-icon" ng-click="IsToolsDivCollapsed=!IsToolsDivCollapsed"> </span>
+                            <div class="toolbox toolbox-form" ng-init="ActiveTabForBPM='Properties'">
+                                <ul class="nav nav-tabs">
+                                    <li ng-class="ActiveTabForBPM=='Properties'?'active':''">
+                                        <a data-toggle="tab" aria-expanded="false">
+                                            Properties
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content no-padding">
+                                    <div ng-class="ActiveTabForBPM=='Properties'?'tab-pane fade active in':'tab-pane fade'">
+                                        <div class="control-common-properties" id="dvcommonProperties" ng-if="selectedShape">
+                                            <div class="common-properties-header">
+                                                <h3>
+                                                    {{selectedShape.ShapeModel.Name}}
+                                                </h3>
+                                            </div>
+                                            <div class="common-properties-content">
+                                                <div class="common-properties-content-inner common-properties-secondary-tabs-wrapper">
+                                                    <ul class="nav nav-tabs common-properties-secondary-tabs">
+                                                        <li role="presentation" class="active">
+                                                            <a data-toggle="tab" data-target="#G-{{$id}}">
+                                                                General
+                                                            </a>
+                                                        </li>
+                                                        <li role="presentation" ng-show="BPMNModel.Type!= 'BPMTemplate'">
+                                                            <a data-toggle="tab" data-target="#C-{{$id}}" ng-click="IsConfiguredOpen=true;">
+                                                                Configure
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                    <div class="tab-content" id="M-{{$id}}">
+                                                        <div id="G-{{$id}}" class="tab-pane fade in active">
+                                                            <form class="form-horizontaL general-prop-table">
+                                                                <div class="form-body padding-10">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label marg-bottom-5">ID</label>
+                                                                        <input type="text" class="form-control input-sm " title="{{selectedShape.ShapeId}}" ng-model="selectedShape.ShapeId" disabled />
+                                                                    </div>
+                                                                    <div class="form-group" ng-hide="selectedShape.ShapeModel.Name == 'textAnnotation' && selectedShape.ShapeModel.dictAttributes.name == undefined">
+                                                                        <label class="control-label marg-bottom-5">Name</label>
+                                                                        <input type="text" class="form-control input-sm" title="{{selectedShape.ShapeModel.dictAttributes.name}}" ng-model="selectedShape.ShapeModel.dictAttributes.name" ng-change="onChangeofText()" ng-disabled="IsVersionDisplay" undoredodirective model="selectedShape.ShapeModel" />
+                                                                    </div>
+                                                                    <div class="form-group mar-top4 marg-bottom-8" ng-if="selectedShape.ShapeModel.isSynchronousModel">
+                                                                        <label class="checkbox-inline">
+                                                                            <input type="checkbox" ng-disabled="$parent.IsVersionDisplay" ng-true-value="'True'" ng-false-value="'False'" ng-model="selectedShape.ShapeModel.isSynchronousModel.Value" undoredodirective model="selectedShape.ShapeModel.isSynchronousModel" />
+                                                                            <span class="control-label">Synchronous</span>
+                                                                        </label>
+                                                                    </div>
+                                                                    <!--for showing properties depending on the selected shape-->
+                                                                    <bpm-usertask-shape-map-properties ng-if="selectedElementID && selectedShape.ShapeModel.Name.toLowerCase() == 'usertask'" model="selectedShape.ShapeModel" is-disabledfor-versioning="IsVersionDisplay"></bpm-usertask-shape-map-properties>
+                                                                    <bpm-process-shape-map-properties ng-if="selectedElementID && selectedShape.ShapeModel.Name.toLowerCase() == 'participant'" model="selectedShape.ProcessModel" process-types="ProcessTypes" is-disabledfor-versioning="IsVersionDisplay"></bpm-process-shape-map-properties>
+                                                                    <bpm-callactivity-shape-map-properties ng-if="selectedElementID && selectedShape.ShapeModel.Name.toLowerCase() == 'callactivity'" model="selectedShape.ShapeModel" called-case-bpm-model="selectedShape.CallActivityDetails" is-disabledfor-versioning="IsVersionDisplay" set-calledelementparameters="SetCalledElementParameters(mapName, extensionElementModel)"></bpm-callactivity-shape-map-properties>
+                                                                    <bpm-intermediate-catch-event-map-properties ng-if="selectedElementID && selectedShape.ShapeModel.Name.toLowerCase() == 'intermediatecatchevent'" model="selectedShape.ShapeModel" mapvariablesmodel="mapVariablesModel" selectedelemforresize="selectedElemForResize" processtypes="ProcessTypes" is-disabledfor-versioning="IsVersionDisplay"></bpm-intermediate-catch-event-map-properties>
+                                                                    <bpm-messageflow-map-properties ng-if="selectedElementID && selectedShape.ShapeModel.Name.toLowerCase() == 'messageflow'" model="selectedShape.ShapeModel" is-disabledfor-versioning="IsVersionDisplay" doc-types="docTypes"></bpm-messageflow-map-properties>
+                                                                    <bpm-text-annotation-properties ng-if="selectedElementID && selectedShape.ShapeModel.Name.toLowerCase() == 'textannotation'" shape-model="selectedShape.ShapeModel" on-change-text="onChangeofText()" is-disabledfor-versioning="IsVersionDisplay"></bpm-text-annotation-properties>
+
+                                                                    <!--Currently we are showing inclusive gateway properties only if it is a converging gateway. In future if something else would be required for non-converging inclusive gate way then we will have to change the ng-if condition.-->
+                                                                    <bpm-inclusive-gateway-properties ng-if="selectedElementID && selectedShape.ShapeModel.Name.toLowerCase() == 'inclusivegateway' && selectedShape.ShapeModel.dictAttributes.gatewayDirection.toLowerCase() == 'converging'" shape-model="selectedShape.ShapeModel" is-disabledfor-versioning="IsVersionDisplay" get-diverging-gateways-callback="getDivergingGateWays()"></bpm-inclusive-gateway-properties>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        <div id="C-{{$id}}" ng-show="BPMNModel.Type!= 'BPMTemplate'" class="tab-pane fade">
+                                                            <form class="form-horizontaL general-prop-table padding-10" ng-if="IsConfiguredOpen && BPMNModel.Type!= 'BPMTemplate'">
+                                                                <bpm-business-rule-task-association-properties ng-if="selectedElementID && selectedShape.ShapeModel && selectedShape.ShapeModel.Name.toLowerCase() == 'businessruletask'" shape-model="selectedShape.ShapeModel" query-parameters-values="queryParametersValues" is-disabledfor-versioning="IsVersionDisplay" is-objectbased="BPMNModel.IsObjectBased"></bpm-business-rule-task-association-properties>
+                                                                <bpm-user-task-association-properties ng-if="selectedElementID && selectedShape.ShapeModel && selectedShape.ShapeModel.Name.toLowerCase() == 'usertask'" shape-model="selectedShape.ShapeModel" query-parameters-values="queryParametersValues" is-disabledfor-versioning="IsVersionDisplay" is-objectbased="BPMNModel.IsObjectBased"></bpm-user-task-association-properties>
+                                                                <bpm-callactivity-shape-association-properties ng-if="selectedElementID && selectedShape.ShapeModel.Name.toLowerCase() == 'callactivity'" model="selectedShape.ShapeModel" is-disabledfor-versioning="IsVersionDisplay" query-parametersvalues="queryParametersValues" check-and-update-param-child-models="checkAndUpdateParamChildModels(param,fromUndoRedoBlock)"></bpm-callactivity-shape-association-properties>
+                                                                <bpm-servicerule-shape-association-properties ng-if="selectedElementID && selectedShape.ShapeModel.Name.toLowerCase() == 'servicetask'" shape-model="selectedShape.ShapeModel" map-variables-model="mapVariablesModel" is-disabledfor-versioning="IsVersionDisplay" is-objectbased="BPMNModel.IsObjectBased" query-parameterallowed-values="queryParameterallowedValues" query-parametersvalues="queryParametersValues" check-and-update-param-child-models="checkAndUpdateParamChildModels(param, fromUndoRedoBlock)"></bpm-servicerule-shape-association-properties>
+                                                                <bpm-sequenceflow-shape-association-properties ng-if="selectedElementID && selectedShape.ShapeModel.Name.toLowerCase() == 'sequenceflow' && selectedShape.ShapeModel.Elements.length > 0" model="selectedShape.ShapeModel" is-disabledfor-versioning="IsVersionDisplay" query-parameterallowed-values="queryParameterallowedValues" query-parametersvalues="queryParametersValues" operators-list="operatorsList"></bpm-sequenceflow-shape-association-properties>
+                                                                <bpm-lane-performers-properties ng-if="selectedElementID && selectedShape.ShapeModel && selectedShape.ShapeModel.Name.toLowerCase() == 'lane'" isdisabledforversioning="IsVersionDisplay" shape-model="selectedShape.ShapeModel" user-roles="UserRoles"></bpm-lane-performers-properties>
+                                                                <bpm-user-task-performers-properties ng-if="selectedElementID && selectedShape.ShapeModel && selectedShape.ShapeModel.Name.toLowerCase() == 'usertask'" isdisabledforversioning="IsVersionDisplay" shape-model="selectedShape.ShapeModel" user-roles="UserRoles" targetsitelist="TargetSiteList" lst-bpmn-related-code-values="lstBPMNRelatedCodeValues" mapvariablesmodel="mapVariablesModel"></bpm-user-task-performers-properties>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div ng-if="!selectedShape" class="text-center" style="font-size: 2em;margin-top: 25%;">
+                                            No Shape selected !
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-class="IsToolsDivCollapsed?'form-area-expanded normal-box-shaddow overflowA':'form-area normal-box-shaddow overflowA'" ng-show="!selectedDesignSource" tabindex="0" onselectstart="return false">
+                            <svg id="mySVG" width="2500" height="2500" style="background:white;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <defs>
+                                    <linearGradient id="task" x1="0.5" y1="0" x2="0.5" y2="1">
+                                        <stop offset="0" style="stop-color:#f7ce98;stop-opacity:1" />
+                                        <stop offset="1" style="stop-color:#f7ce98;stop-opacity:1" />
+                                    </linearGradient>
+                                    <linearGradient id="start" x1="0" y1="0" x2="0.5" y2="1">
+                                        <stop offset="0" style="stop-color:#0b800e;stop-opacity:1" />
+                                        <stop offset="1" style="stop-color:#18bf18;stop-opacity:1" />
+                                    </linearGradient>
+                                    <linearGradient id="end" x1="0" y1="0" x2="0.5" y2="1">
+                                        <stop offset="0" style="stop-color:#9b1d1d;stop-opacity:1" />
+                                        <stop offset="1" style="stop-color:#ea3c3c;stop-opacity:1" />
+                                    </linearGradient>
+                                    <linearGradient id="exclusive" x1="0.5" y1="0" x2="0.5" y2="1">
+                                        <stop offset="0" style="stop-color:#f7ede1;stop-opacity:1" />
+                                        <stop offset="1" style="stop-color:#f7ede1;stop-opacity:1" />
+                                    </linearGradient>
+                                    <linearGradient id="intermediate" cx="0.713" cy="0.256" r="0.737" fx="0.713" fy="0.256">
+                                        <stop offset="0" style="stop-color:#f7ce98;stop-opacity:1" />
+                                        <stop offset="1" style="stop-color:#f7ce98;stop-opacity:1" />
+                                    </linearGradient>
+                                    <linearGradient id="headerRect" x1="0" y1="0.5" x2="1" y2="0.5">
+                                        <stop offset="0" style="stop-color:#f7ce98;stop-opacity:1" />
+                                        <stop offset="0.5" style="stop-color:#f7ce98;stop-opacity:1" />
+                                        <stop offset="1" style="stop-color:#f7ce98;stop-opacity:1" />
+                                    </linearGradient>
+                                    <linearGradient id="selectionRect" x1="0.5" y1="0" x2="0.5" y2="1">
+                                        <stop offset="0" style="stop-color:#e0d5c8;stop-opacity:1" />
+                                        <stop offset="1" style="stop-color:#e0d5c8;stop-opacity:1" />
+                                    </linearGradient>
+                                    <filter id="rectshadow">
+                                        <feOffset result="offOut" in="SourceAlpha" dx="2" dy="2" />
+                                        <feGaussianBlur result="blurOut" in="offOut" stdDeviation="4" />
+                                        <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+                                    </filter>
+                                    <filter id="circleShadow">
+                                        <feGaussianBlur in="SourceAlpha" stdDeviation="1" />
+                                        <feOffset dx="2" dy="2" />
+                                        <feMerge>
+                                            <feMergeNode />
+                                            <feMergeNode in="SourceGraphic" />
+                                        </feMerge>
+                                    </filter>
+                                    <marker id="arrow" markerWidth="10" markerHeight="10" refX="10" refY="3" orient="auto" markerUnits="strokeWidth">
+                                        <path d="M0,0 L0,6 L9,3 z" fill="#3a3a3a" />
+                                    </marker>
+                                </defs>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="full-height" ng-show="activeTab=='VARIABLES'">
+                    <div class="normal-content-wrapper">
+                        <div class="normal-content-wrapper-header">
+                            <h3>Variables</h3>
+                        </div>
+                        <div class="table-scrollable" style="height: 97%;">
+                            <table class="table table-striped table-hover table-bordered dataTable no-footer" id="sample_editable_1" role="grid" aria-describedby="sample_editable_1_info">
+                                <thead>
+                                    <tr role="row">
+                                        <th class="sorting_asc" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="ID activate to sort column ascending" aria-sort="ascending" style="width: 224px;">
+                                            ID
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="Data Type activate to sort column ascending" style="width: 281px;">
+                                            Data Type
+                                        </th>
+                                        <th ng-if="!IsDisabledforVersioning" class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="Entity activate to sort column ascending" style="width: 281px;">
+                                            Entity
+                                        </th>
+                                        <th ng-if="IsDisabledforVersioning" class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="Entity activate to sort column ascending" style="width: 281px;">
+                                            Object
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="Type activate to sort column ascending" style="width: 281px;">
+                                            Type
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="Default Value Type activate to sort column ascending" style="width: 281px;">
+                                            Default Value Type
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="Default Value activate to sort column ascending" style="width: 281px;">
+                                            Default Value
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="Default Value activate to sort column ascending" style="width: 281px;">
+                                            Is Required
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="Query ID activate to sort column ascending" style="width: 281px;">
+                                            Query ID
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="sample_editable_1" rowspan="1" colspan="1" aria-label="Query Parameters activate to sort column ascending" style="width: 281px;">
+                                            Query Parameters
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="variable in mapVariablesModel.Elements" role="row" ng-class="selectedVariable==variable?'selected':($index%2==0?'even':'odd')" ng-click="selectVariable(variable)">
+                                        <td>
+                                            <span title="{{variable.dictAttributes.id}}" ng-bind="variable.dictAttributes.id" />
+                                        </td>
+                                        <td>
+                                            <span title="{{variable.dictAttributes.dataType}}" ng-bind="variable.dictAttributes.dataType"></span>
+                                        </td>
+                                        <td>
+                                            <span title="{{variable.dictAttributes.sfwBusinessObject}}" ng-bind="variable.dictAttributes.sfwBusinessObject"></span>
+                                        </td>
+                                        <td>
+                                            <span title="{{variable.dictAttributes.type}}" ng-bind="variable.dictAttributes.type"></span>
+                                        </td>
+                                        <td>
+                                            <span title="{{variable.dictAttributes.sfwDefaultValueType}}" ng-bind="variable.dictAttributes.sfwDefaultValueType"></span>
+                                        </td>
+                                        <td>
+                                            <span title="{{variable.dictAttributes.sfwDefaultValue}}" ng-bind="variable.dictAttributes.sfwDefaultValue"></span>
+                                        </td>
+                                        <td>
+                                            <span title="{{variable.dictAttributes.sfwRequired}}" ng-bind="variable.dictAttributes.sfwRequired"></span>
+                                        </td>
+                                        <td>
+                                            <span title="{{variable.dictAttributes.sfwQueryID}}" ng-bind="variable.dictAttributes.sfwQueryID"></span>
+                                        </td>
+                                        <td>
+                                            <span title="{{variable.dictAttributes.sfwQueryParameters}}" ng-bind="variable.dictAttributes.sfwQueryParameters"></span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

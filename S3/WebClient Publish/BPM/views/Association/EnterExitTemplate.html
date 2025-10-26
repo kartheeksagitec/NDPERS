@@ -1,0 +1,50 @@
+﻿<div class="portlet-body">
+    <div class="bpm-container">
+        <div class="bpm-container-title">
+            <span>Parameters</span>
+            <div class="bpmn-right" ng-if="!IsDisabledforVersioning">
+                <i class="fa fa-plus color-light2" ng-click="addVariable()" />
+                <i class="fa fa-minus color-light2" ng-click="deleteVariable()" ng-disabled="!SelectedVariable" />
+            </div>
+        </div>
+        <div class="bpm-container-body">
+            <div class="table-scrollable">
+                <table class="table table-striped table-hover table-bordered dataTable no-footer">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Type</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr role="row" ng-repeat="variable in model.Elements" ng-click="$parent.SelectedVariable=variable" ng-class="$parent.SelectedVariable == variable ?'selected':''">
+                            <td>
+                                <select ng-disabled="IsDisabledforVersioning" class="form-control form-filter input-sm" title="{{variable.dictAttributes.ID}}" ng-model="variable.dictAttributes.ID" ng-options="x for x in mapvarids"></select>
+                            </td>
+                            <td>
+                                <select ng-disabled="IsDisabledforVersioning" class="form-control form-filter input-sm" title="{{variable.dictAttributes.variableType}}" ng-model="variable.dictAttributes.variableType" ng-change="onVariableTypeChanged(variable)">
+                                    <option>Property</option>
+                                    <option>ScalarQuery</option>
+                                    <option ng-if="!isEnter">Constant</option>
+                                </select>
+                            </td>
+                            <td class="bpm-actions-input">
+                                <div ng-show="variable.dictAttributes.variableType == 'Property'">
+                                    <entityfieldelementintellisense ng-if="!isObjectbased" is-disabled="IsDisabledforVersioning" modebinding="variable.dictAttributes.sfwEntityField" model="variable" entityid="entityid"></entityfieldelementintellisense>
+                                    <span ng-if="IsDisabledforVersioning && isObjectbased" ng-bind="variable.dictAttributes.sfwObjectField"></span>
+                                </div>
+                                <entityqueryintellisense ng-show="variable.dictAttributes.variableType == 'ScalarQuery'" disableflag="IsDisabledforVersioning" selecteditem="variable.dictAttributes.sfwQueryID" model="variable" parametermodel="variable.dictAttributes.sfwQueryParameters" showsearchbutton="true" isbpm="true" parameterallowedvalues="parameterallowedvalues"></entityqueryintellisense>
+                                <input class="form-control form-filter input-sm" ng-disabled="IsDisabledforVersioning" ng-show="variable.dictAttributes.variableType == 'Constant'" ng-model="variable.dictAttributes.sfwEntityField" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-actions">
+    <input type="button" class="dialog-btn-default" ng-if="!IsDisabledforVersioning" value="OK" ng-click="onOKClick()" />
+    <input type="button" class="dialog-btn" value="Cancel" ng-click="closeDialog()" />
+</div>

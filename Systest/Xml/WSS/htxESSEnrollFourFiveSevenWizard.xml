@@ -1,0 +1,67 @@
+﻿<form ID="wfmESSEnrollFourFiveSevenWizard" sfwActive="True" sfwDescription="Enroll 457" sfwStatus="Valid" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2003" sfwType="FormLinkWizard" sfwTitle="ESSEnroll 457Wizard" version="3.5" sfwEntity="entEnrollOther457Web" sfwTemplate="ESSEnrollFourFiveSevenWizard.html" isBasedOnWfm="true">
+  <initialload>
+    <callmethods sfwMode="New" sfwMethodName="Enrollin457" />
+    <callmethods sfwMode="Update" sfwMethodName="Enrollin457" />
+  </initialload>
+  <items>
+    <sfwWizard ID="wizMain">
+      <items>
+        <sfwWizardStep ID="wzsStep" sfwRulesGroup="Enroll457" Title="Enroll in Other 457/403(b)" sfwShowInHeader="True">
+          <items>
+            <sfwTable ID="tblStep" />
+            <sfwPanel ID="pnlEnrollinOther457" sfwCaption="Enroll in Other 457/403(b)">
+              <items>
+                <sfwLabel ID="capPersonId" Text="PERSLink ID : " AssociatedControlID="lblPersonId" sfwIsCaption="True" />
+                <sfwLabel ID="lblPersonId" sfwEntityField="PersonId" />
+                <sfwLabel ID="capFirstName" Text="Employee Name : " AssociatedControlID="lblFirstName" sfwIsCaption="True" />
+                <sfwLabel ID="lblFirstName" sfwEntityField="objPerson.FullName" />
+                <sfwLabel ID="capIdecAmountPerPayPeriod" Text="Pay Period Begin Date : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtIdtPayPeriodBeginDate" sfwDataFormat="{0:d}" sfwEntityField="IdtPayPeriodBeginDate" sfwValidationRules="IsPayPeriodStartDateNull" />
+                <sfwLabel ID="capIdtPayPeriodBeginDate" Text="Amount Per Pay Period : " sfwIsCaption="True" />
+                <sfwTextBox ID="txtIdecAmountPerPayPeriod" sfwDataFormat="{0:C}" sfwEntityField="IdecAmountPerPayPeriod" />
+                <sfwCheckBox ID="chkCheckBox" sfwEntityField="IstrIsTermsAndConditionsAgreed" sfwValidationRules="IsAcknowledgmentChecked" />
+                <sfwLabel ID="lblLabel" Text="&lt;b&gt;I certify that the above information is true and correct.&lt;/b&gt;" sfwIsCaption="True" />
+                <sfwLabel ID="lblLabel1" sfwEntityField="OrgId" CssClass="hideControl" />
+                <sfwLabel ID="lblLabel2" sfwEntityField="PlanId" CssClass="hideControl" />
+                <sfwLabel ID="lblLabel3" sfwEntityField="PersonId" CssClass="hideControl" />
+                <sfwLabel ID="lblLabel4" sfwEntityField="lintPersonEmploymentDetailID" CssClass="hideControl" />
+                <sfwLabel ID="lblLabel5" sfwEntityField="lintPersonEmploymentID" CssClass="hideControl" />
+                <sfwGridView ID="grvBusPersonAccountDeferredCompProvider" AllowPaging="True" AllowSorting="True" sfwSortExpression="StartDate desc" sfwEntityField="objPerson.objESSPersonAccountDeffCompOther457.lstPersonAccountDeferredCompProvider" sfwGridEntity="entPersonAccountDeferredCompProvider">
+                  <Columns>
+                    <TemplateField HeaderText="Provider">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="CompanyName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Start Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="StartDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="End Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="EndDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Amount Per Pay Period" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="PerPayPeriodContributionAmt" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </items>
+            </sfwPanel>
+            <sfwButton ID="btnCancel" Text="Cancel" sfwActiveForm="wfmESSEmployeeHomeMaintenance" sfwMethodName="btnOpen_Click" />
+            <sfwButton ID="btnButton" sfwMethodName="btnWizardFinish_Click" OnClientClick="ConfirmESSAmount()" sfwExecuteAfterSuccess="btnNew" />
+            <sfwButton ID="btnNew" sfwActiveForm="wfmESSEnrollFourFiveSevenWizard" sfwMethodName="btnNew_Click" sfwNavigationParameter="aintemploymentId=lblLabel5;aintemploymentdetailid=lblLabel4" CssClass="hideControl" />
+          </items>
+        </sfwWizardStep>
+      </items>
+    </sfwWizard>
+  </items>
+  <loaddetails>
+    <entityfield ID="objPerson" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objPerson.objESSPersonAccountDeffCompOther457.lstPersonAccountDeferredCompProvider" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+  </loaddetails>
+</form>

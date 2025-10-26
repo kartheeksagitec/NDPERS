@@ -1,0 +1,75 @@
+﻿<div class="portlet-body">
+    <div class="form-body">
+        <div class="col-xs-6 margin-top-15">
+            <label class="control-label">Attribute</label>
+            <div class="col-xs-12 no-left-padding">
+                <span class="info-tooltip" ng-if="model.errors.empty_id || model.errors.inValid_id || model.errors.duplicate_id" ng-attr-title="{{model.errors.empty_id || model.errors.inValid_id || model.errors.duplicate_id }}" style="color:red !important"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                <input tabindex="0" ng-disabled="IsBaseAppFile && (model.IsBaseAppModel || model.BaseAppModel)" type="text" title="{{model.dictAttributes.ID}}" ng-model="model.dictAttributes.ID" model="model" ng-change="validateId(model,model.dictAttributes.ID)" ng-blur="checkDuplicateObj(model, oldModel, IsUpdate)" class="form-control form-filter input-sm" />
+            </div>
+        </div>
+        <div class="col-xs-6 margin-top-15">
+            <label class="control-label">Data Type</label>
+            <div class="col-xs-12 no-left-padding">
+                <span class="info-tooltip" ng-if="!model.dictAttributes.sfwDataType" ng-attr-title="{{model.errors.data_type}}" style="color:red !important"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                <select ng-disabled="IsBaseAppFile && (model.IsBaseAppModel || model.BaseAppModel)"  ng-options="x for x in datatypes" title="{{model.dictAttributes.sfwDataType}}" ng-model="model.dictAttributes.sfwDataType" model="model" ng-change="validateDataType(model,model.dictAttributes.sfwDataType)" class="form-control form-filter input-sm" />
+            </div>
+        </div>
+        <div class="col-xs-6 margin-top-15" ng-if="objEntity.dictAttributes.sfwObjectID" ng-hide="model.dictAttribute.sfwType === 'AppJsonData'">
+            <label class="control-label">Object Field</label>
+            <div class="col-xs-12 no-left-padding">
+                <!--<span class="info-tooltip" ng-if="model.errors.empty_ObjField" ng-attr-title="{{model.errors.empty_ObjField}}" style="color:red !important"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>-->
+                <span class='info-tooltip' ng-if='model.warnings.sfwValue' ng-attr-title='{{model.warnings.sfwValue}}' style='color:#f0ad4e!important'><i class='fa fa-exclamation-circle' aria-hidden='true'></i></span>
+                <objecttreeintellisensetemplate model="model" isdisabled="(model.dictAttributes.sfwRelatedJSONField != undefined && model.dictAttributes.sfwRelatedJSONField.trim() != '')||(IsBaseAppFile && (model.IsBaseAppModel || model.BaseAppModel))" objtree="objBusinessObject.ObjTree" objectfield="model.dictAttributes.sfwValue" isloadmethod="false" propertyname="'dictAttributes.sfwValue'"
+                                                busobject="objEntity.dictAttributes.sfwObjectID" onselectioncallback="setObjectFieldForProperty(id, model, oldModel, IsUpdate)"></objecttreeintellisensetemplate>
+            </div>
+        </div>
+        <div class="col-xs-6 margin-top-15">
+            <label class="control-label">Related JSON Field</label>
+            <div class="col-xs-12 no-left-padding">
+                <entityattributeintellisense type="'Column'" isdisabled="(model.dictAttributes.sfwValue)||(IsBaseAppFile && (model.IsBaseAppModel || model.BaseAppModel))" isloadinheritedobjects="false" modebinding="model.dictAttributes.sfwRelatedJSONField" isjson="true" model="model" entityid="objEntity.dictAttributes.ID" propertyname="'dictAttributes.sfwRelatedJSONField'"></entityattributeintellisense>
+            </div>
+        </div>
+        <div class="col-xs-6 margin-top-15">
+            <label class="control-label">Caption</label>
+            <div class="col-xs-12 no-left-padding">
+                <input tabindex="0" type="text" title="{{model.dictAttributes.sfwCaption}}" ng-model="model.dictAttributes.sfwCaption" class="form-control form-filter input-sm" />
+            </div>
+        </div>
+        <div class="col-xs-6 margin-top-15">
+            <label class="control-label">Default Value</label>
+            <div class="col-xs-12 no-left-padding">
+                <input type="text" title="{{model.dictAttributes.sfwDefaultValue}}" ng-disabled="(model.dictAttributes.sfwValue)||(IsBaseAppFile && (model.IsBaseAppModel || model.BaseAppModel))" ng-model="model.dictAttributes.sfwDefaultValue" class="form-control form-filter input-sm" />
+            </div>
+        </div>
+        <div class="col-xs-6 margin-top-15">
+            <label class="control-label">Data Format</label>
+            <div class="col-xs-12 no-left-padding">
+                <common-intellisense collection="dataformats" selected-item="model.dictAttributes.sfwDataFormat" model="model" propertyname="'dictAttributes.sfwDataFormat'"></common-intellisense>
+            </div>
+        </div>
+        <div class="col-xs-6 margin-top-15">
+            <label class="control-label">Description</label>
+            <div class="col-xs-12 no-left-padding">
+                <input type="text" title="{{model.dictAttributes.Text}}" ng-model="model.dictAttributes.Text" class="form-control form-filter input-sm" ng-trim="false" />
+            </div>
+        </div>
+        <div class="col-xs-6 margin-top-15">
+            <label class="control-label" for="chkIsPrivateAddProperty">Private</label>
+            <div class="col-xs-12 no-left-padding">
+                <input id="chkIsPrivateAddProperty" ng-disabled="IsBaseAppFile && (model.IsBaseAppModel || model.BaseAppModel)" type="checkbox" value="Private" ng-model="model.dictAttributes.sfwPrivate" ng-true-value="'True' || 'true'" ng-false-value="'False' || 'false' || ''" style="margin-bottom:11px;" />
+            </div>
+        </div>
+        <div class="col-xs-6 margin-top-15">
+            <label class="control-label" for="chkIsImportantAddProperty">Important</label>
+            <div class="col-xs-12 no-left-padding">
+                <input id="chkIsImportantAddProperty" type="checkbox" ng-model="model.dictAttributes.sfwImportant" ng-true-value="'True' || 'true'" ng-false-value="'False' || 'false' || ''" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-actions right">
+    <div class="col-xs-12">
+        <input type="button" value="OK" class="btn dialog-btn-default" ng-click="OkClick()" ng-disabled="model.errors.empty_id || model.errors.inValid_id || model.errors.duplicate_id || model.errors.data_type" />
+        <input type="button" value="Cancel" class="btn dialog-btn" ng-click="onCancelClick()" />
+    </div>
+</div>

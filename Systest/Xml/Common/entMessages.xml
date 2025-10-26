@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entMessages" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvAdmin" sfwType="BusinessRule" sfwMainCDO="icdoMessages" sfwObjectID="busMessages" sfwTableName="sgs_messages" sfwView="False">
+  <rules>
+    <rule ID="RULE CHECK MESSAGE ID IS NOT NULL" sfwMessageId="52" sfwExpression="(this.icdoMessages.message_id == 0)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK MESSAGE ID ALREADY EXISTS IN NEW MODE" sfwMessageId="53" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entMessages.MessageIdExists&quot;, this.icdoMessages.message_id) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="RULE MESSAGE IS BLANK" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="(string.IsNullOrEmpty(this.icdoMessages.display_message))" sfwMessage="Message is Required" />
+    <rule ID="RULE SEVERITY IS BLANK" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="(string.IsNullOrEmpty(this.icdoMessages.severity_value))" sfwMessage="Severity is Required" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror>
+    <item ID="RULE CHECK MESSAGE ID IS NOT NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK MESSAGE ID ALREADY EXISTS IN NEW MODE" sfwMode="New" sfwStatus="Active" />
+    <item ID="RULE MESSAGE IS BLANK" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE SEVERITY IS BLANK" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <updateablecdo />
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select *&#xD;&#xA;  from sgs_messages&#xD;&#xA; order by message_id&#xD;&#xA;">
+      <parameters />
+    </query>
+    <query ID="MessageIdExists" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) from sgs_messages &#xD;&#xA;where&#xD;&#xA;message_id = @message_id">
+      <parameters>
+        <parameter ID="@message_id" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="MessageId" sfwType="Column" sfwValue="message_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="DisplayMessage" sfwType="Column" sfwValue="display_message" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="500" />
+    <attribute ID="SeverityDescription" sfwType="Description" sfwValue="severity_description" />
+    <attribute ID="SeverityId" sfwType="Column" sfwValue="severity_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="16" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="SeverityValue" sfwType="Column" sfwValue="severity_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="InternalInstructions" sfwType="Column" sfwValue="internal_instructions" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4096" />
+    <attribute ID="EmployerInstructions" sfwType="Column" sfwValue="employer_instructions" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4096" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+  </attributes>
+</entity>

@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entBenefitProvisionMultiplier" sfwTableName="sgt_benefit_provision_multiplier">
+  <queries>
+    <query ID="GetBenefitProvisionMultiplier" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_BENEFIT_PROVISION_MULTIPLIER WITH(NOLOCK)&#xD;&#xA;WHERE EFFECTIVE_DATE=(SELECT TOP 1 EFFECTIVE_DATE&#xD;&#xA;FROM SGT_BENEFIT_PROVISION_MULTIPLIER B WITH(NOLOCK)&#xD;&#xA;WHERE B.EFFECTIVE_DATE &lt;= @CALCULATION_DATE&#xD;&#xA;AND B.BENEFIT_PROVISION_ID= CASE WHEN @ISCONVERSION ='N' THEN @BENEFITPROVISIONID ELSE BENEFIT_PROVISION_ID END&#xD;&#xA;AND ISNULL(B.BENEFIT_ACCOUNT_TYPE_VALUE,'')= @BENEFITACCOUNTTYPEVALUE &#xD;&#xA;AND ISCONVERSION=@ISCONVERSION ORDER BY B.EFFECTIVE_DATE DESC)&#xD;&#xA;AND BENEFIT_PROVISION_ID=CASE WHEN @ISCONVERSION ='N' THEN @BENEFITPROVISIONID ELSE BENEFIT_PROVISION_ID END&#xD;&#xA;AND ISNULL(BENEFIT_ACCOUNT_TYPE_VALUE,'')= @BENEFITACCOUNTTYPEVALUE &#xD;&#xA;AND ISCONVERSION=@ISCONVERSION&#xD;&#xA;ORDER BY TIER_NUMBER">
+      <parameters>
+        <parameter ID="@CALCULATION_DATE" sfwDataType="DateTime" />
+        <parameter ID="@BENEFITPROVISIONID" sfwDataType="int" />
+        <parameter ID="@BENEFITACCOUNTTYPEVALUE" sfwDataType="string" />
+        <parameter ID="@ISCONVERSION" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="GetLatestBenefitProvisionTypeByEffectiveDate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT TOP 1 BENEFIT_MULTIPLIER_TYPE_VALUE FROM SGT_BENEFIT_PROVISION_MULTIPLIER BPM&#xD;&#xA;INNER JOIN SGS_CODE_VALUE CV ON BPM.BENEFIT_MULTIPLIER_TYPE_VALUE = CV.CODE_VALUE&#xD;&#xA;WHERE BENEFIT_PROVISION_ID = @BENEFITPROVISIONID AND BPM.EFFECTIVE_DATE &lt;= @RETIREMENT_DATE&#xD;&#xA;ORDER BY CV.CODE_VALUE_ORDER DESC">
+      <parameters>
+        <parameter ID="@BENEFITPROVISIONID" sfwDataType="int" />
+        <parameter ID="@RETIREMENT_DATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="BenefitProvisionMultiplierId" sfwType="Column" sfwValue="benefit_provision_multiplier_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="BenefitProvisionId" sfwType="Column" sfwValue="benefit_provision_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="EffectiveDate" sfwType="Column" sfwValue="effective_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="BenefitAccountTypeDescription" sfwType="Description" sfwValue="benefit_account_type_description" />
+    <attribute ID="BenefitAccountTypeId" sfwType="Column" sfwValue="benefit_account_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="1904" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="BenefitAccountTypeValue" sfwType="Column" sfwValue="benefit_account_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="IsFlatPercentageFlag" sfwType="Column" sfwValue="is_flat_percentage_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="1" sfwRequired="False" />
+    <attribute ID="ServiceFrom" sfwType="Column" sfwValue="service_from" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ServiceTo" sfwType="Column" sfwValue="service_to" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="MultipierPercentage" sfwType="Column" sfwValue="multipier_percentage" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,6" sfwRequired="False" />
+    <attribute ID="TierNumber" sfwType="Column" sfwValue="tier_number" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="Comments" sfwType="Column" sfwValue="comments" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="100" sfwRequired="False" />
+    <attribute ID="Isconversion" sfwType="Column" sfwValue="isconversion" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="1" sfwRequired="False" />
+  </attributes>
+</entity>

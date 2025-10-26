@@ -1,0 +1,210 @@
+﻿<script id="parameterNavigationTree" type="text/ng-template">
+    <table>
+        <tr>
+            <td width="15px">
+                <span ng-class="field.IsExpanded?'file-expanded':'file-collapsed'" ng-click="ExpandCollapsedControl(field, $event)" ng-show="field.Items.length>0"></span>
+            </td>
+            <td><input type="checkbox" ng-model="field.IsSelected" ng-show="field.IsCheckBoxVisible" /></td>
+            <td><span ng-bind="field.Text"></span></td>
+        </tr>
+    </table>
+    <ul class="list-unstyled" ng-if="field.Items.length > 0" ng-show="field.IsExpanded">
+        <li ng-repeat="field in field.Items" parameterdraggable dragdata="field.Text" ng-include="'parameterNavigationTree'" ng-click="SelectFieldClick(field, $event)" ng-class="SetFieldClass(field)">
+        </li>
+    </ul>
+
+</script>
+
+
+<script id="parameterNavigationTree2" type="text/ng-template">
+    <i ng-class="field.IsExpanded?'fa fa-minus':'fa fa-plus'" ng-click="ExpandCollapsedControl(field,$event)" ng-show="field.Elements.length>0"></i>
+
+    <span ng-bind="field.ID"></span>
+    <ul ng-if="field.Elements.length > 0" ng-show="field.IsExpanded">
+        <li ng-repeat="field in field.Elements" parameterdraggable dragdata="field.ID" ng-include="'parameterNavigationTree2'" ng-click="SelectFieldClick(field, $event)"
+            ng-mousedown="SelectFieldClick(field, $event)" class="common-tree-list marg-left-15">
+        </li>
+    </ul>
+</script>
+
+<div ng-controller="NavigationParameterController" id="RetrievalControls" class="full-height">
+    <div class="portlet-body series-details-popup" id="ScopeId_{{$id}}">
+        <div class="client-visi-layout ">
+            <div class="col-xs-4 full-height">
+                <div class="span-extended-name" ng-if="!IsFormCodeGroup">
+                    <label>Source Form :&nbsp; </label>
+                    <span title="{{formobject.dictAttributes.ID}}" ng-bind="formobject.dictAttributes.ID"></span>
+                </div>
+
+                <div class="navigation-param-tree-list">
+
+
+                    <div class="client-visi-layout-inner navi-para-available-wrapper">
+                        <div class="client-visi-header" ng-if="SelectedObject.Name!='sfwSeries' && !blnIsCorr ">
+                            <span>Available Fields</span>
+                            <div class="fright" ng-hide="isFormLink || blnIsCorr || blnIsReport">
+                                <input type="checkbox" ng-model="SelectedObject.IsShowAllControl" ng-change="showAllControlChange($event)" />
+                                <span class="heading-span" ng-hide="isFormLink">Show All Controls</span>
+                            </div>
+                        </div>
+
+                        <div class="client-visi-content" ng-show="SelectedObject.Name!='sfwSeries' && !blnIsCorr">
+                            <ul>
+                                <li ng-repeat="field in EntityFieldCollection" class="common-tree-list" ng-include="'parameterNavigationTree2'">
+                                </li>
+                            </ul>
+                        </div>
+                        <ul class="nav nav-tabs" ng-init="SelectedTab='ControlID'" ng-show="SelectedObject.Name=='sfwSeries'">
+                            <li role="presentation" ng-class="SelectedTab=='ControlID'?'active':''" ng-click="SelectedTab='ControlID'"><a data-toggle="tab" ng-click="SelectedTab='ControlID'">Control ID</a></li>
+                            <li role="presentation" ng-class="SelectedTab=='Entity'?'active':''"><a data-toggle="tab" ng-click="SelectedTab='Entity'">Entity Tree</a></li>
+
+                        </ul>
+                        <div class="tab-content" ng-show="SelectedObject.Name=='sfwSeries'">
+                            <div class="tab-pane fade" ng-class="SelectedTab=='ControlID'?'in active':''">
+                                <div class="client-visi-header">
+                                    <span>Available Fields</span>
+                                    <div class="fright" ng-hide="isFormLink || blnIsCorr || blnIsReport">
+                                        <input type="checkbox" ng-model="SelectedObject.IsShowAllControl" ng-change="showAllControlChange($event)" />
+                                        <span class="heading-span" ng-hide="isFormLink">Show All Controls</span>
+                                    </div>
+                                </div>
+                                <ul class="itemlist">
+                                    <li ng-repeat="field in EntityFieldCollection" class="common-tree-list" ng-include="'parameterNavigationTree2'">
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="client-visi-content tab-pane fade" ng-class="SelectedTab=='Entity'?'in active':''">
+                                <newentityobjecttreetemplate ischeckboxvisible="false" iscollectionnextlevelload="false" lstdisplayentity="SelectedObject.LstDisplayedEntities" selectedentityobjecttreefields="SelectedObject.SelectedEntityObjectTreeFields" entityname="ParentEntityName" selectedfield="SelectedObject.selectedobjecttreefield"></newentityobjecttreetemplate>
+                            </div>
+                        </div>
+
+                        <ul class="nav nav-tabs" ng-init="SelectedTabCorr='Entity'" ng-show="blnIsCorr && (SelectedObject.Name=='sfwDropDownList' ||SelectedObject.Name=='sfwCheckBoxList'|| SelectedObject.Name=='sfwRadioButtonList' )">
+                            <li role="presentation" ng-class="SelectedTabCorr=='Entity'?'active':''" ng-click="SelecteSelectedTabCorrdTab='Entity'"><a data-toggle="tab" ng-click="SelectedTabCorr='Entity'">Entity Tree</a></li>
+                            <li role="presentation" ng-class="SelectedTabCorr=='ControlID'?'active':''" ng-click="SelectedTabCorr='ControlID'"><a data-toggle="tab" ng-click="SelectedTabCorr='ControlID'">Global Parameters</a></li>
+
+                        </ul>
+                        <div class="tab-content" ng-show="blnIsCorr && (SelectedObject.Name=='sfwDropDownList' ||SelectedObject.Name=='sfwCheckBoxList'|| SelectedObject.Name=='sfwRadioButtonList' )">
+
+                            <div class="client-visi-content tab-pane fade" ng-class="SelectedTabCorr=='Entity'?'in active':''">
+                                <newentityobjecttreetemplate ischeckboxvisible="false" iscollectionnextlevelload="false" lstdisplayentity="SelectedObject.LstDisplayedEntities" selectedentityobjecttreefields="SelectedObject.SelectedEntityObjectTreeFields" entityname="entityName" selectedfield="SelectedObject.selectedobjecttreefield"></newentityobjecttreetemplate>
+                            </div>
+
+                            <div class="tab-pane fade" ng-class="SelectedTabCorr=='ControlID'?'in active':''">
+
+                                <ul class="itemlist">
+                                    <li ng-repeat="field in GlobalParamCollection" class="common-tree-list" ng-include="'parameterNavigationTree2'">
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-xs-8 full-height">
+                <div class="span-extended-name" ng-if="IsForm==undefined && !IsFormCodeGroup">
+                    <label>Query Parameters :</label>
+                    <span title="{{SelectedObject.dictAttributes.sfwLoadSource}}" ng-bind="SelectedObject.dictAttributes.sfwLoadSource"></span>
+                </div>
+                <div class="span-extended-name" ng-if="IsForm && !IsFormCodeGroup">
+                    <label ng-bind="TargetFormCaption"></label> <span title="{{TargetForm}}" ng-bind="TargetForm"></span>
+                </div>
+                <div class="client-visi-layout-heading" ng-if="IsFormCodeGroup">
+                    <label>Code Group :</label>
+                    <span class="span-extended-name" title="{{SelectedObject.dictAttributes.sfwLoadSource}}" ng-bind="SelectedObject.dictAttributes.sfwLoadSource"></span>
+                </div>
+                <div class="navigation-param-value-table">
+
+                    <div class="client-visi-layout-inner">
+                        <div class="client-visi-header">
+                            <span>Parameters</span>
+                        </div>
+                        <div class="client-visi-content">
+                            <table id="ParameterCollection" ng-if="ParameterCollection.length>0" class="table table-condensed table-fixedheader">
+                                <thead>
+                                    <tr>
+                                        <th width="40%">Parameter Field</th>
+                                        <th width="50%">Parameter Value</th>
+                                        <th width="10%">Constant</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="param in ParameterCollection" ng-if="ParameterCollection.length>0">
+                                        <td width="40%"><span ng-bind="param.ParameterField"></span></td>
+                                        <td width="50%"><input type="text" class="form-control input-sm" title="{{param.ParameterValue}}" ng-model="param.ParameterValue" parameterdroppable dropdata="param.ParameterValue" /></td>
+                                        <td width="10%"><input type="checkbox" ng-model="param.Constants" /></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table id="LookupParameterCollection" ng-if="LookupParameterCollection.length > 0" class="table table-condensed table-fixedheader">
+                                <thead>
+                                    <tr>
+                                        <th width="30%">Control Id's</th>
+                                        <th width="30%">Parameter Field</th>
+                                        <th width="30%">Parameter Value</th>
+                                        <th width="10%">Constant</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="param in LookupParameterCollection" class="table-right-side-parameters" ng-if="LookupParameterCollection.length>0">
+                                        <td width="30%"><span ng-bind="param.ControlId"></span></td>
+                                        <td width="30%"><span ng-bind="param.ParameterField"></span></td>
+                                        <td width="30%"><input type="text" class="form-control input-sm" title="{{param.ParameterValue}}" ng-model="param.ParameterValue" parameterdroppable dropdata="param.ParameterValue" /></td>
+                                        <td width="10%"><input type="checkbox" ng-model="param.Constants" /></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table id="XmlParameterCollection" ng-if="XmlParameterCollection.length > 0" class="table table-condensed table-fixedheader">
+                                <thead>
+                                    <tr>
+                                        <th width="30%">Parameter Field</th>
+                                        <th width="20%">Entity Field</th>
+                                        <th width="30%">Parameter Value</th>
+                                        <th width="10%">Constant</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="param in XmlParameterCollection" ng-if="XmlParameterCollection.length>0">
+
+                                        <td width="30%"><span ng-bind="param.ParameterField"></span></td>
+                                        <td width="20%"><span title="{{param.EntityField}}" ng-bind="param.EntityField"></span></td>
+                                        <td width="30%" parameterdroppable dropdata="param.ParameterValue"><input type="text" class="form-control input-sm" title="{{param.ParameterValue}}" ng-model="param.ParameterValue" parameterdroppable dropdata="param.ParameterValue" /></td>
+                                        <td width="10%"><input type="checkbox" ng-model="param.Constants" /></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table id="MethodParameterCollection" ng-if="MethodParameterCollection.length > 0" class="table table-condensed table-fixedheader">
+                                <thead>
+                                    <tr>
+                                        <th width="40%">Parameter Field</th>
+                                        <th width="40%">Parameter Value</th>
+                                        <th width="20%">Constant</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="param in MethodParameterCollection" ng-if="MethodParameterCollection.length>0">
+                                        <td width="40%"><span ng-bind="param.ParameterField"></span></td>                                        
+                                        <td width="40%" parameterdroppable dropdata="param.ParameterValue"><input type="text" class="form-control input-sm" title="{{param.ParameterValue}}" ng-model="param.ParameterValue" parameterdroppable dropdata="param.ParameterValue" ng-readonly="param.IsObject" /></td>
+                                        <td width="20%"><input type="checkbox" ng-model="param.Constants" ng-disabled="param.IsObject" /></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="form-actions">
+        <input type="button" class="btn dialog-btn-default" value="OK" ng-click="onOkClick()" />
+        <input type="button" class="btn dialog-btn" value="Cancel" ng-click="onCancelClick()" />
+    </div>
+</div>
+
+

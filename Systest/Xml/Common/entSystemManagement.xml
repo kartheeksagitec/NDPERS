@@ -1,0 +1,64 @@
+﻿<entity ID="entSystemManagement" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvSystemManagement" sfwType="BusinessRule" sfwMainCDO="icdoSystemManagement" sfwObjectID="busSystemManagement" sfwTableName="sgs_system_management" sfwDataObjectID="doSystemManagement">
+  <rules>
+    <rule ID="Region Blank" sfwMessage="Region is required" sfwExpression="(string.IsNullOrEmpty(this.icdoSystemManagement.region_value))" sfwObjectBased="True" />
+    <rule ID="System Availability Blank" sfwMessage="System Availability is required" sfwExpression="(string.IsNullOrEmpty(this.icdoSystemManagement.system_availability_value))" sfwObjectBased="True" />
+    <rule ID="Base Directory is Blank" sfwMessage="Base directory is required" sfwExpression="(string.IsNullOrEmpty(this.icdoSystemManagement.base_directory))" sfwObjectBased="True" />
+    <rule ID="Batch Date is Blank" sfwMessage="Batch Date is required" sfwExpression="(this.icdoSystemManagement.batch_date == DateTime.MinValue)" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror>
+    <item ID="Region Blank" sfwMode="All" sfwStatus="Active" />
+    <item ID="System Availability Blank" sfwMode="All" sfwStatus="Active" />
+    <item ID="Base Directory is Blank" sfwMode="All" sfwStatus="Active" />
+    <item ID="Batch Date is Blank" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <updateablecdo />
+  <queries>
+    <query ID="GetSystemManagementDetail" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT &#x9;&#xD;&#xA;&#x9;SSM.*,  &#xD;&#xA;&#x9;'' AS REGION_DESCRIPTION,&#xD;&#xA;&#x9;'' AS SYSTEM_AVL_DESCRIPTION &#xD;&#xA;FROM SGS_SYSTEM_MANAGEMENT SSM">
+      <parameters />
+    </query>
+    <query ID="GetSystemManagmentDetailByApplicationName" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT  &#xD;&#xA;&#x9;SSAC.JSON_CHANNEL_CONFIG, SSAC.APP_NAME,&#xD;&#xA;&#x9;SSM.*,  &#xD;&#xA;&#x9;'' AS REGION_DESCRIPTION,&#xD;&#xA;&#x9;'' AS SYSTEM_AVL_DESCRIPTION &#xD;&#xA;FROM SGS_SYSTEM_MANAGEMENT SSM&#xD;&#xA;LEFT OUTER JOIN SGS_SYSTEM_APP_CHANNELS SSAC&#xD;&#xA;ON SSM.SYSTEM_MANAGEMENT_ID = SSAC.SYSTEM_MANAGEMENT_ID&#xD;&#xA;AND SSAC.APP_NAME = @APP_NAME">
+      <parameters>
+        <parameter ID="@APP_NAME" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="DeleteSessionStore" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="DELETE FROM SGS_SESSION_STORE WHERE DATE_CREATED &lt;= DATEADD(DAY, @NOOFDAYS * -1, GETDATE())">
+      <parameters>
+        <parameter ID="@NOOFDAYS" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="SystemManagementId" sfwType="Column" sfwValue="system_management_id" sfwIsNull="False" sfwKeyNo="1" sfwIsIdentity="True" sfwDataType="int" />
+    <attribute ID="CurrentCycleNo" sfwType="Column" sfwValue="current_cycle_no" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="RegionDescription" sfwType="Description" sfwValue="region_description" />
+    <attribute ID="RegionId" sfwType="Column" sfwValue="region_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="17" />
+    <attribute ID="RegionValue" sfwType="Column" sfwValue="region_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="SystemAvailabilityDescription" sfwType="Description" sfwValue="system_availability_description" />
+    <attribute ID="SystemAvailabilityId" sfwType="Column" sfwValue="system_availability_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="18" />
+    <attribute ID="SystemAvailabilityValue" sfwType="Column" sfwValue="system_availability_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="BatchDate" sfwType="Column" sfwValue="batch_date" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="BaseDirectory" sfwType="Column" sfwValue="base_directory" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="255" />
+    <attribute sfwValue="system_flag" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="50" sfwIsNull="True" ID="SystemFlag" sfwCaption="System Flag" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="EmailNotification" sfwType="Column" sfwValue="email_notification" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="300" sfwIsSequence="False" />
+    <attribute sfwValue="data1" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="50" sfwIsNull="True" ID="Data1" sfwCaption="Data1" />
+    <attribute sfwValue="data2" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="50" sfwIsNull="True" ID="Data2" sfwCaption="Data2" />
+    <attribute ID="lstAppChannels" sfwType="Collection" sfwValue="iclbSystemAppChannels" sfwEntity="entSystemAppChannels" sfwPrivate="False" />
+    <attribute sfwValue="use_application_date" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="1" sfwIsNull="False" ID="UseApplicationDate" sfwCaption="Use Application Date" />
+  </attributes>
+  <constraint />
+  <groupslist />
+  <methods />
+  <lifecycle />
+  <objectmethods />
+  <ExtraFields />
+</entity>

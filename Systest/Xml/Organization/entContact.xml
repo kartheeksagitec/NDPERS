@@ -1,0 +1,149 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entContact" sfwActive="True" sfwStatus="Valid" sfwRemoteObject="srvOrganization" sfwType="BusinessRule" sfwMainCDO="icdoContact" sfwObjectID="busContact" sfwTableName="sgt_contact" sfwView="False" sfwParentEntity="entExtendBase">
+  <rules>
+    <rule ID="IsContactHavingWSSAccess" sfwExpression="!(string.IsNullOrEmpty(this.icdoContact.ndpers_login_id))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK EMAIL IS VALID" sfwMessageId="10343" sfwExpression="!(string.IsNullOrEmpty(this.icdoContact.email_address)) &amp;&amp; &#xA;(this.ValidateEmail() == False)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK FIRST NAME IS NULL" sfwMessageId="4020" sfwExpression="(string.IsNullOrEmpty(this.icdoContact.first_name))" sfwObjectBased="True" />
+    <rule ID="RULE CHECK LAST NAME IS NULL" sfwMessageId="4021" sfwExpression="(string.IsNullOrEmpty(this.icdoContact.last_name))" sfwObjectBased="True" />
+    <rule ID="Rule Check npn is not numeric" sfwMessageId="4127" sfwExpression="(!string.IsNullOrEmpty(this.icdoContact.npn_number)) &amp;&amp; &#xA;(!RFunc.IsNumeric(this.icdoContact.npn_number))" sfwObjectBased="True" />
+    <rule ID="Rule Check npn length is greater than 10" sfwMessageId="4128" sfwExpression="(RFunc.Length(this.icdoContact.npn_number) &gt; 10)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK STATUS IS NULL" sfwMessageId="4022" sfwExpression="(string.IsNullOrEmpty(this.icdoContact.status_value))" sfwObjectBased="True" />
+    <rule ID="Rule Validate Contact delete" sfwMessageId="4092" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entContact.GetCountOfContactExistsInOrgContact&quot;, this.icdoContact.contact_id) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="Rule Check Org Contact Active" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.IsOrgContactActive()== true)" sfwMessageId="10508" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="IsContactHavingWSSAccess" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="RULE CHECK FIRST NAME IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK LAST NAME IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK STATUS IS NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK EMAIL IS VALID" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check npn is not numeric" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check npn length is greater than 10" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check Org Contact Active" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete>
+    <item ID="Rule Validate Contact delete" sfwMode="All" sfwStatus="Active" />
+  </validatedelete>
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from sgt_contact a">
+      <parameters />
+    </query>
+    <query ID="sqLoadContactAddress" sfwQueryType="SubSelectQuery" sfwSql="SELECT * FROM SGT_ORG_CONTACT_ADDRESS b&#xD;&#xA;WHERE a.CONTACT_ID = b.CONTACT_ID">
+      <parameters />
+    </query>
+    <query ID="sqLoadOrgContactandRoles" sfwQueryType="SubSelectQuery" sfwSql="SELECT * FROM SGT_ORG_CONTACT d&#xD;&#xA;left outer JOIN SGT_ORG_CONTACT_ROLE c  on c.ORG_CONTACT_ID=d.ORG_CONTACT_ID&#xD;&#xA;left outer join sgt_organization o on o.org_id = d.org_id&#xD;&#xA;WHERE a.CONTACT_ID = d.CONTACT_ID">
+      <parameters />
+    </query>
+    <query ID="LOAD_SEMINAR_ATTENDANCE" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_SEMINAR_ATTENDEE_DETAIL A &#xD;&#xA;INNER JOIN SGT_SEMINAR_SCHEDULE B ON A.SEMINAR_SCHEDULE_ID = B.SEMINAR_SCHEDULE_ID&#xD;&#xA;INNER JOIN SGT_CONTACT_TICKET C ON B.CONTACT_TICKET_ID = C.CONTACT_TICKET_ID&#xD;&#xA;INNER JOIN SGS_USER U ON B.facilitator = U.USER_SERIAL_ID&#xD;&#xA;where A.CONTACT_ID=@CONTACT_ID&#xD;&#xA;and (b.Seminar_Cancel_Flag &lt;&gt; 'Y' OR b.Seminar_Cancel_Flag IS NULL)">
+      <parameters>
+        <parameter ID="@CONTACT_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetCountOfContactExistsInOrgContact" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select count(*) from sgt_org_contact where contact_id =@contact_id">
+      <parameters>
+        <parameter ID="@contact_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetSecurityBasedOnContactIDOrgID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT ORGCNT.CONTACT_ID,SEC.RESOURCE_ID,RES.RESOURCE_DESCRIPTION,MAX(CONVERT(INT,SEC.SECURITY_VALUE)) AS SECURITY_LEVEL&#xD;&#xA;FROM  SGT_ORG_CONTACT_ROLE ORGROL WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_ORG_CONTACT ORGCNT WITH(NOLOCK)&#xD;&#xA;  ON ORGROL.ORG_CONTACT_ID = ORGCNT.ORG_CONTACT_ID&#xD;&#xA;INNER JOIN SGS_CODE_VALUE CV WITH(NOLOCK)&#xD;&#xA;  ON ORGROL.CONTACT_ROLE_ID = CV.CODE_ID AND ORGROL.CONTACT_ROLE_VALUE = CV.CODE_VALUE&#xD;&#xA;INNER JOIN SGS_SECURITY SEC WITH(NOLOCK)&#xD;&#xA;  ON CV.DATA1 = SEC.ROLE_ID&#xD;&#xA;INNER JOIN SGS_RESOURCES RES WITH(NOLOCK)&#xD;&#xA;  ON SEC.RESOURCE_ID = RES.RESOURCE_ID&#xD;&#xA;WHERE  ORGCNT.CONTACT_ID = @CONTACTID&#xD;&#xA; AND  ORGCNT.ORG_ID = @ORGID&#xD;&#xA;GROUP BY ORGCNT.CONTACT_ID,SEC.RESOURCE_ID,RES.RESOURCE_DESCRIPTION">
+      <parameters>
+        <parameter ID="@CONTACTID" sfwDataType="int" />
+        <parameter ID="@ORGID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetRolesByOrgIDandContactID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT ORGCNT.CONTACT_ID,ORGROL.CONTACT_ROLE_VALUE&#xD;&#xA;FROM  SGT_ORG_CONTACT_ROLE ORGROL WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_ORG_CONTACT ORGCNT WITH(NOLOCK)&#xD;&#xA;  ON ORGROL.ORG_CONTACT_ID = ORGCNT.ORG_CONTACT_ID&#xD;&#xA;INNER JOIN SGS_CODE_VALUE CV WITH(NOLOCK)&#xD;&#xA;  ON ORGROL.CONTACT_ROLE_ID = CV.CODE_ID AND ORGROL.CONTACT_ROLE_VALUE = CV.CODE_VALUE&#xD;&#xA;WHERE  ORGCNT.CONTACT_ID = @CONTACTID&#xD;&#xA;AND ORGCNT.STATUS_VALUE = 'ACTV'&#xD;&#xA; AND  ORGCNT.ORG_ID =  @ORGID&#xD;&#xA;GROUP BY ORGCNT.CONTACT_ID, ORGROL.CONTACT_ROLE_VALUE">
+      <parameters>
+        <parameter ID="@CONTACTID" sfwDataType="int" />
+        <parameter ID="@ORGID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="UpdateOrgContactStatusToInactive" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="UPDATE SGT_ORG_CONTACT&#xA;SET STATUS_VALUE = 'INCV'&#xA;WHERE ORG_ID = @ORG_ID AND CONTACT_ID = @CONTACT_ID">
+      <parameters>
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+        <parameter ID="@CONTACT_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetDuplicateNDPERSLoginID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT&#xA;&#x9; * &#xA;FROM&#xA;&#x9; SGT_CONTACT WITH(NOLOCK) &#xA;WHERE&#xA;&#x9; NDPERS_LOGIN_ID =  @NDPERS_LOGIN_ID">
+      <parameters>
+        <parameter ID="@NDPERS_LOGIN_ID" sfwDataType="string" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="ContactId" sfwType="Column" sfwValue="contact_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="NamePrefixDescription" sfwType="Description" sfwValue="name_prefix_description" />
+    <attribute ID="NamePrefixId" sfwType="Column" sfwValue="name_prefix_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="301" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="NamePrefixValue" sfwType="Column" sfwValue="name_prefix_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="FirstName" sfwType="Column" sfwValue="first_name" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="MiddleName" sfwType="Column" sfwValue="middle_name" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="LastName" sfwType="Column" sfwValue="last_name" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="PhoneNo" sfwType="Column" sfwValue="phone_no" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="FaxNo" sfwType="Column" sfwValue="fax_no" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="NpnNumber" sfwType="Column" sfwValue="npn_number" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="EmailAddress" sfwType="Column" sfwValue="email_address" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="100" />
+    <attribute ID="StatusDescription" sfwType="Description" sfwValue="status_description" />
+    <attribute ID="StatusId" sfwType="Column" sfwValue="status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="215" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusValue" sfwType="Column" sfwValue="status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="PrimaryAddressId" sfwType="Column" sfwValue="primary_address_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="OtherPhoneNumber" sfwType="Column" sfwValue="other_phone_number" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="RegistrationDate" sfwType="Column" sfwValue="registration_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="PhoneNoExtn" sfwType="Column" sfwValue="phone_no_extn" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="FaxNoExtn" sfwType="Column" sfwValue="fax_no_extn" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="OtherPhoneNumberExtn" sfwType="Column" sfwValue="other_phone_number_extn" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="NdpersLoginId" sfwType="Column" sfwValue="ndpers_login_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="255" />
+    <attribute ID="PreviousNdpersLoginId" sfwType="Column" sfwValue="previous_ndpers_login_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="255" />
+    <attribute ID="ExemptFromTrainingFlag" sfwType="Column" sfwValue="exempt_from_training_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="objContactPrimaryAddress" sfwType="Object" sfwEntity="entOrgContactAddress" sfwValue="ibusContactPrimaryAddress" />
+    <attribute sfwType="Collection" sfwEntity="entOrganization" ID="lstAffliatedOrgs" sfwValue="iclbAffliatedOrgs" />
+    <attribute sfwType="Collection" sfwEntity="entOrgContactAddress" ID="lstContactAddress" sfwValue="iclbContactAddress" />
+    <attribute sfwType="Collection" sfwEntity="entSeminarAttendeeDetail" ID="lstSeminarAttendeeDetail" sfwValue="icolSeminarAttendeeDetail" />
+    <attribute sfwDataType="string" sfwType="Property" ID="FullName" sfwValue="full_name" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ContactName" sfwValue="icdoContact.ContactName" />
+    <attribute sfwDataType="string" sfwType="Property" ID="LstrContactNameAdr" sfwValue="lstrContactNameAdr" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="IdtSeminarDueDate" sfwValue="idtSeminarDueDate" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrIsNewDefCompAgent" sfwValue="istrIsNewDefCompAgent" />
+    <attribute sfwType="Collection" sfwEntity="entSeminarSchedule" ID="lstDeferredCompSeminarSchedule" sfwValue="iclbDeferredCompSeminarSchedule" />
+    <attribute sfwDataType="string" sfwType="Property" ID="FullNameCaps" sfwValue="icdoContact.full_name_Caps" />
+    <attribute ID="lstScreenNotes" sfwType="Collection" sfwValue="iclbScreenNotes" sfwEntity="entScreenNotes" sfwPrivate="False" />
+    <attribute ID="IblnIsContactAffiliatedWithNoOrg" sfwDataType="bool" sfwPrivate="False" sfwValue="iblnIsContactAffiliatedWithNoOrg" sfwType="Property" />
+    <attribute ID="IstrOrgCodeId" sfwDataType="string" sfwPrivate="False" sfwValue="istrOrgCodeId" sfwType="Property" />
+    <attribute ID="iblnIsOrgContactActive" sfwDataType="bool" sfwPrivate="False" sfwValue="iblnIsOrgContactActive" sfwType="Property" />
+  </attributes>
+  <objectmethods>
+    <method ID="btnRemoveWSSAccess_Click" sfwReturnType="ArrayList" />
+    <method ID="SetContactPrimaryAddress" sfwReturnType="ArrayList">
+      <parameters>
+        <parameter ID="aintContactAddressId" sfwDataType="int" />
+      </parameters>
+    </method>
+    <method ID="btnRemoveOrg_Click" sfwReturnType="ArrayList">
+      <parameters>
+        <parameter ID="aintOrgCodeId" sfwDataType="string" />
+        <parameter ID="aintContactId" sfwDataType="int" />
+      </parameters>
+    </method>
+    <method ID="btnSaveNewOrg_Click" sfwReturnType="ArrayList">
+      <parameters>
+        <parameter ID="aintOrgCodeId" sfwDataType="string" />
+        <parameter ID="aintContactId" sfwDataType="int" />
+      </parameters>
+    </method>
+    <method ID="btnInactiveContact" sfwReturnType="ArrayList">
+      <parameters>
+        <parameter ID="aintContactId" sfwDataType="int" />
+      </parameters>
+    </method>
+  </objectmethods>
+</entity>

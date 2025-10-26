@@ -1,0 +1,104 @@
+﻿<fieldset ng-disabled="$ctrl.isDisabledforVersioning">
+    <div class="form-body">
+        <div class="form-group">
+            <label class="control-label marg-bottom-5">
+                Rule Type
+            </label>
+            <div>
+                <select class="form-control input-sm" ng-model="model.dictAttributes.sfwType" ng-change="onChangeType(model.dictAttributes.sfwType)" 
+                        undoredodirective model="model" >
+                    <option value="StaticRule">Static Rule</option>
+                    <option value="BusinessRule">Business Rule</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group" ng-if="model.dictAttributes.sfwType && model.dictAttributes.sfwType.toLowerCase() == 'businessrule'">
+            <label ng-if="$ctrl.isDisabledforVersioning && $ctrl.isObjectbased" class="control-label marg-bottom-5">Business Object</label>
+            <span ng-if="$ctrl.isDisabledforVersioning && $ctrl.isObjectbased" ng-bind="model.baseChild.dictAttributes.type" title="{{model.baseChild.dictAttributes.type}}"></span>
+            <label ng-if='!model.baseChild.dictAttributes.sfwEntity && !$ctrl.isObjectbased' class="control-label marg-bottom-5">Entity ID</label>
+            <label ng-if='model.baseChild.dictAttributes.sfwEntity && !$ctrl.isObjectbased' class="control-label marg-bottom-5"><a ng-click='NavigateToFile(model.baseChild.dictAttributes.sfwEntity)'>Entity ID</a></label>
+            <div ng-if='!$ctrl.isObjectbased'>
+                <fileintellisensetemplate model='model' isdisabled="$ctrl.isDisabledforVersioning" onfilechange="getMapVariableEntityWise()" filename="model.baseChild.dictAttributes.sfwEntity" propertyname="'baseChild.dictAttributes.sfwEntity'" filetype="'Entity'"></fileintellisensetemplate>
+            </div>
+        </div>
+        <div class="form-group" ng-if="model.dictAttributes.sfwType && model.dictAttributes.sfwType.toLowerCase() == 'businessrule'">
+            <label class="control-label marg-bottom-5">Initialization Variable</label>
+            <select class="form-control input-sm" ng-options="x for x in arrMapVariableforEntity" ng-model="model.baseChild.dictAttributes.variable" 
+                    title="{{model.baseChild.dictAttributes.variable}}" ng-change="onVariableChanged()" undoredodirective model="model">
+                <option value="">Select a variable</option>
+            </select>
+        </div>
+        <bpm-initialize-section model="model" query-parameters-values="$ctrl.queryParametersValues" is-disabledfor-versioning="$ctrl.isDisabledforVersioning" ng-if="model.dictAttributes.sfwType && model.dictAttributes.sfwType.toLowerCase() == 'businessrule' && model.baseChild.dictAttributes.sfwEntity && model.baseChild.dictAttributes.sfwEntity.trim().length>0"  callback-function="loadXmlmethods()"></bpm-initialize-section>
+        <div class="form-group" ng-if="model.dictAttributes.sfwType && model.dictAttributes.sfwType.toLowerCase() == 'staticrule'">
+            <label class="control-label marg-bottom-5" ng-if='!model.dictAttributes.sfwEntity'>Entity</label>
+            <label class="control-label marg-bottom-5" ng-if='model.dictAttributes.sfwEntity'><a ng-click='NavigateToFile(model.dictAttributes.sfwEntity)'>Entity</a></label>
+            <div>
+                <fileintellisensetemplate model='model' isdisabled="$ctrl.isDisabledforVersioning" onfileblur="getRuledetails()" filename="model.dictAttributes.sfwEntity" propertyname="'dictAttributes.sfwEntity'" filetype="'Entity'"></fileintellisensetemplate>
+            </div>
+        </div>
+        <div class="form-group" ng-if="(model.dictAttributes.sfwType && model.dictAttributes.sfwType.toLowerCase() == 'businessrule' && model.baseChild.dictAttributes.sfwEntity && model.baseChild.dictAttributes.sfwEntity.trim().length>0)||(model.dictAttributes.sfwType && model.dictAttributes.sfwType.toLowerCase() == 'staticrule' && model.dictAttributes.sfwEntity && model.dictAttributes.sfwEntity.trim().length>0)">
+            <label class="control-label marg-bottom-5" ng-if='!model.dictAttributes.ID'>Rule ID</label>
+            <label class="control-label marg-bottom-5" ng-if='model.dictAttributes.ID'><a ng-click='NavigateToFile(model.dictAttributes.ID)'>Rule ID</a></label>
+            <div>
+                <select class="form-control input-sm" ng-options="x for x in arrRuleIds" title="{{model.dictAttributes.ID}}" ng-model="model.dictAttributes.ID"
+                         ng-change="getRuleParmeters()" undoredodirective model="model">
+                    <option value="">Select a rule</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group" ng-if="(model.dictAttributes.sfwType && model.dictAttributes.sfwType.toLowerCase() == 'businessrule' && model.baseChild.dictAttributes.sfwEntity && model.baseChild.dictAttributes.sfwEntity.trim().length>0)||(model.dictAttributes.sfwType && model.dictAttributes.sfwType.toLowerCase() == 'staticrule' && model.dictAttributes.sfwEntity && model.dictAttributes.sfwEntity.trim().length>0)">
+            <label class="control-label marg-bottom-5">Return Field<span ng-cloak>[{{ returnType }}]</span></label>
+            <div>
+                <select class="form-control input-sm" ng-options="x for x in $ctrl.queryParametersValues" title="{{model.dictAttributes.sfwReturnField}}"
+                         ng-model="model.dictAttributes.sfwReturnField" ng-disabled="!(model.dictAttributes.ID)" undoredodirective model="model"></select>
+            </div>
+        </div>
+        <div class="form-group" ng-if="(model.dictAttributes.sfwType && model.dictAttributes.sfwType.toLowerCase() == 'businessrule' && model.baseChild.dictAttributes.sfwEntity && model.baseChild.dictAttributes.sfwEntity.trim().length>0)||(model.dictAttributes.sfwType && model.dictAttributes.sfwType.toLowerCase() == 'staticrule' && model.dictAttributes.sfwEntity && model.dictAttributes.sfwEntity.trim().length>0)">
+            <label class="control-label marg-bottom-5">Effective Date <span ng-cloak></span></label>
+            <div>
+                <select class="form-control input-sm" ng-options="x for x in $ctrl.queryParametersValues" ng-model="model.dictAttributes.sfwEffectiveDate"
+                        undoredodirective model="model"></select>
+            </div>
+        </div>
+        <div class="inner-section" ng-show="model.dictAttributes.ID && model.dictAttributes.ID.trim().length>0" ng-if="(model.dictAttributes.sfwType && model.dictAttributes.sfwType.toLowerCase() == 'businessrule' && model.baseChild.dictAttributes.sfwEntity && model.baseChild.dictAttributes.sfwEntity.trim().length>0)||(model.dictAttributes.sfwType && model.dictAttributes.sfwType.toLowerCase() == 'staticrule' && model.dictAttributes.sfwEntity && model.dictAttributes.sfwEntity.trim().length>0)">
+            <div class="panel-group" id="accordion_{{$id}}_1">
+                <div class="panel panel-default">
+                    <div class="panel-heading panel-tab-nw" ng-click="showparams=!showparams">
+                        <div class="accordion-toggle collapsed" data-toggle="collapse" href="#collapse_{{$id}}_1" aria-expanded="false">
+                            Parameters
+                            <img src="images/Common/icon_add_dark.svg" ng-show="showparams" class="pull-left" />
+                            <img src="images/Common/icon_delete_dark.svg" ng-show="!showparams" class="pull-left" />
+                            <i ng-if="!$ctrl.isDisabledforVersioning" class="fa fa-refresh color-light2 pull-right" ng-click="refreshRuleParameters($event)" style="cursor:pointer" ></i>
+                        </div>
+                    </div>
+                    <div id="collapse_{{$id}}_1" class="panel-collapse collapse in" aria-expanded="false">
+                        <div class="panel-body">
+                            <div class="form-group" ng-repeat="param in model.parameterschild.Elements">
+                                <div class="col-xs-5 padding0">
+                                    <span style="display:block;word-wrap:break-word;line-height: 28px;" ng-show="param.dictAttributes.sfwDirection === 'In'">{{param.dictAttributes.sfwParamaterName}}[{{param.dictAttributes.sfwDataType}},{{param.dictAttributes.sfwDirection}}]</span>
+                                    <select class="form-control input-sm" ng-options="x for x in $ctrl.queryParametersValues" ng-show="param.dictAttributes.sfwDirection === 'Out'"
+                                             title="{{param.dictAttributes.sfwParameterValue}}" ng-model="param.dictAttributes.sfwParameterValue" undoredodirective model="param"></select>
+                                </div>
+                                <div class="col-xs-2  padding0">
+                                    <span>=</span>
+                                </div>
+                                <div class="col-xs-5 padding0">
+                                    <span style="display:block;word-wrap:break-word;line-height: 28px;" ng-show="param.dictAttributes.sfwDirection === 'Out'">{{param.dictAttributes.sfwParamaterName}}[{{param.dictAttributes.sfwDataType}},{{param.dictAttributes.sfwDirection}}]</span>
+                                    <select class="form-control input-sm" ng-options="x for x in $ctrl.queryParametersValues" ng-show="param.dictAttributes.sfwDirection === 'In'" 
+                                            title="{{param.dictAttributes.sfwParameterValue}}" ng-model="param.dictAttributes.sfwParameterValue" undoredodirective model="param"></select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group marg-top-8" ng-if="model.dictAttributes.sfwType && model.dictAttributes.sfwType.toLowerCase() == 'businessrule' && model.baseChild.dictAttributes.sfwEntity && model.baseChild.dictAttributes.sfwEntity.trim().length>0">
+            <span class="dialog-btn" ng-click="setEnterExitActions(true)">Set On Enter Actions</span>
+        </div>
+        <div class="form-group marg-top-8" ng-if="model.dictAttributes.sfwType && model.dictAttributes.sfwType.toLowerCase() == 'businessrule' && model.baseChild.dictAttributes.sfwEntity && model.baseChild.dictAttributes.sfwEntity.trim().length>0">
+            <span class="dialog-btn" ng-click="setEnterExitActions(false)">Set On Exit Actions</span>
+        </div>
+    </div>
+</fieldset>
+

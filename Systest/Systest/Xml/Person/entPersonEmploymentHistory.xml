@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entPersonEmploymentHistory" sfwTableName="sgt_person_employment_history">
+  <queries>
+    <query ID="GET_ORG_COUNT" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*)FROM SGT_ORGANIZATION WHERE ORG_CODE=@ORG_CODE">
+      <parameters>
+        <parameter ID="@ORG_CODE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="GetEndDate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select max(end_date)as EndDate from sgt_person_employment_history&#xD;&#xA;where person_id =@person_id&#xD;&#xA;and employment_history_id &lt;&gt; @employment_history_id">
+      <parameters>
+        <parameter ID="@person_id" sfwDataType="int" />
+        <parameter ID="@employment_history_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetCombinationCheck" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) from sgt_person_employment_history&#xD;&#xA;where person_id =@person_id&#xD;&#xA;and (@start_date between start_date and end_date)&#xD;&#xA;and (@end_date between start_date and end_date)&#xD;&#xA;and org_id=@org_id&#xD;&#xA;and job_class_value=@job_class_value&#xD;&#xA;and type_value=@type_value&#xD;&#xA;and member_type_value=@member_type_value&#xD;&#xA;and employment_history_id &lt;&gt; @employment_history_id&#xD;&#xA;&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@person_id" sfwDataType="int" />
+        <parameter ID="@start_date" sfwDataType="DateTime" />
+        <parameter ID="@end_date" sfwDataType="DateTime" />
+        <parameter ID="@employment_history_id" sfwDataType="int" />
+        <parameter ID="@job_class_value" sfwDataType="string" />
+        <parameter ID="@type_value" sfwDataType="string" />
+        <parameter ID="@member_type_value" sfwDataType="string" />
+        <parameter ID="@org_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadOtherEmploymenthistory" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_PERSON_EMPLOYMENT_HISTORY WHERE PERSON_ID=@PERSON_ID AND EMPLOYMENT_HISTORY_ID &lt;&gt; @EMPLOYMENT_HISTORY_ID ">
+      <parameters>
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+        <parameter ID="@EMPLOYMENT_HISTORY_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="CheckJobClassCrossRefForOrgId" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) from sgt_plan_job_class_crossref spjcc&#xD;&#xA;left outer join sgt_org_plan sop on sop.plan_id = spjcc.plan_id&#xD;&#xA;left outer join sgt_organization so on so.org_id = sop.org_id&#xD;&#xA;where so.org_id = @org_id and spjcc.job_type_value = @job_type_value&#xD;&#xA;and spjcc.job_class_value = @job_class_value">
+      <parameters>
+        <parameter ID="@org_id" sfwDataType="int" />
+        <parameter ID="@job_type_value" sfwDataType="string" />
+        <parameter ID="@job_class_value" sfwDataType="string" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="EmploymentHistoryId" sfwType="Column" sfwValue="employment_history_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PersonId" sfwType="Column" sfwValue="person_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StartDate" sfwType="Column" sfwValue="start_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="EndDate" sfwType="Column" sfwValue="end_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="StatusValue" sfwType="Column" sfwValue="status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="StatusDescription" sfwType="Description" sfwValue="status_description" />
+    <attribute ID="StatusId" sfwType="Column" sfwValue="status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="310" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="OrgId" sfwType="Column" sfwValue="org_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="HourlyValue" sfwType="Column" sfwValue="hourly_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="HourlyDescription" sfwType="Description" sfwValue="hourly_description" />
+    <attribute ID="HourlyId" sfwType="Column" sfwValue="hourly_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="311" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="SeasonalValue" sfwType="Column" sfwValue="seasonal_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="SeasonalDescription" sfwType="Description" sfwValue="seasonal_description" />
+    <attribute ID="SeasonalId" sfwType="Column" sfwValue="seasonal_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="312" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="TypeDescription" sfwType="Description" sfwValue="type_description" />
+    <attribute ID="TypeId" sfwType="Column" sfwValue="type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="313" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="TypeValue" sfwType="Column" sfwValue="type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="JobClassValue" sfwType="Column" sfwValue="job_class_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="JobClassDescription" sfwType="Description" sfwValue="job_class_description" />
+    <attribute ID="JobClassId" sfwType="Column" sfwValue="job_class_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="314" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="TermBeginDate" sfwType="Column" sfwValue="term_begin_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="OfficialListDescription" sfwType="Description" sfwValue="official_list_description" />
+    <attribute ID="OfficialListId" sfwType="Column" sfwValue="official_list_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="318" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="OfficialListValue" sfwType="Column" sfwValue="official_list_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="RecertifiedDate" sfwType="Column" sfwValue="recertified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="MemberTypeDescription" sfwType="Description" sfwValue="member_type_description" />
+    <attribute ID="MemberTypeId" sfwType="Column" sfwValue="member_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="320" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="MemberTypeValue" sfwType="Column" sfwValue="member_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+  </attributes>
+</entity>

@@ -1,0 +1,92 @@
+﻿<div class="portlet-body">
+    <div class="form-body full-height">
+        <div class="lookup-field-details">
+
+            <div class="col-xs-4 pop-up-box">
+               
+                    <div class="popup-box-header">
+                        Columns
+                    </div>
+                    <div class="popup-box-content" ng-show="!objFormsDetails.IsShowMainQuery">
+                        <newentityobjecttreetemplate ischeckboxvisible="true" lstselectedmultiplelevelfield="objLookupFieldsDetails.lstselectedmultiplelevelfield" iscollectionnextlevelload="false" lstdisplayentity="objLookupFieldsDetails.LstDisplayedEntities"
+                                                     selectedentityobjecttreefields="objLookupFieldsDetails.lstselectedobjecttreefields" selectedfield="objLookupFieldsDetails.SelecetdField" entityname="objFormsDetails.sfwEntity"
+                                                     showonlycolumns="true" showvalueofcolumn="true" isallownavigation="false"></newentityobjecttreetemplate>
+                    </div>
+                <div class="popup-box-content" ng-show="objFormsDetails.IsShowMainQuery">
+                    <div class="form-group">
+                        <input type="Text" placeholder="Search" class="tree-boxes-search-box form-control input-sm margin-bottom-10" title="{{objLookupFieldsDetails.SearchField}}" ng-model="objLookupFieldsDetails.SearchField" />
+                    </div>
+                    <div class="form-group form-entity-list-maintenance">
+                        <ul>
+                            <li ng-repeat="obj in objLookupFieldsDetails.lstQueryColumn | filter:{CodeID:objLookupFieldsDetails.SearchField}" ng-click="objLookupFieldsDetails.getAvailableFields(obj,$event)" ng-class="{'selected':obj == objLookupFieldsDetails.SelectedAvailableFields}">
+                                <input type="checkbox" id="chk{{obj.CodeID}}" class="ver-mid" ng-model="obj.IsSelected" />
+                                <span class="datatype-iconproperties datatype-icon-{{obj.DataType}}"></span>
+                                <span ng-bind="obj.CodeID"></span>
+                            </li>
+                        </ul>
+                    </div>
+                    </div>
+            </div>
+
+            <div class="col-xs-1 add-btn-adjust">
+                <div class="form-group">
+                    <input type="button" class="dialog-btn" value="Add" ng-click="objLookupFieldsDetails.addAvailableFields()" />
+                </div>
+            </div>
+
+            <div class="col-xs-7 pop-up-box">
+          
+                    <div class="popup-box-header">
+                        Search Criteria Fields
+                        <div class="fright">
+                            <i class="fa fa-arrow-down" ng-click="objLookupFieldsDetails.moveSelectedRowDown()" ng-disabled="objLookupFieldsDetails.canmoveSelectedRowDown()"></i>
+                            <i class="fa fa-arrow-up" ng-click="objLookupFieldsDetails.moveSelectedRowUp()" ng-disabled="objLookupFieldsDetails.canmoveSelectedRowUp()"></i>
+                            <i class="fa fa-minus" ng-click="objLookupFieldsDetails.deleteSelectedRow()" ng-disabled="!objLookupFieldsDetails.SelectedFieldRow"></i>
+                        </div>
+                       
+                    </div>
+                    <div class="popup-box-content">
+                        <div class="column-number-row">
+                            <label>No of Columns :</label>
+                                <select ng-options="x for x in lstColumns" title="{{objLookupFieldsDetails.noOfColumns}}" ng-model="objLookupFieldsDetails.noOfColumns" ng-init="objLookupFieldsDetails.noOfColumns=lstColumns[0]" class="form-control input-sm"></select>
+                            
+                        </div>
+                        <div class="lookup-field-details-search-table">
+                            <table class="pop-up-box-table lookup-result-field-table">
+                                <thead>
+                                    <tr>
+                                        <th>Field Name</th>
+                                        <th>Caption</th>
+                                        <th>Control Type</th>
+                                        <th>Range</th>
+                                        <th>Carry Over</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="obj in objLookupFieldsDetails.lstFieldsProperties" ng-click="objLookupFieldsDetails.SelectedFieldPropRow(obj)" ng-class="{'selected':obj==objLookupFieldsDetails.SelectedFieldRow}">
+                                        <td><span ng-bind="obj.ID"></span></td>
+                                        <td><input type="text" name="caption" title="{{obj.strCaption}}" ng-model="obj.strCaption" class="form-control form-filter input-sm" /></td>
+                                        <td>
+                                            <select ng-options="x for x in ControlTypes" title="{{obj.ControlClass}}" ng-model="obj.ControlClass" class="form-control form-filter input-sm"></select>
+                                        </td>
+                                        <td><input type="checkbox" class="form-filter input-sm" ng-show="obj.IsRangeVisible" ng-model="obj.IsRangeCheck" /> </td>
+
+                                        <td><input type="checkbox" class="form-filter input-sm" ng-model="obj.IsCarryOverCheck" /> </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                    </div>
+   
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="form-actions">
+    <input class="dialog-btn" type="button" value="Cancel" ng-click="CloseWizardClick()" />
+    <input class="dialog-btn" type="button" value="Back" wz-previous="onPrevious()" />
+    <input class="dialog-btn" type="button" value="Next" wz-next="objLookupFieldsDetails.UpdateOnFormDetailsNext();onNext()" />
+    <input class="dialog-btn" type="button" value="Finish" wz-finish disabled="disabled" />
+</div>

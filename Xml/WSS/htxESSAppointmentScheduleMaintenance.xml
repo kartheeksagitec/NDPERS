@@ -1,0 +1,104 @@
+﻿<form ID="wfmESSAppointmentScheduleMaintenance" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2007" sfwType="FormLinkMaintenance" sfwTitle="Appointment Schedule Maintenance" version="3.5" sfwEntity="entContactTicket" sfwTemplate="ESSAppointmentScheduleMaintenance.html" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmESSAppointmentScheduleLookup" sfwFormObjectType="None" isBasedOnWfm="true" sfwDefaultButtonID="btnSave">
+  <initialload>
+    <callmethods sfwMode="New" sfwMethodName="NewESSAppointmentSchedule" />
+    <callmethods sfwMode="Update" sfwMethodName="FindESSAppointmentSchedule" />
+  </initialload>
+  <items>
+    <sfwTable ID="Main" />
+    <sfwPanel ID="pnlHeader" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblN" />
+        <sfwLiteral ID="ltrlScheduleAppointment" Text="Schedule Appointment" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnltoolbar" Visible="False">
+      <items>
+        <sfwTable ID="toolbar" />
+        <sfwButton ID="btnPrev" sfwMethodName="btnPrev_Click" Text="Prev" />
+        <sfwButton ID="btnNext" sfwMethodName="btnNext_Click" Text="Next" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlMain" sfwCaption="Schedule Appointment">
+      <items>
+        <sfwTable ID="tblMain" />
+        <sfwLabel ID="capContactTicketId" Text="Ticket Number : " sfwIsCaption="True" />
+        <sfwLabel ID="lblContactTicketId" sfwEntityField="ContactTicketId" />
+        <sfwLabel ID="capStatusDescription" Text="Ticket Status : " sfwIsCaption="True" />
+        <sfwLabel ID="lblStatusDescription" sfwEntityField="StatusDescription" />
+        <sfwLabel ID="lblLabel" SkinID="ReqInformation" Text="*" sfwIsCaption="True" />
+        <sfwLabel ID="capAppointmentTypeValue" Text="Appointment Type : " sfwIsCaption="True" />
+        <sfwDropDownList ID="ddlAppointmentTypeValue" sfwVisibleRule="IsNewMode" sfwLoadType="CodeGroup" sfwLoadSource="1007" sfwEntityField="objAppointmentSchedule.AppointmentTypeValue" />
+        <sfwLabel ID="lblAppointmentTypeDescription" sfwMode="Update" sfwEntityField="objAppointmentSchedule.AppointmentTypeDescription" />
+        <sfwLabel ID="capNotes" Text="Reason For Appointment : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtNotes" Rows="3" TextMode="MultiLine" Width="500px" sfwEntityField="Notes" />
+        <sfwLabel ID="capRequestedDateFrom" Text="Date Range : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtRequestedDateFrom" sfwDataFormat="{0:d}" sfwEntityField="objAppointmentSchedule.RequestedDateFrom" />
+        <sfwLabel ID="lblRequestedDateFrom" SkinID="ReqInformation" Text="*" sfwIsCaption="True" />
+        <sfwTextBox ID="txtRequestedDateTo" sfwDataFormat="{0:d}" sfwEntityField="objAppointmentSchedule.RequestedDateTo" />
+        <sfwLabel ID="lblRequestedDateTo" SkinID="ReqInformation" Text="*" sfwIsCaption="True" />
+        <sfwLiteral ID="ltrDisclaimer" Text="(Mon - Fri , Except Holidays)" />
+        <sfwLabel ID="capTimeOfDayValue" Text="Time Of Day : " sfwIsCaption="True" Visible="False" />
+        <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlTimeOfDayValue" sfwLoadType="CodeGroup" sfwLoadSource="5006" sfwEntityField="objAppointmentSchedule.TimeOfDayValue" Visible="False" />
+        <sfwLabel ID="lblLabel1" SkinID="ReqInformation" Text="*" sfwIsCaption="True" />
+        <sfwLabel ID="capCallbackPhone" Text="Callback Phone Number : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtCallbackPhone" sfwDataFormat="{0:(###)###-####}" sfwEntityField="CallbackPhone" />
+        <sfwLabel ID="capEmail" Text="Email : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtEmail" sfwEntityField="Email" />
+        <sfwButton ID="btnSave" sfwMethodName="btnSave_Click" sfwNavigationParameter="aintContactTicketId=ContactTicketId" Text="Save" sfwMode="New" sfwMessageId="10394" />
+        <sfwButton ID="btnCancel" sfwMethodName="btnCancel_Click" Text="Refresh" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="History">
+      <items>
+        <sfwTable ID="tblNewPage" />
+        <sfwButton ID="btnButton" sfwActiveForm="wfmESSViewAppointmentScheduleMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="aintContactTicketId=ContactTicketId" sfwRelatedControl="grvAppointments" Text="Open" />
+        <sfwGridView ID="grvAppointments" AllowPaging="True" AllowSorting="True" sfwSelection="Many" sfwEntityField="lstESSAppointments" sfwGridEntity="entContactTicket">
+          <Columns>
+            <TemplateField HeaderText="Ticket Number">
+              <ItemTemplate>
+                <sfwLabel sfwLinkable="True" sfwRelatedControl="btnButton" sfwEntityField="ContactTicketId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Appointment Type">
+              <ItemTemplate>
+                <sfwLabel ID="lblAppointmentTypeDescription1" sfwEntityField="objAppointmentSchedule.AppointmentTypeDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Submitted Date">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="CreatedDate" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Ticket Status">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="StatusDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Created By">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="CreatedBy" />
+              </ItemTemplate>
+            </TemplateField>
+          </Columns>
+        </sfwGridView>
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlAuditInfo" sfwCaption="Audit Information" Visible="False">
+      <items>
+        <sfwTable ID="tblAuditInfo" />
+        <sfwLabel ID="capCreate" Text="Create : " sfwIsCaption="True" />
+        <sfwLabel ID="lblCreatedBy" sfwEntityField="CreatedBy" />
+        <sfwLabel ID="lblUpdateSeq" sfwTwoWayBinding="True" Visible="False" sfwEntityField="UpdateSeq" />
+        <sfwLabel ID="lblCreatedDate" sfwEntityField="CreatedDate" sfwDataFormat="{0:G}" />
+        <sfwLabel ID="capModify" Text="Modify : " sfwIsCaption="True" />
+        <sfwLabel ID="lblModifiedBy" sfwEntityField="ModifiedBy" />
+        <sfwLabel ID="lblModifiedDate" sfwEntityField="ModifiedBy" sfwDataFormat="{0:G}" />
+      </items>
+    </sfwPanel>
+  </items>
+  <loaddetails>
+    <entityfield ID="objAppointmentSchedule" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+    <entityfield ID="lstESSAppointments" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+  </loaddetails>
+  <ExtraFields />
+</form>

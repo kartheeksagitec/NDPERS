@@ -1,0 +1,338 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entPersonAccountLife" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwErrorTable="sgt_person_account_error" sfwParentKey="person_account_id" sfwParentKeyValue="icdoPersonAccount.person_account_id" sfwMainCDO="icdoPersonAccount" sfwStatusColumn="status_value" sfwObjectID="busPersonAccountLife" sfwTableName="sgt_person_account_life" sfwView="False" sfwParentEntity="entPersonAccount">
+  <rules>
+    <rule ID="IfSpouseSuppCovAmtExceeds50PercentOfSupp" sfwMessageId="6578" sfwExpression="(this.AintGroupLifeOptionValidateFlag == 24)" sfwObjectBased="True" />
+    <rule ID="IsAcceleratedLifeBenefitPaidCheckedWithoutAmountandDateEntered" sfwMessageId="9993" sfwExpression="(this.icdoPersonAccountLife.accelerated_life_benefit_paid_flag == &quot;Y&quot;) &amp;&amp; &#xA;((this.icdoPersonAccountLife.accelerated_life_benefit_amount == 0) || &#xA;(this.icdoPersonAccountLife.accelerated_life_benefit_effective_date == DateTime.MinValue))" sfwObjectBased="True" />
+    <rule ID="IsACHDetailWithNoEndDateExists" sfwMessageId="8585" sfwExpression="(!string.IsNullOrEmpty(this.ibusPaymentElection.icdoPersonAccountPaymentElection.payment_method_value)) &amp;&amp; &#xA;(this.ibusPaymentElection.icdoPersonAccountPaymentElection.payment_method_value != &quot;ACH&quot;) &amp;&amp; &#xA;(this.IsACHDetailWithNoEndDateExists() == True)" sfwObjectBased="True" />
+    <rule ID="IsActiveConversionExistsAndCoverageModified" sfwMessageId="7113" sfwExpression="(this.IsConversionExistsAndCoverageModified() == True)" sfwObjectBased="True" />
+    <rule ID="IsActivePremiumConversionExists" sfwMessageId="7114" sfwExpression="(this.IsActiveConversionExists() == True)" sfwObjectBased="True" />
+    <rule ID="IsActualPremiumWaiverDateNOTValid" sfwMessageId="7088" sfwExpression="(this.IsActalPremiumWaiverDateValid() == False)" sfwObjectBased="True" />
+    <rule ID="IsActualPremiumWaiverDateNull" sfwMessageId="6546" sfwExpression="(this.icdoPersonAccountLife.premium_waiver_flag == &quot;Y&quot;) &amp;&amp; &#xA;(this.icdoPersonAccountLife.actual_premium_waiver_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsBasicCoverageAmountNull" sfwMessageId="6566" sfwExpression="(this.AintGroupLifeOptionValidateFlag == 12)" sfwObjectBased="True" />
+    <rule ID="IsBasicPlanOptionNull" sfwMessageId="6567" sfwExpression="(this.AintGroupLifeOptionValidateFlag == 13)" sfwObjectBased="True" />
+    <rule ID="IsBillingOrgNOTEmployer" sfwMessageId="6580" sfwExpression="(this.ibusPaymentElection.icdoPersonAccountPaymentElection.ibs_org_id &gt; 0) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entPersonAccountPaymentElection.CheckBillingOrgIsEmployer&quot;, this.ibusPaymentElection.icdoPersonAccountPaymentElection.ibs_org_id) == 0)" sfwObjectBased="True" />
+    <rule ID="IsBillingOrgNOTExists" sfwMessageId="6579" sfwExpression="(this.ibusPaymentElection.icdoPersonAccountPaymentElection.ibs_org_id &gt; 0) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entPersonAccountPaymentElection.CheckBillingOrgExists&quot;, this.ibusPaymentElection.icdoPersonAccountPaymentElection.ibs_org_id) == 0)" sfwObjectBased="True" />
+    <rule ID="IsCoverageAmountEntered" sfwMessageId="10086" sfwExpression="(this.AintGroupLifeOptionValidateFlag == 36)" sfwObjectBased="True" />
+    <rule ID="IsCoverageAmountEnteredForWaivedPlanOption" sfwMessageId="5108" sfwExpression="(this.ValidateGroupLifeOption() == 33)" sfwObjectBased="True" />
+    <rule ID="IsCoverageAmountForBasicInvalid" sfwMessageId="6558" sfwExpression="(this.AintGroupLifeOptionValidateFlag == 7)" sfwObjectBased="True" />
+    <rule ID="IsCoverageAmountForDepSuppInvalid" sfwMessageId="6560" sfwExpression="(this.AintGroupLifeOptionValidateFlag == 9)" sfwObjectBased="True" />
+    <rule ID="IsCoverageAmountForSpouseSuppInvalid" sfwMessageId="6561" sfwExpression="(this.AintGroupLifeOptionValidateFlag == 10)" sfwObjectBased="True" />
+    <rule ID="IsCoverageAmountForSuppInvalid" sfwMessageId="6559" sfwExpression="(this.AintGroupLifeOptionValidateFlag == 8)" sfwObjectBased="True" />
+    <rule ID="IsDepSuppCoverageAmountnull" sfwMessageId="6572" sfwExpression="(this.AintGroupLifeOptionValidateFlag == 18)" sfwObjectBased="True" />
+    <rule ID="IsDepSuppEnrolledWithoutSupp" sfwMessageId="6554" sfwExpression="(this.AintGroupLifeOptionValidateFlag == 5)" sfwObjectBased="True" />
+    <rule ID="IsDepSuppEnteredWithoutSupp" sfwMessageId="6550" sfwExpression="(this.AintGroupLifeOptionValidateFlag == 2)" sfwObjectBased="True" />
+    <rule ID="IsDepSuppPlanOptionStatusNull" sfwMessageId="6573" sfwExpression="(this.AintGroupLifeOptionValidateFlag == 19)" sfwObjectBased="True" />
+    <rule ID="IsDepSuppStartDateNull" sfwMessageId="6574" sfwExpression="(this.AintGroupLifeOptionValidateFlag == 20)" sfwObjectBased="True" />
+    <rule ID="IsEffectivedateEntered" sfwMessageId="10085" sfwExpression="(this.AintGroupLifeOptionValidateFlag == 35)" sfwObjectBased="True" />
+    <rule ID="IsEffectiveStartDateNULL" sfwMessageId="6563" sfwExpression="(this.AintGroupLifeOptionValidateFlag == 11)" sfwObjectBased="True" />
+    <rule ID="IsEmploymentEndDateNull" sfwMessageId="6654" sfwExpression="(this.icdoPersonAccountLife.premium_waiver_flag == &quot;Y&quot;) &amp;&amp; &#xA;(this.IsEmploymentEndDated() == False)" sfwObjectBased="True" />
+    <rule ID="IsEndDateBasicLessthanSupplemental" sfwMessageId="6632" sfwExpression="(this.AintGroupLifeOptionValidateFlag == 29)" sfwObjectBased="True" />
+    <rule ID="IsEndDateDependentLessthanSpouse" sfwMessageId="6628" sfwExpression="(this.AintGroupLifeOptionValidateFlag == 27)" sfwObjectBased="True" />
+    <rule ID="IsEndDateSupplementalLessthanDependent" sfwMessageId="6629" sfwExpression="(this.AintGroupLifeOptionValidateFlag == 28)" sfwObjectBased="True" />
+    <rule ID="IsHistoryChangeDateLessThanLastChangeDate" sfwMessageId="5026" sfwExpression="(this.IsHistoryEntryRequired == True) &amp;&amp; &#xA;!(this.istrAllowOverlapHistory == &quot;Y&quot;) &amp;&amp; &#xA;(this.IsHistoryChangeDateLessThanLastChangeDate() == True)" sfwObjectBased="True" />
+    <rule ID="IsIBSCheckedAndPaymentModeOrOrgToBillNull" sfwMessageId="6528" sfwExpression="(this.ibusPaymentElection.icdoPersonAccountPaymentElection.ibs_flag == &quot;Y&quot;) &amp;&amp; &#xA;!((this.ibusPaymentElection.icdoPersonAccountPaymentElection.ibs_org_id &gt; 0) || &#xA;(!string.IsNullOrEmpty(this.ibusPaymentElection.icdoPersonAccountPaymentElection.payment_method_value)))" sfwObjectBased="True" />
+    <rule ID="IsIBSEffectiveDateStartsWithFirstDayOfMonth" sfwMessageId="7107" sfwExpression="(this.IsIBSEffectiveDateStartsWithFirstDayOfMonth() == False)" sfwObjectBased="True" />
+    <rule ID="IsIBSEffectiveDateValid" sfwMessageId="7108" sfwExpression="(this.IsIBSEffectiveDateValid() == False)" sfwObjectBased="True" />
+    <rule ID="IsIBSFlagCheckedForActiveMember" sfwMessageId="6681" sfwExpression="(this.ibusPaymentElection.icdoPersonAccountPaymentElection.ibs_flag == &quot;Y&quot;) &amp;&amp; &#xA;!(this.icdoPersonAccount.person_employment_dtl_id == 0) &amp;&amp; &#xA;!(this.icdoPersonAccountLife.life_insurance_type_value == &quot;REME&quot;)" sfwObjectBased="True" />
+    <rule ID="IsIBSModeNDPERSCheckAndStatusNOTValid" sfwMessageId="7095" sfwExpression="(this.icdoPersonAccountLife.premium_waiver_flag != &quot;Y&quot; )&amp;&amp;&#xA;(this.ibusPaymentElection.icdoPersonAccountPaymentElection.payment_method_value == &quot;PNCH&quot;) &amp;&amp; &#xA;!(this.ibusPaymentElection.icdoPersonAccountPaymentElection.payee_account_id == 0) &amp;&amp; &#xA;(this.ibusPaymentElection.IsValidPayeeAccountStatusExists() == False)" sfwObjectBased="True" />
+    <rule ID="IsIBSNDPERSCheckAndPayeeNOTSelected" sfwMessageId="7094" sfwExpression="(this.icdoPersonAccountLife.premium_waiver_flag != &quot;Y&quot; )&amp;&amp;&#xA;(this.ibusPaymentElection.icdoPersonAccountPaymentElection.payment_method_value == &quot;PNCH&quot;) &amp;&amp; &#xA;(this.ibusPaymentElection.icdoPersonAccountPaymentElection.payee_account_id == 0)" sfwObjectBased="True" />
+    <rule ID="IsIBSNotCheckedWhenOrgToBillEntered" sfwMessageId="6529" sfwExpression="(RFunc.EvaluateRule(&quot;ibusPaymentElection.IsIBSNotCheckedWhenOrgToBillEntered&quot;, this))" sfwObjectBased="True" />
+    <rule ID="IsIBSPayeeAccountSelectedForPaymentModeNOTNDPERSCheck" sfwMessageId="7096" sfwExpression="!(this.ibusPaymentElection.icdoPersonAccountPaymentElection.payment_method_value == &quot;PNCH&quot;) &amp;&amp; &#xA;!(this.ibusPaymentElection.icdoPersonAccountPaymentElection.payee_account_id == 0)" sfwObjectBased="True" />
+    <rule ID="IsIBSStartDateNull" sfwMessageId="7131" sfwExpression="(this.ibusPaymentElection.icdoPersonAccountPaymentElection.ibs_flag == &quot;Y&quot;) &amp;&amp; &#xA;(this.ibusPaymentElection.icdoPersonAccountPaymentElection.ibs_effective_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsInvalidPayeeAccountSelected" sfwMessageId="6676" sfwExpression="(this.icdoPersonAccount.plan_participation_status_value == &quot;ENL2&quot;) &amp;&amp; &#xA;(this.ibusPaymentElection.IsValidPayeeAccountSelected() == False)" sfwObjectBased="True" />
+    <rule ID="IsLateEnrollment" sfwMessageId="6536" sfwExpression="(this.IsPostEnrollmentDate() == True) &amp;&amp; &#xA;!(this.icdoPersonAccountLife.reason_value == &quot;ANNE&quot;)" sfwObjectBased="True" />
+    <rule ID="IsLevelofCoverageIncreased" sfwMessageId="6684" sfwExpression="!(this.iblnIsNewMode == True) &amp;&amp; &#xA;(this.IsCoverageAmountIncreased() == True)" sfwObjectBased="True" />
+    <rule ID="IsLifeInsuranceTypeActiveAndPremiumEnrolledNotSelected" sfwMessageId="10101" sfwExpression="(this.IsLifeInsuranceTypeActiveAndPremiumEnrolledNotSelected() == True)" sfwObjectBased="True" />
+    <rule ID="IsLifeOptionBasicNull" sfwMessageId="6548" sfwExpression="(this.AintGroupLifeOptionValidateFlag == 1)" sfwObjectBased="True" />
+    <rule ID="IsLifeOptionChangedDuringTransfer" sfwMessageId="6584" sfwExpression="(this.IsLifeOptionChangedinTransfer() == True)" sfwObjectBased="True" />
+    <rule ID="IsLifePaymentElectionMandatory" sfwMessageId="6646" sfwExpression="(this.icdoPersonAccountLife.premium_waiver_flag != &quot;Y&quot; )&amp;&amp;&#xA;(this.icdoPersonAccountLife.life_insurance_type_value == &quot;REME&quot;) &amp;&amp; &#xA;(this.ibusPaymentElection.icdoPersonAccountPaymentElection.ibs_flag != &quot;Y&quot;) &amp;&amp; &#xA;(this.ibusPaymentElection.icdoPersonAccountPaymentElection.ibs_org_id == 0)" sfwObjectBased="True" />
+    <rule ID="IsMemberTypeNULL" sfwMessageId="6562" sfwExpression="(string.IsNullOrEmpty(this.icdoPersonAccountLife.life_insurance_type_value))" sfwObjectBased="True" />
+    <rule ID="IsMemberValidToEnrollOtherThanBasicLOC" sfwMessageId="6585" sfwExpression="(this.AintGroupLifeOptionValidateFlag == 26)" sfwObjectBased="True" />
+    <rule ID="IsMoreThanOneEnrolledInOverlapHistory" sfwMessageId="7132" sfwExpression="(this.istrAllowOverlapHistory == &quot;Y&quot;) &amp;&amp; &#xA;(this.IsMoreThanOneEnrolledInOverlapHistory() == True)" sfwObjectBased="True" />
+    <rule ID="IsOptionDateLessThanHistoryChangeDate" sfwMessageId="7133" sfwExpression="(this.AintGroupLifeOptionValidateFlag == 34)" sfwObjectBased="True" />
+    <rule ID="IsPaymentModeSelected" sfwMessageId="6530" sfwExpression="(this.ibusPaymentElection.icdoPersonAccountPaymentElection.ibs_flag != &quot;Y&quot;) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.ibusPaymentElection.icdoPersonAccountPaymentElection.payment_method_value))" sfwObjectBased="True" />
+    <rule ID="IsPersonNotEligibleToEnrollInEmploymentTransfer" sfwMessageId="7123" sfwExpression="(this.IsPersonNotEligibleToEnrollInEmploymentTransfer() == True)" sfwObjectBased="True" />
+    <rule ID="IsPremiumConversionEnrolledButNoSupplemental" sfwMessageId="7805" sfwExpression="(this.IsPremiumConversionEnrolledButNoSupplemental() == True)" sfwObjectBased="True" />
+    <rule ID="IsPremiumWaiverEffDateNOTValid" sfwMessageId="6581" sfwExpression="(this.IsPremiumWaiverEffectiveDateValid() == False)" sfwObjectBased="True" />
+    <rule ID="IsPremiumWavierProviderOrgEnterdWithoutFlag" sfwMessageId="6660" sfwExpression="(this.icdoPersonAccountLife.premium_waiver_provider_org_id != 0) &amp;&amp; &#xA;!(this.icdoPersonAccountLife.premium_waiver_flag == &quot;Y&quot;)" sfwObjectBased="True" />
+    <rule ID="IsProjectedPremiumWaiverDateNull" sfwMessageId="6547" sfwExpression="(this.icdoPersonAccountLife.premium_waiver_flag == &quot;Y&quot;) &amp;&amp; &#xA;(this.icdoPersonAccountLife.projected_premium_waiver_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsProjectedWaiverAmtEnteredWithoutCheckBox" sfwMessageId="6606" sfwExpression="!(this.icdoPersonAccountLife.projected_premium_waiver_date == DateTime.MinValue) &amp;&amp; &#xA;!(this.icdoPersonAccountLife.premium_waiver_flag == &quot;Y&quot;)" sfwObjectBased="True" />
+    <rule ID="IsProviderEnteredWithoutPremiumWaiverFlagChecked" sfwMessageId="6641" sfwExpression="!(this.icdoPersonAccountLife.premium_waiver_flag == &quot;Y&quot;) &amp;&amp; &#xA;(this.icdoPersonAccount.provider_org_id != 0)" sfwObjectBased="True" />
+    <rule ID="IsProviderOrgInvalid" sfwMessageId="6642" sfwExpression="(this.icdoPersonAccountLife.premium_waiver_provider_org_id != 0) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entPersonAccountLife.IsProviderEmpCategoryProvider&quot;, this.icdoPersonAccountLife.premium_waiver_provider_org_id) == 0)" sfwObjectBased="True" />
+    <rule ID="IsReasonValueNull" sfwMessageId="7109" sfwExpression="(string.IsNullOrEmpty(this.icdoPersonAccountLife.reason_value))" sfwObjectBased="True" />
+    <rule ID="IsRetireeEnrolledInOtherThanBasicCoverage" sfwMessageId="7089" sfwExpression="(this.IsRetireeAttainedAge65() == 1)" sfwObjectBased="True" />
+    <rule ID="IsRetireeLevelOfCoverageChanged" sfwMessageId="7090" sfwExpression="(this.IsRetireeAttainedAge65() == 2)" sfwObjectBased="True" />
+    <rule ID="IsRetireeReEnrollingCoverages" sfwMessageId="7091" sfwExpression="(this.IsRetireeReEnrollingCoverages() == True) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoPersonAccount.suppress_warnings_flag) || this.icdoPersonAccount.suppress_warnings_flag == &quot;N&quot;)" sfwObjectBased="True" />
+    <rule ID="IsSpouseCoverageExceeds50000" sfwMessageId="6648" sfwExpression="(this.iblnIsNewMode == True) &amp;&amp; &#xA;(this.IsSuplementalSpouseCoverageAmountGreaterThan50000() == True)" sfwObjectBased="True" />
+    <rule ID="IsSpouseSuppCoverageAmtNull" sfwMessageId="6575" sfwExpression="(this.AintGroupLifeOptionValidateFlag == 21)" sfwObjectBased="True" />
+    <rule ID="IsSpouseSuppEnrolledWithoutDepSupp" sfwMessageId="6555" sfwExpression="(this.AintGroupLifeOptionValidateFlag == 6)" sfwObjectBased="True" />
+    <rule ID="IsSpouseSuppEnteredWithoutDepSupp" sfwMessageId="6551" sfwExpression="(this.AintGroupLifeOptionValidateFlag == 3)" sfwObjectBased="True" />
+    <rule ID="IsSpouseSuppEnteredWithoutHavingActiveSpouse" sfwMessageId="6557" sfwExpression="(this.IsSpouseSupplementalEntered() == True) &amp;&amp; &#xA;(this.IsMemberHasSpouse() == False)" sfwObjectBased="True" />
+    <rule ID="IsSpouseSuppEnteredWithoutMarriedStatus" sfwMessageId="6556" sfwExpression="(this.IsSpouseSupplementalEntered() == True) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPerson.icdoPerson.marital_status_value&quot;) != &quot;MRID&quot;)" sfwObjectBased="True" />
+    <rule ID="IsSpouseSuppPlanOptionNull" sfwMessageId="6576" sfwExpression="(this.AintGroupLifeOptionValidateFlag == 22)" sfwObjectBased="True" />
+    <rule ID="IsSpouseSuppStartDateNull" sfwMessageId="6577" sfwExpression="(this.AintGroupLifeOptionValidateFlag == 23)" sfwObjectBased="True" />
+    <rule ID="IsStartDateDependentGreaterThanSupplemental" sfwMessageId="6651" sfwExpression="(this.AintGroupLifeOptionValidateFlag == 31)" sfwObjectBased="True" />
+    <rule ID="IsStartDateSpouseGreaterThanDependent" sfwMessageId="6652" sfwExpression="(this.AintGroupLifeOptionValidateFlag == 32)" sfwObjectBased="True" />
+    <rule ID="IsStartDateSupplementalGreaterThanBasic" sfwMessageId="6643" sfwExpression="(this.AintGroupLifeOptionValidateFlag == 30)" sfwObjectBased="True" />
+    <rule ID="IsSuppCoverageAmountNull" sfwMessageId="6569" sfwExpression="(this.AintGroupLifeOptionValidateFlag == 15)" sfwObjectBased="True" />
+    <rule ID="IsSuppEnrolledWithoutBasic" sfwMessageId="6553" sfwExpression="(this.AintGroupLifeOptionValidateFlag == 4)" sfwObjectBased="True" />
+    <rule ID="IsSuppEnteredwithoutBasic" sfwMessageId="6568" sfwExpression="(this.AintGroupLifeOptionValidateFlag == 14)" sfwObjectBased="True" />
+    <rule ID="IsSuppPlanOptionStatusNull" sfwMessageId="6570" sfwExpression="(this.AintGroupLifeOptionValidateFlag == 16)" sfwObjectBased="True" />
+    <rule ID="IsSuppStartDateNull" sfwMessageId="6571" sfwExpression="(this.AintGroupLifeOptionValidateFlag == 17)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForOverlapLife" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="(this.CheckResourceAndInsuranceTypeForOverlap())" />
+    <rule ID="IsStartDatePriortoEnrollmentEffeDate" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(!(this.icdoPersonAccount.history_change_date == DateTime.MinValue) &amp;&amp; &#xA;(this.icdoPersonAccount.plan_participation_status_value == &quot;ENL2&quot;) &amp;&amp;&#xA;(this.icdoPersonAccountLife.life_insurance_type_value == &quot;NREM&quot;) &amp;&amp; (this.IsStartDatePriortoEnrollmentEffeDate()))" sfwMessageId="10457" />
+    <rule ID="IsMemberEligibleToEnrollInCurrentYear" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="(this.IsMemberEligibleToEnrollInCurrentYear()) &amp;&amp;&#xA;!(this.icdoPersonAccountLife.reason_value == &quot;ANNE&quot;)" sfwMessageId="10494" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="VisibleRuleIsACHApplicable" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForOverlapLife" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror>
+    <item ID="IsLifeOptionChangedDuringTransfer" sfwMode="Update" sfwStatus="Active" />
+    <item ID="IsSpouseCoverageExceeds50000" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsACHDetailNotEnteredForACHPaymentMethod" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsLevelofCoverageIncreased" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsReasonValueNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPersonNotEligibleToEnrollInEmploymentTransfer" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsLateEnrollment" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsIBSCheckedAndPaymentMethodPensionCheck" sfwMode="All" sfwStatus="InActive" />
+  </softerror>
+  <harderror>
+    <item ID="IsActualPremiumWaiverDateNull" sfwMode="All" sfwStatus="Inactive" />
+    <item ID="IsProjectedPremiumWaiverDateNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsLifeOptionBasicNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsDepSuppEnteredWithoutSupp" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsSpouseSuppEnteredWithoutDepSupp" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsSuppEnrolledWithoutBasic" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsDepSuppEnrolledWithoutSupp" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsSpouseSuppEnrolledWithoutDepSupp" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsSpouseSuppEnteredWithoutMarriedStatus" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsSpouseSuppEnteredWithoutHavingActiveSpouse" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsCoverageAmountForBasicInvalid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsCoverageAmountForSuppInvalid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsCoverageAmountForDepSuppInvalid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsCoverageAmountForSpouseSuppInvalid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMemberTypeNULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEffectiveStartDateNULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsBasicCoverageAmountNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsBasicPlanOptionNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsSuppEnteredwithoutBasic" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsSuppCoverageAmountNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsSuppPlanOptionStatusNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsSuppStartDateNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsDepSuppCoverageAmountnull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsDepSuppPlanOptionStatusNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsDepSuppStartDateNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsSpouseSuppCoverageAmtNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsSpouseSuppPlanOptionNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsSpouseSuppStartDateNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IfSpouseSuppCovAmtExceeds50PercentOfSupp" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsIBSCheckedAndPaymentModeOrOrgToBillNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPaymentModeSelected" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsBillingOrgNOTEmployer" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsBillingOrgNOTExists" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPremiumWaiverEffDateNOTValid" sfwMode="Update" sfwStatus="Active" />
+    <item ID="IsMemberValidToEnrollOtherThanBasicLOC" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPlanParticipationStatusNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPersonAgeLessThan18" sfwMode="New" sfwStatus="Active" />
+    <item ID="IsEnnrollmentDateNotValidForEapDentalLifeHealthVisionFlex457" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsProviderEnteredWithoutPremiumWaiverFlagChecked" sfwMode="All" sfwStatus="Inactive" />
+    <item ID="IsProviderOrgInvalid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsLifePaymentElectionMandatory" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsHistoryChangeDateLessThanLastChangeDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsHistoryChangeDateRequired" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsHistoryChangeDateStartsWithFirstDayOfMonth" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsProjectedWaiverAmtEnteredWithoutCheckBox" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEndDateDependentLessthanSpouse" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEndDateSupplementalLessthanDependent" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEndDateBasicLessthanSupplemental" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsStartDateSupplementalGreaterThanBasic" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsStartDateSpouseGreaterThanDependent" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsStartDateDependentGreaterThanSupplemental" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEmploymentEndDateNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPremiumWavierProviderOrgEnterdWithoutFlag" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsRetireeEnrolledInOtherThanBasicCoverage" sfwMode="Update" sfwStatus="Active" />
+    <item ID="IsRetireeLevelOfCoverageChanged" sfwMode="Update" sfwStatus="Active" />
+    <item ID="IsIBSNDPERSCheckAndPayeeNOTSelected" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsIBSModeNDPERSCheckAndStatusNOTValid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsIBSPayeeAccountSelectedForPaymentModeNOTNDPERSCheck" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsInvalidPayeeAccountSelected" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsIBSEffectiveDateStartsWithFirstDayOfMonth" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsIBSNotCheckedWhenOrgToBillEntered" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsIBSFlagCheckedForActiveMember" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsRetireeReEnrollingCoverages" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsIBSStartDateNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsCoverageAmountEnteredForWaivedPlanOption" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMoreThanOneEnrolledInOverlapHistory" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsOptionDateLessThanHistoryChangeDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsACHDetailWithNoEndDateExists" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAcceleratedLifeBenefitPaidCheckedWithoutAmountandDateEntered" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPremiumConversionEnrolledButNoSupplemental" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEffectivedateEntered" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsCoverageAmountEntered" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsLifeInsuranceTypeActiveAndPremiumEnrolledNotSelected" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsStartDatePriortoEnrollmentEffeDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMemberEligibleToEnrollInCurrentYear" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <groupslist>
+    <group ID="PortalWizardRules">
+      <item ID="IfSpouseSuppCovAmtExceeds50PercentOfSupp" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsCoverageAmountForDepSuppInvalid" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsCoverageAmountForSpouseSuppInvalid" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsCoverageAmountForSuppInvalid" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsDepSuppCoverageAmountnull" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsDepSuppEnrolledWithoutSupp" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsRetireeEnrolledInOtherThanBasicCoverage" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsSpouseCoverageExceeds50000" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsSpouseSuppCoverageAmtNull" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsSpouseSuppEnrolledWithoutDepSupp" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsSpouseSuppEnteredWithoutHavingActiveSpouse" sfwMode="All" sfwStatus="Active" />
+      <item ID="IsSpouseSuppEnteredWithoutMarriedStatus" sfwMode="All" sfwStatus="Active" />
+    </group>
+  </groupslist>
+  <updateablecdo />
+  <commonproperties />
+  <expressionfields />
+  <queries>
+    <query ID="LoadGroupLifeHistory" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT &#xD;&#xA;SPALH.*,&#xD;&#xA;SCV.DESCRIPTION AS PLAN_PARTICIPATION_STATUS_DESCRIPTION,&#xD;&#xA;SCV1.DESCRIPTION AS LEVEL_OF_COVERAGE_DESCRIPTION,&#xD;&#xA;SCV2.DESCRIPTION AS STATUS_DESCRIPTION&#xD;&#xA;FROM SGT_PERSON_ACCOUNT_LIFE_HISTORY SPALH&#xD;&#xA;LEFT JOIN SGS_CODE_VALUE SCV ON SCV.CODE_VALUE=SPALH.PLAN_PARTICIPATION_STATUS_VALUE AND SCV.CODE_ID=337&#xD;&#xA;LEFT JOIN SGS_CODE_VALUE SCV1 ON SCV1.CODE_VALUE=SPALH.LEVEL_OF_COVERAGE_VALUE AND SCV1.CODE_ID=408&#xD;&#xA;LEFT JOIN SGS_CODE_VALUE SCV2 ON SCV2.CODE_VALUE=SPALH.STATUS_VALUE AND SCV2.CODE_ID=336&#xD;&#xA;WHERE SPALH.PERSON_ACCOUNT_ID=@PERSON_ACCOUNT_ID&#xD;&#xA;ORDER BY PERSON_ACCOUNT_LIFE_HISTORY_ID DESC">
+      <parameters>
+        <parameter ID="@PERSON_ACCOUNT_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadCoverageAmount" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT DISTINCT FULL_COVERAGE_AMT AS COVERAGE_AMOUNT FROM SGT_ORG_PLAN_LIFE_AGE_COVERAGE_REF&#xD;&#xA;WHERE LEVEL_OF_COVERAGE_VALUE=@LEVEL_OF_COVERAGE&#xD;&#xA;ORDER BY FULL_COVERAGE_AMT ASC ">
+      <parameters>
+        <parameter ID="@LEVEL_OF_COVERAGE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="CheckCoverageAmountExists" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="&#xD;&#xA;DECLARE @MAXEFFECTIVEDATE DATETIME&#xD;&#xA;SELECT @MAXEFFECTIVEDATE = MAX(EFFECTIVE_DATE) FROM SGT_ORG_PLAN_LIFE_AGE_COVERAGE_REF WHERE&#xD;&#xA;LEVEL_OF_COVERAGE_VALUE=@LEVEL_OF_COVERAGE AND&#xD;&#xA;LIFE_INSURANCE_TYPE_VALUE=@MEMBER_TYPE&#xD;&#xA;AND EFFECTIVE_DATE &lt;= @EFFECTIVEDATE&#xD;&#xA;&#xD;&#xA;SELECT * FROM SGT_ORG_PLAN_LIFE_AGE_COVERAGE_REF WHERE&#xD;&#xA;LEVEL_OF_COVERAGE_VALUE=@LEVEL_OF_COVERAGE AND&#xD;&#xA;LIFE_INSURANCE_TYPE_VALUE=@MEMBER_TYPE AND&#xD;&#xA;EFFECTIVE_DATE = @MAXEFFECTIVEDATE">
+      <parameters>
+        <parameter ID="@LEVEL_OF_COVERAGE" sfwDataType="string" />
+        <parameter ID="@MEMBER_TYPE" sfwDataType="string" />
+        <parameter ID="@EFFECTIVEDATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="GetMonthyPremiumByProviderOrgPlanID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_ORG_PLAN_LIFE_RATE WHERE&#xD;&#xA;ORG_PLAN_ID=@ORG_PLAN_ID AND&#xD;&#xA;LEVEL_OF_COVERAGE_VALUE=@LEVEL_OF_COVERAGE AND&#xD;&#xA;LIFE_INSURANCE_TYPE_VALUE=@MEMBER_TYPE AND&#xD;&#xA;EFFECTIVE_DATE &lt;=@EFFECTIVE_DATE and&#xD;&#xA;@AGE BETWEEN MIN_AGE_YRS AND MAX_AGE_YRS &#xD;&#xA;ORDER BY EFFECTIVE_DATE DESC">
+      <parameters>
+        <parameter ID="@ORG_PLAN_ID" sfwDataType="int" />
+        <parameter ID="@LEVEL_OF_COVERAGE" sfwDataType="string" />
+        <parameter ID="@MEMBER_TYPE" sfwDataType="string" />
+        <parameter ID="@AGE" sfwDataType="int" />
+        <parameter ID="@EFFECTIVE_DATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="LossofSupplementalCoverageLetter" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT DISTINCT SPA.*,LIFE.*,PER.* &#xD;&#xA;FROM  SGT_PERSON_ACCOUNT_LIFE LIFE&#xD;&#xA;      INNER JOIN SGT_PERSON_ACCOUNT SPA ON SPA.PERSON_ACCOUNT_ID=LIFE.PERSON_ACCOUNT_ID&#xD;&#xA;      INNER JOIN SGT_PERSON PER ON PER.PERSON_ID=SPA.PERSON_ID&#xD;&#xA;      INNER JOIN SGT_PERSON_ACCOUNT_LIFE_OPTION OPT ON OPT.PERSON_ACCOUNT_ID=SPA.PERSON_ACCOUNT_ID&#xD;&#xA;WHERE ISNULL(LIFE.PREMIUM_WAIVER_FLAG, 'N') = 'N' AND&#xD;&#xA;         (DATEADD(MONTH,779,PER.DATE_OF_BIRTH) BETWEEN GETDATE() AND &#xD;&#xA;      DATEADD(s,-1,DATEADD(mm, DATEDIFF(m,0,GETDATE())+3,0))) AND &#xD;&#xA;         LIFE.LIFE_INSURANCE_TYPE_VALUE = 'REME' AND &#xD;&#xA;         (&#xD;&#xA;         (OPT.LEVEL_OF_COVERAGE_VALUE='SPML' AND OPT.COVERAGE_AMOUNT &gt; 0) OR&#xD;&#xA;         (OPT.LEVEL_OF_COVERAGE_VALUE='DSPL' AND OPT.COVERAGE_AMOUNT &gt; 0) OR&#xD;&#xA;         (OPT.LEVEL_OF_COVERAGE_VALUE='SPSL' AND OPT.COVERAGE_AMOUNT &gt; 0)&#xD;&#xA;         ) AND SPA.PLAN_PARTICIPATION_STATUS_VALUE = 'ENL2'">
+      <parameters />
+    </query>
+    <query ID="IsProviderEmpCategoryProvider" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_ORGANIZATION &#xD;&#xA;WHERE ORG_TYPE_VALUE='PRVD' AND ORG_ID=@ORG_ID">
+      <parameters>
+        <parameter ID="@ORG_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="EndDateDisabilityTermLifeInsuranceBatch" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_PERSON_ACCOUNT SPA &#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT_LIFE SPAL ON SPAL.PERSON_ACCOUNT_ID=SPA.PERSON_ACCOUNT_ID&#xD;&#xA;WHERE &#xD;&#xA;(SPAL.DISABILITY_LETTER_SENT_FLAG IS NULL OR SPAL.DISABILITY_LETTER_SENT_FLAG &lt;&gt; 'Y') AND&#xD;&#xA;SPAL.PROJECTED_PREMIUM_WAIVER_DATE IS NOT NULL AND&#xD;&#xA;SPAL.ACTUAL_PREMIUM_WAIVER_DATE IS NULL">
+      <parameters />
+    </query>
+    <query ID="NDPERS_TFFR_Enrollment" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT PA.*,LIFE.*,PER.*,PLN.* FROM SGT_PERSON_ACCOUNT PA &#xD;&#xA;INNER JOIN  SGT_PERSON_ACCOUNT_LIFE LIFE ON PA.PERSON_ACCOUNT_ID=LIFE.PERSON_ACCOUNT_ID&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT_PAYMENT_ELECTION SPAPE ON SPAPE.PERSON_ACCOUNT_ID=PA.PERSON_ACCOUNT_ID&#xD;&#xA;INNER JOIN SGT_PERSON PER ON PER.PERSON_ID=PA.PERSON_ID&#xD;&#xA;INNER JOIN SGT_PLAN PLN ON PLN.PLAN_ID=PA.PLAN_ID&#xD;&#xA;WHERE &#xD;&#xA;LIFE.MODIFIED_AFTER_TFFR_FILE_SENT_FLAG='Y' AND&#xD;&#xA;SPAPE.PAYMENT_METHOD_VALUE='TFPC'">
+      <parameters />
+    </query>
+    <query ID="LoadMembersForWaiverOfLifeExpiring" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="&#xD;&#xA;SELECT  sgt_person_base.*, SGT_PERSON_ACCOUNT.*, SGT_PERSON_ACCOUNT_LIFE.* ,(DATEDIFF(DD,sgt_person_base.DATE_OF_BIRTH,GETDATE())/365.25) AS AGE&#xD;&#xA;FROM    sgt_person_base INNER JOIN&#xD;&#xA;        SGT_PERSON_ACCOUNT ON sgt_person_base.PERSON_ID = SGT_PERSON_ACCOUNT.PERSON_ID RIGHT OUTER JOIN&#xD;&#xA;        SGT_PERSON_ACCOUNT_LIFE ON SGT_PERSON_ACCOUNT.PERSON_ACCOUNT_ID = SGT_PERSON_ACCOUNT_LIFE.PERSON_ACCOUNT_ID&#xD;&#xA;WHERE   (SGT_PERSON_ACCOUNT_LIFE.PREMIUM_WAIVER_FLAG = 'Y') &#xD;&#xA;        AND (SGT_PERSON_ACCOUNT.PLAN_PARTICIPATION_STATUS_VALUE = 'ENL2')&#xD;&#xA;        AND SGT_PERSON_ACCOUNT_LIFE.PREMIUM_WAIVER_PROVIDER_ORG_ID NOT IN (592, 589)&#xD;&#xA;        AND  (CONVERT(DATE, DATEADD(YEAR, 65, sgt_person_base.DATE_OF_BIRTH)) &lt;= CONVERT(DATE, DATEADD(DAY,45,GETDATE())) OR (DATEDIFF(DD,sgt_person_base.DATE_OF_BIRTH,GETDATE())/365.25)&gt;= 65 )&#xD;&#xA;">
+      <parameters />
+    </query>
+    <query ID="LoadLifeHistoryForESS" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT DISTINCT&#xD;&#xA;LIFEHIST.* &#xD;&#xA;FROM SGT_PERSON_ACCOUNT_LIFE_HISTORY LIFEHIST&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT PA ON LIFEHIST.PERSON_ACCOUNT_ID = PA.PERSON_ACCOUNT_ID&#xD;&#xA;INNER JOIN SGT_PERSON_EMPLOYMENT PE ON PE.PERSON_ID = PA.PERSON_ID AND PE.ORG_ID = @ORG_ID&#xD;&#xA;INNER JOIN SGT_PERSON_EMPLOYMENT_DETAIL PED ON PED.PERSON_EMPLOYMENT_ID = PE.PERSON_EMPLOYMENT_ID&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT_EMPLOYMENT_DETAIL PAED ON PED.PERSON_EMPLOYMENT_DTL_ID = PAED.PERSON_EMPLOYMENT_DTL_ID&#xD;&#xA;WHERE PA.PERSON_ACCOUNT_ID = @PERSON_ACCOUNT_ID&#xD;&#xA;AND LIFEHIST.EFFECTIVE_START_DATE != ISNULL(Effective_END_DATE,'01/01/2900')&#xD;&#xA;AND LIFEHIST.PLAN_PARTICIPATION_STATUS_VALUE != 'SUS3'&#xD;&#xA;AND LIFEHIST.EFFECTIVE_START_DATE BETWEEN PE.START_DATE AND ISNULL(PE.END_DATE,'01/01/2900')&#xD;&#xA;AND (LIFEHIST.EFFECTIVE_START_DATE &gt; GETDATE() OR ISNULL(LIFEHIST.EFFECTIVE_END_DATE,'01/01/2900') &gt; GETDATE())&#xD;&#xA;AND PAED.ELECTION_VALUE = 'ENLD'&#xD;&#xA;ORDER BY LEVEL_OF_COVERAGE_VALUE">
+      <parameters>   
+        <parameter ID="@PERSON_ACCOUNT_ID" sfwDataType="int" />
+	<parameter ID="@ORG_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="PersonAccountId" sfwType="Column" sfwValue="person_account_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="LifeInsuranceTypeDescription" sfwType="Description" sfwValue="life_insurance_type_description" />
+    <attribute ID="LifeInsuranceTypeId" sfwType="Column" sfwValue="life_insurance_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="347" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="LifeInsuranceTypeValue" sfwType="Column" sfwValue="life_insurance_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="PremiumWaiverFlag" sfwType="Column" sfwValue="premium_waiver_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="ProjectedPremiumWaiverDate" sfwType="Column" sfwValue="projected_premium_waiver_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ActualPremiumWaiverDate" sfwType="Column" sfwValue="actual_premium_waiver_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="WaivedAmount" sfwType="Column" sfwValue="waived_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="9,2" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="DisabilityLetterSentFlag" sfwType="Column" sfwValue="disability_letter_sent_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="PremiumWaiverProviderOrgId" sfwType="Column" sfwValue="premium_waiver_provider_org_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ModifiedAfterTffrFileSentFlag" sfwType="Column" sfwValue="modified_after_tffr_file_sent_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="ReasonDescription" sfwType="Description" sfwValue="reason_description" />
+    <attribute ID="ReasonId" sfwType="Column" sfwValue="reason_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="332" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ReasonValue" sfwType="Column" sfwValue="reason_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="AcceleratedLifeBenefitPaidFlag" sfwType="Column" sfwValue="accelerated_life_benefit_paid_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="AcceleratedLifeBenefitEffectiveDate" sfwType="Column" sfwValue="accelerated_life_benefit_effective_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="AcceleratedLifeBenefitAmount" sfwType="Column" sfwValue="accelerated_life_benefit_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,6" />
+    <attribute ID="PremiumConversionIndicatorFlag" sfwType="Column" sfwValue="premium_conversion_indicator_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="PremiumConversionEffectiveDate" sfwType="Column" sfwValue="premium_conversion_effective_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="PsFileChangeEventDescription" sfwType="Description" sfwValue="ps_file_change_event_description" />
+    <attribute ID="PsFileChangeEventId" sfwType="Column" sfwValue="ps_file_change_event_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="368" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PsFileChangeEventValue" sfwType="Column" sfwValue="ps_file_change_event_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="SpouseWaivedAmount" sfwType="Column" sfwValue="spouse_waived_amount" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="18,0" />
+    <attribute ID="DependentWaivedAmount" sfwType="Column" sfwValue="dependent_waived_amount" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="18,0" />
+    <attribute ID="RetVoyaSent" sfwType="Column" sfwValue="ret_voya_sent" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="1" />
+    <attribute ID="objPerson" sfwType="Object" sfwEntity="entPerson" sfwValue="ibusPerson" />
+    <attribute sfwDataType="string" sfwType="Property" ID="StatusDescription" sfwValue="icdoPersonAccount.status_description" />
+    <attribute sfwDataType="string" sfwType="Property" ID="SuppressWarningsFlag" sfwValue="icdoPersonAccount.suppress_warnings_flag" />
+    <attribute ID="objPlan" sfwType="Object" sfwEntity="entPlan" sfwValue="ibusPlan" />
+    <attribute sfwDataType="string" sfwType="Property" ID="LifeInsuranceTypeValue1" sfwValue="icdoPersonAccountLife.life_insurance_type_value" />
+    <attribute sfwDataType="int" sfwType="Property" ID="LifeInsuranceAge" sfwValue="icdoPersonAccountLife.Life_Insurance_Age" />
+    <attribute sfwDataType="string" sfwType="Property" ID="PlanParticipationStatusValue" sfwValue="icdoPersonAccount.plan_participation_status_value" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="HistoryChangeDate" sfwValue="icdoPersonAccount.history_change_date" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ReasonValue1" sfwValue="icdoPersonAccountLife.reason_value" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrAllowOverlapHistory" sfwValue="istrAllowOverlapHistory" />
+    <attribute sfwType="Collection" sfwEntity="entPersonAccountLifeOption" ID="lstLifeOption" sfwValue="iclbLifeOption" />
+    <attribute sfwDataType="int" sfwType="Property" ID="PersonAccountId1" sfwValue="icdoPersonAccountLife.person_account_id" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecTotalMonthlyPremium" sfwValue="idecTotalMonthlyPremium" />
+    <attribute sfwDataType="string" sfwType="Property" ID="PremiumConversionIndicatorFlag1" sfwValue="icdoPersonAccountLife.premium_conversion_indicator_flag" />
+    <attribute sfwDataType="string" sfwType="Property" ID="PremiumWaiverFlag1" sfwValue="icdoPersonAccountLife.premium_waiver_flag" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="ProjectedPremiumWaiverDate1" sfwValue="icdoPersonAccountLife.projected_premium_waiver_date" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="WaivedAmount1" sfwValue="icdoPersonAccountLife.waived_amount" />
+    <attribute sfwDataType="int" sfwType="Property" ID="PremiumWaiverProviderOrgId1" sfwValue="icdoPersonAccountLife.premium_waiver_provider_org_id" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="DependentWaivedAmount1" sfwValue="icdoPersonAccountLife.dependent_waived_amount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="SpouseWaivedAmount1" sfwValue="icdoPersonAccountLife.spouse_waived_amount" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="ActualPremiumWaiverDate1" sfwValue="icdoPersonAccountLife.actual_premium_waiver_date" />
+    <attribute sfwDataType="string" sfwType="Property" ID="SuppressWarningsBy" sfwValue="icdoPersonAccount.suppress_warnings_by" />
+    <attribute sfwDataType="string" sfwType="Property" ID="AcceleratedLifeBenefitPaidFlag1" sfwValue="icdoPersonAccountLife.accelerated_life_benefit_paid_flag" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="AcceleratedLifeBenefitAmount1" sfwValue="icdoPersonAccountLife.accelerated_life_benefit_amount" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="AcceleratedLifeBenefitEffectiveDate1" sfwValue="icdoPersonAccountLife.accelerated_life_benefit_effective_date" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ModifiedAfterTffrFileSentFlag1" sfwValue="icdoPersonAccountLife.modified_after_tffr_file_sent_flag" />
+    <attribute sfwType="Collection" sfwEntity="entPersonAccountLifeHistory" ID="lstPersonAccountLifeHistory" sfwValue="iclbPersonAccountLifeHistory" />
+    <attribute ID="objPaymentElection" sfwType="Object" sfwEntity="entPersonAccountPaymentElection" sfwValue="ibusPaymentElection" />
+    <attribute sfwDataType="int" sfwType="Property" ID="PersonId" sfwValue="icdoPersonAccount.person_id" />
+    <attribute sfwType="Collection" sfwEntity="entPersonAccountAchDetail" ID="lstPersonAccountAchDetail" sfwValue="iclbPersonAccountAchDetail" />
+    <attribute sfwType="Collection" sfwEntity="entPersonAccountPaymentElectionHistory" ID="lstPersonAccountPaymentElectionHistory" sfwValue="iclbPersonAccountPaymentElectionHistory" />
+    <attribute sfwType="Collection" sfwEntity="entPersonAccountInsuranceContribution" ID="lstInsuranceContribution" sfwValue="iclbInsuranceContribution" />
+    <attribute sfwType="Collection" sfwEntity="entPersonEmploymentDetail" ID="lstEmploymentDetail" sfwValue="iclbEmploymentDetail" />
+    <attribute sfwType="Collection" sfwEntity="entPersonAccountInsuranceTransfer" ID="lstPersonAccountInsuranceTransfer" sfwValue="iclbPersonAccountInsuranceTransfer" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrESSProviderOrgName" sfwValue="istrESSProviderOrgName" />
+    <attribute sfwDataType="string" sfwType="Property" ID="PlanParticipationStatusDescription" sfwValue="icdoPersonAccount.plan_participation_status_description" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="StartDate" sfwValue="icdoPersonAccount.start_date" />
+    <attribute sfwType="Collection" sfwEntity="entPersonAccountLifeHistory" ID="lstLifeHistory" sfwValue="iclbLifeHistory" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="IdtCoverageEndDate" sfwValue="idtCoverageEndDate" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="IdtCoverageEndDatePlus31Days" sfwValue="idtCoverageEndDatePlus31Days" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrImage" sfwValue="istrImage" />
+    <attribute sfwType="Object" sfwEntity="entPersonAccount" sfwValue="ibusPersonAccount" ID="objPersonAccount" />
+    <attribute ID="objProvider" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusProvider" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecBasicCoverageAmount" sfwValue="idecBasicCoverageAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecLifeBasicPremiumAmt" sfwValue="idecLifeBasicPremiumAmt" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecSuppCoverageAmount" sfwValue="idecSuppCoverageAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecLifeSupplementalPremiumAmount" sfwValue="idecLifeSupplementalPremiumAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecDepSuppCoverageAmount" sfwValue="idecDepSuppCoverageAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecDependentSupplementalPremiumAmt" sfwValue="idecDependentSupplementalPremiumAmt" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecSpouseSuppCoverageAmount" sfwValue="idecSpouseSuppCoverageAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecSpouseSupplementalPremiumAmt" sfwValue="idecSpouseSupplementalPremiumAmt" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="LdclBasicPremiumAmount" sfwValue="ldclBasicPremiumAmount" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrEffectiveEndDate" sfwValue="istrEffectiveEndDate" />
+    <attribute sfwType="Collection" sfwEntity="entPersonAccountLifeOption" ID="lstLifeOptionForCorrespondence" sfwValue="iclbLifeOptionForCorrespondence" />
+    <attribute sfwDataType="int" sfwType="Property" ID="PlanId" sfwValue="icdoPersonAccount.plan_id" />
+    <attribute sfwDataType="string" sfwType="Property" ID="LstrProjectedPremiumEffectiveDate" sfwValue="lstrProjectedPremiumEffectiveDate" />
+  </attributes>
+</entity>

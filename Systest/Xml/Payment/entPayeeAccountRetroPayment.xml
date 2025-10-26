@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entPayeeAccountRetroPayment" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoPayeeAccountRetroPayment" sfwObjectID="busPayeeAccountRetroPayment" sfwTableName="sgt_payee_account_retro_payment" sfwView="False">
+  <rules>
+    <rule ID="IsAdjustmentTypeRHICandAccountRelationBene" sfwMessageId="5572" sfwExpression="(this.icdoPayeeAccountRetroPayment.retro_payment_type_value == &quot;RBRB&quot;) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusPayeeAccount.icdoPayeeAccount.account_relation_value&quot;) == &quot;BENE&quot;)" sfwObjectBased="True" />
+    <rule ID="IsApproveBtnvisible" sfwExpression="(string.IsNullOrEmpty(this.icdoPayeeAccountRetroPayment.approved_flag)) &amp;&amp; &#xA;!(string.IsNullOrEmpty(this.icdoPayeeAccountRetroPayment.payment_option_value)) &amp;&amp; &#xA;!(this.icdoPayeeAccountRetroPayment.modified_by == RFunc.GetValue&lt;String&gt;(this, &quot;iobjPassInfo.istrUserID&quot;))" sfwObjectBased="True" />
+    <rule ID="IsApproveFlagnotNull" sfwExpression="(!string.IsNullOrEmpty(this.icdoPayeeAccountRetroPayment.approved_flag))" sfwObjectBased="True" />
+    <rule ID="IsApproveFlagNull" sfwExpression="(string.IsNullOrEmpty(this.icdoPayeeAccountRetroPayment.approved_flag))" sfwObjectBased="True" />
+    <rule ID="IsCalculateIterestFlagcheckedForRHISReimbursment" sfwMessageId="5548" sfwExpression="(this.icdoPayeeAccountRetroPayment.retro_payment_type_value == &quot;RBRB&quot;) &amp;&amp; &#xA;(this.icdoPayeeAccountRetroPayment.calculate_interest_flag == &quot;Y&quot;)" sfwObjectBased="True" />
+    <rule ID="IsEffectiveStartAndEndDateNotRequired" sfwMessageId="5634" sfwExpression="(this.IsEffectiveStartDateAndEndDateRequired() == &quot;NREQ&quot;) &amp;&amp; &#xA;(this.icdoPayeeAccountRetroPayment.retro_payment_type_value == &quot;POPB&quot;)" sfwObjectBased="True" />
+    <rule ID="IsEffectiveStartAndEndDateRequired" sfwMessageId="5635" sfwExpression="(this.IsEffectiveStartDateAndEndDateRequired() == &quot;REQ&quot;) &amp;&amp; &#xA;!(this.icdoPayeeAccountRetroPayment.retro_payment_type_value == &quot;POPB&quot;)" sfwObjectBased="True" />
+    <rule ID="IsEffectStartDateNull" sfwMessageId="5524" sfwExpression="(this.icdoPayeeAccountRetroPayment.effective_start_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsEndDateInvalid" sfwMessageId="5510" sfwExpression="(this.IsEnddateNotValid() == True) &amp;&amp; &#xA;!(this.icdoPayeeAccountRetroPayment.retro_payment_type_value == &quot;POPB&quot;)" sfwObjectBased="True" />
+    <rule ID="IsEndDateLessThanStartDate" sfwMessageId="5507" sfwExpression="!(this.icdoPayeeAccountRetroPayment.start_date == DateTime.MinValue) &amp;&amp; &#xA;!(this.icdoPayeeAccountRetroPayment.end_date == DateTime.MinValue) &amp;&amp; &#xA;(this.icdoPayeeAccountRetroPayment.end_date &lt; this.icdoPayeeAccountRetroPayment.start_date) &amp;&amp; &#xA;!(this.icdoPayeeAccountRetroPayment.retro_payment_type_value == &quot;POPB&quot;)" sfwObjectBased="True" />
+    <rule ID="IsEndDateNull" sfwMessageId="5553" sfwExpression="(this.icdoPayeeAccountRetroPayment.end_date == DateTime.MinValue) &amp;&amp; &#xA;!(this.icdoPayeeAccountRetroPayment.retro_payment_type_value == &quot;POPB&quot;)" sfwObjectBased="True" />
+    <rule ID="IsLoggedInUserAndModifiedUserSame" sfwExpression="!(this.icdoPayeeAccountRetroPayment.modified_by == RFunc.GetValue&lt;String&gt;(this, &quot;iobjPassInfo.istrUserID&quot;))" sfwObjectBased="True" />
+    <rule ID="IsModifyinngTheRecordInvalid" sfwMessageId="5531" sfwExpression="(this.IsModifyingDetailRecordInValid() == True)" sfwObjectBased="True" />
+    <rule ID="IsNotOnline" sfwExpression="!(this.icdoPayeeAccountRetroPayment.is_online_flag == &quot;Y&quot;)" sfwObjectBased="True" />
+    <rule ID="IsPAStatusCPorCLD" sfwMessageId="5655" sfwExpression="(this.IsPayeeAccountStatusCancelPendingOrCancelled() == True)" sfwObjectBased="True" />
+    <rule ID="IsPopupBenefitAllowed" sfwMessageId="5636" sfwExpression="(this.IsPopupBenefitsNotAllowed() == True)" sfwObjectBased="True" />
+    <rule ID="IsRecordExistForTheSamePeriod" sfwMessageId="5558" sfwExpression="!(this.icdoPayeeAccountRetroPayment.start_date == DateTime.MinValue) &amp;&amp; &#xA;!(this.icdoPayeeAccountRetroPayment.end_date == DateTime.MinValue) &amp;&amp; &#xA;(this.IsRecordExistForSamePeriod() == True) &amp;&amp; &#xA;!(this.icdoPayeeAccountRetroPayment.retro_payment_type_value == &quot;POPB&quot;)" sfwObjectBased="True" />
+    <rule ID="IsRetroPaymentApproved" sfwMessageId="5557" sfwExpression="!(string.IsNullOrEmpty(this.icdoPayeeAccountRetroPayment.approved_flag))" sfwObjectBased="True" />
+    <rule ID="IsRetroPaymentOptionNUll" sfwMessageId="5522" sfwExpression="(string.IsNullOrEmpty(this.icdoPayeeAccountRetroPayment.payment_option_value)) &amp;&amp; &#xA;!(this.icdoPayeeAccountRetroPayment.retro_payment_type_value == &quot;POPB&quot;)" sfwObjectBased="True" />
+    <rule ID="IsRetroPaymentTypeNotPopup" sfwExpression="!(this.icdoPayeeAccountRetroPayment.retro_payment_type_value == &quot;POPB&quot;)" sfwObjectBased="True" />
+    <rule ID="IsRetroPaymentTypeNull" sfwMessageId="5523" sfwExpression="(string.IsNullOrEmpty(this.icdoPayeeAccountRetroPayment.retro_payment_type_value)) &amp;&amp; &#xA;!(this.icdoPayeeAccountRetroPayment.retro_payment_type_value == &quot;POPB&quot;)" sfwObjectBased="True" />
+    <rule ID="IsRetroPaymentTypePopup" sfwExpression="(this.icdoPayeeAccountRetroPayment.retro_payment_type_value == &quot;POPB&quot;)" sfwObjectBased="True" />
+    <rule ID="IsRHICAmountInvalid" sfwMessageId="5656" sfwExpression="(this.IsRHICReimbursementAmountInValid() == True)" sfwObjectBased="True" />
+    <rule ID="IsRHICReimbusmentAmountZero" sfwMessageId="7565" sfwExpression="(this.IsRHICReimbursementAmountZero() == True)" sfwObjectBased="True" />
+    <rule ID="IsStartDateInvalid" sfwMessageId="5506" sfwExpression="(this.IsStartdateNotValid() == True) &amp;&amp; &#xA;!(this.icdoPayeeAccountRetroPayment.retro_payment_type_value == &quot;POPB&quot;)" sfwObjectBased="True" />
+    <rule ID="IsStartDateNull" sfwMessageId="5524" sfwExpression="(this.icdoPayeeAccountRetroPayment.start_date == DateTime.MinValue) &amp;&amp; &#xA;!(this.icdoPayeeAccountRetroPayment.retro_payment_type_value == &quot;POPB&quot;)" sfwObjectBased="True" />
+    <rule ID="IsRetroPaymentTypeInitial" sfwExpression="(this.icdoPayeeAccountRetroPayment.retro_payment_type_value == &quot;IRPM&quot;)" sfwObjectBased="True" />
+    <rule ID="IsIncludeInAdhocAlreadyCheckedAndRetroPaymentWithSpecial" sfwRuleType="Validation" sfwExpression="this.IsRetroPaymentWithSpecialCheckSetUpAndIncludeInAdhocChecked() == True" sfwMessageId="10315" sfwObjectBased="True" />
+    <rule ID="IsRetroPaymentTypePopupBenefits" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="DoesPayeeAccountHasPriorPopup()" sfwMessageId="10407" />
+    <rule ID="DoesWithholdingRecordExistForNextBenefitPaymentDate" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="!this.DoesWithholdingRecordExistForNextBenefitPaymentDate()" sfwMessageId="5595" />
+  </rules>
+  <delete>
+    <property ID="lstPayeeAccountRetroPaymentDetail" sfwMethodName="LoadPayeeAccountRetroPaymentDetail" />
+  </delete>
+  <checklist />
+  <initialload>
+    <item ID="IsApproveFlagNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsApproveFlagnotNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsLoggedInUserAndModifiedUserSame" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsApproveBtnvisible" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsRetroPaymentTypePopup" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsRetroPaymentTypeNotPopup" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsNotOnline" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsRetroPaymentTypeInitial" sfwStatus="Active" sfwMode="All" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="IsRetroPaymentTypeNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsRetroPaymentOptionNUll" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsStartDateNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsModifyinngTheRecordInvalid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsCalculateIterestFlagcheckedForRHISReimbursment" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEndDateInvalid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsStartDateInvalid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEndDateNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEndDateLessThanStartDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsRecordExistForTheSamePeriod" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsRHICReimbusmentAmountZero" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAdjustmentTypeRHICandAccountRelationBene" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEffectiveStartAndEndDateRequired" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEffectiveStartAndEndDateNotRequired" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPopupBenefitAllowed" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEffectStartDateNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsPAStatusCPorCLD" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsRHICAmountInvalid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsIncludeInAdhocAlreadyCheckedAndRetroPaymentWithSpecial" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsRetroPaymentTypePopupBenefits" sfwMode="All" sfwStatus="Active" />
+    <item ID="DoesWithholdingRecordExistForNextBenefitPaymentDate" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete>
+    <item ID="IsRetroPaymentApproved" sfwMode="All" sfwStatus="Active" />
+  </validatedelete>
+  <groupslist />
+  <updateablecdo />
+  <commonproperties>
+    <item ID="person_id" sfwObjectField="ibusPayeeAccount.icdoPayeeAccount.payee_perslink_id" sfwBeforeMethodName="LoadPayeeAccount" />
+  </commonproperties>
+  <queries>
+    <query ID="GetPaymentItemTypeForRetroItem" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select b.* from sgt_retro_Item_type a inner join sgt_payment_item_type b &#xD;&#xA;on a.to_item_type=b.item_type_code where a.FROM_ITEM_TYPE=@retroitem and a.RETRO_PAYMENT_TYPE_VALUE=@retropaymenttype">
+      <parameters>
+        <parameter ID="@retroitem" sfwDataType="string" />
+        <parameter ID="@retropaymenttype" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="UpdateAdjustmentPaymentHistoryID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="DECLARE @LASTDATE DATETIME&#xD;&#xA;SELECT @LASTDATE = MAX(PAYMENT_DATE) FROM SGT_PAYMENT_SCHEDULE &#xD;&#xA;WHERE PROCESS_DATE &lt;= @PAYMENTDATE&#xD;&#xA;AND SCHEDULE_TYPE_VALUE = 'MTLY'&#xD;&#xA;AND STATUS_VALUE = 'PRCD'&#xD;&#xA;&#xD;&#xA;UPDATE A SET PAYMENT_HISTORY_HEADER_ID = B.PAYMENT_HISTORY_HEADER_ID,A.MODIFIED_DATE = GETDATE(),A.MODIFIED_BY ='PERSLink Batch'+' '+ convert(nvarchar,@batchscheduleid),A.UPDATE_SEQ = A.UPDATE_SEQ+1&#xD;&#xA;FROM SGT_PAYEE_ACCOUNT_RETRO_PAYMENT A&#xD;&#xA;INNER JOIN &#xD;&#xA;(&#xD;&#xA;SELECT &#xD;&#xA; PA.PAYEE_ACCOUNT_ID,PHD.PAYMENT_HISTORY_HEADER_ID,RETRO.PAYEE_ACCOUNT_RETRO_PAYMENT_ID&#xD;&#xA; FROM SGT_PAYEE_ACCOUNT PA WITH(NOLOCK)  &#xD;&#xA;  INNER JOIN SGT_PAYMENT_HISTORY_HEADER PHD WITH(NOLOCK)  &#xD;&#xA;   ON PHD.PAYEE_ACCOUNT_ID = PA.PAYEE_ACCOUNT_ID &#xD;&#xA;   AND isnull(PHD.ORG_ID,0) = isnull(PA.PAYEE_ORG_ID,0) and ISNULL(PHD.PERSON_ID,0) = ISNULL(PA.PAYEE_PERSLINK_ID,0)&#xD;&#xA;  INNER JOIN SGT_PAYEE_ACCOUNT_STATUS PAS WITH(NOLOCK) &#xD;&#xA;   ON PAS.PAYEE_ACCOUNT_ID = PA.PAYEE_ACCOUNT_ID &#xD;&#xA;  INNER JOIN SGS_CODE_VALUE CV WITH(NOLOCK)&#xD;&#xA;   ON PAS.STATUS_ID= CV.CODE_ID AND PAS.STATUS_VALUE = CV.CODE_VALUE&#xD;&#xA;  INNER JOIN&#xD;&#xA;    (&#xD;&#xA;     SELECT  PAYEE_ACCOUNT_ID ,PAYEE_ACCOUNT_RETRO_PAYMENT_ID&#xD;&#xA;     FROM SGT_PAYEE_ACCOUNT_RETRO_PAYMENT WITH(NOLOCK) &#xD;&#xA;     WHERE APPROVED_FLAG = 'Y' &#xD;&#xA;       AND PAYMENT_OPTION_VALUE = @PAYMENTOPTION&#xD;&#xA;       AND (PAYMENT_HISTORY_HEADER_ID IS  NULL)              &#xD;&#xA;    ) AS RETRO&#xD;&#xA;   ON RETRO.PAYEE_ACCOUNT_ID = PA.PAYEE_ACCOUNT_ID&#xD;&#xA; WHERE (CV.DATA2 = 'RECV' OR CV.DATA2 = 'APRD' )&#xD;&#xA;  AND PAYEE_ACCOUNT_STATUS_ID  = &#xD;&#xA;   (SELECT TOP 1 PAYEE_ACCOUNT_STATUS_ID&#xD;&#xA;   FROM SGT_PAYEE_ACCOUNT_STATUS PAS1 (nolock)&#xD;&#xA;   WHERE PAS1.PAYEE_ACCOUNT_ID = PA.PAYEE_ACCOUNT_ID&#xD;&#xA;   AND PAS1.STATUS_EFFECTIVE_DATE &lt;= @PAYMENTDATE&#xD;&#xA;   ORDER BY PAS1.STATUS_EFFECTIVE_DATE DESC,PAS1.PAYEE_ACCOUNT_STATUS_ID DESC&#xD;&#xA;  )&#xD;&#xA;  AND PAS.STATUS_EFFECTIVE_DATE &lt;= @PAYMENTDATE&#xD;&#xA;  AND BENEFIT_BEGIN_DATE &lt;=@LASTDATE&#xD;&#xA;  AND (BENEFIT_END_DATE IS NULL OR BENEFIT_END_DATE &gt; @PAYMENTDATE)&#xD;&#xA;  AND PA.BENEFIT_ACCOUNT_TYPE_VALUE &lt;&gt; 'RFND' &#xD;&#xA;  AND PHD.PAYMENT_SCHEDULE_ID = @PAYMENTSCHEDULEID&#xD;&#xA; ) B&#xD;&#xA;ON A.PAYEE_ACCOUNT_RETRO_PAYMENT_ID = B.PAYEE_ACCOUNT_RETRO_PAYMENT_ID">
+      <parameters>
+        <parameter ID="@PAYMENTDATE" sfwDataType="DateTime" />
+        <parameter ID="@PAYMENTSCHEDULEID" sfwDataType="int" />
+        <parameter ID="@PAYMENTOPTION" sfwDataType="string" />
+        <parameter ID="@batchscheduleid" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetRetroPaymentsForPayeeAccount" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_PAYEE_ACCOUNT_RETRO_PAYMENT WITH(NOLOCK)&#xD;&#xA;WHERE PAYEE_ACCOUNT_ID = @PAYEE_ACCOUNT_ID &#xD;&#xA;AND PAYMENT_HISTORY_HEADER_ID IS NOT NULL">
+      <parameters>
+        <parameter ID="@PAYEE_ACCOUNT_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadRetroPaymentReason" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select * from sgs_code_value where code_id=2901 and data1='N' and data2='UPMT'">
+      <parameters />
+    </query>
+    <query ID="LoadRetroPaymentStateAndFedTaxAmount" sfwQueryType="ScalarQuery" sfwDataType="int" sfwSql="SELECT ISNULL(SUM(PAPD.AMOUNT),0) AS AMOUNT FROM SGT_PAYEE_ACCOUNT_RETRO_PAYMENT_DETAIL PAPD WITH(NOLOCK)&#xA;INNER JOIN SGT_PAYEE_ACCOUNT_RETRO_PAYMENT PARP WITH(NOLOCK) ON PAPD.PAYEE_ACCOUNT_RETRO_PAYMENT_ID = PARP.PAYEE_ACCOUNT_RETRO_PAYMENT_ID&#xA;INNER JOIN SGT_PAYMENT_ITEM_TYPE PIT WITH(NOLOCK) ON PAPD.PAYMENT_ITEM_TYPE_ID = PIT.PAYMENT_ITEM_TYPE_ID&#xA;WHERE PIT.ITEM_TYPE_DIRECTION = 1 AND PIT.TAXABLE_ITEM_FLAG = 'Y' AND PARP.PAYEE_ACCOUNT_ID = @PAYEE_ACCOUNT_ID">
+      <parameters>
+        <parameter ID="@PAYEE_ACCOUNT_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="PayeeAccountRetroPaymentId" sfwType="Column" sfwValue="payee_account_retro_payment_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PayeeAccountId" sfwType="Column" sfwValue="payee_account_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="RetroPaymentTypeDescription" sfwType="Description" sfwValue="retro_payment_type_description" />
+    <attribute ID="RetroPaymentTypeId" sfwType="Column" sfwValue="retro_payment_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="2204" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="RetroPaymentTypeValue" sfwType="Column" sfwValue="retro_payment_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="EffectiveStartDate" sfwType="Column" sfwValue="effective_start_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="EffectiveEndDate" sfwType="Column" sfwValue="effective_end_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="StartDate" sfwType="Column" sfwValue="start_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="EndDate" sfwType="Column" sfwValue="end_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="PaymentOptionDescription" sfwType="Description" sfwValue="payment_option_description" />
+    <attribute ID="PaymentOptionId" sfwType="Column" sfwValue="payment_option_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="2207" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PaymentOptionValue" sfwType="Column" sfwValue="payment_option_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="GrossPaymentAmount" sfwType="Column" sfwValue="gross_payment_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="15,2" />
+    <attribute ID="NetPaymentAmount" sfwType="Column" sfwValue="net_payment_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="15,2" />
+    <attribute ID="ApprovedFlag" sfwType="Column" sfwValue="approved_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="CalculateInterestFlag" sfwType="Column" sfwValue="calculate_interest_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="PaymentHistoryHeaderId" sfwType="Column" sfwValue="payment_history_header_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AdjustmentReasonDescription" sfwType="Description" sfwValue="adjustment_reason_description" />
+    <attribute ID="AdjustmentReasonId" sfwType="Column" sfwValue="adjustment_reason_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="2901" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="AdjustmentReasonValue" sfwType="Column" sfwValue="adjustment_reason_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="IsOnlineFlag" sfwType="Column" sfwValue="is_online_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="FedTaxOptionDescription" sfwType="Description" sfwValue="fed_tax_option_description" />
+    <attribute ID="FedTaxOptionId" sfwType="Column" sfwValue="fed_tax_option_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="2218" />
+    <attribute ID="FedTaxOptionValue" sfwType="Column" sfwValue="fed_tax_option_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="FedTaxAllowance" sfwType="Column" sfwValue="fed_tax_allowance" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="FedMaritalStatusDescription" sfwType="Description" sfwValue="fed_marital_status_description" />
+    <attribute ID="FedMaritalStatusId" sfwType="Column" sfwValue="fed_marital_status_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="306" />
+    <attribute ID="FedMaritalStatusValue" sfwType="Column" sfwValue="fed_marital_status_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="FedAdditionalTaxAmount" sfwType="Column" sfwValue="fed_additional_tax_amount" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute ID="StatTaxOptionDescription" sfwType="Description" sfwValue="stat_tax_option_description" />
+    <attribute ID="StatTaxOptionId" sfwType="Column" sfwValue="stat_tax_option_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="2218" />
+    <attribute ID="StatTaxOptionValue" sfwType="Column" sfwValue="stat_tax_option_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="StatTaxAllowance" sfwType="Column" sfwValue="stat_tax_allowance" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="StatMaritalStatusDescription" sfwType="Description" sfwValue="stat_marital_status_description" />
+    <attribute ID="StatMaritalStatusId" sfwType="Column" sfwValue="stat_marital_status_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="306" />
+    <attribute ID="StatMaritalStatusValue" sfwType="Column" sfwValue="stat_marital_status_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="StatAdditionalTaxAmount" sfwType="Column" sfwValue="stat_additional_tax_amount" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecRetroTaxableAmount" sfwValue="idecRetroTaxableAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecRetroNonTaxableAmount" sfwValue="idecRetroNonTaxableAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecRetroTotalAmount" sfwValue="idecRetroTotalAmount" />
+    <attribute ID="objPayeeAccount" sfwType="Object" sfwEntity="entPayeeAccount" sfwValue="ibusPayeeAccount" />
+    <attribute sfwType="Collection" sfwEntity="entPayeeAccountRetroPaymentDetail" ID="lstPayeeAccountRetroPaymentDetail" sfwValue="iclbPayeeAccountRetroPaymentDetail" />
+    <attribute ID="SuppressWarningsFlag" sfwDataType="string" sfwPrivate="False" sfwValue="istrSupressWarningsFlag" sfwType="Property" />
+    <attribute ID="lintRetroPaymentMonths" sfwDataType="int" sfwPrivate="False" sfwValue="iintRetroPaymentMonths" sfwType="Property" />
+    <attribute ID="lstrNoStateTax" sfwDataType="string" sfwPrivate="False" sfwValue="istrNoStateTax" sfwType="Property" />
+  </attributes>
+  <objectmethods>
+    <method ID="btnApprove_Click" sfwReturnType="ArrayList" />
+    <method ID="LoadTaxOptionForFedTax" sfwReturnType="Collection" sfwObjectID="cdoCodeValue" sfwEntity="entPostRetirementDeathApplication" />
+    <method ID="LoadTaxOptionForStateTax" sfwReturnType="Collection" sfwObjectID="cdoCodeValue" sfwEntity="entPostRetirementDeathApplication" />
+    <method ID="LoadPayeeAccountRetroPaymentDetail" sfwReturnType="Void" />
+  </objectmethods>
+</entity>

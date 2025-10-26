@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entProviderReportDataMedicarePartD" sfwMainCDO="icdoProviderReportDataMedicare" sfwType="BusinessRule" sfwActive="True" sfwStatus="Review" sfwObjectID="busProviderReportDataMedicarePartD" sfwTableName="sgt_provider_report_data_medicare_part_d" sfwView="False">
+  <queries>
+    <query ID="LoadInsuranceProviderDataMedicare" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT MED.PERSON_ID,MED.FIRST_NAME,MED.LAST_NAME,MED.EFFECTIVE_DATE,MED.RECORD_TYPE_VALUE,&#xD;&#xA;MED.PREMIUM_AMOUNT,&#xD;&#xA;MED.LEP_AMOUNT,&#xD;&#xA;MED.LIS_AMOUNT,&#xD;&#xA;MED.PLAN_ID,MED.PROVIDER_ORG_ID&#xD;&#xA;FROM SGT_PROVIDER_REPORT_DATA_MEDICARE_PART_D MED WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_PROVIDER_REPORT_DATA_BATCH_REQUEST PRDBR WITH(NOLOCK) ON MED.PROVIDER_ORG_ID=PRDBR.ORG_ID&#xD;&#xA;LEFT JOIN SGT_IBS_DETAIL IBS ON MED.SUBSYSTEM_REF_ID = IBS.IBS_DETAIL_ID&#xD;&#xA;LEFT JOIN SGT_EMPLOYER_PAYROLL_DETAIL EMP ON MED.SUBSYSTEM_REF_ID = EMP.EMPLOYER_PAYROLL_DETAIL_ID&#xD;&#xA;WHERE MED.BATCH_REQUEST_ID IS NULL&#xD;&#xA;   AND PRDBR.STATUS_VALUE='NTPR' &#xD;&#xA;   AND MED.EFFECTIVE_DATE &lt;= PRDBR.EFFECTIVE_START_DATE&#xD;&#xA;   AND PRDBR.EFFECTIVE_START_DATE &lt;= @EFFECTIVEDATE&#xD;&#xA;   AND PRDBR.EFFECTIVE_END_DATE IS NULL&#xD;&#xA;   AND ISNULL(PRDBR.VISIBILITY_FLAG,'') = 'Y'&#xD;&#xA;   AND ISNULL(IBS.DETAIL_STATUS_VALUE, '') &lt;&gt; 'IGNR'">
+      <parameters>
+        <parameter ID="@EFFECTIVEDATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="LoadByOrgIDMedicare" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_PROVIDER_REPORT_DATA_MEDICARE_PART_D&#xD;&#xA;WHERE &#xD;&#xA;PROVIDER_ORG_ID=@PROVIDER_ORG_ID AND&#xD;&#xA;BATCH_REQUEST_ID IS NULL&#xD;&#xA;and effective_Date &lt;= @paymentdate">
+      <parameters>
+        <parameter ID="@PROVIDER_ORG_ID" sfwDataType="int" />
+        <parameter ID="@paymentdate" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="LoadMedicareInsuranceDataGroupByOrgIDPlanID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT &#xD;&#xA;ISNULL(INSU.PROVIDER_ORG_ID,0) PROVIDER_ORG_ID,&#xD;&#xA;ISNULL(INSU.PLAN_ID,0) PLAN_ID,&#xD;&#xA;CASE WHEN ORG.ACH_ACCOUNT_NUMBER IS NOT NULL THEN ORG.ACH_ACCOUNT_NUMBER ELSE ISNULL(ORG.ORG_CODE,'') END AS ORG_CODE,&#xD;&#xA;ISNULL(ORG.ORG_NAME,'') ORG_NAME,&#xD;&#xA;ISNULL(SUM(INSU.PREMIUM_AMOUNT),0) + ISNULL(SUM(INSU.LEP_AMOUNT),0) CONTRIBUTION_AMOUNT,PAYMENT_OPTION_VALUE&#xD;&#xA;FROM SGT_PROVIDER_REPORT_DATA_MEDICARE_PART_D INSU&#xD;&#xA;INNER JOIN SGT_ORGANIZATION ORG ON ORG.ORG_ID=INSU.PROVIDER_ORG_ID&#xD;&#xA;--INNER JOIN SGT_PROVIDER_REPORT_DATA_BATCH_REQUEST PRDBR WITH(NOLOCK) ON INSU.PROVIDER_ORG_ID=PRDBR.ORG_ID&#xD;&#xA;WHERE INSU.BATCH_REQUEST_ID IS NULL&#xD;&#xA;AND INSU.EFFECTIVE_DATE &lt;= @EFFECTIVEDATE&#xD;&#xA;AND ISNULL(PAYMENT_OPTION_VALUE,'') = 'A'&#xD;&#xA;--AND PRDBR.EFFECTIVE_START_DATE &lt;= @EFFECTIVEDATE&#xD;&#xA;GROUP BY INSU.PROVIDER_ORG_ID,INSU.PLAN_ID,ORG.ORG_CODE,ORG.ORG_NAME,PAYMENT_OPTION_VALUE,&#xD;&#xA;CASE WHEN ORG.ACH_ACCOUNT_NUMBER IS NOT NULL THEN ORG.ACH_ACCOUNT_NUMBER ELSE ISNULL(ORG.ORG_CODE,'') END">
+      <parameters>
+        <parameter ID="@EFFECTIVEDATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="ProviderReportDataMedicarePartDCompId" sfwType="Column" sfwValue="provider_report_data_medicare_part_d_comp_id" sfwIsNull="False" sfwKeyNo="1" sfwIsIdentity="True" sfwDataType="int" />
+    <attribute ID="SubsystemDescription" sfwType="Description" sfwValue="subsystem_description" />
+    <attribute ID="SubsystemId" sfwType="Column" sfwValue="subsystem_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="349" />
+    <attribute ID="SubsystemValue" sfwType="Column" sfwValue="subsystem_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="SubsystemRefId" sfwType="Column" sfwValue="subsystem_ref_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="PersonId" sfwType="Column" sfwValue="person_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="Ssn" sfwType="Column" sfwValue="ssn" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="9" />
+    <attribute ID="FirstName" sfwType="Column" sfwValue="first_name" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="LastName" sfwType="Column" sfwValue="last_name" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="ProviderOrgId" sfwType="Column" sfwValue="provider_org_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="PlanId" sfwType="Column" sfwValue="plan_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="EffectiveDate" sfwType="Column" sfwValue="effective_date" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="RecordTypeDescription" sfwType="Description" sfwValue="record_type_description" />
+    <attribute ID="RecordTypeId" sfwType="Column" sfwValue="record_type_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="1208" />
+    <attribute ID="RecordTypeValue" sfwType="Column" sfwValue="record_type_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" />
+    <attribute ID="PremiumAmount" sfwType="Column" sfwValue="premium_amount" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="11,2" />
+    <attribute ID="LisAmount" sfwType="Column" sfwValue="lis_amount" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="11,2" />
+    <attribute ID="LepAmount" sfwType="Column" sfwValue="lep_amount" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="11,2" />
+    <attribute ID="BatchRequestId" sfwType="Column" sfwValue="batch_request_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute ID="PersonName" sfwDataType="string" sfwPrivate="False" sfwValue="lstrPersonName" sfwType="Property" />
+    <attribute ID="ProviderName" sfwDataType="string" sfwPrivate="False" sfwValue="lstrProviderName" sfwType="Property" />
+    <attribute ID="ProviderNamebyOrgid" sfwDataType="string" sfwPrivate="False" sfwValue="lstrProviderNamebyOrgid" sfwType="Property" />
+    <attribute ID="LastFourDigitsOfSSN" sfwDataType="string" sfwPrivate="False" sfwValue="lstrLastFourDigitsOfSSN" sfwType="Property" />
+  </attributes>
+</entity>

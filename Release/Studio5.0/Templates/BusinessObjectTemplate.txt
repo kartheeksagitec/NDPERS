@@ -1,0 +1,125 @@
+#region Using directives
+
+using System;
+using System.Collections;
+using System.Collections.ObjectModel;
+using System.Text;
+using System.Data;
+using Sagitec.Common;
+using Sagitec.DBUtility;
+using Sagitec.BusinessObjects;
+using <bs>namespace<be>.CustomDataObjects;
+using <bs>namespace<be>.BusinessObjects;
+using <bs>namespace<be>.DataObjects;
+
+#endregion
+
+namespace <bs>namespacename<be>
+{
+    /// <summary>
+    /// Class <bs>namespacename<be>.bus<bs>Busobjectname<be>Gen:
+    /// Inherited from <bs>busBaseObject<be>, used to create new business object for main table <bs>MainObjectName<be> and its children table. 
+    /// </summary>
+	[Serializable]
+	public class bus<bs>Busobjectname<be>Gen : <bs>busBaseObject<be>
+	{
+        /// <summary>
+        /// Constructor for <bs>namespacename<be>.bus<bs>Busobjectname<be>Gen
+        /// </summary>
+		public bus<bs>Busobjectname<be>Gen()
+		{
+
+		}
+
+        /// <summary>
+        /// Gets or sets the main-table object contained in bus<bs>Busobjectname<be>Gen.
+        /// </summary>
+		public <bs>MainObjectName<be> i<bs>MainObjectName<be> { get; set; }
+
+<bs>BeginNCLoop<be>
+        /// <summary>
+        /// Gets or sets the non-collection object of type <bs>NCClassName<be>.
+        /// </summary>
+		public <bs>NCClassName<be> <bs>NCObjectName<be> { get; set; }
+
+<bs>EndNCLoop<be>
+
+<bs>BeginClLoop<be>
+        /// <summary>
+        /// Gets or sets the collection object of type <bs>ClClassName<be>. 
+        /// </summary>
+		public Collection<<bs>ClClassName<be>> <bs>ClObjectName<be> { get; set; }
+
+<bs>EndClLoop<be>
+
+<bs>BeginUtlClLoop<be>
+        /// <summary>
+        /// Gets or sets the Sagitec.Common.utlCollection object of type <bs>ClClassName<be>. 
+        /// </summary>
+		public utlCollection<<bs>ClClassName<be>> <bs>ClObjectName<be> { get; set; }
+<bs>EndUtlClLoop<be>
+
+        /// <summary>
+        /// <bs>namespace<be>.bus<bs>Busobjectname<be>Gen.Find<bs>Busobjectname<be>():
+        /// Finds a particular record from <bs>MainObjectName<be> with its primary key. 
+        /// </summary>
+        /// <param name="<bs>PkVariableName<be>">A primary key value of type <bs>PkDataType<be> of <bs>MainObjectName<be> on which search is performed.</param>
+        /// <returns>true if found otherwise false</returns>
+		public virtual bool Find<bs>Busobjectname<be>(<bs>PkDataType<be> <bs>PkVariableName<be>)
+		{
+			bool lblnResult = false;
+			if (i<bs>MainObjectName<be> == null)
+			{
+				i<bs>MainObjectName<be> = new <bs>MainObjectName<be>();
+			}
+			if (i<bs>MainObjectName<be>.SelectRow(new object[1] { <bs>PkVariableName<be> }))
+			{
+				lblnResult = true;
+			}
+			return lblnResult;
+		}
+
+<bs>BeginNCLoop<be>
+        /// <summary>
+        /// <bs>namespace<be>.bus<bs>Busobjectname<be>Gen.Load<bs>NCObjectMethodName<be>():
+        /// Loads non-collection object <bs>NCObjectName<be> of type <bs>NCClassName<be>.
+        /// </summary>
+		public virtual void Load<bs>NCObjectMethodName<be>()
+		{
+			if (<bs>NCObjectName<be> == null)
+			{
+				<bs>NCObjectName<be> = new <bs>NCClassName<be>();
+			}
+			<bs>NCObjectName<be>.Find<bs>NCClassNameFind<be>(i<bs>MainObjectName<be>.<bs>ParamField<be>);
+		}
+
+<bs>EndNCLoop<be>
+<bs>BeginClLoop<be>
+        /// <summary>
+        /// <bs>namespace<be>.bus<bs>Busobjectname<be>Gen.Load<bs>ClObjectMethodName<be>s():
+        /// Loads Collection object <bs>ClObjectName<be> of type <bs>ClClassName<be>.
+        /// </summary>
+		public virtual void Load<bs>ClObjectMethodName<be>s()
+		{
+			DataTable ldtbList = Select<cdo<bs>FormatClObjectName<be>>(
+				new string[1] { enm<bs>FormatClObjectName<be>.<bs>ForeignKey<be>.ToString() },
+				new object[1] { i<bs>MainObjectName<be>.<bs>PrimaryKey<be> }, null, <bs>SortField<be>);
+			<bs>ClObjectName<be> = GetCollection<<bs>ClClassName<be>>(ldtbList, "icdo<bs>FormatClObjectName<be>");
+		}
+
+<bs>EndClLoop<be>
+<bs>BeginUtlClLoop<be>
+        /// <summary>
+        /// <bs>namespace<be>.bus<bs>Busobjectname<be>Gen.Load<bs>ClObjectMethodName<be>s():
+        /// Loads Sagitec.Common.utlCollection object <bs>ClObjectName<be> of type cdo<bs>FormatClObjectName<be>.
+        /// </summary>
+		public virtual void Load<bs>ClObjectMethodName<be>s()
+		{
+			<bs>ClObjectName<be> = GetCollection<cdo<bs>FormatClObjectName<be>>(
+				new string[1] { enm<bs>FormatClObjectName<be>.<bs>ForeignKey<be>.ToString() }, 
+				new object[1] { i<bs>MainObjectName<be>.<bs>PrimaryKey<be> }, null, <bs>SortField<be>);
+		}
+
+<bs>EndUtlClLoop<be>
+	}
+}

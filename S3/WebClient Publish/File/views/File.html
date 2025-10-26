@@ -1,0 +1,400 @@
+﻿<div ng-controller="FileController" class="innerWrapper file-page">
+    <search-design ng-hide="selectedDesignSource" current-file="currentfile" select-element="selectElement(path)" traverse-model="traverseMainModel(path)" toggle-design="ToggleUIDesginAttribute(items, IsAction)" class="design-search"></search-design>
+    <div class="toolbox-wrapper correspondence-toolbar col-xs-3 no-right-padding" ng-hide="selectedDesignSource">
+        <div class="toolbox" ng-init="ActiveTabForFile='Items'">
+
+            <ul class="nav nav-tabs">
+                <li ng-class="ActiveTabForFile=='Items'?'active':''" ng-click="ActiveTabForFile='Items'">
+                    <a data-toggle="tab" aria-expanded="true" knowtion-id="9.1">
+                        Layouts
+                    </a>
+                </li>
+                <li ng-class="ActiveTabForFile=='Entity'?'active':''" ng-click="ActiveTabForFile='Entity'">
+                    <a data-toggle="tab" aria-expanded="false" ng-if="objFile.dictAttributes.sfwType=='Inbound'" knowtion-id="9.2">
+                        Entity
+                    </a>
+                    <a data-toggle="tab" aria-expanded="false" ng-if="objFile.dictAttributes.sfwType!='Inbound' && !(selectedCurrentRecord && selectedCurrentRecord.dictAttributes.sfwQueryID)" knowtion-id="9.3">
+                        Object Tree
+                    </a>
+                </li>
+
+            </ul>
+            <div class="tab-content">
+                <div class="page-sidebar full-height full-width" ng-class="ActiveTabForFile=='Items'?'tab-pane fade active in':'tab-pane fade'" ng-show="ActiveTabForFile=='Items'">
+
+                    <div class="page-sidebar-header correspondence-sidebar-header">
+
+                        <div class="panel-icons">
+                            <i class="fa fa-arrow-up" ng-click="moveLayoutSelectedRowUp()" ng-disabled="canmoveLayoutSelectedRowUp()" title="Move Up" />
+                            <i class="fa fa-arrow-down" ng-click="moveLayoutSelectedRowDown()" ng-disabled="canmoveLayoutSelectedRowDown()" title="Move Down" />
+
+                            <i class="fa fa-plus" ng-click="addNewRecord()" title="Add New Record" />
+                            <i class="fa fa-minus" ng-click="deleteRecord()" ng-disabled="!IsItemsSelected" title="Delete Record" />
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control input-sm" placeholder="Search" title="{{objFileRecordID}}" ng-model="objFileRecordID" />
+                    </div>
+                    <ul class="files-sidebar" id="s3-file-record-list">
+                        <li ng-show="objRecord.Name != 'ExtraFields'" ng-class="{'selected':objRecord==selectedCurrentRecord, 'bckgGrey' : objRecord.isAdvanceSearched, 'bckgGreen' : (objRecord.isAdvanceSearched && objRecord==selectedCurrentRecord)}" ng-repeat="objRecord in objFile.Elements  | filter:{dictAttributes:{ID : objFileRecordID}}" tabindex="{{objRecord.Name != 'ExtraFields'? $index:''}}" key-up-down-with-element callbackfn="SelectedRecordClick" objproperty="'objRecord'" ng-click="SelectedRecordClick(objRecord)">
+                            <a title="{{objRecord.dictAttributes.ID}}">
+                                <span ng-bind="objRecord.dictAttributes.ID"></span>
+                            </a>
+                        </li>
+                    </ul>
+
+
+                </div>
+                <div ng-class="ActiveTabForFile=='Entity'?'tab-pane fade active in':'tab-pane fade'" ng-show="ActiveTabForFile=='Entity'">
+
+                    <div class="col-xs-2 file-object-tree width-16" ng-if="objFile.dictAttributes.sfwType == 'Inbound'">
+                        <select class="form-control input-sm" title="{{entityNameForEntityTree}}" ng-model="entityNameForEntityTree" ng-change="onChangeEntityTree(entityNameForEntityTree)" ng-options="x for x in lstEntityNames"></select>
+                        <!--<entityobjecttreetemplateforcorrespondance lstentity="objFile.lstEntity" entityname="entityNameForEntityTree" isfirstlevelexpanded="true" isonetooneshow="true" isonetomanyshow="true" isattributeshow="true" isxmlmethodparamshow="true" ischeckboxvisible="false" selectedfield="objFile.SelecetdField"></entityobjecttreetemplateforcorrespondance>-->
+                        <newentityobjecttreetemplate ischeckboxvisible="false" iscollectionnextlevelload="false" lstdisplayentity="objFile.LstDisplayedEntities" selectedentityobjecttreefields="objFile.SelectedEntityObjectTreeFields" entityname="entityNameForEntityTree" selectedfield="objFile.SelecetdField"></newentityobjecttreetemplate>
+                    </div>
+                    <div class="entity-tree-wrapper" ng-if="objFile.dictAttributes.sfwType!='Inbound' && !(selectedCurrentRecord && selectedCurrentRecord.dictAttributes.sfwQueryID)">
+                        <div class="full-height">
+                            <div class="full-height outbound-file-leftmenu">
+                                <newbusobjecttreedirective lstmultipleselectedfields="objBusinessObjectTree.lstmultipleselectedfields" lstcurrentbusinessobjectproperties="objBusinessObjectTree.lstCurrentBusinessObjectProperties" lstdisplaybusinessobject="objBusinessObjectTree.lstdisplaybusinessobject" busobjectname="BusObjectName" isshowproperties="true" isshowmethods="false" isshowrules="false" selectedfield="objFile.SelecetdField"></newbusobjecttreedirective>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="correspondence-content col-xs-9 " ng-hide="selectedDesignSource || selectedCurrentRecord == undefined">
+        <div class="file-content" ng-hide="!selectedCurrentRecord">
+            <div class="page-heading" style="margin-bottom:10px;">
+                Record Layout
+            </div>
+            <div class="page-content-area record-layout-content">
+
+                <div class="page-subheading" style="margin-bottom:5px;">
+                    Record Binding
+                </div>
+                <div class="form-group no-bottom-margin">
+                    <div class="col-xs-4">
+                        <div class="form-group">
+                            <label class="control-label">ID</label>
+                            <input class="form-control" type="text" title="{{selectedCurrentRecord.dictAttributes.ID}}" ng-model="selectedCurrentRecord.dictAttributes.ID" undoredodirective model="selectedCurrentRecord" />
+                        </div>
+                    </div>
+                    <div class="col-xs-4" ng-if="objFile.dictAttributes.sfwType!='Inbound'&& selectedCurrentRecord.dictAttributes.sfwRecordType == 'AutoSkip'">
+                        <div class="form-group">
+                            <label class="control-label">Object ID</label>
+                            <businessobjectintellisensetemplate model="selectedCurrentRecord" propertyname="'dictAttributes.sfwObjectID'" undorelatedfunction="'onChangeBusinessObject'" busobjectname="selectedCurrentRecord.dictAttributes.sfwObjectID" onblurcallback="onChangeBusinessObject()"></businessobjectintellisensetemplate>
+                        </div>
+                    </div>
+                    <div class="col-xs-4" ng-if="objFile.dictAttributes.sfwType!='Inbound' && selectedCurrentRecord.dictAttributes.sfwRecordType != 'AutoSkip'">
+                        <div class="form-group">
+                            <label class="control-label">Record Collection</label>
+
+                            <select class="form-control" ng-model="selectedCurrentRecord.sfwRecordObject" ng-options="x for x in objFile.lstFileCollection" ng-change="AddonlyObjectIDtoObject(selectedCurrentRecord.sfwRecordObject)" undoredodirective undorelatedfunction="'AddonlyObjectIDtoObject'" model="selectedCurrentRecord">
+                                <option></option>
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="col-xs-4" ng-if="objFile.dictAttributes.sfwType=='Inbound'">
+                        <div class="form-group">
+                            <label class="control-label" ng-if="!selectedCurrentRecord.dictAttributes.sfwHeaderEntity.trim()">Header Entity ID</label>
+                            <label class="control-label" ng-if="selectedCurrentRecord.dictAttributes.sfwHeaderEntity.trim()">
+                                <a ng-click='NavigateToEntity(selectedCurrentRecord.dictAttributes.sfwHeaderEntity)'>Header Entity ID</a>
+                            </label>
+                            <div style="position: absolute;">
+                                <span class="info-tooltip dtc-span" ng-if="selectedCurrentRecord.errors" ng-attr-title="{{selectedCurrentRecord.errors}}" style="color:red"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                            </div>
+                            <fileintellisensetemplate model='selectedCurrentRecord' onfilechange="AddEntityIDinList(selectedCurrentRecord,true)" filename="selectedCurrentRecord.dictAttributes.sfwHeaderEntity" propertyname="'dictAttributes.sfwHeaderEntity'" filetype="'Entity'"></fileintellisensetemplate>
+
+                        </div>
+                    </div>
+                    <div class="col-xs-4">
+                        <div class="form-group">
+                            <label class="control-label">Description</label>
+                            <input class="form-control" type="text" title="{{selectedCurrentRecord.dictAttributes.sfwDescription}}" ng-model="selectedCurrentRecord.dictAttributes.sfwDescription" undoredodirective model="selectedCurrentRecord" />
+
+                        </div>
+                    </div>
+                    <div class="col-xs-4">
+                        <div class="form-group">
+                            <label class="control-label">Record Type</label>
+                            <select class="form-control" title="{{selectedCurrentRecord.dictAttributes.sfwRecordType}}" ng-model="selectedCurrentRecord.dictAttributes.sfwRecordType" ng-options="x for x in recordType" undoredodirective model="selectedCurrentRecord"
+                                    ng-change="onRecordTypeChanged()" undorelatedfunction="'onRecordTypeChanged'"></select>
+                        </div>
+                    </div>
+                    <div class="col-xs-4" ng-if="objFile.dictAttributes.sfwType=='Inbound'">
+                        <div class="form-group">
+                            <label class="control-label" ng-if="!selectedCurrentRecord.dictAttributes.sfwDetailEntity.trim()">Detail Entity ID</label>
+                            <label class="control-label" ng-if="selectedCurrentRecord.dictAttributes.sfwDetailEntity.trim()"><a ng-click='NavigateToEntity(selectedCurrentRecord.dictAttributes.sfwDetailEntity)'>Detail Entity ID</a></label>
+                            <div style="position: absolute;">
+                                <span class="info-tooltip dtc-span" ng-if="selectedCurrentRecord.errors" ng-attr-title="{{selectedCurrentRecord.errors}}" style="color:red"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+                            </div>
+                            <fileintellisensetemplate model='selectedCurrentRecord' onfilechange="AddEntityIDinList(selectedCurrentRecord,false)" filename="selectedCurrentRecord.dictAttributes.sfwDetailEntity" propertyname="'dictAttributes.sfwDetailEntity'" filetype="'Entity'"></fileintellisensetemplate>
+
+                        </div>
+                    </div>
+                    <div class="col-xs-4" ng-if="objFile.dictAttributes.sfwType=='Inbound'">
+                        <div class="form-group">
+                            <label class="control-label">Inbound Data ID</label>
+                            <input class="form-control" type="text" ng-model="selectedCurrentRecord.dictAttributes.sfwInboundDataId" ng-keydown="$root.onEntityKeyDown($event)" undoredodirective model="selectedCurrentRecord" />
+
+                        </div>
+                    </div>
+                    <div class="col-xs-4" ng-if="objFile.dictAttributes.sfwType !='Inbound' && objFile.dictAttributes.sfwXMLType=='True'">
+                        <div class="form-group">
+                            <label class="control-label">Root Start Node</label>
+                            <input class="form-control" type="text" title="{{selectedCurrentRecord.dictAttributes.sfwRootStartNode}}" ng-model="selectedCurrentRecord.dictAttributes.sfwRootStartNode" undoredodirective model="selectedCurrentRecord" />
+                        </div>
+                    </div>
+                    <div class="col-xs-4" ng-if="objFile.dictAttributes.sfwType !='Inbound' && objFile.dictAttributes.sfwXMLType=='True'">
+                        <div class="form-group">
+                            <label class="control-label">Root End Node</label>
+                            <input class="form-control" type="text" title="{{selectedCurrentRecord.dictAttributes.sfwRootEndNode}}" ng-model="selectedCurrentRecord.dictAttributes.sfwRootEndNode" undoredodirective model="selectedCurrentRecord" />
+                        </div>
+                    </div>
+                    <div class="col-xs-4" ng-if="objFile.dictAttributes.sfwType !='Inbound'">
+                        <div class="form-group">
+                            <label class="control-label full-width">Group Layout</label>
+                            <input type="checkbox" ng-true-value="'true'" ng-false-value="''" ng-model="selectedCurrentRecord.dictAttributes.sfwGroupLayout" undoredodirective model="selectedCurrentRecord" />
+                        </div>
+                    </div>
+                    <div class="col-xs-4" ng-if="objFile.dictAttributes.sfwType !='Inbound'">
+                        <div class="form-group">
+                            <label class="control-label full-width">Query ID</label>
+                            <div ng-class="selectedCurrentRecord.dictAttributes.sfwGroupLayout?'col-xs-8 no-left-padding':''">
+                                <entityqueryintellisense selecteditem="selectedCurrentRecord.dictAttributes.sfwQueryID" propertyname="'dictAttributes.sfwQueryID'" model='selectedCurrentRecord' showsearchbutton="true" onchangecallback="recordQueryChange()"></entityqueryintellisense>
+
+                            </div>
+
+                            <button class="sws-btn col-xs-4 no-margin" ng-if="selectedCurrentRecord.dictAttributes.sfwGroupLayout" ng-click="setQueryParamter(selectedCurrentRecord.dictAttributes.sfwQueryID, selectedCurrentRecord)">Set Parameter</button>
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+
+                <div class="form-group  margin-bottom-5" ng-show="objFile.IsChildOfInboundFileBase">
+                    <div class="col-xs-6 no-left-padding">
+                        <div class="col-xs-12 column-inner-align">
+
+                            <div class="page-subheading">Receive and Validate</div>
+                            <div class="checkbox-row">
+
+
+                                <input type="checkbox" ng-model="selectedCurrentRecord.dictAttributes.sfwBindToObjectOnRecieve" ng-true-value="'True' || 'true'" ng-false-value="'False' || 'false' || ''" undoredodirective model="selectedCurrentRecord"><label class="control-label">Bind To Object</label>
+
+                                <input type="checkbox" ng-model="selectedCurrentRecord.dictAttributes.sfwValidateHardErrorsOnRecieve" ng-true-value="'True' || 'true'" ng-false-value="'False' || 'false' || ''" undoredodirective model="selectedCurrentRecord"><label class="control-label">Validate Hard Errors</label>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-xs-6" ng-show="objFile.IsChildOfInboundFileBase">
+                        <div class="col-xs-12 column-inner-align">
+                            <div class="page-subheading">Validate and Upload</div>
+                            <div class="checkbox-row">
+
+                                <input type="checkbox" ng-model="selectedCurrentRecord.dictAttributes.sfwBindToObjectOnUpload" ng-true-value="'True' || 'true'" ng-false-value="'False' || 'false' || ''" undoredodirective model="selectedCurrentRecord"><label class="control-label">Bind To Object</label>
+
+
+                                <input type="checkbox" ng-model="selectedCurrentRecord.dictAttributes.sfwValidateHardErrorsOnUpload" ng-true-value="'True' || 'true'" ng-false-value="'False' || 'false' || ''" undoredodirective model="selectedCurrentRecord"><label class="control-label">Validate Hard Errors</label>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <hr ng-show="objFile.IsChildOfInboundFileBase" />
+            </div>
+
+            <div class="page-subheading">
+                Field Binding
+            </div>
+
+            <div class="table-top">
+                <input class="sws-btn" type="button" value="Add Fields" ng-click="addNewFields()" knowtion-id="9.4" />
+                <input class="sws-btn" type="button" value="Add Filler" ng-click="addNewFiller()" knowtion-id="9.5" />
+                <input class="sws-btn" type="button" value="Add Constants" ng-if="objFile.dictAttributes.sfwType != 'Inbound'" ng-click="addNewConstant()" knowtion-id="9.6" />
+
+                <div class="panel-icons">
+                    <i class="fa fa-minus" ng-click="deleteSelectedRow()" ng-disabled="!canDeleteRow()" title="Delete" style="cursor:pointer;margin:5px;float:right" />
+                    <i class="fa fa-arrow-up" ng-click="moveSelectedRowUp()" ng-disabled="canmoveSelectedRowUp()" title="Move Up" style="cursor:pointer;margin:5px;float:right" />
+                    <i class="fa fa-arrow-down" ng-click="moveSelectedRowDown()" ng-disabled="canmoveSelectedRowDown()" title="Move Down" style="cursor:pointer;margin:5px;float:right" />
+                </div>
+
+            </div>
+
+            <div ng-class="objFile.IsChildOfInboundFileBase?'field-binding-table filter-table-afternewpanel':'field-binding-table'">
+
+
+                <table class="sws-table" id="s3-file-field-list" role="grid" aria-describedby="sample_editable_1_info">
+                    <thead>
+                        <tr role="row">
+                            <th aria-controls="sample_editable_1" rowspan="1" colspan="1" ng-if="objFile.dictAttributes.sfwType=='Inbound'">
+                                Bind Header
+                            </th>
+                            <th aria-controls="sample_editable_1" rowspan="1" colspan="1" width="20%">
+                                Description
+                            </th>
+                            <th aria-controls="sample_editable_1" rowspan="1" colspan="1">
+                                Length
+                            </th>
+                            <th aria-controls="sample_editable_1" rowspan="1" colspan="1" ng-if="objFile.dictAttributes.sfwType=='Inbound'" width="15%">
+                                Entity Field
+                            </th>
+                            <th aria-controls="sample_editable_1" rowspan="1" colspan="1" ng-if="objFile.dictAttributes.sfwType=='Inbound'">
+                                DataFormat
+                            </th>
+                            <th aria-controls="sample_editable_1" rowspan="1" colspan="1" ng-if="objFile.dictAttributes.sfwType=='Inbound'">
+                                Code ID
+                            </th>
+
+                            <th aria-controls="sample_editable_1" rowspan="1" colspan="1" ng-if="objFile.dictAttributes.sfwType!='Inbound'" width="20%">
+                                Object Field
+                            </th>
+                            <th aria-controls="sample_editable_1" rowspan="1" colspan="1" ng-if="objFile.dictAttributes.sfwType!='Inbound'">
+                                Data Format
+                            </th>
+                            <th aria-controls="sample_editable_1" rowspan="1" colspan="1" ng-if="objFile.dictAttributes.sfwType!='Inbound'">
+                                Remove Decimal
+                            </th>
+                            <th aria-controls="sample_editable_1" rowspan="1" colspan="1" ng-if="objFile.dictAttributes.sfwType!='Inbound'">
+                                Constant
+                            </th>
+                            <th aria-controls="sample_editable_1" rowspan="1" colspan="1" ng-if="objFile.dictAttributes.sfwType!='Inbound'">
+                                Padding Character
+                            </th>
+                            <th aria-controls="sample_editable_1" rowspan="1" colspan="1" ng-if="objFile.dictAttributes.sfwType=='Inbound'">
+                                Data Type
+                            </th>
+                            <th aria-controls="sample_editable_1" rowspan="1" colspan="1" ng-if="objFile.dictAttributes.sfwType=='Inbound'">
+                                Min Value
+                            </th>
+                            <th aria-controls="sample_editable_1" rowspan="1" colspan="1" ng-if="objFile.dictAttributes.sfwType=='Inbound'">
+                                Max Value
+                            </th>
+                            <th aria-controls="sample_editable_1" rowspan="1" colspan="1" ng-if="objFile.dictAttributes.sfwType=='Inbound'">
+                                Max Length
+                            </th>
+                            <th aria-controls="sample_editable_1" rowspan="1" colspan="1" ng-if="objFile.dictAttributes.sfwType=='Inbound'" ng-show="objFile.IsChildOfInboundFileBase">
+                                Total Name
+                            </th>
+                            <th aria-controls="sample_editable_1" rowspan="1" colspan="1" ng-if="objFile.dictAttributes.sfwType=='Inbound'" ng-show="objFile.IsChildOfInboundFileBase">
+                                Sum
+                            </th>
+                            <th aria-controls="sample_editable_1" rowspan="1" colspan="1" ng-if="objFile.dictAttributes.sfwType=='Inbound'">
+                                Required
+                            </th>
+                            <th aria-controls="sample_editable_1" rowspan="1" colspan="1" ng-if="objFile.dictAttributes.sfwType!='Inbound'">
+                                Show Blank
+                            </th>
+
+                            <th aria-controls="sample_editable_1" rowspan="1" colspan="1" ng-if="objFile.dictAttributes.sfwType!='Inbound' && objFile.dictAttributes.sfwXMLType=='True'">
+                                Start Node
+                            </th>
+                            <th aria-controls="sample_editable_1" rowspan="1" colspan="1" ng-if="objFile.dictAttributes.sfwType!='Inbound' && objFile.dictAttributes.sfwXMLType=='True'">
+                                End Node
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="obj in selectedCurrentRecord.Elements" role="row" ng-show="obj.Name!='parameters'" tabindex="{{$index}}" key-up-down-with-element callbackfn="selectedRecordRowClick" objproperty="'obj'" ng-click="selectedRecordRowClick(obj)" ng-class="{'selected':obj==selectedCurrentRecordRow, 'bckgGrey' : obj.isAdvanceSearched, 'bckgGreen' : (obj.isAdvanceSearched && obj==selectedCurrentRecordRow)}">
+                            <td class="align-center" ng-if="objFile.dictAttributes.sfwType=='Inbound'">
+                                <input type="checkbox" ng-model="obj.dictAttributes.sfwBindHeader" ng-checked="obj.dictAttributes.sfwBindHeader" ng-true-value="'True'" ng-change="obj.dictAttributes.sfwEntityField=''" ng-false-value="'False'" undoredodirective model="obj" ng-disabled="obj.dictAttributes.sfwEntityField=='Filler'" />
+                            </td>
+                            <td width="20%">
+                                <input class="form-control input-sm" ondrop="return false" type="text" title="{{obj.dictAttributes.sfwDescription}}" ng-model="obj.dictAttributes.sfwDescription" undoredodirective model='obj' />
+                            </td>
+                            <td>
+                                <input class="form-control input-sm small-grid-value" ondrop="return false" type="text" title="{{obj.dictAttributes.sfwLength}}" ng-model="obj.dictAttributes.sfwLength" ng-disabled="selectedCurrentRecord.dictAttributes.sfwRecordType == 'CommaDelimited'" onkeypress="onlyAllowedNumbers(event)" undoredodirective model="obj" />
+                            </td>
+                            <td width="15%" ng-if="objFile.dictAttributes.sfwType=='Inbound' && obj.dictAttributes.sfwEntityField=='Filler'">
+                                <input class="form-control input-sm" type="text" ng-model="obj.dictAttributes.sfwEntityField" readonly />
+                            </td>
+                            <td width="15%" ng-if="objFile.dictAttributes.sfwType=='Inbound' && obj.dictAttributes.sfwEntityField!='Filler'">
+                                <!--<entityfieldelementintellisense modebinding="obj.dictAttributes.sfwEntityField" isshowonetomany="false" isshowcdocollection="false" model="obj" entityid="(obj.dictAttributes.sfwBindHeader == 'True')?selectedCurrentRecord.dictAttributes.sfwHeaderEntity : selectedCurrentRecord.dictAttributes.sfwDetailEntity " propertyname="'dictAttributes.sfwEntityField'"></entityfieldelementintellisense>-->
+                                <entityattributeintellisense type="'Column,Object,Property'" isloadinheritedobjects="true" modebinding="obj.dictAttributes.sfwEntityField" model="obj" entityid="(obj.dictAttributes.sfwBindHeader == 'True')?selectedCurrentRecord.dictAttributes.sfwHeaderEntity : selectedCurrentRecord.dictAttributes.sfwDetailEntity " propertyname="'dictAttributes.sfwEntityField'"></entityattributeintellisense>
+                            </td>
+                            <td ng-if="objFile.dictAttributes.sfwType=='Inbound'">
+                                <select class="form-control input-sm" ng-options="x for x in dataformats" ng-model="obj.dictAttributes.sfwDataFormat" undoredodirective model='obj'></select>
+                            </td>
+                            <td ng-if="objFile.dictAttributes.sfwType=='Inbound'">
+                                <codegroupintellisensetemplate codegrouplabelclass="col-xs-12 control-label" codegrouptextboxclass="" codegroupid='obj.dictAttributes.sfwCodeID' propertyname="'dictAttributes.sfwCodeID'" model='obj' codegrouptext="'Code Group'" showcodegrouptext='false'></codegroupintellisensetemplate>
+                            </td>
+
+                            <td width="20%" ng-if="objFile.dictAttributes.sfwType !='Inbound' && obj.dictAttributes.sfwObjectField=='Filler'">
+                                <input class="form-control input-sm" type="text" ng-model="obj.dictAttributes.sfwObjectField" readonly />
+                            </td>
+                            <td width="20%" ng-if="objFile.dictAttributes.sfwType!='Inbound'&& obj.dictAttributes.sfwObjectField!='Filler' && !iblnShowQueryIntellisense">
+                                <objecttreeintellisensetemplate insidegrid="true" isshowcollection="false" model="obj" objtree="objBusinessObject.ObjTree" objectfield="obj.dictAttributes.sfwObjectField " propertyname="'dictAttributes.sfwObjectField'" isloadmethod="false" isxmlmethod="false" allowdrop="true"
+                                                                busobject="BusObjectName" parentmodel="selectedCurrentRecord"></objecttreeintellisensetemplate>
+                            </td>
+                            <td ng-if="objFile.dictAttributes.sfwType!='Inbound'&& obj.dictAttributes.sfwObjectField!='Filler' && iblnShowQueryIntellisense">
+                                <entityquerycolumnsintellisense modebinding="obj.dictAttributes.sfwObjectField" model="obj" queryid="strQueryID" propertyname='"dictAttributes.sfwObjectField"'></entityquerycolumnsintellisense>
+                                <!--<common-intellisense collection="lstQuerySchema" is-reset="true" true selected-item="obj.dictAttributes.sfwObjectField" model="obj" propertyname="'dictAttributes.sfwObjectField'"></common-intellisense>-->
+                            </td>
+                            <td ng-if="objFile.dictAttributes.sfwType!='Inbound'">
+                                <common-intellisense collection="outBoundDataFormats" selected-item="obj.dictAttributes.sfwDataFormat" model="obj" propertyname="'dictAttributes.sfwDataFormat'"></common-intellisense>
+                                <!--<select class="form-control input-sm" ng-options="x for x in outBoundDataFormats" type="text" title="{{obj.dictAttributes.sfwDataFormat}}" ng-model="obj.dictAttributes.sfwDataFormat" undoredodirective model="obj" />-->
+                            </td>
+                            <td class="align-center" ng-if="objFile.dictAttributes.sfwType!='Inbound'">
+                                <input type="checkbox" ng-model="obj.dictAttributes.sfwRemoveDecimal" ng-checked="obj.dictAttributes.sfwRemoveDecimal" ng-true-value="'True'" ng-false-value="'False'" undoredodirective model="obj" />
+                            </td>
+                            <td ng-if="objFile.dictAttributes.sfwType!='Inbound'">
+                                <input class="form-control input-sm" type="text" title="{{obj.dictAttributes.sfwConstant}}" ng-model="obj.dictAttributes.sfwConstant" undoredodirective model="obj" />
+                            </td>
+                            <td ng-if="objFile.dictAttributes.sfwType!='Inbound'">
+                                <select class="form-control input-sm" ng-options="x for x in outboundPaddingchars" type="text" title="{{obj.dictAttributes.sfwPaddingCharacter}}" ng-model="obj.dictAttributes.sfwPaddingCharacter" undoredodirective model="obj" />
+                            </td>
+                            <td ng-if="objFile.dictAttributes.sfwType=='Inbound'">
+                                <select class="form-control input-sm" ng-options="x for x in datatypes" title="{{obj.dictAttributes.sfwDataType}}" ng-model="obj.dictAttributes.sfwDataType" ng-change="obj.dictAttributes.sfwSum = 'False'" undoredodirective model="obj"></select>
+
+                            </td>
+                            <td ng-if="objFile.dictAttributes.sfwType=='Inbound'">
+                                <input class="form-control input-sm small-grid-value" type="text" title="{{obj.dictAttributes.sfwMinValue}}" ng-model="obj.dictAttributes.sfwMinValue" onkeypress="onlyAllowedNumbers(event)" undoredodirective model="obj" />
+                            </td>
+                            <td ng-if="objFile.dictAttributes.sfwType=='Inbound'">
+                                <input type="text" class="form-control input-sm small-grid-value" title="{{obj.dictAttributes.sfwMaxValue}}" ng-model="obj.dictAttributes.sfwMaxValue" onkeypress="onlyAllowedNumbers(event)" undoredodirective model="obj" />
+                            </td>
+                            <td ng-if="objFile.dictAttributes.sfwType=='Inbound'">
+                                <input type="text" class="form-control input-sm small-grid-value" title="{{obj.dictAttributes.sfwMaxLength}}" ng-model="obj.dictAttributes.sfwMaxLength" onkeypress="onlyAllowedNumbers(event)" undoredodirective model="obj" />
+                            </td>
+                            <td ng-if="objFile.dictAttributes.sfwType=='Inbound'" ng-show="objFile.IsChildOfInboundFileBase">
+                                <input type="text" class="form-control input-sm" title="{{obj.dictAttributes.sfwTotalName}}" ng-model="obj.dictAttributes.sfwTotalName" undoredodirective model="obj" />
+
+                            </td>
+                            <td class="align-center" ng-if="objFile.dictAttributes.sfwType=='Inbound'" ng-show="objFile.IsChildOfInboundFileBase">
+                                <input type="checkbox" ng-model="obj.dictAttributes.sfwSum" ng-checked="obj.dictAttributes.sfwSum" ng-true-value="'True'" ng-disabled="obj.dictAttributes.sfwDataType != 'Numeric'" ng-false-value="'False'" undoredodirective model="obj" />
+                            </td>
+                            <td ng-if="objFile.dictAttributes.sfwType=='Inbound'">
+                                <div class="input-group align-center">
+                                    <input type="checkbox" class="input-detail-checkbox" ng-model="obj.dictAttributes.sfwRequired" ng-checked="obj.dictAttributes.sfwRequired" ng-true-value="'True'" ng-false-value="'False'" undoredodirective model="obj" />
+                                    <button ng-click="openRequireMessageDialog(obj)" class="input-detail-btn"></button>
+                                </div>
+                            </td>
+                            <td ng-if="objFile.dictAttributes.sfwType!=='Inbound'">
+                                <div class="input-group align-center">
+                                    <input type="checkbox" class="input-detail-checkbox" ng-model="obj.dictAttributes.sfwShowBlank" ng-checked="obj.dictAttributes.sfwShowBlank" ng-true-value="'True'" ng-false-value="'False'" undoredodirective model="obj" />
+                                </div>
+                            </td>
+                            <td ng-if="objFile.dictAttributes.sfwType !='Inbound' && objFile.dictAttributes.sfwXMLType=='True'">
+                                <input class="form-control input-sm" type="text" title="{{obj.dictAttributes.sfwStartNode}}" ng-model="obj.dictAttributes.sfwStartNode" undoredodirective model="obj" />
+                            </td>
+                            <td ng-if="objFile.dictAttributes.sfwType !='Inbound' && objFile.dictAttributes.sfwXMLType=='True'">
+                                <input class="form-control input-sm" type="text" title="{{obj.dictAttributes.sfwEndNode}}" ng-model="obj.dictAttributes.sfwEndNode" undoredodirective model="obj" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+    <div ng-show="selectedDesignSource" class="full-height">
+        <div id="editor_{{currentfile.FileName}}" class="ace-editor-div"></div>
+    </div>
+</div>

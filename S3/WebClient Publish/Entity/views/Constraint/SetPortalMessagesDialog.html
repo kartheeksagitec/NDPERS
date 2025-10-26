@@ -1,0 +1,48 @@
+﻿<div class="full-height">
+    <div class="portlet-body">
+        <table class="table table-striped table-bordered table-condensed">
+            <thead>
+                <tr>
+                    <th colspan="9">
+                        <a href="#" ng-click="addPortal(constraint)">
+                            <i class="fa fa-plus"></i>
+                        </a>
+                        <a href="#" ng-click="deletePortal(constraint)">
+                            <i class="fa fa-minus"></i>
+                        </a>
+                    </th>
+                </tr>
+                <tr role="heading">
+                    <th>Portal ID</th>
+                    <th>Message ID</th>
+                    <th>Message</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="portal in constraint.portalMessages" ng-class="portal === selectedPortal?'selected':''" ng-click="selectPortal(portal)">
+                    <td style="width:150px;">
+                        <common-intellisense-without-undo-redo collection="ctrl.applicationPortals" display-property-name="'name'" selected-property-name="'id'" selected-item="portal.portalName" change-callback="onPortalNameChanged(portal)" model="portal" propertyname="'portalName'" validate="true" errorprop="portal.errors.portalName"></common-intellisense-without-undo-redo>
+                    </td>
+                    <td style="width:150px;">
+                        <messageintellisensetemplate messageid='portal.messageId' propertyname="'messageId'" parameterproperty="(constraint.type === 'Rule' || constraint.type === 'Query')?'messageParameters':''" entityid="$parent.entityId"
+                                                     model='portal' showmessagetext='false' hide-message-text="true"
+                                                     onchangecallback="onPortalMessageChanged(portal)" onblurcallback="onPortalMessageChanged(portal)" messagetextboxclass="full-width fleft"
+                                                     isvalidate="true" errorprop="portal.errors.messageId" isempty="true"></messageintellisensetemplate>
+                    </td>
+                    <td>
+                        <span title="{{portal.message}}" ng-bind="portal.message"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="form-actions right">
+        <div class="col-xs-8 text-left">
+            <span class="text-danger" ng-bind="portalError"> </span><span class="text-danger" ng-if="portalError"></span>
+        </div>
+        <div class="col-xs-4">
+            <input type="button" value="OK" class="btn dialog-btn-default" ng-click="okClick()" ng-disabled="portalError" />
+            <input type="button" value="Cancel" class="btn dialog-btn" ng-click="dialog.close()" />
+        </div>
+    </div>
+</div>

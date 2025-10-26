@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<form ID="wfmPaymentElectionAdjustmentLookup" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvPayment" sfwResource="2029 " sfwType="Lookup" sfwTitle="Payment Election Adjustment Lookup" version="3.5" sfwEntity="entPaymentElectionAdjustment" sfwGridCollection="busPaymentElectionAdjustmentLookup.iclbPaymentElectionAdjustment">
+  <initialload>
+    <query ID="cdoPaymentElectionAdjustment" sfwQueryRef="entPaymentElectionAdjustment.LookUp" sfwMethodName="LoadPaymentElectionAdjustments" />
+    <query ID="cdoPaymentElectionAdjustment" sfwQueryRef="entPaymentElectionAdjustment.LookUpSubQueryPerson" />
+  </initialload>
+  <sfwTable ID="Main">
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlCriteria" sfwCaption="Criteria">
+          <sfwTable ID="tblCriteria">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capPersonId" Text="PERSLink ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtPersonId" sfwDataField="p.person_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="cdoPaymentElectionAdjustment" />
+                <sfwImageButton ID="btnRetrieve" ImageAlign="AbsMiddle" ImageUrl="~/Image/Lookup.jpg" sfwActiveForm="wfmPersonLookup" sfwMethodName="btnRetrieve_Click" sfwRelatedControl="txtPersonId" sfwSelectedIndex="PersonId" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capRepaymentTypeValue" Text="Repayment Type : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlRepaymentTypeValue" sfwDataField="repayment_type_value" sfwOperator="like" sfwQueryID="cdoPaymentElectionAdjustment" sfwLoadType="CodeGroup" sfwLoadSource="1709" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capPaymentOptionValue" Text="Payment Option : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlPaymentOptionValue" sfwDataField="payment_option_value" sfwOperator="like" sfwQueryID="cdoPaymentElectionAdjustment" sfwLoadType="CodeGroup" sfwLoadSource="1703" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capStatusValue" Text="Status : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlStatusValue" sfwDataField="a.status_value" sfwOperator="like" sfwQueryID="cdoPaymentElectionAdjustment" sfwLoadType="CodeGroup" sfwLoadSource="1710" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnSearch" sfwMethodName="btnSearch_Click" Text="Search" />
+                <sfwButton ID="btnReset" sfwMethodName="btnReset_Click" Text="Reset" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwButton ID="btnStoreSearch" sfwMethodName="btnStoreUserDefaults_Click" Text="Store Search" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlResult" sfwCaption="Search Results">
+          <sfwTable CssClass="Table" ID="tblResult">
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnOpen" sfwActiveForm="wfmPaymentElectionAdjustmentMaintenance" sfwCopyActivitySessionVariables="True" sfwMethodName="btnOpen_Click" sfwNavigationParameter="aintpaymentelectionadjustmentid=PaymentElectionAdjustmentId" sfwRelatedControl="dgrResult" Text="Open" sfwDisableViewOnly="True" />
+                <sfwButton ID="btnDelete" sfwMethodName="btnDelete_Click" sfwRelatedControl="dgrResult" Text="Delete" />
+                <sfwButton ID="btnExportExcel" sfwMethodName="btnColumnsToExport_Click" sfwRelatedControl="dgrResult" Text="Export To Excel" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwGridView AllowPaging="True" AllowSorting="True" ID="dgrResult" sfwSelection="Many" sfwSortExpression="PaymentElectionAdjustmentId desc" SortExpressionUpdated="true">
+                  <Columns>
+                    <TemplateField HeaderText="Status">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpen" sfwEntityField="StatusDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="PERSLink ID">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objPersonAccount.objPerson.PersonId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="PersonName">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objPersonAccount.objPerson.PersonName" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Total Adjustment Amount">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="TotalAdjustmentAmount" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Repayment Type">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="RepaymentTypeDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Payment Option">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="PaymentOptionDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Monthly Amount">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="MonthlyAmount" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Payment Election Adjustment ID" Visible="False" sfwShowInExportToExcel="True">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="PaymentElectionAdjustmentId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+  </sfwTable>
+  <loaddetails />
+</form>

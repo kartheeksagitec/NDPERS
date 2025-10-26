@@ -1,0 +1,55 @@
+﻿<div class="portlet-body  scenario-overflow-hide">
+
+
+    <div class="page-subheading fleft">Fields</div>
+
+    <div class="fright">
+        <a ng-click="AddColumnForCollection()" title="Add Column For Collection" ng-hide="IsExcelBasedScenario"><img src="images/Common/icon_add_dark.svg" /></a>
+        <a ng-click="DeleteObjectField()" title="Delete Column" ng-hide="IsExcelBasedScenario"><img src="images/Common/icon_delete_dark.svg" /></a>
+    </div>
+
+
+    <div class="scenario-popup-body">
+        <table cellspacing="0" cellpadding="0" id="tblScenarioObjectPopup" class="sws-table" role="grid">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Is Constant</th>
+                    <th>Input Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="field in SelectedTestField.objFieldsVM.Elements" ng-class="SelectedTestField.objFieldsVM.SelectedField == field?'selected':''" ng-click="UpdateSelectedObjectField(field)" ng-disabled="isexcelbasedscenario">
+                    <td><span ng-bind="field.dictAttributes.ID"></span></td>
+                    <td>
+                        <input type="checkbox" ng-model="field.dictAttributes.sfwIsconstant" ng-true-value="'True'" ng-false-value="'False'" undoredodirective model="field"
+                                ng-disabled="field.dictAttributes.sfwDataType=='Collection' || field.dictAttributes.sfwDataType=='List' || field.dictAttributes.sfwDataType=='Object'" 
+                               ng-change="OnConstantValueChange(field)"/>
+                    </td>
+                    <td ng-show="field.dictAttributes.sfwIsconstant =='True'">
+                        <constantintellisene constantbinding="field.dictAttributes.Value" propertyname="'dictAttributes.Value'" model="field"></constantintellisene>
+                    </td>
+                    <td ng-hide="field.dictAttributes.sfwIsconstant =='True' || field.dictAttributes.sfwDataType =='Collection' || field.dictAttributes.sfwDataType =='Object' || field.dictAttributes.sfwDataType =='List'">
+                        <input type="text" ng-disabled="isexcelbasedscenario" title="{{field.dictAttributes.Value}}" ng-model="field.dictAttributes.Value" class="form-control form-filter input-sm"
+                               undoredodirective model="field" />
+                    </td>
+                    <td ng-show="field.dictAttributes.sfwDataType =='Collection' || field.dictAttributes.sfwDataType =='List'">
+                        <a ng-click="OpenPopupForCollection(field,SelectedTestField.IsOutput)">
+                            <img src="images/Common/icon_add_dark.svg">
+                        </a>
+                    </td>
+                    <td ng-show="field.dictAttributes.sfwDataType =='Object'">
+                        <a ng-click="OpenPopupForObject(field)" title="Add Object">
+                            <img src="images/Common/icon_add_dark.svg">
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+<div class="form-actions">
+    <input type="button" value="OK" ng-click="objectInputDialog.close()" class="dialog-btn" />
+</div>

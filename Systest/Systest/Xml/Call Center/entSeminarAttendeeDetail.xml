@@ -1,0 +1,185 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entSeminarAttendeeDetail" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvCallCenter" sfwType="BusinessRule" sfwMainCDO="icdoSeminarAttendeeDetail" sfwObjectID="busSeminarAttendeeDetail" sfwTableName="sgt_seminar_attendee_detail" sfwView="False" sfwParentEntity="entExtendBase">
+  <rules>
+    <rule ID="IsActiveCentalPayrollEmployerExistsForIDB" sfwMessageId="3079" sfwExpression="(this.icdoSeminarAttendeeDetail.payment_method_value == &quot;IDBL&quot;) &amp;&amp; &#xA;!(this.IsCentralPayrollEmploymentExistsForIDB() == True)" sfwObjectBased="True" />
+    <rule ID="Rule check if attended checkbox or guest is checked" sfwMessageId="3066" sfwExpression="((this.icdoSeminarAttendeeDetail.guest_flag == &quot;Y&quot;) || &#xA;(this.icdoSeminarAttendeeDetail.attended_flag == &quot;Y&quot;)) &amp;&amp; &#xA;(this.icdoSeminarAttendeeDetail.contact_id != 0)" sfwObjectBased="True" />
+    <rule ID="Rule Check if Bill to Organization is Active" sfwMessageId="8573" sfwExpression="!(RFunc.GetValue&lt;String&gt;(this, &quot;ibusOrgToBillOrganization.icdoOrganization.status_value&quot;) == &quot;ACTV&quot;) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.icdoSeminarAttendeeDetail.org_to_bill_org_code)) &amp;&amp; &#xA;(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entOrganization.GetOrgCountByOrgCode&quot;, this.icdoSeminarAttendeeDetail.org_to_bill_org_code) &gt; 0) &amp;&amp; &#xA;((!string.IsNullOrEmpty(this.icdoSeminarAttendeeDetail.attendee_name)) || &#xA;(this.icdoSeminarAttendeeDetail.person_id != 0))" sfwObjectBased="True" />
+    <rule ID="Rule Check if Bill To Organization is Entered" sfwMessageId="8580" sfwExpression="(RFunc.GetValue&lt;Decimal&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.attendee_fee&quot;) &gt; 0) &amp;&amp; &#xA;!(!string.IsNullOrEmpty(this.icdoSeminarAttendeeDetail.org_to_bill_org_code)) &amp;&amp; &#xA;((!string.IsNullOrEmpty(this.icdoSeminarAttendeeDetail.attendee_name)) || &#xA;(this.icdoSeminarAttendeeDetail.person_id != 0)) &amp;&amp; &#xA;(this.icdoSeminarAttendeeDetail.payment_method_value != &quot;PRCK&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule Check If Dual Employment and Org Code Id is blank" sfwMessageId="10096" sfwExpression="(string.IsNullOrEmpty(this.icdoSeminarAttendeeDetail.org_to_bill_org_code)) &amp;&amp; &#xA;(this.IsMemberhavingTwoOpenEmployments() == True)" sfwObjectBased="True" />
+    <rule ID="Rule Check If OrgContactID already added to the Seminar Schedule New Mode" sfwMessageId="3051" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entSeminarAttendeeDetail.GetCountOfAttendeesBySeminarIDandOrgContactIDinNewMode&quot;, this.ibusSeminarSchedule.icdoSeminarSchedule.seminar_schedule_id, this.icdoSeminarAttendeeDetail.contact_id) &gt; 0) &amp;&amp; &#xA;!(this.iblnIsFromESS == True)" sfwObjectBased="True" />
+    <rule ID="Rule Check If OrgContactID already added to the Seminar Schedule Update Mode" sfwMessageId="3051" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entSeminarAttendeeDetail.GetCountOfAttendeesBySeminarIDandOrgContactIDinUpdateMode&quot;, this.ibusSeminarSchedule.icdoSeminarSchedule.seminar_schedule_id, this.icdoSeminarAttendeeDetail.contact_id, this.icdoSeminarAttendeeDetail.seminar_attendee_detail_id) &gt; 1)" sfwObjectBased="True" />
+    <rule ID="Rule check if PERSLink ID or Attendee name is not null" sfwMessageId="3067" sfwExpression="((!string.IsNullOrEmpty(this.icdoSeminarAttendeeDetail.attendee_name)) || &#xA;(this.icdoSeminarAttendeeDetail.person_id != 0)) &amp;&amp; &#xA;(this.icdoSeminarAttendeeDetail.guest_speaker_flag == &quot;Y&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule Check If PersonID already added to the Seminar Schedule New Mode" sfwMessageId="3050" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entSeminarAttendeeDetail.GetCountOfAttendeesBySeminarIDandPerslinkIDinNewMode&quot;, this.ibusSeminarSchedule.icdoSeminarSchedule.seminar_schedule_id, this.icdoSeminarAttendeeDetail.person_id) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="Rule Check If PersonID already added to the Seminar Schedule Update Mode" sfwMessageId="3050" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entSeminarAttendeeDetail.GetCountOfAttendeesBySeminarIDandPerslinkIDinUpdateMode&quot;, this.ibusSeminarSchedule.icdoSeminarSchedule.seminar_schedule_id, this.icdoSeminarAttendeeDetail.person_id, this.icdoSeminarAttendeeDetail.seminar_attendee_detail_id) &gt; 1)" sfwObjectBased="True" />
+    <rule ID="Rule Check if Seminar Date is less than today date" sfwMessageId="3052" sfwExpression="(RFunc.GetValue&lt;DateTime&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_date1&quot;) &gt; RFunc.CurrentDate()) &amp;&amp; &#xA;(this.icdoSeminarAttendeeDetail.attended_flag == &quot;Y&quot;)" sfwObjectBased="True" />
+    <rule ID="RULE CHECK IF THE PERSON ID AND LOGGGEDINPERSONID SAME" sfwMessageId="3045" sfwExpression="(this.CheckLoggedPerslinkId() == True)" sfwObjectBased="True" />
+    <rule ID="RULE DISABLE SAVE BUTTON" sfwExpression="(this.DisableSaveButton() == False)" sfwObjectBased="True" />
+    <rule ID="Rule If Bill To Org is InValid" sfwMessageId="8579" sfwExpression="!(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entOrganization.GetOrgCountByOrgCode&quot;, this.icdoSeminarAttendeeDetail.org_to_bill_org_code) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="Rule If OrgContactID already Exists" sfwMessageId="3051" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entSeminarAttendeeDetail.GetOrgContactIDByOrgContactIDSemIDandSemAttendeeID&quot;, this.ibusSeminarSchedule.icdoSeminarSchedule.seminar_schedule_id, this.icdoSeminarAttendeeDetail.contact_id, this.icdoSeminarAttendeeDetail.seminar_attendee_detail_id) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="Rule if OrgContactId not Exists" sfwMessageId="165" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entSeminarAttendeeDetail.GetCountOfOrgContactIDByOrgContactID&quot;, this.icdoSeminarAttendeeDetail.contact_id) &lt; 1) &amp;&amp; &#xA;(this.icdoSeminarAttendeeDetail.contact_id != 0)" sfwObjectBased="True" />
+    <rule ID="Rule if PerslinkID not Exists" sfwMessageId="164" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entPerson.VALIDATE_PERSLINK_ID&quot;, this.icdoSeminarAttendeeDetail.person_id) &lt; 1) &amp;&amp; &#xA;(this.icdoSeminarAttendeeDetail.person_id != 0)" sfwObjectBased="True" />
+    <rule ID="Rule If PersonID already Exits" sfwMessageId="3050" sfwExpression="(RFunc.ExecuteQuery&lt;Int32&gt;(&quot;entSeminarAttendeeDetail.GetPersonIDByPersonIDOrgSemIDandSemAttendeeID&quot;, this.ibusSeminarSchedule.icdoSeminarSchedule.seminar_schedule_id, this.icdoSeminarAttendeeDetail.person_id, this.icdoSeminarAttendeeDetail.seminar_attendee_detail_id) &gt; 0)" sfwObjectBased="True" />
+    <rule ID="RULE PERSON ID, ORG ID &amp; ATTENDEE NAME NULL" sfwMessageId="3041" sfwExpression="(this.icdoSeminarAttendeeDetail.person_id == 0) &amp;&amp; &#xA;(this.icdoSeminarAttendeeDetail.contact_id == 0) &amp;&amp; &#xA;(string.IsNullOrEmpty(this.icdoSeminarAttendeeDetail.attendee_name)) &amp;&amp; &#xA;(this.iblnIsFromPortal == False)" sfwObjectBased="True" />
+    <rule ID="RULE PERSON ID, ORG ID NOT NULL" sfwMessageId="3042" sfwExpression="!(this.icdoSeminarAttendeeDetail.person_id == 0) &amp;&amp; &#xA;!(this.icdoSeminarAttendeeDetail.contact_id == 0) &amp;&amp; &#xA;(!string.IsNullOrEmpty(this.icdoSeminarAttendeeDetail.attendee_name))" sfwObjectBased="True" />
+    <rule ID="RuleIfBillToOrgIdIsValid" sfwMessageId="1027" sfwExpression="(this.GetOrgCountByOrgCode() == True)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForContactIDESS" sfwExpression="((RFunc.GetValue&lt;String&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_type_value&quot;) == &quot;PAYC&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_type_value&quot;) == &quot;WELL&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_type_value&quot;) == &quot;AUTH&quot;))" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForMSSAttendeeSaveButton" sfwExpression="(this.DisableSaveButton() == False) &amp;&amp; &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_type_value&quot;) == &quot;PREN&quot;) &amp;&amp; &#xA;(this.CheckLoggedPerslinkId() == True)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForOrgToBillESS" sfwExpression="!((RFunc.GetValue&lt;String&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_type_value&quot;) == &quot;ONSC&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_type_value&quot;) == &quot;PAYC&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_type_value&quot;) == &quot;WELL&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_type_value&quot;) == &quot;PREE&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_type_value&quot;) == &quot;AUTH&quot;))" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForPersonIDESS" sfwExpression="((RFunc.GetValue&lt;String&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_type_value&quot;) == &quot;ONSC&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_type_value&quot;) == &quot;PREE&quot;))" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForRetirementAndSickLeaveFields" sfwExpression="!((RFunc.GetValue&lt;String&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_type_value&quot;) == &quot;PAYC&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_type_value&quot;) == &quot;WELL&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_type_value&quot;) == &quot;AUTH&quot;))" sfwObjectBased="True" />
+    <rule ID="VisibleRuleOrgToBillCaptionLabelESS" sfwExpression="!((RFunc.GetValue&lt;String&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_type_value&quot;) == &quot;ONSC&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_type_value&quot;) == &quot;PAYC&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_type_value&quot;) == &quot;WELL&quot;) || &#xA;(RFunc.GetValue&lt;String&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_type_value&quot;) == &quot;AUTH&quot;))" sfwObjectBased="True" />
+    <rule ID="VisibleRuleOrgToBillSponserLabelESS" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.seminar_type_value&quot;) == &quot;PREE&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule Check One Of the Payment Method Is Selected" sfwMessageId="10217" sfwExpression="(this.IsPaymentMethodSelected() == True)" sfwObjectBased="True" />
+    <rule ID="Rule Webcast Available" sfwExpression="(RFunc.GetValue&lt;String&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.webcast_available&quot;) == &quot;Y&quot;)" sfwObjectBased="True" />
+    <rule ID="Rule Chek If Attendee Fee Greater Than Zero" sfwExpression="(RFunc.GetValue&lt;Decimal&gt;(this, &quot;ibusSeminarSchedule.icdoSeminarSchedule.attendee_fee&quot;) &gt; 0)" sfwObjectBased="True" />
+  </rules>
+  <delete>
+    <property ID="lstSeminarAttendeePaymentAllocation" sfwMethodName="LoadSeminarAttendeePaymentAllocation" />
+    <property ID="lstIclcRetirementType" sfwMethodName="LoadRetirementType" />
+  </delete>
+  <checklist />
+  <initialload>
+    <item ID="RULE DISABLE SAVE BUTTON" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForOrgToBillESS" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForContactIDESS" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForPersonIDESS" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleOrgToBillSponserLabelESS" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleOrgToBillCaptionLabelESS" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForMSSAttendeeSaveButton" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForRetirementAndSickLeaveFields" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Webcast Available" sfwStatus="Active" sfwMode="All" />
+    <item ID="Rule Chek If Attendee Fee Greater Than Zero" sfwStatus="Active" sfwMode="All" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="RULE PERSON ID, ORG ID &amp; ATTENDEE NAME NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE PERSON ID, ORG ID NOT NULL" sfwMode="All" sfwStatus="Active" />
+    <item ID="RULE CHECK IF THE PERSON ID AND LOGGGEDINPERSONID SAME" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If PersonID already added to the Seminar Schedule New Mode" sfwMode="New" sfwStatus="Active" />
+    <item ID="Rule Check If OrgContactID already added to the Seminar Schedule New Mode" sfwMode="New" sfwStatus="Active" />
+    <item ID="Rule Check If PersonID already added to the Seminar Schedule Update Mode" sfwMode="Update" sfwStatus="Active" />
+    <item ID="Rule Check If OrgContactID already added to the Seminar Schedule Update Mode" sfwMode="Update" sfwStatus="Active" />
+    <item ID="Rule If PersonID already Exits" sfwMode="Update" sfwStatus="Active" />
+    <item ID="Rule If OrgContactID already Exists" sfwMode="Update" sfwStatus="Active" />
+    <item ID="Rule if PerslinkID not Exists" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule if OrgContactId not Exists" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check if Seminar Date is less than today date" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule check if PERSLink ID or Attendee name is not null" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule check if attended checkbox or guest is checked" sfwMode="All" sfwStatus="Inactive" />
+    <item ID="IsActiveCentalPayrollEmployerExistsForIDB" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check if Bill to Organization is Active" sfwMode="All" sfwStatus="Inactive" />
+    <item ID="Rule If Bill To Org is InValid" sfwMode="All" sfwStatus="Inactive" />
+    <item ID="Rule Check if Bill To Organization is Entered" sfwMode="All" sfwStatus="Inactive" />
+    <item ID="RuleIfBillToOrgIdIsValid" sfwMode="All" sfwStatus="Active" />
+    <item ID="Rule Check If Dual Employment and Org Code Id is blank" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <expressionfields />
+  <queries>
+    <query ID="GetGuestSpeakers" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select * from SGT_SEMINAR_ATTENDEE_DETAIL where guest_speaker_flag='Y' and seminar_schedule_id=@seminar_schedule_id">
+      <parameters>
+        <parameter ID="@seminar_schedule_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetCountOfAttendeesBySeminarIDandPerslinkIDinNewMode" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_SEMINAR_ATTENDEE_DETAIL WHERE SEMINAR_SCHEDULE_ID=@SEMINAR_ID AND PERSON_ID=@PERSON_ID">
+      <parameters>
+        <parameter ID="@SEMINAR_ID" sfwDataType="int" />
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetCountOfAttendeesBySeminarIDandOrgContactIDinNewMode" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_SEMINAR_ATTENDEE_DETAIL WHERE SEMINAR_SCHEDULE_ID=@SEMINAR_ID AND CONTACT_ID=@ORG_CONTACT_ID">
+      <parameters>
+        <parameter ID="@SEMINAR_ID" sfwDataType="int" />
+        <parameter ID="@ORG_CONTACT_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetCountOfAttendeesBySeminarIDandPerslinkIDinUpdateMode" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_SEMINAR_ATTENDEE_DETAIL &#xD;&#xA;WHERE SEMINAR_SCHEDULE_ID=@SEMINAR_ID AND PERSON_ID=@PERSON_ID AND SEMINAR_ATTENDEE_DETAIL_ID=@ATTEDEE_ID">
+      <parameters>
+        <parameter ID="@SEMINAR_ID" sfwDataType="int" />
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+        <parameter ID="@ATTEDEE_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetCountOfAttendeesBySeminarIDandOrgContactIDinUpdateMode" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_SEMINAR_ATTENDEE_DETAIL WHERE SEMINAR_SCHEDULE_ID=@SEMINAR_ID AND CONTACT_ID=@ORG_CONTACT_ID AND SEMINAR_ATTENDEE_DETAIL_ID=@ATTEDEE_ID">
+      <parameters>
+        <parameter ID="@SEMINAR_ID" sfwDataType="int" />
+        <parameter ID="@ORG_CONTACT_ID" sfwDataType="int" />
+        <parameter ID="@ATTEDEE_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetPersonIDByPersonIDOrgSemIDandSemAttendeeID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_SEMINAR_ATTENDEE_DETAIL &#xD;&#xA;WHERE SEMINAR_SCHEDULE_ID=@SEMINAR_ID AND PERSON_ID=@PERSON_ID AND SEMINAR_ATTENDEE_DETAIL_ID!=@ATTEDEE_ID">
+      <parameters>
+        <parameter ID="@SEMINAR_ID" sfwDataType="int" />
+        <parameter ID="@PERSON_ID" sfwDataType="int" />
+        <parameter ID="@ATTEDEE_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetOrgContactIDByOrgContactIDSemIDandSemAttendeeID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_SEMINAR_ATTENDEE_DETAIL WHERE SEMINAR_SCHEDULE_ID=@SEMINAR_ID AND CONTACT_ID=@ORG_CONTACT_ID AND SEMINAR_ATTENDEE_DETAIL_ID!=@ATTEDEE_ID">
+      <parameters>
+        <parameter ID="@SEMINAR_ID" sfwDataType="int" />
+        <parameter ID="@ORG_CONTACT_ID" sfwDataType="int" />
+        <parameter ID="@ATTEDEE_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetCountOfOrgContactIDByOrgContactID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGT_CONTACT WHERE CONTACT_ID=@ORG_CONTACT_ID">
+      <parameters>
+        <parameter ID="@ORG_CONTACT_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="SeminarAttendeeDetailId" sfwType="Column" sfwValue="seminar_attendee_detail_id" sfwIsNull="False" sfwKeyNo="1" sfwIsIdentity="True" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="SeminarScheduleId" sfwType="Column" sfwValue="seminar_schedule_id" sfwIsNull="False" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="PersonId" sfwType="Column" sfwValue="person_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="ContactId" sfwType="Column" sfwValue="contact_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="AttendeeName" sfwType="Column" sfwValue="attendee_name" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwIsSequence="False" />
+    <attribute ID="AttendedFlag" sfwType="Column" sfwValue="attended_flag" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="1" sfwIsSequence="False" />
+    <attribute ID="GuestSpeakerFlag" sfwType="Column" sfwValue="guest_speaker_flag" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="1" sfwIsSequence="False" />
+    <attribute ID="GuestFlag" sfwType="Column" sfwValue="guest_flag" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="1" sfwIsSequence="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwIsSequence="False" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwIsSequence="False" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="RetirementEffectiveDate" sfwType="Column" sfwValue="retirement_effective_date" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="DateTime" sfwIsSequence="False" />
+    <attribute ID="ConvertUnusedSickLeaveFlag" sfwType="Column" sfwValue="convert_unused_sick_leave_flag" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="1" sfwIsSequence="False" />
+    <attribute ID="PaymentMethodDescription" sfwType="Description" sfwValue="payment_method_description" />
+    <attribute ID="PaymentMethodId" sfwType="Column" sfwValue="payment_method_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="5007" sfwIsSequence="False" />
+    <attribute ID="PaymentMethodValue" sfwType="Column" sfwValue="payment_method_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwIsSequence="False" />
+    <attribute ID="OrgToBillId" sfwType="Column" sfwValue="org_to_bill_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="NoOfGuestAttending" sfwType="Column" sfwValue="no_of_guest_attending" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwIsSequence="False" />
+    <attribute ID="AttendanceMethodDescription" sfwType="Description" sfwValue="attendance_method_description" />
+    <attribute ID="AttendanceMethodId" sfwType="Column" sfwValue="attendance_method_id" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwCodeID="5008" sfwIsSequence="False" />
+    <attribute ID="AttendanceMethodValue" sfwType="Column" sfwValue="attendance_method_value" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwIsSequence="False" />
+    <attribute ID="UnusedSickLeaveHours" sfwType="Column" sfwValue="unused_sick_leave_hours" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwIsSequence="False" />
+    <attribute ID="AttendeeFeePaidFlag" sfwType="Column" sfwValue="attendee_fee_paid_flag" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwLength="1" sfwIsSequence="False" />
+    <attribute ID="NoOfWebcastAttendees" sfwType="Column" sfwValue="no_of_webcast_attendees" sfwIsNull="True" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrAttendeeDisplayName" sfwValue="icdoSeminarAttendeeDetail.istrAttendeeDisplayName" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrattendedUnChecked" sfwValue="istrattendedUnChecked" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrGuestFlagUnChecked" sfwValue="istrGuestFlagUnChecked" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="TotalPaidFeeAmount" sfwValue="TotalPaidFeeAmount" />
+    <attribute sfwDataType="string" sfwType="Property" ID="OrgToBillOrgCode" sfwValue="icdoSeminarAttendeeDetail.org_to_bill_org_code" />
+    <attribute sfwDataType="string" sfwType="Property" ID="OrgName" sfwValue="icdoSeminarAttendeeDetail.org_name" />
+    <attribute ID="objSeminarSchedule" sfwType="Object" sfwEntity="entSeminarSchedule" sfwValue="ibusSeminarSchedule" />
+    <attribute sfwDataType="string" sfwType="Property" ID="SeminarSponsor" sfwValue="seminar_sponsor" />
+    <attribute sfwType="CDOCollection" sfwEntity="entSeminarAttendeeDetailRetirementType" ID="lstIclcRetirementType" sfwValue="iclcRetirementType" />
+    <attribute sfwDataType="int" sfwType="Property" ID="GuestSpeakerContactId" sfwValue="icdoSeminarAttendeeDetail.guest_speaker_contact_id" />
+    <attribute sfwType="Collection" sfwEntity="entSeminarAttendeeDetail" ID="lstSeminarAttendeeDetail" sfwValue="iclbSeminarAttendeeDetail" />
+    <attribute ID="objOrganization" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusOrganization" />
+    <attribute sfwType="Collection" sfwEntity="entSeminarAttendeeDetail" ID="lstGuestSpeakers" sfwValue="iclbGuestSpeakers" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrGuestSpeakerFlagUnChecked" sfwValue="istrGuestSpeakerFlagUnChecked" />
+    <attribute ID="objFacilitator" sfwType="Object" sfwEntity="entUser" sfwValue="ibusFacilitator" />
+    <attribute ID="objContact" sfwType="Object" sfwEntity="entContact" sfwValue="ibusContact" />
+    <attribute ID="objOrganizerOrganization" sfwType="Object" sfwEntity="entOrganization" sfwValue="ibusOrganizerOrganization" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrEmptyString" sfwValue="icdoSeminarAttendeeDetail.istrEmptyString" />
+    <attribute sfwType="Collection" sfwEntity="entSeminarAttendeePaymentAllocation" ID="lstSeminarAttendeePaymentAllocation" sfwValue="iclbSeminarAttendeePaymentAllocation" />
+  </attributes>
+  <objectmethods>
+    <method ID="LoadActiveEmployers" sfwReturnType="Collection" sfwObjectID="cdoOrganization" sfwEntity="entOrganization" />
+    <method ID="LoadSeminarAttendeePaymentAllocation" sfwReturnType="Void" />
+    <method ID="LoadRetirementType" sfwReturnType="Void" />
+  </objectmethods>
+</entity>

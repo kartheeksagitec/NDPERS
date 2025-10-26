@@ -1,0 +1,214 @@
+﻿<div class="portlet-body">
+
+    <div class="form-body full-height">
+
+        <div class="create-object-container col-xs-12">
+            <div class="col-xs-6 full-height">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        One To One Properties
+                        <div class="fright">
+                            <a title="Delete Selected One to One Object" ng-show="canDeleteOneToOne()"><img ng-click="OnDeleteNonCollectionRowClick()" src="images/Common/icon_delete_dark.svg" /></a>
+                            <a title="Add One to One Object"><img ng-click="OnAddNonCollectionRowClick()" src="images/Common/icon_add_dark.svg" /></a>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            <li ng-repeat="oneToOne in objEntityDetail.OneToOneSelectedTableCollection" ng-click="OnSelectNonCollectionRow(oneToOne,$event)" class="full-width">
+                                <div ng-hide="oneToOne.blnDetailsGridOpen" ng-class="oneToOne.IsSelected?'consolidated-item-div-selected':'consolidated-item-div'">
+
+                                    <div class="col-xs-11 textoverflow-style"><span contenteditable="false" class="placeholder" data-placeholder="ObjectName">ibus{{oneToOne.ObjectName}}</span></div>
+                                    <div class="fright col-xs-1"><i ng-click="OnOpenOneToOneDetailClick(oneToOne)" title="Edit" class="fa fa-edit"></i></div>
+                                    <div class="col-xs-12" style="font-size: 11px;" ng-if="oneToOne.isFromTable">
+                                        <span contenteditable="false" class="placeholder" data-placeholder="Business Object Name" ng-bind="oneToOne.BusinessObjectName"></span>
+                                        |<span contenteditable="false" class="placeholder" data-placeholder="Foreigen Key" ng-bind="oneToOne.ForeigenKey"></span>
+                                        |<span contenteditable="false" class="placeholder" data-placeholder="Folder" ng-bind="oneToOne.FolderName"></span>
+                                        |<span contenteditable="false" class="placeholder" data-placeholder="Base Business Object Name" ng-bind="oneToOne.BaseBusinessObjectName"></span>
+                                    </div>
+                                    <div class="col-xs-12" style="font-size: 11px;" ng-if="!oneToOne.isFromTable">
+                                        <span contenteditable="false" class="placeholder" data-placeholder="Business Object Name" ng-bind="oneToOne.BusinessObjectName"></span>
+                                    </div>
+                                </div>
+
+                                <div ng-show="oneToOne.blnDetailsGridOpen" class="consolidated-item-div-selected marg-top-2 padding-2">
+                                    <div class="form-group marg-bottom-8">
+                                        <label class="control-label col-xs-6">Entity Name :</label>
+                                        <div class="col-xs-6">
+                                            <fileintellisensetemplate filename="oneToOne.EntityName" propertyname="'EntityName'" onfileblur="objRelatedProperties.OnEntityFieldBlur(oneToOne)" onfilechange="objRelatedProperties.isFinishDisable()" filetype="'Entity'" model="oneToOne" isinsidedialog="true"
+                                                                      isdisabled="oneToOne.IsExistingEntity"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group marg-bottom-8">
+                                        <label class="control-label col-xs-5">Object Name: </label>
+                                        <label class="control-label col-xs-1">ibus</label>
+                                        <div class="col-xs-6">
+                                            <input type="text" title="{{oneToOne.ObjectName}}" ng-model="oneToOne.ObjectName" ng-change="objRelatedProperties.isFinishDisable()" class="form-control input-sm" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group marg-bottom-8" ng-if="oneToOne.isFromTable">
+                                        <label class="control-label col-xs-6">Business Object :</label>
+                                        <div class="col-xs-6">
+                                            <businessobjectintellisensetemplate busobjectchange="onOneToOneBusObjChange()" onblurcallback="onOneToOneBusObjChange()" isonlybusobject="true" busobjectname="oneToOne.BusinessObjectName" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group marg-bottom-8" ng-if="!oneToOne.isFromTable">
+                                        <label class="control-label col-xs-6">Business Object :</label>
+                                        <div class="col-xs-6">
+                                            <input type="text" ng-disabled="true" class="form-control input-sm" ng-model="oneToOne.BusinessObjectName" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group marg-bottom-8" ng-if="oneToOne.isFromTable">
+                                        <label class="control-label col-xs-6">Foreign Key :</label>
+                                        <div class="col-xs-6">
+                                            <select title="{{oneToOne.ForeigenKey}}" ng-model="oneToOne.ForeigenKey" class="form-control input-sm" ng-options="opt for opt in oneToOne.ForeigenKeyCollection">{{opt}}</select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group marg-bottom-8" ng-if="oneToOne.isFromTable">
+                                        <label class="control-label col-xs-6">Folder :</label>
+                                        <div class="col-xs-6">
+                                            <locationintellisensetemplate locationchanged="objRelatedProperties.isFinishDisable()" locationname="oneToOne.FolderName"
+                                                                          islocationdisabled="oneToOne.IsExistingEntity"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group marg-bottom-8" ng-if="oneToOne.isFromTable">
+                                        <label class="control-label col-xs-6">Base Business Object :</label>
+                                        <div class="col-xs-6">
+                                            <businessobjectintellisensetemplate isonlybusobject="true" busobjectname="oneToOne.BaseBusinessObjectName" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group marg-bottom-8" ng-if="!oneToOne.isFromTable">
+                                        <label class="control-label col-xs-5">Attribute : </label>
+                                        <label class="control-label col-xs-1">obj</label>
+                                        <div class="col-xs-6">
+                                            <input type="text" ng-model="oneToOne.Attribute" ng-change="objRelatedProperties.isFinishDisable()" class="form-control input-sm" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <input value="OK" class="dialog-btn fright" type="button" ng-click="OnCloseOneToOneDetailClick(oneToOne)" />
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-6 full-height">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        One To Many Properties
+                        <div class="fright">
+                            <a title="Delete Selected One to Many Object" ng-show="canDeleteOneToMany()"><img ng-click="OnDeleteCollectionRowClick()" src="images/Common/icon_delete_dark.svg" /></a>
+                            <a title="Add One to Many Object"><img ng-click="OnAddCollectionRowClick()" src="images/Common/icon_add_dark.svg" /></a>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            <li ng-repeat="oneToMany in objEntityDetail.OneToManySelectedTableCollection" ng-click="OnSelectCollectionRow(oneToMany,$event)" class="full-width">
+                                <div ng-hide="oneToMany.blnDetailsGridOpen" ng-class="oneToMany.IsSelected?'consolidated-item-div-selected':'consolidated-item-div'">
+                                    <div class="col-xs-11 textoverflow-style"><span contenteditable="false" class="placeholder" data-placeholder="ObjectName">iclb{{oneToMany.ObjectName}}</span></div>
+                                    <div class="fright col-xs-1"><i class="fa fa-edit" ng-click="OnOpenOneToManyDetailClick(oneToMany)" title="Edit"></i></div>
+                                    <div class="col-xs-12" style="font-size: 11px;" ng-if="oneToMany.isFromTable">
+                                        <span contenteditable="false" class="placeholder" data-placeholder="Business Object Name" ng-bind="oneToMany.BusinessObjectName"></span>
+                                        |<span contenteditable="false" class="placeholder" data-placeholder="Foreigen Key" ng-bind="oneToMany.ForeigenKey"></span>
+                                        |<span contenteditable="false" class="placeholder" data-placeholder="Folder" ng-bind="oneToMany.FolderName"></span>
+                                        |<span contenteditable="false" class="placeholder" data-placeholder="Base Business Object Name" ng-bind="oneToMany.BaseBusinessObjectName"></span>
+                                    </div>
+                                    <div class="col-xs-12" style="font-size: 11px;" ng-if="!oneToMany.isFromTable">
+                                        <span contenteditable="false" class="placeholder" data-placeholder="Business Object Name" ng-bind="oneToMany.BusinessObjectName"></span>
+                                    </div>
+                                </div>
+                                <div ng-show="oneToMany.blnDetailsGridOpen" class="consolidated-item-div-selected marg-top-2 padding-2">
+                                    <div class="form-group marg-bottom-8">
+                                        <label class="control-label col-xs-6">Entity Name :</label>
+                                        <div class="col-xs-6">
+                                            <fileintellisensetemplate filename="oneToMany.EntityName" propertyname="'EntityName'" onfileblur="objRelatedProperties.OnEntityFieldBlur(oneToMany)" onfilechange="objRelatedProperties.isFinishDisable()" filetype="'Entity'" model="oneToMany" isinsidedialog="true"
+                                                                      isdisabled="oneToMany.IsExistingEntity"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group marg-bottom-8">
+                                        <label class="control-label col-xs-5">Object Name: </label>
+                                        <label class="control-label col-xs-1">iclb</label>
+                                        <div class="col-xs-6">
+                                            <input type="text" title="{{oneToMany.ObjectName}}" ng-model="oneToMany.ObjectName" ng-change="objRelatedProperties.isFinishDisable()" class="form-control input-sm" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group marg-bottom-8" ng-if="oneToMany.isFromTable">
+                                        <label class="control-label col-xs-6">Business Object :</label>
+                                        <div class="col-xs-6">
+                                            <businessobjectintellisensetemplate busobjectchange="onOneToManyBusObjChange()" onblurcallback="onOneToManyBusObjChange()" isonlybusobject="true" busobjectname="oneToMany.BusinessObjectName" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group marg-bottom-8" ng-if="!oneToMany.isFromTable">
+                                        <label class="control-label col-xs-6">Business Object :</label>
+                                        <div class="col-xs-6">
+                                            <input type="text" ng-model="oneToMany.BusinessObjectName" ng-disabled="true" class="form-control input-sm" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group marg-bottom-8" ng-if="!oneToMany.isFromTable">
+                                        <label class="control-label col-xs-5">Attribute : </label>
+                                        <label class="control-label col-xs-1">lst</label>
+                                        <div class="col-xs-6">
+                                            <input type="text" ng-model="oneToMany.Attribute" ng-change="objRelatedProperties.isFinishDisable()" class="form-control input-sm" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group marg-bottom-8" ng-if="oneToMany.isFromTable">
+                                        <label class="control-label col-xs-6">Sort Order :</label>
+                                        <div class="col-xs-6">
+                                            <select class="form-control input-sm" title="{{oneToMany.SortOrder}}" ng-model="oneToMany.SortOrder" ng-options="opt for opt in oneToMany.SortOrderCollection">{{opt}}</select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group marg-bottom-8" ng-if="oneToMany.isFromTable">
+                                        <label class="control-label col-xs-6">Sort Order Collection:</label>
+                                        <div class="col-xs-6">
+                                            <select class="form-control input-sm" title="{{oneToMany.DefaultSortOrder}}" ng-model="oneToMany.DefaultSortOrder" ng-options="opt for opt in oneToMany.DefaultSortOrderLst">{{opt}}</select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group marg-bottom-8" ng-if="oneToMany.isFromTable">
+                                        <label class="control-label col-xs-6">Foreign Key :</label>
+                                        <div class="col-xs-6">
+                                            <select class="form-control input-sm" title="{{oneToMany.ForeigenKey}}" ng-model="oneToMany.ForeigenKey" ng-options="opt for opt in oneToMany.ForeigenKeyCollection">{{opt}}</select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group marg-bottom-8" ng-if="oneToMany.isFromTable">
+                                        <label class="control-label col-xs-6">Folder :</label>
+                                        <div class="col-xs-6">
+                                            <locationintellisensetemplate locationchanged="objRelatedProperties.isFinishDisable()" locationname="oneToMany.FolderName"
+                                                                          islocationdisabled="oneToMany.IsExistingEntity"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group marg-bottom-8" ng-if="oneToMany.isFromTable">
+                                        <label class="control-label col-xs-6">Base Business Object :</label>
+                                        <div class="col-xs-6">
+                                            <businessobjectintellisensetemplate isonlybusobject="true" busobjectname="oneToMany.BaseBusinessObjectName" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <input value="OK" class="dialog-btn fright" type="button" ng-click="OnCloseOneToManyDetailClick(oneToMany)" />
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<div class="form-actions">
+    <div class="col-xs-6 text-left">
+        <span class="alert-error-msg" ng-if="objRelatedProperties.ErrorMessageForDisplay.length>0">{{objRelatedProperties.ErrorMessageForDisplay}}</span>
+    </div>
+    <div class="col-xs-6">
+        <input class="dialog-btn" type="button" value="Cancel" ng-click="CloseWizardClick()" />
+        <input class="dialog-btn" type="button" wz-previous="onPrevious()" value="Back" />
+        <input ng-if="showExtraFieldsTab" class="dialog-btn" type="button" value="Next" wz-next="onNext()" ng-disabled="objRelatedProperties.isEntityFinishDisable"/>
+        <input ng-if="!showExtraFieldsTab" class="dialog-btn" type="button" value="Next" disabled="disabled" />
+        <input ng-if="showExtraFieldsTab" class="dialog-btn" type="button" wz-finish value="Finish" disabled="disabled" />
+        <input ng-if="!showExtraFieldsTab" class="dialog-btn" type="button" wz-finish value="Finish" ng-disabled="objRelatedProperties.isEntityFinishDisable" />
+    </div>
+</div>

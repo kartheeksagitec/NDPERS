@@ -1,0 +1,60 @@
+﻿<div class="full-height full-width" ng-controller="BpmTerminationController">
+    <div class="col-xs-6">
+        <div class="form-group">
+            <label class="control-label marg-bottom-5">Entity ID</label>
+            <div>
+                <fileintellisensetemplate onfilechange="onEntityChanged()" onfileblur="onEntityChanged()" filename="selectedEntity" filetype="'Entity'" model="this"></fileintellisensetemplate>
+            </div>
+        </div>
+        <div class="form-group">
+            <!--Initialize Load Method labels-->
+            <label class="control-label marg-bottom-5" ng-if='!selectedVariable'>Initialize Method:</label>
+            <!--Fail Over Load Method labels-->
+            <label class="control-label marg-bottom-5" ng-if='selectedVariable'>Fail Over Method:</label>
+
+            <div>
+                <common-intellisense model="this" collection="xmlMethods" selected-item="selectedXmlMethod" display-property-name="'ID'" selected-property-name="'ID'"
+                                     update-data-callback="getXmlMethods()" change-callback="onXmlMethodChanged()" onblurcallback="onXmlMethodChanged()" is-reset="true"></common-intellisense>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label marg-bottom-5">Object Method</label>
+            <div style="width: calc(100% + 20px);margin-left: -10px;">
+                <entitymethodsintellisense entityid="selectedEntity" modelvalue="selectedObjectMethod" onchangecallback="onObjectMethodChanged()" onblurcallback="onObjectMethodChanged()"></entitymethodsintellisense>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-6">
+
+        <div class="form-group">
+            <label class="control-label marg-bottom-5">Initialization Variable</label>
+            <select class="form-control input-sm" ng-options="x.dictAttributes.id as x.dictAttributes.id for x in mapVariablesModel.Elements | filter :showVariablesByEntity()"
+                    ng-model="selectedVariable"
+                    title="{{selectedVariable}}" ng-change="onVariableChanged()">
+                <option value="">Select a variable</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="control-label marg-bottom-5">Xml Method Parameters: </label>
+            <div class='input-group full-width'>
+                <input class="form-control input-sm" type="text" readonly
+                       title="{{selectedXmlMethodParameters}}"
+                       ng-model="selectedXmlMethodParameters" />
+                <span class='input-group-addon input-sm' ng-click="setXmlMethodParameters()" style="cursor:pointer">
+                    <i title="Set Xml Method Parameters" class="fa fa-chevron-right col-xs-1"></i>
+                </span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label marg-bottom-5">Object Method Parameters: </label>
+            <div class='input-group full-width'>
+                <input class="form-control input-sm" type="text" readonly
+                       title="{{selectedObjectMethodParameters}}"
+                       ng-model="selectedObjectMethodParameters" />
+                <span class='input-group-addon input-sm' ng-click="setObjectMethodParameters()" style="cursor:pointer">
+                    <i title="Set Object Method Parameters" class="fa fa-chevron-right col-xs-1"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,324 @@
+﻿<entity ID="entBenefitCalculation" sfwActive="True" sfwStatus="Review" sfwType="BusinessRule" sfwMainCDO="icdoBenefitCalculation" sfwStatusColumn="status_value" sfwParentKeyValue="icdoBenefitCalculation.benefit_calculation_id" sfwParentKey="benefit_calculation_id" sfwErrorTable="sgt_benefit_calculation_error" sfwObjectID="busBenefitCalculation" sfwTableName="sgt_benefit_calculation" sfwView="False" sfwParentEntity="entPersonBase" sfwDataObjectID="doBenefitCalculation">
+  <rules>
+    <rule ID="IsCalculationTypeFinal" sfwMessageId="1954" sfwExpression="(this.icdoBenefitCalculation.calculation_type_value == &quot;FNAL&quot;) || &#xA;(this.icdoBenefitCalculation.calculation_type_value == &quot;ADJM&quot;) ||&#xA;(this.icdoBenefitCalculation.calculation_type_value == &quot;SBST&quot;) ||&#xA;(this.icdoBenefitCalculation.calculation_type_value == &quot;STAD&quot;)" sfwObjectBased="True" />
+    <rule ID="IsRetirementDateNull" sfwMessageId="1907" sfwExpression="(this.icdoBenefitCalculation.retirement_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsTerminationDateNull" sfwMessageId="1905" sfwExpression="(this.icdoBenefitCalculation.termination_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleIsStatusApprovedOrPendApproval" sfwExpression="(this.icdoBenefitCalculation.is_calculation_visible_flag != &quot;N&quot;) || &#xA;(this.icdoBenefitCalculation.action_status_value == &quot;APPR&quot;) || &#xA;(this.icdoBenefitCalculation.action_status_value == &quot;PAPR&quot;)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleIsStatusCancelled" sfwExpression="(this.icdoBenefitCalculation.is_calculation_visible_flag != &quot;N&quot;) &amp;&amp; &#xA;(this.icdoBenefitCalculation.action_status_value == &quot;CANC&quot;)" sfwObjectBased="True" />
+    <rule ID="IsApplicationModifiedAfterCalculation" sfwMessageId="2060" sfwExpression="(this.iblnIsApplicationModified == True)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForReviewPCD" sfwRuleType="Validation" sfwExpression="((this.icdoBenefitCalculation.benefit_account_type_value == &quot;RETR&quot; )||&#xD;&#xA;(this.icdoBenefitCalculation.benefit_account_type_value == &quot;DISA&quot;))||&#xD;&#xA;((this.icdoBenefitCalculation.benefit_account_type_value == &quot;DETH&quot;) &amp;&amp;&#xD;&#xA;  !(this.icdoBenefitCalculation.benefit_option_value==&quot;REFD&quot;))" sfwObjectBased="True" />
+    <rule ID="AreAddlContributionsReportedWhileCalcInPendingApproval" sfwRuleType="Validation" sfwExpression="(this.iblnAdditionalContributionsReported)" sfwMessageId="10305" sfwObjectBased="True" />
+    <rule ID="TentativeTFFRTIAARecordExists" sfwRuleType="Validation" sfwExpression="(this.icdoBenefitCalculation.calculation_type_value == &quot;FNAL&quot;) &amp;&amp;&#xD;&#xA;(this.CheckIFTentativeTFFROrTIAAExistsForPerson() == true)&#xD;&#xA;" sfwMessageId="1916" sfwObjectBased="True" />
+    <rule ID="VisibleRuleApplicationIdIsZero" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="this.icdoBenefitCalculation.benefit_application_id &gt; 0" />
+    <rule ID="VisibleRuleForFAS2010" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.icdoBenefitCalculation.termination_date &lt;=  DateTime(2019, 12, 31)) ||&#xA;(this.icdoBenefitCalculation.plan_id==6 ) ||&#xA;(this.icdoBenefitCalculation.plan_id==23)" />
+    <rule ID="VisibleRuleForFAS2020" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.icdoBenefitCalculation.termination_date &gt;  DateTime(2019, 12, 31)) &amp;&amp;&#xA;(this.icdoBenefitCalculation.plan_id!=6) &amp;&amp;&#xA; (this.icdoBenefitCalculation.plan_id!=23)" />
+    <rule ID="Rule - IfPersonLimit401aFlagYandOverriddenFASisZero" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(this.IsPersonReached401aFlag()) &amp;&amp;&#xA;!(this.icdoBenefitCalculation.overridden_final_average_salary &gt; 0) &amp;&amp;&#xA;(this.icdoBenefitCalculation.calculation_type_value == &quot;ESTM&quot; ||&#xA;this.icdoBenefitCalculation.calculation_type_value == &quot;FNAL&quot;)" sfwMessageId="10425" />
+    <rule ID="IsFASCalculatedBy3Consecutive12MonthsPeriod" sfwRuleType="Validation" sfwObjectBased="False" sfwExpression="(this.icdoBenefitCalculation.suppress_warnings_flag != &quot;Y&quot;) &amp;&amp;&#xA;(this.IsFASCalculatedBy3Consecutive12MonthsPeriod())" sfwMessageId="10463" />
+  </rules>
+  <delete>
+    <property ID="lstBenefitCalculationPersonAccount" sfwMethodName="LoadBenefitCalculationPersonAccountFromDB" />
+    <property ID="lstBenefitServicePurchase" sfwMethodName="LoadBenefitServicePurchase" />
+    <property ID="lstBenefitCalculationPayee" sfwMethodName="LoadBenefitCalculationPayee" />
+    <property ID="lstBenefitCalculationFASMonths" sfwMethodName="LoadFASMonths" />
+    <property ID="lstBenefitCalculationOptions" sfwMethodName="LoadBenefitCalculationOptions" />
+    <property ID="lstBenefitRHICOption" sfwMethodName="LoadBenefitRHICOption" />
+    <property ID="lstBenefitMultiplier" sfwMethodName="LoadBenefitMultiplier" />
+    <property ID="lstBenefitCalculationOtherDisBenefit" sfwMethodName="LoadBenefitCalculationOtherDisBenefit" />
+    <property ID="lstBenefitPayeeTaxWithholding" sfwMethodName="LoadBenefitPayeeTaxWithholding" />
+    <property ID="lstBenefitGHDVDeduction" sfwMethodName="LoadBenefitGhdvDeduction" />
+    <property ID="lstBenefitLifeDeduction" sfwMethodName="LoadBenefitLifeDeduction" />
+    <property ID="lstBenefitLTCDeduction" sfwMethodName="LoadBenefitLTCDeduction" />
+    <property ID="lstBenefitFASIndexing" sfwMethodName="LoadBenefitFasIndexing" />
+    <property ID="lstBenefitDeductionSummary" sfwMethodName="LoadBenefitDeductionSummaryToDelete" />
+    <property ID="lstBenefitCalculationError" sfwMethodName="LoadBenefitCalculationError" />
+  </delete>
+  <checklist />
+  <initialload>
+    <item ID="VisibleRuleIsStatusApprovedOrPendApproval" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleIsStatusCancelled" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForReviewPCD" sfwStatus="Active" sfwMode="All" />
+    <item ID="VisibleRuleApplicationIdIsZero" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror>
+    <item ID="IsApplicationModifiedAfterCalculation" sfwMode="All" sfwStatus="Active" />
+    <item ID="AreAddlContributionsReportedWhileCalcInPendingApproval" sfwStatus="Active" sfwMode="All" />
+    <item ID="TentativeTFFRTIAARecordExists" sfwStatus="Active" sfwMode="All" />
+    <item ID="IsFASCalculatedBy3Consecutive12MonthsPeriod" sfwMode="All" sfwStatus="Active" />
+  </softerror>
+  <harderror>
+    <item ID="IsTerminationDateNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsRetirementDateNull" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete>
+    <item ID="IsCalculationTypeFinal" sfwMode="All" sfwStatus="Active" />
+  </validatedelete>
+  <groupslist />
+  <updateablecdo />
+  <commonproperties />
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_BENEFIT_CALCULATION  SBC WITH(NOLOCK)&#xA;INNER JOIN SGT_PERSON PER WITH(NOLOCK) ON PER.PERSON_ID=SBC.PERSON_ID&#xA;INNER JOIN SGT_PLAN PLN WITH(NOLOCK) ON PLN.PLAN_ID=SBC.PLAN_ID&#xA;INNER JOIN SGS_CODE_VALUE SCV WITH(NOLOCK) ON SCV.CODE_VALUE=SBC.STATUS_VALUE AND SCV.CODE_ID=SBC.STATUS_ID&#xA;WHERE ISNULL(SBC.IS_CALCULATION_VISIBLE_FLAG,'Y')&lt;&gt;'N'&#xA;ORDER BY SBC.BENEFIT_CALCULATION_ID desc,SCV.CODE_VALUE_ORDER">
+      <parameters />
+    </query>
+    <query ID="LoadServicePurchase" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select Service_Purchase_Header_Id,Person_Id,Service_Purchase_Type_Value,Service_Purchase_Type_ID,PRORATED_PSC&#xD;&#xA; from SGT_SERVICE_PURCHASE_HEADER&#xD;&#xA;Where person_id=@personid and plan_id=@planid&#xD;&#xA;Service_Purchase_Type_Value in ('CONS','USRA','UUSL')&#xD;&#xA;and Action_Status_Value in ('INPY')&#xD;&#xA;and Action_Status_Value in ('APPR','INPY')">
+      <parameters>
+        <parameter ID="@personid" sfwDataType="int" />
+        <parameter ID="@planid" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="DeleteBenefitCalculation" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="DELETE FROM SGT_BENEFIT_CALCULATION_FAS_MONTHS WHERE BENEFIT_CALCULATION_ID=@BENEFIT_CALCULATION_ID&#xD;&#xA;DELETE FROM SGT_BENEFIT_CALCULATION_ERROR WHERE BENEFIT_CALCULATION_ID=@BENEFIT_CALCULATION_ID&#xD;&#xA;DELETE FROM SGT_BENEFIT_CALCULATION_OPTIONS WHERE BENEFIT_CALCULATION_ID=@BENEFIT_CALCULATION_ID&#xD;&#xA;DELETE FROM SGT_BENEFIT_CALCULATION_OTHER_DIS_BENEFIT WHERE BENEFIT_CALCULATION_ID=@BENEFIT_CALCULATION_ID&#xD;&#xA;DELETE FROM SGT_BENEFIT_CALCULATION_PAYEE WHERE BENEFIT_CALCULATION_ID=@BENEFIT_CALCULATION_ID&#xD;&#xA;DELETE FROM SGT_BENEFIT_CALCULATION_PERSON_ACCOUNT WHERE BENEFIT_CALCULATION_ID=@BENEFIT_CALCULATION_ID&#xD;&#xA;DELETE FROM SGT_BENEFIT_DEDUCTION_SUMMARY WHERE BENEFIT_CALCULATION_ID=@BENEFIT_CALCULATION_ID&#xD;&#xA;DELETE FROM SGT_BENEFIT_FAS_INDEXING WHERE BENEFIT_CALCULATION_ID=@BENEFIT_CALCULATION_ID&#xD;&#xA;DELETE FROM SGT_BENEFIT_GHDV_DEDUCTION WHERE BENEFIT_CALCULATION_ID=@BENEFIT_CALCULATION_ID&#xD;&#xA;DELETE FROM SGT_BENEFIT_LIFE_DEDUCTION WHERE BENEFIT_CALCULATION_ID=@BENEFIT_CALCULATION_ID&#xD;&#xA;DELETE FROM SGT_BENEFIT_LTC_DEDUCTION WHERE BENEFIT_CALCULATION_ID=@BENEFIT_CALCULATION_ID&#xD;&#xA;DELETE FROM SGT_BENEFIT_MULTIPLIER WHERE BENEFIT_CALCULATION_ID=@BENEFIT_CALCULATION_ID&#xD;&#xA;DELETE FROM SGT_BENEFIT_PAYEE_TAX_WITHHOLDING WHERE BENEFIT_CALCULATION_ID=@BENEFIT_CALCULATION_ID&#xD;&#xA;DELETE FROM SGT_BENEFIT_RHIC_OPTION WHERE BENEFIT_CALCULATION_ID=@BENEFIT_CALCULATION_ID&#xD;&#xA;DELETE FROM SGT_BENEFIT_SERVICE_PURCHASE WHERE BENEFIT_CALCULATION_ID=@BENEFIT_CALCULATION_ID&#xD;&#xA;DELETE FROM SGT_BENEFIT_CALCULATION WHERE BENEFIT_CALCULATION_ID=@BENEFIT_CALCULATION_ID">
+      <parameters>
+        <parameter ID="@BENEFIT_CALCULATION_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetNumberofPayments" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT TOP 1 NUMBER_OF_PAYMENTS&#xD;&#xA;FROM SGT_BENEFIT_PROVISION_EXCLUSION&#xD;&#xA;WHERE @SUMOFAGE &gt;=MINIMUM_AGE AND @SUMOFAGE &lt;=MAXIMUM_AGE&#xD;&#xA;AND EXCLUSION_CALC_PAYMENT_TYPE_VALUE=@EXCLUSIONPAYMENTTYPE&#xD;&#xA;AND EFFECTIVE_DATE &lt;=@EFFECTIVE_DATE&#xD;&#xA;ORDER BY EFFECTIVE_DATE DESC&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@SUMOFAGE" sfwDataType="int" />
+        <parameter ID="@EXCLUSIONPAYMENTTYPE" sfwDataType="string" />
+        <parameter ID="@EFFECTIVE_DATE" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="LoadFASMonths" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * FROM SGT_BENEFIT_CALCULATION_FAS_MONTHS FAS&#xD;&#xA;LEFT JOIN SGT_PERSON_ACCOUNT SPA ON SPA.PERSON_ACCOUNT_ID=FAS.PERSON_ACCOUNT_ID&#xD;&#xA;LEFT JOIN SGT_PLAN PLN ON PLN.PLAN_ID=SPA.PLAN_ID&#xD;&#xA;WHERE FAS.BENEFIT_CALCULATION_ID=@BENEFIT_CALCULATION_ID&#xD;&#xA;and FAS_LOGIC_VALUE=@FAS_LOGIC_VALUE&#xD;&#xA;ORDER BY YEAR DESC,MONTH DESC">
+      <parameters>
+        <parameter ID="@BENEFIT_CALCULATION_ID" sfwDataType="int" />
+        <parameter ID="@FAS_LOGIC_VALUE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="LoadApplicants" sfwQueryType="SubSelectQuery" sfwSql="SELECT * FROM SGT_BENEFIT_CALCULATION_PAYEE PAY &#xD;&#xA;LEFT JOIN SGT_PERSON APP ON APP.PERSON_ID=PAY.PAYEE_PERSON_ID &#xD;&#xA;LEFT JOIN SGT_ORGANIZATION ORG ON ORG.ORG_ID=PAY.PAYEE_ORG_ID &#xD;&#xA;WHERE PAY.BENEFIT_CALCULATION_ID=SBC.BENEFIT_CALCULATION_ID ">
+      <parameters />
+    </query>
+    <query ID="GetBenefitAccountID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="&#xD;&#xA;SELECT TOP 1 BENEFIT_ACCOUNT_ID &#xD;&#xA;FROM&#xD;&#xA;(SELECT PAYEE.BENEFIT_ACCOUNT_ID,&#xD;&#xA;(SELECT TOP 1 DATA2 FROM SGT_PAYEE_ACCOUNT_STATUS PAYSTAT&#xD;&#xA;INNER JOIN SGS_CODE_VALUE SCV ON PAYSTAT.STATUS_VALUE=SCV.CODE_VALUE AND PAYSTAT.STATUS_ID=SCV.CODE_ID&#xD;&#xA;WHERE PAYEE_ACCOUNT_ID=PAYEE.PAYEE_ACCOUNT_ID  ORDER BY STATUS_EFFECTIVE_DATE DESC) AS PAYEE_STATUS&#xD;&#xA;FROM &#xD;&#xA;SGT_PAYEE_ACCOUNT PAYEE LEFT JOIN&#xD;&#xA;SGT_BENEFIT_APPLICATION APP ON PAYEE.APPLICATION_ID=APP.BENEFIT_APPLICATION_ID&#xD;&#xA;LEFT JOIN SGT_BENEFIT_APPLICATION_PERSON_ACCOUNT APPACC  ON APP.BENEFIT_APPLICATION_ID=APPACC.BENEFIT_APPLICATION_ID&#xD;&#xA; AND ISNULL(IS_APPLICATION_PERSON_ACCOUNT_FLAG,'N') ='Y'&#xD;&#xA;LEFT JOIN SGT_BENEFIT_DRO_CALCULATION  DROC (NOLOCK) ON PAYEE.DRO_CALCULATION_ID = DROC.DRO_CALCULATION_ID&#xD;&#xA;LEFT JOIN DBO.SGT_BENEFIT_DRO_APPLICATION DROA (NOLOCK) ON PAYEE.DRO_APPLICATION_ID = DROA.DRO_APPLICATION_ID&#xD;&#xA;LEFT JOIN SGT_PERSON_ACCOUNT DROAC (NOLOCK) ON DROA.MEMBER_PERSLINK_ID=DROAC.PERSON_ID AND DROA.PLAN_ID=DROAC.PLAN_ID AND DROAC.PLAN_PARTICIPATION_STATUS_VALUE &lt;&gt; 'WTN1'&#xD;&#xA;&#xD;&#xA;WHERE  case when APPACC.PERSON_ACCOUNT_ID IS NOT NULL THEN &#xD;&#xA;   APPACC.PERSON_ACCOUNT_ID else&#xD;&#xA;   droac.PERSON_ACCOUNT_ID  end = @PERSON_ACCOUNT_ID &#xD;&#xA;AND &#xD;&#xA; payee.BENEFIT_ACCOUNT_TYPE_VALUE=@BENEFIT_TYPE) AS INNERTAB&#xD;&#xA;WHERE PAYEE_STATUS &lt;&gt; 'CNLD'">
+      <parameters>
+        <parameter ID="@PERSON_ACCOUNT_ID" sfwDataType="int" />
+        <parameter ID="@BENEFIT_TYPE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="GetBenefitAccount" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT TOP 1 *&#xD;&#xA;FROM&#xD;&#xA;(SELECT PAYEE.BENEFIT_ACCOUNT_ID,&#xD;&#xA;(SELECT TOP 1 DATA2 FROM SGT_PAYEE_ACCOUNT_STATUS PAYSTAT&#xD;&#xA;INNER JOIN SGS_CODE_VALUE SCV ON PAYSTAT.STATUS_VALUE=SCV.CODE_VALUE AND PAYSTAT.STATUS_ID=SCV.CODE_ID&#xD;&#xA;WHERE PAYEE_ACCOUNT_ID=PAYEE.PAYEE_ACCOUNT_ID  ORDER BY STATUS_EFFECTIVE_DATE DESC) AS PAYEE_STATUS&#xD;&#xA;FROM &#xD;&#xA;SGT_PAYEE_ACCOUNT PAYEE LEFT JOIN&#xD;&#xA;SGT_BENEFIT_APPLICATION APP ON PAYEE.APPLICATION_ID=APP.BENEFIT_APPLICATION_ID&#xD;&#xA;LEFT JOIN SGT_BENEFIT_APPLICATION_PERSON_ACCOUNT APPACC  ON APP.BENEFIT_APPLICATION_ID=APPACC.BENEFIT_APPLICATION_ID&#xD;&#xA; AND ISNULL(IS_APPLICATION_PERSON_ACCOUNT_FLAG,'N') ='Y'&#xD;&#xA;LEFT JOIN SGT_BENEFIT_DRO_CALCULATION  DROC (NOLOCK) ON PAYEE.DRO_CALCULATION_ID = DROC.DRO_CALCULATION_ID&#xD;&#xA;LEFT JOIN DBO.SGT_BENEFIT_DRO_APPLICATION DROA (NOLOCK) ON PAYEE.DRO_APPLICATION_ID = DROA.DRO_APPLICATION_ID&#xD;&#xA;LEFT JOIN SGT_PERSON_ACCOUNT DROAC (NOLOCK) ON DROA.MEMBER_PERSLINK_ID=DROAC.PERSON_ID AND DROA.PLAN_ID=DROAC.PLAN_ID AND DROAC.PLAN_PARTICIPATION_STATUS_VALUE &lt;&gt; 'WTN1'&#xD;&#xA;&#xD;&#xA;WHERE  case when APPACC.PERSON_ACCOUNT_ID IS NOT NULL THEN &#xD;&#xA;   APPACC.PERSON_ACCOUNT_ID else&#xD;&#xA;   droac.PERSON_ACCOUNT_ID  end = @PERSON_ACCOUNT_ID &#xD;&#xA;AND &#xD;&#xA; payee.BENEFIT_ACCOUNT_TYPE_VALUE=@BENEFIT_TYPE) AS INNERTAB&#xD;&#xA;WHERE PAYEE_STATUS &lt;&gt; 'CNLD'&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@PERSON_ACCOUNT_ID" sfwDataType="int" />
+        <parameter ID="@BENEFIT_TYPE" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="LoadPayeeAccountForRuleConversion" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT *&#xD;&#xA;FROM SGT_PAYEE_ACCOUNT PAY WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_BENEFIT_APPLICATION   APP WITH(NOLOCK) ON PAY.APPLICATION_ID= APP.BENEFIT_APPLICATION_ID&#xD;&#xA;LEFT OUTER JOIN SGT_BENEFIT_CALCULATION  CAL WITH(NOLOCK) ON PAY.CALCULATION_ID=CAL.BENEFIT_CALCULATION_ID AND CAL.BENEFIT_APPLICATION_ID=APP.BENEFIT_APPLICATION_ID&#xD;&#xA; INNER JOIN SGT_BENEFIT_APPLICATION_PERSON_ACCOUNT   APPLACC WITH(NOLOCK) ON APPLACC.BENEFIT_APPLICATION_ID=APP.BENEFIT_APPLICATION_ID AND ISNULL(IS_APPLICATION_PERSON_ACCOUNT_FLAG,'N') ='Y'&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT    PERACC WITH(NOLOCK) ON &#xD;&#xA;PERACC.PERSON_ACCOUNT_ID=APPLACC.PERSON_ACCOUNT_ID&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT_RETIREMENT PAR WITH(NOLOCK) ON PERACC.PERSON_ACCOUNT_ID = PAR.PERSON_ACCOUNT_ID --PIR14646&#xD;&#xA;INNER JOIN SGT_PERSON    PER WITH(NOLOCK) ON PER.PERSON_ID=PERACC.PERSON_ID&#xD;&#xA;INNER JOIN SGT_PLAN   PLN WITH(NOLOCK) ON PERACC.PLAN_ID= PLN.PLAN_ID INNER JOIN &#xD;&#xA;(SELECT PAYEE_ACCOUNT_ID,(SELECT TOP 1 STATUS_VALUE FROM&#xD;&#xA;SGT_PAYEE_ACCOUNT_STATUS PAYSTAT WITH(NOLOCK) WHERE PAYSTAT.PAYEE_ACCOUNT_ID=PAY.PAYEE_ACCOUNT_ID ORDER BY PAYSTAT.STATUS_EFFECTIVE_DATE DESC, PAYSTAT.PAYEE_ACCOUNT_STATUS_ID DESC) STATUS_VALUE&#xD;&#xA; FROM SGT_PAYEE_ACCOUNT PAY&#xD;&#xA;WHERE PAY.BENEFIT_ACCOUNT_TYPE_VALUE='DISA') AS TEMP ON TEMP.PAYEE_ACCOUNT_ID=PAY.PAYEE_ACCOUNT_ID AND TEMP.STATUS_VALUE='RCDS' &#xD;&#xA;Where (WORKFLOW_AGE_CONVERSION_FLAG is null&#xD;&#xA;or WORKFLOW_AGE_CONVERSION_FLAG = 'N') and (WORKFLOW_RULE_CONVERSION_FLAG is null&#xD;&#xA;or WORKFLOW_RULE_CONVERSION_FLAG = 'N') and pln.plan_id in&#xD;&#xA;(1,2,20,4,5,26,27,3,29)">
+      <parameters />
+    </query>
+    <query ID="LoadPayeeAccountForAgeConversion" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT *&#xD;&#xA;FROM SGT_PAYEE_ACCOUNT  PAY WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_BENEFIT_APPLICATION  APP WITH(NOLOCK)ON PAY.APPLICATION_ID=APP.BENEFIT_APPLICATION_ID &#xD;&#xA;LEFT OUTER JOIN SGT_BENEFIT_CALCULATION  CAL WITH(NOLOCK) ON PAY.CALCULATION_ID=CAL.BENEFIT_CALCULATION_ID AND CAL.BENEFIT_APPLICATION_ID=APP.BENEFIT_APPLICATION_ID&#xD;&#xA;INNER JOIN SGT_BENEFIT_APPLICATION_PERSON_ACCOUNT  APPACC WITH(NOLOCK)ON APPACC.BENEFIT_APPLICATION_ID=APP.BENEFIT_APPLICATION_ID AND ISNULL(IS_APPLICATION_PERSON_ACCOUNT_FLAG,'N') ='Y'&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT  PERACC WITH(NOLOCK) ON &#xD;&#xA;PERACC.PERSON_ACCOUNT_ID=APPACC.PERSON_ACCOUNT_ID&#xD;&#xA;INNER JOIN SGT_PERSON  PER WITH(NOLOCK) ON PER.PERSON_ID=PERACC.PERSON_ID&#xD;&#xA;INNER JOIN SGT_PLAN  PLN WITH(NOLOCK) ON PERACC.PLAN_ID= PLN.PLAN_ID&#xD;&#xA;INNER JOIN &#xD;&#xA;(SELECT PAYEE_ACCOUNT_ID,(SELECT TOP 1 STATUS_VALUE FROM&#xD;&#xA;SGT_PAYEE_ACCOUNT_STATUS PAYSTAT WITH(NOLOCK) WHERE PAYSTAT.PAYEE_ACCOUNT_ID=PAY.PAYEE_ACCOUNT_ID ORDER BY PAYSTAT.STATUS_EFFECTIVE_DATE DESC, PAYSTAT.PAYEE_ACCOUNT_STATUS_ID DESC) STATUS_VALUE&#xD;&#xA; FROM SGT_PAYEE_ACCOUNT PAY&#xD;&#xA;WHERE PAY.BENEFIT_ACCOUNT_TYPE_VALUE='DISA') AS TEMP ON TEMP.PAYEE_ACCOUNT_ID=PAY.PAYEE_ACCOUNT_ID AND&#xD;&#xA; TEMP.STATUS_VALUE='RCDS' Where (WORKFLOW_AGE_CONVERSION_FLAG is null&#xD;&#xA;or WORKFLOW_AGE_CONVERSION_FLAG = 'N')">
+      <parameters />
+    </query>
+    <query ID="UpdateBenefitCalculation" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="UPDATE BC&#xD;&#xA; SET STATUS_VALUE='PROC',&#xD;&#xA; MODIFIED_BY='PERSLink Batch'+' '+ convert(nvarchar,@batchscheduleid),&#xD;&#xA; MODIFIED_DATE = GETDATE(),&#xD;&#xA; UPDATE_SEQ = UPDATE_SEQ+1&#xD;&#xA; FROM SGT_BENEFIT_CALCULATION BC INNER JOIN&#xD;&#xA;(&#xD;&#xA; SELECT PA.CALCULATION_ID FROM &#xD;&#xA; SGT_PAYEE_ACCOUNT PA   &#xD;&#xA; INNER JOIN SGT_PAYMENT_HISTORY_HEADER PHH&#xD;&#xA;    ON PA.PAYEE_ACCOUNT_ID=PHH.PAYEE_ACCOUNT_ID AND &#xD;&#xA;      PHH.PAYMENT_SCHEDULE_ID=@PAYMENTSCHEDULEID&#xD;&#xA; WHERE PHH.PAYEE_ACCOUNT_ID IS NOT NULL AND PA.CALCULATION_ID IS NOT NULL&#xD;&#xA;)&#xD;&#xA;AS PBA &#xD;&#xA;ON BC.BENEFIT_CALCULATION_ID =PBA.CALCULATION_ID&#xD;&#xA;WHERE ISNULL(STATUS_VALUE,'') &lt;&gt; 'PROC' &#xD;&#xA;&#xD;&#xA;&#xD;&#xA;UPDATE BC&#xD;&#xA; SET STATUS_VALUE='PROC',&#xD;&#xA; MODIFIED_BY='PERSLink Batch'+' '+ convert(nvarchar,@batchscheduleid),&#xD;&#xA; MODIFIED_DATE = GETDATE(),&#xD;&#xA; UPDATE_SEQ = UPDATE_SEQ+1&#xD;&#xA; FROM SGT_BENEFIT_CALCULATION BC INNER JOIN &#xD;&#xA; ( SELECT BENEFIT_APPLICATION_ID FROM SGT_BENEFIT_APPLICATION&#xD;&#xA;  WHERE ISNULL(ACTION_STATUS_VALUE,'') = 'VERF' &#xD;&#xA; AND ISNULL(STATUS_VALUE,'') = 'PROC' AND (PLAN_ID = 7 OR PLAN_ID = 28 OR PLAN_ID = 30)&#xD;&#xA; AND PAYMENT_DATE &lt;= (SELECT PAYMENT_DATE FROM SGT_PAYMENT_SCHEDULE WHERE PAYMENT_SCHEDULE_ID = @PAYMENTSCHEDULEID) -- ADDED&#xD;&#xA;) BA ON BA.BENEFIT_APPLICATION_ID = BC.BENEFIT_APPLICATION_ID&#xD;&#xA; WHERE ISNULL(BC.ACTION_STATUS_VALUE,'') = 'APPR' &#xD;&#xA; and ISNULL(BC.STATUS_VALUE,'') &lt;&gt; 'PROC' AND (PLAN_ID = 7 OR PLAN_ID = 28 OR PLAN_ID = 30)">
+      <parameters>
+        <parameter ID="@PAYMENTSCHEDULEID" sfwDataType="int" />
+        <parameter ID="@batchscheduleid" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="UpdateContributionTransferFlagToC" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql=" UPDATE SGT_PERSON_ACCOUNT_RETIREMENT_CONTRIBUTION&#xD;&#xA;SET TRANSFER_FLAG_VALUE = 'C',&#xD;&#xA;MODIFIED_BY = @USER_ID&#xD;&#xA;,MODIFIED_DATE = GETDATE()&#xD;&#xA;,UPDATE_SEQ = UPDATE_SEQ + 1&#xD;&#xA;WHERE PERSON_ACCOUNT_ID = @PERSON_ACCOUNT_ID&#xD;&#xA;AND TRANSFER_FLAG_VALUE IS NULL&#xD;&#xA;AND SUBSYSTEM_VALUE &lt;&gt; 'PMNT'">
+      <parameters>
+        <parameter ID="@PERSON_ACCOUNT_ID" sfwDataType="int" />
+        <parameter ID="@USER_ID" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="UpdateContributionTransferFlagToNull" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="DECLARE @PERSON_ACCOUNT_ID INT;&#xD;&#xA;&#xD;&#xA;SET @PERSON_ACCOUNT_ID = &#xD;&#xA;(&#xD;&#xA;&#x9;SELECT TOP 1 BPA.PERSON_ACCOUNT_ID &#xD;&#xA;FROM SGT_BENEFIT_APPLICATION BA&#xD;&#xA;JOIN SGT_BENEFIT_APPLICATION_PERSON_ACCOUNT BPA ON BPA.BENEFIT_APPLICATION_ID = BA.BENEFIT_APPLICATION_ID&#xD;&#xA;WHERE BA.BENEFIT_APPLICATION_ID = @BENEFIT_APPLICATION_ID&#xD;&#xA;AND BPA.IS_APPLICATION_PERSON_ACCOUNT_FLAG = 'Y'&#xD;&#xA;)&#xD;&#xA;&#xD;&#xA;IF(@TRANSFER_FLAG = '')&#xD;&#xA;&#x9;SET @TRANSFER_FLAG = NULL;&#xD;&#xA;&#xD;&#xA;UPDATE SGT_PERSON_ACCOUNT_RETIREMENT_CONTRIBUTION&#xD;&#xA;SET TRANSFER_FLAG_VALUE = NULL,&#xD;&#xA;MODIFIED_BY = @USER_ID&#xD;&#xA;,MODIFIED_DATE = GETDATE()&#xD;&#xA;,UPDATE_SEQ = UPDATE_SEQ + 1&#xD;&#xA;WHERE PERSON_ACCOUNT_ID = @PERSON_ACCOUNT_ID&#xD;&#xA;AND TRANSFER_FLAG_VALUE = ISNULL(@TRANSFER_FLAG,TRANSFER_FLAG_VALUE)&#xD;&#xA;AND ISNULL(TRANSFER_FLAG_VALUE,'') &lt;&gt; 'T'">
+      <parameters>
+        <parameter ID="@BENEFIT_APPLICATION_ID" sfwDataType="int" />
+        <parameter ID="@USER_ID" sfwDataType="string" />
+        <parameter ID="@TRANSFER_FLAG" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="LoadPendingApprovalCalculations" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT DISTINCT BC.*, BAPA.PERSON_ACCOUNT_ID&#xD;&#xA;FROM SGT_BENEFIT_CALCULATION BC WITH (NOLOCK)&#xD;&#xA;INNER JOIN SGT_BENEFIT_APPLICATION BA WITH (NOLOCK) ON BC.BENEFIT_APPLICATION_ID = BA.BENEFIT_APPLICATION_ID&#xD;&#xA;INNER JOIN SGT_BENEFIT_APPLICATION_PERSON_ACCOUNT BAPA WITH (NOLOCK) ON BA.BENEFIT_APPLICATION_ID = BAPA.BENEFIT_APPLICATION_ID&#xD;&#xA;WHERE ISNULL(BAPA.IS_APPLICATION_PERSON_ACCOUNT_FLAG, 'N') = 'Y' AND BA.ACTION_STATUS_VALUE NOT IN ('DENI', 'CANC')&#xD;&#xA;AND BAPA.PERSON_ACCOUNT_ID = CASE WHEN @PERSONACCOUNTID = -999 THEN BAPA.PERSON_ACCOUNT_ID ELSE @PERSONACCOUNTID END&#xD;&#xA;AND BC.ACTION_STATUS_VALUE = 'PAPR' AND (BC.CALCULATION_TYPE_VALUE = 'FNAL' OR BC.CALCULATION_TYPE_VALUE = 'SBST')&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;">
+      <parameters>
+        <parameter ID="@PERSONACCOUNTID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadPrevBenefitCalculationForRTW" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT TOP 1 * FROM SGT_BENEFIT_CALCULATION &#xD;&#xA;WHERE PERSON_ID = @PERSONID&#xD;&#xA;AND CALCULATION_TYPE_VALUE = 'FNAL'&#xD;&#xA;ORDER BY BENEFIT_CALCULATION_ID DESC">
+      <parameters>
+        <parameter ID="@PERSONID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="objMember" sfwType="Object" sfwEntity="entPerson" sfwValue="ibusMember" />
+    <attribute sfwDataType="string" sfwType="Property" ID="CalculationIdentifier" sfwValue="icdoBenefitCalculation.calculation_identifier" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ApplicationIdentifier" sfwValue="icdoBenefitCalculation.application_identifier" />
+    <attribute ID="objPlan" sfwType="Object" sfwEntity="entPlan" sfwValue="ibusPlan" />
+    <attribute sfwType="Collection" sfwEntity="entEmployerPayrollDetail" ID="lstEmployerPayrollDetail" sfwValue="iclbEmployerPayrollDetail" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecLastYrs" sfwValue="idecLastYrs" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecNextYrs" sfwValue="idecNextYrs" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecMemberAgeBasedOnRetirementDate" sfwValue="idecMemberAgeBasedOnRetirementDate" />
+    <attribute sfwDataType="string" sfwType="Property" ID="IstrRetirementSubType" sfwValue="istrRetirementSubType" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="CalculationFinalAverageSalary" sfwValue="icdoBenefitCalculation.calculation_final_average_salary" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecFirstYrs" sfwValue="idecFirstYrs" />
+    <attribute sfwDataType="int" sfwType="Property" ID="HP" sfwValue="HP" />
+    <attribute sfwDataType="int" sfwType="Property" ID="Judges" sfwValue="Judges" />
+    <attribute sfwDataType="int" sfwType="Property" ID="MainorLEorNG" sfwValue="MainorLEorNG" />
+    <attribute sfwDataType="int" sfwType="Property" ID="QDRO" sfwValue="QDRO" />
+    <attribute sfwDataType="string" sfwType="Property" ID="RetirementLongDate" sfwValue="icdoBenefitCalculation.retirement_long_date" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecRoundedYrsOfService" sfwValue="idecRoundedYrsOfService" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecRHICEarlyRetirementReductionAmount" sfwValue="idecRHICEarlyRetirementReductionAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="IdecReducedRHICAmount" sfwValue="idecReducedRHICAmount" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="ConsolidatedPscInYears" sfwValue="icdoBenefitCalculation.consolidated_psc_in_years" />
+    <attribute sfwDataType="datetime" sfwType="Property" ID="IdtFirstDayOfMonthNormalEligibilityDate" sfwValue="idtFirstDayOfMonthNormalEligibilityDate" />
+    <attribute sfwType="Collection" sfwEntity="entBenefitCalculationPersonAccount" ID="lstBenefitCalculationPersonAccount" sfwValue="iclbBenefitCalculationPersonAccount" />
+    <attribute sfwType="Collection" sfwEntity="entBenefitServicePurchase" ID="lstBenefitServicePurchase" sfwValue="iclbBenefitServicePurchase" />
+    <attribute sfwType="Collection" sfwEntity="entBenefitCalculationPayee" ID="lstBenefitCalculationPayee" sfwValue="iclbBenefitCalculationPayee" />
+    <attribute sfwType="Collection" sfwEntity="entBenefitCalculationFasMonths" ID="lstBenefitCalculationFASMonths" sfwValue="iclbBenefitCalculationFASMonths" />
+    <attribute sfwType="Collection" sfwEntity="entBenefitCalculationOptions" ID="lstBenefitCalculationOptions" sfwValue="iclbBenefitCalculationOptions" />
+    <attribute sfwType="Collection" sfwEntity="entBenefitRHICOption" ID="lstBenefitRHICOption" sfwValue="iclbBenefitRHICOption" />
+    <attribute sfwType="Collection" sfwEntity="entBenefitMultiplier" ID="lstBenefitMultiplier" sfwValue="iclbBenefitMultiplier" />
+    <attribute sfwType="Collection" sfwEntity="entBenefitCalculationOtherDisBenefit" ID="lstBenefitCalculationOtherDisBenefit" sfwValue="iclbBenefitCalculationOtherDisBenefit" />
+    <attribute sfwType="Collection" sfwEntity="entBenefitPayeeTaxWithholding" ID="lstBenefitPayeeTaxWithholding" sfwValue="iclbBenefitPayeeTaxWithholding" />
+    <attribute sfwType="Collection" sfwEntity="entBenefitGhdvDeduction" ID="lstBenefitGHDVDeduction" sfwValue="iclbBenefitGHDVDeduction" />
+    <attribute sfwType="Collection" sfwEntity="entBenefitLifeDeduction" ID="lstBenefitLifeDeduction" sfwValue="iclbBenefitLifeDeduction" />
+    <attribute sfwType="Collection" sfwEntity="entBenefitLtcDeduction" ID="lstBenefitLTCDeduction" sfwValue="iclbBenefitLTCDeduction" />
+    <attribute sfwType="Collection" sfwEntity="entBenefitFasIndexing" ID="lstBenefitFASIndexing" sfwValue="iclbBenefitFASIndexing" />
+    <attribute sfwType="Collection" sfwEntity="entBenefitDeductionSummary" ID="lstBenefitDeductionSummary" sfwValue="iclbBenefitDeductionSummary" />
+    <attribute sfwType="Collection" sfwEntity="entBenefitCalculationError" ID="lstBenefitCalculationError" sfwValue="iclbBenefitCalculationError" />
+    <attribute ID="lstSalaryVarianceRecords" sfwType="Collection" sfwValue="iclcSalaryVarianceRecords" sfwEntity="entPersonAccountRetirementContribution" sfwPrivate="False" />
+    <attribute ID="objplan_name" sfwType="Object" sfwEntity="entPlan" sfwPrivate="False" sfwValue="ibusPlan.icdoPlan.plan_name" />
+    <attribute sfwValue="benefit_calculation_id" sfwType="Column" sfwKeyNo="1" sfwIsIdentity="True" sfwDataType="int" sfwDBDataType="int" sfwIsNull="False" ID="BenefitCalculationId" sfwCaption="ID" />
+    <attribute sfwValue="benefit_application_id" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="True" ID="BenefitApplicationId" sfwCaption="Benefit Application Id" />
+    <attribute sfwValue="person_id" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="False" ID="PersonId" sfwCaption="Person Id" />
+    <attribute sfwValue="plan_id" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="False" ID="PlanId" sfwCaption="Plan Id" />
+    <attribute sfwValue="calculation_type_id" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="False" ID="CalculationTypeId" sfwCodeID="2303" sfwCaption="Calculation Type" />
+    <attribute sfwValue="calculation_type_value" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="4" sfwIsNull="False" ID="CalculationTypeValue" sfwCaption="Calculation Type" />
+    <attribute sfwValue="benefit_account_type_id" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="False" ID="BenefitAccountTypeId" sfwCodeID="1904" sfwCaption="Benefit Account Type" />
+    <attribute sfwValue="benefit_account_type_value" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="4" sfwIsNull="False" ID="BenefitAccountTypeValue" sfwCaption="Benefit Account Type" />
+    <attribute sfwValue="benefit_account_sub_type_id" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="False" ID="BenefitAccountSubTypeId" sfwCodeID="2201" sfwCaption="Benefit Account Sub Type" />
+    <attribute sfwValue="benefit_account_sub_type_value" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="4" sfwIsNull="False" ID="BenefitAccountSubTypeValue" sfwCaption="Benefit Account Sub Type" />
+    <attribute sfwValue="plso_requested_flag" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="char" sfwLength="1" sfwIsNull="False" ID="PlsoRequestedFlag" sfwCaption="Plso Requested Flag" />
+    <attribute sfwValue="benefit_option_id" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="False" ID="BenefitOptionId" sfwCodeID="2216" sfwCaption="Benefit Option" />
+    <attribute sfwValue="benefit_option_value" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="4" sfwIsNull="True" ID="BenefitOptionValue" sfwCaption="Benefit Option" />
+    <attribute sfwValue="uniform_income_or_ssli_flag" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="char" sfwLength="1" sfwIsNull="False" ID="UniformIncomeOrSsliFlag" sfwCaption="Uniform Income Or Ssli Flag" />
+    <attribute sfwValue="ssli_or_uniform_income_commencement_age" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,4" sfwIsNull="True" ID="SsliOrUniformIncomeCommencementAge" sfwCaption="Ssli Or Uniform Income Commencement Age" />
+    <attribute sfwValue="estimated_ssli_benefit_amount" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,2" sfwIsNull="True" ID="EstimatedSsliBenefitAmount" sfwCaption="Estimated Ssli Benefit Amount" />
+    <attribute sfwValue="reduced_benefit_flag" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="char" sfwLength="1" sfwIsNull="False" ID="ReducedBenefitFlag" sfwCaption="Reduced Benefit Flag" />
+    <attribute sfwValue="reduced_benefit_option_amount" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,2" sfwIsNull="True" ID="ReducedBenefitOptionAmount" sfwCaption="Reduced Benefit Option Amount" />
+    <attribute sfwValue="termination_date" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="datetime" sfwDBDataType="datetime" sfwIsNull="True" ID="TerminationDate" sfwCaption="Termination Date" />
+    <attribute sfwValue="normal_retirement_date" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="datetime" sfwDBDataType="datetime" sfwIsNull="True" ID="NormalRetirementDate" sfwCaption="Normal Retirement Date" />
+    <attribute sfwValue="retirement_date" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="datetime" sfwDBDataType="datetime" sfwIsNull="True" ID="RetirementDate" sfwCaption="Retirement Date" />
+    <attribute sfwValue="date_of_death" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="datetime" sfwDBDataType="datetime" sfwIsNull="True" ID="DateOfDeath" sfwCaption="Date Of Death" />
+    <attribute sfwValue="combined_dual_fas_flag" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="char" sfwLength="1" sfwIsNull="True" ID="CombinedDualFasFlag" sfwCaption="Combined Dual Fas Flag" />
+    <attribute sfwValue="rhic_option_id" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="False" ID="RhicOptionId" sfwCodeID="1905" sfwCaption="Rhic Option" />
+    <attribute sfwValue="rhic_option_value" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="4" sfwIsNull="False" ID="RhicOptionValue" sfwCaption="Rhic Option" />
+    <attribute sfwValue="unreduced_rhic_amount" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,2" sfwIsNull="True" ID="UnreducedRhicAmount" sfwCaption="Unreduced Rhic Amount" />
+    <attribute sfwValue="rhic_early_reduction_factor" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,6" sfwIsNull="True" ID="RhicEarlyReductionFactor" sfwCaption="Rhic Early Reduction Factor" />
+    <attribute sfwValue="adjusted_psc" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,2" sfwIsNull="True" ID="AdjustedPsc" sfwCaption="Adjusted Psc" />
+    <attribute sfwValue="adjusted_tvsc" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,2" sfwIsNull="True" ID="AdjustedTvsc" sfwCaption="Adjusted Tvsc" />
+    <attribute sfwValue="comments" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="1000" sfwIsNull="True" ID="Comments" sfwCaption="Comments" />
+    <attribute sfwValue="js_rhic_amount" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,2" sfwIsNull="True" ID="JsRhicAmount" sfwCaption="Js Rhic Amount" />
+    <attribute sfwValue="paid_up_annuity_amount" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,2" sfwIsNull="True" ID="PaidUpAnnuityAmount" sfwCaption="Paid Up Annuity Amount" />
+    <attribute sfwValue="computed_final_average_salary" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,2" sfwIsNull="False" ID="ComputedFinalAverageSalary" sfwCaption="Computed Final Average Salary" />
+    <attribute sfwValue="overridden_final_average_salary" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,2" sfwIsNull="True" ID="OverriddenFinalAverageSalary" sfwCaption="Overridden Final Average Salary" />
+    <attribute sfwValue="unreduced_benefit_amount" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,2" sfwIsNull="True" ID="UnreducedBenefitAmount" sfwCaption="Unreduced Benefit Amount" />
+    <attribute sfwValue="credited_psc" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,5" sfwIsNull="True" ID="CreditedPsc" sfwCaption="Credited Psc" />
+    <attribute sfwValue="projected_psc" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,5" sfwIsNull="True" ID="ProjectedPsc" sfwCaption="Projected Psc" />
+    <attribute sfwValue="credited_vsc" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,5" sfwIsNull="True" ID="CreditedVsc" sfwCaption="Credited Vsc" />
+    <attribute sfwValue="projected_vsc" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,5" sfwIsNull="True" ID="ProjectedVsc" sfwCaption="Projected Vsc" />
+    <attribute sfwValue="indexed_final_average_salary" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,2" sfwIsNull="True" ID="IndexedFinalAverageSalary" sfwCaption="Indexed Final Average Salary" />
+    <attribute sfwValue="percentage_salary_increase" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="5,2" sfwIsNull="True" ID="PercentageSalaryIncrease" sfwCaption="Percentage Salary Increase" />
+    <attribute sfwValue="salary_month_increase" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="True" ID="SalaryMonthIncrease" sfwCaption="Salary Month Increase" />
+    <attribute sfwValue="dnro_missed_months" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="True" ID="DnroMissedMonths" sfwCaption="Dnro Missed Months" />
+    <attribute sfwValue="adhoc_or_cola_amount" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,2" sfwIsNull="True" ID="AdhocOrColaAmount" sfwCaption="Adhoc Or Cola Amount" />
+    <attribute sfwValue="dnro_total_missed_amount" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,2" sfwIsNull="True" ID="DnroTotalMissedAmount" sfwCaption="Dnro Total Missed Amount" />
+    <attribute sfwValue="dnro_factor" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,5" sfwIsNull="True" ID="DnroFactor" sfwCaption="Dnro Factor" />
+    <attribute sfwValue="dnro_monthly_increase" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,2" sfwIsNull="True" ID="DnroMonthlyIncrease" sfwCaption="Dnro Monthly Increase" />
+    <attribute sfwValue="early_reduced_months" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="True" ID="EarlyReducedMonths" sfwCaption="Early Reduced Months" />
+    <attribute sfwValue="early_reduction_factor" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,6" sfwIsNull="True" ID="EarlyReductionFactor" sfwCaption="Early Reduction Factor" />
+    <attribute sfwValue="plso_lumpsum_amount" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,2" sfwIsNull="True" ID="PlsoLumpsumAmount" sfwCaption="Plso Lumpsum Amount" />
+    <attribute sfwValue="plso_factor" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,5" sfwIsNull="True" ID="PlsoFactor" sfwCaption="Plso Factor" />
+    <attribute sfwValue="plso_reduction_amount" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,2" sfwIsNull="True" ID="PlsoReductionAmount" sfwCaption="Plso Reduction Amount" />
+    <attribute sfwValue="minimum_guarentee_amount" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,2" sfwIsNull="True" ID="MinimumGuarenteeAmount" sfwCaption="Minimum Guarentee Amount" />
+    <attribute sfwValue="minimum_guarentee_amount_taxable_amount" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,2" sfwIsNull="True" ID="MinimumGuarenteeAmountTaxableAmount" sfwCaption="Minimum Guarentee Amount Taxable Amount" />
+    <attribute sfwValue="minimum_guarentee_amount_non_taxable_amount" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,2" sfwIsNull="True" ID="MinimumGuarenteeAmountNonTaxableAmount" sfwCaption="Minimum Guarentee Amount Non Taxable Amount" />
+    <attribute sfwValue="taxable_amount" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,2" sfwIsNull="True" ID="TaxableAmount" sfwCaption="Taxable Amount" />
+    <attribute sfwValue="non_taxable_amount" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,2" sfwIsNull="True" ID="NonTaxableAmount" sfwCaption="Non Taxable Amount" />
+    <attribute sfwValue="js_residual_mg_amount" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,2" sfwIsNull="True" ID="JsResidualMgAmount" sfwCaption="Js Residual Mg Amount" />
+    <attribute sfwValue="status_id" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="False" ID="StatusId" sfwCodeID="2301" sfwCaption="Status" />
+    <attribute sfwValue="status_value" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="4" sfwIsNull="False" ID="StatusValue" sfwCaption="Status" />
+    <attribute sfwValue="action_status_id" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="False" ID="ActionStatusId" sfwCodeID="2302" sfwCaption="Action Status" />
+    <attribute sfwValue="action_status_value" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="4" sfwIsNull="False" ID="ActionStatusValue" sfwCaption="Action Status" />
+    <attribute sfwValue="approved_by" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="50" sfwIsNull="True" ID="ApprovedBy" sfwCaption="Approved By" />
+    <attribute sfwValue="suppress_warnings_flag" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="1" sfwIsNull="True" ID="SuppressWarningsFlag" sfwCaption="Suppress Warnings Flag" />
+    <attribute sfwValue="suppress_warnings_by" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="50" sfwIsNull="True" ID="SuppressWarningsBy" sfwCaption="Suppress Warnings By" />
+    <attribute sfwValue="suppress_warnings_date" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="datetime" sfwDBDataType="datetime" sfwIsNull="True" ID="SuppressWarningsDate" sfwCaption="Suppress Warnings Date" />
+    <attribute sfwValue="early_monthly_decrease" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,2" sfwIsNull="True" ID="EarlyMonthlyDecrease" sfwCaption="Early Monthly Decrease" />
+    <attribute sfwValue="plso_exclusion_ratio" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,6" sfwIsNull="True" ID="PlsoExclusionRatio" sfwCaption="Plso Exclusion Ratio" />
+    <attribute sfwValue="ssli_uniform_income_factor" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,5" sfwIsNull="True" ID="SsliUniformIncomeFactor" sfwCaption="Ssli Uniform Income Factor" />
+    <attribute sfwValue="qdro_amount" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,2" sfwIsNull="True" ID="QdroAmount" sfwCaption="Qdro Amount" />
+    <attribute sfwValue="taxable_qdro_amount" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,2" sfwIsNull="True" ID="TaxableQdroAmount" sfwCaption="Taxable Qdro Amount" />
+    <attribute sfwValue="non_taxable_qdro_amount" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,2" sfwIsNull="True" ID="NonTaxableQdroAmount" sfwCaption="Non Taxable Qdro Amount" />
+    <attribute sfwValue="disability_payee_account_id" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="True" ID="DisabilityPayeeAccountId" sfwCaption="Disability Payee Account Id" />
+    <attribute sfwValue="is_rule_or_age_conversion" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="True" ID="IsRuleOrAgeConversion" sfwCaption="Is Rule Or Age Conversion" />
+    <attribute sfwValue="final_monthly_benefit" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,6" sfwIsNull="True" ID="FinalMonthlyBenefit" sfwCaption="Final Monthly Benefit" />
+    <attribute sfwValue="rmd_amount" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,6" sfwIsNull="True" ID="RmdAmount" sfwCaption="Rmd Amount" />
+    <attribute sfwValue="actuarial_benefit_reduction" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,6" sfwIsNull="True" ID="ActuarialBenefitReduction" sfwCaption="Actuarial Benefit Reduction" />
+    <attribute sfwValue="rtw_refund_election_id" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="True" ID="RtwRefundElectionId" sfwCodeID="2325" sfwCaption="Rtw Refund Election" />
+    <attribute sfwValue="rtw_refund_election_value" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="4" sfwIsNull="True" ID="RtwRefundElectionValue" sfwCaption="Rtw Refund Election" />
+    <attribute sfwValue="is_rtw_less_than_2years_flag" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="char" sfwLength="1" sfwIsNull="True" ID="IsRtwLessThan2yearsFlag" sfwCaption="Is Rtw Less Than 2years Flag" />
+    <attribute sfwValue="pre_rtw_payee_account_id" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="True" ID="PreRtwPayeeAccountId" sfwCaption="Pre Rtw Payee Account Id" />
+    <attribute sfwValue="actuarially_adjusted_monthly_single_life_benefit" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,6" sfwIsNull="True" ID="ActuariallyAdjustedMonthlySingleLifeBenefit" sfwCaption="Actuarially Adjusted Monthly Single Life Benefit" />
+    <attribute sfwValue="is_rule_applied_flag" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="char" sfwLength="1" sfwIsNull="True" ID="IsRuleAppliedFlag" sfwCaption="Is Rule Applied Flag" />
+    <attribute sfwValue="rhic_factor_amount" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,2" sfwIsNull="True" ID="RhicFactorAmount" sfwCaption="Rhic Factor Amount" />
+    <attribute sfwValue="originating_payee_account_id" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="True" ID="OriginatingPayeeAccountId" sfwCaption="Originating Payee Account Id" />
+    <attribute sfwValue="post_retirement_death_reason_type_id" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="True" ID="PostRetirementDeathReasonTypeId" sfwCodeID="2701" sfwCaption="Post Retirement Death Reason Type" />
+    <attribute sfwValue="post_retirement_death_reason_type_value" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="4" sfwIsNull="True" ID="PostRetirementDeathReasonTypeValue" sfwCaption="Post Retirement Death Reason Type" />
+    <attribute sfwValue="beneficiary_person_id" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="True" ID="BeneficiaryPersonId" sfwCaption="Beneficiary Person Id" />
+    <attribute sfwValue="created_by" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="50" sfwIsNull="False" ID="CreatedBy" sfwCaption="Created By" />
+    <attribute sfwValue="created_date" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="datetime" sfwDBDataType="datetime" sfwIsNull="False" ID="CreatedDate" sfwCaption="Created Date" />
+    <attribute sfwValue="modified_by" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="50" sfwIsNull="False" ID="ModifiedBy" sfwCaption="Modified By" />
+    <attribute sfwValue="modified_date" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="datetime" sfwDBDataType="datetime" sfwIsNull="False" ID="ModifiedDate" sfwCaption="Modified Date" />
+    <attribute sfwValue="update_seq" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="False" ID="UpdateSeq" sfwCaption="Update Seq" />
+    <attribute sfwValue="parent_benefit_calculation_id" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="True" ID="ParentBenefitCalculationId" sfwCaption="Parent Benefit Calculation Id" />
+    <attribute sfwValue="is_calculation_visible_flag" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="char" sfwLength="1" sfwIsNull="True" ID="IsCalculationVisibleFlag" sfwCaption="Is Calculation Visible Flag" />
+    <attribute sfwValue="rule_indicator_id" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="True" ID="RuleIndicatorId" sfwCodeID="2229" sfwCaption="Rule Indicator" />
+    <attribute sfwValue="rule_indicator_value" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="char" sfwLength="4" sfwIsNull="True" ID="RuleIndicatorValue" sfwCaption="Rule Indicator" />
+    <attribute sfwValue="ssli_effective_date" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="datetime" sfwDBDataType="datetime" sfwIsNull="True" ID="SsliEffectiveDate" sfwCaption="Ssli Effective Date" />
+    <attribute sfwValue="recalculated_by" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="50" sfwIsNull="True" ID="RecalculatedBy" sfwCaption="Recalculated By" />
+    <attribute sfwValue="is_created_from_portal" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="char" sfwLength="1" sfwIsNull="True" ID="IsCreatedFromPortal" sfwCaption="Is Created From Portal" />
+    <attribute sfwValue="non_taxable_plso" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,2" sfwIsNull="True" ID="NonTaxablePlso" sfwCaption="Non Taxable Plso" />
+    <attribute sfwValue="fas_termination_date" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="datetime" sfwDBDataType="datetime" sfwIsNull="True" ID="FasTerminationDate" sfwCaption="Fas Termination Date" />
+    <attribute sfwValue="is_tentative_tffr_tiaa_used" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="char" sfwLength="1" sfwIsNull="True" ID="IsTentativeTffrTiaaUsed" sfwCaption="Is Tentative Tffr Tiaa Used" />
+    <attribute sfwValue="graduated_benefit_option_id" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="True" ID="GraduatedBenefitOptionId" sfwCodeID="1913" sfwCaption="Graduated Benefit Option" />
+    <attribute sfwValue="graduated_benefit_option_value" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="4" sfwIsNull="True" ID="GraduatedBenefitOptionValue" sfwCaption="Graduated Benefit Option" />
+    <attribute sfwValue="rtw_graduated_benefit_factor" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,6" sfwIsNull="True" ID="RtwGraduatedBenefitFactor" sfwCaption="Rtw Graduated Benefit Factor" />
+    <attribute sfwValue="overridden_dnro_missed_payment_amount" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,6" sfwIsNull="True" ID="OverriddenDnroMissedPaymentAmount" sfwCaption="Overridden Dnro Missed Payment Amount" />
+    <attribute sfwValue="is_dro_estimate" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="char" sfwLength="1" sfwIsNull="True" ID="IsDroEstimate" sfwCaption="Is Dro Estimate" />
+    <attribute sfwValue="tffr_calculation_method_id" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="True" ID="TffrCalculationMethodId" sfwCodeID="1920" sfwCaption="Tffr Calculation Method" />
+    <attribute sfwValue="tffr_calculation_method_value" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="4" sfwIsNull="True" ID="TffrCalculationMethodValue" sfwCaption="Tffr Calculation Method" />
+    <attribute sfwValue="rhic_effective_date" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="datetime" sfwDBDataType="datetime" sfwIsNull="True" ID="RhicEffectiveDate" sfwCaption="Rhic Effective Date" />
+    <attribute sfwValue="fas_2019" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,2" sfwIsNull="True" ID="Fas2019" sfwCaption="Fas 2019" />
+    <attribute sfwValue="fas_2020" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,2" sfwIsNull="True" ID="Fas2020" sfwCaption="Fas 2020" />
+    <attribute sfwValue="fas_2010" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="decimal" sfwDBDataType="decimal" sfwLength="13,2" sfwIsNull="True" ID="Fas2010" sfwCaption="Fas 2010" />
+    <attribute sfwType="Description" ID="CalculationTypeDescription" sfwCaption="Calculation Type" sfwValue="calculation_type_description" />
+    <attribute sfwType="Description" ID="BenefitAccountTypeDescription" sfwCaption="Benefit Account Type" sfwValue="benefit_account_type_description" />
+    <attribute sfwType="Description" ID="BenefitAccountSubTypeDescription" sfwCaption="Benefit Account Sub Type" sfwValue="benefit_account_sub_type_description" />
+    <attribute sfwType="Description" ID="BenefitOptionDescription" sfwCaption="Benefit Option" sfwValue="benefit_option_description" />
+    <attribute sfwType="Description" ID="RhicOptionDescription" sfwCaption="Rhic Option" sfwValue="rhic_option_description" />
+    <attribute sfwType="Description" ID="StatusDescription" sfwCaption="Status" sfwValue="status_description" />
+    <attribute sfwType="Description" ID="ActionStatusDescription" sfwCaption="Action Status" sfwValue="action_status_description" />
+    <attribute sfwType="Description" ID="RtwRefundElectionDescription" sfwCaption="Rtw Refund Election" sfwValue="rtw_refund_election_description" />
+    <attribute sfwType="Description" ID="PostRetirementDeathReasonTypeDescription" sfwCaption="Post Retirement Death Reason Type" sfwValue="post_retirement_death_reason_type_description" />
+    <attribute sfwType="Description" ID="RuleIndicatorDescription" sfwCaption="Rule Indicator" sfwValue="rule_indicator_description" />
+    <attribute sfwType="Description" ID="GraduatedBenefitOptionDescription" sfwCaption="Graduated Benefit Option" sfwValue="graduated_benefit_option_description" />
+    <attribute sfwType="Description" ID="TffrCalculationMethodDescription" sfwCaption="Tffr Calculation Method" sfwValue="tffr_calculation_method_description" />
+  </attributes>
+  <objectmethods>
+    <method ID="LoadBenefitCalculationPersonAccountFromDB" sfwReturnType="Void" />
+    <method ID="LoadBenefitServicePurchase" sfwReturnType="Void" />
+    <method ID="LoadBenefitCalculationPayee" sfwReturnType="Void" />
+    <method ID="LoadFASMonths" sfwReturnType="Void" />
+    <method ID="LoadBenefitCalculationOptions" sfwReturnType="Void" />
+    <method ID="LoadBenefitRHICOption" sfwReturnType="Void" />
+    <method ID="LoadBenefitMultiplier" sfwReturnType="Void" />
+    <method ID="LoadBenefitCalculationOtherDisBenefit" sfwReturnType="Void" />
+    <method ID="LoadBenefitPayeeTaxWithholding" sfwReturnType="Void" />
+    <method ID="LoadBenefitGhdvDeduction" sfwReturnType="Void" />
+    <method ID="LoadBenefitLifeDeduction" sfwReturnType="Void" />
+    <method ID="LoadBenefitLTCDeduction" sfwReturnType="Void" />
+    <method ID="LoadBenefitFasIndexing" sfwReturnType="Void" />
+    <method ID="LoadBenefitDeductionSummaryToDelete" sfwReturnType="Void" />
+    <method ID="LoadBenefitCalculationError" sfwReturnType="Void" />
+  </objectmethods>
+  <constraint />
+  <methods />
+  <lifecycle />
+  <ExtraFields />
+</entity>

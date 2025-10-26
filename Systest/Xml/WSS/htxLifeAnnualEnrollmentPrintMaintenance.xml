@@ -1,0 +1,99 @@
+﻿<form ID="wfmLifeAnnualEnrollmentPrintMaintenance" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2001" sfwType="FormLinkMaintenance" sfwTitle="Life Annual Enrollment" version="3.5" sfwEntity="entWssPersonAccountEnrollmentRequest" sfwTemplate="LifeAnnualEnrollmentPrintMaintenance.html" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmLifeAnnualEnrollmentPrintLookup" sfwFormObjectType="None" isBasedOnWfm="true">
+  <initialload>
+    <callmethods sfwMethodName="FindWizardCompletion" />
+  </initialload>
+  <items>
+    <sfwPanel ID="pnlHeader" sfwCollapsible="False">
+      <items />
+    </sfwPanel>
+    <sfwPanel ID="pnlPanel" sfwCaption="Enrollment Details">
+      <items>
+        <sfwLabel ID="capReasonDescription" />
+        <sfwLabel ID="lblReasonDescription" sfwEntityField="ReasonDescription" />
+        <sfwLabel ID="capChangeEffectiveDate" sfwVisibleRule="IsChangeReasonNotNewHire" />
+        <sfwLabel ID="lblChangeEffectiveDate" sfwEntityField="DateOfChange" sfwDataFormat="{0:d}" sfwVisibleRule="IsChangeReasonNotNewHire" />
+        <sfwLabel ID="capPreTaxPayrollDeduction" sfwVisibleRule="VisibleRule-IsFlexPlanAvailableForLife" />
+        <sfwLabel ID="lblPreTaxPayrollDeduction" sfwEntityField="objMSSLifeOption.PreTaxPayrollDeductionDesc" sfwVisibleRule="VisibleRule-IsFlexPlanAvailableForLife" />
+        <sfwPanel ID="pnlReviewBasic">
+          <items>
+            <sfwLabel ID="lblLabel" />
+            <sfwLabel ID="lblLabel59" sfwEntityField="IdecBasicCoverageAmount" sfwDataFormat="{0:C}" sfwVisibleRule="IsNOTTemporaryMember" />
+            <sfwLabel ID="lblLabel60" sfwVisibleRule="IsNOTTemporaryMember" />
+            <sfwLabel ID="lblLabel229" sfwVisibleRule="IsTemporaryMember" />
+            <sfwLabel ID="lblLabel61" sfwEntityField="IdecBasicCoverageAmount" sfwVisibleRule="IsTemporaryMember" sfwDataFormat="{0:C}" />
+            <sfwLabel ID="lblLabel62" sfwVisibleRule="IsTemporaryMember" />
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlSupp" sfwVisibleRule="VisibleRuleIsSupplemental">
+          <items>
+            <sfwLabel ID="lblLabels" />
+            <sfwLabel ID="lblBasicSupplementalAmount" sfwDataFormat="{0:C}" sfwEntityField="IdecBasicCoverageAmount" />
+            <sfwLabel ID="lblSupplementalAmount" sfwEntityField="objMSSLifeOption.SupplementalAmount" sfwDataFormat="{0:C}" />
+            <sfwLabel ID="capSupplementalAmount" />
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlSuppWaive" sfwVisibleRule="VisibleRuleIsSupplementalWaive">
+          <items>
+            <sfwLabel ID="lblLabel46" />
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlSuppDep" sfwVisibleRule="VisibleRuleSupplementalDependent">
+          <items>
+            <sfwLabel ID="lblLabels7" />
+            <sfwLabel ID="lblDependentCoverageOptionValue" sfwEntityField="objMSSLifeOption.DependentCoverageOptionValue" sfwDataFormat="{0:C}" />
+            <sfwLabel ID="capDependentCoverageOptionValue" />
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlDepWaive" sfwVisibleRule="VisibleRuleIsSupplementalDependentWaive">
+          <items>
+            <sfwLabel ID="lblLabel47" />
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlSpouseSupp" sfwVisibleRule="VisibleRuleSupplementalSpouse">
+          <items>
+            <sfwLabel ID="lblLabel10" />
+            <sfwLabel ID="lblSpouseSupplementalAmount" sfwEntityField="objMSSLifeOption.SpouseSupplementalAmount" sfwDataFormat="{0:C}" />
+            <sfwLabel ID="capSpouseSupplementalAmount" />
+          </items>
+        </sfwPanel>
+        <sfwPanel ID="pnlNewPanel" sfwVisibleRule="VisibleRuleIsSupplementalSpouseWaive">
+          <items>
+            <sfwLabel ID="lblLabel48" />
+          </items>
+        </sfwPanel>
+        <sfwLabel ID="capDocument" sfwVisibleRule="IsDocumentExists" />
+        <sfwLabel ID="lblDocument" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlPanel1" sfwCaption="Member Authorization">
+      <items>
+        <sfwGridView ID="grvAcknowledgementCheck" sfwEntityField="lstAcknowledgementCheck" CssClass="GridColumnHide">
+          <Columns>
+            <TemplateField HeaderText="Acknowledgement ID" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="AcknowledgementId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Acknowledgement Text">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="AcknowledgementText" />
+              </ItemTemplate>
+            </TemplateField>
+          </Columns>
+        </sfwGridView>
+        <sfwTextBox ID="txtDownloadFileNameStep7" sfwEntityField="IstrDownloadFileName" />
+        <sfwLabel ID="lblLabel11" />
+        <sfwLinkButton ID="btnPdfCorrespondenceClick4" sfwMethodName="btn_OpenPDF" sfwNavigationParameter="pdf_file_name=IstrDownloadFileName" />
+        <sfwCheckBox ID="chkIsPlanWaivedFlag" sfwEntityField="AcknolwedgementPartDFlag" />
+        <sfwLabel ID="lblIstrConfirmationText" sfwEntityField="IstrConfirmationText" sfwRenderType="RichText" />
+      </items>
+    </sfwPanel>
+    <sfwButton ID="btnLoadOnDemandClick" sfwMethodName="btnOpen_Click" sfwActiveForm="wfmAnnualEnrollmentBenefitPlansMaintenance" sfwNavigationParameter="aintPersonID=PersonId" />
+    <sfwButton ID="btnPrintPage" Text="Print" OnClientClick="PrintCenterMiddle(e)" sfwMethodName="btnOpen_Click" />
+  </items>
+  <loaddetails>
+    <entityfield ID="objMSSLifeOption" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="lstAcknowledgementCheck" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+  </loaddetails>
+  <ExtraFields />
+</form>

@@ -1,0 +1,59 @@
+﻿<form ID="wfmMSSContactInfoMaintenance" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2001" sfwType="FormLinkMaintenance" sfwTitle="Spouse/Designated Contact Information" version="3.5" sfwEntity="entMSSHome" sfwTemplate="MSSContactInfoMaintenance.html" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmMSSContactInfoLookup" sfwFormObjectType="None" isBasedOnWfm="true">
+  <initialload>
+    <callmethods sfwMethodName="FindMSSMemberContact" />
+  </initialload>
+  <items>
+    <sfwTable ID="Main" />
+    <sfwPanel ID="pnlHeading" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblHeading" />
+        <sfwLiteral Text="Spouse or Designated Contact Information" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlNewPage" sfwCaption="Information" sfwCollapsible="False">
+      <items>
+        <sfwTable ID="tblNewPage" />
+        <sfwLabel ID="lblLiteral" Text="The following shows your spouse or designated contact information.  This is maintained in case of death or incapacity.&lt;br/&gt;If you are married, your spouse is required to be your Contact. If you are adding a spouse, you will be required&lt;br/&gt;to enter the Social Security Number, Date of Birth, and Gender." sfwIsCaption="True" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlSection0" sfwCaption="Contact Information">
+      <items>
+        <sfwTable ID="Section0" />
+        <sfwLabel ID="lblLabel" Text="To View your current contact information, please select the contact name from the list below. To Update your current&lt;br/&gt;contact information, select check box by the contact and the Update Contact Info button below." sfwIsCaption="True" />
+        <sfwGridView AllowPaging="True" ID="grvPersonContact" sfwSelection="Many" sfwEntityField="objPerson.lstPersonContact" sfwGridEntity="entPersonContact">
+          <Columns>
+            <TemplateField HeaderText="Contact Name">
+              <ItemTemplate>
+                <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpen1" sfwEntityField="IstrMSSContactName" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Person Contact ID" Visible="False">
+              <ItemTemplate>
+                <sfwLabel sfwRelatedControl="btnOpen" sfwEntityField="PersonContactId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Contact Type">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="RelationshipDescription" />
+              </ItemTemplate>
+            </TemplateField>
+          </Columns>
+        </sfwGridView>
+        <sfwButton ID="btnNewContact" sfwActiveForm="wfmMSSContactMaintenance" sfwMethodName="btnNew_Click" sfwNavigationParameter="aintPersonID=txtPersonId" Text="Add New Contact" />
+        <sfwButton ID="btnOpen" sfwActiveForm="wfmMSSUpdateContactMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="aintPersonContactID=PersonContactId" sfwRelatedControl="grvPersonContact" Text="Update Contact Info" />
+        <sfwTextBox ID="txtPersonId" Visible="False" sfwEntityField="objPerson.PersonId" />
+        <sfwButton ID="btnOpen1" sfwActiveForm="wfmMSSViewContactMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="aintPersonContactID=PersonContactId;iintIsReadOnly=#1" sfwRelatedControl="grvPersonContact" Text="Open" Visible="False" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlNewPage1" sfwCaption="Disclaimer">
+      <items>
+        <sfwTable ID="tblNewPage1" />
+        <sfwLabel ID="lblLiteral1" Text="In compliance with the Federal Privacy Act of 1974, the disclosure of the individual's social security number on this site is&lt;br/&gt; mandatory pursuant to 26 U.S.C. Sec. 3402. The individual's social security number will be used for tax reporting and as an&lt;br/&gt;identification number.  The individual’s social security number will remain confidential." sfwIsCaption="True" />
+      </items>
+    </sfwPanel>
+  </items>
+  <loaddetails>
+    <entityfield ID="objPerson.lstPersonContact" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+    <entityfield ID="objPerson" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+  </loaddetails>
+</form>

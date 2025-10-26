@@ -1,0 +1,129 @@
+﻿<div class="portlet-body" style="overflow:hidden;">
+
+    <div class="col-xs-12 column-inner-align" style="height:7%;">
+        <label class="control-label col-xs-2">Form Path:</label>
+        <div class="col-xs-5">
+            <locationintellisensetemplate hide-create-button="true" locationname="folderName" locationchanged="onSearch(locationname)"></locationintellisensetemplate>
+        </div>
+        <div class="col-xs-5 fright">
+            <button class="btn btn-default functional-prop-btn padding-2" ng-click="onExport()" type="button" >Export</button>
+        </div>
+    </div>
+    <div class="col-xs-12 column-inner-align div-border add-resource-div" style="height:35%;">
+        <table class="table table-condensed table-hover">
+            <thead>
+                <tr>
+                    <th width="10%"><input type="checkbox" ng-model="IsSelectAll" value="Select All" ng-change="onToggleSelectionClick(IsSelectAll)"  />&nbsp;Select</th>
+                    <th width="50%">Form ID</th>
+                    <!--<th width="30%">Title</th>-->
+                    <th width="40%">Path</th>
+                </tr>
+            </thead>
+            <tbody> <!--ng-if="IsShowSearch"-->
+                <tr ng-repeat="objform in lstResourceFormList" tabindex="{{$index}}" key-up-down-with-element callbackfn="selectFormId" objproperty="'objform'" ng-click="selectFormId(objform)" ng-class="{'selected':selectedFormId == objform,'bckgGrey' : ''}">
+                    <td width="10%"><input type="checkbox" ng-model="objform.IsChecked" ng-checked="objform.IsChecked" value="objform.isChecked" /></td>
+                    <td width="50%"><span ng-bind="objform.FileName"></span></td>
+                    <!--<td width="30%"><span ng-bind="objform.FileTitle"></span></td>-->
+                    <td width="40%"><span ng-bind="objform.Location"></span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-xs-12 div-border add-resource-plus-div" style="height:10%;">
+        <input type="button" class="btn dialog-btn-default mar-rgt-10"  ng-click="onAddResource()" value="Add"/>  <span>Click on the button to add the form for which associated control needs to be set</span>
+    </div>
+   
+    <div  class="col-xs-12 padding-0 div-border" style="height:49%;">
+        <ul class="nav nav-tabs">
+            <li ng-class="tab==1?'active':''"> <a ng-click="setTab(1)">Resource Set</a></li>
+            <li ng-class="tab==2?'active':''"><a ng-click="setTab(2)">Resource Not Set</a></li>
+            <li ng-class="tab==3?'active':''"><a ng-click="setTab(3)">Form Resource</a></li>
+            <!--<li ng-class="tab==4?'active':''"><a ng-click="setTab(4)">Read Only Files</a></li>-->
+        </ul>
+
+        <table ng-show="isSet(1)" class="table table-condensed table-hover table-fixedheader height25p">
+            <thead>
+                <tr>
+                    <th width="25%">Form ID</th>
+                    <th width="25%">Control ID</th>
+                    <th width="50%">Resources</th>
+                </tr>
+            </thead>
+            <tbody style="height:90%" ng-scrolldown callback="OnScrollSet()" ngpausescroll="IsProcessing" ngscrollheight="9">
+                <tr ng-repeat="rs in resourceSet | limitTo:displayedRecordsSet track by $index" ng-click="onResourceSetRowClick(rs)">
+                    <td width="25%"> <span ng-bind="rs.strFormId"></span> </td>
+                    <td width="25%"><span ng-bind="rs.strControlId"></span></td>
+                    <td width="50%">
+                        <resourceintellisensetemplate resourceid="rs.strResource" model="rs" propertyname="'strResource'" resourcetext="'Resources :'" showresourcetext='false'></resourceintellisensetemplate>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table ng-show="isSet(2)" class="table table-condensed table-hover table-fixedheader height25p">
+            <thead>
+                <tr>
+                    <th width="25%">Form ID</th>
+                    <th width="25%">Control ID</th>
+                    <th width="50%">Resources</th>
+                </tr>
+            </thead>
+            <tbody style="height:90%" ng-scrolldown callback="OnScrollNotSet()" ngpausescroll="IsProcessing" ngscrollheight="9">
+                <tr ng-repeat="rs in resourceNotSet | limitTo:displayedRecordsNotSet track by $index" tabindex="{{$index}}" key-up-down-with-element callbackfn="onResourceNotSetRowClick" objproperty="'rs'" ng-click="onResourceNotSetRowClick(rs)" ng-class="{'selected':selectedResourceNotSet == rs,'bckgGrey' : ''}">
+                    <td width="25%"> <span ng-bind="rs.strFormId"></span> </td>
+                    <td width="25%"><span ng-bind="rs.strControlId"></span></td>
+                    <td width="50%">
+                        <resourceintellisensetemplate resourceid="rs.strResource" model="rs" propertyname="'strResource'" resourcetext="'Resources :'" showresourcetext='false'></resourceintellisensetemplate>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table ng-show="isSet(3)" class="table table-condensed table-hover table-fixedheader height25p">
+            <thead>
+                <tr>
+                    <th width="50%">Form ID</th>
+                    <th width="50%">Resources</th>
+                </tr>
+            </thead>
+            <tbody style="height:90%" ng-scrolldown callback="OnScrollForm()" ngpausescroll="IsProcessing" ngscrollheight="9">
+                <tr ng-repeat="rs in formResource | limitTo:displayedRecordsForm track by $index" ng-click="onFormResourceRowClick(rs)">
+                    <td width="50%"> <span ng-bind="rs.strFormId"></span> </td>
+                    <td width="50%">
+                        <resourceintellisensetemplate resourceid="rs.strResource" model="rs" propertyname="'strResource'" resourcetext="'Resources :'" showresourcetext='false'></resourceintellisensetemplate>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+  
+  
+    <!--<div ng-show="isSet(4)" class="col-xs-12 padding-0 div-border" style="height:44%;">
+        <table class="table table-condensed table-hover table-fixedheader full-height">
+            <thead>
+                <tr>
+                    <th width="100%">Form ID</th>
+                </tr>
+            </thead>
+            <tbody style="height:90%">
+                <tr ng-repeat="rs in readOnlyFiles">
+                    <td width="100%"> <span ng-bind="rs.strFormId"></span> </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>-->
+</div>
+<div class="form-actions">
+    <div class="col-xs-8 text-left">
+        <span>
+            WARNING:Make sure that all files to be saved are Checked Out/Writable before proceeding.
+        </span>
+    </div>
+    <div class="col-xs-4">
+        <input type="button" class="btn dialog-btn-default" ng-click="onSaveResources()" value="Save" />
+        <input type="button" class="btn dialog-btn-default" value="Cancel" ng-click="CloseAddResourcesDialog()" />
+    </div>
+    
+    
+</div>

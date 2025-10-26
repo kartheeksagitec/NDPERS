@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<form ID="wfmActivityDashboardMaintenance" sfwFormObject="busBpmActivityBAM" sfwType="Maintenance" sfwTitle="Activity Dashboard Maintenance" sfwActive="True" sfwStatus="Review" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmDashboardLookup" sfwFormObjectType="FormObject" sfwEntity="entBpmActivityBAM">
+  <initialload>
+    <callmethods sfwMode="New" sfwMethodName="NewObject" />
+    <callmethods sfwMode="Update" sfwMethodName="Group1" />
+  </initialload>
+  <sfwTable>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnltoolbars" sfwGroupCaption="Activity Dashboard Details" sfwCaption="Activity Dashboard Charts">
+          <sfwTable ID="tblNewPage3" sfwCaption="New Page">
+            <sfwRow>
+              <sfwColumn CssClass="width-90">
+                <sfwLabel ID="lblActivityName" Text="Activity Name" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn CssClass="width-160">
+                <sfwDropDownList ID="ddlDropDownList" DataTextField="name" DataValueField="activity_id" sfwLoadType="Query" sfwLoadSource="entBpmActivityBAM.GetUserTaskActivities" sfwEntityField="IintActivityId" />
+              </sfwColumn>
+              <sfwColumn CssClass="width-90">
+                <sfwLabel ID="lblDateFrom" Text="Date From: " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn CssClass="width-160">
+                <sfwTextBox ID="txtDateFrom" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="=" sfwEntityField="IdtDateFrom" />
+                <CompareValidator ID="cmvCompareValidator" Operator="LessThanEqual" Type="Date" ControlToValidate="txtDateFrom" ControlToCompare="txtDateTo" ErrorMessage="Date From should be Less Than or Equal to Date To." />
+              </sfwColumn>
+              <sfwColumn CssClass="width-90">
+                <sfwLabel ID="lblDateTo" Text="Date To: " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn CssClass="width-160">
+                <sfwTextBox ID="txtDateTo" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="=" sfwEntityField="IdtDateTo" />
+                <CompareValidator ID="cmvCompareValidator1" Operator="GreaterThanEqual" Type="Date" ControlToValidate="txtDateTo" ControlToCompare="txtDateFrom" ErrorMessage="Date To should be Greater Than or Equal to Date From" />
+              </sfwColumn>
+              <sfwColumn CssClass="width-90">
+                <sfwButton ID="btnExecuteRefreshFromObject" sfwMethodName="btnValidateExecuteBusinessMethod_Click" Text="Load Charts" sfwObjectID="busBpmActivityBAM" sfwObjectMethod="GetBPMActivityBAM" sfwNavigationParameter="aintActivityId=IintActivityId" sfwMessageId="10026" sfwValidateClientJavascript="True" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn ColumnSpan="7">
+                <sfwTabContainer ID="tctSfwTabContainer">
+                  <Tabs>
+                    <sfwTabSheet ID="tshNewPage" HeaderText="Activity Load Analysis">
+                      <sfwTable>
+                        <sfwRow>
+                          <sfwColumn>
+                            <sfwChart ChartName="Load Analysis per Activity" ShowLegend="true" ID="chrActivityLoadAnalysis" ChartType="Bar" Width="1000px" Height="500" sfwLegendColCount="3" sfwEntityField="lstActivityLoadAnalysis" sfwGridEntity="entBpmBAMActivityLoadAnalysis">
+                              <Series>
+                                <sfwSeries XValueMember="IstrActivityName" Name="At Risk" YValueMembers="IintAtRisk" ChartType="Bar" sfwTooltipTableParams="&lt;table class='leftchart' &gt;&lt;tr&gt;&lt;th&gt;&lt;strong&gt; Activity Name &lt;/strong&gt;&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;{IstrActivityName}&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt; At Risk :&lt;/td&gt;&lt;td&gt;{IintAtRisk}&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt; On Time :&lt;/td&gt;&lt;td&gt;{IintOnTime}&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt; Over Due :&lt;/td&gt;&lt;td&gt;{IintOverDue}&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;" YMemberColor="#E84D2C" />
+                                <sfwSeries XValueMember="IstrActivityName" Name="On Time" YValueMembers="IintOnTime" ChartType="Bar" sfwTooltipTableParams="&lt;table class='leftchart' &gt;&lt;tr&gt;&lt;th&gt;&lt;strong&gt; Activity Name &lt;/strong&gt;&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;{IstrActivityName}&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt; At Risk :&lt;/td&gt;&lt;td&gt;{IintAtRisk}&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt; On Time :&lt;/td&gt;&lt;td&gt;{IintOnTime}&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt; Over Due :&lt;/td&gt;&lt;td&gt;{IintOverDue}&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;" YMemberColor="#333CFF" />
+                                <sfwSeries XValueMember="IstrActivityName" Name="Over Due" YValueMembers="IintOverDue" ChartType="Bar" sfwTooltipTableParams="&lt;table class='leftchart' &gt;&lt;tr&gt;&lt;th&gt;&lt;strong&gt; Activity Name &lt;/strong&gt;&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;{IstrActivityName}&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt; At Risk :&lt;/td&gt;&lt;td&gt;{IintAtRisk}&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt; On Time :&lt;/td&gt;&lt;td&gt;{IintOnTime}&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt; Over Due :&lt;/td&gt;&lt;td&gt;{IintOverDue}&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;" YMemberColor="#932ce8" />
+                              </Series>
+                              <ChartAreas>
+                                <sfwChartArea ChartAreaName="ActivityLoadAnalysis">
+                                  <Area3DStyle Enable3D="false" />
+                                </sfwChartArea>
+                              </ChartAreas>
+                            </sfwChart>
+                          </sfwColumn>
+                          <sfwColumn />
+                          <sfwColumn />
+                          <sfwColumn />
+                        </sfwRow>
+                      </sfwTable>
+                    </sfwTabSheet>
+                  </Tabs>
+                </sfwTabContainer>
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+  </sfwTable>
+  <validatenew />
+  <loaddetails>
+    <entityfield ID="lstActivityLoadAnalysis" sfwUpdateAutoLoad="False" sfwNewAutoLoad="False" />
+  </loaddetails>
+</form>

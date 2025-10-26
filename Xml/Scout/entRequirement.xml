@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entRequirement" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvScout" sfwType="BusinessRule" sfwMainCDO="icdoRequirement" sfwObjectID="busRequirement" sfwTableName="sgs_requirement">
+  <rules>
+    <rule ID="REQ_TYPE_SHUD_NOT_BE_CHILD" sfwMessageId="46" sfwExpression="(this.icdoRequirement.requirement_key == this.icdoRequirement.parent_requirement_key) &amp;&amp; &#xA;(this.icdoRequirement.requirement_type_value == &quot;CHLD&quot;)" sfwObjectBased="True" />
+    <rule ID="IS_PARENT_REQ_KEY_EXISTS" sfwMessageId="47" sfwExpression="(this.IsParentRequirementExists != True)" sfwObjectBased="True" />
+    <rule ID="IS_REQ_KEY_EXISTS" sfwMessageId="48" sfwExpression="(this.IsRequirementKeyExists == True)" sfwObjectBased="True" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload />
+  <softerror />
+  <harderror>
+    <item ID="REQ_TYPE_SHUD_NOT_BE_CHILD" sfwMode="All" sfwStatus="Active" />
+    <item ID="IS_PARENT_REQ_KEY_EXISTS" sfwMode="All" sfwStatus="Active" />
+    <item ID="IS_REQ_KEY_EXISTS" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <updateablecdo />
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select A.* from sgs_requirement A&#xD;&#xA;&#xD;&#xA;">
+      <parameters />
+    </query>
+    <query ID="CountbyFlowID" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select count(*) from SGS_REQUIREMENT_USECASE_FLOW_CROSSREF where &#xD;&#xA;flow_id = @flow_id">
+      <parameters>
+        <parameter ID="@flow_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="GetChildRequirements" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT r.* FROM SGS_REQUIREMENT r &#xD;&#xA;WHERE (r.REQUIREMENT_ID &lt;&gt; @PARENT_REQUIREMENT_ID) AND (r.PARENT_REQUIREMENT_ID = @PARENT_REQUIREMENT_ID)&#xD;&#xA;ORDER BY CharIndex(r.REQUIREMENT_TYPE_VALUE + '|','CHLD|DUP|BUS|COR|REP|'),r.REQUIREMENT_ID">
+      <parameters>
+        <parameter ID="@PARENT_REQUIREMENT_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="ListOwners" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT user_serial_id, last_name + ', ' + first_name full_name FROM sgs_user &#xD;&#xA;ORDER BY 2">
+      <parameters />
+    </query>
+    <query ID="GetFlowDetails" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="IF((SELECT COUNT(*) FROM SGS_REQUIREMENT_USECASE_FLOW_CROSSREF CRS &#xD;&#xA;INNER JOIN  SGS_USECASE_FLOW U ON U.FLOW_ID = CRS.FLOW_ID&#xD;&#xA;WHERE CRS.REQUIREMENT_ID = @REQUIREMENT_ID)=0)&#xD;&#xA;BEGIN&#xD;&#xA;   SELECT U.flow_key as FLOW_KEY,U.STATUS_VALUE AS STATUS_VALUE,&#xD;&#xA;   U.INCREMENT_VALUE AS INCREMENT_VALUE,&#xD;&#xA;   U.FLOW_DESC AS FLOW_DESCRIPTION,&#xD;&#xA;   CRS.* FROM SGS_REQUIREMENT_USECASE_FLOW_CROSSREF CRS &#xD;&#xA;   INNER JOIN  SGS_USECASE_FLOW U ON U.FLOW_ID = CRS.FLOW_ID&#xD;&#xA;   WHERE CRS.REQUIREMENT_ID =@PARENT_REQUIREMENT_ID&#xD;&#xA;END&#xD;&#xA;ELSE&#xD;&#xA;BEGIN&#xD;&#xA;                        SELECT U.flow_key as FLOW_KEY,U.STATUS_VALUE AS STATUS_VALUE,&#xD;&#xA;   U.INCREMENT_VALUE AS INCREMENT_VALUE,&#xD;&#xA;   U.FLOW_DESC AS FLOW_DESCRIPTION,&#xD;&#xA;   CRS.* FROM SGS_REQUIREMENT_USECASE_FLOW_CROSSREF CRS &#xD;&#xA;   INNER JOIN  SGS_USECASE_FLOW U ON U.FLOW_ID = CRS.FLOW_ID&#xD;&#xA;   WHERE CRS.REQUIREMENT_ID = @REQUIREMENT_ID&#xD;&#xA;END">
+      <parameters>
+        <parameter ID="@REQUIREMENT_ID" sfwDataType="int" />
+        <parameter ID="@PARENT_REQUIREMENT_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="sqUseCaseFlow" sfwQueryType="SubSelectQuery" sfwSql="SELECT * FROM SGS_REQUIREMENT_USECASE_FLOW_CROSSREF B&#xD;&#xA;INNER JOIN SGS_USECASE_FLOW C ON C.FLOW_ID = B.FLOW_ID&#xD;&#xA;INNER JOIN SGS_USECASE D ON D.USECASE_ID = C.USECASE_ID&#xD;&#xA;WHERE B.REQUIREMENT_ID = A.REQUIREMENT_ID">
+      <parameters />
+    </query>
+    <query ID="DeleteFromCrossRef" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="delete from SGS_REQUIREMENT_USECASE_FLOW_CROSSREF where requirement_id =@requirement_id">
+      <parameters>
+        <parameter ID="@requirement_id" />
+      </parameters>
+    </query>
+    <query ID="ParentKeyExists" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGS_REQUIREMENT WHERE REQUIREMENT_KEY=@REQUIREMENT_KEY">
+      <parameters>
+        <parameter ID="@REQUIREMENT_KEY" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="GetRequirementIDbyKey" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT REQUIREMENT_ID FROM SGS_REQUIREMENT WHERE REQUIREMENT_KEY=@REQUIREMENT_KEY ">
+      <parameters>
+        <parameter ID="@REQUIREMENT_KEY" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="LoadRequirementKey" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT REQUIREMENT_KEY FROM SGS_REQUIREMENT WHERE REQUIREMENT_ID=@PARENT_REQUIREMENT_ID">
+      <parameters>
+        <parameter ID="@PARENT_REQUIREMENT_ID" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="UpdateParentRequirmentId" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="UPDATE SGS_REQUIREMENT SET PARENT_REQUIREMENT_ID = @requirement_id&#xD;&#xA;WHERE requirement_id = @requirement_id">
+      <parameters>
+        <parameter ID="@requirement_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="IsRequirementKeyExists" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT COUNT(*) FROM SGS_REQUIREMENT WHERE REQUIREMENT_KEY=@REQUIREMENT_KEY">
+      <parameters>
+        <parameter ID="@REQUIREMENT_KEY" sfwDataType="string" />
+      </parameters>
+    </query>
+    <query ID="GetNextRequirement_Key" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select top(1) requirement_id from sgs_requirement order by requirement_id desc">
+      <parameters />
+    </query>
+    <query ID="rptRequirement" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="WITH PARENT(REQUIREMENT_ID, REQUIREMENT_KEY,PARENT_REQUIREMENT_ID,REQUIREMENT_SHORT_DESC,REQUIREMENT_DESC,&#xD;&#xA;  REQUIREMENT_TYPE_DESCRIPTION,STATUS_DESCRIPTION,CATEGORY_DESCRIPTION,NOTES, MYORDER, Level, SORT_STRING)&#xD;&#xA;AS&#xD;&#xA;(&#xD;&#xA; SELECT REQ.REQUIREMENT_ID, REQ.REQUIREMENT_KEY,REQ.PARENT_REQUIREMENT_ID,REQ.REQUIREMENT_SHORT_DESC,&#xD;&#xA;   REQ.REQUIREMENT_DESC,REQ.REQUIREMENT_TYPE_DESCRIPTION,REQ.STATUS_DESCRIPTION,REQ.CATEGORY_DESCRIPTION,REQ.NOTES, &#xD;&#xA;   REQ.MYORDER, 0 AS LEVEL&#xD;&#xA;   ,&#xD;&#xA;   CAST(RIGHT('00000000'+CAST(REQ.REQUIREMENT_ID AS VARCHAR(8)),8) AS VARCHAR(250)) AS SORT_STRING&#xD;&#xA; FROM (&#xD;&#xA;   SELECT REQ.REQUIREMENT_ID &#xD;&#xA;     ,REQ.REQUIREMENT_KEY,&#xD;&#xA;     CASE WHEN REQ.PARENT_REQUIREMENT_ID =REQ.REQUIREMENT_ID THEN NULL ELSE REQ.PARENT_REQUIREMENT_ID  END &#xD;&#xA;      AS PARENT_REQUIREMENT_ID,&#xD;&#xA;     RTRIM(LTRIM(REQ.REQUIREMENT_SHORT_DESC)) AS REQUIREMENT_SHORT_DESC,&#xD;&#xA;     LTRIM(RTRIM(REQ.REQUIREMENT_DESC)) REQUIREMENT_DESC,&#xD;&#xA;     CODE.DESCRIPTION AS REQUIREMENT_TYPE_DESCRIPTION,CODE1.DESCRIPTION AS STATUS_DESCRIPTION,&#xD;&#xA;     CODE2.DESCRIPTION AS CATEGORY_DESCRIPTION,Req.NOTES,&#xD;&#xA;     (CASE REQUIREMENT_TYPE_VALUE WHEN 'PAR' THEN 1 WHEN 'CHLD' THEN 2 WHEN 'BUS' THEN 3 WHEN 'DUP' THEN 4 WHEN 'REP' &#xD;&#xA;      THEN 5 WHEN 'COR' THEN 6 END) AS MYORDER&#xD;&#xA;    FROM SGS_REQUIREMENT(NOLOCK) REQ &#xD;&#xA;   INNER JOIN  SGS_CODE_VALUE(NOLOCK) CODE ON CODE.CODE_ID=REQ.REQUIREMENT_TYPE_ID AND CODE.CODE_VALUE=REQ.REQUIREMENT_TYPE_VALUE&#xD;&#xA;   INNER JOIN  SGS_CODE_VALUE(NOLOCK) CODE1 ON CODE1.CODE_ID=REQ.STATUS_ID AND CODE1.CODE_VALUE=REQ.STATUS_VALUE&#xD;&#xA;   INNER JOIN  SGS_CODE_VALUE(NOLOCK) CODE2 ON CODE2.CODE_ID=REQ.CATEGORY_ID AND CODE2.CODE_VALUE=REQ.CATEGORY_VALUE&#xD;&#xA;   WHERE CATEGORY_VALUE=(CASE WHEN @CATEGORY_VALUE ='' THEN CATEGORY_VALUE ELSE @CATEGORY_VALUE END)&#xD;&#xA;  ) REQ&#xD;&#xA; WHERE PARENT_REQUIREMENT_ID IS  NULL&#xD;&#xA;&#xD;&#xA;    UNION ALL&#xD;&#xA;&#xD;&#xA; SELECT REQ.REQUIREMENT_ID, REQ.REQUIREMENT_KEY,REQ.PARENT_REQUIREMENT_ID,REQ.REQUIREMENT_SHORT_DESC,&#xD;&#xA;  REQ.REQUIREMENT_DESC,REQ.REQUIREMENT_TYPE_DESCRIPTION,REQ.STATUS_DESCRIPTION,REQ.CATEGORY_DESCRIPTION,REQ.NOTES, REQ.MYORDER, LEVEL+1 AS LEVEL,&#xD;&#xA;   CAST(D.SORT_STRING+ + '-'+ RIGHT('00000000'+CAST(REQ.REQUIREMENT_ID AS VARCHAR(8)),8) AS VARCHAR(250))  AS SORT_STRING&#xD;&#xA; FROM (&#xD;&#xA;   SELECT REQ.REQUIREMENT_ID &#xD;&#xA;     ,REQ.REQUIREMENT_KEY,&#xD;&#xA;     CASE WHEN REQ.PARENT_REQUIREMENT_ID =REQ.REQUIREMENT_ID THEN NULL ELSE REQ.PARENT_REQUIREMENT_ID  END &#xD;&#xA;      AS PARENT_REQUIREMENT_ID,&#xD;&#xA;     RTRIM(LTRIM(REQ.REQUIREMENT_SHORT_DESC)) AS REQUIREMENT_SHORT_DESC,&#xD;&#xA;     LTRIM(RTRIM(REQ.REQUIREMENT_DESC)) REQUIREMENT_DESC,&#xD;&#xA;     CODE.DESCRIPTION AS REQUIREMENT_TYPE_DESCRIPTION,CODE1.DESCRIPTION AS STATUS_DESCRIPTION,&#xD;&#xA;     CODE2.DESCRIPTION AS CATEGORY_DESCRIPTION,Req.NOTES,&#xD;&#xA;     (CASE REQUIREMENT_TYPE_VALUE WHEN 'PAR' THEN 1 WHEN 'CHLD' THEN 2 WHEN 'BUS' THEN 3 WHEN 'DUP' THEN 4 WHEN 'REP' THEN 5 WHEN 'COR' THEN 6 END) AS MYORDER&#xD;&#xA;    FROM SGS_REQUIREMENT(NOLOCK) REQ &#xD;&#xA;   INNER JOIN  SGS_CODE_VALUE(NOLOCK) CODE ON CODE.CODE_ID=REQ.REQUIREMENT_TYPE_ID AND CODE.CODE_VALUE=REQ.REQUIREMENT_TYPE_VALUE&#xD;&#xA;   INNER JOIN  SGS_CODE_VALUE(NOLOCK) CODE1 ON CODE1.CODE_ID=REQ.STATUS_ID AND CODE1.CODE_VALUE=REQ.STATUS_VALUE&#xD;&#xA;   INNER JOIN  SGS_CODE_VALUE(NOLOCK) CODE2 ON CODE2.CODE_ID=REQ.CATEGORY_ID AND CODE2.CODE_VALUE=REQ.CATEGORY_VALUE&#xD;&#xA;   WHERE CATEGORY_VALUE=(CASE WHEN @CATEGORY_VALUE ='' THEN CATEGORY_VALUE ELSE @CATEGORY_VALUE END)&#xD;&#xA;  ) REQ&#xD;&#xA; INNER JOIN Parent AS d ON REQ.PARENT_REQUIREMENT_ID = d.REQUIREMENT_ID&#xD;&#xA;)&#xD;&#xA;SELECT * &#xD;&#xA; FROM PARENT  ORDER BY SORT_STRING,LEVEL,MYORDER&#xD;&#xA; OPTION (MAXRECURSION 32767);">
+      <parameters>
+        <parameter ID="@CATEGORY_VALUE" sfwDataType="string" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="RequirementId" sfwType="Column" sfwValue="requirement_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="RequirementKey" sfwType="Column" sfwValue="requirement_key" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="ParentRequirementId" sfwType="Column" sfwValue="parent_requirement_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="30" sfwRequired="False" />
+    <attribute ID="RequirementShortDesc" sfwType="Column" sfwValue="requirement_short_desc" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="70" sfwRequired="False" />
+    <attribute ID="RequirementDesc" sfwType="Column" sfwValue="requirement_desc" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="2000" sfwRequired="False" />
+    <attribute ID="RequirementTypeDescription" sfwType="Description" sfwValue="requirement_type_description" />
+    <attribute ID="RequirementTypeId" sfwType="Column" sfwValue="requirement_type_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="55" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="RequirementTypeValue" sfwType="Column" sfwValue="requirement_type_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="StatusDescription" sfwType="Description" sfwValue="status_description" />
+    <attribute ID="StatusId" sfwType="Column" sfwValue="status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="35" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusValue" sfwType="Column" sfwValue="status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="CategoryDescription" sfwType="Description" sfwValue="category_description" />
+    <attribute ID="CategoryId" sfwType="Column" sfwValue="category_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwCodeID="56" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="CategoryValue" sfwType="Column" sfwValue="category_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="Owner" sfwType="Column" sfwValue="owner" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="FileLocation" sfwType="Column" sfwValue="file_location" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="200" sfwRequired="False" />
+    <attribute ID="Priority" sfwType="Column" sfwValue="priority" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="Notes" sfwType="Column" sfwValue="notes" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="500" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute sfwDataType="string" sfwType="Property" ID="ParentRequirementKey" sfwValue="icdoRequirement.Parent_Requirement_Key" />
+    <attribute sfwDataType="int" sfwType="Property" ID="RequirementId1" sfwValue="icdoParentRequirement.requirement_id" />
+    <attribute sfwDataType="string" sfwType="Property" ID="RequirementKey1" sfwValue="icdoParentRequirement.requirement_key" />
+    <attribute sfwDataType="string" sfwType="Property" ID="CategoryDescription1" sfwValue="icdoParentRequirement.category_description" />
+    <attribute sfwDataType="string" sfwType="Property" ID="RequirementShortDesc1" sfwValue="icdoParentRequirement.requirement_short_desc" />
+    <attribute sfwDataType="string" sfwType="Property" ID="StatusDescription1" sfwValue="icdoParentRequirement.status_description" />
+    <attribute sfwType="Collection" sfwEntity="entRequirementHistory" ID="lstRequirementHistory" sfwValue="iclbRequirementHistory" />
+    <attribute sfwType="Collection" sfwEntity="entRequirement" ID="lstChildRequirement" sfwValue="iclbChildRequirement" />
+    <attribute sfwType="Collection" sfwEntity="entRequirementUsecaseFlowCrossref" ID="lstusRequirementUsecaseFlowCrossref" sfwValue="iclbusRequirementUsecaseFlowCrossref" />
+  </attributes>
+</entity>

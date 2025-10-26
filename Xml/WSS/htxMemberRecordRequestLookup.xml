@@ -1,0 +1,97 @@
+﻿<form ID="wfmMemberRecordRequestLookup" sfwActive="True" sfwDescription="Internal Screen Lookup" sfwStatus="Review" sfwRemoteObject="srvNeoSpinWSS" sfwResource="2027" sfwType="FormLinkLookup" sfwTitle="Member Record Request Lookup" version="3.5" WebSite="NeoSpinWebClient" sfwEntity="entWssMemberRecordRequest" sfwGridCollection="busMemberDataRequestLookup.iclbWssMemberRecordRequest" sfwTemplate="MemberRecordRequestLookup.html" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmMemberRecordRequestLookup" isBasedOnWfm="true">
+  <initialload>
+    <query ID="cdoWssMemberRecordRequest" sfwQueryRef="entWssMemberRecordRequest.LookupInternal" sfwMethodName="LoadMemberDataRequests" />
+    <query ID="cdoWssMemberRecordRequest" sfwQueryRef="entWssMemberRecordRequest.LookupInternalSubQuery1" />
+  </initialload>
+  <items>
+    <sfwTable ID="Main" />
+    <sfwPanel ID="pnlCriteria" sfwCaption="Criteria">
+      <items>
+        <sfwTable ID="tblCriteria" />
+        <sfwLabel ID="capMemberRecordRequestId" Text="Member Record Request ID : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtMemberRecordRequestId" sfwDataField="a.member_record_request_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="cdoWssMemberRecordRequest" />
+        <sfwLabel ID="capPersonId" Text="PERSLink ID :  " AssociatedControlID="txtPersonId" sfwIsCaption="True" />
+        <sfwTextBox ID="txtPersonId" sfwDataField="a.person_id" sfwQueryID="cdoWssMemberRecordRequest" />
+        <sfwImageButton ID="btnRetrieve1" sfwMethodName="btnRetrieve_Click" ImageUrl="~/Image/Lookup.jpg" ImageAlign="AbsMiddle" sfwSelectedIndex="PersonId" sfwActiveForm="wfmPersonLookup" sfwRelatedControl="txtPersonId" />
+        <sfwLabel ID="capLastName" Text="Last Name : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtLastName" sfwDataField="a.last_name" sfwOperator="like" sfwQueryID="cdoWssMemberRecordRequest" />
+        <sfwLabel ID="capFirstName" Text="First Name : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtFirstName" sfwDataField="a.first_name" sfwOperator="like" sfwQueryID="cdoWssMemberRecordRequest" />
+        <sfwLabel ID="capSsn" Text="Last four digits of SSN : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtSsn" sfwDataField="substring(a.ssn, 6, 4)" sfwOperator="like" sfwQueryID="cdoWssMemberRecordRequest" />
+        <sfwLabel ID="capStatusValue" Text="Status : " sfwIsCaption="True" />
+        <sfwDropDownList ID="ddlStatusValue" sfwDataField="a.status_value" sfwOperator="like" sfwQueryID="cdoWssMemberRecordRequest" sfwLoadType="CodeGroup" sfwLoadSource="3508" />
+        <sfwLabel ID="capOrgCode" Text="Org Code : " sfwIsCaption="True" />
+        <sfwTextBox ID="txtOrgCode" sfwDataField="c.org_code" sfwOperator="=" sfwQueryID="cdoWssMemberRecordRequest" />
+        <sfwImageButton ID="btnRetrieve" ImageAlign="AbsMiddle" ImageUrl="~/Image/Lookup.jpg" sfwActiveForm="wfmOrganizationLookup" sfwMethodName="btnRetrieve_Click" sfwRelatedControl="txtOrgCode" sfwSelectedIndex="OrgCode" />
+        <sfwLabel AssociatedControlID="txtCreatedDateFrom" ID="lblCreatedDateFrom" Text="Requested Date From :" sfwIsCaption="True" />
+        <sfwTextBox ID="txtCreatedDateFrom" sfwDataField="convert(datetime, convert(varchar(10), a.created_date, 101))" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="between" sfwQueryID="cdoWssMemberRecordRequest" sfwRelatedControl="txtCreatedDateTo" />
+        <CompareValidator ID="cmvCreateDateFrom" />
+        <sfwLabel AssociatedControlID="txtCreatedDateTo" ID="lblCreatedDateTo" Text="Requested Date To :" sfwIsCaption="True" />
+        <sfwTextBox ID="txtCreatedDateTo" sfwDataField="convert(datetime, convert(varchar(10), a.created_date, 101))" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="=" sfwQueryID="cdoWssMemberRecordRequest" />
+        <CompareValidator ID="cmvCreateDateTo" />
+        <CompareValidator ID="cmvCreateDateRange" />
+        <sfwButton ID="btnSearch" sfwMethodName="btnSearch_Click" Text="Search" />
+        <sfwButton ID="btnReset" sfwMethodName="btnReset_Click" Text="Reset" />
+        <sfwButton ID="btnStoreSearch" sfwMethodName="btnStoreUserDefaults_Click" Text="Store Search" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlResult" sfwCaption="Search Results">
+      <items>
+        <sfwTable ID="tblResult" />
+        <sfwButton ID="btnOpen" sfwActiveForm="wfmViewMemberRecordRequestMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="aintMemberRecordRequestID=MemberRecordRequestId" sfwRelatedControl="dgrResult" Text="Open" />
+        <sfwButton ID="btnExportExcel" sfwMethodName="btnColumnsToExport_Click" sfwRelatedControl="dgrResult" Text="Export To Excel" />
+        <sfwGridView AllowPaging="True" AllowSorting="True" ID="dgrResult" sfwSelection="Many">
+          <Columns>
+            <TemplateField HeaderText="Request ID">
+              <ItemTemplate>
+                <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpen" sfwEntityField="MemberRecordRequestId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="PERSLink ID">
+              <ItemTemplate>
+                <sfwLabel ID="lblLabel" Text="Label" sfwEntityField="PersonId" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Last 4 Digits of SSN">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="IstrLastFourDigitsSSN" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Last Name">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="LastName" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="First Name">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="FirstName" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Date Of Birth">
+              <ItemTemplate>
+                <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="DateOfBirth" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Gender">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="GenderDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Status">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="StatusDescription" />
+              </ItemTemplate>
+            </TemplateField>
+            <TemplateField HeaderText="Rejection Reason">
+              <ItemTemplate>
+                <sfwLabel sfwEntityField="RejectionReason" />
+              </ItemTemplate>
+            </TemplateField>
+          </Columns>
+        </sfwGridView>
+      </items>
+    </sfwPanel>
+  </items>
+  <loaddetails />
+</form>

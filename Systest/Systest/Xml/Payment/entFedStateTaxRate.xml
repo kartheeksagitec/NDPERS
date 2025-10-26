@@ -1,0 +1,105 @@
+﻿<entity ID="entFedStateTaxRate" sfwActive="True" sfwStatus="Valid" sfwType="BusinessRule" sfwMainCDO="icdoFedStateTaxRate" sfwObjectID="busFedStateTaxRate" sfwTableName="sgt_fed_state_tax_rate">
+  <rules>
+    <rule ID="IsAllowanceAmountEnteredValid" sfwMessageId="5545" sfwExpression="(this.IsAllowanceEnteredForEffectiveDateInvalid() == True)" sfwObjectBased="True" />
+    <rule ID="IsAmountLessThanZero" sfwMessageId="5629" sfwExpression="((this.icdoFedStateTaxRate.allowance_amount &lt; 0) || &#xA;(this.icdoFedStateTaxRate.maximum_amount &lt; 0) || &#xA;(this.icdoFedStateTaxRate.minimum_amount &lt; 0) || &#xA;(this.icdoFedStateTaxRate.tax_amount &lt; 0))" sfwObjectBased="True" />
+    <rule ID="IsEffectiveDateNull" sfwMessageId="7067" sfwExpression="(this.icdoFedStateTaxRate.effective_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="IsEfftiveDateInvalid" sfwMessageId="5532" sfwExpression="(this.IsEffectiveDateInvalid() == True)" sfwObjectBased="True" />
+    <rule ID="IsMaritalStatusNull" sfwMessageId="1004" sfwExpression="(string.IsNullOrEmpty(this.icdoFedStateTaxRate.marital_status_value))" sfwObjectBased="True" />
+    <rule ID="IsMinGreaterThanMax" sfwMessageId="5630" sfwExpression="(this.icdoFedStateTaxRate.minimum_amount &gt; this.icdoFedStateTaxRate.maximum_amount)" sfwObjectBased="True" />
+    <rule ID="IsPercentageGreaterThan100" sfwMessageId="5570" sfwExpression="(this.icdoFedStateTaxRate.percentage &gt;= 100)" sfwObjectBased="True" />
+    <rule ID="IsRecordValid" sfwMessageId="5551" sfwExpression="(this.IsEffectiveDateInvalid() == True)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleIsTaxRateApproved" sfwExpression="!(this.icdoFedStateTaxRate.approved_flag == &quot;Y&quot;) || &#xA;(string.IsNullOrEmpty(this.icdoFedStateTaxRate.approved_flag))" sfwObjectBased="True" />
+    <rule ID="IsFilingStatusNull" sfwRuleType="Validation" sfwObjectBased="True" sfwExpression="(string.IsNullOrEmpty(this.icdoFedStateTaxRate.filing_status_value))" sfwMessageId="10471" />
+  </rules>
+  <delete />
+  <checklist />
+  <initialload>
+    <item ID="VisibleRuleIsTaxRateApproved" sfwMode="All" sfwStatus="Active" />
+  </initialload>
+  <softerror />
+  <harderror>
+    <item ID="IsEffectiveDateNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEfftiveDateInvalid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAllowanceAmountEnteredValid" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMaritalStatusNull" sfwMode="All" sfwStatus="InActive" />
+    <item ID="IsPercentageGreaterThan100" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsAmountLessThanZero" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsMinGreaterThanMax" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsFilingStatusNull" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete>
+    <item ID="IsRecordValid" sfwMode="All" sfwStatus="Active" />
+  </validatedelete>
+  <updateablecdo />
+  <queries>
+    <query ID="FederalLookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * from SGT_FED_STATE_TAX_RATE WHERE TAX_IDENTIFIER_VALUE='FDRL' order by EFFECTIVE_DATE desc">
+      <parameters />
+    </query>
+    <query ID="StateLookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT * from SGT_FED_STATE_TAX_RATE WHERE TAX_IDENTIFIER_VALUE='STAT' order by EFFECTIVE_DATE desc">
+      <parameters />
+    </query>
+    <query ID="GetLatestTaxRateForEffectiveDate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select * from sgt_fed_state_tax_rate&#xD;&#xA;where marital_status_value=@maritalStatus and tax_identifier_value=@taxtype and approved_flag='Y'&#xD;&#xA;and effective_date=(Select max(effective_date) from sgt_fed_state_tax_rate&#xD;&#xA;where marital_status_value=@maritalStatus and tax_identifier_value=@taxtype&#xD;&#xA;and effective_date &lt;=@paymentDate and approved_flag='Y')&#xD;&#xA;order by effective_date desc">
+      <parameters>
+        <parameter ID="@maritalStatus" sfwDataType="string" />
+        <parameter ID="@taxtype" sfwDataType="string" />
+        <parameter ID="@paymentDate" sfwDataType="DateTime" />
+      </parameters>
+    </query>
+    <query ID="LoadMaritalStatusForPaymentTaxRates" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select * from sgs_code_value where code_id=306 and data1='Y'">
+      <parameters />
+    </query>
+    <query ID="GetAllowanceRecordForEffectiveDate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="select  distinct Allowance_amount from dbo.SGT_FED_STATE_TAX_RATE &#xD;&#xA;where tax_identifier_value = @taxtype&#xD;&#xA;and effective_date = @effectivedate and fed_state_tax_id &lt;&gt; @fedstatetaxid">
+      <parameters>
+        <parameter ID="@taxtype" sfwDataType="string" />
+        <parameter ID="@effectivedate" sfwDataType="DateTime" />
+        <parameter ID="@fedstatetaxid" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LoadMaritalStatusForPaymentTaxRatesTable" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="Select * from sgs_code_value where code_id=306 and data1='Y' and data2='Y'">
+      <parameters />
+    </query>
+    <query ID="GetTaxRateForEffecDate" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT &#xD;&#xA;&#x9;* &#xD;&#xA;FROM &#xD;&#xA;&#x9;SGT_FED_STATE_TAX_RATE WITH(NOLOCK)&#xD;&#xA;WHERE&#xD;&#xA;&#x9;TAX_IDENTIFIER_VALUE = @TAXIDENTIFIERVALUE AND&#xD;&#xA;&#x9;TAX_REF = @TAXREF AND&#xD;&#xA;&#x9;ISNULL(APPROVED_FLAG,'N') = 'Y'&#x9;AND&#xD;&#xA;&#x9;FILING_STATUS_VALUE = @FILINGSTATUSVALUE AND&#xD;&#xA;&#x9;EFFECTIVE_DATE  &lt;= @EFFECTIVEDATE AND &#xD;&#xA;&#x9;(@TAXABLEAMT BETWEEN MINIMUM_AMOUNT AND MAXIMUM_AMOUNT)&#xD;&#xA;ORDER BY &#xD;&#xA;&#x9;EFFECTIVE_DATE DESC">
+      <parameters>
+        <parameter ID="@TAXIDENTIFIERVALUE" sfwDataType="string" />
+        <parameter ID="@TAXREF" sfwDataType="string" />
+        <parameter ID="@FILINGSTATUSVALUE" sfwDataType="string" />
+        <parameter ID="@EFFECTIVEDATE" sfwDataType="DateTime" />
+        <parameter ID="@TAXABLEAMT" sfwDataType="decimal" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="FedStateTaxId" sfwType="Column" sfwValue="fed_state_tax_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="TaxIdentifierDescription" sfwType="Description" sfwValue="tax_identifier_description" />
+    <attribute ID="TaxIdentifierId" sfwType="Column" sfwValue="tax_identifier_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="2211" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="TaxIdentifierValue" sfwType="Column" sfwValue="tax_identifier_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="EffectiveDate" sfwType="Column" sfwValue="effective_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="MaritalStatusDescription" sfwType="Description" sfwValue="marital_status_description" />
+    <attribute ID="MaritalStatusId" sfwType="Column" sfwValue="marital_status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="306" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="MaritalStatusValue" sfwType="Column" sfwValue="marital_status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="4" sfwRequired="False" />
+    <attribute ID="MinimumAmount" sfwType="Column" sfwValue="minimum_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" sfwRequired="False" />
+    <attribute ID="MaximumAmount" sfwType="Column" sfwValue="maximum_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" sfwRequired="False" />
+    <attribute ID="TaxAmount" sfwType="Column" sfwValue="tax_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" sfwRequired="False" />
+    <attribute ID="Percentage" sfwType="Column" sfwValue="percentage" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" sfwRequired="False" />
+    <attribute ID="AllowanceAmount" sfwType="Column" sfwValue="allowance_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwLength="13,2" sfwRequired="False" />
+    <attribute ID="ApprovedFlag" sfwType="Column" sfwValue="approved_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwLength="1" sfwRequired="False" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwLength="50" sfwRequired="False" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute sfwValue="filing_status_id" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="int" sfwDBDataType="int" sfwIsNull="True" ID="FilingStatusId" sfwCodeID="7033" sfwCaption="Filing Status" />
+    <attribute sfwValue="filing_status_value" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="4" sfwIsNull="True" ID="FilingStatusValue" sfwCaption="Filing Status" />
+    <attribute sfwType="Description" ID="FilingStatusDescription" sfwCaption="Filing Status" sfwValue="filing_status_description" />
+    <attribute sfwValue="tax_ref" sfwType="Column" sfwKeyNo="0" sfwIsIdentity="False" sfwDataType="string" sfwDBDataType="varchar" sfwLength="4" sfwIsNull="True" ID="TaxRef" sfwCaption="Tax Ref" />
+  </attributes>
+  <objectmethods>
+    <method ID="UpdateTax_Click" sfwReturnType="ArrayList" />
+    <method ID="Approve_Click" sfwReturnType="ArrayList" />
+  </objectmethods>
+  <constraint />
+  <groupslist />
+  <methods />
+  <lifecycle />
+  <ExtraFields />
+</entity>

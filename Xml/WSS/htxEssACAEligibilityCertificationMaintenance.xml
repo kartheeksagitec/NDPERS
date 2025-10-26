@@ -1,0 +1,65 @@
+﻿<form ID="wfmEssACAEligibilityCertificationMaintenance" sfwType="FormLinkMaintenance" sfwEntity="entWssEmploymentAcaCert" sfwTitle="ESSACAEligibility Certification Maintenance" sfwActive="True" sfwStatus="Review" sfwAspNetCaching="False" sfwMenuItemID="wfmDefaultLookup.aspx?FormID=wfmEssACAEligibilityCertificationLookup" sfwRemoteObject="srvPerson" sfwTemplate="EssACAEligibilityCertificationMaintenance.html" sfwFormObjectType="None" isBasedOnWfm="true">
+  <initialload>
+    <callmethods sfwMethodName="FindACACertificationRequest" />
+  </initialload>
+  <items>
+    <sfwPanel ID="pnlDemo" sfwCaption="Demographic Information">
+      <items>
+        <sfwTable ID="tblMain1" />
+        <sfwLabel ID="capPersonId" Text="PERSLink ID : " sfwIsCaption="True" />
+        <sfwLabel ID="lblPersonId" sfwEntityField="objPerson.PersonId" />
+        <sfwLabel ID="capFullName" Text="Name : " sfwIsCaption="True" />
+        <sfwLabel ID="lblFullName" sfwEntityField="objPerson.FullName" />
+        <sfwLabel ID="capLastFourDigitsOfSSN" Text="Last 4 SSN : " sfwIsCaption="True" />
+        <sfwLabel ID="lblLastFourDigitsOfSSN" sfwEntityField="objPerson.LastFourDigitsOfSSN" />
+        <sfwLabel ID="capDateOfBirth" Text="Date Of Birth : " sfwIsCaption="True" />
+        <sfwLabel ID="lblDateOfBirth" sfwDataFormat="{0:d}" sfwEntityField="objPerson.DateOfBirth" />
+        <sfwLabel ID="capMaritalStatusDescription" Text="Marital Status : " sfwIsCaption="True" />
+        <sfwLabel ID="lblMaritalStatusDescription" sfwEntityField="objPerson.MaritalStatusDescription" />
+        <sfwLabel ID="capGenderDescription" Text="Gender : " sfwIsCaption="True" />
+        <sfwLabel ID="lblGenderDescription" sfwEntityField="objPerson.GenderDescription" />
+      </items>
+    </sfwPanel>
+    <sfwPanel ID="pnlMain" sfwCaption="ACA Eligibility Certification">
+      <items>
+        <sfwTable ID="tblMain" />
+        <sfwLabel ID="lblWssEmploymentAcaCertId" sfwEntityField="WssEmploymentAcaCertId" CssClass="hideControl" />
+        <sfwLabel ID="lblPersonId" sfwEntityField="PersonId" CssClass="hideControl" />
+        <sfwTextBox ID="txtPersonId" sfwEntityField="PersonId" CssClass="hideControl" />
+        <sfwTextBox ID="txtPersonEmploymentId" sfwEntityField="PersonEmploymentId" CssClass="hideControl" />
+        <sfwLabel ID="capMetReq" Text="Does this employee meet the definition of a full-time employee under the Affordable Care Act?" AssociatedControlID="ddlMetReq" sfwIsCaption="True" />
+        <sfwDropDownList ID="ddlMetReq" sfwEntityField="MetReq" sfwClientVisibility="controllist:lblCertifyNo,lblCertifyYes,btnCertifyButtonClick,btnSave#N:lblCertifyNo;Y:lblCertifyYes,btnCertifyButtonClick;">
+          <ListItem />
+          <ListItem Text="Yes" Value="Y" />
+          <ListItem Text="No" Value="N" />
+        </sfwDropDownList>
+        <sfwLabel ID="lblMethodReq" sfwEntityField="MetReq" CssClass="hideControl" />
+        <sfwLabel ID="lblCertifyNo" Text="‘No further action is required at this time.’" />
+        <sfwLabel ID="lblCertifyYes" Text="I certify that this employee meets the definition of a full-time employee under the Affordable Care Act, and as such, is being offered coverage." sfwVisibleRule="IsCertificationDone" />
+        <sfwButton sfwMethodName="btnValidateExecuteBusinessMethod_Click" ID="btnCertifyButtonClick" sfwExecuteMethodType="ObjectMethod" sfwObjectMethod="CertifyButtonClick" sfwVisibleRule="IsCertificationDone" />
+        <sfwLabel ID="capMethod" Text="Check the appropriate method: " AssociatedControlID="ddlMethod" sfwIsCaption="True" sfwVisibleRule="IsCertifyButtonClick" />
+        <sfwDropDownList ID="ddlMethod" sfwEntityField="Method" sfwClientVisibility="controllist:capNewHireToDate,dtpNewHireToDate,capChangeToDate,dtpChangeToDate,capLbMeasure,ddlLbMeasure,btnSave#NEWH:capNewHireToDate,dtpNewHireToDate,btnSave;CPHI:capChangeToDate,dtpChangeToDate,btnSave;LBM:capLbMeasure,ddlLbMeasure,btnSave;" sfwVisibleRule="IsCertifyButtonClick" sfwLoadType="Method" sfwLoadSource="LoadMthodValueForAcaCertification" DataTextField="description" DataValueField="code_value" />
+        <sfwLabel ID="capNewHireToDate" Text="Enter Date of New Hire : " AssociatedControlID="dtpToDate" sfwIsCaption="True" />
+        <sfwTextBox ID="dtpNewHireToDate" sfwDataFormat="{0:d}" sfwEntityField="ToDate" />
+        <sfwLabel ID="capChangeToDate" Text="Date&#xA;of Change in Position / Increase in Hours : " AssociatedControlID="dtpToDate1" sfwIsCaption="True" />
+        <sfwTextBox ID="dtpChangeToDate" sfwDataFormat="{0:d}" sfwEntityField="ToDate" />
+        <sfwLabel ID="capLbMeasure" Text="Type of look-back measurement : " AssociatedControlID="ddlLbMeasure" sfwIsCaption="True" />
+        <sfwDropDownList ID="ddlLbMeasure" sfwEntityField="LbMeasure" sfwClientVisibility="controllist:lblAnnualFromDate,lblAnnualToDate,capAnnualFromDate,capAnnualToDate,capNewEligibleFromDate,dtpNewEligibleFromDate,capNewEligibleToDate,dtpNewEligibleToDate#ANNE:lblAnnualFromDate,lblAnnualToDate,capAnnualFromDate,capAnnualToDate;NEWE:capNewEligibleFromDate,dtpNewEligibleFromDate,capNewEligibleToDate,dtpNewEligibleToDate;" sfwLoadType="Method" sfwLoadSource="LoadLookBackOptions" DataTextField="description" DataValueField="code_value" />
+        <sfwLabel ID="capAnnualFromDate" Text="From Date : " AssociatedControlID="lblAnnualFromDate" sfwIsCaption="True" />
+        <sfwLabel ID="lblAnnualFromDate" sfwEntityField="IdtAnnualFromDate" />
+        <sfwLabel ID="capAnnualToDate" Text="To Date : " AssociatedControlID="lblAnnualToDate" sfwIsCaption="True" />
+        <sfwLabel ID="lblAnnualToDate" sfwEntityField="IdtAnnualToDate" />
+        <sfwLabel ID="capNewEligibleFromDate" Text="From Date : " AssociatedControlID="dtpFromDate1" sfwIsCaption="True" />
+        <sfwTextBox ID="dtpNewEligibleFromDate" sfwDataFormat="{0:d}" sfwEntityField="FromDate" />
+        <sfwLabel ID="capNewEligibleToDate" Text="To Date : " AssociatedControlID="dtpToDate3" sfwIsCaption="True" />
+        <sfwTextBox ID="dtpNewEligibleToDate" sfwEntityField="ToDate" />
+        <sfwButton ID="btnSave" sfwMethodName="btnSave_Click" sfwExecuteAfterSuccess="btnOpenEmp" />
+        <sfwButton ID="btnOpenEmp" sfwMethodName="btnOpen_Click" sfwActiveForm="wfmESSEmployeeMaintenance" sfwNavigationParameter="aintpersonid=objPerson.PersonId" />
+      </items>
+    </sfwPanel>
+  </items>
+  <ExtraFields />
+  <loaddetails>
+    <entityfield ID="objPerson" sfwNewAutoLoad="False" sfwUpdateAutoLoad="False" />
+  </loaddetails>
+</form>

@@ -1,0 +1,137 @@
+﻿<div class="portlet-body">
+
+    <div class="form-body">
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label class="control-label">Client Name</label>
+
+                <input type="text" class="form-control input-sm" placeholder="Enter text" ng-model="ClientName" ng-change="checkValidClient()">
+
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">SAS License Type </label>
+
+                <select class="form-control input-sm" ng-options='Licensetype.ID as Licensetype.Description for Licensetype in lstLicensetype' ng-model="SASLicenseType" ng-change="checkValidClient()" />
+
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Active User Limit </label>
+
+                <input type="number" class="form-control input-sm" value="-1" ng-model="ActiveUserLimit" ng-change="checkValidClient()">
+
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Start Date</label>
+
+                <div class="input-group date date-picker">
+                    <input type="text" class="form-control input-sm" readonly ng-model="StartDate" ng-change="checkValidClient()">
+                    <span class="input-group-btn">
+                        <button class="btn default calendar-icon-size" type="button">
+                            <i class="fa fa-calendar">
+                            </i>
+                        </button>
+                    </span>
+
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-6">
+
+            <div class="form-group">
+                <label class="control-label">SDS License Type </label>
+
+                <select class="form-control input-sm" ng-options='Licensetype.ID as Licensetype.Description for Licensetype in lstLicensetype' ng-model="SDSLicenseType" ng-change="checkValidClient()" />
+
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">SMS License Type </label>
+
+                <select class="form-control input-sm" ng-options='Licensetype.ID as Licensetype.Description for Licensetype in lstLicensetype' ng-model="SMSLicenseType" ng-change="checkValidClient()" />
+
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Status</label>
+
+                <select class="form-control input-sm" ng-model="Status" ng-change="checkValidClient()">
+                    <option value="active">Active</option>
+                    <option value="inactive">InActive</option>
+                </select>
+
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">End Date</label>
+
+                <div class="input-group date date-picker" data-date-start-date="+0d">
+                    <input type="text" class="form-control input-sm" readonly ng-model="EndDate" ng-change="checkValidClient()">
+                    <span class="input-group-btn">
+                        <button class="btn default calendar-icon-size" type="button">
+                            <i class="fa fa-calendar">
+                            </i>
+                        </button>
+                    </span>
+
+
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="control-label">Owners</div>
+            <div class="col-xs-6">
+                <label>DB Users:</label>
+                <a title="Add Database User as Owner">
+                    <img src="images/Common/icon_add_dark.svg" ng-click="MapUsers()" />
+                </a>
+                <a title="Delete Database User from Owners">
+                    <img src="images/Common/icon_delete_dark.svg" ng-disabled="!selectedAdminUser" ng-click="deleteAdminUser()" />
+                </a>
+
+                <ul class="checkbox-list-wrapper" title="Select owner">
+                    <li ng-repeat="user in lstMapUsers" ng-class="selectedAdminUser==user?'selected':''" ng-click="selectAdminUser(user)">
+                        <span ng-bind="user.UserName"></span>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-xs-6">
+                <label>AD Users:</label>
+                <a title="Add Active Directory User as owner">
+                    <img src="images/Common/icon_add_dark.svg" ng-click="mapADUsers()" />
+                </a>
+                <a title="Delete Active Directory User from Owners">
+                    <img src="images/Common/icon_delete_dark.svg" ng-disabled="!selectedADOwner" ng-click="deleteADUserFromOwners()" />
+                </a>
+
+                <ul class="checkbox-list-wrapper" title="Select owner">
+                    <li ng-repeat="user in mappedADUsers track by user.SAMAccountName" ng-class="selectedADOwner==user?'selected':''" ng-click="selectADOwner(user)">
+                        <span ng-bind="user.DomainName"></span><span>\</span><span ng-bind="user.SAMAccountName"></span>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="form-actions">
+    <div class="col-xs-8 text-left">
+        <span class="alert-error-msg" ng-bind="ClientErrorMessage" ng-if="IsClientError"></span>
+    </div>
+
+    <div class="col-xs-4">
+        <input type="button" ng-if="!IsUpdate" class="dialog-btn" ng-disabled="((!lstMapUsers||lstMapUsers.length==0) && (!mappedADUsers||mappedADUsers.length==0))||IsClientError" ng-click="AddClient()" value="Submit" />
+        <input type="button" ng-if="IsUpdate" class="dialog-btn" ng-disabled="((!lstMapUsers||lstMapUsers.length==0) && (!mappedADUsers||mappedADUsers.length==0))||IsClientError" ng-click="AddClient()" value="Update" />
+        <input type="button" class="dialog-btn" ng-click="closeDialog()" value="Cancel" />
+    </div>
+
+</div>
+

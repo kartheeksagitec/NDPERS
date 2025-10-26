@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<entity ID="entBenefitRhicCombine" sfwActive="True" sfwStatus="Review" sfwType="BusinessRule" sfwErrorTable="sgt_benefit_rhic_combine_error" sfwParentKey="benefit_rhic_combine_id" sfwParentKeyValue="icdoBenefitRhicCombine.benefit_rhic_combine_id" sfwMainCDO="icdoBenefitRhicCombine" sfwStatusColumn="status_value" sfwObjectID="busBenefitRhicCombine" sfwTableName="sgt_benefit_rhic_combine" sfwView="False" sfwParentEntity="entExtendBase">
+  <rules>
+    <rule ID="Is_Status_Approved_Ended_Cancelled_Denied" sfwExpression="(this.icdoBenefitRhicCombine.action_status_value == &quot;APPR&quot;) || &#xA;(this.icdoBenefitRhicCombine.action_status_value == &quot;DEND&quot;) || &#xA;(this.icdoBenefitRhicCombine.action_status_value == &quot;ENDD&quot;) || &#xA;(this.icdoBenefitRhicCombine.action_status_value == &quot;CANC&quot;)" sfwObjectBased="True" />
+    <rule ID="Is_Status_Not_Approved_Ended_Cancelled_Denied" sfwExpression="!(this.icdoBenefitRhicCombine.action_status_value == &quot;APPR&quot;) || &#xA;!(this.icdoBenefitRhicCombine.action_status_value == &quot;DEND&quot;) || &#xA;!(this.icdoBenefitRhicCombine.action_status_value == &quot;ENDD&quot;) || &#xA;!(this.icdoBenefitRhicCombine.action_status_value == &quot;CANC&quot;)" sfwObjectBased="True" />
+    <rule ID="IsActionSatusApproved" sfwExpression="(this.icdoBenefitRhicCombine.action_status_value == &quot;APPR&quot;)" sfwObjectBased="True" />
+    <rule ID="IsActionStatusNotApproved" sfwExpression="!(this.icdoBenefitRhicCombine.action_status_value == &quot;APPR&quot;)" sfwObjectBased="True" />
+    <rule ID="IsActionStatusPending" sfwExpression="(this.icdoBenefitRhicCombine.action_status_value == &quot;PAPR&quot;)" sfwObjectBased="True" />
+    <rule ID="IsEndDateLessThanStartDate" sfwMessageId="7100" sfwExpression="!(this.icdoBenefitRhicCombine.end_date == DateTime.MinValue) &amp;&amp; &#xA;!(this.icdoBenefitRhicCombine.start_date == DateTime.MinValue) &amp;&amp; &#xA;(this.icdoBenefitRhicCombine.start_date &gt; this.icdoBenefitRhicCombine.end_date)" sfwObjectBased="True" />
+    <rule ID="IsNoRowsSelectedToCombine" sfwMessageId="7103" sfwExpression="!(this.IsCombineFlagChecked() == True)" sfwObjectBased="True" />
+    <rule ID="IsOverlappingApprovedEntryExistsForSameDonor" sfwMessageId="7104" sfwExpression="!(this.icdoBenefitRhicCombine.start_date == DateTime.MinValue) &amp;&amp; &#xA;(this.IsOverlappingValidApprovedRecordForSameDonor() == True)" sfwObjectBased="True" />
+    <rule ID="IsOverlappingApproveEntryExistsForSameReceiver" sfwMessageId="7124" sfwExpression="!(this.icdoBenefitRhicCombine.start_date == DateTime.MinValue) &amp;&amp; &#xA;(this.IsOverlappingValidApprovedRecordForSameReceiver() == True)" sfwObjectBased="True" />
+    <rule ID="IsReceiverAndDonorAreAssociatedSpouse" sfwMessageId="7125" sfwExpression="(this.IsSpouseDonorSelected() == True) &amp;&amp; &#xA;!(this.IsSpouseRelationAssociatedWithBothReceiverAndDonor() == True)" sfwObjectBased="True" />
+    <rule ID="IsStartDateNull" sfwMessageId="7099" sfwExpression="(this.icdoBenefitRhicCombine.start_date == DateTime.MinValue)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForApproveButton" sfwExpression="(this.icdoBenefitRhicCombine.status_value == &quot;VALD&quot;) &amp;&amp; &#xA;(this.icdoBenefitRhicCombine.action_status_value == &quot;PAPR&quot;)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForSaveButton" sfwExpression="(this.icdoBenefitRhicCombine.action_status_value == &quot;PAPR&quot;)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForCancelButton" sfwExpression="(this.IsCancelButtonToShow() == True)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForDenyButton" sfwExpression="(this.icdoBenefitRhicCombine.action_status_value == &quot;PAPR&quot;)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForEndButton" sfwExpression="(this.icdoBenefitRhicCombine.action_status_value == &quot;APPR&quot;)" sfwObjectBased="True" />
+    <rule ID="VisibleRuleForApplyToHealth" sfwExpression="(this.IsApplyToHealthEnabled() == True)" sfwObjectBased="True" />
+  </rules>
+  <delete>
+    <property ID="lstRHICDonarDetails" />
+    <property ID="lstEstimatedRHICDonorDetails" />
+  </delete>
+  <checklist />
+  <initialload>
+    <item ID="Is_Status_Approved_Ended_Cancelled_Denied" sfwMode="All" sfwStatus="Active" />
+    <item ID="Is_Status_Not_Approved_Ended_Cancelled_Denied" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsActionSatusApproved" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsActionStatusNotApproved" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsActionStatusPending" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForApproveButton" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForSaveButton" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForDenyButton" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForEndButton" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForCancelButton" sfwMode="All" sfwStatus="Active" />
+    <item ID="VisibleRuleForApplyToHealth" sfwStatus="Active" sfwMode="All" />
+  </initialload>
+  <softerror>
+    <item ID="IsNoRowsSelectedToCombine" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsReceiverAndDonorAreAssociatedSpouse" sfwMode="All" sfwStatus="Active" />
+  </softerror>
+  <harderror>
+    <item ID="IsStartDateNull" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsEndDateLessThanStartDate" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsOverlappingApproveEntryExistsForSameReceiver" sfwMode="All" sfwStatus="Active" />
+    <item ID="IsOverlappingApprovedEntryExistsForSameDonor" sfwMode="All" sfwStatus="Active" />
+  </harderror>
+  <validatedelete />
+  <groupslist />
+  <updateablecdo />
+  <commonproperties>
+    <item ID="person_id" sfwObjectField="icdoBenefitRhicCombine.person_id" />
+  </commonproperties>
+  <expressionfields />
+  <queries>
+    <query ID="Lookup" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT SBRC.*, PER.* FROM SGT_BENEFIT_RHIC_COMBINE SBRC WITH(NOLOCK)&#xD;&#xA;INNER JOIN SGT_PERSON PER WITH(NOLOCK) ON PER.PERSON_ID = SBRC.PERSON_ID">
+      <parameters />
+    </query>
+    <query ID="GetCountIsPremiumPaidByEmployer" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT count(*) FROM SGT_PERSON_ACCOUNT_GHDV PAG WITH(NOLOCK)     &#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT PA WITH(NOLOCK) on PAG.person_account_id = PA.person_account_id&#xD;&#xA;INNER JOIN SGT_PERSON_ACCOUNT_PAYMENT_ELECTION PAPE WITH(NOLOCK) ON PA.PERSON_ACCOUNT_ID = PAPE.PERSON_ACCOUNT_ID&#xD;&#xA;INNER JOIN SGT_PERSON P WITH(NOLOCK) on PA.person_id = P.person_id                       &#xD;&#xA;WHERE ibs_flag = 'Y' AND PA.plan_id = @plan_id AND                              &#xD;&#xA;ibs_org_id is null and IBS_SUPPLEMENTAL_ORG_ID is null and payment_method_value &lt;&gt; 'TFPC'               &#xD;&#xA;AND pa.plan_participation_status_value = 'ENL2'  and pa.person_account_id = @person_account_id">
+      <parameters>
+        <parameter ID="@person_account_id" sfwDataType="int" />
+        <parameter ID="@plan_id" sfwDataType="int" />
+      </parameters>
+    </query>
+    <query ID="LookupSubQueryRhicCombineDetail" sfwQueryType="SubSelectQuery" sfwSql="SELECT * FROM SGT_BENEFIT_RHIC_COMBINE_DETAIL SBRCD WITH(NOLOCK) &#xD;&#xA;INNER JOIN SGT_PAYEE_ACCOUNT PA WITH(NOLOCK) ON SBRCD.donar_payee_account_id = pa.payee_account_id&#xD;&#xA;WHERE SBRC.benefit_rhic_combine_id = SBRCD.benefit_rhic_combine_id">
+      <parameters />
+    </query>
+    <query ID="LoadRHICDetails" sfwQueryType="SelectQuery" sfwDataType="EntityTable" sfwSql="SELECT PAY.PAYEE_ACCOUNT_ID, RHCOMB.*&#xD;&#xA;FROM SGT_PAYMENT_HISTORY_HEADER PHH&#xD;&#xA;INNER JOIN SGT_PAYEE_ACCOUNT PAY ON PHH.PAYEE_ACCOUNT_ID = PAY.PAYEE_ACCOUNT_ID&#xD;&#xA;INNER JOIN &#xD;&#xA; (&#xD;&#xA;  SELECT *&#xD;&#xA;  FROM (SELECT BENEFIT_RHIC_COMBINE_ID,PERSON_ID,START_DATE,END_DATE,CREATED_BY AS RHIC_CREATED,ISNULL(COMBINED_RHIC_AMOUNT,0.0) AS COMBINED_RHIC_AMOUNT, ISNULL(TOTAL_OTHER_RHIC_AMOUNT,0.0) AS TOTAL_OTHER_RHIC_AMOUNT,&#xD;&#xA;   RANK() OVER (PARTITION BY PERSON_ID ORDER BY ACTION_STATUS_VALUE, ISNULL(END_DATE,'99991231') DESC,START_DATE DESC ,BENEFIT_RHIC_COMBINE_ID DESC ) AS ROWRANK &#xD;&#xA;   FROM  SGT_BENEFIT_RHIC_COMBINE  RC &#xD;&#xA;   WHERE @PAYMENTDATE BETWEEN RC.START_DATE &#xD;&#xA;   AND (CASE WHEN RC.END_DATE IS NULL THEN '99991231' ELSE RC.END_DATE END)&#xD;&#xA;   AND ACTION_STATUS_VALUE IN ( 'APPR','ENDD')&#xD;&#xA;   AND ISNULL(COMBINED_RHIC_AMOUNT,0) &lt;&gt; ISNULL(TOTAL_JS_RHIC_AMOUNT,0)&#xD;&#xA;   ) A&#xD;&#xA;  WHERE A.ROWRANK = 1&#xD;&#xA; )RHCOMB ON RHCOMB.PERSON_ID = PAY.PAYEE_PERSLINK_ID&#xD;&#xA;LEFT JOIN (SELECT GHDVHIST.*,ACCT.PERSON_ID,ACCT.PERSON_ACCOUNT_ID,ACCT.PLAN_ID FROM SGT_PERSON_ACCOUNT ACCT &#xD;&#xA;   INNER JOIN SGT_PERSON_ACCOUNT_GHDV GHDV ON GHDV.PERSON_ACCOUNT_ID = ACCT.PERSON_ACCOUNT_ID&#xD;&#xA;   INNER JOIN SGT_PERSON_ACCOUNT_GHDV_HISTORY GHDVHIST ON GHDVHIST.PERSON_ACCOUNT_GHDV_ID = GHDV.PERSON_ACCOUNT_GHDV_ID&#xD;&#xA;   WHERE @PAYMENTDATE BETWEEN GHDVHIST.START_DATE AND ISNULL(GHDVHIST.END_DATE,'99991231')&#xD;&#xA;   AND GHDVHIST.START_DATE &lt;&gt; CASE WHEN GHDVHIST.END_DATE IS NOT NULL &#xD;&#xA;    THEN GHDVHIST.END_DATE ELSE '99991231' END&#xD;&#xA;   AND (GHDVHIST.HEALTH_INSURANCE_TYPE_VALUE = 'RT12' OR (GHDVHIST.HEALTH_INSURANCE_TYPE_VALUE &lt;&gt; 'RT12' AND&#xD;&#xA;   GHDVHIST.COBRA_TYPE_VALUE IN ('R18C','R36C','RDSC')))) &#xD;&#xA; PERSACCT12 ON RHCOMB.PERSON_ID = PERSACCT12.PERSON_ID AND PERSACCT12.PLAN_ID = 12&#xD;&#xA;LEFT JOIN (SELECT GHDVHIST.*,ACCT.PERSON_ID,ACCT.PERSON_ACCOUNT_ID,ACCT.PLAN_ID FROM SGT_PERSON_ACCOUNT ACCT &#xD;&#xA;   INNER JOIN SGT_PERSON_ACCOUNT_GHDV GHDV ON GHDV.PERSON_ACCOUNT_ID = ACCT.PERSON_ACCOUNT_ID&#xD;&#xA;   INNER JOIN SGT_PERSON_ACCOUNT_GHDV_HISTORY GHDVHIST ON GHDVHIST.PERSON_ACCOUNT_GHDV_ID = GHDV.PERSON_ACCOUNT_GHDV_ID&#xD;&#xA;   WHERE @PAYMENTDATE BETWEEN GHDVHIST.START_DATE AND ISNULL(GHDVHIST.END_DATE,'99991231')&#xD;&#xA;   AND GHDVHIST.START_DATE &lt;&gt; CASE WHEN GHDVHIST.END_DATE IS NOT NULL &#xD;&#xA;    THEN GHDVHIST.END_DATE ELSE '99991231' END&#xD;&#xA;   AND (GHDVHIST.HEALTH_INSURANCE_TYPE_VALUE = 'RT12' OR (GHDVHIST.HEALTH_INSURANCE_TYPE_VALUE &lt;&gt; 'RT12' AND&#xD;&#xA;   GHDVHIST.COBRA_TYPE_VALUE IN ('R18C','R36C','RDSC')))) &#xD;&#xA; PERSACCT09 ON RHCOMB.PERSON_ID = PERSACCT09.PERSON_ID AND PERSACCT09.PLAN_ID = 9&#xD;&#xA;WHERE PHH.PAYMENT_SCHEDULE_ID = @PAYMENTSCHEDULEID&#xD;&#xA;AND ISNULL(COALESCE(PERSACCT12.PLAN_PARTICIPATION_STATUS_VALUE,PERSACCT09.PLAN_PARTICIPATION_STATUS_VALUE),'') = 'ENL2'">
+      <parameters>
+        <parameter ID="@PAYMENTDATE" sfwDataType="DateTime" />
+        <parameter ID="@PAYMENTSCHEDULEID" sfwDataType="int" />
+      </parameters>
+    </query>
+  </queries>
+  <attributes>
+    <attribute ID="BenefitRhicCombineId" sfwType="Column" sfwValue="benefit_rhic_combine_id" sfwKeyNo="1" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="True" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="PersonId" sfwType="Column" sfwValue="person_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StartDate" sfwType="Column" sfwValue="start_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="EndDate" sfwType="Column" sfwValue="end_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="InitialRhicAmount" sfwType="Column" sfwValue="initial_rhic_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="CombinedRhicAmount" sfwType="Column" sfwValue="combined_rhic_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="EstimatedCombinedRhicAmount" sfwType="Column" sfwValue="estimated_combined_rhic_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="ApplyToValue" sfwType="Column" sfwValue="apply_to_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="ActionStatusDescription" sfwType="Description" sfwValue="action_status_description" />
+    <attribute ID="ActionStatusId" sfwType="Column" sfwValue="action_status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="2306" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="ActionStatusValue" sfwType="Column" sfwValue="action_status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="StatusDescription" sfwType="Description" sfwValue="status_description" />
+    <attribute ID="StatusId" sfwType="Column" sfwValue="status_id" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwCodeID="2305" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="StatusValue" sfwType="Column" sfwValue="status_value" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="4" />
+    <attribute ID="ApprovedBy" sfwType="Column" sfwValue="approved_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="RequestDate" sfwType="Column" sfwValue="request_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="TotalJsRhicAmount" sfwType="Column" sfwValue="total_js_rhic_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="TotalOtherRhicAmount" sfwType="Column" sfwValue="total_other_rhic_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="TotalReimbursementAmount" sfwType="Column" sfwValue="total_reimbursement_amount" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="decimal" sfwRequired="False" sfwLength="13,2" />
+    <attribute ID="SuppressWarningsFlag" sfwType="Column" sfwValue="suppress_warnings_flag" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="1" />
+    <attribute ID="Comments" sfwType="Column" sfwValue="comments" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="True" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="8000" />
+    <attribute ID="CreatedBy" sfwType="Column" sfwValue="created_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="CreatedDate" sfwType="Column" sfwValue="created_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="ModifiedBy" sfwType="Column" sfwValue="modified_by" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="string" sfwRequired="False" sfwLength="50" />
+    <attribute ID="ModifiedDate" sfwType="Column" sfwValue="modified_date" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="DateTime" sfwRequired="False" />
+    <attribute ID="UpdateSeq" sfwType="Column" sfwValue="update_seq" sfwKeyNo="0" sfwIsSequence="False" sfwIsNull="False" sfwIsIdentity="False" sfwDataType="int" sfwRequired="False" />
+    <attribute ID="objPerson" sfwType="Object" sfwEntity="entPerson" sfwValue="ibusPerson" />
+    <attribute sfwDataType="decimal" sfwType="Property" ID="TotalBalanceRhicAmount" sfwValue="icdoBenefitRhicCombine.total_balance_rhic_amount" />
+    <attribute sfwType="Collection" sfwEntity="entBenefitRhicCombineDetail" ID="lstRHICDonarDetails" sfwValue="iclbRHICDonarDetails" />
+    <attribute sfwType="Collection" sfwEntity="entBenefitRhicEstimateCombineDetail" ID="lstEstimatedRHICDonorDetails" sfwValue="iclbEstimatedRHICDonorDetails" />
+    <attribute sfwDataType="string" sfwType="Property" ID="StartDateNoNullLongDate" sfwValue="icdoBenefitRhicCombine.start_date_no_null_longDate" />
+    <attribute ID="objSpouseDonor" sfwType="Object" sfwEntity="entPerson" sfwValue="ibusSpouseDonor" />
+  </attributes>
+  <objectmethods>
+    <method ID="btnApprove_Click" sfwReturnType="ArrayList" />
+    <method ID="btnDeny_Click" sfwReturnType="ArrayList" />
+    <method ID="btnCancel_Click" sfwReturnType="ArrayList" />
+    <method ID="btnEnd_Click" sfwReturnType="ArrayList" />
+  </objectmethods>
+</entity>

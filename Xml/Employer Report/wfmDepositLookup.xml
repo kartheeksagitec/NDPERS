@@ -1,0 +1,261 @@
+﻿<form ID="wfmDepositLookup" sfwActive="True" sfwStatus="Review" sfwRemoteObject="srvEmployerReport" sfwResource="1008" sfwType="Lookup" sfwTitle="Deposit Lookup" version="3.5" sfwMaxCount="2000" sfwEntity="entDeposit" sfwGridCollection="busDepositLookup.icolDeposit">
+  <initialload>
+    <query ID="cdoDeposit" sfwQueryRef="entDeposit.Lookup" sfwMethodName="LoadDeposit" />
+    <query ID="LookupOrgCode" sfwQueryRef="entDeposit.LookupOrgCode" />
+    <query ID="LookupBenefitType" sfwQueryRef="entDeposit.LookupBenefitType" />
+  </initialload>
+  <sfwTable ID="Main">
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlCriteria" sfwCaption="Criteria" CssClass="ContainerPanel auto-width-panel">
+          <sfwTable CssClass="Table" ID="tblCriteria">
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="lblperslink_id" Text="PERSLink ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txt_perslink_id" sfwDataField="person_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="cdoDeposit" />
+                <sfwImageButton ID="btnRetrievePerson" ImageAlign="AbsMiddle" ImageUrl="~/Image/Lookup.jpg" sfwActiveForm="wfmPersonLookup" sfwMethodName="btnRetrieve_Click" sfwRelatedControl="txt_perslink_id" sfwSelectedIndex="PersonId" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblorg_id" Text="Org Code ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtOrgCode" sfwDataField="org_code" sfwOperator="=" sfwQueryID="LookupOrgCode" />
+                <sfwImageButton ID="btnRetrieveOrg" ImageAlign="AbsMiddle" ImageUrl="~/Image/Lookup.jpg" sfwActiveForm="wfmOrganizationLookup" sfwMethodName="btnRetrieve_Click" sfwRelatedControl="txtOrgCode" sfwSelectedIndex="OrgCode" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="lbldeposit_tape_id" Text="Deposit Tape ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txt_deposit_tape_id" sfwDataField="sdt.deposit_tape_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="cdoDeposit" />
+                <sfwImageButton ID="btnRetrieveDeposit" ImageAlign="AbsMiddle" ImageUrl="~/Image/Lookup.jpg" sfwActiveForm="wfmDepositTapeLookup" sfwMethodName="btnRetrieve_Click" sfwRelatedControl="txt_deposit_tape_id" sfwSelectedIndex="DepositTapeId" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capDepositMethodValue" Text="Deposit Method : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwMultiSelectDropDownList DataTextField="description" DataValueField="code_value" ID="ddlDepositMethodValue" sfwDataField="deposit_method_value" sfwOperator="in" sfwQueryID="LookupDepositTape" sfwLoadType="CodeGroup" sfwLoadSource="1501" sfwSelectAll="True" sfwSelectionToDisplay="6" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capDepositDateFrom" Text="Deposit Date From : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtDepositDateFrom" sfwDataField="CONVERT(VARCHAR(10), d.deposit_date, 101)" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="between" sfwQueryID="cdoDeposit" sfwRelatedControl="txtDepositDateTo" />
+                <CompareValidator ControlToValidate="txtDepositDateFrom" ErrorMessage="Deposit Date From must be in mm/dd/yyyy format." ID="cmpreDepositDateFrom" Operator="DataTypeCheck" Text="*" Type="Date" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capDepositDateTo" Text="Deposit Date To : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtDepositDateTo" sfwDataField="CONVERT(VARCHAR(10), d.deposit_date, 101)" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="between" sfwQueryID="cdoDeposit" sfwRelatedControl="txtDepositDateFrom" />
+                <CompareValidator ControlToValidate="txtDepositDateTo" ErrorMessage="Deposit Date To must be in mm/dd/yyyy format." ID="valdepositDateTo" Operator="DataTypeCheck" Text="*" Type="Date" />
+                <CompareValidator ControlToCompare="txtDepositDateFrom" ControlToValidate="txtDepositDateTo" ErrorMessage="Deposit date To cannot be less than Deposit Date From." ID="valDepositDateRange" Operator="GreaterThanEqual" Text="*" Type="Date" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capPaymentDateFrom" Text="Payment Date From : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtPaymentDateFrom" sfwDataField="CONVERT(VARCHAR(10), d.payment_date, 101)" sfwQueryID="cdoDeposit" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="between" sfwRelatedControl="txtPaymentDateTo" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capPaymentDateTo" Text="Payment Date To : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtPaymentDateTo" sfwDataField="CONVERT(VARCHAR(10), d.payment_date, 101)" sfwQueryID="cdoDeposit" sfwDataFormat="{0:d}" sfwDataType="DateTime" sfwOperator="between" sfwRelatedControl="txtPaymentDateFrom" />
+                <CompareValidator ControlToCompare="txtPaymentDateFrom" ControlToValidate="txtPaymentDateTo" ErrorMessage="Payment date To cannot be less than Payment Date From." ID="valPaymentDateRange" Operator="GreaterThanEqual" Text="*" Type="Date" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capamtfrom" Text="Amount From :" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtDepositAmountFrom" sfwDataField="deposit_amount" sfwDataType="Decimal" sfwOperator="between" sfwQueryID="cdoDeposit" sfwRelatedControl="txtDepositAmountTo" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblamtto" Text="Amount To :" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txtDepositAmountTo" sfwDataField="deposit_amount" sfwDataType="Decimal" sfwOperator="between" sfwQueryID="cdoDeposit" sfwRelatedControl="txtDepositAmountFrom" />
+                <CompareValidator ControlToCompare="txtDepositAmountFrom" ControlToValidate="txtDepositAmountTo" ErrorMessage="Amount To cannot be less than Amount From." ID="valAmountRange" Operator="GreaterThanEqual" Text="*" Type="Currency" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="lblreferece_no" Text="Reference No : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txt_referece_no" sfwDataField="d.reference_no" sfwOperator="like" sfwQueryID="cdoDeposit" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lbldeposit_id" Text="Deposit ID : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwTextBox ID="txt_deposit_id" sfwDataField="deposit_id" sfwDataType="Numeric" sfwOperator="=" sfwQueryID="cdoDeposit" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capDepositSourceValue" Text="Deposit Source : " AssociatedControlID="ddlDepositSourceValue" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwMultiSelectDropDownList ID="ddlDepositSourceValue" sfwDataField="d.deposit_source_value" sfwQueryID="cdoDeposit" sfwLoadType="CodeGroup" sfwOperator="in" sfwLoadSource="1211" DataTextField="description" DataValueField="code_value" sfwSelectAll="True" sfwSelectionToDisplay="6" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="lblstatus_value" Text="Status : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwMultiSelectDropDownList ID="ddl_status_value" sfwDataField="d.status_value" sfwOperator="in" sfwQueryID="cdoDeposit" sfwLoadType="CodeGroup" sfwLoadSource="1500" sfwSelectAll="True" sfwSelectionToDisplay="6" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwLabel ID="capBankAccountValue" Text="Bank Account : " sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList DataTextField="description" DataValueField="code_value" ID="ddlBankAccountValue" sfwDataField="bank_account_value" sfwOperator="=" sfwQueryID="LookupDepositTape" sfwLoadType="CodeGroup" sfwLoadSource="1201" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwLabel ID="capBenefitTypeValue" Text="Benefit Type : " AssociatedControlID="ddlBenefitTypeValue" sfwIsCaption="True" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwDropDownList ID="ddlBenefitTypeValue" sfwDataField="benefit_type_value" sfwQueryID="LookupBenefitType" DataTextField="description" DataValueField="code_value" sfwOperator="=" sfwLoadType="CodeGroup" sfwLoadSource="250" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnSearch" sfwMethodName="btnSearch_Click" Text="Search" />
+                <sfwButton ID="btnReset" sfwMethodName="btnReset_Click" Text="Reset" />
+              </sfwColumn>
+              <sfwColumn>
+                <sfwButton ID="btnStoreSearch" sfwMethodName="btnStoreUserDefaults_Click" Text="StoreSearch" />
+              </sfwColumn>
+              <sfwColumn />
+              <sfwColumn />
+              <sfwColumn />
+              <sfwColumn />
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+    <sfwRow>
+      <sfwColumn>
+        <sfwPanel ID="pnlResult" sfwCaption="Search Results">
+          <sfwTable CssClass="Table" ID="tblResult">
+            <sfwRow>
+              <sfwColumn>
+                <sfwButton ID="btnOpen" sfwActiveForm="wfmDepositMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintdepositid=DepositId" sfwRelatedControl="dgrResult" Text="Open" sfwDisableViewOnly="True" />
+                <sfwButton ID="btnDelete" sfwMethodName="btnDelete_Click" sfwRelatedControl="dgrResult" Text="Delete" />
+                <sfwButton ID="btnExportExcel" sfwMethodName="btnColumnsToExport_Click" sfwRelatedControl="dgrResult" Text="Export To Excel" />
+                <sfwButton ID="btnOpenDepositTape" sfwActiveForm="wfmDepositTapeMaintenance" sfwMethodName="btnOpen_Click" sfwNavigationParameter="Aintdeposittapeid=objDepositTape.DepositTapeId" sfwRelatedControl="dgrResult" Text="Open" Visible="False" />
+              </sfwColumn>
+            </sfwRow>
+            <sfwRow>
+              <sfwColumn>
+                <sfwGridView AllowPaging="True" AllowSorting="True" ID="dgrResult" sfwSelection="Many">
+                  <Columns>
+                    <TemplateField HeaderText="Deposit Tape ID" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpenDepositTape" sfwEntityField="objDepositTape.DepositTapeId" CssClass="ItemRightAlign" Font.Underline="True" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Deposit ID" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwLinkable="True" sfwRelatedControl="btnOpen" sfwEntityField="DepositId" CssClass="ItemRightAlign" Font.Underline="True" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Deposit Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="DepositDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Deposit Method">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objDepositTape.DepositMethodDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="PERSLink ID" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat=" {0:#;''}" sfwEntityField="PersonId" CssClass="ItemRightAlign" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Org Code ID" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="IstrOrgCode" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Org ID" Visible="False" sfwShowInExportToExcel="True">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="OrgId" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Reference No">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="ReferenceNo" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Payment Date">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:d}" sfwEntityField="PaymentDate" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Deposit Amount" ItemStyle.HorizontalAlign="Right">
+                      <ItemTemplate>
+                        <sfwLabel sfwDataFormat="{0:C}" sfwEntityField="DepositAmount" CssClass="ItemRightAlign" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Status">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="StatusDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Bank Account">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="objDepositTape.BankAccountDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Deposit Source">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="DepositSourceDescription" />
+                      </ItemTemplate>
+                    </TemplateField>
+                    <TemplateField HeaderText="Benefit Type">
+                      <ItemTemplate>
+                        <sfwLabel sfwEntityField="lstrBenfitTypeValue" />
+                      </ItemTemplate>
+                    </TemplateField>
+                  </Columns>
+                </sfwGridView>
+              </sfwColumn>
+            </sfwRow>
+          </sfwTable>
+        </sfwPanel>
+      </sfwColumn>
+    </sfwRow>
+  </sfwTable>
+  <loaddetails />
+</form>
