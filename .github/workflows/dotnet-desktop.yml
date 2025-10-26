@@ -13,29 +13,17 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      - name: Set up MSBuild path
-        shell: pwsh
-        run: |
-          Write-Host "Locating MSBuild..." -ForegroundColor Cyan
-          $vsPath = "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe"
-          if (-Not (Test-Path $vsPath)) {
-            $vsPath = "C:\Program Files\Microsoft Visual Studio\2022\Professional\MSBuild\Current\Bin\MSBuild.exe"
-          }
-          if (-Not (Test-Path $vsPath)) {
-            $vsPath = "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe"
-          }
-          if (-Not (Test-Path $vsPath)) {
-            throw "MSBuild not found on runner!"
-          }
-          Write-Host "MSBuild found at $vsPath" -ForegroundColor Green
-          echo "##vso[task.setvariable variable=MSBUILD_PATH]$vsPath"
+    - name: Set up MSBuild path
+      run: |
+        echo "##vso[task.setvariable variable=MSBUILD_PATH]C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe"
 
-      - name: Build solution
-        shell: pwsh
-        run: |
-          Write-Host "Building solution..." -ForegroundColor Cyan
-          $msbuild = $env:MSBUILD_PATH
-          & $msbuild ".\slnNeoSpin\slnNeoSpin.sln" /p:Configuration=Release /clp:ErrorsOnly
+    - name: Build solution
+      shell: pwsh
+      run: |
+        Write-Host "Building solution..." -ForegroundColor Cyan
+
+        # Direct call to MSBuild using quotes to handle spaces
+        & "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe" ".\slnNeoSpin\slnNeoSpin.sln" /p:Configuration=Release /clp:ErrorsOnly
