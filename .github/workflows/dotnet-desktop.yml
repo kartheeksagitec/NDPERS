@@ -22,25 +22,28 @@ jobs:
 
     - name: Restore NuGet packages
       run: |
-        echo "🔹 Restoring NuGet packages..."
-        nuget restore "NDPERS/slnNeoSpin.sln"
+        Write-Host "Restoring NuGet packages..." -ForegroundColor Cyan
+        nuget restore 'NDPERS/slnNeoSpin.sln'
       shell: powershell
 
     - name: Build Solution (Release)
       run: |
-        echo "🔹 Building solution..."
-        msbuild "NDPERS/slnNeoSpin.sln" /p:Configuration=Release /p:OutDir=NDPERS/bin/Release/ /clp:ErrorsOnly;Summary
+        Write-Host "Building solution..." -ForegroundColor Cyan
+        msbuild 'NDPERS/slnNeoSpin.sln' /p:Configuration=Release /p:OutDir='NDPERS/bin/Release/' /clp:ErrorsOnly;Summary
       shell: powershell
 
-    - name: Check for warnings
+    - name: Scan for Warnings
       run: |
-        Write-Host "🔹 Scanning build output for warnings..."
-        $warnings = Get-Content "NDPERS/bin/Release/msbuild.log" | Select-String "warning"
-        if ($warnings) {
-            Write-Host " Warnings found:"
-            $warnings
-        } else {
-            Write-Host " No warnings found."
+        Write-Host "Checking for warnings in build output..." -ForegroundColor Cyan
+        $logFiles = Get-ChildItem -Path 'NDPERS/bin/Release/' -Filter '*.log' -Recurse
+        foreach ($log in $logFiles) {
+            $warnings = Select-String -Path $log.FullName -Pattern "warning"
+            if ($warnings) {
+                Write-Host "Warnings found in $($log.FullName):" -ForegroundColor Yellow
+                $warnings | ForEach-Object { Write-Host $_.Line -ForegroundColor Yellow }
+            } else {
+                Write-Host "No warnings in $($log.FullName)" -ForegroundColor Green
+            }
         }
       shell: powershell
 
