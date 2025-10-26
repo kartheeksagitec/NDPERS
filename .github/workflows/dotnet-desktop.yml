@@ -31,19 +31,19 @@ jobs:
     - name: Restore NuGet packages
       run: |
         Write-Host "Restoring NuGet packages..." -ForegroundColor Cyan
-        nuget restore './NDPERS/slnNeoSpin.sln'
+        nuget restore './slnNeoSpin/slnNeoSpin.sln'
       shell: powershell
 
     - name: Build Solution (Release)
       run: |
         Write-Host "Building solution..." -ForegroundColor Cyan
-        msbuild './NDPERS/slnNeoSpin.sln' /p:Configuration=Release /p:OutDir='./NDPERS/bin/Release/' /clp:ErrorsOnly;Summary
+        msbuild './slnNeoSpin/slnNeoSpin.sln' /p:Configuration=Release /p:OutDir='./slnNeoSpin/bin/Release/' /clp:ErrorsOnly;Summary
       shell: powershell
 
     - name: Scan for Warnings
       run: |
         Write-Host "Checking for warnings in build output..." -ForegroundColor Cyan
-        $logFiles = Get-ChildItem -Path './NDPERS/bin/Release/' -Filter '*.log' -Recurse
+        $logFiles = Get-ChildItem -Path './slnNeoSpin/bin/Release/' -Filter '*.log' -Recurse
         foreach ($log in $logFiles) {
             $warnings = Select-String -Path $log.FullName -Pattern "warning"
             if ($warnings) {
@@ -59,4 +59,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: NeoSpin_Build_Output
-        path: './NDPERS/bin/Release/'
+        path: './slnNeoSpin/bin/Release/'
