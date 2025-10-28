@@ -14,9 +14,9 @@ jobs:
     runs-on: windows-latest
 
     env:
-      SONAR_HOST_URL: http://localhost:9000       # Your local SonarQube URL
-      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}     # Add in GitHub Secrets
-      SOLUTION_PATH: slnNeoSpin/slnNeoSpin.sln    # Update if solution path differs
+      SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}   # e.g., http://localhost:9000
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      SOLUTION_PATH: slnNeoSpin/slnNeoSpin.sln        # Update if needed
 
     steps:
       - name: Checkout repository
@@ -27,6 +27,11 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
 
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v2
 
@@ -36,19 +41,12 @@ jobs:
       - name: Add dotnet tools to PATH
         run: echo "$env:USERPROFILE\.dotnet\tools" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
-      - name: Install SonarScanner for MSBuild
+      - name: Install SonarScanner for .NET
         run: dotnet tool install --global dotnet-sonarscanner
 
-      - name: Begin SonarQube analysis
+      - name: Build and analyze
+        shell: powershell
         run: |
-          dotnet-sonarscanner begin `
-            /k:"NDPERS" `
-            /d:sonar.host.url="${{ env.SONAR_HOST_URL }}" `
-            /d:sonar.login="${{ env.SONAR_TOKEN }}" `
-            /d:sonar.verbose=true
-
-      - name: Build Solution
-        run: msbuild $env:SOLUTION_PATH /p:Configuration=Release /p:Platform="Any CPU"
-
-      - name: End SonarQube analysis
-        run: dotnet-sonarscanner end /d:sonar.login="${{ env.SONAR_TOKEN }}"
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"GITNdpers" /d:sonar.token="${{ env.SONAR_TOKEN }}" /d:sonar.host.url="${{ env.SONAR_HOST_URL }}"
+          dotnet build $env:SOLUTION_PATH --configuration Release
+          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ env.SONAR_TOKEN }}"
