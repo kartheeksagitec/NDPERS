@@ -1,62 +1,70 @@
-name: Build and Analyze with SonarQube
+name: Build & SonarQube (.NET Framework 4.8)
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
-    types: [opened, synchronize, reopened]
+    branches: [ main ]
 
 jobs:
   build:
-    name: Build and analyze
     runs-on: windows-latest
 
     steps:
-      - name: Checkout code
+      # 🧩 Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Required for full SonarQube analysis
+          fetch-depth: 0
 
-      - name: Set up .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'  # Use the version your project targets
+      # ⚙️ Setup MSBuild (for .NET Framework builds)
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
 
-      - name: Set up JDK 17
+      # ⚙️ Restore NuGet packages
+      - name: Restore NuGet packages
+        run: nuget restore "slnNeoSpin/slnNeoSpin.sln"
+
+      # 🧰 Install Sagitec Framework (if required by your projects)
+      - name: Install Sagitec Framework
+        run: |
+          if (Test-Path ".\Dependencies\Sagitec Framework-Installer.exe") {
+            Write-Host "Installing Sagitec Framework..."
+            Start-Process -FilePath ".\Dependencies\Sagitec Framework-Installer.exe" -ArgumentList "/quiet" -Wait
+          } else {
+            Write-Host "Sagitec Framework installer not found. Skipping installation."
+          }
+
+      # ☕ Install Java (SonarQube scanner requires it)
+      - name: Setup JDK
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
+          distribution: 'temurin'
           java-version: '17'
 
-      - name: Cache SonarQube packages
-        uses: actions/cache@v4
-        with:
-          path: ~\.sonar\cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-
-      - name: Cache SonarQube scanner
-        id: cache-sonar-scanner
-        uses: actions/cache@v4
-        with:
-          path: .\.sonar\scanner
-          key: ${{ runner.os }}-sonar-scanner
-          restore-keys: ${{ runner.os }}-sonar-scanner
-
-      - name: Install SonarQube scanner
-        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
-        shell: pwsh
+      # 🧠 Install SonarScanner for .NET Framework
+      - name: Install SonarScanner
         run: |
-          New-Item -Path .\.sonar\scanner -ItemType Directory -Force
-          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+          dotnet tool install --global dotnet-sonarscanner
+          $env:PATH += ";$env:USERPROFILE\.dotnet\tools"
 
-      - name: Restore dependencies
-        run: dotnet restore slnNeoSpin/slnNeoSpin.sln
-
-      - name: Build and analyze
-        shell: pwsh
+      # 🔍 Begin SonarQube analysis
+      - name: SonarQube Begin
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"gitDERP" /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}" /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
-          dotnet build slnNeoSpin/slnNeoSpin.sln --no-incremental
-          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          $env:PATH += ";$env:USERPROFILE\.dotnet\tools"
+          dotnet sonarscanner begin `
+            /k:"gitDERP" `
+            /d:sonar.host.url="http://sagitec-1656:9000" `
+            /d:sonar.login="$env:SONAR_TOKEN"
+
+      # 🏗️ Build .NET Framework 4.8 solution
+      - name: Build Solution
+        run: msbuild "slnNeoSpin/slnNeoSpin.sln" /p:Configuration=Release /p:Platform="Any CPU"
+
+      # 🧩 End SonarQube analysis
+      - name: SonarQube End
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          $env:PATH += ";$env:USERPROFILE\.dotnet\tools"
+          dotnet sonarscanner end /d:sonar.login="$env:SONAR_TOKEN"
