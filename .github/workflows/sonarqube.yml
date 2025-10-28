@@ -1,15 +1,22 @@
-name: Build and Analyze (.NET Framework 4.8 + Local SonarQube)
+name: Build and Analyze with SonarQube
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
-    name: Build and Analyze
+    name: Build and SonarQube Analysis
     runs-on: windows-latest
+
+    env:
+      SONAR_HOST_URL: http://localhost:9000       # Your local SonarQube URL
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}     # Add in GitHub Secrets
+      SOLUTION_PATH: slnNeoSpin/slnNeoSpin.sln    # Update if solution path differs
 
     steps:
       - name: Checkout repository
@@ -24,48 +31,24 @@ jobs:
         uses: NuGet/setup-nuget@v2
 
       - name: Restore NuGet packages
-        run: nuget restore "slnNeoSpin/slnNeoSpin.sln"
+        run: nuget restore $env:SOLUTION_PATH
 
-      - name: Install Sagitec Framework
-        run: |
-          Write-Host "Installing Sagitec Framework..."
-          Start-Process -FilePath ".\Dependencies\Sagitec Framework-Installer.exe" -ArgumentList "/quiet" -Wait
-          Write-Host "Sagitec Framework installation completed."
-
-      - name: Setup JDK (for SonarQube)
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
+      - name: Add dotnet tools to PATH
+        run: echo "$env:USERPROFILE\.dotnet\tools" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
       - name: Install SonarScanner for MSBuild
-        run: |
-          choco install "sonarscanner-msbuild-net46" -y
-          $env:PATH += ";C:\ProgramData\chocolatey\lib\sonarscanner-msbuild-net46\tools"
+        run: dotnet tool install --global dotnet-sonarscanner
 
-      - name: SonarQube Begin
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+      - name: Begin SonarQube analysis
         run: |
-          SonarScanner.MSBuild.exe begin /k:"$env:SONAR_PROJECT_KEY" `
-            /d:sonar.host.url="$env:SONAR_HOST_URL" `
-            /d:sonar.login="$env:SONAR_TOKEN"
+          dotnet-sonarscanner begin `
+            /k:"NDPERS" `
+            /d:sonar.host.url="${{ env.SONAR_HOST_URL }}" `
+            /d:sonar.login="${{ env.SONAR_TOKEN }}" `
+            /d:sonar.verbose=true
 
       - name: Build Solution
-        run: msbuild "slnNeoSpin/slnNeoSpin.sln" /p:Configuration=Release
+        run: msbuild $env:SOLUTION_PATH /p:Configuration=Release /p:Platform="Any CPU"
 
-      - name: SonarQube End
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: SonarScanner.MSBuild.exe end /d:sonar.login="$env:SONAR_TOKEN"
-
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: NeoSpin-Build-Output
-          path: |
-            **/bin/Release/**
-            **/bin/x64/Release/**
-            **/bin/Debug/**
+      - name: End SonarQube analysis
+        run: dotnet-sonarscanner end /d:sonar.login="${{ env.SONAR_TOKEN }}"
