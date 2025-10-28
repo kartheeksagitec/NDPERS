@@ -1,70 +1,51 @@
-name: Build & SonarQube (.NET Framework 4.8)
+name: Build and Analyze with SonarQube
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   build:
+    name: Build and SonarQube Analysis
     runs-on: windows-latest
 
     steps:
-      # 🧩 Checkout code
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # ⚙️ Setup MSBuild (for .NET Framework builds)
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
 
-      # ⚙️ Restore NuGet packages
       - name: Restore NuGet packages
         run: nuget restore "slnNeoSpin/slnNeoSpin.sln"
 
-      # 🧰 Install Sagitec Framework (if required by your projects)
-      - name: Install Sagitec Framework
+      - name: Install .NET Framework 4.8 targeting pack
         run: |
-          if (Test-Path ".\Dependencies\Sagitec Framework-Installer.exe") {
-            Write-Host "Installing Sagitec Framework..."
-            Start-Process -FilePath ".\Dependencies\Sagitec Framework-Installer.exe" -ArgumentList "/quiet" -Wait
-          } else {
-            Write-Host "Sagitec Framework installer not found. Skipping installation."
-          }
+          choco install netfx-4.8-devpack -y
+        continue-on-error: true
 
-      # ☕ Install Java (SonarQube scanner requires it)
-      - name: Setup JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
+      - name: Install SonarScanner for .NET
+        run: dotnet tool install --global dotnet-sonarscanner
 
-      # 🧠 Install SonarScanner for .NET Framework
-      - name: Install SonarScanner
+      - name: Add SonarScanner to PATH
+        run: echo "$env:USERPROFILE\.dotnet\tools" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      - name: Test SonarQube connection
+        run: curl http://localhost:9000/api/system/status
+
+      - name: Begin SonarQube analysis
         run: |
-          dotnet tool install --global dotnet-sonarscanner
-          $env:PATH += ";$env:USERPROFILE\.dotnet\tools"
+          dotnet-sonarscanner begin `
+            /k:"slnNeoSpin" `
+            /d:sonar.host.url="http://localhost:9000" `
+            /d:sonar.login="${{ secrets.SONAR_TOKEN }}" `
+            /d:sonar.verbose=true
 
-      # 🔍 Begin SonarQube analysis
-      - name: SonarQube Begin
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          $env:PATH += ";$env:USERPROFILE\.dotnet\tools"
-          dotnet sonarscanner begin `
-            /k:"gitDERP" `
-            /d:sonar.host.url="http://sagitec-1656:9000" `
-            /d:sonar.login="$env:SONAR_TOKEN"
-
-      # 🏗️ Build .NET Framework 4.8 solution
       - name: Build Solution
         run: msbuild "slnNeoSpin/slnNeoSpin.sln" /p:Configuration=Release /p:Platform="Any CPU"
 
-      # 🧩 End SonarQube analysis
-      - name: SonarQube End
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          $env:PATH += ";$env:USERPROFILE\.dotnet\tools"
-          dotnet sonarscanner end /d:sonar.login="$env:SONAR_TOKEN"
+      - name: End SonarQube analysis
+        run: dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
