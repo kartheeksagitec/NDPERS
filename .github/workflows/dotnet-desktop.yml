@@ -1,4 +1,4 @@
-name: Build NeoSpin Solution
+name: Build and Analyze NeoSpin Solution
 
 on:
   push:
@@ -11,20 +11,55 @@ jobs:
     runs-on: windows-latest
 
     steps:
+      # 🧩 Step 1: Checkout repository
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # required for SonarQube analysis
 
+      # 🧩 Step 2: Install JDK (SonarScanner requires Java)
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # 🧩 Step 3: Install SonarQube Scanner for MSBuild
+      - name: Install SonarQube Scanner for MSBuild
+        run: |
+          choco install "sonarscanner-for-msbuild" -y
+
+      # 🧩 Step 4: Install Sagitec Framework (before build)
+      # Make sure "Sagitec Framework-Installer.exe" is inside a folder like Dependencies/
+      - name: Install Sagitec Framework
+        run: |
+          Write-Host "Installing Sagitec Framework..." -ForegroundColor Cyan
+          Start-Process -FilePath ".\Dependencies\Sagitec Framework-Installer.exe" -ArgumentList "/quiet" -Wait
+
+      # 🧩 Step 5: Restore NuGet packages
+      - name: Restore NuGet packages
+        run: |
+          nuget restore ".\slnNeoSpin\slnNeoSpin.sln"
+
+      # 🧩 Step 6: Begin SonarQube analysis
+      - name: SonarQube - Begin Analysis
+        shell: pwsh
+        run: |
+          SonarScanner.MSBuild.exe begin /k:"NeoSpinProject" /d:sonar.host.url="http://localhost:9000" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /v:"1.0.${{ github.run_number }}"
+
+      # 🧩 Step 7: Build solution with MSBuild
       - name: Build NeoSpin Solution
         shell: pwsh
         run: |
-          Write-Host "Building solution..." -ForegroundColor Cyan
-
-          # Path to MSBuild in VS 2022
+          Write-Host "Building NeoSpin solution..." -ForegroundColor Cyan
           $msbuildPath = "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe"
-
           if (-Not (Test-Path $msbuildPath)) {
             throw "MSBuild not found at $msbuildPath"
           }
+          & $msbuildPath ".\slnNeoSpin\slnNeoSpin.sln" /p:Configuration=Release /m /verbosity:minimal
 
-          # Build the solution (will fail if Sagitec assemblies are missing)
-          & $msbuildPath ".\slnNeoSpin\slnNeoSpin.sln" /p:Configuration=Release /clp:ErrorsOnly
+      # 🧩 Step 8: End SonarQube analysis
+      - name: SonarQube - End Analysis
+        shell: pwsh
+        run: |
+          SonarScanner.MSBuild.exe end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
