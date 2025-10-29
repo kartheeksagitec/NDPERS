@@ -1,0 +1,35 @@
+name: Build
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Build solution with diagnostic logs
+      run: |
+        msbuild slnNeoSpin/slnNeoSpin.sln /p:Configuration=Release `
+        /fl `
+        "/flp:logfile=msbuild.log;verbosity=diagnostic" `
+        /bl:msbuild.binlog
+      shell: pwsh
+
+    - name: Upload logs if build fails
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: MSBuild-Logs
+        path: |
+          msbuild.log
+          msbuild.binlog
