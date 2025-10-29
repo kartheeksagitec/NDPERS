@@ -1,42 +1,42 @@
-name: Build with Full Logs
+name: Build and Analyze
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - build
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - build
 
 jobs:
   build:
+    name: Build C# Solution
     runs-on: windows-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v2
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
 
-    # Optional: download external DLLs if needed (see below)
-    # - name: Download Sagitec DLLs
-    #   run: |
-    #     mkdir "D:\libs"
-    #     curl -L "https://yourstorage/sagitec_dlls.zip" -o dlls.zip
-    #     tar -xf dlls.zip -C D:\libs
+      - name: Restore NuGet Packages
+        run: nuget restore slnNeoSpin/slnNeoSpin.sln
 
-    - name: Build solution with full logs
-      run: |
-        msbuild .\slnNeoSpin\slnNeoSpin.sln /p:Configuration=Release /fl /flp:logfile=msbuild.log;verbosity=diagnostic /bl:msbuild.binlog
-        echo "================ BUILD COMPLETE ================"
-        echo "Artifacts and logs are available below."
+      - name: Build Solution with Diagnostic Logs
+        run: |
+          msbuild slnNeoSpin/slnNeoSpin.sln /p:Configuration=Release `
+          /fl `
+          /flp:logfile=msbuild.log;verbosity=diagnostic `
+          /bl:msbuild.binlog
+        shell: pwsh
 
-    - name: Upload build artifacts and logs
-      uses: actions/upload-artifact@v4
-      with:
-        name: BuildOutputAndLogs
-        path: |
-          **/bin/Release/
-          msbuild.log
-          msbuild.binlog
+      - name: Upload Build Logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: msbuild-logs
+          path: |
+            msbuild.log
+            msbuild.binlog
