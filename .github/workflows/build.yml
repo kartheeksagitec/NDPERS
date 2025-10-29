@@ -1,4 +1,4 @@
-name: Build
+name: Build with Full Logs
 
 on:
   push:
@@ -19,12 +19,24 @@ jobs:
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
-    - name: Build solution
-      run: msbuild .\slnNeoSpin\slnNeoSpin.sln /p:Configuration=Release
+    # Optional: download external DLLs if needed (see below)
+    # - name: Download Sagitec DLLs
+    #   run: |
+    #     mkdir "D:\libs"
+    #     curl -L "https://yourstorage/sagitec_dlls.zip" -o dlls.zip
+    #     tar -xf dlls.zip -C D:\libs
 
-    - name: Upload build artifacts
+    - name: Build solution with full logs
+      run: |
+        msbuild .\slnNeoSpin\slnNeoSpin.sln /p:Configuration=Release /fl /flp:logfile=msbuild.log;verbosity=diagnostic /bl:msbuild.binlog
+        echo "================ BUILD COMPLETE ================"
+        echo "Artifacts and logs are available below."
+
+    - name: Upload build artifacts and logs
       uses: actions/upload-artifact@v4
       with:
-        name: BuildOutput
+        name: BuildOutputAndLogs
         path: |
           **/bin/Release/
+          msbuild.log
+          msbuild.binlog
