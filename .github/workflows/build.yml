@@ -1,42 +1,35 @@
-name: Build  AND
+name: Build
 
 on:
   push:
-    branches:
-      - build
+    branches: [ "main" ]
   pull_request:
-    branches:
-      - build
+    branches: [ "main" ]
 
 jobs:
   build:
-    name: Build C# Solution
     runs-on: windows-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v2
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
 
-      - name: Restore NuGet Packages
-        run: nuget restore slnNeoSpin/slnNeoSpin.sln
+    - name: Build solution with diagnostic logs
+      run: |
+        msbuild slnNeoSpin/slnNeoSpin.sln /p:Configuration=Release `
+        /fl `
+        "/flp:logfile=msbuild.log;verbosity=diagnostic" `
+        /bl:msbuild.binlog
+      shell: pwsh
 
-      - name: Build Solution with Diagnostic Logs
-        run: |
-          msbuild slnNeoSpin/slnNeoSpin.sln /p:Configuration=Release `
-          /fl `
-          /flp:logfile=msbuild.log;verbosity=diagnostic `
-          /bl:msbuild.binlog
-        shell: pwsh
-
-      - name: Upload Build Logs
-        uses: actions/upload-artifact@v4
-        with:
-          name: msbuild-logs
-          path: |
-            msbuild.log
-            msbuild.binlog
+    - name: Upload logs if build fails
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: MSBuild-Logs
+        path: |
+          msbuild.log
+          msbuild.binlog
