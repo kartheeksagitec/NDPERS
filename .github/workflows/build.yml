@@ -2,16 +2,12 @@ name: Build .NET Framework 4.8 Solution
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "build" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "build" ]
 
 jobs:
   build:
-    strategy:
-      matrix:
-        configuration: [Debug, Release]
-
     runs-on: windows-latest
 
     steps:
@@ -24,11 +20,11 @@ jobs:
       uses: microsoft/setup-msbuild@v2
 
     - name: Build solution
-      run: msbuild .\NDPERS\slnNeoSpin\slnNeoSpin.sln /p:Configuration=${{ matrix.configuration }}
+      run: msbuild .\slnNeoSpin\slnNeoSpin.sln /p:Configuration=Release
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
         name: BuildOutput
         path: |
-          **/bin/${{ matrix.configuration }}/
+          **/bin/Release/
